@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辅助类</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+</head>
+<body>
+    <div class="page-cont">
+	    <div class="crumb"></div>
+        <div class="page-title">
+			<h2>辅助类</h2>
+			<p>辅助类是方便快捷、可复用、实用的原子类样式（小粒度预定义样式）。</p>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 格式化文本</h4>
+			<div class="section-cont">
+				<p>格式化文本用来显示一些特定格式的文本内容：</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						100m<sup>3</sup>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">100m&lt;sup&gt;3&lt;/sup&gt;  &lt;!-- 上角标 --&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						CO<sub>2</sub>减排量
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">CO&lt;sub&gt;2&lt;/sub&gt;减排量  &lt;!-- 下角标 --&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						请按键盘的 <kbd>Enter</kbd> 键发送远程命令
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">请按键盘的 &lt;kbd&gt;Enter&lt;/kbd&gt; 键发送远程命令</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<code>ping 192.168.1.1</code>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;code&gt;ping 192.168.1.1&lt;/code&gt;  &lt;!-- 控制台专用文本 --&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 文本颜色</h4>
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<span class="ft-normal">默默无闻的提示语</span>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;span class="ft-normal"&gt;默默无闻的提示语&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<span class="ft-info">预知详情如何，请点我查看</span>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;span class="ft-info"&gt;预知详情如何，请点我查看&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<span class="ft-success">恭喜你，成功了！</span>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;span class="ft-success"&gt;恭喜你，成功了！&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<span class="ft-warning">警告，高压危险，请勿靠近！</span>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;span class="ft-warning"&gt;警告，高压危险，请勿靠近！&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<span class="ft-danger">地球有危险啦！</span>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;span class="ft-danger"&gt;地球有危险啦！&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 背景色</h4>
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="bg-normal">默默无闻的提示语</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;div class="bg-normal"&gt;默默无闻的提示语&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="bg-info">预知详情如何，请点我查看</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;div class="bg-info"&gt;预知详情如何，请点我查看&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="bg-success">恭喜你，成功了！</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;div class="bg-success"&gt;恭喜你，成功了！&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="bg-warning">警告，高压危险，请勿靠近！</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;div class="bg-warning"&gt;警告，高压危险，请勿靠近！&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="bg-danger">地球有危险啦！</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="code html">&lt;div class="bg-danger"&gt;地球有危险啦！&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 对齐方式</h4>
+			<div class="section-cont">
+				<p><strong>1. 块元素居中</strong>（为块元素加上 <code>.center</code> 类名即可）</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="center" style="width:50%;background:#ccc">我是一个块元素</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;div class="<strong>center</strong>" style="width:50%;background:#ccc"&gt;我是一个块元素&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<p class="mt15"><strong>2. 文本水平对齐</strong></p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="txt-l" style="background:#ccc">左对齐</div>
+						<p class="hint ft-normal">注：左对齐为页面默认对齐方式，如非必要，无需显示指定左对齐。</p>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;div class="<strong>txt-l</strong>" style="background:#ccc"&gt;左对齐&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="txt-c" style="background:#ccc">居中对齐</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;div class="<strong>txt-c</strong>" style="background:#ccc"&gt;居中对齐&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<div class="txt-r" style="background:#ccc">右对齐</div>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;div class="<strong>txt-r</strong>" style="background:#ccc"&gt;右对齐&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 外边距</h4>
+			<div class="section-cont">
+				<p>使用形如 <code>.m+[<em>Position</em>]+[<em>Value</em>]</code> 的类名来快速应用外边距，其中：</p>
+				<ul class="ml20">
+					<li><code><em>Position</em></code> 代表外边距的方位，取值：t、r、b、l（上、右、下、左）；</li>
+					<li><code><em>Value</em></code> 代表外边距的数值，单位为px，取值：05、10、15、20。</li>
+				</ul>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>实例</strong></div>
+					<div class="grid-col grid-col-8"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<p>图标右侧距离文字5px：</p>
+						<i class="iconfont icon-brush_fill mr05"></i>编辑
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;i class="iconfont icon-brush_fill <strong>mr05</strong>"&gt;&lt;/i&gt;编辑</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<p>第一行下方距离第二行10px：</p>
+						<p class="bg-success mb10">第一行</p>
+						<p class="bg-danger">第二行</p>
+					</div>
+					<div class="grid-col grid-col-8">
+						<pre><code class="html">&lt;p class="bg-success <strong>mb10</strong>"&gt;第一行&lt;/p&gt;
+&lt;p class="bg-danger"&gt;第二行&lt;/p></code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动化构建</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+</head>
+<body>
+    <div class="page-cont">
+	    <div class="crumb"></div>
+        <div class="page-title">
+			<h2>自动化构建</h2>
+			<p>自动化构建，让工作更轻松</p>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 自动化构建？</h4>
+			<div class="section-cont">
+				作为老司机，相信在 <a href="use.html">指南 → 快速上手</a> 一文中你已对传统的开发方式感到厌倦：<br>新建文件、编写HTML、引用资源、处理路径、启动服务…… 整个过程需要人肉处理一些重复无用且繁琐的工作。<br>而自动化构建就是用机器来代替处理这部分工作的，实现自动新建文件、编译、压缩、启动服务等功能，这也是编写 ARM UI 的其中一个目标。
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 搭建环境</h4>
+			<div class="section-cont">
+				<p><strong>1. 安装 Node.js</strong></p>
+				<p>ARM UI 使用 Gulp 作为构建工具，它是一个非常棒而且容易上手的工具。<br>Gulp 构建在 Node.js 之上，在安装 Gulp 前，你首先需要 <a href="https://nodejs.org/en/download/" target="_blank">下载并安装 Node.js</a>，对于 Node.js 的安装可<a href="https://jingyan.baidu.com/article/91f5db1b2bb6941c7f05e33c.html" target="_blank">参考这篇文章</a>。</p>
+				<p class="mt10"><strong>2. 安装 Gulp</strong></p>
+				<p>安装 Node.js 之后，在命令行运行如下命令安装 Gulp：</p>
+				<pre class="mt05"><code class="javascript">npm install -g gulp  /* 全局环境中安装 Gulp */</code></pre>
+				<p class="mt10"><strong>3. 安装依赖拓展包</strong></p>
+				<p>将命令行位置定位到 ARM UI 根目录，然后运行如下命令安装依赖包：</p>
+				<pre class="mt05"><code class="javascript">npm install</code></pre>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 使用 Gulp 构建</h4>
+			<div class="section-cont">
+				<p>完成上述步骤就可以使用 Gulp 进行自动化构建了，只需要在 ARM UI 根目录中使用命令行输入对应的命令就可以启动相应任务。以下为 ARM UI 内置的一些常用任务命令：</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4"><strong>命令</strong></div>
+					<div class="grid-col grid-col-5"><strong>描述</strong></div>
+					<div class="grid-col grid-col-3"><strong>默认输出</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp css</code></pre>
+						<pre><code class="javascript">gulp css --name [<em>FileName</em>].scss</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						启动 CSS 任务：
+						<ol class="ml20">
+							<li>将 source/scss 目录下所有的 scss 文件（不包含以下划线开头的文件）编译为 css；</li>
+							<li>处理 css 属性的浏览器前缀；</li>
+							<li>压缩并输出最终 css 文件。</li>
+						</ol>
+						<p class="mt10">如使用带 <code>--name</code> 参数的命令，则只处理 <code>[<em>fileName</em>].scss</code> 文件。</p>
+					</div>
+					<div class="grid-col grid-col-3">
+						<pre>include/css/*.min.css</pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp js</code></pre>
+						<pre><code class="javascript">gulp js --name [<em>FileName</em>].js</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						<p>压缩 source/js 目录下所有的 js 文件并输出。</p>
+						<p class="mt10">如使用带 <code>--name</code> 参数的命令，则只处理 <code>[<em>fileName</em>].js</code> 文件。</p>
+					</div>
+					<div class="grid-col grid-col-3">
+						<pre>include/js/*.min.js</pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp font</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						启动 iconfont 任务：
+						<ol class="ml20">
+							<li>清理 include/fonts 目录下的字体文件；</li>
+							<li>读取项目配置文件；</li>
+							<li>从配置中指定的 URL 下载 iconfont 样式表；</li>
+							<li>解析 iconfont 样式表，下载对应字体文件；</li>
+							<li>将样式表中引用的字体文件路径替换为本地路径；</li>
+							<li>压缩并输出最终 css 文件。</li>
+						</ol>
+					</div>
+					<div class="grid-col grid-col-3">
+						<pre>include/css/iconfont.min.css</pre>
+						<pre>fonts/*.*</pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp favicon</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						启动 favicon 任务：
+						<ol class="ml20">
+							<li>读取项目配置文件；</li>
+							<li>根据配置中指定的 logo 图片，自动生成 32×32 的 favicon 文件（用于浏览器小图标）。</li>
+						</ol>
+					</div>
+					<div class="grid-col grid-col-3">
+						<pre>favicon.ico</pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp build</code></pre>
+						<pre><code class="javascript">gulp build --force</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						启动文件构造任务：
+						<ol class="ml20">
+							<li>读取项目配置文件；</li>
+							<li>读取 source/models 下的模板文件；</li>
+							<li>根据配置中指定的 project 基本信息（项目名、标题、入口文件），填充 index.html 模板并生成入口文件（首页）；</li>
+							<li>根据配置中的 nav 导航数组，生成导航 nav.json 文件；</li>
+							<li>根据导航配置，填充 frame.html 模板，并自动生成与导航对应的目录和文件。</li>
+						</ol>
+						<p class="mt10">如使用带 <code>--force</code> 参数的命令，则会在自动生成内页文件时强制覆盖原有文件；如不带，则会跳过同名文件。</p>
+					</div>
+					<div class="grid-col grid-col-3">
+						<pre>include/js/nav.json</pre>
+						<pre>index.html</pre>
+						<pre>**/**/*.html</pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-4">
+						<pre><code class="javascript">gulp serve</code></pre>
+					</div>
+					<div class="grid-col grid-col-5">
+						启动一个 HTTP 服务，并打开如下地址：
+						<pre>http://127.0.0.1:8888/index.html</pre>
+					</div>
+					<div class="grid-col grid-col-3">
+						N/A
+					</div>
+				</div>
+				<p class="mt05">小彩蛋：试试不带任务名，直接运行 <code>gulp</code> 命令。</p>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+    </script>
+</body>
+</html>

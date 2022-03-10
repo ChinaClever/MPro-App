@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选项卡</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+</head>
+<body>
+    <div class="page-cont">
+	    <div class="crumb"></div>
+        <div class="page-title">
+			<h2>选项卡</h2>
+			<p>选项卡用于分隔内容上有关联但属于不同类别的信息集合。</p>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 选项卡结构</h4>
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-6"><strong>示例</strong></div>
+					<div class="grid-col grid-col-6"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-5">
+						<div class="tabs">
+							<ul class="tabs-title">
+								<li class="active"><a href="#demo1_tab1">标签1</a></li>
+								<li><a href="#demo1_tab2">标签2</a></li>
+								<li><a href="#demo1_tab3">标签3</a></li>
+							</ul>
+							<div class="tabs-cont">
+								<div class="tab-pane active" id="demo1_tab1">我是标签1</div>
+								<div class="tab-pane" id="demo1_tab2">这里是标签2的内容</div>
+								<div class="tab-pane" id="demo1_tab3">现在看到的是标签3的内容</div>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<pre><code class="html">&lt;div class="tabs"&gt;
+    &lt;ul class="tabs-title"&gt;
+        &lt;li class="active"&gt;&lt;a href="#demo1_tab1"&gt;标签1&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo1_tab2"&gt;标签2&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo1_tab3"&gt;标签3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tabs-cont"&gt;
+        &lt;div class="tab-pane active" id="demo1_tab1"&gt;我是标签1&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo1_tab2"&gt;这里是标签2的内容&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo1_tab3"&gt;现在看到的是标签3的内容&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 对齐方式</h4>
+			<div class="section-cont">
+				<p>配合辅助类（<a href="atom.html">组件 → 辅助类</a>）中的对齐类样式，可改变选项卡的对齐方式：</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-6"><strong>示例</strong></div>
+					<div class="grid-col grid-col-6"><strong>代码</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-5">
+						<p class="mb10">居中对齐（为 <code>tabs-title</code> 添加 <code>txt-c</code> 样式）：</p>
+						<div class="tabs">
+							<ul class="tabs-title txt-c">
+								<li class="active"><a href="#demo2_tab1">标签1</a></li>
+								<li><a href="#demo2_tab2">标签2</a></li>
+								<li><a href="#demo2_tab3">标签3</a></li>
+							</ul>
+							<div class="tabs-cont">
+								<div class="tab-pane active" id="demo2_tab1">我是标签1</div>
+								<div class="tab-pane" id="demo2_tab2">这里是标签2的内容</div>
+								<div class="tab-pane" id="demo2_tab3">现在看到的是标签3的内容</div>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<pre><code class="html">&lt;div class="tabs"&gt;
+    &lt;ul class="tabs-title <strong>txt-c</strong>"&gt;
+        &lt;li class="active"&gt;&lt;a href="#demo2_tab1"&gt;标签1&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo2_tab2"&gt;标签2&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo2_tab3"&gt;标签3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tabs-cont"&gt;
+        &lt;div class="tab-pane active" id="demo2_tab1"&gt;我是标签1&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo2_tab2"&gt;这里是标签2的内容&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo2_tab3"&gt;现在看到的是标签3的内容&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-5">
+						<p class="mb10">右对齐（为 <code>tabs-title</code> 添加 <code>txt-r</code> 样式）：</p>
+						<div class="tabs">
+							<ul class="tabs-title txt-r">
+								<li class="active"><a href="#demo3_tab1">标签1</a></li>
+								<li><a href="#demo3_tab2">标签2</a></li>
+								<li><a href="#demo3_tab3">标签3</a></li>
+							</ul>
+							<div class="tabs-cont">
+								<div class="tab-pane active" id="demo3_tab1">我是标签1</div>
+								<div class="tab-pane" id="demo3_tab2">这里是标签2的内容</div>
+								<div class="tab-pane" id="demo3_tab3">现在看到的是标签3的内容</div>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<pre><code class="html">&lt;div class="tabs"&gt;
+    &lt;ul class="tabs-title <strong>txt-r</strong>"&gt;
+        &lt;li class="active"&gt;&lt;a href="#demo3_tab1"&gt;标签1&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo3_tab2"&gt;标签2&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#demo3_tab3"&gt;标签3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tabs-cont"&gt;
+        &lt;div class="tab-pane active" id="demo3_tab1"&gt;我是标签1&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo3_tab2"&gt;这里是标签2的内容&lt;/div&gt;
+        &lt;div class="tab-pane" id="demo3_tab3"&gt;现在看到的是标签3的内容&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+
+    </script>
+</body>
+</html>

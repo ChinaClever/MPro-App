@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+	<style>
+		.icon-list {
+			overflow: hidden;
+			border: 1px solid #eaeefb;
+			border-radius: 4px;
+		}
+		.icon-list > li {
+			float:left;
+			width: 16.66%;
+			padding: 5px 0 10px;
+			text-align: center;
+			color: #666;
+			font-size: 13px;
+			margin-right: -1px;
+			margin-bottom: -1px;
+			border-right: 1px solid #eee;
+			border-bottom: 1px solid #eee;
+			list-style-type: none;
+		}
+		.icon-list > li:hover {background: #f3f6f9;}
+		.icon-list .iconfont {font-size: 32px;}
+		.fontclass {color: #606266;}
+
+		.demo-list {line-height: 1.5;}
+		.demo-list > li {list-style-type: none;}
+		.demo-list .iconfont {font-size: 18px; color: #666;}
+	</style>
+</head>
+<body>
+    <div class="page-cont">
+	    <div class="crumb"></div>
+        <div class="page-title">
+			<h2>图标</h2>
+			<p>图标能在视觉上简洁有效的指引用户操作。</p>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 简介</h4>
+			<div class="section-cont">
+				<p>ARM UI 中的图标采用 iconfont 技术，即图标字体技术：一种将图标集合以字体文件形式进行封装，并可通过 CSS 在 Web 页面上调用的技术。</p>
+				<p class="mt10"><strong>特点：</strong>技术方案成熟，加载文件体积小，矢量无损缩放，样式自定义方便（支持尺寸、颜色等自定义）。</p>
+				<p><strong>来源：</strong>字体资源精选自 <a href="http://www.iconfont.cn" target="_blank">阿里巴巴矢量图标库</a>。</p>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 图标集合</h4>
+			<div class="section-cont" id="iconSet">
+				<p>在 ARM UI 中提供了 <b id="iconTotalTxt">&nbsp;</b> 个图标，涵盖了大部分后台系统常见的图标。图标可随时增删拓展，详情请移步 <a href="../guide/customize.html">指南 → 定制</a></p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2"><strong>类别</strong></div>
+					<div class="grid-col grid-col-10"><strong>图标</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">操作类</div>
+					<ul class="grid-col grid-col-10 icon-list clear">
+						<li>
+							<i class="icon iconfont icon-collection_fill"></i>
+							<div class="fontclass">icon-collection_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-collection"></i>
+							<div class="fontclass">icon-collection</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-like_fill"></i>
+							<div class="fontclass">icon-like_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-like"></i>
+							<div class="fontclass">icon-like</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-lock_fill"></i>
+							<div class="fontclass">icon-lock_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-unlock_fill"></i>
+							<div class="fontclass">icon-unlock_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-brush_fill"></i>
+							<div class="fontclass">icon-brush_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-setup_fill"></i>
+							<div class="fontclass">icon-setup_fill</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-share_fill"></i>
+							<div class="fontclass">icon-share_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-trash_fill"></i>
+							<div class="fontclass">icon-trash_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-clock_fill"></i>
+							<div class="fontclass">icon-clock_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-search"></i>
+							<div class="fontclass">icon-search</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-refresh"></i>
+							<div class="fontclass">icon-refresh</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-scan"></i>
+							<div class="fontclass">icon-scan</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-shutdown"></i>
+							<div class="fontclass">icon-shutdown</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-reboot"></i>
+							<div class="fontclass">icon-reboot</div>
+						</li>
+					</ul>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">流程类</div>
+					<ul class="grid-col grid-col-10 icon-list clear">
+						<li>
+							<i class="icon iconfont icon-arrow-top"></i>
+							<div class="fontclass">icon-arrow-top</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-arrow-right"></i>
+							<div class="fontclass">icon-arrow-right</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-arrow-down"></i>
+							<div class="fontclass">icon-arrow-down</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-arrow-left"></i>
+							<div class="fontclass">icon-arrow-left</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-packup"></i>
+							<div class="fontclass">icon-packup</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-enter"></i>
+							<div class="fontclass">icon-enter</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-unfold"></i>
+							<div class="fontclass">icon-unfold</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-return"></i>
+							<div class="fontclass">icon-return</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-add"></i>
+							<div class="fontclass">icon-add</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-close"></i>
+							<div class="fontclass">icon-close</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-addition"></i>
+							<div class="fontclass">icon-addition</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-subtraction"></i>
+							<div class="fontclass">icon-subtraction</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-right"></i>
+							<div class="fontclass">icon-right</div>
+						</li>
+					</ul>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">消息类</div>
+					<ul class="grid-col grid-col-10 icon-list clear">
+						<li>
+							<i class="iconfont icon-feedback_fill"></i>
+							<div class="fontclass">icon-feedback_fill</div>
+						</li>
+						<li>
+							<i class="iconfont icon-info"></i>
+							<div class="fontclass">icon-info</div>
+						</li>
+						<li>
+							<i class="iconfont icon-prompt_fill"></i>
+							<div class="fontclass">icon-prompt_fill</div>
+						</li>
+						<li>
+							<i class="iconfont icon-success_fill"></i>
+							<div class="fontclass">icon-success_fill</div>
+						</li>
+						<li>
+							<i class="iconfont icon-warning_fill"></i>
+							<div class="fontclass">icon-warning_fill</div>
+						</li>
+						<li>
+							<i class="iconfont icon-remind_fill"></i>
+							<div class="fontclass">icon-remind_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-message_fill"></i>
+							<div class="fontclass">icon-message_fill</div>
+						</li>
+					</ul>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">标记类</div>
+					<ul class="grid-col grid-col-10 icon-list clear">
+						<li>
+							<i class="icon iconfont icon-computer_fill"></i>
+							<div class="fontclass">icon-computer_fill</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-coordinates_fill"></i>
+							<div class="fontclass">icon-coordinates_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-flag_fill"></i>
+							<div class="fontclass">icon-flag_fill</div>
+						</li>
+
+						<li>
+							<i class="icon iconfont icon-flashlight_fill"></i>
+							<div class="fontclass">icon-flashlight_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-time_fill"></i>
+							<div class="fontclass">icon-time_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-financial_fill"></i>
+							<div class="fontclass">icon-financial_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-label_fill"></i>
+							<div class="fontclass">icon-label_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-mail_fill"></i>
+							<div class="fontclass">icon-mail_fill</div>
+						</li>
+					</ul>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">其他</div>
+					<ul class="grid-col grid-col-10 icon-list clear">
+						<li>
+							<i class="icon iconfont icon-arm-ui"></i>
+							<div class="fontclass">icon-arm-ui</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-createtask_fill"></i>
+							<div class="fontclass">icon-createtask_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-document_fill"></i>
+							<div class="fontclass">icon-document_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-task_fill"></i>
+							<div class="fontclass">icon-task_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-tasklist_fill"></i>
+							<div class="fontclass">icon-tasklist_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-dynamic_fill"></i>
+							<div class="fontclass">icon-dynamic_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-homepage_fill"></i>
+							<div class="fontclass">icon-homepage_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-service_fill"></i>
+							<div class="fontclass">icon-service_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-manage_fill"></i>
+							<div class="fontclass">icon-manage_fill</div>
+						</li>
+						<li>
+							<i class="icon iconfont icon-people_fill"></i>
+							<div class="fontclass">icon-people_fill</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 使用方法</h4>
+			<div class="section-cont">
+				<p><strong>1. 调用</strong></p>
+				<p>挑选相应图标获取其类名（图标类名见本文“图标集合”中图标下方 <code>icon-xxx</code> 形式的英文名称），然后应用于页面：</p>
+				<pre><code class="html">&lt;i class="iconfont icon-xxx"&gt;&lt;/i&gt;</code></pre>
+				<p class="mt10"><strong>2. 自定义样式</strong></p>
+				<p>可以使用 <code>font-size</code> 和 <code>color</code> 样式属性来分别设置图标的尺寸和颜色：</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-1">
+						<i class="iconfont icon-arm-ui" style="font-size:40px; color:brown"></i>
+					</div>
+					<div class="grid-col grid-col-11">
+						<pre><code class="html">/* 图标大小为40px，颜色为棕色 */<br>&lt;i class="iconfont icon-arm-ui" style="font-size:40px; color:brown"&gt;&lt;/i&gt;</code></pre>
+					</div>
+				</div>
+				<p class="mt10"><strong>3. 场景使用实例</strong></p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2"><strong>实例</strong></div>
+					<div class="grid-col grid-col-10"><strong>描述</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">
+						<p>
+							<button class="btn btn-normal">
+								<i class="iconfont icon-collection"></i> 收藏
+							</button>
+						</p>
+						<p class="mt10">
+							<button class="btn btn-primary">
+								<i class="iconfont icon-setup_fill"></i>
+							</button>
+						</p>
+					</div>
+					<div class="grid-col grid-col-10">
+						用于按钮，对于一些常用的按钮可以使用图标取代按钮中的文本，使得界面更加简洁
+						<pre><code class="html">&lt;button class="btn btn-normal"&gt;
+    &lt;i class="iconfont icon-collection"&gt;&lt;/i&gt; 收藏
+&lt;/button&gt;
+&lt;button class="btn btn-primary"&gt;
+    &lt;i class="iconfont icon-setup_fill"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">
+						<div class="msg msg-success mr15">
+							<i class="iconfont icon-success_fill"></i>
+							<p>资料修改成功！</p>
+						</div>
+					</div>
+					<div class="grid-col grid-col-10">
+						用于提示消息，图标能指明消息类型，便于用户无需仔细阅读消息内容就可以迅速做出决策
+						<pre><code class="html">&lt;div class="msg msg-success"&gt;
+    &lt;i class="iconfont icon-success_fill"&gt;&lt;/i&gt;
+    &lt;p&gt;资料修改成功！&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">
+						<ul class="demo-list">
+							<li>
+								<i class="iconfont icon-people_fill"></i>
+								<strong>姓名：</strong>王大锤
+							</li>
+							<li>
+								<i class="iconfont icon-financial_fill"></i>
+								<strong>余额：</strong>￥11.11
+							</li>
+							<li>
+								<i class="iconfont icon-coordinates_fill"></i>
+								<strong>地址：</strong>松山湖
+							</li>
+						</ul>
+					</div>
+					<div class="grid-col grid-col-10">
+						用于一些简单但重要列表，在列表项目前面加上合适的图标能大大增强列表识别程度
+						<pre><code class="html">&lt;ul class="demo-list"&gt;
+    &lt;li&gt;
+        &lt;i class="iconfont icon-people_fill"&gt;&lt;/i&gt;
+        &lt;strong&gt;姓名：&lt;/strong&gt;王大锤
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;i class="iconfont icon-financial_fill"&gt;&lt;/i&gt;
+        &lt;strong&gt;余额：&lt;/strong&gt;￥11.11
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;i class="iconfont icon-coordinates_fill"&gt;&lt;/i&gt;
+        &lt;strong&gt;地址：&lt;/strong&gt;松山湖
+    &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-2">
+						<span class="label bg-info"><i class="iconfont icon-message_fill"></i></span>
+						<span class="label bg-danger"><i class="iconfont icon-manage_fill"></i></span>
+						<span class="label bg-warning"><i class="iconfont icon-flashlight_fill"></i></span>
+						<span class="label bg-success"><i class="iconfont icon-service_fill"></i></span>
+					</div>
+					<div class="grid-col grid-col-10">
+						用作标签，图标能简明表达项目或信息类型
+						<pre><code class="html">&lt;span class="label bg-info"&gt;&lt;i class="iconfont icon-message_fill"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;span class="label bg-danger"&gt;&lt;i class="iconfont icon-manage_fill"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;span class="label bg-warning"&gt;&lt;i class="iconfont icon-flashlight_fill"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;span class="label bg-success"&gt;&lt;i class="iconfont icon-service_fill"&gt;&lt;/i&gt;&lt;/span&gt;</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+
+		var totalIcons = 0;
+
+		$('#iconSet').find('.grid-row').not(':eq(0)').each(function() {
+			var self = $(this),
+				title = self.children('.grid-col:eq(0)'),
+				curNum = self.find('li').length;
+
+			totalIcons += curNum;
+			title.html(title.text() + '(' + curNum + ')');
+		});
+
+		$('#iconTotalTxt').html(totalIcons);
+    </script>
+</body>
+</html>

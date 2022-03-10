@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<style>
+		#msgBox {display: inline-block;}
+	</style>
+</head>
+<body>
+	<div class="page-cont">
+		<div class="breadcrumb"></div>
+		<form id="form1">
+			<div class="form-row">
+				<h5 class="form-subtitle line">基本信息</h5>
+				<div class="form-cont line">
+					<div class="form-cont-title">真实姓名：</div>
+					<div class="form-cont-item">
+						<input class="input" type="text" name="fullName">
+						<p class="hint">(请提供真实姓名，以便核验您的真实身份。)</p>
+					</div>
+				</div>
+				<div class="form-cont line">
+					<div class="form-cont-title">性别：</div>
+					<div class="form-cont-item">
+						<label>
+							<input type="radio" name="sex" value="1">
+							<span>男</span>
+						</label>
+						<label>
+							<input type="radio" name="sex" value="2" checked>
+							<span>女</span>
+						</label>
+					</div>
+				</div>
+				<div class="form-cont line">
+					<div class="form-cont-title">我的生日：</div>
+					<div class="form-cont-item">
+						<select class="btn btn-normal" id="dateType" name="dateType">
+							<option value="1">公历</option>
+							<option value="2">农历</option>
+						</select>
+						<select class="btn btn-normal" id="month" name="month" style="margin-left:5px">
+						</select> 月
+						<select class="btn btn-normal" id="day" name="day">
+						</select> 日
+						<div style="margin-top:7px">
+							<label>
+								<input type="checkbox" name="shared" value="1" checked>
+								<span>公开我的生日</span>
+							</label>
+						</div>
+						<p class="hint">(公开后，其他人可以看到您的生日信息。)</p>
+						<script>
+							var lunarMonth = ['正','二','三','四','五','六','七','八','九','十','十一','腊'],
+								lunarDay = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+							var buildDateList = function(flag) {
+								var html = '';
+								for (var i = 0; i < 12; i++) {
+									var month = (flag == 1 ? i + 1 : lunarMonth[i]);
+									html += '<option value="' + (i + 1) + '">' + month + '</option>';
+								}
+								document.getElementById('month').innerHTML = html;
+
+								html = '';
+								for (var i = 0; i < 31; i++) {
+									var day = (flag == 1 ? i + 1 : lunarDay[i]);
+									if (!day) {
+										break;
+									}
+									html += '<option value="' + (i + 1) + '">' + day + '</option>';
+								}
+								document.getElementById('day').innerHTML = html;
+							};
+							buildDateList(1);
+							document.getElementById('dateType').onchange = function() {
+								buildDateList(this.value);
+							}
+						</script>
+					</div>
+				</div>
+			</div>
+			<div class="form-row">
+				<h5 class="form-subtitle line">联系方式</h5>
+				<div class="form-cont line">
+					<div class="form-cont-title">邮箱：</div>
+					<div class="form-cont-item">
+						<input class="input" type="text" name="email">
+						<p class="hint">(推荐使用 QQ 邮箱。)</p>
+					</div>
+				</div>
+				<div class="form-cont line">
+					<div class="form-cont-title">微信：</div>
+					<div class="form-cont-item">
+						<input class="input" type="text" name="wechat">
+					</div>
+				</div>
+			</div>
+			<div class="txt-c mt10">
+				<div id="msgBox"></div>
+			</div>
+			<div class="form-row form-buttons">
+				<button class="btn btn-normal" type="reset">取消</button>
+				<button class="btn btn-primary" type="submit">提交</button>
+			</div>
+		</form>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script>
+		var contTitles = $('.form-cont-title');
+		var titlesWt = [];
+		for (var i = 0; i < contTitles.length; i++) {
+			titlesWt.push(contTitles.eq(i).width());
+		}
+		var maxWt = Math.max.apply(null, titlesWt);
+		titlesWt = null;
+		contTitles.width(maxWt);
+
+		var msgBox = $('#msgBox');
+
+		function checkForm() {
+			var form = $('#form1'),
+				fullName = form.find(':text[name=fullName]');
+
+			if ($.trim(fullName.val()) == '') {
+				msgBox.msg({
+					type: 'error',
+					text: '真实姓名不能为空！'
+				});
+
+				return false;
+			}
+
+			return true;
+		}
+
+		// 表单提交
+		$('#form1').submit(function(e) {
+			e.preventDefault();
+
+			if (!checkForm()) {
+				return;
+			}
+
+			msgBox.msg({
+				type: 'success',
+				text: '保存成功！'
+			});
+		});
+    </script>
+</body>
+</html>

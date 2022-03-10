@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开始使用</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+	<style>
+		.msg {display: inline-block;}
+	</style>
+</head>
+<body>
+    <div class="page-cont">
+	    <div class="crumb"></div>
+        <div class="page-title">
+			<h2>开始使用</h2>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 新手必看</h4>
+			<div class="section-cont">
+				<div class="msg msg-normal mt05 mb05">
+					<i class="iconfont icon-info"></i>
+					<p>这部分是给新手看的，主要是对必要的前端知识点进行扫盲，高手请略过。</p>
+				</div>
+				<div class="grid-row">
+					编写网页项目需要用到以下三种语言：HTML（结构层）、CSS（表现层） 和 JavaScript（行为层）。
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-6">
+						<p><strong>HTML</strong> 本身并不是编程语言，它用来描述元素应该如何在页面上布局，并向浏览器提供页面所需的其他所有文件列表（例如 CSS 和 JavaScript）。你可以将 HTML 看做盖房的图纸，它可以告诉你房间有多大，里面应该有什么东西。</p>
+						<p>在编写页面时，你需要使用语义化的 HTML 标签来搭建结构，如果页面布局对你有困难的话，可以参考现成的 <a href="../template/index.html">模板</a>。</p>
+					</div>
+					<div class="grid-col grid-col-6">
+						<button>我是按钮</button>
+						<pre class="mt05"><code class="html">&lt;button&gt;我是按钮&lt;/button&gt;  &lt;!-- 普通的 HTML 元素 --></code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-6">
+						<p><strong>CSS</strong> 负责控制页面的外观。如果说 HTML 描述的是房子的布局，那么 CSS 描述的就是房子的外观。页面上诸如颜色、字体，甚至一些动画都由 CSS 控制。和 HTML 一样，CSS 不是编程语言，它是一种描述型的文本文档，使页面看起来更美观。</p>
+						<p>使用 ARM UI 编写页面时，你只需为组件根据需要加上对应的 class 类名（组件的样式类名请参见“组件”栏目），即可为当前组件赋以样式风格。例如为按钮添加 <code>btn</code> 和 <code>btn-primary</code> 两个 class 类名，即可为其赋以主要按钮的外观样式。</p>
+					</div>
+					<div class="grid-col grid-col-6">
+						<button class="btn btn-primary">我是按钮</button>
+						<pre class="mt05"><code class="html">&lt;button class="btn btn-primary"&gt;我是按钮&lt;/button&gt;</code></pre>
+						<pre class="mt05"><code class="css">/* 为按钮加上样式 */
+.btn {
+    height: 26px;  /* 高度 */
+    padding: 0 13px;  /* 内边距 */
+    font-size: 12px;  /* 文字大小 */
+    color: #fff;  /* 文字颜色 */
+    ...
+}
+.btn-primary {
+    background-color: #4680d4;  /* 背景色 */
+    border-color: #275ba7;  /* 边框色 */
+    ...
+}</code></pre>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-6">
+						<p><strong>JavaScript</strong> 是编程语言，负责控制页面的交互操作。就像一位勤杂工人，可以拆掉墙壁、建造新的房间和重新装饰房屋。</p>
+						<p>对于表单组件居多、强调动态交互的后台页面来讲，JavaScript 是非常重要的组成部分。ARM UI 使用 jQuery 库，使我们能够更轻松地进行跨浏览器 DOM 遍历和操作、处理事件和执行 AJAX 操作。</p>
+					</div>
+					<div class="grid-col grid-col-6">
+						<button class="btn btn-primary" onclick="alert('你点击了我！');">我是按钮</button>
+						<pre><code class="html">&lt;button class="btn btn-primary" onclick="say()"&gt;我是按钮&lt;/button&gt;</code></pre>
+						<pre class="mt05"><code class="javascript">// 为按钮加上点击事件
+function say() {
+    alert('你点击了我！');
+}</code></pre>
+					</div>
+				</div>
+				</ul>
+			</div>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 获取资源</h4>
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-6">
+						<h4>
+							<strong>ARM UI 生产包</strong>
+							<a class="btn btn-primary ml10" href="http://eastups.oschina.io/arm-web/export/armui_dist.zip" target="_blank">下载</a>
+						</h4>
+						<p>包含编译及压缩后用于生产环境的 CSS、JavaScript 和字体文件（这些文件在源码包的 include 目录下提供）。不包括文档和开发源码。</p>
+					</div>
+					<div class="grid-col grid-col-6">
+						<h4>
+							<strong>ARM UI 开发包</strong>
+							<a class="btn btn-normal ml10" href="https://gitee.com/eastups/ARM-Web/repository/archive/master.zip" target="_blank">下载源码</a>
+						</h4>
+						<p>ARM UI 的完整项目代码，包括 Sass、JavaScript 和字体等源码文件，你还可以使用内置 gulp 任务来定制自己的版本，另外还有完整的文档。</p>
+					</div>
+				</div>
+				<p class="mt10">
+					<strong>说人话：</strong><br>如果是前端新手，又不懂前端构建、编译这些东东，请下载生产包。<br>如果自身有前端方面的底子，想提高开发效率，或者想对 ARM UI 中的一些组件自己插一手，请下载开发包。
+				</p>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+		function say() {
+			alert('你点击了我！');
+		}
+    </script>
+</body>
+</html>

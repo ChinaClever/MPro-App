@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按钮</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+	<link rel="stylesheet" href="../doc-lib/doc.css">
+</head>
+<body>
+    <div class="page-cont">
+		<div class="crumb"></div>
+		<div class="page-title">
+			<h2>按钮</h2>
+			<p>按钮是用来响应用户鼠标点击操作，来触发一些动作的组件。通常用在表单、对话框、菜单上面。</p>
+		</div>
+		<div class="section">
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 按钮类型</h4>
+			<div class="section-cont">
+				<p>根据按钮表现形式有如下分类：</p>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3"><strong>按钮</strong></div>
+					<div class="grid-col grid-col-9"><strong>描述</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<button class="btn btn-primary">主要按钮</button>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;button class="btn btn-primary"&gt;主要按钮&lt;/button&gt;</code></pre>
+						<p>指示用户完成当前页面主要操作，例如提交表单，确认选择等。通常在一个页面里面仅包含一个主要按钮。</p>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<button class="btn btn-normal">普通按钮</button>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;button class="btn btn-normal"&gt;普通按钮&lt;/button&gt;</code></pre>
+						<p>页面上的普通按钮，指示用户完成一些次要操作，例如取消、返回、重置输入等。</p>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<button class="btn btn-danger">危险按钮</button>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;button class="btn btn-danger"&gt;危险按钮&lt;/button&gt;</code></pre>
+						<p>表示这个动作危险或存在危险，提醒应该谨慎操作。例如删除、清空、重启等不可逆操作。</p>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<a href="javascript:;" class="btn btn-normal">详情按钮...</a>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;a class="btn btn-normal" href="url"&gt;详情按钮...&lt;/a&gt;</code></pre>
+						<p>表示有二级页面或更多的设置项，用于打开对话框、跳转页面等场景。</p>
+					</div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<div>
+							<button class="btn btn-primary">
+								<i class="iconfont icon-setup_fill"></i> 带图标按钮1
+							</button>
+						</div>
+						<div class="mt05">
+							<button class="btn btn-normal">
+								<i class="iconfont icon-like"></i> 带图标按钮2
+							</button>
+						</div>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;button class="btn btn-primary"&gt;
+    &lt;i class="iconfont icon-setup_fill"&gt;&lt;/i&gt; 带图标按钮1
+&lt;/button&gt;
+&lt;button class="btn btn-normal"&gt;
+    &lt;i class="iconfont icon-like"&gt;&lt;/i&gt; 带图标按钮2
+&lt;/button&gt;</code></pre>
+						<p>在按钮上合理使用图标能加强视觉引导作用。注意图标与文字直接要加一个空格。图标的用法参见 <a href="icon.html">组件 &rarr; 图标</a></p>
+					</div>
+				</div>
+			</div>
+
+			<h4 class="section-title"><i class="iconfont icon-subtraction"></i> 按钮状态</h4>
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-3"><strong>按钮</strong></div>
+					<div class="grid-col grid-col-9"><strong>描述</strong></div>
+				</div>
+				<div class="grid-row">
+					<div class="grid-col grid-col-3">
+						<button class="btn btn-primary" disabled>被禁用的按钮</button>
+					</div>
+					<div class="grid-col grid-col-9">
+						<pre><code class="html">&lt;button class="btn btn-primary" disabled&gt;被禁用的按钮&lt;/button&gt;</code></pre>
+						<p>当某些场合下按钮不可用时需切换到禁用状态，让用户知道按钮不可点击。</p>
+						<p>为按钮添加 <code>disabled</code> 属性即可禁用按钮，此时按钮不会响应用户的点击。</p>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		hljs.initHighlightingOnLoad();
+    </script>
+</body>
+</html>
