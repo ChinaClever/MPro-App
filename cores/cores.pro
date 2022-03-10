@@ -11,7 +11,6 @@ include(logs/logs.pri)
 include(apps/apps.pri)
 include(ipcs/ipcs.pri)
 include(common/common.pri)
-include(outputs/outputs.pri)
 include(settings/settings.pri)
 
 SOURCES += \
