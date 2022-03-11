@@ -75,14 +75,6 @@ bool Modbus_Object::isConnectedModbus()
     return ret;
 }
 
-void Modbus_Object::mdelay(int msec)
-{
-    QTime t = QTime::currentTime().addMSecs(msec);
-    while (QTime::currentTime() < t) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-    }
-}
-
 bool Modbus_Object::waitForState(int state)
 {
     bool ret = false;

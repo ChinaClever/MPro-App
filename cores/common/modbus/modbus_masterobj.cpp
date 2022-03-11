@@ -70,24 +70,24 @@ int Modbus_MasterObj::writeModbus(int addr, const QModbusDataUnit &unit)
     return ret;
 }
 
-int Modbus_MasterObj::writeModbus(int addr, QModbusDataUnit::RegisterType table, int start, const QVector<quint16> &data)
+int Modbus_MasterObj::writeModbus(int addr, QModbusDataUnit::RegisterType table, int start, const vshort &data)
 {
     QModbusDataUnit dataunit(table, start, data);
     return writeModbus(addr, dataunit);
 }
 
-int Modbus_MasterObj::writeModbus(int addr, int start, const QVector<quint16> &data)
+int Modbus_MasterObj::writeModbus(int addr, int start, const vshort &data)
 {
     return writeModbus(addr, m_type, start, data);
 }
 
 
-int Modbus_MasterObj::writeHoldingRegisters(int addr, int start, const QVector<quint16> &data)
+int Modbus_MasterObj::writeHoldingRegisters(int addr, int start, const vshort &data)
 {
     return writeModbus(addr, start, data);
 }
 
-int Modbus_MasterObj::writeCoils(int addr, int start, const QVector<quint16> &data)
+int Modbus_MasterObj::writeCoils(int addr, int start, const vshort &data)
 {
     QModbusDataUnit dataunit(QModbusDataUnit::Coils, start, data);
     return writeModbus(addr, dataunit);

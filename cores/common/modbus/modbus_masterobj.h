@@ -9,8 +9,8 @@ class Modbus_MasterObj : public Modbus_Object
 public:
     explicit Modbus_MasterObj(QObject *parent = nullptr);
 
-    int writeCoils(int addr, int start, const QVector<quint16> &data);
-    int writeHoldingRegisters(int addr, int start, const QVector<quint16> &data);
+    int writeCoils(int addr, int start, const vshort &data);
+    int writeHoldingRegisters(int addr, int start, const vshort &data);
 
     QVector<quint16> readCoils(int addr, int start, int num);
     QVector<quint16> readHoldingRegisters(int addr, int start, int num);
@@ -22,9 +22,9 @@ protected:
 private:
     void writeRequest(const QModbusDataUnit &dataunit, int serverAddress);
     int writeModbus(int addr, const QModbusDataUnit &unit);
-    int writeModbus(int addr, int start, const QVector<quint16> &data);
+    int writeModbus(int addr, int start, const vshort &data);
     int writeModbus(int addr, QModbusDataUnit::RegisterType table,
-                    int start, const QVector<quint16> &data);
+                    int start, const vshort &data);
 
     QVector<quint16> readModbus(int addr, int start, int num);
     QVector<quint16> readModbus(int addr, const QModbusDataUnit &unit);

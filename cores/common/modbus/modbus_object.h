@@ -14,6 +14,7 @@ struct sModbusSetting {
     int responseTime = 1000;
     int numberOfRetries = 3;
 };
+typedef QVector<ushort> vshort;
 
 class Modbus_Object : public QObject
 {
@@ -30,7 +31,6 @@ protected:
     virtual QModbusDevice *modbusDevice() = 0;
     void initModbusNet(const QString &address, int port);
     void initModbusSerial(const QString &portName, qint32 baudRate);
-    void mdelay(int msec);
 
     bool connectDevice();
     bool waitForState(int state);

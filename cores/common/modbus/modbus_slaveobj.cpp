@@ -53,7 +53,9 @@ void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int addr
 
 bool Modbus_SlaveObj::setData(const QModbusDataUnit &unit)
 {
-    return mDev->setData(unit);
+    bool ret = isConnectedModbus();
+    if(ret) ret = mDev->setData(unit);
+    return ret;
 }
 
 bool Modbus_SlaveObj::setData(QModbusDataUnit::RegisterType table, quint16 address, quint16 data)
@@ -61,18 +63,18 @@ bool Modbus_SlaveObj::setData(QModbusDataUnit::RegisterType table, quint16 addre
     return mDev->setData(table, address, data);
 }
 
-bool Modbus_SlaveObj::setData(quint16 address, const QVector<quint16> &values)
+bool Modbus_SlaveObj::setData(quint16 address, const vshort &values)
 {
     QModbusDataUnit unit(m_type, address, values);
     return setData(unit);
 }
 
-bool Modbus_SlaveObj::setHoldingRegisters(quint16 address, const QVector<quint16> &values)
+bool Modbus_SlaveObj::setHoldingRegisters(quint16 address, const vshort &values)
 {
     return setData(address, values);
 }
 
-bool Modbus_SlaveObj::setCoils(quint16 address, const QVector<quint16> &values)
+bool Modbus_SlaveObj::setCoils(quint16 address, const vshort &values)
 {
     QModbusDataUnit unit(QModbusDataUnit::Coils, address, values);
     return setData(unit);

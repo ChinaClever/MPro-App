@@ -8,14 +8,20 @@ class Modbus_SlaveObj : public Modbus_Object
     Q_OBJECT
 public:
     explicit Modbus_SlaveObj(QObject *parent = nullptr);
-
     void setAddress(int addr) {mDev->setServerAddress(addr);}
-    bool setCoils(quint16 address, const QVector<quint16> &values);
-    bool setHoldingRegisters(quint16 address, const QVector<quint16> &values);
+
+    bool setCoil(quint16 reg, ushort v){return setCoils(reg, vshort(v));}
+    bool setCoils(quint16 address, const vshort &values);
+
+    bool setHoldingRegister(quint16 reg, ushort v) {return setHoldingRegisters(reg, vshort(v));}
+    bool setHoldingRegisters(quint16 address, const vshort &values);
+
+    bool setRegister(ushort reg, ushort v) {return setHoldingRegister(reg, v);}
+    bool setRegisters(ushort reg, const vshort &v) {return setHoldingRegisters(reg, v);}
 
 signals:
     //void registerDataSig(int address,int value);
-    void rcvDataSig(int address, QVector<quint16> values);
+    void rcvDataSig(int address, vshort values);
 
 protected slots:
     void recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size);
@@ -27,7 +33,7 @@ protected:
 
 private:
     bool setData(const QModbusDataUnit &unit);
-    bool setData(quint16 address, const QVector<quint16> &values);
+    bool setData(quint16 address, const vshort &values);
     bool setData(QModbusDataUnit::RegisterType table, quint16 address, quint16 data);
 
 protected:

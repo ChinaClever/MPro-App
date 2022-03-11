@@ -13,7 +13,7 @@ bool OP_Updater::ota_update(int addr, const QByteArray &array)
         for(int i=0; i<array.size();i+=data.size()) {
             data = array.mid(i, max);
             ret = sendPacket(addr, data);
-            if(ret) mdelay(100); else break;
+            if(ret) mdelay(20); else break;
         } isOta = false;
     }
 
@@ -28,7 +28,7 @@ bool OP_Updater::ota_update(int addr, const QString &fn)
         while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data);
-            if(ret) mdelay(100); else break;
+            if(ret) mdelay(20); else break;
         } file.close(); isOta = false;
     }
 
