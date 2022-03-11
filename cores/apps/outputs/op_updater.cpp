@@ -12,9 +12,24 @@ bool OP_Updater::ota_update(int addr, const QByteArray &array)
         QByteArray data; int max = 1024;
         for(int i=0; i<array.size();i+=data.size()) {
             data = array.mid(i, max);
-            ret =sendPacket(addr, data);
+            ret = sendPacket(addr, data);
             if(ret) mdelay(100); else break;
-        }
+        } isOta = false;
+    }
+
+    return ret;
+}
+
+bool OP_Updater::ota_update(int addr, const QString &fn)
+{
+    QFile file(fn);  bool ret = false; int max = 1024;
+    if(file.exists() && file.open(QIODevice::ReadOnly)) {
+        ret = initOta(addr);
+        while (!file.atEnd() && ret) {
+            QByteArray data = file.read(max);
+            ret = sendPacket(addr, data);
+            if(ret) mdelay(100); else break;
+        } file.close(); isOta = false;
     }
 
     return ret;

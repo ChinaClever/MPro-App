@@ -9,7 +9,7 @@ class OP_ZRtu : public OP_ZCtrl
     explicit OP_ZRtu(QObject *parent = nullptr);
 public:
     static OP_ZRtu *bulid(QObject *parent = nullptr);
-    bool readData(int addr, sOpIt &it);
+    bool readData(int addr, sOpIt &it) override;
 
 private:
     bool sendReadCmd(int addr, sOpIt &it);

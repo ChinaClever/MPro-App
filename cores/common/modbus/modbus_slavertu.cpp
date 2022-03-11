@@ -12,9 +12,9 @@ bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud)
     return connectDevice();
 }
 
-bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud, int addr, quint16 size)
+bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud, int addr)
 {
-    bool ret = initUnitMap(size);
+    bool ret = initUnitMap();
     if(ret) setAddress(addr);
     if(ret) ret = connectModbus(name, baud);
     return ret;

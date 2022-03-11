@@ -12,9 +12,9 @@ public:
 
 private:
     void writeCtrlCmd(uchar *cmd, int k);
-    void funSwitch(uchar *on, uchar *off);
-    void funClearEle(uchar *buf);
-    void funDelay(uchar *buf);
+    void funSwitch(uchar *on, uchar *off) override;
+    void funClearEle(uchar *buf) override;
+    void funDelay(uchar *buf) override;
 };
 
 #endif // OP_ZCTRL_H

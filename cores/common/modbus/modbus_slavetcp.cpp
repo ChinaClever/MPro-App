@@ -13,9 +13,9 @@ bool Modbus_SlaveTcp::connectModbus(const QString &url, int port)
     return connectDevice();
 }
 
-bool Modbus_SlaveTcp::connectModbus(quint16 size, int port, const QString &url)
+bool Modbus_SlaveTcp::connectModbus(int port, const QString &url)
 {
     setAddress(1);
-    initUnitMap(size);
+    initUnitMap();
     return connectModbus(url, port);
 }

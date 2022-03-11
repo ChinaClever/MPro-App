@@ -13,26 +13,27 @@ public:
     void relayCtrl(int id, int on);
     void setDelay(int id, uchar sec);
 
-protected:
-    virtual void openAllSwitch();
-    virtual void closeAllSwitch();
-
-    virtual void openSwitch(int id);
-    virtual void closeSwitch(int id);
-
-    virtual void closeOtherSwitch(int id);
-    virtual void openOnlySwitch(int id);
-
-    virtual void clearAllEle();
-    virtual void setClearEle(int id);
-
-    virtual void setAllDelay(uchar sec);
-    virtual void setOutputDelay(int id, uchar sec);
-    virtual void setBitControl(int id, uchar *buf);
-
+protected:    
     virtual void funDelay(uchar *buf)=0;
     virtual void funClearEle(uchar *buf)=0;
     virtual void funSwitch(uchar *on, uchar *off)=0;
+
+private:
+    void openAllSwitch();
+    void closeAllSwitch();
+
+    void openSwitch(int id);
+    void closeSwitch(int id);
+
+    void closeOtherSwitch(int id);
+    void openOnlySwitch(int id);
+
+    void clearAllEle();
+    void setClearEle(int id);
+
+    void setAllDelay(uchar sec);
+    void setOutputDelay(int id, uchar sec);
+    void setBitControl(int id, uchar *buf);
 };
 
 #endif // OP_OBJCTRL_H

@@ -8,7 +8,7 @@ class Modbus_SlaveRtu : public Modbus_SlaveObj
     Q_OBJECT
 public:
     explicit Modbus_SlaveRtu(QObject *parent = nullptr);
-    bool connectModbus(const QString &name, int baud, int addr, quint16 size);
+    bool connectModbus(const QString &name, int baud, int addr);
 protected:
     bool connectModbus(const QString &name, int baud);
 };

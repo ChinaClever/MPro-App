@@ -12,13 +12,16 @@ void Modbus_SlaveObj::initConnects()
     connect(mDev, &QModbusServer::errorOccurred, this, &Modbus_SlaveObj::handleDeviceError);
 }
 
-bool Modbus_SlaveObj::initUnitMap(quint16 size)
+bool Modbus_SlaveObj::initUnitMap()
 {
     QModbusDataUnitMap reg;
-    reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 0, size});
-    reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, size });
-    reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, size });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, size });
+    reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 2000, 800});
+    //reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, size });
+    //reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 3000, size });
+    reg.insert(m_type, { m_type, 0, 1999 });
+    reg.insert(m_type, { m_type, 3000, 150 });
+    reg.insert(m_type, { m_type, 4000, 100 });
+
     bool ret = mDev->setMap(reg);
     if(!ret) throwError("Error: ModbusDataUnitMap");
     return ret;
@@ -61,5 +64,16 @@ bool Modbus_SlaveObj::setData(QModbusDataUnit::RegisterType table, quint16 addre
 bool Modbus_SlaveObj::setData(quint16 address, const QVector<quint16> &values)
 {
     QModbusDataUnit unit(m_type, address, values);
+    return setData(unit);
+}
+
+bool Modbus_SlaveObj::setHoldingRegisters(quint16 address, const QVector<quint16> &values)
+{
+    return setData(address, values);
+}
+
+bool Modbus_SlaveObj::setCoils(quint16 address, const QVector<quint16> &values)
+{
+    QModbusDataUnit unit(QModbusDataUnit::Coils, address, values);
     return setData(unit);
 }

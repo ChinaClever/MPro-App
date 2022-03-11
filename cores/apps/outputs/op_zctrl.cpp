@@ -23,7 +23,7 @@ void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
 
 void OP_ZCtrl::funSwitch(uchar *on, uchar *off)
 {
-    int k = 5, all = 0; // mItem->addr
+    int k = 5, all = 1; // mItem->addr
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x00, 0xA2, 0xB2};
 
     for(int i=0; i<6; i++)  cmd[k++] = on[i];  //打开有效位
@@ -33,7 +33,7 @@ void OP_ZCtrl::funSwitch(uchar *on, uchar *off)
     for(int i=0; i<3; i++)  cmd[k++] = 0xC7 + i;
     for(int i=0; i<3; i++)  cmd[k++] = 0xD7 + i;
     for(int i=0; i<39; i++)  cmd[k++] = 0x00;
-    for(int i=0; i<6; ++i) if((on[i] == 0xFF) || (off[i] == 0xFF)) all = 1;
+    for(int i=0; i<6; ++i) if((on[i] != 0xFF) || (off[i] != 0xFF)) all = 0;
     cmd[k++] = all; // 统一开关为1
     writeCtrlCmd(cmd, k);
 }

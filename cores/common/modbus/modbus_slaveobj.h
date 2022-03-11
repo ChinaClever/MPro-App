@@ -9,14 +9,12 @@ class Modbus_SlaveObj : public Modbus_Object
 public:
     explicit Modbus_SlaveObj(QObject *parent = nullptr);
 
-    bool initUnitMap(quint16 size);
-    bool setData(const QModbusDataUnit &unit);
     void setAddress(int addr) {mDev->setServerAddress(addr);}
-    bool setData(quint16 address, const QVector<quint16> &values);
-    bool setData(QModbusDataUnit::RegisterType table, quint16 address, quint16 data);
+    bool setCoils(quint16 address, const QVector<quint16> &values);
+    bool setHoldingRegisters(quint16 address, const QVector<quint16> &values);
 
 signals:
-    void registerDataSig(int address,int value);
+    //void registerDataSig(int address,int value);
     void rcvDataSig(int address, QVector<quint16> values);
 
 protected slots:
@@ -24,7 +22,13 @@ protected slots:
 
 protected:
     void initConnects();
+    bool initUnitMap();
     QModbusDevice *modbusDevice() override {return mDev;}
+
+private:
+    bool setData(const QModbusDataUnit &unit);
+    bool setData(quint16 address, const QVector<quint16> &values);
+    bool setData(QModbusDataUnit::RegisterType table, quint16 address, quint16 data);
 
 protected:
     QModbusServer* mDev;

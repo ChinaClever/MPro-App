@@ -8,6 +8,7 @@ class OP_Updater : public OP_Object
     Q_OBJECT
 public:
     explicit OP_Updater(QObject *parent = nullptr);
+    bool ota_update(int addr, const QString &fn);
     bool ota_update(int addr, const QByteArray &array);
 
 signals:

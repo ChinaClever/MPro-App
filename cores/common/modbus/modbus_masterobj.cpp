@@ -32,6 +32,17 @@ QVector<quint16> Modbus_MasterObj::readModbus(int addr, int start, int num)
     return readModbus(addr, m_type, start, num);
 }
 
+QVector<quint16> Modbus_MasterObj::readHoldingRegisters(int addr, int start, int num)
+{
+    return readModbus(addr, start, num);
+}
+
+QVector<quint16> Modbus_MasterObj::readCoils(int addr, int start, int num)
+{
+    QModbusDataUnit unit(QModbusDataUnit::Coils, start, num);
+    return readModbus(addr, unit);
+}
+
 void Modbus_MasterObj::writeRequest(const QModbusDataUnit &dataunit, int serverAddress)
 {
     if(auto *reply = mModbus->sendWriteRequest(dataunit,  serverAddress)) {
@@ -68,4 +79,16 @@ int Modbus_MasterObj::writeModbus(int addr, QModbusDataUnit::RegisterType table,
 int Modbus_MasterObj::writeModbus(int addr, int start, const QVector<quint16> &data)
 {
     return writeModbus(addr, m_type, start, data);
+}
+
+
+int Modbus_MasterObj::writeHoldingRegisters(int addr, int start, const QVector<quint16> &data)
+{
+    return writeModbus(addr, start, data);
+}
+
+int Modbus_MasterObj::writeCoils(int addr, int start, const QVector<quint16> &data)
+{
+    QModbusDataUnit dataunit(QModbusDataUnit::Coils, start, data);
+    return writeModbus(addr, dataunit);
 }

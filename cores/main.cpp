@@ -32,21 +32,20 @@ void modbus_master()
     tcp->connectModbus("192.168.31.52", 502);
 
     QVector<quint16> rcv{9,8,7,6,5};
-    qDebug() <<  tcp->writeModbus(1, QModbusDataUnit::HoldingRegisters, 0, rcv);
+    qDebug() <<  tcp->writeHoldingRegisters(1, 0, rcv);
 
-    QVector<quint16> data =  tcp->readModbus(1, 0, 5);
+    QVector<quint16> data =  tcp->readHoldingRegisters(1, 0, 5);
     qDebug() << "recv" << data;
 }
 
 void modbus_slave()
 {
     Modbus_SlaveTcp *tcp = new Modbus_SlaveTcp();
-    qDebug() << tcp->connectModbus(1024, 1502, "192.168.31.14");
-    tcp->setData(QModbusDataUnit::HoldingRegisters, 0, 10);
+    qDebug() << tcp->connectModbus( 1502, "192.168.31.14");
+    //tcp->setData(QModbusDataUnit::HoldingRegisters, 0, 10);
 
     QVector<quint16> data{9,8,7,6,5};
-    QModbusDataUnit dataunit(QModbusDataUnit::HoldingRegisters, 1, data);
-    tcp->setData(dataunit);
+    tcp->setHoldingRegisters(1, data);
 }
 
 bool snmp_callback(uint id, const QString &oid, const QVariant &v)
