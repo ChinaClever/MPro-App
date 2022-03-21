@@ -3,7 +3,9 @@
 Net_TcpClient::Net_TcpClient(QObject *parent)
     : QObject{parent} , tcpSocket(new QTcpSocket(this))
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(tcpSocket, &QAbstractSocket::errorOccurred, this, &Net_TcpClient::displayError);
+#endif
 }
 
 bool Net_TcpClient::connectToHost(const QHostAddress &address, quint16 port)
