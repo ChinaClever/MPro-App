@@ -62,9 +62,9 @@ void ipc_demo(QObject *p)
     qDebug() << "LSocket Client B" << clientSocket->transLsc("456");
     qDebug() << "LSocket Monitor C" << LSocket_Monitor::bulid(p)->onLines();
 
-    demo->dataPacket()->lzy = 99;
+//    demo->dataPacket()->lzy = 99;
 
     SM_Obj readSm;
     sDataPacket *rsp = (sDataPacket *) readSm.sharedMemory();
-    qDebug() << "IPC Shared Memory" << rsp->lzy;
+//    qDebug() << "IPC Shared Memory" << rsp->lzy;
 }

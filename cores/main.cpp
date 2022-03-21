@@ -5,6 +5,8 @@
 #include "ssdp_server.h"
 #include "snmp/snmpagent.h"
 #include "dtls_sender.h"
+#include "cascade_slave.h"
+#include "http/http.h"
 
 void log_demo()
 {
@@ -96,6 +98,19 @@ void dtls_demo()
     qDebug() << ser->waitForFinish();
 }
 
+void http_demo()
+{
+    // https://github.com/flaviotordini/http
+//    auto reply = Http::instance().post("https://google.com/", "LZY", "application/json");
+//    connect(reply, &HttpReply::finished, this, [](auto &reply) {
+//        if (reply.isSuccessful()) {
+//            qDebug() << "Feel the bytes!" << reply.body();
+//        } else {
+//            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
+//        }
+//    });
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -106,6 +121,48 @@ int main(int argc, char *argv[])
     // ssdp_demo();
     // dtls_demo();
     // snmp_agent();
+    // Cascade_Core::bulid();
+
+
+
+    //     new c_sDevData;
+    //    Cascade_Object obj;
+    //    c_sDevData *data = obj.getDev();
+    ////     = data;
+
+
+    //    memset(data, 0, sizeof(c_sDevData));
+    //    data->id = 10;
+
+    //    data->lineSize = 2;
+    //    strcpy(data->info.devName, "luozhiyong");
+    //    strcpy(data->line[0].name, "1111");
+    //    strcpy(data->line[1].name, "22222");
+
+    //    QByteArray b = obj.toDataStream();
+    //    memset(data, 0, sizeof(c_sDevData));
+
+    //    c_sDevData *rcv = obj.deDataStream(b);
+    //    qDebug() << rcv->id <<  rcv->info.devName <<  rcv->lineSize<<  rcv->line[1].name;
+
+
+    //    c_sDevData data;
+
+    //
+
+    //    Cascade_DataStream s(&data);
+    //    QByteArray b;
+    //    QDataStream in(&b, QIODevice::WriteOnly);
+    //    in << s;
+
+    //    c_sDevData gdata;
+    //    Cascade_DataStream g(&gdata);
+    //    QDataStream out(&b, QIODevice::ReadOnly );
+    //    out >> g;
+    //
+
+
+
 
 
     return a.exec();
