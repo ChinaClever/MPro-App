@@ -29,28 +29,28 @@ void cm::mdelay(int msec)
 #endif
 }
 
-//ushort cm::CRC16(uchar *ptr, int len) // AUG-CCITT
-//{
-//    ushort crc = INITIAL_CRC_CC3;
-//    while (len-- > 0)
-//    {
-//        crc = crc ^ ((uint16_t) (*ptr++ << 8));  // --len;
-//        for (int i = 0; i < 8; i++) {
-//            if (crc & 0x8000) {
-//                crc = (crc << 1) ^ CRC_CCITT_POLY;
-//            } else {
-//                crc = crc << 1;
-//            }
-//        }
-//    }
+ushort cm::CRC16(uchar *ptr, int len) // AUG-CCITT
+{
+    ushort crc = INITIAL_CRC_CC3;
+    while (len-- > 0)
+    {
+        crc = crc ^ ((uint16_t) (*ptr++ << 8));  // --len;
+        for (int i = 0; i < 8; i++) {
+            if (crc & 0x8000) {
+                crc = (crc << 1) ^ CRC_CCITT_POLY;
+            } else {
+                crc = crc << 1;
+            }
+        }
+    }
 
-//    return crc;
-//}
+    return crc;
+}
 
-//ushort cm::CRC16(const QByteArray &array)
-//{
-//    return CRC16((uchar *)array.data(), array.size());
-//}
+ushort cm::CRC16(const QByteArray &array)
+{
+    return CRC16((uchar *)array.data(), array.size());
+}
 
 static ushort calccrc(ushort crc, uchar crcbuf)
 {
