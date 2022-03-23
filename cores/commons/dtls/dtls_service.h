@@ -12,7 +12,7 @@ public:
     Dtls_Service(QObject *parent = nullptr);
     ~Dtls_Service();
 
-    bool listen(const QHostAddress &address = QHostAddress::AnyIPv4, quint16 port = 15601);
+    bool listen(const QHostAddress &address = QHostAddress::Any, quint16 port = 15601);
     bool isListening() const;
     void close();
 

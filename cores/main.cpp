@@ -31,7 +31,7 @@ void log_demo()
 void modbus_master()
 {
     Modbus_MasterTcp *tcp = new Modbus_MasterTcp();
-    tcp->connectModbus("192.168.31.52", 502);
+    tcp->connectModbus("192.168.31.52", 1502);
 
     QVector<quint16> rcv{9,8,7,6,5};
     qDebug() <<  tcp->writeHoldingRegisters(1, 0, rcv);
@@ -43,7 +43,7 @@ void modbus_master()
 void modbus_slave()
 {
     Modbus_SlaveTcp *tcp = new Modbus_SlaveTcp();
-    qDebug() << tcp->connectTcp( 1502, "192.168.31.14");
+    qDebug() << tcp->connectTcp(1502);
     //tcp->setData(QModbusDataUnit::HoldingRegisters, 0, 10);
 
     QVector<quint16> data{9,8,7,6,5};
