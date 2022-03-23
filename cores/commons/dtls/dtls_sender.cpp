@@ -10,9 +10,10 @@ Dtls_Sender::Dtls_Sender(QObject *parent)
 
 bool Dtls_Sender::writeData(Dtls_Association *dtls)
 {
-    QByteArray array;
+    QByteArray array; int max = 999;
     QString name = dtls->getName();
-    bool ret = false; int max = 999;
+    bool ret = dtls->writeData(mHead);
+    if(!ret) qDebug() << "Error: Dtls write head";
     for(int i=0; i<mArray.size();i+=array.size()) {
         array = mArray.mid(i, max);
         ret = dtls->writeData(array);
@@ -37,7 +38,7 @@ bool Dtls_Sender::workDown(const QString &host)
         if(ret) emit subProgress(host, 100);
         else emit infoMessage(ret, tr("%1 Dtls 数据发送失败").arg(host));
     } else emit infoMessage(ret, tr("%1 Dtls 连接失败").arg(host));
-    delete mDtls; cm::mdelay(5);
+    delete mDtls; if(ret) cm::mdelay(1); else cm::mdelay(30);
     return ret;
 }
 
@@ -46,17 +47,31 @@ void Dtls_Sender::run()
     for(int i=0; i<mHosts.size(); ++i) {
         bool ret = workDown(mHosts.at(i));
         if(!ret) ret = workDown(mHosts.at(i));
-        emit finishSig(ret, mHosts.at(i));
+        emit finishSig(mHosts.at(i), ret);
         int v = ((i+1)*100.0)/mHosts.size();
         emit progress(v);
     }
 }
 
-void Dtls_Sender::send(const QStringList &ips, const QByteArray &array)
+bool Dtls_Sender::send(const QStringList &ips, const QByteArray &array)
 {
     mHosts = ips;
     mArray = array;
     mThread->onceRun();
+    return true;
+}
+
+bool Dtls_Sender::sendFile(const QStringList &ips, const QString &fn, const sFileTrans &it)
+{
+    bool ret = false;
+    if(File::CheckMd5(fn)) {
+        QByteArray array; QDataStream in(&array, QIODevice::WriteOnly); QFile file(fn);
+        in << it.fc << it.recvPath << it.file << it.md5 << END_CRC; mHead = array;
+        if(file.exists() && file.open(QIODevice::ReadOnly)) {
+            ret = send(ips, file.readAll());
+        }
+    } else qDebug() << "Error: Dtls Sender Md5";
+    return ret;
 }
 
 void Dtls_Sender::startNewConnection(const QString &address)

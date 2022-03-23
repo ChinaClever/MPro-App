@@ -86,16 +86,16 @@ void ssdp_demo()
 
 void dtls_demo()
 {
-    Dtls_Recver *ser = new Dtls_Recver;
-    ser->setFile("lzy.txt");
+    Dtls_Recver *ser = Dtls_Recver::bulid();
+//    ser->setFile("lzy.txt");
 
     QStringList ips {"127.0.0.1"};
     QByteArray array{"012345678901234567890123456789"};
 
     Dtls_Sender *c = new Dtls_Sender;
-    c->send(ips, array);
+//    c->send(ips, array);
 
-    qDebug() << ser->waitForFinish();
+//    qDebug() << ser->waitForFinish();
 }
 
 void http_demo()

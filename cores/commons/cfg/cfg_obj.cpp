@@ -97,25 +97,3 @@ QVariant Cfg_Obj::readCfg(const QString &key, const QVariant &v, const QString& 
 
     return ret;
 }
-
-QString Cfg_Obj::fileMd5(const QString &fn)
-{
-    QFile sourceFile(fn);
-    qint64 fileSize = sourceFile.size();
-    const qint64 bufferSize = 1024;
-
-    if (sourceFile.open(QIODevice::ReadOnly)) {
-        char buffer[bufferSize]; int bytesRead;
-        int readSize = qMin(fileSize, bufferSize);
-        QCryptographicHash hash(QCryptographicHash::Md5);
-        while (readSize > 0 && (bytesRead = sourceFile.read(buffer, readSize)) > 0) {
-            fileSize -= bytesRead;
-            hash.addData(buffer, bytesRead);
-            readSize = qMin(fileSize, bufferSize);
-        }
-        sourceFile.close();
-        return QString(hash.result().toHex());
-    }
-
-    return QString();
-}

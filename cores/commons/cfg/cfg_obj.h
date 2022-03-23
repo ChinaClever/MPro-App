@@ -1,6 +1,6 @@
 #ifndef CFG_OBJ_H
 #define CFG_OBJ_H
-#include <QtCore>
+#include "file.h"
 
 class Cfg_Obj
 {
@@ -8,7 +8,6 @@ class Cfg_Obj
 public:
     static Cfg_Obj* bulid(const QString& fn, QObject *parent = nullptr);
     static QString pathOfCfg(const QString& name);
-    static QString fileMd5(const QString &fn);
 
     void writeCfg(const QMap<QString,QVariant> &map, const QString &g="Cfg");
     void writeCfg(const QString &key, const QVariant& v, const QString &g="Cfg");
