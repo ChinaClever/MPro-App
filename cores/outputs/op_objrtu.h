@@ -9,6 +9,7 @@ class OP_ObjRtu : public OP_Updater
 public:
     explicit OP_ObjRtu(QObject *parent = nullptr);
     virtual bool readData(int addr)=0;
+    uint readSn(uchar addr);
 
 protected:
     uchar *toInt(uchar *ptr, int line, uint *value);

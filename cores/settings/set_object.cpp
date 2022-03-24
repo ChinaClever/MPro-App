@@ -26,6 +26,7 @@ bool Set_Object::saveSettings()
         mFile->write(array);
     }
 
+
     mFile->close();
     isRun = false;
     return ret;

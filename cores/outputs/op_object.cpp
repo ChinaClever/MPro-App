@@ -7,6 +7,7 @@ OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
     mDev = cm::masterDev();
 }
 
+
 void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev;

@@ -62,8 +62,8 @@ bool Dtls_Recver::initFile(const QByteArray &array)
     QByteArray rcv(array);
     bool ret = false; sFileTrans *it = &mIt;
     QDataStream out(&rcv, QIODevice::ReadOnly);
-    out >> it->fc >> it->recvPath >> it->file >> it->md5 >> it->crc;
-    if(it->crc == END_CRC) ret = setFile(it->recvPath + it->file);
+    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->crc;
+    if(it->crc == END_CRC) ret = setFile(it->path + it->file);
     else qDebug() << "Error: Dtls recver head" << it->file << it->md5 << it->crc;
     return ret;
 }

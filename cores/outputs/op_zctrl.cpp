@@ -11,7 +11,7 @@ void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
     for(int i=0; i<3; ++i) cmd[k++] = dev->info.ops[i];  // 三块执行板各个输出位个数
 
     cmd[k++] = 0x44;
-    cmd[k] = cm::xorNum(cmd,sizeof(cmd)-1);
+    cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
     if(!isOta) {
         waitForLock();
         writeSerial(cmd, sizeof(cmd));

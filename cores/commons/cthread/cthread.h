@@ -1,7 +1,7 @@
 #ifndef CTHREAD_H
 #define CTHREAD_H
 #include <QThread>
-#include <QtCore>
+#include "crc.h"
 
 class CThread : public QObject
 {

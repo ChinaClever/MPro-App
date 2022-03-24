@@ -25,7 +25,7 @@ private:
     bool workDown(const QString &host);
     bool writeData(Dtls_Association *dtls);
     void startNewConnection(const QString &address);
-    bool send(const QStringList &ips, const QByteArray &array);
+    bool send(const QStringList &ips, const QByteArray &head, const QByteArray &array);
 
 private:
     CThread *mThread;

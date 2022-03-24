@@ -5,17 +5,6 @@
 namespace cm {
 void mdelay(int msec=1);
 
-uchar xorNum(uchar *buf, int len);
-uchar xorNum(const QByteArray &array);
-void appendXorNum(QByteArray &array);
-
-ushort CRC16(uchar *ptr, int len);
-ushort CRC16(const QByteArray &array);
-
-//ushort calccrc(ushort crc, uchar crcbuf);
-ushort rtu_crc(uchar *buf, int len);
-ushort rtu_crc(const QByteArray &array);
-
 bool isDigitStr(const QString &src);
 bool isIPaddress(const QString& ip);
 

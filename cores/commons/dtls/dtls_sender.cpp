@@ -53,9 +53,10 @@ void Dtls_Sender::run()
     }
 }
 
-bool Dtls_Sender::send(const QStringList &ips, const QByteArray &array)
+bool Dtls_Sender::send(const QStringList &ips, const QByteArray &head, const QByteArray &array)
 {
     mHosts = ips;
+    mHead = head;
     mArray = array;
     mThread->onceRun();
     return true;
@@ -65,10 +66,10 @@ bool Dtls_Sender::sendFile(const QStringList &ips, const QString &fn, const sFil
 {
     bool ret = false;
     if(File::CheckMd5(fn)) {
-        QByteArray array; QDataStream in(&array, QIODevice::WriteOnly); QFile file(fn);
-        in << it.fc << it.recvPath << it.file << it.md5 << END_CRC; mHead = array;
+        QByteArray head; QDataStream in(&head, QIODevice::WriteOnly); QFile file(fn);
+        in << it.fc << it.dev << it.path << it.file << it.md5 << END_CRC;
         if(file.exists() && file.open(QIODevice::ReadOnly)) {
-            ret = send(ips, file.readAll());
+            ret = send(ips, head, file.readAll());
         }
     } else qDebug() << "Error: Dtls Sender Md5";
     return ret;

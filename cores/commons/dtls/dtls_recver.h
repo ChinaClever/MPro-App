@@ -12,7 +12,7 @@ class Dtls_Recver : public QObject
     explicit Dtls_Recver(QObject *parent = nullptr);
 public:
     static Dtls_Recver *bulid(QObject *parent = nullptr);
-    void setPath(const QString &path) {mIt.recvPath=path;}
+    void setPath(const QString &path) {mIt.path=path;}
     bool waitForFinish();
 
 signals:

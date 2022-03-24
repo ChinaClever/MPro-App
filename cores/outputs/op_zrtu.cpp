@@ -66,10 +66,10 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     bool res = false; int k = 6; waitForLock();
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
-    cmd[k++] = 0x44; cmd[k] = cm::xorNum(cmd,sizeof(cmd)-1);
+    cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
 
     QByteArray recv = transmit(cmd, sizeof(cmd));
-    if((recv.size() == 127) && (recv.at(2) == addr)) {
+    if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
     } else {
         qDebug() << "Error: OP_ZRtu send cmd err!" << recv.toHex();
@@ -89,7 +89,7 @@ bool OP_ZRtu::readData(int addr)
 void OP_ZRtu::run()
 {
     for(int i=0; mDev->info.opNum; ++i) {
-        readData(i+1);
+        ota_updates(); readData(i+1);
         mThread->msleep(240);
     } mThread->msleep(300);
 }

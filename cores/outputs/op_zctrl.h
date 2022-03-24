@@ -8,7 +8,7 @@ class OP_ZCtrl : public OP_ObjCtrl
     Q_OBJECT
 public:
     explicit OP_ZCtrl(QObject *parent = nullptr);
-    enum {zCmdLen=68};
+    enum {zCmdLen=68, zRcvLen=127};
 
 private:
     void writeCtrlCmd(uchar *cmd, int k);

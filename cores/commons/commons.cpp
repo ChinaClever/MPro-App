@@ -1,8 +1,6 @@
 #include "commons.h"
 #include "sm_obj.h"
 
-#define INITIAL_CRC_CC3 0x1D0F
-#define CRC_CCITT_POLY 0x1021
 
 void cm::mdelay(int msec)
 {
@@ -27,80 +25,6 @@ void cm::mdelay(int msec)
     }
 #endif
 #endif
-}
-
-ushort cm::CRC16(uchar *ptr, int len) // AUG-CCITT
-{
-    ushort crc = INITIAL_CRC_CC3;
-    while (len-- > 0)
-    {
-        crc = crc ^ ((uint16_t) (*ptr++ << 8));  // --len;
-        for (int i = 0; i < 8; i++) {
-            if (crc & 0x8000) {
-                crc = (crc << 1) ^ CRC_CCITT_POLY;
-            } else {
-                crc = crc << 1;
-            }
-        }
-    }
-
-    return crc;
-}
-
-ushort cm::CRC16(const QByteArray &array)
-{
-    return CRC16((uchar *)array.data(), array.size());
-}
-
-static ushort calccrc(ushort crc, uchar crcbuf)
-{
-    uchar x, kkk=0;
-    crc = crc^crcbuf;
-    for(x=0;x<8;x++)
-    {
-        kkk = crc&1;
-        crc >>= 1;
-        crc &= 0x7FFF;
-        if(kkk == 1)
-            crc = crc^0xa001;
-        crc=crc&0xffff;
-    }
-    return crc;
-}
-
-ushort cm::rtu_crc(uchar *buf, int len)
-{
-    ushort crc = 0xffff;
-    for(int i=0; i<len; i++)
-        crc = calccrc(crc, buf[i]);
-    return crc;
-}
-
-ushort cm::rtu_crc(const QByteArray &array)
-{
-    return rtu_crc((uchar *)array.data(), array.size());
-}
-
-uchar cm::xorNum(uchar *buf, int len)
-{
-    uchar xorsum = 0x00;
-    for(int i=0; i<len; i++)
-        xorsum ^= buf[i];
-    return xorsum;
-}
-
-uchar cm::xorNum(const QByteArray &array)
-{
-    uchar xorsum = 0x00;
-    foreach(auto &it, array)
-        xorsum ^= it;
-    return xorsum;
-}
-
-void cm::appendXorNum(QByteArray &array)
-{
-    uchar xorsum = xorNum(array);
-    array.append(xorsum);
 }
 
 /***
