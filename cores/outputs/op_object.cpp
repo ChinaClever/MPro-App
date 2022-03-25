@@ -27,7 +27,7 @@ void OP_Object::fillData(uchar addr)
         dev->output.relay.sw[k+i] = it->sw[i];
     }
 
-    dev->info.hz[addr] = it->hz;
+    dev->info.hzs[addr] = it->hz;
     dev->info.ops[addr] = it->size;
     dev->info.opVers[addr] = it->version;
     dev->info.chipStates[addr] = it->chipStatus;

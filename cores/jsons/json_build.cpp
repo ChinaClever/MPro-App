@@ -71,7 +71,7 @@ void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJs
 void Json_Build::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
     if(!it.size) return;
-    QJsonObject obj; int r = 1;
+    QJsonObject obj; double r = 1;
     obj.insert("state", it.sw[id]/r);
     obj.insert("mode", it.mode[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
@@ -154,14 +154,14 @@ void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &js
 
 void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj;
-    obj.insert("phases", it.phases);
-    obj.insert("version", it.version);
+    QJsonObject obj; double r = 1;
+    obj.insert("phases", it.phases/r);
+    obj.insert("version", it.version/r);
     obj.insert("dev_name", it.devName);
 
-    obj.insert("slave_num", it.slaveNum);
     obj.insert("op_num", it.opNum);
-    obj.insert("output_num", it.outputs);
+    obj.insert("slave_num", it.slaveNum/r);
+    obj.insert("output_num", it.outputs/r);
 
     QJsonArray ops;
     for(int i=0; i<it.opNum; ++i) ops.append(it.ops[i]);
@@ -172,7 +172,7 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     obj.insert("op_vers", vs);
 
     QJsonArray hz;
-    for(int i=0; i<it.opNum; ++i) ops.append(it.hz[i]);
+    for(int i=0; i<it.opNum; ++i) ops.append(it.hzs[i]);
     obj.insert("hzs", hz);
 
     json.insert(key, QJsonValue(obj));

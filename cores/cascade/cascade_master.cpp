@@ -21,7 +21,7 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
     sDevData *dev = masterDev();
-    for(int i=0; i<dev->info.slaveNum; ++i) {
+    for(uint i=0; i<dev->info.slaveNum; ++i) {
         bool ret = masterRead(i+1);
         if(!ret){} ////========
         mdelay(120);

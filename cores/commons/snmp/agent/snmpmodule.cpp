@@ -7,7 +7,7 @@ SnmpModule::SnmpModule(QSNMPAgent *snmpAgent, QObject *parent)
     mSnmpAgent->setTrapsEnabled(true);
     mModuleOid = QSNMPOid() << 1 << 3 << 6 << 1 << 4 << 1 /* iso.org.dod.internet.private.enterprises */
                             << 30966 /* .example */
-                            << 1; /* .myModule */
+                            << 11; /* .myModule */
 }
 
 bool SnmpModule::addOid(const sOidIt &it)
@@ -24,8 +24,8 @@ bool SnmpModule::addOid(const sOidIt &it)
     if(it.callback) { maxAccess = QSNMPMaxAccess_ReadWrite;
         mShash.insert(it.name, (void *)it.callback); }
     if(ptr) {mRhash.insert(it.name, QVariant::fromValue((void *) ptr));
-     QSNMPVar * var =   this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
-     qDebug() << var->oidString();
+     QSNMPVar * var = this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
+    //  qDebug() << var->oidString() << "\t\t"<< var->name();
     }
 
     return ret;

@@ -9,7 +9,7 @@ struct sOidIt{
     QString name;
     quint32 fieldId;
     QString oid;
-    int *intPtr;
+    uint *intPtr;
     char *str;
     bool (*callback)(uint, const QString &, const QVariant &);
 };

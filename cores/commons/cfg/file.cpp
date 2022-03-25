@@ -56,3 +56,13 @@ bool File::AppendCrc(const QString &fn)
     QByteArray b = QByteArray::number(crc).toHex();
     return QFile::rename(fn, fn+"."+b);
 }
+
+uint File::Size(const QString &fn)
+{
+    uint size = 0; QFile file(fn);
+    if (file.open(QIODevice::ReadOnly)) {
+        size  = file.size();
+        file.close();
+    }
+    return size;
+}

@@ -8,6 +8,8 @@
 #include "cascade_slave.h"
 #include "http/http.h"
 
+#include "agent_devdata.h"
+
 void log_demo()
 {
     Db_User *db = Db_User::bulid();
@@ -56,7 +58,7 @@ bool snmp_callback(uint id, const QString &oid, const QVariant &v)
     return true;
 }
 
-int snmp_value = 55;
+uint snmp_value = 55;
 
 void snmp_agent()
 {
@@ -161,6 +163,8 @@ int main(int argc, char *argv[])
     //    out >> g;
     //
 
+    Agent_DevData dev;
+    dev.addOids();
 
 
 

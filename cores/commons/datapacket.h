@@ -33,18 +33,18 @@ struct sAlarmUnit
     uint value[PACK_ARRAY_SIZE];
     uint rated[PACK_ARRAY_SIZE];
 
-    ushort min[PACK_ARRAY_SIZE]; // 最小值
-    ushort max[PACK_ARRAY_SIZE]; // 最大值
+    uint min[PACK_ARRAY_SIZE]; // 最小值
+    uint max[PACK_ARRAY_SIZE]; // 最大值
     uchar alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
 
-    ushort crMin[PACK_ARRAY_SIZE]; // 最小值
-    ushort crMax[PACK_ARRAY_SIZE]; // 最大值
+    uint crMin[PACK_ARRAY_SIZE]; // 最小值
+    uint crMax[PACK_ARRAY_SIZE]; // 最大值
 };
 
 struct sRelayUnit
 {
     uchar size;
-    uchar sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用
+    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用
     uchar mode[PACK_ARRAY_SIZE];
     uchar alarm[PACK_ARRAY_SIZE];
     uchar delay[PACK_ARRAY_SIZE];
@@ -65,7 +65,7 @@ struct sObjData
     sRelayUnit relay;
 
     uint ele[PACK_ARRAY_SIZE]; // 电能
-    ushort pf[PACK_ARRAY_SIZE]; // 功率因数
+    uint pf[PACK_ARRAY_SIZE]; // 功率因数
 
     uint artPow[PACK_ARRAY_SIZE]; // 功率值
     uint reactivePow[PACK_ARRAY_SIZE];
@@ -138,18 +138,19 @@ struct sRtuCount
 
 struct sDevInfo {
     uint devType; //设备类型
-    uchar devSpec; // 设备规格 A\B\C\D
+    uint devSpec; // 设备规格 A\B\C\D
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uchar phases; //设备单三相
+    uint phases; //设备单三相
 
-    ushort version;
+    uint version;
     char devName[NAME_SIZE]; // 设备名称
-    uchar slaveNum;
+    uint slaveNum;
 
+    uint hz;
     uchar opNum;
-    uchar outputs;
+    uint outputs;
     uchar ops[DEV_NUM];
-    uchar hz[DEV_NUM];  // 电压频率
+    uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM];
     uchar chipStates[DEV_NUM];
 };
