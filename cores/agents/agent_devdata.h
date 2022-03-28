@@ -20,7 +20,7 @@ private:
     void addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
     void addObjData(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index);
 
-    void addEnvData(uchar addr, uchar key, const QString &oidPrefix, sEnvData &it);
+    void addEnvData(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);
     void addDevData(uchar addr, sDevData *it);
 };
 

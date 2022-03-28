@@ -8,7 +8,7 @@ SnmpAgent::SnmpAgent(QObject *parent) : QObject{parent}
     snmpAgent-> connect (snmpAgent, &QSNMPAgent::newLog, [=](QSNMPLogType_e logType, const QString & msg)
     {
         Q_UNUSED(logType)
-        qDebug() << msg;
+        //qDebug() << msg;
     });
 }
 

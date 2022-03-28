@@ -9,8 +9,8 @@ Agent_DevData::Agent_DevData(QObject *parent) : Agent_Object{parent}
 
 void Agent_DevData::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
 {
-    int id = 1; QString prefix = oidPrefix + "uut_";
-    QString oid = QString::number(addr) + ".0.0.";
+    int id = 1; QString oid = "0.0.";
+    QString prefix = oidPrefix + "uut_";
 
     addOid(addr, id++, oid, prefix+"room", it.room);
     addOid(addr, id++, oid, prefix+"modular", it.module);
@@ -20,18 +20,17 @@ void Agent_DevData::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &i
 
 void Agent_DevData::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev)
 {
+    bool w = false; QString oid = "0.1.";
     int id = 1; QString prefix = oidPrefix + "info_";
-    QString oid = QString::number(addr) + ".0.1.";
 
     addOid(addr, id++, oid, prefix+"name", dev.devName);
-    addOidValue(addr, id++, oid, prefix+"type", dev.devSpec);
-    addOidValue(addr, id++, oid, prefix+"phases", dev.phases);
-    addOidValue(addr, id++, oid, prefix+"outputs", dev.outputs);
-    addOidValue(addr, id++, oid, prefix+"slaveNum", dev.slaveNum);
-    addOidValue(addr, id++, oid, prefix+"version", dev.version);
-    addOidValue(addr, id++, oid, prefix+"hz", dev.hz);
+    addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
+    addOidValue(addr, id++, oid, prefix+"phases", dev.phases, w);
+    addOidValue(addr, id++, oid, prefix+"outputs", dev.outputs, w);
+    addOidValue(addr, id++, oid, prefix+"slaveNum", dev.slaveNum, w);
+    addOidValue(addr, id++, oid, prefix+"version", dev.version, w);
+    addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
 }
-
 
 
 void Agent_DevData::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix,
@@ -39,8 +38,8 @@ void Agent_DevData::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix
 {
     int id = 1; QString name = oidName + "_";
     QString oid = oidPrefix + QString::number(key) +".";
-    addOidValue(addr, id++, oid, name+"value", it.value[index]);
-    addOidValue(addr, id++, oid, name+"rated", it.rated[index]);
+    addOidValue(addr, id++, oid, name+"value", it.value[index], false);
+    addOidValue(addr, id++, oid, name+"rated", it.rated[index], false);
 
     addOidValue(addr, id++, oid, name+"alarm_min", it.min[index]);
     addOidValue(addr, id++, oid, name+"warn_min", it.crMin[index]);
@@ -66,37 +65,44 @@ void Agent_DevData::addObjData(uchar addr, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"ele", it.ele[index]);
 }
 
-void Agent_DevData::addEnvData(uchar addr, uchar key, const QString &oidPrefix, sEnvData &it)
+void Agent_DevData::addEnvData(uchar addr, const QString &oidPrefix,
+                               const QString &oidName, sEnvData &it, int index)
 {
-    //    QString prefix = oidPrefix + "env_";
 
-    //    addAlarmUnit(addr, id++, oid, name+"vol", it.vol, index);
+    int id = 1; QString oid = oidPrefix + ".";
+    QString name = tr("%1_%2_").arg(oidName).arg(index+1);
+    addAlarmUnit(addr, id++, oid, name+"tem", it.tem, index);
+    addAlarmUnit(addr, id++, oid, name+"hum", it.hum, index);
 
 }
 
 void Agent_DevData::addDevData(uchar addr, sDevData *it)
 {
-    QString oidPrefix = QString::number(addr) +".";
     QString name = tr("pdu_%1_").arg(addr);
 
     addUutInfo(addr, name, it->uut);
     addDevInfo(addr, name, it->info);
 
-
     for(int i=0; i<LINE_NUM; ++i) {
-        QString oid = oidPrefix + "1." +QString::number(i+1);
+        QString oid = "1." +QString::number(i+1);
         addObjData(addr, oid, name+"line", it->line, i);
     }
 
     for(int i=0; i<LOOP_NUM; ++i) {
-        QString oid = oidPrefix + "2." +QString::number(i+1);
+        QString oid = "2." +QString::number(i+1);
         addObjData(addr, oid, name+"loop", it->loop, i);
     }
 
     for(int i=0; i<OUTPUT_NUM; ++i) {
-        QString oid = oidPrefix + "3." +QString::number(i+1);
+        QString oid = "3." +QString::number(i+1);
         addObjData(addr, oid, name+"output", it->output, i);
     }
+
+    for(int i=0; i<SENOR_NUM; ++i) {
+        QString oid = "6." + QString::number(i+1);
+        addEnvData(addr, oid, name+"env", it->env, i);
+    }
+
 }
 
 void Agent_DevData::addOids()

@@ -13,19 +13,18 @@ SnmpModule::SnmpModule(QSNMPAgent *snmpAgent, QObject *parent)
 bool SnmpModule::addOid(const sOidIt &it)
 {
     void *ptr = nullptr;  QSNMPType_e type;
-    bool ret = !mRhash.contains(it.name);
-    if(!ret){ return ret; }if(it.intPtr){
+    bool ret = !mShash.contains(it.name);
+    if(!ret){ return ret; } if(it.intPtr){
         type = QSNMPType_Integer; ptr = (void *)it.intPtr;
     } else if(it.str){
         type = QSNMPType_OctetStr;  ptr = (void *)it.str;
     } else { ret = false; qDebug() << "Error: add oid";}
 
     QSNMPMaxAccess_e maxAccess = QSNMPMaxAccess_ReadOnly;
-    if(it.callback) { maxAccess = QSNMPMaxAccess_ReadWrite;
-        mShash.insert(it.name, (void *)it.callback); }
-    if(ptr) {mRhash.insert(it.name, QVariant::fromValue((void *) ptr));
-     QSNMPVar * var = this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
-    //  qDebug() << var->oidString() << "\t\t"<< var->name();
+    if(it.enWrited)  maxAccess = QSNMPMaxAccess_ReadWrite;
+    if(ptr) {mShash.insert(it.name, ptr);
+        QSNMPVar *var = this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
+        //qDebug() << var->oidString() << "\t\t"<< var->name();
     }
 
     return ret;
@@ -41,10 +40,11 @@ QSNMPOid SnmpModule::toOid(const QString &oid)
 
 QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
 {
-    QVariant res, v = mRhash.value(var->name());
+    QVariant res;
+    void *v = mShash.value(var->name());
     switch ((QSNMPType_e)var->type()) {
-    case QSNMPType_Integer: res = *((int *)v.value<void *>()); break;
-    case QSNMPType_OctetStr: res = (char *)v.value<void *>(); break;
+    case QSNMPType_Integer: res = *((int *)v); break;
+    case QSNMPType_OctetStr: res = (char *)v; break;
     default: qDebug() << "Error: snmpGetValue" << var->fullName(); break;
     }
 
@@ -54,9 +54,18 @@ QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
 bool SnmpModule::snmpSetValue(const QSNMPVar * var, const QVariant & v)
 {
     void *ptr = mShash.value(var->name());
-    bool (*callback)(uint, const QString &, const QVariant &);
-    callback = (bool (*)(uint, const QString &, const QVariant &))ptr;
-    return callback(var->fieldId(), var->oidString(), v);
+    switch ((QSNMPType_e)var->type()) {
+    case QSNMPType_Integer: *((int *)ptr) = v.toUInt(); break;
+    case QSNMPType_OctetStr: qstrcpy((char *)ptr, v.toByteArray().data()); break;
+    default: qDebug() << "Error: snmpSetValue" << var->fullName(); break;
+    } emit snmpSetSig(var->fieldId(), var->oidString(), v);
+
+    return true;
+
+    //    void *ptr = mShash.value(var->name());
+    //    bool (*callback)(uint, const QString &, const QVariant &);
+    //    callback = (bool (*)(uint, const QString &, const QVariant &))ptr;
+    //    return callback(var->fieldId(), var->oidString(), v);
 }
 
 void SnmpModule::sendTrap(const QString & name, const QString &msg)

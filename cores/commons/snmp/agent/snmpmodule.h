@@ -5,13 +5,14 @@
 #include "QSNMP.h"
 
 struct sOidIt{
-    sOidIt() : fieldId(0), intPtr(nullptr), str(nullptr), callback(nullptr){ }
+    sOidIt() : fieldId(0), intPtr(nullptr), str(nullptr), enWrited(false){ }
     QString name;
     quint32 fieldId;
     QString oid;
     uint *intPtr;
     char *str;
-    bool (*callback)(uint, const QString &, const QVariant &);
+    bool enWrited;
+    //bool (*callback)(uint, const QString &, const QVariant &);
 };
 
 class SnmpModule : public QObject, public QSNMPModule
@@ -27,6 +28,9 @@ public:
     void sendTrap(const QString & name, const QString &msg);
     void sendTrap(const QString & name, quint32 fieldId, const QString &msg);
 
+signals:
+    void snmpSetSig(uint, const QString &, const QVariant &);
+
 protected:
     QSNMPOid toOid(const QString &oid);
 
@@ -34,7 +38,7 @@ private:
     QSNMPOid  mModuleOid;
     QSNMPAgent *mSnmpAgent;
     QHash<QString, void *> mShash;
-    QHash<QString, QVariant> mRhash;
+//    QHash<QString, QVariant> mRhash;
 };
 
 #endif // SNMPMODULE_H

@@ -69,7 +69,7 @@ void snmp_agent()
     it.fieldId = 1;
     it.oid = "10.3.2";
     it.intPtr = &snmp_value;
-    it.callback = snmp_callback;
+//    it.callback = snmp_callback;
 
     bool ret = snmp->addOid(it);
     qDebug() << "snmp agent add oid" << ret;
@@ -163,8 +163,8 @@ int main(int argc, char *argv[])
     //    out >> g;
     //
 
-    Agent_DevData dev;
-    dev.addOids();
+//    Agent_DevData *dev = new Agent_DevData();
+//    dev->addOids();
 
 
 
