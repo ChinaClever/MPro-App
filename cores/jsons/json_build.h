@@ -2,6 +2,7 @@
 #define JSON_BUILD_H
 
 #include "commons.h"
+#define JSON_VERSION   1
 
 class Json_Build
 {

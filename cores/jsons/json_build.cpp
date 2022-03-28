@@ -1,5 +1,5 @@
 #include "json_build.h"
-#define JSON_VERSION   1
+
 
 Json_Build::Json_Build()
 {
@@ -58,11 +58,11 @@ void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJs
     obj.insert("value", it.value[id]/r);
     obj.insert("rated", it.rated[id]/r);
 
-    obj.insert("min", it.min[id]/r);
-    obj.insert("max", it.max[id]/r);
+    obj.insert("alarm_min", it.min[id]/r);
+    obj.insert("alarm_max", it.max[id]/r);
 
-    obj.insert("near_min", it.crMin[id]/r);
-    obj.insert("near_max", it.crMax[id]/r);
+    obj.insert("warn_min", it.crMin[id]/r);
+    obj.insert("warn_max", it.crMax[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
 
     json.insert(key, QJsonValue(obj));
