@@ -8,7 +8,7 @@ Set_Unserialize::Set_Unserialize(QObject *parent) : Set_Fill{parent}
 
 Set_Unserialize *Set_Unserialize::bulid(QObject *parent)
 {
-    Set_Unserialize* sington = nullptr;
+    static Set_Unserialize* sington = nullptr;
     if(sington == nullptr) {
         sington = new Set_Unserialize(parent);
     }

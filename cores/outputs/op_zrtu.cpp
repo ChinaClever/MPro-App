@@ -9,7 +9,7 @@ OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 {
-    OP_ZRtu* sington = nullptr;
+    static OP_ZRtu* sington = nullptr;
     if(sington == nullptr) {
         sington = new OP_ZRtu(parent);
     }

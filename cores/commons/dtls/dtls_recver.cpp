@@ -16,7 +16,7 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
 
 Dtls_Recver *Dtls_Recver::bulid(QObject *parent)
 {
-    Dtls_Recver* sington = nullptr;
+    static Dtls_Recver* sington = nullptr;
     if(sington == nullptr) {
         sington = new Dtls_Recver(parent);
     }
@@ -70,9 +70,8 @@ bool Dtls_Recver::initFile(const QByteArray &array)
 
 void Dtls_Recver::rcvClientMessage(const QByteArray &data)
 {
-    if(mFile->isWritable()) {
-        if(mSize) mFile->write(data);
-        else initFile(data);
-        mSize += data.size();
-    } else throwMessage(tr("Error: Dtls Recver write file %1").arg(data.data()));
+    if(mFile->isWritable() && mSize) mFile->write(data);
+    else if(!mFile->isOpen() && !mSize) initFile(data);
+    else throwMessage(tr("Error: Dtls Recver write file %1").arg(data.data()));
+    mSize += data.size();
 }

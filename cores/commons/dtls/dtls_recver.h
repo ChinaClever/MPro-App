@@ -1,7 +1,6 @@
 #ifndef DTLS_RECVER_H
 #define DTLS_RECVER_H
 
-#include "commons.h"
 #include "dtls_service.h"
 #include "cfg_obj.h"
 

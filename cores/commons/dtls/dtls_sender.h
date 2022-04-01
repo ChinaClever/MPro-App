@@ -3,36 +3,38 @@
 
 #include "dtls_recver.h"
 
-class Dtls_Sender : public QObject
+class Dtls_Sender : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
     explicit Dtls_Sender(QObject *parent = nullptr);
-    bool sendFile(const QStringList &ips, const QString &fn, const sFileTrans &it);
+    bool sendFile(const QString &ip, const QString &fn, const sFileTrans &it);
+    void sendData(const QString &ip, const sFileTrans &it, const QByteArray &data);
+    static void setRunState(bool run) {gRunState=run;}
 
 signals:
-    void progress(int);
     void errorMessage(const QString &);
     void subProgress(const QString &,int);
     void infoMessage(bool,const QString &);
-    void finishSig(const QString &, bool);
+    void finishSig(bool, const QString &);
+    void throwSig(const QString &);
 
 public slots:
-    void run();
+    void run() override;
     void throwMessage(const QString &message);
 
 private:
     bool workDown(const QString &host);
     bool writeData(Dtls_Association *dtls);
     void startNewConnection(const QString &address);
-    bool send(const QStringList &ips, const QByteArray &head, const QByteArray &array);
 
 private:
+    QString mHost;
     CThread *mThread;
     QByteArray mHead;
     QByteArray mArray;
-    QStringList mHosts;
     Dtls_Association *mDtls;
+    static bool gRunState;
 };
 
 #endif // DTLS_SENDER_H

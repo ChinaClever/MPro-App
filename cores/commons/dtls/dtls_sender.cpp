@@ -1,27 +1,28 @@
 #include "dtls_sender.h"
-#include <thread>
 
+bool Dtls_Sender::gRunState = true;
 Dtls_Sender::Dtls_Sender(QObject *parent)
     : QObject{parent}
 {
-    mThread = new CThread(this);
-    mThread->init(this, SLOT(run()));
+    //    mThread = new CThread(this);
+    //    mThread->init(this, SLOT(run()));
 }
 
 bool Dtls_Sender::writeData(Dtls_Association *dtls)
-{
+{    
     QByteArray array; int max = 999;
     QString name = dtls->getName();
-    bool ret = dtls->writeData(mHead);
-    if(!ret) qDebug() << "Error: Dtls write head";
-    for(int i=0; i<mArray.size();i+=array.size()) {
+    bool ret = dtls->writeData(mHead); int pro=0;
+    if(ret) emit infoMessage(ret, tr("%1 连接成功").arg(name));
+    else {emit errorMessage(name+" Error: Dtls write head"); return ret;}
+    for(int i=0; i<mArray.size() && gRunState;i+=array.size()) {
         array = mArray.mid(i, max);
         ret = dtls->writeData(array);
         if(ret) {
-            int v = (i*100.0)/mHosts.size();
-            if(0==(i%5)) emit subProgress(name, v);
+            int v = (i*100.0)/mArray.size();
+            if(v > pro){pro = v; emit subProgress(name, v);}
         } else {
-            emit errorMessage(name);
+            emit errorMessage(name+" Error: Dtls write data");
             break;
         }
     }
@@ -35,8 +36,8 @@ bool Dtls_Sender::workDown(const QString &host)
     bool ret = mDtls->startHandshake();
     if(ret) {
         ret = writeData(mDtls);
-        if(ret) emit subProgress(host, 100);
-        else emit infoMessage(ret, tr("%1 Dtls 数据发送失败").arg(host));
+        if(ret && gRunState) emit subProgress(host, 100);
+        else if(gRunState) emit infoMessage(ret, tr("%1 Dtls 数据发送失败").arg(host));
     } else emit infoMessage(ret, tr("%1 Dtls 连接失败").arg(host));
     delete mDtls; if(ret) cm::mdelay(1); else cm::mdelay(30);
     return ret;
@@ -44,35 +45,30 @@ bool Dtls_Sender::workDown(const QString &host)
 
 void Dtls_Sender::run()
 {
-    for(int i=0; i<mHosts.size(); ++i) {
-        bool ret = workDown(mHosts.at(i));
-        if(!ret) ret = workDown(mHosts.at(i));
-        emit finishSig(mHosts.at(i), ret);
-        int v = ((i+1)*100.0)/mHosts.size();
-        emit progress(v);
+    if(gRunState) {
+        QString host = mHost;
+        bool ret = workDown(host);
+        if(!ret && gRunState) ret = workDown(host);
+        if(gRunState) emit finishSig(ret, host);
     }
 }
 
-bool Dtls_Sender::send(const QStringList &ips, const QByteArray &head, const QByteArray &array)
+bool Dtls_Sender::sendFile(const QString &ip, const QString &fn, const sFileTrans &it)
 {
-    mHosts = ips;
-    mHead = head;
-    mArray = array;
-    mThread->onceRun();
-    return true;
+    bool ret = true; QFile file(fn);
+    QByteArray head; QDataStream in(&head, QIODevice::WriteOnly);
+    in << it.fc << it.dev << it.path << it.file << it.md5 << END_CRC;
+    if(file.exists() && file.open(QIODevice::ReadOnly)) {
+        mHost = ip; mHead = head; mArray = file.readAll(); //mThread->onceRun();
+    } else {ret = false;} file.close();
+    return ret;
 }
 
-bool Dtls_Sender::sendFile(const QStringList &ips, const QString &fn, const sFileTrans &it)
+void Dtls_Sender::sendData(const QString &ip, const sFileTrans &it, const QByteArray &data)
 {
-    bool ret = false;
-    if(File::CheckMd5(fn)) {
-        QByteArray head; QDataStream in(&head, QIODevice::WriteOnly); QFile file(fn);
-        in << it.fc << it.dev << it.path << it.file << it.md5 << END_CRC;
-        if(file.exists() && file.open(QIODevice::ReadOnly)) {
-            ret = send(ips, head, file.readAll());
-        }
-    } else qDebug() << "Error: Dtls Sender Md5";
-    return ret;
+    QByteArray head; QDataStream in(&head, QIODevice::WriteOnly);
+    in << it.fc << it.dev << it.path << it.file << it.md5 << END_CRC;
+    mHost = ip; mHead = head; mArray = data; //mThread->onceRun();
 }
 
 void Dtls_Sender::startNewConnection(const QString &address)
@@ -86,5 +82,5 @@ void Dtls_Sender::startNewConnection(const QString &address)
 
 void Dtls_Sender::throwMessage(const QString &message)
 {
-    qDebug() << message;
+    emit throwSig(message);
 }

@@ -94,7 +94,7 @@ void dtls_demo()
     QStringList ips {"127.0.0.1"};
     QByteArray array{"012345678901234567890123456789"};
 
-    Dtls_Sender *c = new Dtls_Sender;
+//    Dtls_Sender *c = new Dtls_Sender;
 //    c->send(ips, array);
 
 //    qDebug() << ser->waitForFinish();
@@ -124,6 +124,9 @@ int main(int argc, char *argv[])
     // dtls_demo();
     // snmp_agent();
     // Cascade_Core::bulid();
+
+
+    Dtls_Recver::bulid();
 
 
 

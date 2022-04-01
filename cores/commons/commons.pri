@@ -4,6 +4,7 @@ include(sql/sql.pri)
 include(cfg/cfg.pri)
 include(ipc/ipc.pri)
 include(crc/crc.pri)
+include(cms/cms.pri)
 include(http/http.pri)
 include(ssdp/ssdp.pri)
 include(snmp/snmp.pri)
@@ -22,9 +23,6 @@ include(websocket/websocket.pri)
 
 INCLUDEPATH += $$PWD
 
-HEADERS += \
-    $$PWD/commons.h \
-    $$PWD/datapacket.h
+HEADERS +=
 
-SOURCES += \
-    $$PWD/commons.cpp
+SOURCES +=

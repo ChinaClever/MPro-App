@@ -13,7 +13,7 @@ Sercret_Smx::Sercret_Smx()
 
 Sercret_Smx *Sercret_Smx::bulid()
 {
-    Sercret_Smx* sington = nullptr;
+    static Sercret_Smx* sington = nullptr;
     if(sington == nullptr) {
         sington = new Sercret_Smx();
     }

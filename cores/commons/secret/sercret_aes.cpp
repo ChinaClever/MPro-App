@@ -6,7 +6,7 @@ Sercret_Aes::Sercret_Aes()
 
 Sercret_Aes *Sercret_Aes::bulid()
 {
-    Sercret_Aes* sington = nullptr;
+    static Sercret_Aes* sington = nullptr;
     if(sington == nullptr) {
         sington = new Sercret_Aes();
     }

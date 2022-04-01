@@ -9,7 +9,7 @@ Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
 
 Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
 {
-    Cascade_Slave* sington = nullptr;
+    static Cascade_Slave* sington = nullptr;
     if(sington == nullptr) {
         sington = new Cascade_Slave(parent);
     }

@@ -20,6 +20,7 @@ bool LSocket_Server::lsCreateServer()
     } else ret = false;
     return ret;
 }
+
 bool LSocket_Server::lsListen(const QString &name)
 {
     bool ret = false;

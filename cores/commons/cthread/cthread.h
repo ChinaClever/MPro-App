@@ -12,6 +12,7 @@ public:
 
     void msleep(int msec=1);
     void init(QObject *p, const char *fun);
+    bool isRun(){return mThread->isRunning();}
 
 signals:
 

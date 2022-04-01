@@ -8,7 +8,7 @@ Sercret_Rsa::Sercret_Rsa()
 
 Sercret_Rsa *Sercret_Rsa::bulid()
 {
-    Sercret_Rsa* sington = nullptr;
+    static Sercret_Rsa* sington = nullptr;
     if(sington == nullptr) {
         sington = new Sercret_Rsa();
     }
