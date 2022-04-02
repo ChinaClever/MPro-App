@@ -1,20 +1,20 @@
-#ifndef TD_MAINWID_H
-#define TD_MAINWID_H
+#ifndef HOME_STATEWID_H
+#define HOME_STATEWID_H
 
 #include "comtablewid.h"
 #include "core_sender.h"
 
 namespace Ui {
-class Td_MainWid;
+class Home_StateWid;
 }
 
-class Td_MainWid : public QWidget
+class Home_StateWid : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Td_MainWid(QWidget *parent = nullptr);
-    ~Td_MainWid();
+    explicit Home_StateWid(QWidget *parent = nullptr);
+    ~Home_StateWid();
 
 public slots:
     void startSlot();
@@ -24,8 +24,8 @@ private slots:
     void insertSlot(const QString &str);
 
 private:
-    Ui::Td_MainWid *ui;
+    Ui::Home_StateWid *ui;
     int mCnt;
 };
 
-#endif // TD_MAINWID_H
+#endif // HOME_STATEWID_H

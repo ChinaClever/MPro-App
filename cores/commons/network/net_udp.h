@@ -10,7 +10,7 @@ class Net_Udp : public QObject
 {
     Q_OBJECT
 public:
-    explicit Net_Udp(QObject *parent = nullptr);    
+    explicit Net_Udp(QObject *parent = nullptr);
     bool writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port);
     bool bind(int port, const QHostAddress &address = QHostAddress::Any);
     bool broadcastDatagram(const QByteArray &datagram, quint16 port);

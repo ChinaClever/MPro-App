@@ -3,7 +3,7 @@
 
 #include "dtls_service.h"
 #include "cfg_obj.h"
-
+#include "net_udp.h"
 
 class Dtls_Recver : public QObject
 {
@@ -33,6 +33,7 @@ private:
     sFileTrans mIt;
     QFile *mFile;
     bool isFinshed;
+    Net_Udp *mNet;
     Dtls_Service *mDtls;
 };
 

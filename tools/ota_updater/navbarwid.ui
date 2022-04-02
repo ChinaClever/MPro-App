@@ -128,7 +128,7 @@
       </font>
      </property>
      <property name="text">
-      <string>服务设置</string>
+      <string>传输状态</string>
      </property>
     </widget>
    </item>
@@ -152,7 +152,7 @@
       </font>
      </property>
      <property name="text">
-      <string>日志记录</string>
+      <string>远程监控</string>
      </property>
     </widget>
    </item>

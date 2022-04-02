@@ -5,6 +5,7 @@ Core_Sender::Core_Sender(QObject *parent)
 {
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timeoutDone()));
+    QThreadPool::globalInstance()->setMaxThreadCount(8);
 }
 
 Core_Sender *Core_Sender::bulid(QObject *parent)

@@ -5,6 +5,7 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
     : QObject{parent}
 {
     mFile = new QFile;
+    mNet = new Net_Udp(this);
     mDtls = new Dtls_Service(this);
     connect(mDtls, &Dtls_Service::errorMessage, this, &Dtls_Recver::throwError);
     connect(mDtls, &Dtls_Service::warningMessage, this, &Dtls_Recver::throwMessage);
@@ -39,15 +40,15 @@ bool Dtls_Recver::waitForFinish()
 
 void Dtls_Recver::throwError(const QString &message)
 {
-    throwMessage(message);
-    bool ret = recvFinish();
-    emit finishSig(mIt, ret);
+    bool ret = recvFinish();    
+    if(ret) throwMessage(tr("%1 接收成功").arg(mDtls->clientHost().toString()));
+    else {throwMessage(message);} emit finishSig(mIt, ret);
 }
 
 void Dtls_Recver::throwMessage(const QString &message)
 {
-    emit messageSig(message);
-    qDebug() << message;
+    emit messageSig(message); // qDebug() << message;
+    mNet->writeDatagram(message.toUtf8(), mDtls->clientHost(), 21437);
 }
 
 bool Dtls_Recver::recvFinish()
@@ -64,7 +65,7 @@ bool Dtls_Recver::initFile(const QByteArray &array)
     QDataStream out(&rcv, QIODevice::ReadOnly);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->crc;
     if(it->crc == END_CRC) ret = setFile(it->path + it->file);
-    else qDebug() << "Error: Dtls recver head" << it->file << it->md5 << it->crc;
+    else throwMessage("Error: Dtls recver head");
     return ret;
 }
 

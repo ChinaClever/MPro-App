@@ -12,6 +12,7 @@ public:
     Dtls_Service(QObject *parent = nullptr);
     ~Dtls_Service();
 
+    QHostAddress clientHost() {return mClientHost;}
     bool listen(const QHostAddress &address = QHostAddress::Any, quint16 port = 15601);
     bool isListening() const;
     void close();
@@ -37,6 +38,7 @@ private:
     bool listening = false;
     QUdpSocket serverSocket;
 
+    QHostAddress mClientHost;
     QSslConfiguration serverConfiguration;
     QDtlsClientVerifier cookieSender;
     std::vector<std::unique_ptr<QDtls>> knownClients;

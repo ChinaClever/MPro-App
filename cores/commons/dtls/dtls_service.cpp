@@ -129,6 +129,7 @@ void Dtls_Service::handleNewConnection(const QHostAddress &peerAddress,
     if (!listening)
         return;
 
+    mClientHost = peerAddress;
     const QString peerInfo = peer_info(peerAddress, peerPort);
     if (cookieSender.verifyClient(&serverSocket, clientHello, peerAddress, peerPort)) {
         emit infoMessage(peerInfo + tr(": verified, starting a handshake"));

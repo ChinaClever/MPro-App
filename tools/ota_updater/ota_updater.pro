@@ -11,8 +11,8 @@ CONFIG += c++14
 include(core/core.pri)
 include(home/home.pri)
 include(common/common.pri)
-
-
+include(remote/remote.pri)
+include(progres/progres.pri)
 
 SOURCES += \
     main.cpp \

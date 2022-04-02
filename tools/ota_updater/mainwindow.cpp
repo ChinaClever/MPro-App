@@ -21,6 +21,14 @@ void MainWindow::initFunSlot()
 {
     mHomeWid = new Home_MainWid(ui->stackedWid);
     ui->stackedWid->addWidget(mHomeWid);
+
+    mPro = new Pro_Widget(ui->stackedWid);
+    ui->stackedWid->addWidget(mPro);
+    connect(mHomeWid, SIGNAL(startSig()), mPro, SLOT(startSlot()));
+
+    mRecvWid = new Remote_RecvWid(ui->stackedWid);
+    ui->stackedWid->addWidget(mRecvWid);
+    connect(mHomeWid, SIGNAL(startSig()), mRecvWid, SLOT(startSlot()));
 }
 
 void MainWindow::navBarSlot(int id)

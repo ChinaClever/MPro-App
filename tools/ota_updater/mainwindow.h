@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "navbarwid.h"
 #include "home_mainwid.h"
+#include "remote_recvwid.h"
+#include "pro_widget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,6 +26,8 @@ protected slots:
 private:
     Ui::MainWindow *ui;
     NavBarWid *mNavBarWid;
-     Home_MainWid *mHomeWid;
+    Home_MainWid *mHomeWid;
+    Remote_RecvWid *mRecvWid;
+    Pro_Widget *mPro;
 };
 #endif // MAINWINDOW_H
