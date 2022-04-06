@@ -41,8 +41,8 @@ void Pro_Widget::finishSlot(bool pass, const QString &ip)
 
 void Pro_Widget::subProgressSlot(const QString &ip ,int v)
 {
+    if(mCnt++ > 500) startSlot();
     QString str = tr("%1 \t  %2").arg(ip).arg(v);
-    if(mCnt > 500) ui->realTextEdit->clear();
     insertText(ui->realTextEdit, str);
 }
 

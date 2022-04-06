@@ -63,9 +63,9 @@ void Home_WorkWid::setTextColor(bool pass)
 void Home_WorkWid::insertTextSlot(bool pass, const QString &msg)
 {
     setTextColor(pass);
+    if(!(mId%500)) ui->textEdit->clear();
     QString str = QString::number(mId++) + "、"+ msg + "\n";
     ui->textEdit->insertPlainText(str);
-    if(mId > 500) ui->textEdit->clear();
 }
 
 void Home_WorkWid::finishSlot(bool pass, const QString &msg)
