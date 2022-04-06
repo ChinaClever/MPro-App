@@ -23,12 +23,12 @@ public:
     ~ComTableWid();
 
     int getList(QList<QStringList> list);
-protected:
-    void initTableWid(QStringList &header, int line, const QString &title);
+
+    void initTableWid(QStringList &header, int line);
     void setTableItem(int id, int column, const QString &str);
     void setTableRow(int id, QStringList &listStr);
     void setTableRow(int id, int col, QStringList &listStr);
-    //void appendTableRow(QStringList &listStr, bool c=false);
+    void appendTableRow(QStringList &listStr);
     void checkTableRow(int line);
 
     void insertRow(int id, QStringList &listStr);

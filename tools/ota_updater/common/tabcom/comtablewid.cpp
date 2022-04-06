@@ -21,9 +21,9 @@ ComTableWid::ComTableWid(QWidget *parent) :
     timer->start(350 + rand()%100);
     connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
 
-    // QGridLayout *gridLayout = new QGridLayout(parent);
-    // gridLayout->setContentsMargins(0, 0, 0, 0);
-    // gridLayout->addWidget(this);
+    QGridLayout *gridLayout = new QGridLayout(parent);
+    gridLayout->setContentsMargins(0, 0, 0, 0);
+    gridLayout->addWidget(this);
 }
 
 ComTableWid::~ComTableWid()
@@ -184,7 +184,7 @@ void ComTableWid::addInitRow(int row)
  * @param line 表格行数
  * @param title 表格名称
  */
-void ComTableWid::initTableWid(QStringList &header, int line, const QString &title)
+void ComTableWid::initTableWid(QStringList &header, int line)
 {
     initTableWidget(header);
     for(int i=0; i<line; ++i) {
@@ -247,12 +247,12 @@ void ComTableWid::insertRow(int id, QStringList &listStr)
     addInitRow(id);
     setTableRow(id, listStr);
 }
-//void ComTableWid::appendTableRow(QStringList &listStr, bool c)
-//{
-//    int row = ui->tableWidget->rowCount();
-//    setTableRow(row, listStr);
-//    if(c) setBackgroundColor(row);
-//}
+
+void ComTableWid::appendTableRow(QStringList &listStr)
+{
+    int row = ui->tableWidget->rowCount();
+    setTableRow(row, listStr);
+}
 
 
 void ComTableWid::addTableRows(int line)

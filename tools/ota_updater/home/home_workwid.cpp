@@ -191,6 +191,7 @@ void Home_WorkWid::on_startBtn_clicked()
             QStringList ips;
             ips << "127.0.0.1";
             timer->start(500);
+
             mSender->sendFile(ips, ui->fnLab->text(), mFileIt);
         }
     } else {
