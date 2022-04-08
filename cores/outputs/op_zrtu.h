@@ -9,10 +9,11 @@ class OP_ZRtu : public OP_ZCtrl
     explicit OP_ZRtu(QObject *parent = nullptr);
 public:
     static OP_ZRtu *bulid(QObject *parent = nullptr);
+    ~OP_ZRtu();
 
 public slots:
     void run();
-    void start(){mThread->start();}
+    void start();
 
 private:
     bool readData(int addr) override;
@@ -20,6 +21,7 @@ private:
     bool recvPacket(const QByteArray &array, sOpIt *obj);
 
 private:
+    bool isRun;
     CThread *mThread;
 };
 

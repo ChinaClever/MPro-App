@@ -21,6 +21,7 @@ public slots:
     void finished();
     void start(bool run=true);
     void onceRun(){start(false);}
+    void quit() {mThread->quit();}
 
 private:
     bool isSleep;

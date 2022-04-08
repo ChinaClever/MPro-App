@@ -3,19 +3,30 @@
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
     mThread = new CThread(this);
-    mThread->init(this, SLOT(run()));
 }
 
+OP_ZRtu::~OP_ZRtu()
+{
+    isRun = false;
+    mThread->stop();
+}
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 {
     static OP_ZRtu* sington = nullptr;
     if(sington == nullptr) {
         sington = new OP_ZRtu(parent);
+        sington->openSerial("/dev/ttyUSB0");
+        sington->start();
     }
     return sington;
 }
 
+void OP_ZRtu::start()
+{
+    mThread->init(this, SLOT(run()));
+    isRun = true; mThread->start();
+}
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
@@ -70,9 +81,10 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
 
     QByteArray recv = transmit(cmd, sizeof(cmd));
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
-        res = recvPacket(recv, it);
+        res = recvPacket(recv, it); qDebug() << "OK" << addr;
     } else {
-        qDebug() << "Error: OP_ZRtu send cmd err!" << recv.toHex();
+        qDebug() << "Error: OP_ZRtu send cmd err!"
+                 << addr << cm::byteArrayToHexStr(recv);
     }
 
     return res;
@@ -88,8 +100,13 @@ bool OP_ZRtu::readData(int addr)
 
 void OP_ZRtu::run()
 {
-    for(int i=0; mDev->info.opNum; ++i) {
-        ota_updates(); readData(i+1);
-        mThread->msleep(240);
-    } mThread->msleep(300);
+    while (isRun) {
+        int size = mDev->info.opNum;
+        if(0 == size) size = 1;
+
+        for(int i=0; i<size; ++i) {
+            ota_updates(); readData(i+1);
+            mThread->msleep(200);
+        } mThread->msleep(300);
+    }
 }

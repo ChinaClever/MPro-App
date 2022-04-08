@@ -9,6 +9,9 @@
 #include "http/http.h"
 
 #include "agent_devdata.h"
+#include "op_zrtu.h"
+
+extern void op_Core();
 
 void log_demo()
 {
@@ -126,7 +129,10 @@ int main(int argc, char *argv[])
     // Cascade_Core::bulid();
 
 
-    Dtls_Recver::bulid();
+//    op_Core();
+    OP_ZRtu::bulid(a.parent());
+//    OP_Core *op = new OP_Core();
+    // Dtls_Recver::bulid();
 
 
 

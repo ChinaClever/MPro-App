@@ -4,7 +4,7 @@
 CThread::CThread(QObject *parent)
     : QObject{parent}
 {
-    mThread = new QThread(parent);
+    mThread = new QThread(this);
     connect(mThread, &QThread::finished, this, &CThread::finished);
 }
 
