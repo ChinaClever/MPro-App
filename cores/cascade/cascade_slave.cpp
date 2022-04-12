@@ -17,11 +17,12 @@ Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
 {
     static Cascade_Slave* sington = nullptr;
     if(sington == nullptr) {
+        qint32 baudRate = QSerialPort::Baud38400;
         sington = new Cascade_Slave(parent);
 #if defined(Q_OS_LINUX)
-        sington->openSerial("/dev/ttyUSB1");
+        sington->openSerial("/dev/ttyUSB1", baudRate);
 #else
-        sington->openSerial("COM22");
+        sington->openSerial("COM22", baudRate);
 #endif
         sington->start();
     }

@@ -13,7 +13,7 @@ bool Set_Relay::outputRelayCtrl(int addr, int id, uchar on)
     if(addr) {
        ret = Cascade_Core::bulid()->masterRelayCtrl(addr, id, on);
     } else {
-        OP_ZRtu::bulid()->relayCtrl(id, on);
+        OP_Core::bulid()->relayCtrl(id, on);
     }
 
     return ret;

@@ -13,6 +13,7 @@ bool Cascade_Master::masterRead(uchar addr)
         deDataStream(rcv);
         ret = unSequence(addr);
     }
+    qDebug() << "AAAAAAAA" << ret;
 
     return ret;
 }
@@ -24,8 +25,12 @@ void Cascade_Master::masterReadDevs()
     size = 1;       /////==========
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
-        qDebug() << "AAAAAAAA" << ret;
-        if(!ret){} ////========
+        if(ret)devData(i+1)->offLine=3;
+        else if(devData(i+1)->offLine > 0) {
+            if(--(devData(i+1)->offLine) == 0) {
+                qDebug() << " error slave lose";
+            }
+        }
         mdelay(120);
     } mdelay(320);
 }

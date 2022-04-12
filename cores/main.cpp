@@ -70,14 +70,14 @@ void ssdp_demo()
 void http_demo()
 {
     // https://github.com/flaviotordini/http
-//    auto reply = Http::instance().post("https://google.com/", "LZY", "application/json");
-//    connect(reply, &HttpReply::finished, this, [](auto &reply) {
-//        if (reply.isSuccessful()) {
-//            qDebug() << "Feel the bytes!" << reply.body();
-//        } else {
-//            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
-//        }
-//    });
+    //    auto reply = Http::instance().post("https://google.com/", "LZY", "application/json");
+    //    connect(reply, &HttpReply::finished, this, [](auto &reply) {
+    //        if (reply.isSuccessful()) {
+    //            qDebug() << "Feel the bytes!" << reply.body();
+    //        } else {
+    //            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
+    //        }
+    //    });
 }
 
 
@@ -88,10 +88,17 @@ int main(int argc, char *argv[])
 
     QObject *p = a.parent();
     //OP_Core::bulid(p);
+    Cascade_Core *c = Cascade_Core::bulid(p);
 #if defined(Q_OS_LINUX)
-    Cascade_Core::bulid(p);
+
 #else
-    Cascade_Core::bulid(p)->setAddress(0);
+    c->setAddress(0);
+    for(int i=0; i<12; ++i) {
+        c->masterRelayCtrl(1, i+1, 0);
+        cm::mdelay(500);
+        c->masterRelayCtrl(1, i+1, 1);
+    }
+
 #endif
 
 
