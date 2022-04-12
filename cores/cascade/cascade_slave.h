@@ -10,6 +10,7 @@ class Cascade_Slave : public Cascade_Fill
 public:
     static Cascade_Slave *bulid(QObject *parent = nullptr);
     void setAddress(int addr){mAddr=addr;}
+    ~Cascade_Slave();
 
 public slots:
     void run();
@@ -23,6 +24,7 @@ private:
     bool workDown(QByteArray &rcv);
 
 private:
+    bool isRun;
     uchar mAddr;
     QFile *mFile;
     CThread *mThread;

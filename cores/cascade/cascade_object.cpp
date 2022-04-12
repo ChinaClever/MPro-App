@@ -31,7 +31,7 @@ QByteArray Cascade_Object::replyData(uchar fc, QByteArray &rcv, uchar addr)
 QByteArray Cascade_Object::readData(uchar fc, uchar addr, ushort size)
 {
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << size << Crc::Cal(array); // END_CRC
+    in << fc << addr << size << END_CRC; // Crc::Cal(array)
     array = transmit(array);
     return replyData(fc, array);
 }
@@ -39,14 +39,14 @@ QByteArray Cascade_Object::readData(uchar fc, uchar addr, ushort size)
 bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
 {
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << (ushort)value.size() << value << Crc::Cal(array); // END_CRC;
+    in << fc << addr << (ushort)value.size() << value << END_CRC; // Crc::Cal(array)
     return writeSerial(array);
 }
 
 QByteArray Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
 {
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << (ushort)value.size() << value << Crc::Cal(array); //END_CRC;
+    in << fc << addr << (ushort)value.size() << value << END_CRC; // Crc::Cal(array);
     array = transmit(array);
     return replyData(fc, array);
 }
@@ -84,9 +84,9 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
 bool Cascade_Object::crcCheck(const QByteArray &array)
 {
     bool ret = false;
-    ushort crc = Crc::Cal((uchar *)array.data(), array.size()-2); //END_CRC;//
-    if(crc == array.right(2).toShort()) ret = true;
+    //ushort crc = Crc::Cal((uchar *)array.data(), array.size()-2); //;//
+    if(END_CRC == array.right(2).toShort()) ret = true;
     else qCritical() << "Error: crc check" << __FUNCTION__ << array.right(2).toShort()
-                  << crc << cm::byteArrayToHexStr(array);
+                  << END_CRC << cm::byteArrayToHexStr(array);
     return ret;
 }

@@ -20,8 +20,9 @@ bool Cascade_Master::masterRead(uchar addr)
 void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
-    sDevData *dev = masterDev();
-    for(uint i=0; i<dev->info.slaveNum; ++i) {
+    uint size = masterDev()->info.slaveNum;
+    size = 1;       /////==========
+    for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         if(!ret){} ////========
         mdelay(120);

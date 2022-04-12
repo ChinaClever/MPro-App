@@ -6,6 +6,13 @@ Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
     mThread = new CThread(this);
 }
 
+
+Cascade_Slave::~Cascade_Slave()
+{
+    isRun = false;
+    mThread->stop();
+}
+
 Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
 {
     static Cascade_Slave* sington = nullptr;
@@ -25,7 +32,7 @@ Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
 void Cascade_Slave::start()
 {
     mThread->init(this, SLOT(run()));
-    mThread->start();
+    isRun = true; mThread->start();
 }
 
 bool Cascade_Slave::replyDevData(uchar fc)
@@ -78,11 +85,12 @@ bool Cascade_Slave::workDown(QByteArray &rcv)
 
 void Cascade_Slave::run()
 {
-    if(mAddr) {
-        QByteArray rcv = readSerial();
-        if((rcv.size()>4) && crcCheck(rcv)) {
-            workDown(rcv);
-        } else fillData(mAddr);
-    } else {ota_updates();masterReadDevs();}
-    mThread->msleep(1);
+    while(isRun) {
+        if(mAddr) {
+            QByteArray rcv = readSerial();
+            if((rcv.size()>4) && crcCheck(rcv)) {
+                workDown(rcv); } else fillData(mAddr);
+        } else {ota_updates(); masterReadDevs();}
+        mThread->msleep(1);
+    }
 }
