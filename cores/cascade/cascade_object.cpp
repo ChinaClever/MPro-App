@@ -83,10 +83,10 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
 
 bool Cascade_Object::crcCheck(const QByteArray &array)
 {
-    bool ret = false;
-    //ushort crc = Crc::Cal((uchar *)array.data(), array.size()-2); //;//
-    if(END_CRC == array.right(2).toShort()) ret = true;
-    else qCritical() << "Error: crc check" << __FUNCTION__ << array.right(2).toShort()
+    bool ret = false; QByteArray ba = array.right(2);
+    //ushort crc = Crc::Cal((uchar *)array.data(), array.size()-2);
+    ushort crc = (ba.at(0)<<8) + ba.at(1); if(END_CRC == crc) ret = true;
+    else qCritical() << "Error: Cascade" << __FUNCTION__ << array.right(2).toShort()
                   << END_CRC << cm::byteArrayToHexStr(array);
     return ret;
 }
