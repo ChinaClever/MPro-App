@@ -60,8 +60,7 @@ void SerialPort::writeSlot()
         if(mList.size()) {
             int ret = mSerial->write(mList.takeFirst());
             if(ret > 0) mSerial->flush(); else qCritical() << mSerial->errorString();
-            if(mList.size()) QTimer::singleShot(300,this, SLOT(writeSlot()));
-        } else isRun = false;
+        } if(mList.size()) QTimer::singleShot(300,this, SLOT(writeSlot())); else isRun = false;
         mRwLock->unlock();
     }
 }

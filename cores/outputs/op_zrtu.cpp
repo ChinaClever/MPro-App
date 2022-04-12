@@ -102,7 +102,7 @@ void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        if(0 == size) size = 1;
+        if(0 == size) size = 1;  /////==========
 
         for(int i=0; i<size; ++i) {
             ota_updates(); readData(i+1);

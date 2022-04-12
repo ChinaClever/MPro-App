@@ -12,7 +12,7 @@ public:
     bool ota_start(const QString &fn);
 
 signals:
-    void otaPro(uchar addr, int v);
+    void otaProgress(uchar addr, int v);
     void otaFinish(uchar addr, bool);
     void otaSig(int addr, const QString &message);
 

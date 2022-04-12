@@ -15,7 +15,7 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
 {
     using namespace cm;
     c_sDevData *ptr = data.mDevData;
-    in << ptr->id << ptr->hz;
+    in << ptr->version << ptr->id << ptr->hz;
 
     uchar size = ptr->lineSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->line[i]);
@@ -42,7 +42,7 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
 {
     using namespace cm;
     c_sDevData *ptr = data.mDevData;
-    out >> ptr->id >> ptr->hz; QByteArray v; uchar size;
+    out >> ptr->version >> ptr->id >> ptr->hz; QByteArray v; uchar size;
 
     out >> size; ptr->lineSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->line[i] = toStruct<c_sObjData>(v);}

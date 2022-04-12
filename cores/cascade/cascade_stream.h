@@ -43,7 +43,8 @@ struct _sEnvData
 
 struct _sDevData
 {
-    _sDevData() {id=0;}
+    _sDevData() {id=0; version=1;}
+    uchar version;
 
     uchar id;  // 设备号
     sDevInfo info;

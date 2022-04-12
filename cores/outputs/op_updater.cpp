@@ -18,10 +18,10 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        for(int i=0; i< 1/*mDev->info.opNum*/; ++i) {
+        for(int i=0; i< mDev->info.opNum; ++i) {
             ret = ota_update(i+1, fn);
             emit otaFinish(i+1, ret);
-        } cm::mdelay(3220);
+        } cm::mdelay(220);
     }
 
     return ret;
@@ -49,11 +49,8 @@ bool OP_Updater::ota_update(int addr, const QString &fn)
         ret = initOta(addr); uint size = file.size(), len=0;
         while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
-            ret = sendPacket(addr, data);
-            len += data.size();
-            int v = (len*100.0)/size;
-            emit otaPro(addr, v);
-            qDebug() << "pro" << v;
+            ret = sendPacket(addr, data); len += data.size();
+            int v = (len*100.0)/size; emit otaProgress(addr, v);
             if(ret) cm::mdelay(220); else break;
         } file.close(); isOta = false;
     }
@@ -70,25 +67,21 @@ bool OP_Updater::initOta(int id)
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
     QByteArray recv = transmit(cmd, sizeof(cmd), 5000);
     if(!recv.contains("Start Updat")) isOta = false;
-    emit otaSig(id, recv); qDebug() << "AAAAAAA" << id << recv;
+    emit otaSig(id, recv);
     return isOta;
 }
 
 bool OP_Updater::sendPacket(int addr, const QByteArray &array)
 {
-    bool ret = false;
-    QByteArray data;
-    data.append(0x7B);
-    data.append(addr);
+    bool ret = false; QByteArray data;
+    data.append(0x7B); data.append(addr);
     data.append(array.size() / 256);
     data.append(array.size() % 256);
     data.append(array);
-    Crc::AppendCrc(data);
 
-    //Crc::AppendXorNum(data);
-    QByteArray recv = transmit(data, 3500);
-    if(recv.contains("success"))  ret = true;
-    emit otaSig(addr, recv); qDebug() << addr << recv;
-
+    for(int i=array.size(); i<1024; ++i) data.append((char)0);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 3000);
+    if(recv.contains("success")) ret = true;
+    emit otaSig(addr, recv);
     return ret;
 }
