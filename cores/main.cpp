@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_LINUX)
     Cascade_Core::bulid(p);
 #else
-    Cascade_Core::bulid(p)->setAddress(1);
+    Cascade_Core::bulid(p)->setAddress(0);
 #endif
 
 
