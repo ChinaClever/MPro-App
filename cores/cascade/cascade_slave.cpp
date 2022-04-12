@@ -79,6 +79,8 @@ bool Cascade_Slave::workDown(QByteArray &rcv)
         }
     }
 
+    qDebug() << "CCCCCCCCCCC" << ret;
+
     return ret;
 }
 
