@@ -8,7 +8,7 @@ OP_Updater::OP_Updater(QObject *parent) : OP_Object{parent}
 
 bool OP_Updater::ota_start(const QString &fn)
 {
-    bool ret = File::CheckCrc(fn); if(ret)  mOtaFile=fn;
+    bool ret = File::CheckCrc(fn); if(ret) mOtaFile=fn;
     else qDebug() << "Error: OP Updater ota crc";
     return ret;
 }
@@ -18,10 +18,12 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        for(int i=0; i<mDev->info.opNum; ++i) {
+        for(int i=0; i< 1/*mDev->info.opNum*/; ++i) {
             ret = ota_update(i+1, fn);
-        }
+            emit otaFinish(i+1, ret);
+        } cm::mdelay(3220);
     }
+
     return ret;
 }
 
@@ -33,7 +35,7 @@ bool OP_Updater::ota_update(int addr, QByteArray &array)
         for(int i=0; i<array.size();i+=data.size()) {
             data = array.mid(i, max);
             ret = sendPacket(addr, data);
-            if(ret) cm::mdelay(20); else break;
+            if(ret) cm::mdelay(220); else break;
         }
     }
 
@@ -44,11 +46,15 @@ bool OP_Updater::ota_update(int addr, const QString &fn)
 {
     QFile file(fn);  bool ret = false; int max = 1024;
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
-        ret = initOta(addr);
+        ret = initOta(addr); uint size = file.size(), len=0;
         while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data);
-            if(ret) cm::mdelay(20); else break;
+            len += data.size();
+            int v = (len*100.0)/size;
+            emit otaPro(addr, v);
+            qDebug() << "pro" << v;
+            if(ret) cm::mdelay(220); else break;
         } file.close(); isOta = false;
     }
 
@@ -62,25 +68,27 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
-    if(!recv.contains("Start Updata")) isOta = false;
-    emit otaSig(id, recv);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 5000);
+    if(!recv.contains("Start Updat")) isOta = false;
+    emit otaSig(id, recv); qDebug() << "AAAAAAA" << id << recv;
     return isOta;
 }
 
 bool OP_Updater::sendPacket(int addr, const QByteArray &array)
 {
-    bool ret = true;
+    bool ret = false;
     QByteArray data;
     data.append(0x7B);
     data.append(addr);
     data.append(array.size() / 256);
     data.append(array.size() % 256);
     data.append(array);
+    Crc::AppendCrc(data);
 
-    Crc::AppendXorNum(data);
-    QByteArray recv = transmit(data, 2000);
-    if(recv.contains("Receive Packet Failure")) ret = false;
-    emit otaSig(addr, recv);
+    //Crc::AppendXorNum(data);
+    QByteArray recv = transmit(data, 3500);
+    if(recv.contains("success"))  ret = true;
+    emit otaSig(addr, recv); qDebug() << addr << recv;
+
     return ret;
 }

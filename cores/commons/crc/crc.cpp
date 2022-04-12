@@ -111,6 +111,13 @@ ushort Crc::Cal(const QByteArray &array)
     return Cal((uchar *)array.data(), array.size());
 }
 
+void Crc::AppendCrc(QByteArray &array)
+{
+    ushort crc = rtu_crc(array);
+    array.append(0xff & crc);
+    array.append(crc >> 8);
+}
+
 uint Crc::File(const QString &fn)
 {
     uint ret = CRC32_INIT_VAL;

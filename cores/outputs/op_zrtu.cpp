@@ -81,7 +81,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
 
     QByteArray recv = transmit(cmd, sizeof(cmd));
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
-        res = recvPacket(recv, it); qDebug() << "OK" << addr;
+        res = recvPacket(recv, it);
     } else {
         qDebug() << "Error: OP_ZRtu send cmd err!"
                  << addr << cm::byteArrayToHexStr(recv);

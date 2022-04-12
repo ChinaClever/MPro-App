@@ -12,7 +12,7 @@ public:
 
 private:
     void writeCtrlCmd(uchar *cmd, int k);
-    void funSwitch(uchar *on, uchar *off) override;
+    void funSwitch(uchar *on, uchar *off, uchar all=0) override;
     void funClearEle(uchar *buf) override;
     void funDelay(uchar *buf) override;
 };

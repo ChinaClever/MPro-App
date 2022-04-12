@@ -11,16 +11,17 @@ public:
 
     void clearEle(int id);
     void relayCtrl(int id, int on);
+    void orderCtrl(int on, uchar all=1);
     void setDelay(int id, uchar sec);
 
 protected:    
     virtual void funDelay(uchar *buf)=0;
     virtual void funClearEle(uchar *buf)=0;
-    virtual void funSwitch(uchar *on, uchar *off)=0;
+    virtual void funSwitch(uchar *on, uchar *off, uchar all=0)=0;
 
 private:
-    void openAllSwitch();
-    void closeAllSwitch();
+    void openAllSwitch(uchar all);
+    void closeAllSwitch(uchar all);
 
     void openSwitch(int id);
     void closeSwitch(int id);

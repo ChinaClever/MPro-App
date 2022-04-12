@@ -34,10 +34,12 @@ QStringList SerialPort::ports()
 
 bool SerialPort::waitForLock()
 {
+    int cnt = 1;
     bool ret = false;
     do {
         ret = mRwLock->tryLockForWrite();
         if(ret) break; else cm::mdelay(1);
+        if(0 == (cnt++ % 3000)) qDebug() << "Error: SerialPort waitForLock" << cnt;
     }while(!ret);
     mRwLock->unlock();
     return ret;
@@ -52,12 +54,16 @@ bool SerialPort::writeSerial(const QByteArray &array)
 
 void SerialPort::writeSlot()
 {
-    QWriteLocker locker(mRwLock);
-    while(!mList.isEmpty()) {
-        int ret = mSerial->write(mList.takeFirst());
-        if(ret > 0) {mSerial->flush(); cm::mdelay(11);}
-        else qCritical() << mSerial->errorString();
-    } isRun = false;
+    bool res = mRwLock->tryLockForWrite();
+    if(!res) QTimer::singleShot(1,this, SLOT(writeSlot()));
+    else {
+        if(mList.size()) {
+            int ret = mSerial->write(mList.takeFirst());
+            if(ret > 0) mSerial->flush(); else qCritical() << mSerial->errorString();
+            if(mList.size()) QTimer::singleShot(300,this, SLOT(writeSlot()));
+        } else isRun = false;
+        mRwLock->unlock();
+    }
 }
 
 QByteArray SerialPort::readSerial(int msecs)
@@ -67,7 +73,7 @@ QByteArray SerialPort::readSerial(int msecs)
     if(!ret) return rcv;
 
     do{
-        cm::mdelay(100);
+        cm::mdelay(msecs/10);
         array = mSerial->readAll();
         rcv.append(array);
     } while (array.size());

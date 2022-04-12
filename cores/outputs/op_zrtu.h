@@ -25,4 +25,5 @@ private:
     CThread *mThread;
 };
 
+using OP_Core = OP_ZRtu;
 #endif // OP_ZRTU_H

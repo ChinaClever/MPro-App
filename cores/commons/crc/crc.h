@@ -16,12 +16,14 @@ uint File(const QString &fn);
 
 ushort Cal(uchar *puchMsg, uint len);
 ushort Cal(const QByteArray &array);
+void AppendCrc(QByteArray &array);
 
 ushort CRC16(uchar *ptr, int len);
 ushort CRC16(const QByteArray &array);
 
 ushort rtu_crc(uchar *buf, int len);
 ushort rtu_crc(const QByteArray &array);
+
 }
 
 

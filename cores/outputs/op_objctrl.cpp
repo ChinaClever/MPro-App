@@ -10,8 +10,13 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     if(id) {
         if(on) openSwitch(id); else closeSwitch(id);
     } else {
-        if(on) openAllSwitch(); else closeAllSwitch();
+        orderCtrl(on, 0);
     }
+}
+
+void OP_ObjCtrl::orderCtrl(int on, uchar all)
+{
+    if(on) openAllSwitch(all); else closeAllSwitch(all);
 }
 
 void OP_ObjCtrl::clearEle(int id)
@@ -24,12 +29,12 @@ void OP_ObjCtrl::setDelay(int id, uchar sec)
     if(id) setOutputDelay(id,sec); else setAllDelay(sec);
 }
 
-void OP_ObjCtrl::openAllSwitch()
+void OP_ObjCtrl::openAllSwitch(uchar all)
 {
     uchar on[8], off[8];
     for(int i=0; i<6; i++)  on[i] = 0xFF;  //打开有效位
     for(int i=0; i<6; i++)  off[i] = 0x00;  //关闭有效位
-    funSwitch(on, off);
+    funSwitch(on, off, all);
 }
 
 
@@ -67,12 +72,12 @@ void OP_ObjCtrl::closeOtherSwitch(int id)
     funSwitch(on, off);
 }
 
-void OP_ObjCtrl::closeAllSwitch()
+void OP_ObjCtrl::closeAllSwitch(uchar all)
 {
     uchar on[8], off[8];
     for(int i=0; i<6; i++)  on[i] = 0x00;  //打开有效位
     for(int i=0; i<6; i++)  off[i] = 0xff;  //关闭有效位
-    funSwitch(on, off);
+    funSwitch(on, off, all);
 }
 
 void OP_ObjCtrl::closeSwitch(int id)
@@ -101,14 +106,16 @@ void OP_ObjCtrl::setClearEle(int id)
 
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
-    uchar cmd[48];
-    for(int i=0; i<48; i++) cmd[i] = sec;
+    sDevData *dev = cm::masterDev();
+    uchar *cmd = dev->output.relay.delay;
+    for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
     funDelay(cmd);
 }
 
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
-    static uchar cmd[48] = {0}; ///////////////============
+    sDevData *dev = cm::masterDev();
+    uchar *cmd = dev->output.relay.delay;
     cmd[id-1] = sec;
     funDelay(cmd);
 }

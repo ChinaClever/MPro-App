@@ -11,7 +11,6 @@
 #include "agent_devdata.h"
 #include "op_zrtu.h"
 
-extern void op_Core();
 
 void log_demo()
 {
@@ -55,28 +54,6 @@ void modbus_slave()
     tcp->setHoldingRegisters(1, data);
 }
 
-bool snmp_callback(uint id, const QString &oid, const QVariant &v)
-{
-    qDebug() << "snmp callback" << id << oid << v;
-    return true;
-}
-
-uint snmp_value = 55;
-
-void snmp_agent()
-{
-    SnmpModule *snmp = SnmpAgent::bulid();
-    sOidIt it;
-
-    it.name = "test";
-    it.fieldId = 1;
-    it.oid = "10.3.2";
-    it.intPtr = &snmp_value;
-//    it.callback = snmp_callback;
-
-    bool ret = snmp->addOid(it);
-    qDebug() << "snmp agent add oid" << ret;
-}
 
 void ssdp_demo()
 {
@@ -89,19 +66,6 @@ void ssdp_demo()
 
 }
 
-void dtls_demo()
-{
-    Dtls_Recver *ser = Dtls_Recver::bulid();
-//    ser->setFile("lzy.txt");
-
-    QStringList ips {"127.0.0.1"};
-    QByteArray array{"012345678901234567890123456789"};
-
-//    Dtls_Sender *c = new Dtls_Sender;
-//    c->send(ips, array);
-
-//    qDebug() << ser->waitForFinish();
-}
 
 void http_demo()
 {
@@ -116,9 +80,48 @@ void http_demo()
 //    });
 }
 
+static void outputCtrl(QObject *p)
+{
+    OP_Core *core = OP_Core::bulid(p);
+
+
+//    QString fn = "/home/lzy/ZMDPU_ZXB_APP_V1_6.bin.31313131313033383237";
+//    qDebug() << "CCCCCCCCCCC" <<  core->ota_start(fn);
+
+//    return ;
+
+    core->setDelay(0, 0);
+
+    cm::mdelay(500);
+
+qDebug() << "XXXXXXXXX";
+    core->orderCtrl(0);
+    qDebug() << "JJJJJJJJJJJJJJ";
+    cm::mdelay(500);
+
+    for(int i=0; i<12; ++i)
+    {
+        cm::mdelay(500);
+        core->relayCtrl(i+1, 1);
+//        core->orderCtrl(1);
+        cm::mdelay(500);
+        core->relayCtrl(i+1, 0);
+//        core->orderCtrl(1);
+    }
+
+    core->setDelay(0, 1);
+//    cm::mdelay(500);
+    core->orderCtrl(1);
+}
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    QObject *p = a.parent();
+    outputCtrl(p);
+
     // ipc_demo(a.parent());
     // log_demo();
     // modbus_master();
@@ -130,7 +133,7 @@ int main(int argc, char *argv[])
 
 
 //    op_Core();
-    OP_ZRtu::bulid(a.parent());
+
 //    OP_Core *op = new OP_Core();
     // Dtls_Recver::bulid();
 

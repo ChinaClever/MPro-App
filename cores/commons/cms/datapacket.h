@@ -3,7 +3,7 @@
 #include "cthread.h"
 
 #define LINE_NUM  3
-#define LOOP_NUM  6
+#define LOOP_NUM  12
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
 #define NAME_SIZE 32
