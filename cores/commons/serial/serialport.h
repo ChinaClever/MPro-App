@@ -24,8 +24,8 @@ public:
     QByteArray readSerial(int msecs=1000);
     bool waitForLock();
 
-private slots:
-    void writeSlot();
+public slots:
+    void cmsWriteSlot();
 
 private:
     bool isRun;

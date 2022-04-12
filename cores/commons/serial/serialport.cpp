@@ -48,20 +48,14 @@ bool SerialPort::waitForLock()
 bool SerialPort::writeSerial(const QByteArray &array)
 {
     mList << array;
-    if(!isRun) {isRun = true; QTimer::singleShot(1,this, SLOT(writeSlot()));}
     return mSerial->isWritable();
 }
 
-void SerialPort::writeSlot()
+void SerialPort::cmsWriteSlot()
 {
-    bool res = mRwLock->tryLockForWrite();
-    if(!res) QTimer::singleShot(1,this, SLOT(writeSlot()));
-    else {
-        if(mList.size()) {
-            cm::mdelay(120); int ret = mSerial->write(mList.takeFirst());
-            if(ret > 0) mSerial->flush(); else qCritical() << mSerial->errorString();
-        } if(mList.size()) QTimer::singleShot(300,this, SLOT(writeSlot())); else isRun = false;
-        mRwLock->unlock();
+    QWriteLocker locker(mRwLock);  while(mList.size()) {
+        cm::mdelay(235); int ret = mSerial->write(mList.takeFirst());
+        if(ret > 0) mSerial->flush(); else qCritical() << mSerial->errorString();
     }
 }
 
