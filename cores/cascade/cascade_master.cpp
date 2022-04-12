@@ -24,6 +24,7 @@ void Cascade_Master::masterReadDevs()
     size = 1;       /////==========
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
+        qDebug() << "AAAAAAAA" << ret;
         if(!ret){} ////========
         mdelay(120);
     } mdelay(320);
