@@ -93,10 +93,11 @@ int main(int argc, char *argv[])
 
 #else
     c->setAddress(0);
-    for(int i=0; i<12; ++i) {
+    for(int i=0; i<10; ++i) {
         c->masterRelayCtrl(1, i+1, 0);
         cm::mdelay(500);
         c->masterRelayCtrl(1, i+1, 1);
+        cm::mdelay(500);
     }
 
 #endif

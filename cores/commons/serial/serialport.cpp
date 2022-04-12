@@ -85,8 +85,8 @@ QByteArray SerialPort::transmit(const QByteArray &array, int msecs)
     QByteArray rcv;
     QWriteLocker locker(mRwLock);
     if(mSerial->write(array) > 0) {
-        mSerial->flush(); //mSerial->waitForBytesWritten();
-        rcv = readSerial(msecs);
+        mSerial->readAll(); mSerial->flush();
+        rcv = readSerial(msecs);  //mSerial->waitForBytesWritten();
     } else qCritical() << mSerial->errorString();
     return rcv;
 }

@@ -93,6 +93,9 @@ void Cascade_Slave::run()
             QByteArray rcv = readSerial();
             if((rcv.size()>4) && crcCheck(rcv)) {
                 workDown(rcv); } else fillData(mAddr);
-        } else {ota_updates(); masterReadDevs();}
+        } else {
+             ota_updates();
+             //masterReadDevs();
+         }
     }
 }
