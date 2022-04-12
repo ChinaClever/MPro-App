@@ -2,7 +2,7 @@
 
 Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
 {
-    setAddress(0);
+    setAddress(1);
     mThread = new CThread(this);
 }
 
