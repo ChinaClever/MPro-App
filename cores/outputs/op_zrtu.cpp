@@ -16,8 +16,10 @@ OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
     static OP_ZRtu* sington = nullptr;
     if(sington == nullptr) {
         sington = new OP_ZRtu(parent);
+#if defined(Q_OS_LINUX)
         sington->openSerial("/dev/ttyUSB0");
         sington->start();
+#endif
     }
     return sington;
 }

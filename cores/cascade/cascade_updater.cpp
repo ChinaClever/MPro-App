@@ -27,7 +27,7 @@ void Cascade_Updater::ota_updates()
 {
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
-        for(int i=0; i<dev->info.slaveNum; ++i) {
+        for(uint i=0; i<dev->info.slaveNum; ++i) {
             ota_update(i+1, mIt);
         } mIt.file.clear();
     }

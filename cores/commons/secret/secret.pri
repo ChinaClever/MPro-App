@@ -1,3 +1,4 @@
+unix {
 INCLUDEPATH += $$PWD
 
 
@@ -33,3 +34,4 @@ SOURCES += \
 #    $$PWD/sercret_example.cpp \
     $$PWD/sercret_rsa.cpp \
     $$PWD/sercret_smx.cpp
+}

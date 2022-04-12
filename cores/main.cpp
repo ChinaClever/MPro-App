@@ -3,12 +3,12 @@
 #include "db_user.h"
 #include "modbus_slavetcp.h"
 #include "ssdp_server.h"
-#include "snmp/snmpagent.h"
+//#include "snmp/snmpagent.h"
 #include "dtls_sender.h"
 #include "cascade_slave.h"
 #include "http/http.h"
 
-#include "agent_devdata.h"
+//#include "agent_devdata.h"
 #include "op_zrtu.h"
 
 
@@ -80,39 +80,6 @@ void http_demo()
 //    });
 }
 
-static void outputCtrl(QObject *p)
-{
-    OP_Core *core = OP_Core::bulid(p);
-
-
-//    QString fn = "/home/lzy/ZMDPU_ZXB_APP_V1_6.bin.31313131313033383237";
-//    qDebug() << "CCCCCCCCCCC" <<  core->ota_start(fn);
-
-//    return ;
-
-    core->setDelay(0, 0);
-
-    cm::mdelay(500);
-
-qDebug() << "XXXXXXXXX";
-    core->orderCtrl(0);
-    qDebug() << "JJJJJJJJJJJJJJ";
-    cm::mdelay(500);
-
-    for(int i=0; i<12; ++i)
-    {
-        cm::mdelay(500);
-        core->relayCtrl(i+1, 1);
-//        core->orderCtrl(1);
-        cm::mdelay(500);
-        core->relayCtrl(i+1, 0);
-//        core->orderCtrl(1);
-    }
-
-    core->setDelay(0, 1);
-//    cm::mdelay(500);
-    core->orderCtrl(1);
-}
 
 
 int main(int argc, char *argv[])
@@ -120,63 +87,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     QObject *p = a.parent();
-    outputCtrl(p);
-
-    // ipc_demo(a.parent());
-    // log_demo();
-    // modbus_master();
-    // modbus_slave();
-    // ssdp_demo();
-    // dtls_demo();
-    // snmp_agent();
-    // Cascade_Core::bulid();
-
-
-//    op_Core();
-
-//    OP_Core *op = new OP_Core();
-    // Dtls_Recver::bulid();
-
-
-
-    //     new c_sDevData;
-    //    Cascade_Object obj;
-    //    c_sDevData *data = obj.getDev();
-    ////     = data;
-
-
-    //    memset(data, 0, sizeof(c_sDevData));
-    //    data->id = 10;
-
-    //    data->lineSize = 2;
-    //    strcpy(data->info.devName, "luozhiyong");
-    //    strcpy(data->line[0].name, "1111");
-    //    strcpy(data->line[1].name, "22222");
-
-    //    QByteArray b = obj.toDataStream();
-    //    memset(data, 0, sizeof(c_sDevData));
-
-    //    c_sDevData *rcv = obj.deDataStream(b);
-    //    qDebug() << rcv->id <<  rcv->info.devName <<  rcv->lineSize<<  rcv->line[1].name;
-
-
-    //    c_sDevData data;
-
-    //
-
-    //    Cascade_DataStream s(&data);
-    //    QByteArray b;
-    //    QDataStream in(&b, QIODevice::WriteOnly);
-    //    in << s;
-
-    //    c_sDevData gdata;
-    //    Cascade_DataStream g(&gdata);
-    //    QDataStream out(&b, QIODevice::ReadOnly );
-    //    out >> g;
-    //
-
-//    Agent_DevData *dev = new Agent_DevData();
-//    dev->addOids();
+    //OP_Core::bulid(p);
 
 
 

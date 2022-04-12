@@ -1,3 +1,4 @@
+unix {
 INCLUDEPATH += $$PWD
 
 HEADERS += \
@@ -7,3 +8,4 @@ HEADERS += \
 SOURCES += \
     $$PWD/mjson.c \
     $$PWD/mongoose.c
+}

@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    cores \
-    http-server \
+    cores \    
+#    http-server \
     tools/ota_updater

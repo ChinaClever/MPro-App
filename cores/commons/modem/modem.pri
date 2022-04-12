@@ -1,3 +1,4 @@
+unix {
 INCLUDEPATH += $$PWD
 
 include(Ymodem/Ymodem.pri)
@@ -7,3 +8,4 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/ymodem.cpp
+}

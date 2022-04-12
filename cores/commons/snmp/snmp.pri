@@ -1,4 +1,4 @@
-
+unix{
 include(agent/agent.pri)
 include(client/client.pri)
 
@@ -11,3 +11,4 @@ HEADERS += \
 SOURCES += \
     $$PWD/snmpagent.cpp \
     $$PWD/snmpclient.cpp
+}

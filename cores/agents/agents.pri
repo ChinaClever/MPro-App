@@ -1,5 +1,5 @@
+unix {
 INCLUDEPATH += $$PWD
-
 
 HEADERS += \
     $$PWD/agent_devdata.h \
@@ -8,3 +8,4 @@ HEADERS += \
 SOURCES += \
     $$PWD/agent_devdata.cpp \
     $$PWD/agent_object.cpp
+}
