@@ -9,10 +9,11 @@ class Cascade_Slave : public Cascade_Fill
     explicit Cascade_Slave(QObject *parent = nullptr);
 public:
     static Cascade_Slave *bulid(QObject *parent = nullptr);
-    void setAddress(int addr);
+    void setAddress(int addr){mAddr=addr;}
 
 public slots:
     void run();
+    void start();
 
 private:
     bool replyDevData(uchar fc);

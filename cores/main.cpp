@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
     QObject *p = a.parent();
     //OP_Core::bulid(p);
-
+    Cascade_Core::bulid(p);
 
 
 

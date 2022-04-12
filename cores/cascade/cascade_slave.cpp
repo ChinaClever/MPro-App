@@ -2,9 +2,8 @@
 
 Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
 {
-    mAddr = 0;
+    setAddress(0);
     mThread = new CThread(this);
-    mThread->init(this, SLOT(run()));
 }
 
 Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
@@ -12,15 +11,21 @@ Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
     static Cascade_Slave* sington = nullptr;
     if(sington == nullptr) {
         sington = new Cascade_Slave(parent);
+#if defined(Q_OS_LINUX)
+        sington->openSerial("/dev/ttyUSB1");
+#else
+        sington->openSerial("COM22");
+#endif
+        sington->start();
     }
     return sington;
 }
 
-void Cascade_Slave::setAddress(int addr)
+
+void Cascade_Slave::start()
 {
-    mAddr=addr;
+    mThread->init(this, SLOT(run()));
     mThread->start();
-    // mThread->stop();
 }
 
 bool Cascade_Slave::replyDevData(uchar fc)
