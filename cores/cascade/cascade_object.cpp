@@ -19,7 +19,7 @@ QByteArray Cascade_Object::replyData(uchar fc, QByteArray &rcv, uchar addr)
     }
 
     if((_fc == fc) && (_addr == addr)) {
-        if(size > 6) out >> array;
+        if(rcv.size() > 6) out >> array;
     } else {
         qCritical() << "Error: reply Data" << __FUNCTION__
                     << fc << addr << size << cm::byteArrayToHexStr(rcv);

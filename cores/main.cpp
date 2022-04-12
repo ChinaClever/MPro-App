@@ -87,9 +87,11 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     QObject *p = a.parent();
-    //OP_Core::bulid(p);
+
     Cascade_Core *c = Cascade_Core::bulid(p);
 #if defined(Q_OS_LINUX)
+    OP_Core * op = OP_Core::bulid(p);
+
 
 #else
     c->setAddress(0);

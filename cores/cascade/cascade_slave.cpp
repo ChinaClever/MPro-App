@@ -95,7 +95,7 @@ void Cascade_Slave::run()
                 workDown(rcv); } else fillData(mAddr);
         } else {
              ota_updates();
-             masterReadDevs();
+             //masterReadDevs();
          }
     }
 }
