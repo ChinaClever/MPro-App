@@ -91,7 +91,12 @@ int main(int argc, char *argv[])
     Cascade_Core *c = Cascade_Core::bulid(p);
 #if defined(Q_OS_LINUX)
     OP_Core * op = OP_Core::bulid(p);
-
+    for(int i=0; i<10; ++i) {
+        op->relayCtrl( i+1, 0);
+        cm::mdelay(500);
+        op->relayCtrl(i+1, 1);
+        cm::mdelay(500);
+    }
 
 #else
     c->setAddress(0);
