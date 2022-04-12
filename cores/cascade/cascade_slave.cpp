@@ -64,9 +64,9 @@ bool Cascade_Slave::replyRelaySet(QByteArray &rcv)
 bool Cascade_Slave::workDown(QByteArray &rcv)
 {
     bool ret = false;
-    uchar fc, addr; ushort size; QByteArray array;
     QDataStream out(&rcv, QIODevice::ReadOnly);
-    out >> fc >> addr >> size; if(size > 6) out >> array;
+    uchar fc, addr; ushort size; QByteArray array;
+    out >> fc >> addr >> size; if(rcv.size() > 6) out >> array;
     if((addr == mAddr) || (addr == fc_mask)) {
         switch (fc) {
         case fc_readDev: ret = replyDevData(fc); break;
