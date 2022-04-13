@@ -97,7 +97,7 @@ void Cascade_Slave::run()
                 for(auto &it: its) workDown(it);
                 fillData(addr);
 
-                qDebug() << "XXXXXXXXXX" << rcv.size();
+                qDebug() << "XXXXXXXXXX" << its.size();
             }
         } else {
              ota_updates();

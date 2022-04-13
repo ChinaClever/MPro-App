@@ -31,8 +31,9 @@ QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
     QDataStream out(&array, QIODevice::ReadOnly);
     if((array.size()>6) && crcCheck(array)) {
         while(!out.atEnd()) {
-            c_sFrame it; bool ret = arrayToFrame(out, it);
-            if(ret) its << it;
+            c_sFrame it;
+            bool ret = arrayToFrame(out, it);
+            if(ret) its << it; else qDebug() << "Error:" << __func__;
         }
     }
 
@@ -117,21 +118,10 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
 bool Cascade_Object::crcCheck(const QByteArray &array)
 {
     bool ret = false;
-    //    QByteArray ba = array.left(2);
-    //    ushort head = (ba.at(0)<<8) + ba.at(1);
-    //    if(head == START_HEAD) {
-    //        ushort len = ((uchar)array.at(5))*256 + (uchar)array.at(6);
-    //        QByteArray end = array.mid(7+len, 2);
-    //        ushort crc = (end.at(0)<<8) + end.at(1);
-    //        if(END_CRC == crc) ret = true; else qCritical() << "Error: Cascade end crc";
-    //    } else qCritical() << "Error: Cascade head crc";
-
     QByteArray ba = array.left(2);
     QByteArray end = array.right(2);
-    ushort crc = (abs(end.at(0))<<8) + abs(end.at(1));
-    ushort head = (abs(ba.at(0))<<8) + abs(ba.at(1));
-    qDebug() << cm::byteArrayToHexStr(ba) << cm::byteArrayToHexStr(end);
-    qDebug() << head << START_HEAD << crc << END_CRC;
+    ushort crc = (uchar(end.at(0))<<8) + uchar(end.at(1));
+    ushort head = (uchar(ba.at(0))<<8) + uchar(ba.at(1));
     if((head == START_HEAD) && (END_CRC == crc)) ret = true;
     else qCritical() << "Error: Cascade crc" << cm::byteArrayToHexStr(array);
 
