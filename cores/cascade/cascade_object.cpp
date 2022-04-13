@@ -16,24 +16,24 @@ QByteArray Cascade_Object::frameToArray(const c_sFrame &it)
     return array;
 }
 
-bool Cascade_Object::arrayToFrame(QByteArray &array, c_sFrame &it)
+bool Cascade_Object::arrayToFrame(QDataStream &out, c_sFrame &it)
 {
-    ushort head, crc; bool ret = false;
-    QDataStream out(&array, QIODevice::ReadOnly);
-    if((array.size()>6) && crcCheck(array)) {
-        out >> head >> it.dstAddr >> it.srcAddr >> it.fc >> it.len;
-        if(it.len) {out >> it.data;} out >> crc; // Crc::Cal(array)
-        array.remove(0, it.len + 9); ret = true;
-    } else qCritical() << "Error:" << __FUNCTION__ << cm::byteArrayToHexStr(array);
+    ushort head, crc; bool ret = false; out >> head;
+    if(head == START_HEAD) out >> it.dstAddr >> it.srcAddr >> it.fc >> it.len;
+    if(it.len) {out >> it.data;} out >> crc; // Crc::Cal(array)
+    if(crc == END_CRC) ret = true;
     return ret;
 }
 
 QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
 {
     QVector<c_sFrame> its;
-    for(int i=0; i<array.size(); ++i) {
-        c_sFrame it; bool ret = arrayToFrame(array, it);
-        if(ret) its << it; else array.remove(0, 1);
+    QDataStream out(&array, QIODevice::ReadOnly);
+    if((array.size()>6) && crcCheck(array)) {
+        while(!out.atEnd()) {
+            c_sFrame it; bool ret = arrayToFrame(out, it);
+            if(ret) its << it;
+        }
     }
 
     return its;
@@ -117,14 +117,23 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
 bool Cascade_Object::crcCheck(const QByteArray &array)
 {
     bool ret = false;
+    //    QByteArray ba = array.left(2);
+    //    ushort head = (ba.at(0)<<8) + ba.at(1);
+    //    if(head == START_HEAD) {
+    //        ushort len = ((uchar)array.at(5))*256 + (uchar)array.at(6);
+    //        QByteArray end = array.mid(7+len, 2);
+    //        ushort crc = (end.at(0)<<8) + end.at(1);
+    //        if(END_CRC == crc) ret = true; else qCritical() << "Error: Cascade end crc";
+    //    } else qCritical() << "Error: Cascade head crc";
+
     QByteArray ba = array.left(2);
-    ushort head = (ba.at(0)<<8) + ba.at(1);
-    if(head == START_HEAD) {
-        ushort len = ((uchar)array.at(5))*256 + (uchar)array.at(6);
-        QByteArray end = array.mid(7+len, 2);
-        ushort crc = (end.at(0)<<8) + end.at(1);
-        if(END_CRC == crc) ret = true; else qCritical() << "Error: Cascade end crc";
-    } else qCritical() << "Error: Cascade head crc";
+    QByteArray end = array.right(2);
+    ushort crc = (abs(end.at(0))<<8) + abs(end.at(1));
+    ushort head = (abs(ba.at(0))<<8) + abs(ba.at(1));
+    qDebug() << cm::byteArrayToHexStr(ba) << cm::byteArrayToHexStr(end);
+    qDebug() << head << START_HEAD << crc << END_CRC;
+    if((head == START_HEAD) && (END_CRC == crc)) ret = true;
+    else qCritical() << "Error: Cascade crc" << cm::byteArrayToHexStr(array);
 
     return ret;
 }

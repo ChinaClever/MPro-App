@@ -32,7 +32,7 @@ protected:
 
 private:
     QByteArray frameToArray(const c_sFrame &it);
-    bool arrayToFrame(QByteArray &array, c_sFrame &it);
+    bool arrayToFrame(QDataStream &out, c_sFrame &it);
     QVector<c_sFrame> arrayToFrames(QByteArray &array);
 
     void deDataStream(QByteArray &array, c_sDevData *dev);
