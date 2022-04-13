@@ -29,6 +29,6 @@ private:
     QThread *mThread;
 };
 
-#define START_HEAD ((ushort)0x7E7E)
+#define START_HEAD ((ushort)0xC5C5)
 #define END_CRC ((ushort)0x5C5C)
 #endif // CTHREAD_H
