@@ -51,12 +51,12 @@ bool SerialPort::writeSerial(const QByteArray &array)
     return mSerial->isWritable();
 }
 
-void SerialPort::cmsWriteSlot()
+void SerialPort::cmsWriteSlot(int msecs)
 {
     QWriteLocker locker(mRwLock);  while(mList.size()) {
-        cm::mdelay(135); int ret = mSerial->write(mList.takeFirst());
+        cm::mdelay(msecs); int ret = mSerial->write(mList.takeFirst());
         if(ret > 0) mSerial->flush(); else qCritical() << mSerial->errorString();
-        if(!mList.size()) cm::mdelay(235);
+        if(!mList.size()) cm::mdelay(2*msecs);
     }
 }
 

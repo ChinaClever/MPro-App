@@ -25,7 +25,7 @@ public:
     bool waitForLock();
 
 public slots:
-    void cmsWriteSlot();
+    void cmsWriteSlot(int msecs=125);
 
 private:
     bool isRun;

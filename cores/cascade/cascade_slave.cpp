@@ -87,7 +87,9 @@ void Cascade_Slave::run()
 {
     while(isRun) {
         uchar addr = getAddress();
-         mThread->msleep(1); cmsWriteSlot();
+         mThread->msleep(1);
+         cmsWriteSlot(20);
+
          if(addr) {
             QByteArray rcv = readSerial();
             if(rcv.size() > 6) {
