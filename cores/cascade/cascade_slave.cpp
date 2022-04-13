@@ -90,12 +90,12 @@ void Cascade_Slave::run()
 {
     while(isRun) {
          mThread->msleep(1); cmsWriteSlot(); if(mAddr) {
-            QByteArray rcv = readSerial();
+            QByteArray rcv = readSerial(100);
             if((rcv.size()>4) && crcCheck(rcv)) {
                 workDown(rcv); } else fillData(mAddr);
         } else {
              ota_updates();
-             //masterReadDevs();
+             masterReadDevs();
          }
     }
 }

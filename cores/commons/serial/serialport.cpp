@@ -66,9 +66,9 @@ QByteArray SerialPort::readSerial(int msecs)
     bool ret = mSerial->waitForReadyRead(msecs);
     if(!ret) return rcv;
 
-    do{
-        cm::mdelay(msecs/10);
-        array = mSerial->readAll();
+    do{        
+        ret = mSerial->waitForReadyRead(msecs/10); //cm::mdelay(msecs/10);
+        if(ret) array = mSerial->readAll(); else break;
         rcv.append(array);
     } while (array.size());
 

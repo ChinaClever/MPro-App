@@ -29,9 +29,7 @@ void Cascade_Master::masterReadDevs()
         else if(devData(i+1)->offLine > 0) {
             if(--(devData(i+1)->offLine) == 0) {
                 qDebug() << " error slave lose";
-            }
-        }
-        mdelay(120);
+        }} mdelay(120);
     } mdelay(320);
 }
 
