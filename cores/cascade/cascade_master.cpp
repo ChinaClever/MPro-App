@@ -8,12 +8,13 @@ Cascade_Master::Cascade_Master(QObject *parent) : Cascade_Unserialize{parent}
 bool Cascade_Master::masterRead(uchar addr)
 {
     bool ret = false; if(isOta) return isOta;
-    QByteArray rcv = readData(fc_readDev, addr, sizeof(c_sDevData));
-    if((rcv.size()>4)) {
-        deDataStream(rcv);
-        ret = unSequence(addr);
+    QVector<c_sFrame> its = readData(fc_readDev, addr);
+    for(auto &it: its) {
+        if(it.fc == fc_readDev) {
+            deDataStream(it.data); ret = unSequence(it.srcAddr);
+        } else qCritical() << "Error: Cascade Master fc" << it.fc;
+        qDebug() << "AAAAAAAA" << ret;
     }
-    qDebug() << "AAAAAAAA" << ret;
 
     return ret;
 }
@@ -29,7 +30,7 @@ void Cascade_Master::masterReadDevs()
         else if(devData(i+1)->offLine > 0) {
             if(--(devData(i+1)->offLine) == 0) {
                 qDebug() << " error slave lose";
-        }} mdelay(120);
+            }} mdelay(120);
     } mdelay(320);
 }
 

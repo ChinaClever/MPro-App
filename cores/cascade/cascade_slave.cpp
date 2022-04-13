@@ -61,22 +61,19 @@ bool Cascade_Slave::replyRelaySet(QByteArray &rcv)
     return outputRelaySet(0, rcv[0], rcv[1], rcv[2]);
 }
 
-bool Cascade_Slave::workDown(QByteArray &rcv)
+bool Cascade_Slave::workDown(c_sFrame &it)
 {
     bool ret = false;
-    QDataStream out(&rcv, QIODevice::ReadOnly);
-    uchar fc, addr; ushort size; QByteArray array;
-    out >> fc >> addr >> size; if(rcv.size() > 6) out >> array;
-    if((addr == mAddr) || (addr == fc_mask)) {
-        switch (fc) {
-        case fc_readDev: ret = replyDevData(fc); break;
-        case fc_writeAlarm: ret = replyAlarm(array); break;
-        case fc_relaySet: ret = replyRelaySet(array); break;
-        case fc_relayCtrl: ret = replyRelayCtrl(array); break;
+    if((it.dstAddr == getAddress()) || (it.dstAddr == fc_mask)) {
+        switch (it.fc) {
+        case fc_readDev: ret = replyDevData(it.fc); break;
+        case fc_writeAlarm: ret = replyAlarm(it.data); break;
+        case fc_relaySet: ret = replyRelaySet(it.data); break;
+        case fc_relayCtrl: ret = replyRelayCtrl(it.data); break;
 
-        case fc_otaStart: ret = otaReplyStart(array); break;
-        case fc_otaEnd: ret = otaReplyFinish(array); break;
-        case fc_otaPack: ret = otaReplyPacket(array); break;
+        case fc_otaStart: ret = otaReplyStart(it.data); break;
+        case fc_otaEnd: ret = otaReplyFinish(it.data); break;
+        case fc_otaPack: ret = otaReplyPacket(it.data); break;
         }
     }
 
@@ -89,12 +86,17 @@ bool Cascade_Slave::workDown(QByteArray &rcv)
 void Cascade_Slave::run()
 {
     while(isRun) {
-         mThread->msleep(1); cmsWriteSlot(); if(mAddr) {
+        uchar addr = getAddress();
+         mThread->msleep(1); cmsWriteSlot();
+         if(addr) {
             QByteArray rcv = readSerial();
-            qDebug() << "XXXXXXXXXX" << rcv.size();
+            if(rcv.size() > 6) {
+                QVector<c_sFrame> its = replyData(rcv);
+                for(auto &it: its) workDown(it);
+                fillData(addr);
 
-            if((rcv.size()>4) && crcCheck(rcv)) {
-                workDown(rcv); } else fillData(mAddr);
+                qDebug() << "XXXXXXXXXX" << rcv.size();
+            }
         } else {
              ota_updates();
              //masterReadDevs();

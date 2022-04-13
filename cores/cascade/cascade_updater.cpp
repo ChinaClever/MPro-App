@@ -38,7 +38,7 @@ bool Cascade_Updater::otaSendInit(int addr, const sFileTrans &it)
     isOta = true; waitForLock(); cm::mdelay(200);
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << it.fc << it.dev <<it.path << it.file << it.md5 << END_CRC;
-    QByteArray recv = transData(fc_otaStart, addr, array);
+    QByteArray recv = tranData(fc_otaStart, addr, array);
     if(!recv.contains("Start Updata")) isOta = false;
     return isOta;
 }
@@ -56,7 +56,7 @@ bool Cascade_Updater::otaSendPacket( int addr, const QByteArray &array)
 bool Cascade_Updater::otaSendData(uchar fn, int addr, const QByteArray &array)
 {
     bool ret = true;
-    QByteArray recv = transData(fn, addr, array);  emit otaSendSig(addr, recv);
+    QByteArray recv = tranData(fn, addr, array);  emit otaSendSig(addr, recv);
     if(recv.isEmpty() || recv.contains("Receive Packet Failure")) ret = false;
     return ret;
 }
@@ -76,7 +76,7 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
     QDataStream out(&rcv, QIODevice::ReadOnly);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
-    else qDebug() << "Error: Dtls recver head" << it->file << it->md5 << it->crc;
+    else qDebug() << "Error: Ota recver head" << it->file << it->md5 << it->crc;
     return writeData(fc_otaStart, 0, "Start Updata");
 }
 

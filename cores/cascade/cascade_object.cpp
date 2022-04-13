@@ -2,53 +2,86 @@
 
 Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 {
+    setAddress(0);
     mCData = new c_sDevData;
     memset((void *)mCData, 0, sizeof(c_sDevData));
     mDataStream = new c_DataStream(mCData);
 }
 
-QByteArray Cascade_Object::replyData(uchar fc, QByteArray &rcv, uchar addr)
+QByteArray Cascade_Object::frameToArray(const c_sFrame &it)
 {
-    ushort size = 0;
-    QByteArray array;
-    uchar _fc = 0, _addr = 0;
-
-    QDataStream out(&rcv, QIODevice::ReadOnly);
-    if((rcv.size()>4) && crcCheck(rcv)) {
-        out >> _fc >> _addr >> size;
-    }
-
-    if((_fc == fc) && (_addr == addr)) {
-        if(rcv.size() > 6) out >> array;
-    } else {
-        qCritical() << "Error: reply Data" << __FUNCTION__
-                    << fc << addr << size << cm::byteArrayToHexStr(rcv);
-    }
-
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << START_HEAD << it.dstAddr << mSelfAddr /*it.srcAddr*/ << it.fc << it.len;
+    if(it.len) {in << it.data;} in << END_CRC;
     return array;
 }
 
-QByteArray Cascade_Object::readData(uchar fc, uchar addr, ushort size)
+bool Cascade_Object::arrayToFrame(QByteArray &array, c_sFrame &it)
 {
-    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << size << END_CRC; // Crc::Cal(array)
-    array = transmit(array);
-    return replyData(fc, array);
+    ushort head, crc; bool ret = false;
+    QDataStream out(&array, QIODevice::ReadOnly);
+    if((array.size()>6) && crcCheck(array)) {
+        out >> head >> it.dstAddr >> it.srcAddr >> it.fc >> it.len;
+        if(it.len) {out >> it.data;} out >> crc; // Crc::Cal(array)
+        array.remove(0, it.len + 9); ret = true;
+    } else qCritical() << "Error:" << __FUNCTION__ << cm::byteArrayToHexStr(array);
+    return ret;
+}
+
+QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
+{
+    QVector<c_sFrame> its;
+    for(int i=0; i<array.size(); ++i) {
+        c_sFrame it; bool ret = arrayToFrame(array, it);
+        if(ret) its << it; else array.remove(0, 1);
+    }
+
+    return its;
+}
+
+QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar fc)
+{
+    QVector<c_sFrame> res;
+    QVector<c_sFrame> its = arrayToFrames(rcv);
+    foreach(const auto &it, its) {
+        if(it.srcAddr == addr) {
+            if(fc) if(fc != it.fc) continue;
+            res << it;
+        }
+    }
+
+    return its;
+}
+
+QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
+{
+    c_sFrame it; it.fc = fc; it.dstAddr = addr; it.len=0;
+    QByteArray array = frameToArray(it); array = transmit(array);
+    return arrayToFrames(array);
 }
 
 bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
 {
-    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << (ushort)value.size() << value << END_CRC; // Crc::Cal(array)
+    c_sFrame it; it.fc = fc; it.dstAddr = addr;
+    it.len=value.size(); it.data = value;
+    QByteArray array = frameToArray(it);
     return writeSerial(array);
 }
 
-QByteArray Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
+QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
 {
-    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << fc << addr << (ushort)value.size() << value << END_CRC; // Crc::Cal(array);
-    array = transmit(array);
-    return replyData(fc, array);
+    c_sFrame it; it.fc = fc; it.dstAddr = addr;
+    it.len=value.size(); it.data = value;
+    QByteArray array = frameToArray(it);
+    return replyData(array, addr, fc);
+}
+
+QByteArray Cascade_Object::tranData(uchar fc, uchar addr, const QByteArray &value)
+{
+    QByteArray array;
+    QVector<c_sFrame> res = transData(fc, addr, value);
+    if(res.size()) array = res.takeLast().data;
+    return array;
 }
 
 QByteArray Cascade_Object::toDataStream()
@@ -83,10 +116,15 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
 
 bool Cascade_Object::crcCheck(const QByteArray &array)
 {
-    bool ret = false; QByteArray ba = array.right(2);
-    //ushort crc = Crc::Cal((uchar *)array.data(), array.size()-2);
-    ushort crc = (ba.at(0)<<8) + ba.at(1); if(END_CRC == crc) ret = true;
-    else qCritical() << "Error: Cascade" << __FUNCTION__ << array.right(2).toShort()
-                  << END_CRC << cm::byteArrayToHexStr(array);
+    bool ret = false;
+    QByteArray ba = array.left(2);
+    ushort head = (ba.at(0)<<8) + ba.at(1);
+    if(head == START_HEAD) {
+        ushort len = ((uchar)array.at(5))*256 + (uchar)array.at(6);
+        QByteArray end = array.mid(7+len, 2);
+        ushort crc = (end.at(0)<<8) + end.at(1);
+        if(END_CRC == crc) ret = true; else qCritical() << "Error: Cascade end crc";
+    } else qCritical() << "Error: Cascade head crc";
+
     return ret;
 }
