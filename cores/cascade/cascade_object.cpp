@@ -120,8 +120,8 @@ bool Cascade_Object::crcCheck(const QByteArray &array)
     bool ret = false;
     QByteArray ba = array.left(2);
     QByteArray end = array.right(2);
-    ushort crc = (uchar(end.at(0))<<8) + uchar(end.at(1));
-    ushort head = (uchar(ba.at(0))<<8) + uchar(ba.at(1));
+    ushort crc = (((uchar)end.at(0))<<8) + (uchar)end.at(1);
+    ushort head = (((uchar)ba.at(0))<<8) + (uchar)ba.at(1);
     if((head == START_HEAD) && (END_CRC == crc)) ret = true;
     else qCritical() << "Error: Cascade crc" << cm::byteArrayToHexStr(array);
 
