@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
 #else
     c->setAddress(0);
-    for(int i=0; i<10; ++i) {
+    for(int i=0; i<3; ++i) {
         c->masterRelayCtrl(1, i+1, 0);
         cm::mdelay(500);
         c->masterRelayCtrl(1, i+1, 1);
