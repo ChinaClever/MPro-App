@@ -63,12 +63,10 @@ void SerialPort::cmsWriteSlot(int msecs)
 QByteArray SerialPort::readSerial(int msecs)
 {
     QByteArray rcv, array;
-    bool ret = mSerial->waitForReadyRead(msecs);
-    if(!ret) return rcv;
-
-    do{        
-        ret = mSerial->waitForReadyRead(msecs/10); //cm::mdelay(msecs/10);
-        if(ret) array = mSerial->readAll(); else break;
+    mSerial->waitForReadyRead(msecs);
+    do{
+        cm::mdelay(msecs/10);
+        array = mSerial->readAll();
         rcv.append(array);
     } while (array.size());
 
