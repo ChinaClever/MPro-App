@@ -12,6 +12,7 @@ class Dtls_Recver : public QObject
 public:
     static Dtls_Recver *bulid(QObject *parent = nullptr);
     void setPath(const QString &path) {mIt.path=path;}
+    void listen(){mDtls->listen();}
     bool waitForFinish();
 
 signals:
@@ -23,9 +24,11 @@ private:
     bool initFile(const QByteArray &data);
     bool recvFinish();
 
+public slots:
+     void throwMessage(const QString &message);
+
 private slots:
-    void throwError(const QString &message);
-    void throwMessage(const QString &message);
+    void throwError(const QString &message);   
     void rcvClientMessage(const QByteArray &data);
 
 private:

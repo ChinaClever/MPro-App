@@ -1,9 +1,11 @@
 #include "cascade_updater.h"
 
+
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
     isOta = false;
     mFile = new QFile;
+    QTimer::singleShot(50,this,SLOT(initFunSlot()));
 }
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
@@ -58,9 +60,9 @@ bool Cascade_Updater::otaSendData(uchar fn, int addr, const QByteArray &array)
     bool ret = true;
     QByteArray recv = tranData(fn, addr, array);  emit otaSendSig(addr, recv);
     if(recv.isEmpty() || recv.contains("Receive Packet Failure")) ret = false;
+    mDtls->throwMessage(tr("addr=%1: ").arg(addr) + recv);
     return ret;
 }
-
 
 bool Cascade_Updater::otaSetFile(const QString &fn)
 {
@@ -97,4 +99,10 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize); else str += "Failure";
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
+}
+
+void Cascade_Updater::initFunSlot()
+{
+    mDtls = Dtls_Recver::bulid(this);
+    connect(mDtls, &Dtls_Recver::finishSig, this, &Cascade_Updater::dtlsFinishSlot);
 }

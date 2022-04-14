@@ -6,12 +6,11 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
 {
     mFile = new QFile;
     mNet = new Net_Udp(this);
-    mDtls = new Dtls_Service(this);
+    mDtls = new Dtls_Service(this); isFinshed = false;
     connect(mDtls, &Dtls_Service::errorMessage, this, &Dtls_Recver::throwError);
     connect(mDtls, &Dtls_Service::warningMessage, this, &Dtls_Recver::throwMessage);
     connect(mDtls, &Dtls_Service::infoMessage, this, &Dtls_Recver::throwMessage);
-    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);
-    mDtls->listen(); isFinshed = false;
+    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);    
 }
 
 

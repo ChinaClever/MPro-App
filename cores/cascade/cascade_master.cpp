@@ -23,8 +23,6 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
     uint size = masterDev()->info.slaveNum;
-    size = 1;       /////==========
-
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(ret, devData(i+1)->offLine);
