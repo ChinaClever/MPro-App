@@ -3,8 +3,7 @@
 
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
-    isOta = false;
-    mFile = new QFile;
+    isOta = false; mFile = new QFile;
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
 }
 
@@ -29,7 +28,8 @@ void Cascade_Updater::ota_updates()
 {
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
-        for(uint i=0; i<dev->info.slaveNum; ++i) {
+        uint size = dev->info.slaveNum; size = 1;
+        for(uint i=0; i<size; ++i) {
             ota_update(i+1, mIt);
         } mIt.file.clear();
     }
