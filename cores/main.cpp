@@ -86,9 +86,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-
-
-
     QObject *p = a.parent();
 
     Dtls_Recver::bulid(p)->listen();
