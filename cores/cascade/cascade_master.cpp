@@ -10,7 +10,7 @@ bool Cascade_Master::masterRead(uchar addr)
     bool ret = false; if(isOta) return isOta;
     QVector<c_sFrame> its = readData(fc_readDev, addr);
     for(auto &it: its) {
-        if(it.fc == fc_readDev) {
+        if((it.fc == fc_readDev) && it.srcAddr){
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
     }

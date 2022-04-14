@@ -47,13 +47,8 @@ bool Cascade_Slave::replyAlarm(QByteArray &rcv)
 {
     sSetAlarmUnit unit = cm::toStruct<sSetAlarmUnit>(rcv);
     unit.index.addr = 0; Set_Core *set = Set_Core::bulid();
-   // return set->setAlarm(unit);
-    set->setAlarm(unit);
-
-    qDebug() << "GGGGGGGG" << cm::masterDev()->output.vol.rated[32];
-    return true;
+    return set->setAlarm(unit);
 }
-
 
 bool Cascade_Slave::replyRelayCtrl(QByteArray &rcv)
 {
