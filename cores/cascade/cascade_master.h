@@ -13,7 +13,7 @@ public:
     bool masterRead(uchar addr);
     bool masterSetAlarm(const sSetAlarmUnit &unit);
     bool masterRelayCtrl(uchar addr, uchar id, uchar on);
-    bool masterRelaySet(int addr, int id, uchar type, uchar delay);
+    bool masterDelaySet(int addr, int id, uchar type, uchar delay);
 };
 
 #endif // CASCADE_MASTER_H

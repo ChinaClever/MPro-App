@@ -23,7 +23,7 @@ bool Set_Relay::outputRelaySet(int addr, int id, uchar mode, uchar delay)
 {
     bool ret = true;
     if(addr) {
-        ret = Cascade_Core::bulid()->masterRelaySet(addr, id, mode, delay);
+        ret = Cascade_Core::bulid()->masterDelaySet(addr, id, mode, delay);
     } else {
         OP_ZRtu::bulid()->setDelay(id, delay);
         sRelayUnit *it = &(cm::masterDev()->output.relay);

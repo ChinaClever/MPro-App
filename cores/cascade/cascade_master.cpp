@@ -30,7 +30,8 @@ void Cascade_Master::masterReadDevs()
         else if(devData(i+1)->offLine > 0) {
             if(--(devData(i+1)->offLine) == 0) {
                 qDebug() << " error slave lose";
-            }} mdelay(120);
+            }
+        } mdelay(120);
     } mdelay(320);
 }
 
@@ -48,9 +49,9 @@ bool Cascade_Master::masterRelayCtrl(uchar addr, uchar id, uchar on)
     return writeData(fc, addr, array);
 }
 
-bool Cascade_Master::masterRelaySet(int addr, int id, uchar type, uchar delay)
+bool Cascade_Master::masterDelaySet(int addr, int id, uchar type, uchar delay)
 {
-    uchar fc = fc_relaySet; if(isOta) return isOta;
+    uchar fc = fc_delaySet; if(isOta) return isOta;
     QByteArray array;  array.append(id); array.append(type); array.append(delay);
     return writeData(fc, addr, array);
 }

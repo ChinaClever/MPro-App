@@ -70,7 +70,7 @@ bool Cascade_Slave::workDown(c_sFrame &it)
         switch (it.fc) {
         case fc_readDev: ret = replyDevData(it.fc); break;
         case fc_writeAlarm: ret = replyAlarm(it.data); break;
-        case fc_relaySet: ret = replyRelaySet(it.data); break;
+        case fc_delaySet: ret = replyRelaySet(it.data); break;
         case fc_relayCtrl: ret = replyRelayCtrl(it.data); break;
 
         case fc_otaStart: ret = otaReplyStart(it.data); break;
@@ -96,7 +96,7 @@ void Cascade_Slave::run()
             }
         } else {
              ota_updates();
-             //masterReadDevs();
+             masterReadDevs();
          }
     }
 }
