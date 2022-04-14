@@ -77,6 +77,5 @@ void Cascade_Fill::fillData(uchar addr)
 {
     c_sDevData *dev = getDev();
     sDevData *data = cm::masterDev();
-    data->hz = 66;
     upDevData(addr, data, dev);
 }

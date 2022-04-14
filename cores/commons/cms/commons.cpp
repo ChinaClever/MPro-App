@@ -86,7 +86,7 @@ QString cm::byteArrayToUcharStr(const QByteArray &array)
 
 sDataPacket *cm::dataPacket()
 {
-    sDataPacket *packet = (sDataPacket *)SM_Obj::sharedMemory(sizeof(sDataPacket));
+    sDataPacket *packet = (sDataPacket *)SM_Obj::sharedMemory();
     if(!packet) qDebug() << "Error cm dataPacket";
     return packet;
 }

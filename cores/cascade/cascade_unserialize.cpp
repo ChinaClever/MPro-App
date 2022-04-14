@@ -82,8 +82,6 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->dc = obj->dc;
     data->hz = obj->hz;
     data->br = obj->br;
-
-    qDebug() << "hz" << data->hz;
 }
 
 bool Cascade_Unserialize::unSequence(uchar addr)

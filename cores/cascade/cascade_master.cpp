@@ -13,26 +13,30 @@ bool Cascade_Master::masterRead(uchar addr)
         if(it.fc == fc_readDev) {
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
-        qDebug() << "AAAAAAAA" << ret;
     }
 
     return ret;
 }
+
 
 void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
     uint size = masterDev()->info.slaveNum;
     size = 1;       /////==========
+
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
-        if(ret)devData(i+1)->offLine=3;
-        else if(devData(i+1)->offLine > 0) {
-            if(--(devData(i+1)->offLine) == 0) {
-                qDebug() << " error slave lose";
-            }
-        } mdelay(120);
+        setEndisable(ret, devData(i+1)->offLine);
     } mdelay(320);
+}
+
+void Cascade_Master::setEndisable(bool ret, uchar &v)
+{
+    if(ret) v = 3;
+    else if(v > 0){
+        if(--v == 0)  qDebug() << " error slave lose";
+    } cm::mdelay(100);
 }
 
 bool Cascade_Master::masterSetAlarm(const sSetAlarmUnit &unit)

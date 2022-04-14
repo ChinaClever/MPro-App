@@ -102,6 +102,18 @@ int main(int argc, char *argv[])
 
 #else
     c->setAddress(0);
+
+    sAlarmIndex index;
+    index.addr = 1;
+    index.type = AlarmIndex::Output;
+    index.subtopic = AlarmIndex::Vol;
+    index.id = 32;
+
+    sSetAlarmUnit unit;
+    unit.index = index;
+    unit.rated = 55;
+    set->setAlarm(unit);
+
     for(int i=0; i<12; ++i) {
         set->outputRelayCtrl(1, i+1, 0);
         cm::mdelay(1500);
