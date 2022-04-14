@@ -107,7 +107,7 @@ void OP_ZRtu::run()
         if(0 == size) size = 1;  /////==========
 
         for(int i=0; i<size; ++i) {
-            cmsWriteSlot();
+            cmsWriteSlot(150);
             ota_updates();
             readData(i+1);
             mThread->msleep(200);
