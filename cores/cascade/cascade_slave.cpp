@@ -85,17 +85,14 @@ bool Cascade_Slave::workDown(c_sFrame &it)
 
 void Cascade_Slave::run()
 {
-    while(isRun) {
-        uchar addr = getAddress();
-         mThread->msleep(1);
-         cmsWriteSlot();
-
-         if(addr) {
+    while(isRun) {        
+         mThread->msleep(1); cmsWriteSlot();
+         uchar addr = getAddress(); if(addr) {
             QByteArray rcv = readSerial();
             if(rcv.size() > 6) {
                 QVector<c_sFrame> its = replyData(rcv);
                 for(auto &it: its) workDown(it);
-                fillData(addr);
+                if(its.size()) fillData(addr);
             }
         } else {
              ota_updates();
