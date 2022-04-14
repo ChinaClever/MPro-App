@@ -1,6 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 #include <QtCore>
+#include <QMetaType>
 
 struct sFileTrans {
     ushort fc;

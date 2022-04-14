@@ -17,7 +17,7 @@ bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
             if(ret) cm::mdelay(25); else break;
-        } mFile->close(); otaSendFinish(addr, ret?1:0); isOta = false;
+        } mFile->close(); ret = otaSendFinish(addr, ret?1:0); isOta = false;
     }
 
     return ret;
@@ -79,6 +79,9 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
     else qDebug() << "Error: Ota recver head" << it->file << it->md5 << it->crc;
+
+    qDebug() << "oo" << it->path + it->file << it->md5;
+
     return writeData(fc_otaStart, 0, "Start Updata");
 }
 
@@ -90,6 +93,8 @@ bool Cascade_Updater::otaReplyPacket(const QByteArray &data)
         QString str = "Receive Packet " + QString::number(mSize);
         ret = writeData(fc_otaPack, 0, str.toLocal8Bit());
     } else qDebug() << tr("Error: reply Ota Packet %1").arg(data.data());
+
+    qDebug() << "gg" << data.size() << ret;
     return ret;
 }
 
@@ -97,12 +102,16 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
 {    
     QString str = "Receive Packet "; mFile->close();
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
-    if(ret) str += QString::number(mSize); else str += "Failure";
+    if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
+
+    qDebug() << "OKOK" << str << ret;
+
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
 }
 
 void Cascade_Updater::initFunSlot()
 {
     mDtls = Dtls_Recver::bulid(this);
+    qRegisterMetaType<sFileTrans>("sFileTrans");
     connect(mDtls, &Dtls_Recver::finishSig, this, &Cascade_Updater::dtlsFinishSlot);
 }
