@@ -1,7 +1,7 @@
 #ifndef CASCADE_STREAM_H
 #define CASCADE_STREAM_H
 
-#include "set_relay.h"
+#include "set_core.h"
 #include <QDataStream>
 
 namespace cascade {

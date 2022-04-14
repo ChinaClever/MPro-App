@@ -46,19 +46,21 @@ bool Cascade_Slave::replyDevData(uchar fc)
 bool Cascade_Slave::replyAlarm(QByteArray &rcv)
 {
     sSetAlarmUnit unit = cm::toStruct<sSetAlarmUnit>(rcv);
-    unit.index.addr = 0;
-    return setAlarm(unit);
+    unit.index.addr = 0; Set_Core *set = Set_Core::bulid();
+    return set->setAlarm(unit);
 }
 
 
 bool Cascade_Slave::replyRelayCtrl(QByteArray &rcv)
 {
-    return outputRelayCtrl(0, rcv[0], rcv[1]);
+    Set_Core *set = Set_Core::bulid();
+    return set->outputRelayCtrl(0, rcv[0], rcv[1]);
 }
 
 bool Cascade_Slave::replyRelaySet(QByteArray &rcv)
 {
-    return outputRelaySet(0, rcv[0], rcv[1], rcv[2]);
+    Set_Core *set = Set_Core::bulid();
+    return set->outputRelaySet(0, rcv[0], rcv[1], rcv[2]);
 }
 
 bool Cascade_Slave::workDown(c_sFrame &it)

@@ -89,21 +89,23 @@ int main(int argc, char *argv[])
     QObject *p = a.parent();
 
     Cascade_Core *c = Cascade_Core::bulid(p);
+     Set_Core *set = Set_Core::bulid();
+
 #if defined(Q_OS_LINUX)
     OP_Core * op = OP_Core::bulid(p);
     for(int i=0; i<10; ++i) {
-        op->relayCtrl( i+1, 0);
+        set->outputRelayCtrl(0, i+1, 0);
         cm::mdelay(500);
-        op->relayCtrl(i+1, 1);
+         set->outputRelayCtrl(0, i+1, 1);
         cm::mdelay(500);
     }
 
 #else
     c->setAddress(0);
     for(int i=0; i<12; ++i) {
-        c->masterRelayCtrl(1, i+1, 0);
+        set->outputRelayCtrl(1, i+1, 0);
         cm::mdelay(1500);
-        c->masterRelayCtrl(1, i+1, 1);
+        set->outputRelayCtrl(1, i+1, 1);
         cm::mdelay(1500);
     }
 

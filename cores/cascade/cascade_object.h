@@ -4,10 +4,7 @@
 #include "serialport.h"
 #include "cascade_stream.h"
 
-
-
-
-class Cascade_Object : public SerialPort, public Set_Relay
+class Cascade_Object : public SerialPort
 {
     Q_OBJECT
 public:
