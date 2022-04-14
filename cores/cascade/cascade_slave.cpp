@@ -38,6 +38,7 @@ void Cascade_Slave::start()
 
 bool Cascade_Slave::replyDevData(uchar fc)
 {
+    fillData(getAddress());
     QByteArray array = toDataStream();
     return writeData(fc, 0, array);
 }
@@ -91,7 +92,6 @@ void Cascade_Slave::run()
             if(rcv.size() > 6) {
                 QVector<c_sFrame> its = replyData(rcv);
                 for(auto &it: its) workDown(it);
-                if(its.size()) fillData(addr);
             }
         } else {
              ota_updates();

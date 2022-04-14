@@ -18,6 +18,7 @@ public slots:
 signals:
     void otaReplyFinishSig(const sFileTrans &it,bool);
     void otaSendSig(uchar addr, const QString &message);
+    void otaProSig(uchar addr, int pro);
 
 protected:
     bool otaReplyStart(const QByteArray &data);

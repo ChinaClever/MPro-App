@@ -9,6 +9,7 @@ struct sFileTrans {
     QString path;
     QString file;
     QString md5;
+    uint size;
     ushort crc;
 };
 

@@ -151,6 +151,7 @@ void Home_WorkWid::initData(sFileTrans &it)
 {
     mId = 1; mResult = true;
     it.file = ui->fnLab->text().split("/").last();
+    it.size = File::Size(ui->fnLab->text());
     it.md5 = File::Md5(ui->fnLab->text());
     it.fc = ui->modeBox->currentIndex();
     it.dev = ui->devBox->currentText();

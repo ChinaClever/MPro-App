@@ -72,8 +72,9 @@ bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
 QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
-    it.len=value.size(); it.data = value;
+    it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
+    array = transmit(array);
     return replyData(array, addr, fc);
 }
 
