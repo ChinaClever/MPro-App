@@ -8,7 +8,7 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
 {
-    bool ret = false; int max = 8*1024; int i=0, pro=0;
+    bool ret = false; int max = 4*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         ret = otaSendInit(addr, it);
