@@ -97,3 +97,8 @@ int SerialPort::writeSerial(quint8 *cmd, int len)
 {
     return writeSerial(QByteArray((char *)cmd, len));
 }
+
+void SerialPort::setBaudRate(qint32 br)
+{
+    mBr = br; QTimer::singleShot(50,this,SLOT(setBaudRateSlot()));
+}

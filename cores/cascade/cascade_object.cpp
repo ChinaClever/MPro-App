@@ -4,8 +4,8 @@ Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 {
     setAddress(0);
     mCData = new c_sDevData;
-    memset((void *)mCData, 0, sizeof(c_sDevData));
     mDataStream = new c_DataStream(mCData);
+    memset((void *)mCData, 0, sizeof(c_sDevData));
 }
 
 QByteArray Cascade_Object::frameToArray(const c_sFrame &it)
@@ -74,7 +74,7 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    array = transmit(array);
+    array = transmit(array, 2000);
     return replyData(array, addr, fc);
 }
 

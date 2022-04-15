@@ -9,10 +9,12 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
 {
+    qDebug() << QTime::currentTime().toString("hh:mm:ss");
     bool ret = false; int max = 4*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         ret = otaSendInit(addr, it);
+        if(ret) {setBaudRate(QSerialPort::Baud115200); cm::mdelay(100);}
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
@@ -25,7 +27,9 @@ bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
                 mDtls->throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
             }
         } mFile->close(); ret = otaSendFinish(addr, ret?1:0); isOta = false;
-    }
+    } setBaudRate(QSerialPort::Baud38400); cm::mdelay(100);
+
+    qDebug() << QTime::currentTime().toString("hh:mm:ss");
 
     return ret;
 }
@@ -75,6 +79,7 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
     mFile->close(); mFile->setFileName(fn);
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) mSize = 0; else qDebug() << tr("Error: Cascade Recver open file").arg(fn);
+    if(ret) setBaudRate(QSerialPort::Baud115200);
     return ret;
 }
 
@@ -104,7 +109,7 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     QString str = "Receive Packet "; mFile->close();
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
-
+    if(ret) setBaudRate(QSerialPort::Baud38400);
     qDebug() << "OKOK" << str << ret;
 
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
