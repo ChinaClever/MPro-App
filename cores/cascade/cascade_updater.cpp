@@ -97,6 +97,7 @@ bool Cascade_Updater::otaReplyPacket(const QByteArray &data)
         QString str = "Receive Packet " + QString::number(mSize);
         ret = writeData(fc_otaPack, 0, str.toLocal8Bit());
     } else qDebug() << tr("Error: reply Ota Packet %1").arg(data.data());
+
     return ret;
 }
 
