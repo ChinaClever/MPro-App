@@ -1,6 +1,5 @@
 #include "cascade_updater.h"
 
-
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
     isOta = false; mFile = new QFile;
@@ -9,8 +8,7 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
 {
-    qDebug() << QTime::currentTime().toString("hh:mm:ss");
-    bool ret = false; int max = 4*1024; int i=0, pro=0;
+    bool ret = false; int max = 8*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         ret = otaSendInit(addr, it);
@@ -29,8 +27,6 @@ bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
         } mFile->close(); ret = otaSendFinish(addr, ret?1:0); isOta = false;
     } setBaudRate(QSerialPort::Baud38400); cm::mdelay(100);
 
-    qDebug() << QTime::currentTime().toString("hh:mm:ss");
-
     return ret;
 }
 
@@ -39,7 +35,7 @@ void Cascade_Updater::ota_updates()
 {
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
-        uint size = dev->info.slaveNum; size = 1;      /////////=============
+        uint size = dev->info.slaveNum;
         for(uint i=0; i<size; ++i) {
             ota_update(i+1, mIt);
         } mIt.file.clear();
@@ -110,8 +106,6 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
     if(ret) setBaudRate(QSerialPort::Baud38400);
-    qDebug() << "OKOK" << str << ret;
-
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
 }
 

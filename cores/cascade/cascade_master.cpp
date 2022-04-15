@@ -31,8 +31,10 @@ void Cascade_Master::masterReadDevs()
 
 void Cascade_Master::setEndisable(bool ret, uchar &v)
 {
-    if(ret) v = 3;
-    else if(v > 0){
+    if(ret) {
+        if(v == 0) qDebug() << " error slave up";
+        v = 3;
+    } else if(v > 0){
         if(--v == 0)  qDebug() << " error slave lose";
     } cm::mdelay(100);
 }

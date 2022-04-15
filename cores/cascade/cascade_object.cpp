@@ -74,7 +74,7 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    array = transmit(array, 2000);
+    array = transmit(array, 2500);
     return replyData(array, addr, fc);
 }
 
