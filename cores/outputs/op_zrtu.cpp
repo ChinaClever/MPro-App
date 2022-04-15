@@ -85,11 +85,22 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
     } else {
-        qDebug() << "Error: OP_ZRtu send cmd err!"
-                 << addr << cm::byteArrayToHexStr(recv);
+        qDebug() << Q_FUNC_INFO << addr << cm::byteArrayToHexStr(recv);
     }
 
     return res;
+}
+
+bool OP_ZRtu::setEndisable(bool ret, uchar &v)
+{
+    if(ret) {
+        if(v == 0) qDebug() << " error output up";
+        v = 3;
+    } else if(v > 0){
+        if(--v == 0)  qDebug() << " error output lose";
+    } cm::mdelay(200);
+
+    return ret;
 }
 
 bool OP_ZRtu::readData(int addr)
@@ -97,7 +108,7 @@ bool OP_ZRtu::readData(int addr)
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
     if(ret) fillData(addr);
-    return ret;
+    return setEndisable(ret, mOpData->ens[addr]);
 }
 
 void OP_ZRtu::run()
@@ -110,7 +121,6 @@ void OP_ZRtu::run()
             cmsWriteSlot(150);
             ota_updates();
             readData(i+1);
-            mThread->msleep(200);
         } mThread->msleep(300);
     }
 }

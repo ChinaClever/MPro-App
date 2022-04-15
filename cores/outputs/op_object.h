@@ -23,6 +23,7 @@ struct sOpIt
     uint reactivePow[OP_ARRAY_SIZE];
     uchar chipStatus; //  01表示执行版计量芯片模块损坏，00表示正常
     uchar version;  // 执行板软件版本号
+    uchar ens[4];
 };
 
 class OP_Object : public SerialPort

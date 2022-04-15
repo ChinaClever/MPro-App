@@ -13,10 +13,10 @@ sDataPacket *IPC_ObjClient::dataPacket()
     return res;
 }
 
-void IPC_ObjClient::initFunction(const QString &key)
+void IPC_ObjClient::initFunction(const QString &key, bool f)
 {
     if(!mDbus) mDbus = new DBus_Call(key, this);
-    QTimer::singleShot(1, mDbus, SLOT(lscReconnect()));
+    if(f) QTimer::singleShot(1, mDbus, SLOT(lscReconnect()));
 }
 
 QVariant IPC_ObjClient::readBus(const QVariantList &v)

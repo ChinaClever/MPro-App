@@ -60,7 +60,7 @@ bool Cascade_Slave::replyRelayCtrl(QByteArray &rcv)
 bool Cascade_Slave::replyRelaySet(QByteArray &rcv)
 {
     Set_Core *set = Set_Core::bulid();
-    return set->outputRelaySet(0, rcv[0], rcv[1], rcv[2]);
+    return set->outputDelaySet(0, rcv[0], rcv[1], rcv[2]);
 }
 
 bool Cascade_Slave::workDown(c_sFrame &it)

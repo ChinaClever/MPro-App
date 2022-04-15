@@ -7,7 +7,7 @@ class LSocket_Server : public DBus_Receiver
     Q_OBJECT
 public:
     explicit LSocket_Server(QObject *parent = nullptr);
-    virtual QByteArray lsRecv(const QByteArray &) = 0;
+    virtual QByteArray lsRecv(const QByteArray &){return "";}
 
     bool lsListen(){return lsListen(key());}
     bool lsListen(const QString &name);

@@ -10,9 +10,9 @@ sDataPacket *IPC_ObjServer::dataPacket()
     return (sDataPacket *)sharedMemory();
 }
 
-void IPC_ObjServer::initFunction(const QString &key)
+void IPC_ObjServer::initFunction(const QString &key, bool f)
 {
-    setKey(key); lsListen();
+    setKey(key); if(f)lsListen();
     registerBusObject();
     busConnects();
 }

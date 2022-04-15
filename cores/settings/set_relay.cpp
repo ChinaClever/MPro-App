@@ -19,7 +19,7 @@ bool Set_Relay::outputRelayCtrl(int addr, int id, uchar on)
     return ret;
 }
 
-bool Set_Relay::outputRelaySet(int addr, int id, uchar mode, uchar delay)
+bool Set_Relay::outputDelaySet(int addr, int id, uchar mode, uchar delay)
 {
     bool ret = true;
     if(addr) {

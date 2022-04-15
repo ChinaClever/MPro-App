@@ -74,7 +74,7 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
 {
     mFile->close(); mFile->setFileName(fn);
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
-    if(ret) mSize = 0; else qDebug() << tr("Error: Cascade Recver open file").arg(fn);
+    if(ret) mSize = 0; else qDebug() << Q_FUNC_INFO << fn;
     if(ret) setBaudRate(QSerialPort::Baud115200);
     return ret;
 }
@@ -85,7 +85,7 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
     QDataStream out(&rcv, QIODevice::ReadOnly);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
-    else qDebug() << "Error: Ota recver head" << it->file << it->md5 << it->crc;
+    else qDebug() << Q_FUNC_INFO << it->file << it->md5 << it->crc;
     return writeData(fc_otaStart, 0, "Start Updata");
 }
 

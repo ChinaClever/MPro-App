@@ -127,12 +127,7 @@ struct sTgObjData
  */
 struct sRtuCount
 {
-    uint count;
-    uint okCount;
-    uint errCount;
-
-    uint longCount; // 连续丢命令
-    uint longFlag;
+    uchar offLines[4];
 };
 
 
@@ -215,5 +210,39 @@ struct sDataPacket
     sDevData data[DEV_NUM]; //设备数据
     sDevLogin login;
 };
+
+
+
+enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
+enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem,Hum};
+
+struct sAlarmIndex
+{
+    sAlarmIndex():addr(0){}
+    uchar addr;
+    uchar type;
+    uchar subtopic;
+    uchar id;
+};
+
+struct sSetAlarmUnit
+{
+    sAlarmIndex index;
+    uint rated;
+    uint min;
+    uint max;
+    uint crMin;
+    uint crMax;
+};
+
+
+struct sRelay
+{
+    enum State{Off, On};
+    enum Type{Breaker, Relay};
+    enum Mode{Standard, NormaOpen, NormaClose};
+    enum Alarm{NoAlarm, OpenALarm, CloseAlarm};
+};
+
 
 #endif // DATAPACKET_H

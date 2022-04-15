@@ -31,4 +31,5 @@ void OP_Object::fillData(uchar addr)
     dev->info.ops[addr] = it->size;
     dev->info.opVers[addr] = it->version;
     dev->info.chipStates[addr] = it->chipStatus;
+    for(int i=0; i<4; ++i) dev->rtuCount.offLines[i] = it->ens[i];
 }

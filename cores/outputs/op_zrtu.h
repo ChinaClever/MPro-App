@@ -18,6 +18,7 @@ public slots:
 private:
     bool readData(int addr) override;
     bool sendReadCmd(int addr, sOpIt *it);
+    bool setEndisable(bool ret, uchar &v);
     bool recvPacket(const QByteArray &array, sOpIt *obj);
 
 private:

@@ -1,5 +1,7 @@
 #include <QCoreApplication>
-#include "ipc_demo.h"
+#include "ipc_coreserver.h"
+#include "ipc_alarmclient.h"
+
 #include "db_user.h"
 #include "modbus_slavetcp.h"
 #include "ssdp_server.h"
@@ -31,29 +33,6 @@ void log_demo()
     //    db->removeItemsByName(it.name);
     //    qDebug() << db->selectBetween(8,10).size();
 }
-
-void modbus_master()
-{
-    Modbus_MasterTcp *tcp = new Modbus_MasterTcp();
-    tcp->connectModbus("192.168.31.52", 1502);
-
-    QVector<quint16> rcv{9,8,7,6,5};
-    qDebug() <<  tcp->writeHoldingRegisters(1, 0, rcv);
-
-    QVector<quint16> data =  tcp->readHoldingRegisters(1, 0, 5);
-    qDebug() << "recv" << data;
-}
-
-void modbus_slave()
-{
-    Modbus_SlaveTcp *tcp = new Modbus_SlaveTcp();
-    qDebug() << tcp->connectTcp(1502);
-    //tcp->setData(QModbusDataUnit::HoldingRegisters, 0, 10);
-
-    QVector<quint16> data{9,8,7,6,5};
-    tcp->setHoldingRegisters(1, data);
-}
-
 
 void ssdp_demo()
 {
@@ -87,42 +66,15 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     QObject *p = a.parent();
+    IPC_CoreServer::bulid(p);
+    //Dtls_Recver::bulid(p)->listen();
+    //Cascade_Core *c = Cascade_Core::bulid(p);
+    // Set_Core *set = Set_Core::bulid();
+    OP_Core::bulid(p);
 
-    Dtls_Recver::bulid(p)->listen();
-    Cascade_Core *c = Cascade_Core::bulid(p);
-     Set_Core *set = Set_Core::bulid();
+    cm::mdelay(100);
 
-#if defined(Q_OS_LINUX)
-    OP_Core * op = OP_Core::bulid(p);
-    for(int i=0; i<10; ++i) {
-        set->outputRelayCtrl(0, i+1, 0);
-        cm::mdelay(500);
-         set->outputRelayCtrl(0, i+1, 1);
-        cm::mdelay(500);
-    }
-
-#else
-    c->setAddress(0);
-
-    sAlarmIndex index;
-    index.addr = 1;
-    index.type = AlarmIndex::Output;
-    index.subtopic = AlarmIndex::Vol;
-    index.id = 32;
-
-    sSetAlarmUnit unit;
-    unit.index = index;
-    unit.rated = 55;
-    set->setAlarm(unit);
-
-    for(int i=0; i<12; ++i) {
-        set->outputRelayCtrl(1, i+1, 0);
-        cm::mdelay(1500);
-        set->outputRelayCtrl(1, i+1, 1);
-        cm::mdelay(1500);
-    }
-
-#endif
+    IPC_RelayClient::bulid(p)->ctrl(0, 1,1);
 
 
 

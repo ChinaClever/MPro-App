@@ -19,7 +19,7 @@ bool IPC_SettingClient::setValue(const QString &prefix, const QString &key, cons
 {
     QVariantList lv{prefix, key, value};
     bool ret = inputCheck(lv);
-    if(ret) ret =  mDbus->sendBus(lv);
+    if(ret) ret = mDbus->sendBus(lv);
     return ret;
 }
 

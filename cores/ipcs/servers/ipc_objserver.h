@@ -1,6 +1,6 @@
 #ifndef IPC_OBJSERVER_H
 #define IPC_OBJSERVER_H
-
+#include "set_core.h"
 #include "ipc_objclient.h"
 
 class IPC_ObjServer : public LSocket_Server
@@ -11,7 +11,7 @@ public:
      sDataPacket *dataPacket();
 
 protected:
-    virtual void initFunction(const QString &key);
+    virtual void initFunction(const QString &key, bool f=false);
 };
 
 #endif // IPC_OBJSERVER_H
