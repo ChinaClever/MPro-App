@@ -12,7 +12,7 @@
 
 //#include "agent_devdata.h"
 #include "op_zrtu.h"
-
+#include "log_core.h"
 
 void log_demo()
 {
@@ -72,13 +72,14 @@ int main(int argc, char *argv[])
     // Set_Core *set = Set_Core::bulid();
     OP_Core::bulid(p);
 
-    cm::mdelay(100);
+    Log_Core::bulid(p);
+    cm::mdelay(500);
 
 
-    QStringList ls {"luo", "zhi", "yong"};
+    QStringList ls {"zhi", "yong"};
     IPC_LogClient::bulid(p)->write(1, ls);
-    cm::mdelay(100);
-    qDebug() << IPC_LogClient::bulid(p)->read(1, 5);
+    cm::mdelay(1000);
+    qDebug() << IPC_LogClient::bulid(p)->read(1, 0);
 
 
     return a.exec();

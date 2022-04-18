@@ -10,7 +10,7 @@ IPC_LogClient *IPC_LogClient::bulid(QObject *parent)
     static IPC_LogClient *sington = nullptr;
     if(!sington) {
         sington = new IPC_LogClient(parent);
-        sington->initFunction(IPC_KEY_LOG);
+        sington->initFunction(IPC_KEY_LOG, true);
     }
     return sington;
 }

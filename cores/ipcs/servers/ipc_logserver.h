@@ -16,9 +16,14 @@ public slots:
 
 protected:
     QList<const char *> busRecvMethods();
+    QByteArray lsRecv(const QByteArray &v);
 
 private:
+    QString userRead(int page);
     void userWrite(const QStringList &ls);
+
+    QString opRead(int page);
+    void opWrite(const QStringList &ls);
 };
 
 #endif // IPC_LOGSERVER_H
