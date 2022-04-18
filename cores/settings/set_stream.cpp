@@ -11,6 +11,7 @@ QDataStream& operator<<(QDataStream& in, Set_Stream& data)
     using namespace cm;
     set::_sDevData *ptr = data.mDevData;
 
+    in << ptr->version;
     uchar size = ptr->lineSize = LINE_NUM; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->line[i]);
 
@@ -34,6 +35,7 @@ QDataStream& operator>>(QDataStream& out, Set_Stream& data)
     set::_sDevData *ptr = data.mDevData;
     QByteArray v; uchar size;
 
+    out >> ptr->version;
     out >> size; ptr->lineSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->line[i] = toStruct<_sObjData>(v);}
 

@@ -9,6 +9,12 @@
 #define IPC_KEY_ALARM       "alarms"
 #define IPC_KEY_SETTING     "settings"
 
+enum eLogs{
+    eUserLog,
+    eAlarmLog,
+
+};
+
 class IPC_ObjClient : public QObject
 {
     Q_OBJECT

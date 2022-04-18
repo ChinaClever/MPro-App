@@ -18,7 +18,7 @@ OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
         sington = new OP_ZRtu(parent);
 #if defined(Q_OS_LINUX)
         sington->openSerial("/dev/ttyUSB0");
-        sington->start();
+        //sington->start(); ////=======
 #endif
     }
     return sington;
@@ -115,7 +115,7 @@ void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        if(0 == size) size = 1;  /////==========
+        if(0 == size) size = 3;
 
         for(int i=0; i<size; ++i) {
             cmsWriteSlot(150);

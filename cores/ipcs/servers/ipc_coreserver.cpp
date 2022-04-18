@@ -22,4 +22,6 @@ void IPC_CoreServer::initFunSlot()
     IPC_DelayServer::bulid(this);
     IPC_RelayServer::bulid(this);
     IPC_AlarmServer::bulid(this);
+    IPC_CfgServer::bulid(this);
+    IPC_LogServer::bulid(this);
 }

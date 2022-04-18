@@ -1,6 +1,6 @@
 #include <QCoreApplication>
-#include "ipc_coreserver.h"
-#include "ipc_alarmclient.h"
+#include "ipcs/servers/ipc_coreserver.h"
+#include "ipc_cfgclient.h"
 
 #include "db_user.h"
 #include "modbus_slavetcp.h"
@@ -74,8 +74,11 @@ int main(int argc, char *argv[])
 
     cm::mdelay(100);
 
-    IPC_RelayClient::bulid(p)->ctrl(0, 1,1);
 
+    QStringList ls {"luo", "zhi", "yong"};
+    IPC_LogClient::bulid(p)->write(1, ls);
+    cm::mdelay(100);
+    qDebug() << IPC_LogClient::bulid(p)->read(1, 5);
 
 
     return a.exec();

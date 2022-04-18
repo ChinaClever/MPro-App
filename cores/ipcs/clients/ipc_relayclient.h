@@ -1,7 +1,7 @@
 #ifndef IPC_RELAYCLIENT_H
 #define IPC_RELAYCLIENT_H
 
-#include "ipc_settingclient.h"
+#include "ipc_cfgclient.h"
 
 class IPC_RelayClient : public IPC_ObjClient
 {
