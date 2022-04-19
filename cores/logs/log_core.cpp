@@ -24,7 +24,7 @@ void Log_Core::initFunSlot()
 
 void Log_Core::run()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(100,this, SLOT(saveLogSlot()));}
+    if(!isRun) { isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot())); }
 }
 
 void Log_Core::saveLogSlot()

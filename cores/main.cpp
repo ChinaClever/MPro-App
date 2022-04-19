@@ -67,13 +67,12 @@ int main(int argc, char *argv[])
 
     QObject *p = a.parent();
     IPC_CoreServer::bulid(p);
+    Set_readWrite::bulid(p);
     Log_Core::bulid(p);
     //Dtls_Recver::bulid(p)->listen();
     //Cascade_Core *c = Cascade_Core::bulid(p);
     // Set_Core *set = Set_Core::bulid();
     OP_Core::bulid(p);
-
-
 
 
 
