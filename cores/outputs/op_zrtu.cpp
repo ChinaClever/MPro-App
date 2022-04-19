@@ -1,4 +1,5 @@
 #include "op_zrtu.h"
+#include "log_core.h"
 
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
@@ -91,13 +92,22 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     return res;
 }
 
-bool OP_ZRtu::setEndisable(bool ret, uchar &v)
+bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
-        if(v == 0) qDebug() << " error output up";
-        v = 3;
+        if(v == 0) {
+            //qDebug() << " error output up";
+            sSysItem it; it.module = tr("Output");
+            it.content = tr("执行板 %1 连接正常").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        } v = 3;
     } else if(v > 0){
-        if(--v == 0)  qDebug() << " error output lose";
+        if(--v == 0)  {
+            //qDebug() << " error output lose";
+            sSysItem it; it.module = tr("Output");
+            it.content = tr("执行板 %1 掉线").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        }
     } cm::mdelay(200);
 
     return ret;
@@ -108,7 +118,7 @@ bool OP_ZRtu::readData(int addr)
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
     if(ret) fillData(addr);
-    return setEndisable(ret, mOpData->ens[addr]);
+    return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
 void OP_ZRtu::run()

@@ -50,7 +50,7 @@ public:
         }
         json.insert("logs", logs);
         QJsonDocument doc; doc.setObject(json);
-        return doc.toJson(QJsonDocument::Compact);
+        return doc.toJson(QJsonDocument::Indented);
     }
 
     bool jsonWriteFile(const QByteArray &array) {

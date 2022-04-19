@@ -24,6 +24,8 @@ private:
 
     QString opRead(int page);
     void opWrite(const QStringList &ls);
+
+    QString sysRead(int page);
 };
 
 #endif // IPC_LOGSERVER_H

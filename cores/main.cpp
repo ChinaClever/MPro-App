@@ -67,19 +67,16 @@ int main(int argc, char *argv[])
 
     QObject *p = a.parent();
     IPC_CoreServer::bulid(p);
+    Log_Core::bulid(p);
     //Dtls_Recver::bulid(p)->listen();
     //Cascade_Core *c = Cascade_Core::bulid(p);
     // Set_Core *set = Set_Core::bulid();
     OP_Core::bulid(p);
 
-    Log_Core::bulid(p);
-    cm::mdelay(500);
 
 
-    QStringList ls {"zhi", "yong"};
-    IPC_LogClient::bulid(p)->write(1, ls);
-    cm::mdelay(1000);
-    qDebug() << IPC_LogClient::bulid(p)->read(1, 0);
+
+
 
 
     return a.exec();

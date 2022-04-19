@@ -16,7 +16,7 @@ public:
 
 private:
     bool masterRead(uchar addr);
-    void setEndisable(bool ret, uchar &v);
+    void setEndisable(int addr, bool ret, uchar &v);
 };
 
 #endif // CASCADE_MASTER_H

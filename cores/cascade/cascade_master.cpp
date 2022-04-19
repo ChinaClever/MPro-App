@@ -1,4 +1,5 @@
 #include "cascade_master.h"
+#include "log_core.h"
 
 Cascade_Master::Cascade_Master(QObject *parent) : Cascade_Unserialize{parent}
 {
@@ -25,17 +26,26 @@ void Cascade_Master::masterReadDevs()
     uint size = masterDev()->info.slaveNum;
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
-        setEndisable(ret, devData(i+1)->offLine);
+        setEndisable(i, ret, devData(i+1)->offLine);
     } mdelay(320);
 }
 
-void Cascade_Master::setEndisable(bool ret, uchar &v)
+void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
-        if(v == 0) qDebug() << " error slave up";
-        v = 3;
+        if(v == 0) {
+            //qDebug() << " error slave up";
+            sSysItem it; it.module = tr("级联");
+            it.content = tr("副机 %1 连接正常").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        } v = 3;
     } else if(v > 0){
-        if(--v == 0)  qDebug() << " error slave lose";
+        if(--v == 0)  {
+            //qDebug() << " error slave lose";
+            sSysItem it; it.module = tr("级联");
+            it.content = tr("副机 %1 掉线").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        }
     } cm::mdelay(100);
 }
 

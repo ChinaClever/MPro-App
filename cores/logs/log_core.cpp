@@ -4,8 +4,6 @@ Log_Core::Log_Core(QObject *parent)
     : QObject{parent}
 {
     isRun = false;
-    mThread = new CThread(this);
-    //mThread->init(this, SLOT(run()));
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
 }
 
@@ -20,31 +18,20 @@ Log_Core *Log_Core::bulid(QObject *parent)
 void Log_Core::initFunSlot()
 {
     mOp = Db_Op::bulid();
+    mSys = Db_Sys::bulid();
     mUser = Db_User::bulid();
 }
 
-
-
-void Log_Core::writeLogs()
+void Log_Core::run()
 {
-    if(!isRun) {
-        isRun = true;
-            QTimer::singleShot(100,this, SLOT(run()));
-    //    QTimer::singleShot(100,mThread, SLOT(onceRun()));
-    }
-
-    saveLogs();
-    qDebug() << "GGGGGGGG" << "DD" << isRun << mOpIts.size();
+    if(!isRun) {isRun = true; QTimer::singleShot(100,this, SLOT(saveLogSlot()));}
 }
 
-
-void Log_Core::saveLogs()
+void Log_Core::saveLogSlot()
 {
     Db_Tran t;
-    qDebug() << "GGGGGGGG" << "DD" << isRun << mOpIts.size();
-    while(mOpIts.size()) {
-         qDebug() << "GGGGGGGG" << mOp->insertItem(mOpIts.takeFirst());
-    }
+    while(mOpIts.size()) mOp->insertItem(mOpIts.takeFirst());
+    while(mSysIts.size()) mSys->insertItem(mSysIts.takeFirst());
     while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
 
     isRun = false;

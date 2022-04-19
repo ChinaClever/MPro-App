@@ -12,6 +12,8 @@
 enum eLogs{
     eUserLog,
     eOpLog,
+    eSysLog,
+
 
 };
 
