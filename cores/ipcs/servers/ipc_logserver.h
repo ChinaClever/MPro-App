@@ -19,13 +19,8 @@ protected:
     QByteArray lsRecv(const QByteArray &v);
 
 private:
-    QString userRead(int page);
     void userWrite(const QStringList &ls);
-
-    QString opRead(int page);
     void opWrite(const QStringList &ls);
-
-    QString sysRead(int page);
 };
 
 #endif // IPC_LOGSERVER_H

@@ -1,7 +1,7 @@
 #ifndef LOG_CORE_H
 #define LOG_CORE_H
 
-#include "db_sys.h"
+#include "db_alarm.h"
 
 class Log_Core : public QObject
 {
@@ -12,6 +12,7 @@ public:
     void append(const sOpItem &it) {mOpIts<<it; run();}
     void append(const sSysItem &it) {mSysIts<<it; run();}
     void append(const sUserItem &it) {mUserIts<<it; run();}
+    void append(const sAlarmItem &it) {mAlarmIts<<it; run();}
 
 private slots:
     void run();
@@ -28,6 +29,9 @@ private:
 
     Db_Sys *mSys;
     QList<sSysItem> mSysIts;
+
+    Db_Alarm *mAlarm;
+    QList<sAlarmItem> mAlarmIts;
 };
 
 #endif // LOG_CORE_H

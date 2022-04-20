@@ -13,7 +13,7 @@ enum eLogs{
     eUserLog,
     eOpLog,
     eSysLog,
-
+    eAlarmLog,
 
 };
 

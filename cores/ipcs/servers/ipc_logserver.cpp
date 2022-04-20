@@ -57,38 +57,13 @@ void IPC_LogServer::dbus_recv_slot(int id, const QStringList &ls)
     }
 }
 
-QString IPC_LogServer::userRead(int page)
+template <typename T, typename U>
+static QString ipc_log_read(U *db, int page)
 {
-    QVector<sUserItem> its;
-    Db_User *db = Db_User::bulid();
+    QVector<T> its;
     if(page) {
         int min = (page-1) * 30;
-        int max = page *30;
-        its = db->selectBetween(min, max);
-    } else its = db->selectAll();
-    return db->toJson(its);
-}
-
-
-QString IPC_LogServer::opRead(int page)
-{
-    QVector<sOpItem> its;
-    Db_Op *db = Db_Op::bulid();
-    if(page) {
-        int min = (page-1) * 30;
-        int max = page *30;
-        its = db->selectBetween(min, max);
-    } else its = db->selectAll();
-    return db->toJson(its);
-}
-
-QString IPC_LogServer::sysRead(int page)
-{
-    QVector<sSysItem> its;
-    Db_Sys *db = Db_Sys::bulid();
-    if(page) {
-        int min = (page-1) * 30;
-        int max = page *30;
+        int max = page *45;
         its = db->selectBetween(min, max);
     } else its = db->selectAll();
     return db->toJson(its);
@@ -97,9 +72,10 @@ QString IPC_LogServer::sysRead(int page)
 QStringList IPC_LogServer::dbus_reply_slot(int id, int page)
 {
     QVariant v; switch (id) {
-    case eUserLog: v = userRead(page); break;
-    case eOpLog: v = opRead(page);  break;
-    case eSysLog: v = sysRead(page);  break;
+    case eUserLog: v = ipc_log_read<sUserItem>(Db_User::bulid(), page); break;
+    case eOpLog: v = ipc_log_read<sOpItem>(Db_Op::bulid(), page);  break;
+    case eSysLog: v = ipc_log_read<sSysItem>(Db_Sys::bulid(), page);  break;
+    case eAlarmLog: v = ipc_log_read<sAlarmItem>(Db_Alarm::bulid(), page); break;
     default: qDebug() << Q_FUNC_INFO << id; break;
     }
 
@@ -110,7 +86,6 @@ QStringList IPC_LogServer::dbus_reply_slot(int id, int page)
 
 QByteArray IPC_LogServer::lsRecv(const QByteArray &v)
 {
-
     QStringList ls = QString(v).split(";");
     int id = ls.first().toInt();
     int fc = ls.last().toInt();
