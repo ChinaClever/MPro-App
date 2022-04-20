@@ -2,15 +2,6 @@
 
 Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
 {
-    setAddress(1);
-    mThread = new CThread(this);
-}
-
-
-Cascade_Slave::~Cascade_Slave()
-{
-    isRun = false;
-    mThread->stop();
 }
 
 Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
@@ -24,16 +15,8 @@ Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
 #else
         sington->openSerial("COM22", baudRate);
 #endif
-        sington->start();
     }
     return sington;
-}
-
-
-void Cascade_Slave::start()
-{
-    mThread->init(this, SLOT(run()));
-    isRun = true; mThread->start();
 }
 
 bool Cascade_Slave::replyDevData(uchar fc)
@@ -86,7 +69,7 @@ bool Cascade_Slave::workDown(c_sFrame &it)
 void Cascade_Slave::run()
 {
     while(isRun) {        
-         mThread->msleep(1); cmsWriteSlot();
+         cm::mdelay(1); cmsWriteSlot();
          uchar addr = getAddress(); if(addr) {
             QByteArray rcv = readSerial();
             if(rcv.size() > 6) {

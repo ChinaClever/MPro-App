@@ -3,17 +3,16 @@
 
 #include "cascade_fill.h"
 
-class Cascade_Slave : public Cascade_Fill
+class Cascade_Slave : public Cascade_Fill, public QRunnable
 {
     Q_OBJECT
     explicit Cascade_Slave(QObject *parent = nullptr);
 public:
     static Cascade_Slave *bulid(QObject *parent = nullptr);
-    ~Cascade_Slave();
+    ~Cascade_Slave(){isRun = false;}
 
 public slots:
-    void run();
-    void start();
+    void run() override;
 
 private:
     bool replyDevData(uchar fc);
@@ -23,9 +22,8 @@ private:
     bool workDown(c_sFrame &it);
 
 private:
-    bool isRun;
-    QFile *mFile;
-    CThread *mThread;
+    bool isRun=true;
+    QFile *mFile=nullptr;
 };
 
 using Cascade_Core = Cascade_Slave;

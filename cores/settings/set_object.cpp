@@ -16,8 +16,8 @@ Set_Object::Set_Object(QObject *parent) : QObject{parent}
 void Set_Object::writeSettings()
 {
     if(!isRun) {
-        isRun = true;
         mThread->onceRun();
+        isRun = true;
     }
 }
 

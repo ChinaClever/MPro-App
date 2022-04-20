@@ -61,14 +61,14 @@ struct sObjData
 
     sAlarmUnit vol; // 电压
     sAlarmUnit cur; // 电流
-    sAlarmUnit pow; // 功率
+    sAlarmUnit pow; // 有功功率
     sRelayUnit relay;
 
     uint ele[PACK_ARRAY_SIZE]; // 电能
     uint pf[PACK_ARRAY_SIZE]; // 功率因数
 
-    uint artPow[PACK_ARRAY_SIZE]; // 功率值
-    uint reactivePow[PACK_ARRAY_SIZE];
+    uint artPow[PACK_ARRAY_SIZE]; // 视在功率
+    uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
@@ -135,18 +135,19 @@ struct sDevInfo {
     uint devType; //设备类型
     uint devSpec; // 设备规格 A\B\C\D
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uint phases; //设备单三相
+    uint lineNum; //设备单三相
 
     uint version;
     char devName[NAME_SIZE]; // 设备名称
-    uint slaveNum;
+    uint slaveNum;  // 副机数量
 
     uint hz;
-    uchar opNum;
-    uint outputs;
-    uchar ops[DEV_NUM];
+    uchar opNum;   //　执行板数量
+    uchar loopNum; // 回路数量
+    uint outputNum;   //　输出位数量
+    uchar ops[DEV_NUM]; //　每块执行板的输出位数量
     uchar hzs[DEV_NUM];  // 电压频率
-    ushort opVers[DEV_NUM];
+    ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uchar chipStates[DEV_NUM];
 };
 

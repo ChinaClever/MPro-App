@@ -3,14 +3,9 @@
 
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
-    mThread = new CThread(this);
+
 }
 
-OP_ZRtu::~OP_ZRtu()
-{
-    isRun = false;
-    mThread->stop();
-}
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 {
@@ -19,16 +14,9 @@ OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
         sington = new OP_ZRtu(parent);
 #if defined(Q_OS_LINUX)
         sington->openSerial("/dev/ttyUSB0");
-        //sington->start(); ////=======
 #endif
     }
     return sington;
-}
-
-void OP_ZRtu::start()
-{
-    mThread->init(this, SLOT(run()));
-    isRun = true; mThread->start();
 }
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
@@ -96,19 +84,17 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 0) {
-            //qDebug() << " error output up";
             sSysItem it; it.module = tr("Output");
             it.content = tr("执行板 %1 连接正常").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         } v = 3;
     } else if(v > 0){
         if(--v == 0)  {
-            //qDebug() << " error output lose";
             sSysItem it; it.module = tr("Output");
             it.content = tr("执行板 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(200);
+    } cm::mdelay(320);
 
     return ret;
 }
@@ -125,12 +111,11 @@ void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        if(0 == size) size = 3;
-
+        //if(0 == size) size = 3;
         for(int i=0; i<size; ++i) {
             cmsWriteSlot(150);
             ota_updates();
             readData(i+1);
-        } mThread->msleep(300);
+        } cm::mdelay(10);
     }
 }

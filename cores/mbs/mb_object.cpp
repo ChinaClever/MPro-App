@@ -29,7 +29,7 @@ void Mb_Object::upDevInfo()
     vs << 1 << 1 << 1;
     setRegs(MbReg_Rateds, vs);
 
-    setReg(MbReg_PhaseNum, mDevData->info.phases);
+    setReg(MbReg_PhaseNum, mDevData->info.lineNum);
     setReg(MbReg_Classify, 2);
     setReg(MbReg_Classify+1, 0xFF);
 }

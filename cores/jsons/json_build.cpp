@@ -155,13 +155,13 @@ void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &js
 void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
-    obj.insert("phases", it.phases/r);
+    obj.insert("phases", it.lineNum/r);
     obj.insert("version", it.version/r);
     obj.insert("dev_name", it.devName);
 
     obj.insert("op_num", it.opNum);
     obj.insert("slave_num", it.slaveNum/r);
-    obj.insert("output_num", it.outputs/r);
+    obj.insert("output_num", it.outputNum/r);
 
     QJsonArray ops;
     for(int i=0; i<it.opNum; ++i) ops.append(it.ops[i]);
