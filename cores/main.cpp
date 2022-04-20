@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include "ipcs/servers/ipc_coreserver.h"
+#include "ipc_coreserver.h"
 #include "ipc_cfgclient.h"
 
 #include "db_user.h"

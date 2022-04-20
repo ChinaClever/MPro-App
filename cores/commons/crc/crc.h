@@ -10,12 +10,10 @@ void AppendXorNum(QByteArray &array);
 uchar Cal8(uchar *pdata, uint len);
 uint Cal32(uchar *pdata, uint len);
 uint Cal32(const QByteArray &array);
+uint Cal32(const QByteArray &array, uint crc);
 ushort Cal16(uchar *pdata, uint len);
 
 uint File(const QString &fn);
-
-ushort Cal(uchar *puchMsg, uint len);
-ushort Cal(const QByteArray &array);
 void AppendCrc(QByteArray &array);
 
 ushort CRC16(uchar *ptr, int len);

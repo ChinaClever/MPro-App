@@ -1,7 +1,5 @@
 
-
-
-#INCLUDEPATH += $$PWD/
+INCLUDEPATH += $$PWD/
 
 HEADERS += \
     $$PWD/ipc_alarmserver.h \

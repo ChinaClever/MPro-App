@@ -1,27 +1,9 @@
 #include "crc.h"
-extern "C" {
-#include "libcrc/crc.h"
-}
-
-#define INITIAL_CRC_CC3 0x1D0F
-#define CRC_CCITT_POLY 0x1021
+#include "libcrc/CRC.h"
 
 ushort Crc::CRC16(uchar *ptr, int len) // AUG-CCITT
 {
-    ushort crc = INITIAL_CRC_CC3;
-    while (len-- > 0)
-    {
-        crc = crc ^ ((uint16_t) (*ptr++ << 8));  // --len;
-        for (int i = 0; i < 8; i++) {
-            if (crc & 0x8000) {
-                crc = (crc << 1) ^ CRC_CCITT_POLY;
-            } else {
-                crc = crc << 1;
-            }
-        }
-    }
-
-    return crc;
+    return CRC::Calculate(ptr, len, CRC::CRC_16_CCITTFALSE());
 }
 
 ushort Crc::CRC16(const QByteArray &array)
@@ -83,17 +65,17 @@ void Crc::AppendXorNum(QByteArray &array)
 
 uchar Crc::Cal8(uchar *pdata, uint len)
 {
-    return crc8_cal(pdata, len);
+    return CRC::Calculate(pdata, len, CRC::CRC_8());
 }
 
 ushort Crc::Cal16(uchar *pdata, uint len)
 {
-    return crc16_cal(pdata, len);
+    return CRC::Calculate(pdata, len, CRC::CRC_16_ARC());
 }
 
 uint Crc::Cal32(uchar *pdata, uint len)
 {
-    return crc32_cal(pdata, len);
+    return CRC::Calculate(pdata, len, CRC::CRC_32());
 }
 
 uint Crc::Cal32(const QByteArray &array)
@@ -101,14 +83,10 @@ uint Crc::Cal32(const QByteArray &array)
     return Cal32((uchar *)array.data(), array.size());
 }
 
-ushort Crc::Cal(uchar *puchMsg, uint len)
+uint Crc::Cal32(const QByteArray &array, uint crc)
 {
-    return Cal16(puchMsg, len);
-}
-
-ushort Crc::Cal(const QByteArray &array)
-{
-    return Cal((uchar *)array.data(), array.size());
+    uchar *ptr = (uchar *)array.data();
+    return CRC::Calculate(ptr, array.size(), CRC::CRC_32(), crc);
 }
 
 void Crc::AppendCrc(QByteArray &array)
@@ -120,15 +98,15 @@ void Crc::AppendCrc(QByteArray &array)
 
 uint Crc::File(const QString &fn)
 {
-    uint ret = CRC32_INIT_VAL;
+    uint ret = 0;
     int max = 1024; QFile file(fn);
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
         while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
-            uchar *ptr = (uchar *)data.data();
-            ret = crc32_cyc_cal(ret, ptr, data.size());
+            if(ret) ret = Cal32(data, ret);
+            else ret = Cal32(data);
         } file.close();
     }
 
-    return (ret ^ CRC32_INIT_VAL);
+    return ret;
 }

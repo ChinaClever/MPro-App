@@ -2,7 +2,7 @@ INCLUDEPATH += $$PWD
 
 include(libcrc/libcrc.pri)
 
-HEADERS += \
+HEADERS += \    
     $$PWD/crc.h
 
 SOURCES += \
