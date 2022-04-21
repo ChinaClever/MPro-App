@@ -61,9 +61,9 @@ template <typename T, typename U>
 static QString ipc_log_read(U *db, int page)
 {
     QVector<T> its;
-    if(page) {
-        int min = (page-1) * 30;
-        int max = page *45;
+    int cnt = 45; if(page) {
+        int min = (page-1) * cnt;
+        int max = page * cnt;
         its = db->selectBetween(min, max);
     } else its = db->selectAll();
     return db->toJson(its);

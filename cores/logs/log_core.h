@@ -16,11 +16,14 @@ public:
 
 private slots:
     void run();
+    void timeoutDone();
     void initFunSlot();
     void saveLogSlot();
 
 private:
-    bool isRun;
+    bool isRun=false;
+    QTimer *timer;
+
     Db_Op *mOp;
     QList<sOpItem> mOpIts;
 

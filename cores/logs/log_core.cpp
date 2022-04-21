@@ -3,7 +3,10 @@
 Log_Core::Log_Core(QObject *parent)
     : QObject{parent}
 {
-    isRun = false;
+    uint t = 6*60*60*1000;
+    timer = new QTimer(this);
+    timer->start(t + rand()%100);
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
 }
 
@@ -37,4 +40,14 @@ void Log_Core::saveLogSlot()
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
 
     isRun = false;
+}
+
+void Log_Core::timeoutDone()
+{
+    Db_Tran t;
+    int cnt = 10000;
+    mOp->countsRemove(cnt);
+    mSys->countsRemove(cnt);
+    mUser->countsRemove(cnt);
+    mAlarm->countsRemove(cnt);
 }
