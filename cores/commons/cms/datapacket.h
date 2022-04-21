@@ -215,7 +215,7 @@ struct sDataPacket
 
 
 enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem,Hum};
+enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum};
 
 struct sAlarmIndex
 {

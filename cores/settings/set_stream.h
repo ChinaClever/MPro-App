@@ -1,6 +1,6 @@
 #ifndef SET_STREAM_H
 #define SET_STREAM_H
-#include "alarm_Updater.h"
+#include "alarm_log.h"
 #include <QDataStream>
 
 namespace set {

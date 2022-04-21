@@ -11,13 +11,13 @@ public:
     char alarmValue(const sAlarmIndex &index, AlarmType type);
     char alarmValue(const sAlarmIndex &index, sRelay::Alarm type);
 
-protected:
+//protected:
     sTgUnit *getTgAlarmUnit(const sAlarmIndex &index);
     sAlarmUnit *getAlarmUnit(const sAlarmIndex &index);
+    sRelayUnit *getRelayUnit(const sAlarmIndex &index);
 
 private:
     sObjData *getObjData(const sAlarmIndex &index);
-    sRelayUnit *getRelayUnit(const sAlarmIndex &index);
     sAlarmUnit *getAlarmUnit(const sAlarmIndex &index, sObjData *obj);
 };
 

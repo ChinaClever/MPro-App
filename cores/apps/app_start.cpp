@@ -28,6 +28,7 @@ void App_Start::initFunSlot()
     IPC_CoreServer::bulid(this);
     Set_readWrite::bulid(this);
     Dtls_Recver::bulid(this);
+    Alarm_Log::bulid(this);
     Log_Core::bulid(this);
     Set_Core::bulid();
 }

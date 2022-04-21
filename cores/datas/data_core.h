@@ -11,6 +11,7 @@ public:
 
 protected:
     void run() override;
+    void upAlarm();
 
 private:
     bool isRun=true;
