@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "core_sender.h"
 
 Core_Sender::Core_Sender(QObject *parent)

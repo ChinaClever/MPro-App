@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cascade_updater.h"
 
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}

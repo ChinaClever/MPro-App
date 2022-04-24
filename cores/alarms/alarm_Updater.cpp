@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "alarm_Updater.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)

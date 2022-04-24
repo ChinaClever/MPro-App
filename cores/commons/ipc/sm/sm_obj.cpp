@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "sm_obj.h"
 
 #if defined(Q_OS_LINUX)

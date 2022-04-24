@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cfg_obj.h"
 
 QSettings *Cfg_Obj::mCfgIni = nullptr;

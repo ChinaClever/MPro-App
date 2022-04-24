@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_relayclient.h"
 
 IPC_RelayClient::IPC_RelayClient(QObject *parent)

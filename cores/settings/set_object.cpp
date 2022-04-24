@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_object.h"
 #include "cfg_obj.h"
 #define SET_FN "set.ini"

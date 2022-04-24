@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_cfgserver.h"
 
 IPC_CfgServer::IPC_CfgServer(QObject *parent)

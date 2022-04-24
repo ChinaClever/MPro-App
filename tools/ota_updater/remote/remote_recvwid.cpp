@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "remote_recvwid.h"
 #include "ui_remote_recvwid.h"
 #include "backcolourcom.h"

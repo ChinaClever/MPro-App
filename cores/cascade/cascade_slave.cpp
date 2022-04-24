@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cascade_slave.h"
 
 Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}

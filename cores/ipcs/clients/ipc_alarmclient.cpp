@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_alarmclient.h"
 
 IPC_AlarmClient::IPC_AlarmClient(QObject *parent)

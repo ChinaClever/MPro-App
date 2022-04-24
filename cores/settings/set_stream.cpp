@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_stream.h"
 
 Set_Stream::Set_Stream(set::_sDevData *data) : mDevData{data}

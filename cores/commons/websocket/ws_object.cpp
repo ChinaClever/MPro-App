@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ws_object.h"
 
 WS_Object::WS_Object(QObject *parent)

@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "agent_devdata.h"
 
 Agent_DevData::Agent_DevData(QObject *parent) : Agent_Object{parent}

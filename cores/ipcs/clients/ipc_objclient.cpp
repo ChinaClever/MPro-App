@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_objclient.h"
 
 IPC_ObjClient::IPC_ObjClient(QObject *parent)

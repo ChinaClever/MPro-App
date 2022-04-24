@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_delayserver.h"
 
 IPC_DelayServer::IPC_DelayServer(QObject *parent)

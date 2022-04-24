@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "lsocket_client.h"
 
 LSocket_Client::LSocket_Client(QObject *parent) : LSocket_Object{parent}

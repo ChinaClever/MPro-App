@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_object.h"
 
 OP_Object::OP_Object(QObject *parent) : SerialPort{parent}

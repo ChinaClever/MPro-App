@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_relayserver.h"
 
 IPC_RelayServer::IPC_RelayServer(QObject *parent)

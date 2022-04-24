@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_objrtu.h"
 
 OP_ObjRtu::OP_ObjRtu(QObject *parent)

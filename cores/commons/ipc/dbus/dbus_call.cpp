@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dbus_call.h"
 
 DBus_Call::DBus_Call(QObject *parent) : DBus_Sender{parent}

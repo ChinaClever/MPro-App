@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "modbus_masterobj.h"
 
 Modbus_MasterObj::Modbus_MasterObj(QObject *parent) : Modbus_Object{parent}

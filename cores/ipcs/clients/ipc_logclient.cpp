@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_logclient.h"
 
 IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_ObjClient{parent}

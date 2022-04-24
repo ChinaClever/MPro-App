@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dtls_association.h"
 
 Dtls_Association::Dtls_Association(const QString &address, quint16 port)

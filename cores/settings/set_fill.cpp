@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_fill.h"
 
 Set_Fill::Set_Fill(QObject *parent) : Set_Object{parent}

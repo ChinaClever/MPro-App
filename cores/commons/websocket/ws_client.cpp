@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ws_client.h"
 
 WS_Client::WS_Client(QObject *parent) : WS_Object{parent}

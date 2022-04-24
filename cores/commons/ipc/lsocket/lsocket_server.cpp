@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "lsocket_server.h"
 
 LSocket_Server::LSocket_Server(QObject *parent) : DBus_Receiver{parent}

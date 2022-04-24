@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "lsocket_object.h"
 
 LSocket_Object::LSocket_Object(QObject *parent) : SM_Obj{parent}

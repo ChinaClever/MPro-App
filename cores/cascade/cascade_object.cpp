@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cascade_object.h"
 
 Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}

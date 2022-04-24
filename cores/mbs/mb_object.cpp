@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_object.h"
 
 Mb_Object::Mb_Object(QObject *parent) : Modbus_SlaveRtu{parent}

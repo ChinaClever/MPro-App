@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dtls_sender.h"
 
 bool Dtls_Sender::gRunState = true;

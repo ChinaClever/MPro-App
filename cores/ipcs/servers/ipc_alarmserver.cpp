@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_alarmserver.h"
 
 IPC_AlarmServer::IPC_AlarmServer(QObject *parent)

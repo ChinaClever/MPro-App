@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dbus_sender.h"
 
 DBus_Sender::DBus_Sender(QObject *parent) : DBus_Object{parent}

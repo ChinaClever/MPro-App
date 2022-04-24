@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_cfgclient.h"
 
 IPC_CfgClient::IPC_CfgClient(QObject *parent) : IPC_ObjClient{parent}

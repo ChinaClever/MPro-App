@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ssdp_client.h"
 
 Ssdp_Client::Ssdp_Client(QObject *parent)

@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "ipc_objserver.h"
 
 IPC_ObjServer::IPC_ObjServer(QObject *parent) : LSocket_Server{parent}
