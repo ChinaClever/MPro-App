@@ -1,32 +1,40 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_object.h"
+#include "cfg_obj.h"
+#define SET_FN "set.ini"
 
 Set_Object::Set_Object(QObject *parent) : QObject{parent}
 {
     isRun = false;
     mFile = new QFile;
     mData = new set::_sDevData;
-    memset((void *)mData, 0, sizeof(set::_sDevData));
-    mDataStream = new Set_Stream(mData);
-
     mThread = new CThread(this);
-    mThread->init(this, SLOT(run()));
+    mDataStream = new Set_Stream(mData);
+    memset((void *)mData, 0, sizeof(set::_sDevData));
+    QTimer::singleShot(15,this,SLOT(readSettings()));
 }
 
 void Set_Object::writeSettings()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(100,mThread, SLOT(onceRun()));}
+    if(!isRun) {
+        isRun = true;
+        mThread->onceRun();
+    }
 }
 
 bool Set_Object::saveSettings()
 {
-    mFile->setFileName("cfg"); fillData();
+    mThread->msleep(150);
+    mFile->setFileName(Cfg_Obj::pathOfCfg(SET_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
         mFile->write(array);
     }
-
-
     mFile->close();
     isRun = false;
     return ret;
@@ -34,7 +42,8 @@ bool Set_Object::saveSettings()
 
 bool Set_Object::readSettings()
 {
-    bool ret = false; mFile->setFileName("cfg");
+    mThread->init(this, SLOT(run()));
+    bool ret = false; mFile->setFileName(Cfg_Obj::pathOfCfg(SET_FN));
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         QByteArray array = mFile->readAll();
         if(array.size()) {

@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_object.h"
 
 Mb_Object::Mb_Object(QObject *parent) : Modbus_SlaveRtu{parent}
@@ -29,7 +34,7 @@ void Mb_Object::upDevInfo()
     vs << 1 << 1 << 1;
     setRegs(MbReg_Rateds, vs);
 
-    setReg(MbReg_PhaseNum, mDevData->info.phases);
+    setReg(MbReg_PhaseNum, mDevData->info.lineNum);
     setReg(MbReg_Classify, 2);
     setReg(MbReg_Classify+1, 0xFF);
 }

@@ -10,10 +10,10 @@ public:
     explicit Set_Object(QObject *parent = nullptr);
 
     void writeSettings();
-    bool readSettings();
 
 public slots:
     void run() {saveSettings();}
+    bool readSettings();
 
 protected:
     virtual void fillData()=0;

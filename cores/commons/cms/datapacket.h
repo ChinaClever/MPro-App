@@ -61,14 +61,14 @@ struct sObjData
 
     sAlarmUnit vol; // 电压
     sAlarmUnit cur; // 电流
-    sAlarmUnit pow; // 功率
+    sAlarmUnit pow; // 有功功率
     sRelayUnit relay;
 
     uint ele[PACK_ARRAY_SIZE]; // 电能
     uint pf[PACK_ARRAY_SIZE]; // 功率因数
 
-    uint artPow[PACK_ARRAY_SIZE]; // 功率值
-    uint reactivePow[PACK_ARRAY_SIZE];
+    uint artPow[PACK_ARRAY_SIZE]; // 视在功率
+    uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
@@ -127,12 +127,7 @@ struct sTgObjData
  */
 struct sRtuCount
 {
-    uint count;
-    uint okCount;
-    uint errCount;
-
-    uint longCount; // 连续丢命令
-    uint longFlag;
+    uchar offLines[4];
 };
 
 
@@ -140,18 +135,19 @@ struct sDevInfo {
     uint devType; //设备类型
     uint devSpec; // 设备规格 A\B\C\D
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uint phases; //设备单三相
+    uint lineNum; //设备单三相
 
     uint version;
     char devName[NAME_SIZE]; // 设备名称
-    uint slaveNum;
+    uint slaveNum;  // 副机数量
 
     uint hz;
-    uchar opNum;
-    uint outputs;
-    uchar ops[DEV_NUM];
+    uchar opNum;   //　执行板数量
+    uchar loopNum; // 回路数量
+    uint outputNum;   //　输出位数量
+    uchar ops[DEV_NUM]; //　每块执行板的输出位数量
     uchar hzs[DEV_NUM];  // 电压频率
-    ushort opVers[DEV_NUM];
+    ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uchar chipStates[DEV_NUM];
 };
 
@@ -215,5 +211,39 @@ struct sDataPacket
     sDevData data[DEV_NUM]; //设备数据
     sDevLogin login;
 };
+
+
+
+enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
+enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum};
+
+struct sAlarmIndex
+{
+    sAlarmIndex():addr(0){}
+    uchar addr;
+    uchar type;
+    uchar subtopic;
+    uchar id;
+};
+
+struct sSetAlarmUnit
+{
+    sAlarmIndex index;
+    uint rated;
+    uint min;
+    uint max;
+    uint crMin;
+    uint crMax;
+};
+
+
+struct sRelay
+{
+    enum State{Off, On};
+    enum Type{Breaker, Relay};
+    enum Mode{Standard, NormaOpen, NormaClose};
+    enum Alarm{NoAlarm, OpenALarm, CloseAlarm};
+};
+
 
 #endif // DATAPACKET_H

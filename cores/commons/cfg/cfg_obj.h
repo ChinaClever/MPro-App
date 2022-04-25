@@ -2,6 +2,8 @@
 #define CFG_OBJ_H
 #include "file.h"
 
+#define CFG_FN "cfg.ini"
+
 class Cfg_Obj
 {
     Cfg_Obj(const QString& fn, QObject *parent = nullptr);

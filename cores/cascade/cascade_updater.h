@@ -1,6 +1,7 @@
 #ifndef CASCADE_UPDATER_H
 #define CASCADE_UPDATER_H
 #include "file.h"
+#include "dtls_recver.h"
 #include "cascade_object.h"
 
 class Cascade_Updater : public Cascade_Object
@@ -17,6 +18,7 @@ public slots:
 signals:
     void otaReplyFinishSig(const sFileTrans &it,bool);
     void otaSendSig(uchar addr, const QString &message);
+    void otaProSig(uchar addr, int pro);
 
 protected:
     bool otaReplyStart(const QByteArray &data);
@@ -31,6 +33,10 @@ private:
     bool otaSendPacket(int addr, const QByteArray &array);
     bool otaSendData(uchar fn, int addr, const QByteArray &array);
 
+private slots:
+    void initFunSlot();
+    void dtlsFinishSlot(const sFileTrans &it, bool f) {if(f) ota_start(it);}
+
 protected:
     bool isOta;
 
@@ -38,6 +44,7 @@ private:
     int mSize;
     QFile *mFile;
     sFileTrans mIt;
+    Dtls_Recver *mDtls;
 };
 
 #endif // CASCADE_UPDATER_H

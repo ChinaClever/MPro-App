@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dbus_object.h"
 
 DBus_Object::DBus_Object(QObject *parent) : LSocket_Client{parent}

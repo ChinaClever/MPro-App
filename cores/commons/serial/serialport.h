@@ -20,15 +20,16 @@ public:
     bool writeSerial(const QByteArray &array);
     QByteArray transmit(uchar *sent, int len, int msecs=1000);
     QByteArray transmit(const QByteArray &array, int msecs=1000);
-
     QByteArray readSerial(int msecs=1000);
+    void setBaudRate(qint32 br);
     bool waitForLock();
 
-private slots:
-    void writeSlot();
+public slots:
+    void cmsWriteSlot(int msecs=1);
+    void setBaudRateSlot() {mSerial->setBaudRate(mBr);}
 
 private:
-    bool isRun;
+    bool isRun; qint32 mBr;
     QByteArrayList mList;
     QSerialPort  *mSerial;
     QReadWriteLock *mRwLock;

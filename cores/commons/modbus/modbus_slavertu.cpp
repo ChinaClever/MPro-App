@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "modbus_slavertu.h"
 
 Modbus_SlaveRtu::Modbus_SlaveRtu(QObject *parent) : Modbus_SlaveTcp{parent}

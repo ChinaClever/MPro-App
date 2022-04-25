@@ -1,7 +1,7 @@
 #ifndef CASCADE_STREAM_H
 #define CASCADE_STREAM_H
 
-#include "set_relay.h"
+#include "set_core.h"
 #include <QDataStream>
 
 namespace cascade {
@@ -70,6 +70,15 @@ struct _sDevData
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
+struct _sFrame {
+    _sFrame(){srcAddr=0;}
+    uchar srcAddr;
+    uchar dstAddr;
+
+    uchar fc;
+    ushort len;
+    QByteArray data;
+};
 }
 
 using c_sRelayUnit = cascade::_sRelayUnit;
@@ -77,6 +86,7 @@ using c_sAlarmUnit = cascade::_sAlarmUnit;
 using c_sObjData = cascade::_sObjData;
 using c_sEnvData = cascade::_sEnvData;
 using c_sDevData = cascade::_sDevData;
+using c_sFrame = cascade::_sFrame;
 
 class Cascade_Stream
 {

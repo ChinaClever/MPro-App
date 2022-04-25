@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "json_recv.h"
 
 Json_Recv::Json_Recv(QObject *parent)

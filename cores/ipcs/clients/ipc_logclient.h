@@ -9,8 +9,10 @@ class IPC_LogClient : public IPC_ObjClient
     explicit IPC_LogClient(QObject *parent = nullptr);
 public:
     static IPC_LogClient *bulid(QObject *parent = nullptr);
-    bool write(int id, const QStringList &value);
-    QVariant read(int id, int page);
+    bool write(eLogs id, const QStringList &value);
+    QVariant read(eLogs id, int page);
+    int countLog(eLogs id);
+    void clearLog(eLogs id);
 
 private:
     bool inputCheck(const QVariantList &values);

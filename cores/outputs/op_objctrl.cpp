@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_objctrl.h"
 
 OP_ObjCtrl::OP_ObjCtrl(QObject *parent) : OP_ObjRtu{parent}

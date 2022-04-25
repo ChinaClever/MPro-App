@@ -6,8 +6,9 @@
 class Alarm_Updater : public QObject
 {
     Q_OBJECT
-public:
     explicit Alarm_Updater(QObject *parent = nullptr);
+public:
+    static Alarm_Updater *bulid(QObject *parent = nullptr);
 
 signals:
     void alarmSig(sAlarmIndex index, uchar value);
@@ -24,10 +25,8 @@ private:
 
     uchar upTgUnit(sAlarmIndex &index, sTgUnit &it);
     bool upTgObjData(sAlarmIndex &index, sTgObjData &it);
+    bool upEnvData(sAlarmIndex &index, sEnvData &it);
     bool upDevAlarm(uchar addr);
-
-private:
-    CThread *mThread;
 };
 
 #endif // ALARM_UPDATER_H

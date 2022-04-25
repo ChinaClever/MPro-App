@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_loop.h"
 
 Mb_Loop::Mb_Loop(QObject *parent) : Mb_Output{parent}

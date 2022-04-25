@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_relay.h"
 #include "op_zrtu.h"
 #include "cascade_slave.h"
@@ -13,17 +18,17 @@ bool Set_Relay::outputRelayCtrl(int addr, int id, uchar on)
     if(addr) {
        ret = Cascade_Core::bulid()->masterRelayCtrl(addr, id, on);
     } else {
-        OP_ZRtu::bulid()->relayCtrl(id, on);
+        OP_Core::bulid()->relayCtrl(id, on);
     }
 
     return ret;
 }
 
-bool Set_Relay::outputRelaySet(int addr, int id, uchar mode, uchar delay)
+bool Set_Relay::outputDelaySet(int addr, int id, uchar mode, uchar delay)
 {
     bool ret = true;
     if(addr) {
-        ret = Cascade_Core::bulid()->masterRelaySet(addr, id, mode, delay);
+        ret = Cascade_Core::bulid()->masterDelaySet(addr, id, mode, delay);
     } else {
         OP_ZRtu::bulid()->setDelay(id, delay);
         sRelayUnit *it = &(cm::masterDev()->output.relay);

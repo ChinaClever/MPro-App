@@ -1,6 +1,6 @@
 QT -= gui
 
-CONFIG += c++14 console
+CONFIG += c++17 console
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -11,6 +11,7 @@ include(mbs/mbs.pri)
 include(logs/logs.pri)
 include(apps/apps.pri)
 include(ipcs/ipcs.pri)
+include(datas/datas.pri)
 include(jsons/jsons.pri)
 include(agents/agents.pri)
 include(alarms/alarms.pri)

@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_alarm.h"
 #include "cascade_slave.h"
 
@@ -28,7 +33,7 @@ bool Set_Alarm::setTgAlarmUnit(const sSetAlarmUnit &unit)
         it->crMax = unit.crMax;
         it->crMin = unit.crMin;
         it->rated = unit.rated;
-    } else {qDebug() << "Error Set Tg Alarm "; ret = false; }
+    } else {qDebug() << Q_FUNC_INFO; ret = false; }
 
     return ret;
 }
@@ -41,7 +46,7 @@ bool Set_Alarm::setAlarmIt(const sSetAlarmUnit &unit)
         uchar id = unit.index.id;
         if(id) setAlarmUnit(id--, it, unit);
         else for(int i=0; i<it->size; ++i) setAlarmUnit(i, it, unit);
-    } else {qDebug() << "Error Set Alarm "; ret = false; }
+    } else {qDebug() << Q_FUNC_INFO; ret = false; }
 
     return ret;
 }

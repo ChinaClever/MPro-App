@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_line.h"
 
 Mb_Line::Mb_Line(QObject *parent) : Mb_Object{parent}

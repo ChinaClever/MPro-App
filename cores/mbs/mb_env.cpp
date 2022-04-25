@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_env.h"
 
 Mb_Env::Mb_Env(QObject *parent) : Mb_Loop{parent}

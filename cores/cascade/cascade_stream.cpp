@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cascade_stream.h"
 
 Cascade_Stream::Cascade_Stream(c_sDevData *data) : mDevData{data}

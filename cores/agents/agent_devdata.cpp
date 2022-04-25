@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "agent_devdata.h"
 
 Agent_DevData::Agent_DevData(QObject *parent) : Agent_Object{parent}
@@ -25,8 +30,8 @@ void Agent_DevData::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &d
 
     addOid(addr, id++, oid, prefix+"name", dev.devName);
     addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
-    addOidValue(addr, id++, oid, prefix+"phases", dev.phases, w);
-    addOidValue(addr, id++, oid, prefix+"outputs", dev.outputs, w);
+    addOidValue(addr, id++, oid, prefix+"phases", dev.lineNum, w);
+    addOidValue(addr, id++, oid, prefix+"outputs", dev.outputNum, w);
     addOidValue(addr, id++, oid, prefix+"slaveNum", dev.slaveNum, w);
     addOidValue(addr, id++, oid, prefix+"version", dev.version, w);
     addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);

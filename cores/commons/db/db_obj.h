@@ -1,5 +1,10 @@
 #ifndef DB_OBJ_H
 #define DB_OBJ_H
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "sql_select.h"
 
 class Db_Tran
@@ -50,7 +55,7 @@ public:
         }
         json.insert("logs", logs);
         QJsonDocument doc; doc.setObject(json);
-        return doc.toJson(QJsonDocument::Compact);
+        return doc.toJson(QJsonDocument::Indented);
     }
 
     bool jsonWriteFile(const QByteArray &array) {

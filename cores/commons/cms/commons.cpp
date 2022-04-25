@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "commons.h"
 #include "sm_obj.h"
 
@@ -86,7 +91,7 @@ QString cm::byteArrayToUcharStr(const QByteArray &array)
 
 sDataPacket *cm::dataPacket()
 {
-    sDataPacket *packet = (sDataPacket *)SM_Obj::sharedMemory(sizeof(sDataPacket));
+    sDataPacket *packet = (sDataPacket *)SM_Obj::sharedMemory();
     if(!packet) qDebug() << "Error cm dataPacket";
     return packet;
 }

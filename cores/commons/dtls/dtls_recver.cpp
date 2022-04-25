@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dtls_recver.h"
 
 
@@ -6,12 +11,11 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
 {
     mFile = new QFile;
     mNet = new Net_Udp(this);
-    mDtls = new Dtls_Service(this);
+    mDtls = new Dtls_Service(this); isFinshed = false;
     connect(mDtls, &Dtls_Service::errorMessage, this, &Dtls_Recver::throwError);
     connect(mDtls, &Dtls_Service::warningMessage, this, &Dtls_Recver::throwMessage);
     connect(mDtls, &Dtls_Service::infoMessage, this, &Dtls_Recver::throwMessage);
-    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);
-    mDtls->listen(); isFinshed = false;
+    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);    
 }
 
 
@@ -60,10 +64,9 @@ bool Dtls_Recver::recvFinish()
 
 bool Dtls_Recver::initFile(const QByteArray &array)
 {
-    QByteArray rcv(array);
-    bool ret = false; sFileTrans *it = &mIt;
-    QDataStream out(&rcv, QIODevice::ReadOnly);
-    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->crc;
+    QByteArray rcv(array); bool ret = false;
+    sFileTrans *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly);
+    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) ret = setFile(it->path + it->file);
     else throwMessage("Error: Dtls recver head");
     return ret;
@@ -74,5 +77,5 @@ void Dtls_Recver::rcvClientMessage(const QByteArray &data)
     if(mFile->isWritable() && mSize) mFile->write(data);
     else if(!mFile->isOpen() && !mSize) initFile(data);
     else throwMessage(tr("Error: Dtls Recver write file %1").arg(data.data()));
-    mSize += data.size();
+    mSize += data.size(); //throwMessage(tr("Dtls Recver File Size %1").arg(mSize));
 }

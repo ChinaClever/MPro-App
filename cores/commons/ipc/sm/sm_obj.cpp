@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "sm_obj.h"
 
 #if defined(Q_OS_LINUX)
@@ -34,28 +39,17 @@ void SM_Obj::initShareMemory(QObject *parent)
     if(!mSm) {
         mSm = new QSharedMemory(parent);
         mSm->setKey(IPC_SHAREDMEMORY_KEY);
-        sharedMemory(sizeof(sDataPacket));
+        int size = sizeof(sDataPacket);
+        bool ret = mSm->create(size);
+        if(!mSm->isAttached()) mSm->attach();
+        if(ret) memset(mSm->data(), 0, size);
     }
-}
-
-
-void *SM_Obj::sharedMemory(int size)
-{
-#if defined(Q_OS_LINUX)
-    return share_mem_get(size);
-#else
-    initShareMemory();
-    bool ret = mSm->create(size);
-    if(!mSm->isAttached()) mSm->attach();
-    if(ret) memset(mSm->data(), 0, size);
-    return mSm->data();
-#endif
 }
 
 void *SM_Obj::sharedMemory()
 {
 #if defined(Q_OS_LINUX)
-    return sharedMemory(sizeof(sDataPacket));
+     return share_mem_get(sizeof(sDataPacket));
 #else
     if(!mSm) initShareMemory();
     return mSm->data();

@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "modbus_object.h"
 
 Modbus_Object::Modbus_Object(QObject *parent)

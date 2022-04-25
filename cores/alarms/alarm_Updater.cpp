@@ -1,11 +1,23 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "alarm_Updater.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
 {
-    mThread = new CThread(this);
-    mThread->init(this, SLOT(run()));
-    QTimer::singleShot(5*1000,mThread, SLOT(start()));
+
+}
+
+Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
+{
+    static Alarm_Updater* sington = nullptr;
+    if(sington == nullptr) {
+        sington = new Alarm_Updater(parent);
+    }
+    return sington;
 }
 
 bool Alarm_Updater::upRelayUnit(sAlarmIndex &index, sRelayUnit &it)
@@ -23,7 +35,7 @@ bool Alarm_Updater::upRelayUnit(sAlarmIndex &index, sRelayUnit &it)
         } else alarm = sRelay::NoAlarm; index.id = i;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
-    }
+    }    
 
     return ret;
 }
@@ -71,7 +83,7 @@ uchar Alarm_Updater::upTgUnit(sAlarmIndex &index, sTgUnit &it)
     else if(value > it.crMax) alarm = AlarmType::CrMax;
     else if(value < it.crMin) alarm = AlarmType::CrMin;
     else if(value < it.min) alarm = AlarmType::Min;
-    else alarm = AlarmType::Ok; index.id = 0xFF;
+    else {alarm = AlarmType::Ok;} index.id = 0xFF;
     if(it.alarm != alarm) emit alarmSig(index, alarm);
     it.alarm = alarm; ret |= alarm;
     return ret;
@@ -92,6 +104,19 @@ bool Alarm_Updater::upTgObjData(sAlarmIndex &index, sTgObjData &it)
     return ret;
 }
 
+
+bool Alarm_Updater::upEnvData(sAlarmIndex &index, sEnvData &it)
+{
+    bool ret = false;
+    index.subtopic = AlarmIndex::Tem;
+    ret |= upAlarmUnit(index, it.tem);
+
+    index.subtopic = AlarmIndex::Hum;
+    ret |= upAlarmUnit(index, it.hum);
+
+    return ret;
+}
+
 bool Alarm_Updater::upDevData(sAlarmIndex &index, sDevData *it)
 {
     bool ret = false;
@@ -107,6 +132,9 @@ bool Alarm_Updater::upDevData(sAlarmIndex &index, sDevData *it)
 
     index.type = AlarmIndex::Tg;
     ret |= upTgObjData(index, it->tg);
+
+    index.type = AlarmIndex::Env;
+    ret |= upObjData(index, it->output);
 
     return ret;
 }
@@ -125,7 +153,6 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 
 void Alarm_Updater::run()
 {
-    int num = cm::masterDev()->info.slaveNum +1;
-    for(int i=0; i<num; ++i) upDevAlarm(i);
-    mThread->msleep(350);
+    int num = cm::masterDev()->info.slaveNum;
+    for(int i=0; i<num+1; ++i) upDevAlarm(i);
 }

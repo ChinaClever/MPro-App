@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "cascade_unserialize.h"
 
 Cascade_Unserialize::Cascade_Unserialize(QObject *parent) : Cascade_Updater{parent}

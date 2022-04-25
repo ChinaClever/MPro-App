@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "net_tcpclient.h"
 
 Net_TcpClient::Net_TcpClient(QObject *parent)

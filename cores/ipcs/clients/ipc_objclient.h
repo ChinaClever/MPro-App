@@ -3,8 +3,19 @@
 
 #include "lsocket_server.h"
 
-#define IPC_KEY_LOG "logs"
-#define IPC_KEY_SETTING "settings"
+#define IPC_KEY_LOG         "logs"
+#define IPC_KEY_RELAY       "relays"
+#define IPC_KEY_DELAY       "delays"
+#define IPC_KEY_ALARM       "alarms"
+#define IPC_KEY_SETTING     "settings"
+
+enum eLogs{
+    eUserLog,
+    eOpLog,
+    eSysLog,
+    eAlarmLog,
+
+};
 
 class IPC_ObjClient : public QObject
 {
@@ -15,8 +26,8 @@ public:
 
 protected:
     QVariant readBus(const QVariantList &v);
-    virtual void initFunction(const QString &key);
-    virtual bool inputCheck(const QVariantList &values) = 0;
+    virtual void initFunction(const QString &key, bool f=false);
+    virtual bool inputCheck(const QVariantList &){return true;}
 
 protected :
     DBus_Call *mDbus;

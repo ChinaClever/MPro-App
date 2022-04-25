@@ -3,26 +3,25 @@
 
 #include "op_zctrl.h"
 
-class OP_ZRtu : public OP_ZCtrl
+class OP_ZRtu : public OP_ZCtrl, public QRunnable
 {
     Q_OBJECT
     explicit OP_ZRtu(QObject *parent = nullptr);
 public:
     static OP_ZRtu *bulid(QObject *parent = nullptr);
-    ~OP_ZRtu();
+    ~OP_ZRtu(){isRun = false;}
 
 public slots:
-    void run();
-    void start();
+    void run() override;
 
 private:
     bool readData(int addr) override;
     bool sendReadCmd(int addr, sOpIt *it);
+    bool setEndisable(int addr, bool ret, uchar &v);
     bool recvPacket(const QByteArray &array, sOpIt *obj);
 
 private:
-    bool isRun;
-    CThread *mThread;
+    bool isRun=true;
 };
 
 using OP_Core = OP_ZRtu;

@@ -1,6 +1,8 @@
 INCLUDEPATH += $$PWD
 
 
-HEADERS +=
+HEADERS += \
+    $$PWD/app_start.h
 
-SOURCES +=
+SOURCES += \
+    $$PWD/app_start.cpp

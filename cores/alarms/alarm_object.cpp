@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "alarm_object.h"
 
 Alarm_Object::Alarm_Object()

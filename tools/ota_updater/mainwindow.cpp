@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -9,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     mNavBarWid = new NavBarWid(ui->barWid);
     QTimer::singleShot(50,this,SLOT(initFunSlot())); //延时初始化
     connect(mNavBarWid, SIGNAL(navBarSig(int)), this, SLOT(navBarSlot(int)));
+    qDebug() << "QSslSocket=" << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "OpenSSL支持情况:" << QSslSocket::supportsSsl();
 }
 
 MainWindow::~MainWindow()

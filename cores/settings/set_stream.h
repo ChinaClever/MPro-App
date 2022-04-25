@@ -1,6 +1,6 @@
 #ifndef SET_STREAM_H
 #define SET_STREAM_H
-#include "alarm_Updater.h"
+#include "alarm_log.h"
 #include <QDataStream>
 
 namespace set {
@@ -38,6 +38,8 @@ struct _sEnvData
 
 struct _sDevData
 {
+    _sDevData() {version=1;}
+    uchar version;
     uchar lineSize;
     _sObjData line[LINE_NUM]; // 相数据
 

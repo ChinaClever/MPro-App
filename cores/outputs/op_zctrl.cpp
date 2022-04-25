@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_zctrl.h"
 
 OP_ZCtrl::OP_ZCtrl(QObject *parent) : OP_ObjCtrl{parent}

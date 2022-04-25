@@ -1,15 +1,16 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_zrtu.h"
+#include "log_core.h"
 
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
-    mThread = new CThread(this);
+
 }
 
-OP_ZRtu::~OP_ZRtu()
-{
-    isRun = false;
-    mThread->stop();
-}
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 {
@@ -18,16 +19,9 @@ OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
         sington = new OP_ZRtu(parent);
 #if defined(Q_OS_LINUX)
         sington->openSerial("/dev/ttyUSB0");
-        sington->start();
 #endif
     }
     return sington;
-}
-
-void OP_ZRtu::start()
-{
-    mThread->init(this, SLOT(run()));
-    isRun = true; mThread->start();
 }
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
@@ -85,11 +79,29 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
     } else {
-        qDebug() << "Error: OP_ZRtu send cmd err!"
-                 << addr << cm::byteArrayToHexStr(recv);
+        qDebug() << Q_FUNC_INFO << addr << cm::byteArrayToHexStr(recv);
     }
 
     return res;
+}
+
+bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
+{
+    if(ret) {
+        if(v == 0) {
+            sSysItem it; it.module = tr("Output");
+            it.content = tr("执行板 %1 连接正常").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        } v = 3;
+    } else if(v > 0){
+        if(--v == 0)  {
+            sSysItem it; it.module = tr("Output");
+            it.content = tr("执行板 %1 掉线").arg(addr+1);
+            Log_Core::bulid(this)->append(it);
+        }
+    } cm::mdelay(320);
+
+    return ret;
 }
 
 bool OP_ZRtu::readData(int addr)
@@ -97,18 +109,18 @@ bool OP_ZRtu::readData(int addr)
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
     if(ret) fillData(addr);
-    return ret;
+    return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
 void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        if(0 == size) size = 1;  /////==========
-
+        //if(0 == size) size = 3;
         for(int i=0; i<size; ++i) {
-            ota_updates(); readData(i+1);
-            mThread->msleep(200);
-        } mThread->msleep(300);
+            cmsWriteSlot(150);
+            ota_updates();
+            readData(i+1);
+        } cm::mdelay(10);
     }
 }

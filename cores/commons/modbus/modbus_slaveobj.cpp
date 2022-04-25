@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "modbus_slaveobj.h"
 
 Modbus_SlaveObj::Modbus_SlaveObj(QObject *parent) : Modbus_Object{parent}

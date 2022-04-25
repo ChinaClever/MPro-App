@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "dbus_receiver.h"
 
 DBus_Receiver::DBus_Receiver(QObject *parent) : DBus_Call{parent}

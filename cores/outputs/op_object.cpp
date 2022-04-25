@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "op_object.h"
 
 OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
@@ -27,8 +32,10 @@ void OP_Object::fillData(uchar addr)
         dev->output.relay.sw[k+i] = it->sw[i];
     }
 
+    dev->offLine = 3;
     dev->info.hzs[addr] = it->hz;
     dev->info.ops[addr] = it->size;
     dev->info.opVers[addr] = it->version;
     dev->info.chipStates[addr] = it->chipStatus;
+    for(int i=0; i<4; ++i) dev->rtuCount.offLines[i] = it->ens[i];    
 }
