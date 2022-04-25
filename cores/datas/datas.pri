@@ -13,4 +13,3 @@ SOURCES += \
     $$PWD/data_loop.cpp \
     $$PWD/data_object.cpp
 
-QT += widgets
