@@ -3,9 +3,23 @@
 #include <thread>
 #include "mjson.h"
 #include "mongoose.h"
+#include "outputread.h"
+#include "ipc_relayclient.h"
+
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "web_root";
+std::vector<std::string *> gveStr;
+QObject* gObj = NULL;
+IPC_RelayClient *gipc_RelayClientObj = NULL;
+
+void init()
+{
+    for(int i = 0 ; i < 24 ; i++)
+    {
+        gveStr.push_back( new std::string("output" + std::to_string(i+1)) );
+    }
+}
 
 static void sum(struct jsonrpc_request *r) {
     double a = 0.0, b = 0.0;
@@ -53,32 +67,44 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     (void) fn_data;
 }
 
-static void timer_fn(void *arg) {
-    struct mg_mgr *mgr = (struct mg_mgr *) arg;
-    // Broadcast "hi" message to all connected websocket clients.
-    // Traverse over all connections
-    for (struct mg_connection *c = mgr->conns; c != NULL; c = c->next) {
-        // Send JSON-RPC notifications to marked connections
-        const char *msg = "{\"method\":\"hiya!!\",\"params\":[1,2,3]}";
-        if (c->label[0] == 'W') mg_ws_send(c, msg, strlen(msg), WEBSOCKET_OP_TEXT);
-    }
-}
+//static void timer_fn(void *arg) {
+//    struct mg_mgr *mgr = (struct mg_mgr *) arg;
+//    // Broadcast "hi" message to all connected websocket clients.
+//    // Traverse over all connections
+//    for (struct mg_connection *c = mgr->conns; c != NULL; c = c->next) {
+//        // Send JSON-RPC notifications to marked connections
+//        const char *msg = "{\"method\":\"hiya!!\",\"params\":[1,2,3]}";
+//        if (c->label[0] == 'W') mg_ws_send(c, msg, strlen(msg), WEBSOCKET_OP_TEXT);
+//    }
+//}
 
 int http_main(void) {
     struct mg_mgr mgr;   // Event manager
-    struct mg_timer t1;  // Timer
+    //struct mg_timer t1;  // Timer
 
     mg_mgr_init(&mgr);  // Init event manager
-    mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
+    init();
+    gObj = new QObject();
+    IPC_RelayClient * gipc_RelayClientObj = IPC_RelayClient::bulid(gObj);
+    //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
     jsonrpc_export("sum", sum);       // And export a couple
     jsonrpc_export("mul", multiply);  // of RPC functions
+    OutputRead *opRead = OutputRead::bulid();
+    jsonrpc_export("get" , opRead->get);
+    jsonrpc_export("output_size_value" , opRead->output_size_value);
+    jsonrpc_export("output_name_value" , opRead->output_name_value);
+    jsonrpc_export("output_relay_status" , opRead->output_relay_status);
+    jsonrpc_export("output_relay_ctrl" , opRead->output_relay_ctrl);
+
+
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
+
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     for (;;) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
-    mg_timer_free(&t1);                           // Free timer resources
+/*    mg_timer_free(&t1);*/                           // Free timer resources
     mg_mgr_free(&mgr);                            // Deallocate event manager
     return 0;
 }

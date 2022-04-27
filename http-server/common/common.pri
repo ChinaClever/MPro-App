@@ -1,6 +1,7 @@
 INCLUDEPATH += $$PWD
 
 include(mongoose/mongoose.pri)
+include(output/output.pri)
 
 CM_PATH = ../../cores/commons
 include($$CM_PATH/cms/cms.pri)
