@@ -34,8 +34,8 @@ void OutputRead::output_name_value(struct jsonrpc_request * r)
     mjson_get_number(r->params, r->params_len, "$[1]", &index);
     index = (int) index;
     if(index > 42 || index < 1) return;
-    printf("addr: %d ---- index: %d-----%s\n" ,(int) addr ,(int) index-1 ,  (*gveStr[index-1]).c_str());
-    jsonrpc_return_success(r , "%Q" , (*gveStr[index-1]).c_str() );
+    printf("addr: %d ---- index: %d-----%s\n" ,(int) addr ,(int) index-1 ,  (*gVeStr[index-1]).c_str());
+    jsonrpc_return_success(r , "%Q" , (*gVeStr[index-1]).c_str() );
 }
 
 int aa = 0;
@@ -64,8 +64,8 @@ void OutputRead::output_relay_ctrl(struct jsonrpc_request * r)
     mjson_get_number(r->params, r->params_len, "$[0]", &addr);
     mjson_get_number(r->params, r->params_len, "$[1]", &id);
     mjson_get_number(r->params, r->params_len, "$[2]", &ctrl);
-    if( !gipc_RelayClientObj ) return;
-    gipc_RelayClientObj->ctrl( addr , id , ctrl );
+    if( !gIpc_RelayClientObj ) return;
+    gIpc_RelayClientObj->ctrl( addr , id , ctrl );
     jsonrpc_return_success(r , "%g" , 1 );
 }
 

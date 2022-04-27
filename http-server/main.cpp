@@ -8,16 +8,16 @@
 
 
 static const char *s_listen_on = "ws://localhost:8000";
-static const char *s_web_root = "web_root";
-std::vector<std::string *> gveStr;
+static const char *s_web_root = "/home/lzy/pmd/NPDU/web";
+std::vector<std::string *> gVeStr;
 QObject* gObj = NULL;
-IPC_RelayClient *gipc_RelayClientObj = NULL;
+IPC_RelayClient *gIpc_RelayClientObj = NULL;
 
 void init()
 {
     for(int i = 0 ; i < 24 ; i++)
     {
-        gveStr.push_back( new std::string("output" + std::to_string(i+1)) );
+        gVeStr.push_back( new std::string("output" + std::to_string(i+1)) );
     }
 }
 
@@ -85,7 +85,7 @@ int http_main(void) {
     mg_mgr_init(&mgr);  // Init event manager
     init();
     gObj = new QObject();
-    IPC_RelayClient * gipc_RelayClientObj = IPC_RelayClient::bulid(gObj);
+    IPC_RelayClient * gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance

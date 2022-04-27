@@ -7,9 +7,9 @@
 #include "mjson.h"
 #include "ipc_relayclient.h"
 
-extern std::vector<std::string *> gveStr;
-extern IPC_RelayClient *gipc_RelayClientObj;
-extern int gopBit;
+extern std::vector<std::string *> gVeStr;
+extern IPC_RelayClient *gIpc_RelayClientObj;
+extern int gOpBit;
 
 class OutputRead
 {
