@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "dbus_object.h"
+#define IPC_PC  1
 
 DBus_Object::DBus_Object(QObject *parent) : LSocket_Client{parent}
 {
@@ -21,7 +22,18 @@ void DBus_Object::setKey(const QString &newKey)
 void DBus_Object::throwError(const QString &msg)
 {
     qDebug() << "Error: D-Bus" << msg << mInterface
-             << QDBusConnection::sessionBus().lastError();
+             << busConnection().lastError();
+}
+
+QDBusConnection DBus_Object::busConnection()
+{
+#if IPC_PC
+    static bool ini = false;
+    if(!ini)ini=registerBusService();
+    return QDBusConnection::sessionBus();
+#else
+    return QDBusConnection::systemBus();
+#endif
 }
 
 bool DBus_Object::registerBusService()
