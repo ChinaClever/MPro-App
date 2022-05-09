@@ -8,7 +8,7 @@
 
 
 static const char *s_listen_on = "ws://localhost:8000";
-static const char *s_web_root = "/home/lzy/pmd/NPDU/web";
+static const char *s_web_root = "/home/lzy/work/NPDU/web";
 std::vector<std::string *> gVeStr;
 QObject* gObj = NULL;
 IPC_RelayClient *gIpc_RelayClientObj = NULL;
@@ -49,11 +49,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
             // Upgrade to websocket. From now on, a connection is a full-duplex
             // Websocket connection, which will receive MG_EV_WS_MSG events.
             mg_ws_upgrade(c, hm, NULL);
+
         } else {
             // Serve static files
             struct mg_http_serve_opts opts = {.root_dir = s_web_root};
             mg_http_serve_dir(c, (mg_http_message *)ev_data, &opts);
         }
+
     } else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
@@ -85,13 +87,13 @@ int http_main(void) {
     mg_mgr_init(&mgr);  // Init event manager
     init();
     gObj = new QObject();
-    IPC_RelayClient * gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
+    IPC_RelayClient *gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
     jsonrpc_export("sum", sum);       // And export a couple
     jsonrpc_export("mul", multiply);  // of RPC functions
-    OutputRead *opRead = OutputRead::bulid();
+    OutputRead *opRead = OutputRead::bulid(gObj);
     jsonrpc_export("get" , opRead->get);
     jsonrpc_export("output_size_value" , opRead->output_size_value);
     jsonrpc_export("output_name_value" , opRead->output_name_value);

@@ -1,16 +1,16 @@
 #include "outputread.h"
 
-OutputRead::OutputRead()
+OutputRead::OutputRead(QObject *parent)
 {
 
 }
 
 
-OutputRead *OutputRead::bulid()
+OutputRead *OutputRead::bulid(QObject *parent)
 {
     static OutputRead *sington = nullptr;
     if(!sington) {
-        sington = new OutputRead();
+        sington = new OutputRead(parent);
     }
     return sington;
 }
@@ -19,11 +19,15 @@ OutputRead *OutputRead::bulid()
 
 void OutputRead::output_size_value(struct jsonrpc_request * r)
 {
-    double addr = 0;
+    double addr = 0 , index = 0 , a = 0;
+    char type[20]="output_size";
     mjson_get_number(r->params, r->params_len, "$[0]", &addr);
-    printf("addr: %d\n" , (int)addr);
+    printf("addr: %d len:%d\n" , (int)addr , (int) r->params_len);
+    a = (int)addr;
+    index = 1;
     addr = 24;
-    jsonrpc_return_success(r , "%g" , addr );
+
+    jsonrpc_return_success(r , "[%g,%g,%Q,%g]" , a ,  index, type , addr  );
 }
 
 void OutputRead::output_name_value(struct jsonrpc_request * r)
@@ -33,9 +37,10 @@ void OutputRead::output_name_value(struct jsonrpc_request * r)
     mjson_get_number(r->params, r->params_len, "$[0]", &addr);
     mjson_get_number(r->params, r->params_len, "$[1]", &index);
     index = (int) index;
+    char type[20] = "output_name";
     if(index > 42 || index < 1) return;
     printf("addr: %d ---- index: %d-----%s\n" ,(int) addr ,(int) index-1 ,  (*gVeStr[index-1]).c_str());
-    jsonrpc_return_success(r , "%Q" , (*gVeStr[index-1]).c_str() );
+    jsonrpc_return_success(r , "[%g,%g,%Q,%Q]" , addr , index , type , (*gVeStr[index-1]).c_str() );
 }
 
 int aa = 0;
@@ -60,13 +65,28 @@ void OutputRead::output_relay_status(struct jsonrpc_request * r)
 
 void OutputRead::output_relay_ctrl(struct jsonrpc_request * r)
 {
-    double addr = 0 , id = 1 , ctrl = 1;
-    mjson_get_number(r->params, r->params_len, "$[0]", &addr);
-    mjson_get_number(r->params, r->params_len, "$[1]", &id);
-    mjson_get_number(r->params, r->params_len, "$[2]", &ctrl);
-    if( !gIpc_RelayClientObj ) return;
-    gIpc_RelayClientObj->ctrl( addr , id , ctrl );
-    jsonrpc_return_success(r , "%g" , 1 );
+    double ctrl = 1;
+    //mjson_get_number(r->params, r->params_len, "$[0]", &addr);
+    //mjson_get_number(r->params, r->params_len, "$[1]", &id);
+    //mjson_get_number(r->params, r->params_len, "$[2]", &ctrl);
+
+    std::vector<double> ans;
+    mjson_get_mutilnumbers(r , 3 , ans);
+    printf("addr: %d ---- id: %d-----ctrl: %d\n" ,(int) ans[0] ,(int) ans[1] , (int)ans[2]);
+    //if( !gIpc_RelayClientObj ) return;
+    //gIpc_RelayClientObj->ctrl( addr , id , ctrl );
+    char type[20] = "ctrlop_state";
+    jsonrpc_return_success(r , "[%g,%g,%Q,%g]" , ans[0] ,  ans[1] , type , ctrl );
 }
 
+void OutputRead::mjson_get_mutilnumbers(struct jsonrpc_request * r ,int num , std::vector<double> & ans)
+{
+    ans.resize(num);
+    char buffer[10];
+    for(int i = 0 ; i < num ; i++)
+    {
+       sprintf(buffer , "$[%d]" , i);
+       mjson_get_number(r->params, r->params_len, buffer, &ans[i]);
+    }
+}
 
