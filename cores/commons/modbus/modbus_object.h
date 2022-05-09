@@ -7,7 +7,7 @@
 
 struct sModbusSetting {
     QString portName;
-    int parity = QSerialPort::EvenParity;
+    int parity = QSerialPort::NoParity;
     int baud = QSerialPort::Baud19200;
     int dataBits = QSerialPort::Data8;
     int stopBits = QSerialPort::OneStop;

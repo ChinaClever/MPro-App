@@ -44,7 +44,7 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     uchar size;
-    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用
+    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用  0:不能控制；1:通；2:断
     uchar mode[PACK_ARRAY_SIZE];
     uchar alarm[PACK_ARRAY_SIZE];
     uchar delay[PACK_ARRAY_SIZE];
@@ -140,6 +140,9 @@ struct sDevInfo {
     uint version;
     char devName[NAME_SIZE]; // 设备名称
     uint slaveNum;  // 副机数量
+    uchar modbusAddr; // 通讯地址
+    uchar buzzerSw; // 蜂鸣器开关
+    uchar drySw; // 报警干接点开关
 
     uint hz;
     uchar opNum;   //　执行板数量

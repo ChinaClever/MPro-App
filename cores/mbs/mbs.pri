@@ -6,6 +6,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/mb_alarm.h \
     $$PWD/mb_control.h \
+    $$PWD/mb_core.h \
     $$PWD/mb_env.h \
     $$PWD/mb_line.h \
     $$PWD/mb_loop.h \
@@ -18,6 +19,7 @@ HEADERS += \
 SOURCES += \
     $$PWD/mb_alarm.cpp \
     $$PWD/mb_control.cpp \
+    $$PWD/mb_core.cpp \
     $$PWD/mb_env.cpp \
     $$PWD/mb_line.cpp \
     $$PWD/mb_loop.cpp \

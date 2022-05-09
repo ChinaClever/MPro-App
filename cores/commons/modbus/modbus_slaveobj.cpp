@@ -7,7 +7,7 @@
 
 Modbus_SlaveObj::Modbus_SlaveObj(QObject *parent) : Modbus_Object{parent}
 {
-
+    qRegisterMetaType<QModbusDataUnit::RegisterType>("sMbRt");
 }
 
 void Modbus_SlaveObj::initConnects()
@@ -21,12 +21,9 @@ bool Modbus_SlaveObj::initUnitMap()
 {
     QModbusDataUnitMap reg;
     reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 2000, 800});
-    //reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, size });
-    //reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 3000, size });
-    reg.insert(m_type, { m_type, 0, 1999 });
-    reg.insert(m_type, { m_type, 3000, 150 });
-    reg.insert(m_type, { m_type, 4000, 100 });
-
+    reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, 1999 });
+    reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, 1999 });
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 4999 });
     bool ret = mDev->setMap(reg);
     if(!ret) throwError("Error: ModbusDataUnitMap");
     return ret;
@@ -37,29 +34,29 @@ void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int addr
     QModbusDataUnit rcvData(table, address, size);
     if(mDev->data(&rcvData)) {
         emit rcvDataSig(address, rcvData.values());
-        qDebug() << table << address << size << rcvData.values();
+        qDebug() << Q_FUNC_INFO << table << address << size << rcvData.values();
     }
 
-//    quint16 value = 0;
-//    for (int i = 0; i < size; ++i) {
-//        switch (table) {
-//        case QModbusDataUnit::Coils:
-//            mDev->data(QModbusDataUnit::Coils, address + i, &value);
-//            break;
-//        case QModbusDataUnit::HoldingRegisters:
-//            mDev->data(QModbusDataUnit::HoldingRegisters, address + i, &value);
-//            break;
-//        default: value = 0xFF; qDebug() << "Error: Modbus Register Type " << table;
-//            continue;
-//        }
-//        emit registerDataSig(address+i,value);
-//    }
+    //    quint16 value = 0;
+    //    for (int i = 0; i < size; ++i) {
+    //        switch (table) {
+    //        case QModbusDataUnit::Coils:
+    //            mDev->data(QModbusDataUnit::Coils, address + i, &value);
+    //            break;
+    //        case QModbusDataUnit::HoldingRegisters:
+    //            mDev->data(QModbusDataUnit::HoldingRegisters, address + i, &value);
+    //            break;
+    //        default: value = 0xFF; qDebug() << "Error: Modbus Register Type " << table;
+    //            continue;
+    //        }
+    //        emit registerDataSig(address+i,value);
+    //    }
 }
 
 bool Modbus_SlaveObj::setData(const QModbusDataUnit &unit)
 {
-    bool ret = isConnectedModbus();
-    if(ret) ret = mDev->setData(unit);
+    bool ret = isConnectedModbus(); if(ret) ret = mDev->setData(unit);
+    if(!ret) throwError(Q_FUNC_INFO + QString::number(unit.startAddress()));
     return ret;
 }
 

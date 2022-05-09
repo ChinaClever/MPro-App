@@ -10,3 +10,15 @@ Mb_Restore::Mb_Restore(QObject *parent)
 {
 
 }
+
+void Mb_Restore::mbUpdates()
+{
+    upDevInfo();
+    mbLineUpdate();
+    mbLoopUpdate();
+    mbOutputUpdate();
+    mbEnvUpdate();
+    mbSetUpdate();
+    mbAlarmUpdate();
+    mbCtrlUpdate();
+}

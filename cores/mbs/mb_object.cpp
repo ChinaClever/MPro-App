@@ -15,22 +15,22 @@ void Mb_Object::initFucRegs()
     setReg(MbReg_Factory, "CLEVER");
     setReg(MbReg_Model, "HVPDU63-2-32(01)");
     setReg(MbReg_Hw, "A");
-
-    setReg2(MbReg_Sw, 1,1);
+    setReg(MbReg_Sw, 100);
     setReg2(MbReg_Version, 1,9);
 
     QString t = cm::buildDateTime().toString("yyyyMMdd");
     char *str = t.toLocal8Bit().data();
     setReg(MbReg_CompileTime, str);
-
-    upDevInfo();
 }
 
 void Mb_Object::upDevInfo()
 {
     vshort vs; initFucRegs();
-    vs << 220 << 63 << 50;
-    vs << mDevData->output.size;
+    vs << mDevData->tg.vol.rated; // 额定电压
+    vs << mDevData->tg.cur.rated; // 额定电流
+    vs << 50; // 额定频率
+
+    vs << mDevData->info.outputNum;
     vs << 1 << 1 << 1;
     setRegs(MbReg_Rateds, vs);
 

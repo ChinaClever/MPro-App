@@ -21,11 +21,11 @@ bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud)
 bool Modbus_SlaveRtu::connectRtu(const QString &name, int baud, int addr)
 {
     bool ret = true;
-    if(mDev) {
-        disconnectModbus();
-    } else {
+    if(!mDev) {
         mDev = new QModbusRtuSerialSlave(this);
         ret = initUnitMap();
+    } else  {
+        disconnectModbus();
     }
 
     if(ret) setAddress(addr);

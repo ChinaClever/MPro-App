@@ -24,6 +24,8 @@ static void *share_mem_get(int size)
         fprintf(stderr, "shmat failed\n");
         return NULL;
     } else memset(shm, 0, size);
+
+    //qDebug() << "JJJJJ" << size/1024;
     return shm;
 }
 #endif

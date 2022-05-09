@@ -24,7 +24,7 @@ bool SerialPort::openSerial(const QString &name,qint32 baudRate)
         mSerial->setParity(QSerialPort::NoParity);    //无奇偶校验
         mSerial->setStopBits(QSerialPort::OneStop);   //无停止位
         mSerial->setFlowControl(QSerialPort::NoFlowControl);  //无控制
-    } else qCritical() << mSerial->errorString();
+    } else qCritical() << Q_FUNC_INFO << mSerial->errorString();
 
     return ret;
 }

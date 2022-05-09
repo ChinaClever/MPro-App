@@ -11,8 +11,10 @@ Modbus_SlaveTcp::Modbus_SlaveTcp(QObject *parent) : Modbus_SlaveObj{parent}
 }
 
 
-bool Modbus_SlaveTcp::connectModbus(const QString &url, int port)
+bool Modbus_SlaveTcp::connectModbusTcp(const QString &url, int port)
 {
+
+    qDebug() << "AAAAAAAAAA" << url << port;
     setAddress(1);
     initConnects();
     initModbusNet(url, port);
@@ -25,7 +27,9 @@ bool Modbus_SlaveTcp::connectTcp(int port, const QHostAddress &url)
         disconnectModbus();
     } else {
         mDev = new QModbusTcpServer(this);
+
         initUnitMap();
+        qDebug() << "AAAAAAAAA" << port;
     }
-    return connectModbus(url.toString(), port);
+    return connectModbusTcp(url.toString(), port);
 }

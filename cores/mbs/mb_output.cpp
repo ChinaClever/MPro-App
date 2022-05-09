@@ -12,7 +12,6 @@ Mb_Output::Mb_Output(QObject *parent) : Mb_Line{parent}
 
 void Mb_Output::mbOutputUpdate()
 {
-    mbLineUpdate();
     upOutputData();
     upOutputThreshold();
 }

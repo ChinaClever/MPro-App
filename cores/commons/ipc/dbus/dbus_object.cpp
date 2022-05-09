@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "dbus_object.h"
-#define IPC_PC  1
+#define IPC_PC  0
 
 DBus_Object::DBus_Object(QObject *parent) : LSocket_Client{parent}
 {

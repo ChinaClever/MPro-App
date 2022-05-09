@@ -30,6 +30,7 @@ enum eMbRegs {
     MbReg_SetLine = 1003,
     MbReg_SetOutput = 1011,
     MbReg_SetEnv = 1107,
+    MbReg_SetLoop = 1202,
     MbReg_Alarms = 2000,    // 警报：01H功能码读
 
     MbReg_Controls = 3000,  // 控制量

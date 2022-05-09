@@ -9,8 +9,8 @@ class Mb_Line : public Mb_Object
 public:
     explicit Mb_Line(QObject *parent = nullptr);
 
-protected:
     void mbLineUpdate();
+protected:
 
 private:
     void upTgData();

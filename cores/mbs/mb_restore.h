@@ -8,8 +8,7 @@ class Mb_Restore : public Mb_Control
     Q_OBJECT
 public:
     explicit Mb_Restore(QObject *parent = nullptr);
-
-signals:
+    void mbUpdates();
 
 };
 
