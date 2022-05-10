@@ -109,6 +109,7 @@ bool OP_ZRtu::readData(int addr)
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
     if(ret) fillData(addr);
+    qDebug() << "AAAAAAA" << ret;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
@@ -116,7 +117,7 @@ void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        //if(0 == size) size = 3;
+        if(0 == size) size = 3;
         for(int i=0; i<size; ++i) {
             cmsWriteSlot(150);
             ota_updates();
