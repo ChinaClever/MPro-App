@@ -3,7 +3,7 @@
 
 #include "op_zctrl.h"
 
-class OP_ZRtu : public OP_ZCtrl, public QRunnable
+class OP_ZRtu : public OP_ZCtrl , public QRunnable
 {
     Q_OBJECT
     explicit OP_ZRtu(QObject *parent = nullptr);

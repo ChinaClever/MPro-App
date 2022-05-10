@@ -8,9 +8,7 @@
 
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
-
 }
-
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 {
@@ -108,8 +106,7 @@ bool OP_ZRtu::readData(int addr)
 {
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr);
-    qDebug() << "AAAAAAA" << ret;
+    if(ret) fillData(addr); //qDebug() << Q_FUNC_INFO<< addr << ret;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 

@@ -25,7 +25,6 @@ static void *share_mem_get(int size)
         return NULL;
     } else memset(shm, 0, size);
 
-    //qDebug() << "JJJJJ" << size/1024;
     return shm;
 }
 #endif

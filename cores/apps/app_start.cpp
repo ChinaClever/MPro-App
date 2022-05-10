@@ -36,7 +36,7 @@ void App_Start::initFunSlot()
     Set_readWrite::bulid(this);
     Dtls_Recver::bulid(this);
     Alarm_Log::bulid(this);
-    Log_Core::bulid(this);
+    Log_Core::bulid(this);    
     Set_Core::bulid();
 }
 
@@ -44,8 +44,8 @@ void App_Start::startThreadSlot()
 {
     QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Cascade_Core::bulid(this));
-    pool->start(OP_ZRtu::bulid(this));
-    pool->start(Mb_Core::bulid(this));
+    pool->start(OP_Core::bulid(this));
+    //pool->start(Mb_Core::bulid(this));
     pool->start(Data_Core::bulid());
 }
 
