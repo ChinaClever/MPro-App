@@ -27,6 +27,8 @@ enum eMbRegs {
     MbReg_Envs = 500, // 环境参数
 
     MbReg_Settings = 1000,    // 配置参数
+    MbReg_SetAddr = 1000, // 通讯地址
+
     MbReg_SetLine = 1003,
     MbReg_SetOutput = 1011,
     MbReg_SetEnv = 1107,
