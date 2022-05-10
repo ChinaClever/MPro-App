@@ -32,7 +32,12 @@ static void *share_mem_get(int size)
 QSharedMemory* SM_Obj::mSm = nullptr;
 SM_Obj::SM_Obj(QObject *parent) : QObject{parent}
 {
+#if defined(Q_OS_LINUX)
+
+#elif
     initShareMemory(parent);
+#endif
+
 }
 
 void SM_Obj::initShareMemory(QObject *parent)
