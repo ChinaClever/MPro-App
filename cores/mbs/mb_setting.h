@@ -9,8 +9,11 @@ class Mb_Setting : public Mb_Env
 public:
     explicit Mb_Setting(QObject *parent = nullptr);
 
-signals:
+protected:
+    void mbSetUpdate();
 
+private:
+    void upSetData();
 };
 
 #endif // MB_SETTING_H

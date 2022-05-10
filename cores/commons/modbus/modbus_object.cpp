@@ -50,8 +50,7 @@ void Modbus_Object::onStateChanged(int state)
     case QModbusDevice::ConnectingState: str = tr("Modbus 连接中"); break;
     case QModbusDevice::ConnectedState: str = tr("Modbus 已连接"); break;
     case QModbusDevice::ClosingState: str = tr("Modbus 已关闭"); break;
-    }
-    qDebug() << str;
+    } qDebug() << str;
 }
 
 void Modbus_Object::handleDeviceError(QModbusDevice::Error newError)
@@ -74,9 +73,8 @@ bool Modbus_Object::isConnectedModbus()
 {
     bool ret = false; QModbusDevice *dev = modbusDevice();
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-    if(!dev || dev->state() != QModbusDevice::ConnectedState) {
-        qDebug() << "Error: Modbus Device is not connected!";
-    } else ret = true;
+    if(dev) if(dev->state() == QModbusDevice::ConnectedState) ret = true;
+     //qDebug() << "Error: Modbus Device is not connected!";
     return ret;
 }
 

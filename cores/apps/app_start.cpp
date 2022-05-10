@@ -9,12 +9,14 @@
 #include "ipc_coreserver.h"
 #include "log_core.h"
 #include "data_core.h"
+#include "mb_core.h"
 
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
+    //QTimer::singleShot(250,this,SLOT(clearCacheSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -41,7 +43,14 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     QThreadPool *pool = QThreadPool::globalInstance();
-    pool->start(Cascade_Core::bulid(this));
+    //pool->start(Cascade_Core::bulid(this));
     pool->start(OP_ZRtu::bulid(this));
+    pool->start(Mb_Core::bulid(this));
     pool->start(Data_Core::bulid());
+}
+
+void App_Start::clearCacheSlot()
+{
+    QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
+    system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
 }

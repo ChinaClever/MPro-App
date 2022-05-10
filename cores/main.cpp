@@ -4,7 +4,7 @@
 //#include "snmp/snmpagent.h"
 #include "http/http.h"
 #include "app_start.h"
-//#include "agent_devdata.h"
+#include "agent_devdata.h"
 
 void ssdp_demo()
 {
@@ -39,6 +39,10 @@ int main(int argc, char *argv[])
     QObject *p = a.parent();
     Set_readWrite::bulid(p);
     App_Start::bulid(p);
+
+
+
+
 
     return a.exec();
 }

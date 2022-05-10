@@ -19,8 +19,7 @@ void Mb_Line::mbLineUpdate()
 
 void Mb_Line::upTgData()
 {
-    vshort vs; upDevInfo();
-    sTgObjData *tg = &(mDevData->tg);
+    vshort vs; sTgObjData *tg = &(mDevData->tg);
     vs << tg->vol.value << tg->cur.value << tg->pow.value;
     vs << tg->artPow - tg->pow.value << tg->pf;
     vs << tg->ele / 65536 << tg->ele % 65536;

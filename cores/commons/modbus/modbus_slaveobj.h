@@ -10,10 +10,10 @@ public:
     explicit Modbus_SlaveObj(QObject *parent = nullptr);
     void setAddress(int addr) {mDev->setServerAddress(addr);}
 
-    bool setCoil(quint16 reg, ushort v){return setCoils(reg, vshort(v));}
+    bool setCoil(quint16 reg, ushort v){return setCoils(reg, vshort{v});}
     bool setCoils(quint16 address, const vshort &values);
 
-    bool setHoldingRegister(quint16 reg, ushort v) {return setHoldingRegisters(reg, vshort(v));}
+    bool setHoldingRegister(quint16 reg, ushort v) {return setHoldingRegisters(reg, vshort{v});}
     bool setHoldingRegisters(quint16 address, const vshort &values);
 
     bool setRegister(ushort reg, ushort v) {return setHoldingRegister(reg, v);}
@@ -37,7 +37,7 @@ private:
     bool setData(QModbusDataUnit::RegisterType table, quint16 address, quint16 data);
 
 protected:
-    QModbusServer* mDev;
+    QModbusServer* mDev=nullptr;
 };
 
 #endif // MODBUS_SLAVEOBJ_H
