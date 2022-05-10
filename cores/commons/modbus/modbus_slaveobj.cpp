@@ -12,17 +12,22 @@ Modbus_SlaveObj::Modbus_SlaveObj(QObject *parent) : Modbus_Object{parent}
 
 void Modbus_SlaveObj::initConnects()
 {
-    connect(mDev,&QModbusServer::dataWritten,this, &Modbus_SlaveObj::recvDataSlot);
+    QTimer::singleShot(1500,this,SLOT(initConnectSlot()));
     connect(mDev, &QModbusServer::stateChanged, this, &Modbus_SlaveObj::onStateChanged);
     connect(mDev, &QModbusServer::errorOccurred, this, &Modbus_SlaveObj::handleDeviceError);
+}
+
+void Modbus_SlaveObj::initRecvSlot()
+{
+    connect(mDev,&QModbusServer::dataWritten,this, &Modbus_SlaveObj::recvDataSlot);
 }
 
 bool Modbus_SlaveObj::initUnitMap()
 {
     QModbusDataUnitMap reg;
     reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 2000, 800});
-    reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, 1999 });
-    reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, 1999 });
+    //reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, 1999 });
+    //reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, 1999 });
     reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 4999 });
     bool ret = mDev->setMap(reg);
     if(!ret) throwError("Error: ModbusDataUnitMap");
@@ -31,10 +36,12 @@ bool Modbus_SlaveObj::initUnitMap()
 
 void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size)
 {
-    QModbusDataUnit rcvData(table, address, size);
-    if(mDev->data(&rcvData)) {
-        emit rcvDataSig(address, rcvData.values());
-        qDebug() << Q_FUNC_INFO << table << address << size << rcvData.values();
+    if(((address >= 1000) && (address < 2000)) || (address >= 3000)){
+        QModbusDataUnit rcvData(table, address, size);
+        if(mDev->data(&rcvData)) {
+            emit rcvDataSig(address, rcvData.values());
+            //qDebug() << Q_FUNC_INFO << table << address << size << rcvData.values();
+        }
     }
 
     //    quint16 value = 0;

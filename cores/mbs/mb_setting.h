@@ -14,6 +14,10 @@ protected:
 
 private:
     void upSetData();
+    void addrSet(vshort &values);
+
+private slots:
+    void rcvDataSlot(int address, vshort values);
 };
 
 #endif // MB_SETTING_H

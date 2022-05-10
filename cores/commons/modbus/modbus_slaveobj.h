@@ -24,6 +24,7 @@ signals:
     void rcvDataSig(int address, vshort values);
 
 private slots:
+    void initRecvSlot();
     void recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size);
 
 protected:
