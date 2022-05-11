@@ -97,7 +97,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             it.content = tr("执行板 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(320);
+    } cm::mdelay(360);
 
     return ret;
 }

@@ -10,13 +10,14 @@
 #include "log_core.h"
 #include "data_core.h"
 #include "mb_core.h"
+#include "ipc_relayclient.h"
 
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
-    //QTimer::singleShot(250,this,SLOT(clearCacheSlot()));
+    QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -51,6 +52,7 @@ void App_Start::startThreadSlot()
 
 void App_Start::clearCacheSlot()
 {
-    QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
-    system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
+    IPC_RelayClient::bulid(this)->ctrl(0, 5, 0);
+    //QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
+    //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
 }
