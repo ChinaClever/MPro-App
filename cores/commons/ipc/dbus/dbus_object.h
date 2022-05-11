@@ -12,13 +12,13 @@ class DBus_Object : public LSocket_Client
 public:
     explicit DBus_Object(QObject *parent = nullptr);
     virtual void setKey(const QString &newKey) override;
+    static bool registerBusService();
     bool registerBusObject();
 
 protected:
     void throwError(const QString &msg);
 
 private:
-    bool registerBusService();
     QDBusConnection busConnection();
 
 protected:

@@ -13,7 +13,9 @@ OP_ObjCtrl::OP_ObjCtrl(QObject *parent) : OP_ObjRtu{parent}
 void OP_ObjCtrl::relayCtrl(int id, int on)
 {
     if(id) {
-        if(on) openSwitch(id); else closeSwitch(id);
+        id -= 1;
+        if(on) openSwitch(id);
+        else closeSwitch(id);
     } else {
         orderCtrl(on, 0);
     }

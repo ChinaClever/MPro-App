@@ -92,7 +92,7 @@ int http_main(void) {
     mg_mgr_init(&mgr);  // Init event manager
     init();
     gObj = new QObject();
-    IPC_RelayClient *gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
+    //gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
@@ -119,6 +119,12 @@ int http_main(void) {
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    QObject *p = a.parent();
+    IPC_RelayClient::bulid(p);
+
+    cm::mdelay(2000);
+    qDebug() << "AAAAAAAA" << IPC_RelayClient::bulid()->ctrl(0, 4, 0);
     std::thread th(http_main);
     th.detach();
 
