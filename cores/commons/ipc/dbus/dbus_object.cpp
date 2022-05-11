@@ -28,8 +28,6 @@ void DBus_Object::throwError(const QString &msg)
 QDBusConnection DBus_Object::busConnection()
 {
 #if IPC_PC
-//    static bool ini = false;
-//    if(!ini)ini=registerBusService();
     return QDBusConnection::sessionBus();
 #else
     return QDBusConnection::systemBus();
@@ -39,15 +37,15 @@ QDBusConnection DBus_Object::busConnection()
 bool DBus_Object::registerBusService()
 {
     QString service = DBUS_SERVICE_NAME;
-    QDBusConnection::sessionBus().unregisterService(service);
-    bool ret = QDBusConnection::sessionBus().registerService(service);
+    busConnection().unregisterService(service);
+    bool ret = busConnection().registerService(service);
     if(!ret) qDebug() << "Err: DBus register Service: " << service;
     return ret;
 }
 
 bool DBus_Object::registerBusObject()
 {
-    bool ret = mBus.registerObject(mBusPath, mInterface, this,
+    bool ret = mBus.registerObject(mBusPath, this,
                QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
     if(!ret) throwError(Q_FUNC_INFO);
     return ret;
