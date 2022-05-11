@@ -41,9 +41,12 @@ static void multiply(struct jsonrpc_request *r) {
 static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     if (ev == MG_EV_OPEN) {
         // c->is_hexdumping = 1;
+        //printf("MG_EV_OPEN\n");
     } else if (ev == MG_EV_WS_OPEN) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
+       // printf("MG_EV_WS_OPEN\n");
     } else if (ev == MG_EV_HTTP_MSG) {
+       // printf("MG_EV_HTTP_MSG\n");
         struct mg_http_message *hm = (struct mg_http_message *) ev_data;
         if (mg_http_match_uri(hm, "/websocket")) {
             // Upgrade to websocket. From now on, a connection is a full-duplex
@@ -54,10 +57,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
             // Serve static files
             struct mg_http_serve_opts opts = {.root_dir = s_web_root};
             mg_http_serve_dir(c, (mg_http_message *)ev_data, &opts);
+            //printf("mg_http_serve_dir\n");
         }
 
     } else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
+        printf("MG_EV_WS_MSG\n");
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
         struct mg_str req = wm->data;
         char *response = NULL;

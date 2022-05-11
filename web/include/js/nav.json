@@ -5,13 +5,13 @@
     "url": "pages/home.html"
   },
   {
-    "name": "指南",
+    "name": "OUTPUT",
     "icon": "flag_fill",
-    "base": "pages/guide/",
+    "base": "pages/output/",
     "subNav": [
       {
-        "name": "开始使用",
-        "url": "index.html"
+        "name": "relay",
+        "url": "relay_ctrl.html"
       },
       {
         "name": "快速上手",

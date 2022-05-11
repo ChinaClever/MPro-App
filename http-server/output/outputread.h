@@ -9,7 +9,6 @@
 extern std::vector<std::string *> gVeStr;
 extern IPC_RelayClient *gIpc_RelayClientObj;
 
-extern std::string *gOpsize_type;
 
 class OutputRead : public QObject
 {
