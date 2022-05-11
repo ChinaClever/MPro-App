@@ -106,7 +106,7 @@ bool OP_ZRtu::readData(int addr)
 {
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr); //qDebug() << Q_FUNC_INFO<< addr << ret;
+    if(ret) fillData(addr); qDebug() << Q_FUNC_INFO<< addr << ret;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
