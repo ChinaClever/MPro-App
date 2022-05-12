@@ -22,7 +22,7 @@ bool DBus_Sender::sendBus(const QVariant &v)
 
 bool DBus_Sender::sendBus(const QVariantList &arguments)
 {
-    QDBusMessage message = QDBusMessage::createTargetedSignal(mService, mBusPath, mInterface, mBusSig);
+    QDBusMessage message = QDBusMessage::createSignal(mBusPath, mInterface, mBusSig);
     message.setArguments(arguments); bool ret = mBus.send(message); if(!ret) throwError("send");
     return ret;
 }

@@ -9,6 +9,7 @@
 class DBus_Object : public LSocket_Client
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", DBUS_SERVICE_NAME)
 public:
     explicit DBus_Object(QObject *parent = nullptr);
     virtual void setKey(const QString &newKey) override;
@@ -19,7 +20,7 @@ protected:
     void throwError(const QString &msg);
 
 private:
-    QDBusConnection busConnection();
+    static QDBusConnection busConnection();
 
 protected:
     QString mService, mBusPath, mInterface, mBusSig;
