@@ -12,7 +12,7 @@ Modbus_SlaveObj::Modbus_SlaveObj(QObject *parent) : Modbus_Object{parent}
 
 void Modbus_SlaveObj::initConnects()
 {
-    QTimer::singleShot(1500,this,SLOT(initConnectSlot()));
+    QTimer::singleShot(1500,this,SLOT(initRecvSlot()));
     connect(mDev, &QModbusServer::stateChanged, this, &Modbus_SlaveObj::onStateChanged);
     connect(mDev, &QModbusServer::errorOccurred, this, &Modbus_SlaveObj::handleDeviceError);
 }
@@ -37,27 +37,28 @@ bool Modbus_SlaveObj::initUnitMap()
 void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size)
 {
     if(((address >= 1000) && (address < 2000)) || (address >= 3000)){
-        QModbusDataUnit rcvData(table, address, size);
-        if(mDev->data(&rcvData)) {
-            emit rcvDataSig(address, rcvData.values());
-            //qDebug() << Q_FUNC_INFO << table << address << size << rcvData.values();
+        quint16 value = 0;
+        for (int i = 0; i < size; ++i) {
+            switch (table) {
+            case QModbusDataUnit::Coils:
+                mDev->data(QModbusDataUnit::Coils, address + i, &value);
+                break;
+            case QModbusDataUnit::HoldingRegisters:
+                mDev->data(QModbusDataUnit::HoldingRegisters, address + i, &value);
+                break;
+            default: value = 0xFF; qDebug() << "Error: Modbus Register Type " << table;
+                continue;
+            }
+            emit registerDataSig(address+i,value);
+            //qDebug() << Q_FUNC_INFO << table << address << size << value;
         }
-    }
 
-    //    quint16 value = 0;
-    //    for (int i = 0; i < size; ++i) {
-    //        switch (table) {
-    //        case QModbusDataUnit::Coils:
-    //            mDev->data(QModbusDataUnit::Coils, address + i, &value);
-    //            break;
-    //        case QModbusDataUnit::HoldingRegisters:
-    //            mDev->data(QModbusDataUnit::HoldingRegisters, address + i, &value);
-    //            break;
-    //        default: value = 0xFF; qDebug() << "Error: Modbus Register Type " << table;
-    //            continue;
-    //        }
-    //        emit registerDataSig(address+i,value);
-    //    }
+        //QModbusDataUnit rcvData(table, address, size);
+        //if(mDev->data(&rcvData)) {
+         //   emit rcvDataSig(address, rcvData.values());
+            //qDebug() << Q_FUNC_INFO << table << address << size << rcvData.values();
+        //}
+    }
 }
 
 bool Modbus_SlaveObj::setData(const QModbusDataUnit &unit)

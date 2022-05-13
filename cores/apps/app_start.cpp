@@ -45,8 +45,8 @@ void App_Start::startThreadSlot()
 {
     QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Cascade_Core::bulid(this));
-    pool->start(OP_Core::bulid(this));
-    //pool->start(Mb_Core::bulid(this));
+    //pool->start(OP_Core::bulid(this));
+    pool->start(Mb_Core::bulid(this));
     pool->start(Data_Core::bulid());
 }
 

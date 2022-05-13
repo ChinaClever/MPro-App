@@ -32,7 +32,6 @@ void IPC_RelayServer::dbus_recv_slot(int addr, int id, int value)
 {
     Set_Core *set = Set_Core::bulid();
     set->outputRelayCtrl(addr, id, value);
-    qDebug() << Q_FUNC_INFO << addr << id << value;
 }
 
 

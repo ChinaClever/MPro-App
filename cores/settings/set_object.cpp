@@ -28,7 +28,7 @@ void Set_Object::writeSettings()
 
 bool Set_Object::saveSettings()
 {
-    mThread->msleep(150);
+    mThread->msleep(350);
     mFile->setFileName(Cfg_Obj::pathOfCfg(SET_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {

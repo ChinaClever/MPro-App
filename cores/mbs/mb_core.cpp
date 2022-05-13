@@ -6,21 +6,26 @@ Mb_Core::Mb_Core(QObject *parent)
     mTcp = new Mb_Restore(parent);
 }
 
-
 Mb_Core *Mb_Core::bulid(QObject *parent)
 {
     static Mb_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
-        sington->connectTcp();
+        sington->connectTcp(1);
     }
     return sington;
 }
 
-bool Mb_Core::connectTcp(int port)
+void Mb_Core::setAddress(int addr)
+{
+    mRtu->setAddress(addr);
+    mTcp->setAddress(addr);
+}
+
+bool Mb_Core::connectTcp(int addr, int port)
 {
     bool ret = mTcp->isConnectedModbus();
-    if(!ret) ret = mTcp->connectTcp(port);
+    if(!ret) ret = mTcp->connectTcp(addr, port);
     return ret;
 }
 

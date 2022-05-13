@@ -20,7 +20,7 @@ public:
     bool setRegisters(ushort reg, const vshort &v) {return setHoldingRegisters(reg, v);}
 
 signals:
-    //void registerDataSig(int address,int value);
+    void registerDataSig(int address, ushort value);
     void rcvDataSig(int address, vshort values);
 
 private slots:

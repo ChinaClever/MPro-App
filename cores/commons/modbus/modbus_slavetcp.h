@@ -8,7 +8,7 @@ class Modbus_SlaveTcp : public Modbus_SlaveObj
     Q_OBJECT
 public:
     explicit Modbus_SlaveTcp(QObject *parent = nullptr);
-    bool connectTcp(int port=502, const QHostAddress &url=QHostAddress::Any);
+    bool connectTcp(int addr, int port=502, const QHostAddress &url=QHostAddress::Any);
 
 private:
     bool connectModbusTcp(const QString &url, int port);

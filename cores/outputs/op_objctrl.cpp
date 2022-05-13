@@ -14,7 +14,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
 {
     if(id) {
         id -= 1;
-        if(on) openSwitch(id);
+        if(1==on) openSwitch(id);
         else closeSwitch(id);
     } else {
         orderCtrl(on, 0);

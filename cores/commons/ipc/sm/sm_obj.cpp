@@ -23,7 +23,7 @@ static void *share_mem_get(int size)
     if(shm == (void*)-1) {
         fprintf(stderr, "shmat failed\n");
         return NULL;
-    } else memset(shm, 0, size);
+    } else memset(shm, 0, size);    
 
     return shm;
 }

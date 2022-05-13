@@ -28,6 +28,8 @@ enum eMbRegs {
 
     MbReg_Settings = 1000,    // 配置参数
     MbReg_SetAddr = 1000, // 通讯地址
+    MbReg_SetBuzzer = 1001, // 蜂鸣器开关
+    MbReg_SetDry = 1002, // 报警干接点开关
 
     MbReg_SetLine = 1003,
     MbReg_SetOutput = 1011,
