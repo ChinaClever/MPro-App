@@ -9,20 +9,6 @@ Cascade_Slave::Cascade_Slave(QObject *parent) : Cascade_Fill{parent}
 {
 }
 
-Cascade_Slave *Cascade_Slave::bulid(QObject *parent)
-{
-    static Cascade_Slave* sington = nullptr;
-    if(sington == nullptr) {
-        qint32 baudRate = QSerialPort::Baud38400;
-        sington = new Cascade_Slave(parent);
-#if defined(Q_OS_LINUX)
-        sington->openSerial("/dev/ttyUSB1", baudRate);
-#else
-        sington->openSerial("COM22", baudRate);
-#endif
-    }
-    return sington;
-}
 
 bool Cascade_Slave::replyDevData(uchar fc)
 {
@@ -70,20 +56,3 @@ bool Cascade_Slave::workDown(c_sFrame &it)
     return ret;
 }
 
-
-void Cascade_Slave::run()
-{
-    while(isRun) {        
-         cm::mdelay(1); cmsWriteSlot();
-         uchar addr = getAddress(); if(addr) {
-            QByteArray rcv = readSerial();
-            if(rcv.size() > 6) {
-                QVector<c_sFrame> its = replyData(rcv);
-                for(auto &it: its) workDown(it);
-            }
-        } else {
-             ota_updates();
-             masterReadDevs();
-         }
-    }
-}

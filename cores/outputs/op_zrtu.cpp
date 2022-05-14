@@ -9,32 +9,6 @@
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
 
-    mThread = new CThread(parent);
-
-    timer = new QTimer(this);
-    //timer->start(3500);
-    connect(timer, SIGNAL(timeout()), this, SLOT(run()));
-}
-
-OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
-{
-    static OP_ZRtu* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new OP_ZRtu(parent);
-#if defined(Q_OS_LINUX)
-        sington->openSerial("/dev/ttyUSB0");
-#endif
-    }
-    return sington;
-}
-
-
-void OP_ZRtu::startFun()
-{
-
-    mThread->init(this, SLOT(run()));
-    mThread->onceRun();
-
 }
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
@@ -129,8 +103,6 @@ bool OP_ZRtu::readData(int addr)
 
 void OP_ZRtu::run()
 {
-
-
     while (isRun) {
         int size = mDev->info.opNum;
         if(0 == size) size = 3;

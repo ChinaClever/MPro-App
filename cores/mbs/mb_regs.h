@@ -1,7 +1,7 @@
 #ifndef MB_REGS_H
 #define MB_REGS_H
 #include "modbus_slavertu.h"
-#include "set_relay.h"
+#include "set_core.h"
 
 enum eMbRegs {
     MbReg_Factory   =   0,     // 生产厂家

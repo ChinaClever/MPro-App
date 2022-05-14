@@ -7,7 +7,7 @@ class Set_Core : public Set_Relay
     Set_Core();
 public:
     static Set_Core *bulid();
-
+    void writeSettings();
 };
 
 #endif // SET_CORE_H

@@ -4,13 +4,12 @@
  *      Author: Lzy
  */
 #include "app_start.h"
-#include "op_zrtu.h"
-#include "cascade_slave.h"
+#include "op_core.h"
+#include "cascade_core.h"
 #include "ipc_coreserver.h"
 #include "log_core.h"
 #include "data_core.h"
 #include "mb_core.h"
-#include "ipc_relayclient.h"
 
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
@@ -34,10 +33,10 @@ App_Start *App_Start::bulid(QObject *parent)
 void App_Start::initFunSlot()
 {
     IPC_CoreServer::bulid(this);
-    Set_readWrite::bulid(this);
     Dtls_Recver::bulid(this);
     Alarm_Log::bulid(this);
-    Log_Core::bulid(this);    
+    Log_Core::bulid(this);
+    Cascade_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
 }
@@ -45,17 +44,15 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     OP_Core::bulid(this)->startFun();
+    //Cascade_Core::bulid(this)->startFun();
 
-    //QThreadPool *pool = QThreadPool::globalInstance();
-    //pool->start(Cascade_Core::bulid(this));
-    //pool->start(OP_Core::bulid());
-    //pool->start(Mb_Core::bulid(this));
-    //pool->start(Data_Core::bulid());
+    QThreadPool *pool = QThreadPool::globalInstance();
+    pool->start(Mb_Core::bulid(this));
+    pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()
 {
-    IPC_RelayClient::bulid(this)->ctrl(0, 5, 0);
     //QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
     //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
 }

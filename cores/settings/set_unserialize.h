@@ -21,5 +21,5 @@ private:
     void unDevData(sDevData *data, set::_sDevData *obj);
     void unDevSize(uchar size, sObjData &data);
 };
-using Set_readWrite = Set_Unserialize;
+using Set_ReadWrite = Set_Unserialize;
 #endif // SET_UNSERIALIZE_H

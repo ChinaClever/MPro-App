@@ -4,8 +4,8 @@
  *      Author: Lzy
  */
 #include "set_relay.h"
-#include "op_zrtu.h"
-#include "cascade_slave.h"
+#include "op_core.h"
+#include "cascade_core.h"
 
 Set_Relay::Set_Relay()
 {
@@ -30,14 +30,14 @@ bool Set_Relay::outputDelaySet(int addr, int id, uchar mode, uchar delay)
     if(addr) {
         ret = Cascade_Core::bulid()->masterDelaySet(addr, id, mode, delay);
     } else {
-        OP_ZRtu::bulid()->setDelay(id, delay);
+        OP_Core::bulid()->setDelay(id, delay);
         sRelayUnit *it = &(cm::masterDev()->output.relay);
         if(id) {
             it->mode[id-1] = mode; it->delay[id-1] = delay;
         } else {
             for(int i=0; i<it->size; ++i) {it->mode[i] = mode; it->delay[i] = delay;}
         }
-        Set_readWrite::bulid()->writeSettings();
+        Set_ReadWrite::bulid()->writeSettings();
     }
 
     return ret;

@@ -7,7 +7,7 @@
 
 Set_Core::Set_Core()
 {
-
+    Set_ReadWrite::bulid();
 }
 
 Set_Core *Set_Core::bulid()
@@ -17,4 +17,9 @@ Set_Core *Set_Core::bulid()
         sington = new Set_Core();
     }
     return sington;
+}
+
+void Set_Core::writeSettings()
+{
+    Set_ReadWrite::bulid()->writeSettings();
 }

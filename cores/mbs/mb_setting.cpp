@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "mb_setting.h"
-#include  "op_zrtu.h"
+#include  "op_core.h"
 
 Mb_Setting::Mb_Setting(QObject *parent) : Mb_Env{parent}
 {
@@ -217,5 +217,5 @@ void Mb_Setting::registerRecvSlot(int address, ushort value)
     else if(address < 3050) relaySet(address, value);
     else if(address == 4000) restoreFactoryDefaults();
     else if(address < 4050) eleClear(value);
-    if(address < 2000) Set_readWrite::bulid()->writeSettings();
+    if(address < 2000) Set_Core::bulid()->writeSettings();
 }

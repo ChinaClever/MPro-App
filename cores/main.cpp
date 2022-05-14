@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    Set_readWrite::bulid(p);
     App_Start::bulid(p);
 
 

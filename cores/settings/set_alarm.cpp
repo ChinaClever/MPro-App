@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_alarm.h"
-#include "cascade_slave.h"
+#include "cascade_core.h"
 
 Set_Alarm::Set_Alarm()
 {
@@ -18,7 +18,7 @@ bool Set_Alarm::setAlarm(const sSetAlarmUnit &unit)
     } else {
         if(unit.index.type) ret = setAlarmIt(unit);
         else ret = setTgAlarmUnit(unit);
-        Set_readWrite::bulid()->writeSettings();
+        Set_ReadWrite::bulid()->writeSettings();
     }
     return ret;
 }
