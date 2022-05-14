@@ -15,13 +15,7 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
 {
     static Cascade_Core* sington = nullptr;
     if(sington == nullptr) {
-        qint32 baudRate = QSerialPort::Baud38400;
         sington = new Cascade_Core(parent);
-#if defined(Q_OS_LINUX)
-        sington->openSerial("/dev/ttyUSB1", baudRate);
-#else
-        sington->openSerial("COM22", baudRate);
-#endif
     }
     return sington;
 }
@@ -29,7 +23,17 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
 void Cascade_Core::startFun()
 {
     if(!isInit) isInit = mThread->init(this, SLOT(run()));
-    if(!isRun) {isRun=true; mThread->start();}
+    if(!isRun) {
+        qint32 baudRate = QSerialPort::Baud38400;
+        isRun = openSerial("/dev/ttyUSB1", baudRate);
+        if(isRun) mThread->start();
+    }
+}
+
+void Cascade_Core::stopFun()
+{
+    isRun = false;
+    closeSerial();
 }
 
 void Cascade_Core::run()

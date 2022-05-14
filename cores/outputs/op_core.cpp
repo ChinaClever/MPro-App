@@ -16,7 +16,6 @@ OP_Core *OP_Core::bulid(QObject *parent)
     static OP_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new OP_Core(parent);
-        sington->openSerial("/dev/ttyUSB0");
     }
     return sington;
 }
@@ -24,6 +23,8 @@ OP_Core *OP_Core::bulid(QObject *parent)
 void OP_Core::startFun()
 {
     mThread->init(this, SLOT(run()));
-    mThread->start();
+    qint32 baudRate = QSerialPort::Baud19200;
+    bool ret = openSerial("/dev/ttyUSB0", baudRate);
+    if(ret) mThread->start();
 }
 

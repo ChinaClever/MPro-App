@@ -10,8 +10,8 @@ class Cascade_Core : public Cascade_Slave
 public:
     static Cascade_Core *bulid(QObject *parent = nullptr);
     ~Cascade_Core(){isRun = false;}
-    void stopFun(){isRun = false;}
     void startFun();
+    void stopFun();
 
 public slots:
     void run();
