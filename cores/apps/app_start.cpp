@@ -39,15 +39,18 @@ void App_Start::initFunSlot()
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);    
     Set_Core::bulid();
+    OP_Core::bulid();
 }
 
 void App_Start::startThreadSlot()
 {
-    QThreadPool *pool = QThreadPool::globalInstance();
+    OP_Core::bulid(this)->startFun();
+
+    //QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Cascade_Core::bulid(this));
-    //pool->start(OP_Core::bulid(this));
-    pool->start(Mb_Core::bulid(this));
-    pool->start(Data_Core::bulid());
+    //pool->start(OP_Core::bulid());
+    //pool->start(Mb_Core::bulid(this));
+    //pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()
