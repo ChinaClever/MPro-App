@@ -13,8 +13,8 @@ HEADERS += \
     $$PWD/mb_object.h \
     $$PWD/mb_output.h \
     $$PWD/mb_regs.h \
-    $$PWD/mb_restore.h \
-    $$PWD/mb_setting.h
+    $$PWD/mb_setting.h \
+    $$PWD/mb_update.h
 
 SOURCES += \
     $$PWD/mb_alarm.cpp \

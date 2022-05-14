@@ -2,10 +2,20 @@ unix {
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/agent_devdata.h \
-    $$PWD/agent_object.h
+    $$PWD/agent_get.h \
+    $$PWD/agent_obj.h
 
 SOURCES += \
-    $$PWD/agent_devdata.cpp \
-    $$PWD/agent_object.cpp
+    $$PWD/agent_get.cpp \
+    $$PWD/agent_obj.cpp
 }
+
+HEADERS += \
+    $$PWD/agent_core.h \
+    $$PWD/agent_set.h \
+    $$PWD/agent_trap.h
+
+SOURCES += \
+    $$PWD/agent_core.cpp \
+    $$PWD/agent_set.cpp \
+    $$PWD/agent_trap.cpp

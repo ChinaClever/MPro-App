@@ -1,16 +1,13 @@
-#ifndef AGENT_OBJECT_H
-#define AGENT_OBJECT_H
+#ifndef AGENT_OBJ_H
+#define AGENT_OBJ_H
 #include "commons.h"
 #include "snmp/snmpagent.h"
 
-class Agent_Object : public QObject
+class Agent_Obj : public QObject
 {
     Q_OBJECT
 public:
-    explicit Agent_Object(QObject *parent = nullptr);
-
-signals:
-
+    explicit Agent_Obj(QObject *parent = nullptr);
 
 
 protected:
@@ -25,4 +22,4 @@ protected:
     SnmpModule *mSnmp;
 };
 
-#endif // AGENT_OBJECT_H
+#endif // AGENT_OBJ_H

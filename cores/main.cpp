@@ -4,7 +4,7 @@
 //#include "snmp/snmpagent.h"
 #include "http/http.h"
 #include "app_start.h"
-#include "agent_devdata.h"
+#include "agent_get.h"
 
 void ssdp_demo()
 {

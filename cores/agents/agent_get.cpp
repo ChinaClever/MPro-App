@@ -3,16 +3,16 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "agent_devdata.h"
+#include "agent_get.h"
 
-Agent_DevData::Agent_DevData(QObject *parent) : Agent_Object{parent}
+Agent_Get::Agent_Get(QObject *parent) : Agent_Obj{parent}
 {
 
 }
 
 
 
-void Agent_DevData::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
+void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
 {
     int id = 1; QString oid = "0.0.";
     QString prefix = oidPrefix + "uut_";
@@ -23,7 +23,7 @@ void Agent_DevData::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &i
     addOid(addr, id++, oid, prefix+"road", it.road);
 }
 
-void Agent_DevData::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev)
+void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev)
 {
     bool w = false; QString oid = "0.1.";
     int id = 1; QString prefix = oidPrefix + "info_";
@@ -38,7 +38,7 @@ void Agent_DevData::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &d
 }
 
 
-void Agent_DevData::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix,
+void Agent_Get::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix,
                                  const QString &oidName, sAlarmUnit &it, int index)
 {
     int id = 1; QString name = oidName + "_";
@@ -53,7 +53,7 @@ void Agent_DevData::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix
     addOidValue(addr, id++, oid, name+"alarm_max", it.max[index]);
 }
 
-void Agent_DevData::addObjData(uchar addr, const QString &oidPrefix,
+void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
                                const QString &oidName, sObjData &it, int index)
 {
     int id = 1; QString oid = oidPrefix + ".";
@@ -70,7 +70,7 @@ void Agent_DevData::addObjData(uchar addr, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"ele", it.ele[index]);
 }
 
-void Agent_DevData::addEnvData(uchar addr, const QString &oidPrefix,
+void Agent_Get::addEnvData(uchar addr, const QString &oidPrefix,
                                const QString &oidName, sEnvData &it, int index)
 {
 
@@ -81,7 +81,7 @@ void Agent_DevData::addEnvData(uchar addr, const QString &oidPrefix,
 
 }
 
-void Agent_DevData::addDevData(uchar addr, sDevData *it)
+void Agent_Get::addDevData(uchar addr, sDevData *it)
 {
     QString name = tr("pdu_%1_").arg(addr);
 
@@ -110,7 +110,7 @@ void Agent_DevData::addDevData(uchar addr, sDevData *it)
 
 }
 
-void Agent_DevData::addOids()
+void Agent_Get::addOids()
 {
     sDevData *dev = cm::devData(0);
     addDevData(8, dev);

@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "mb_restore.h"
+#include "mb_update.h"
 
-Mb_Restore::Mb_Restore(QObject *parent)
+Mb_Update::Mb_Update(QObject *parent)
     : Mb_Control{parent}
 {
 
 }
 
-void Mb_Restore::mbUpdates()
+void Mb_Update::mbUpdates()
 {
     upDevInfo();
     mbLineUpdate();

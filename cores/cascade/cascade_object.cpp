@@ -56,7 +56,7 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
         }
     }
 
-    return its;
+    return res;
 }
 
 QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
@@ -69,7 +69,7 @@ QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
 bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
-    it.len=value.size(); it.data = value;
+    it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
     return writeSerial(array);
 }

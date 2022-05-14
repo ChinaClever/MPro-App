@@ -2,8 +2,8 @@
 
 Mb_Core::Mb_Core(QObject *parent)
 {
-    mRtu = new Mb_Restore(parent);
-    mTcp = new Mb_Restore(parent);
+    mRtu = new Mb_Update(parent);
+    mTcp = new Mb_Update(parent);
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)

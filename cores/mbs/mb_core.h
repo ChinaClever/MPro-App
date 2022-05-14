@@ -1,7 +1,7 @@
 #ifndef MB_CORE_H
 #define MB_CORE_H
 
-#include "mb_restore.h"
+#include "mb_update.h"
 #define MB_NAME  "/dev/ttyUSB1"
 
 class Mb_Core : public QRunnable
@@ -19,8 +19,8 @@ public slots:
 
 private:
     bool isRun=true;
-    Mb_Restore *mRtu;
-    Mb_Restore *mTcp;
+    Mb_Update *mRtu;
+    Mb_Update *mTcp;
 };
 
 #endif // MB_CORE_H

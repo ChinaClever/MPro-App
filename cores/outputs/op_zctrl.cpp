@@ -21,7 +21,7 @@ void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
     cmd[k++] = 0x44;
     cmd[k] = Crc::XorNum(cmd,zCmdLen-1);
     if(!isOta) {
-        waitForLock();
+        //waitForLock();
         writeSerial(cmd, zCmdLen);
     }
 }

@@ -3,17 +3,17 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "agent_object.h"
+#include "agent_obj.h"
 
-Agent_Object::Agent_Object(QObject *parent)
+Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
     mSnmp = SnmpAgent::bulid(this);
-    connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Object::snmpSetSlot);
+    connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Obj::snmpSetSlot);
 }
 
 
-bool Agent_Object::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
+bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
 {
     sOidIt it;
     it.str = ptr;
@@ -24,7 +24,7 @@ bool Agent_Object::addOid(uchar addr, uint oid, const QString &oidPrefix, const 
     return mSnmp->addOid(it);
 }
 
-bool Agent_Object::addOidValue(uchar addr, uint oid, const QString &oidPrefix, const QString &name, uint &value, bool isWrite)
+bool Agent_Obj::addOidValue(uchar addr, uint oid, const QString &oidPrefix, const QString &name, uint &value, bool isWrite)
 {
     sOidIt it;
     it.name = name;
@@ -35,7 +35,7 @@ bool Agent_Object::addOidValue(uchar addr, uint oid, const QString &oidPrefix, c
     return mSnmp->addOid(it);
 }
 
-void Agent_Object::snmpSetSlot(uint addr, const QString &oid, const QVariant &value)
+void Agent_Obj::snmpSetSlot(uint addr, const QString &oid, const QVariant &value)
 {
 
 }
