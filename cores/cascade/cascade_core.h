@@ -15,10 +15,10 @@ public:
 
 public slots:
     void run();
+    void initFunSlot();
 
 private:
     bool isRun=false;
-    bool isInit=false;
     CThread *mThread;
 };
 

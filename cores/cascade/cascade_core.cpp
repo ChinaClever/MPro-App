@@ -22,12 +22,17 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
 
 void Cascade_Core::startFun()
 {
-    if(!isInit) isInit = mThread->init(this, SLOT(run()));
+    mThread->init(this, SLOT(run()));
     if(!isRun) {
-        qint32 baudRate = QSerialPort::Baud38400;
-        isRun = openSerial("/dev/ttyUSB1", baudRate);
-        if(isRun) mThread->start();
+       QTimer::singleShot(1,this,SLOT(initFunSlot()));
+       cm::mdelay(2); isRun = true; mThread->start();
     }
+}
+
+void Cascade_Core::initFunSlot()
+{
+    qint32 baudRate = QSerialPort::Baud38400;
+    openSerial("/dev/ttyUSB0", baudRate);
 }
 
 void Cascade_Core::stopFun()
@@ -39,7 +44,7 @@ void Cascade_Core::stopFun()
 void Cascade_Core::run()
 {
     while(isRun) {
-         cm::mdelay(1); cmsWriteSlot();
+         cm::mdelay(1000); cmsWriteSlot();
          uchar addr = getAddress(); if(addr) {
             QByteArray rcv = readSerial();
             if(rcv.size() > 6) {

@@ -9,8 +9,8 @@ class Agent_Get : public Agent_Obj
 public:
     explicit Agent_Get(QObject *parent = nullptr);
 
-protected:
-    void addOids();
+private slots:
+    void addOidSlot();
 
 private:
     void addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it);

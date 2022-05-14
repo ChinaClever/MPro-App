@@ -20,6 +20,7 @@ bool Cascade_Master::masterRead(uchar addr)
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
     }
+    qDebug() << Q_FUNC_INFO << addr << ret;
 
     return ret;
 }
@@ -29,6 +30,7 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
     uint size = masterDev()->info.slaveNum;
+   if(0 == size) size = 3;
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(i, ret, devData(i+1)->offLine);

@@ -24,7 +24,7 @@ bool SnmpModule::addOid(const sOidIt &it)
     if(it.enWrited)  maxAccess = QSNMPMaxAccess_ReadWrite;
     if(ptr) {mShash.insert(it.name, ptr);
         QSNMPVar *var = this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
-        //qDebug() << var->oidString() << "\t\t"<< var->name();
+        qDebug() << var->oidString() << "\t\t"<< var->name();
     }
 
     return ret;

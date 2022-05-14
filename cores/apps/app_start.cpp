@@ -4,12 +4,13 @@
  *      Author: Lzy
  */
 #include "app_start.h"
-#include "op_core.h"
 #include "cascade_core.h"
 #include "ipc_coreserver.h"
-#include "log_core.h"
+#include "agent_core.h"
 #include "data_core.h"
+#include "log_core.h"
 #include "mb_core.h"
+#include "op_core.h"
 
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
@@ -43,7 +44,8 @@ void App_Start::initFunSlot()
 
 void App_Start::startThreadSlot()
 {
-    OP_Core::bulid(this)->startFun();
+    Agent_Core::bulid(this);
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();

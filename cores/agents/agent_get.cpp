@@ -7,10 +7,8 @@
 
 Agent_Get::Agent_Get(QObject *parent) : Agent_Obj{parent}
 {
-
+    QTimer::singleShot(2150,this,SLOT(addOidSlot()));
 }
-
-
 
 void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
 {
@@ -88,29 +86,29 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
     addUutInfo(addr, name, it->uut);
     addDevInfo(addr, name, it->info);
 
-    for(int i=0; i<LINE_NUM; ++i) {
-        QString oid = "1." +QString::number(i+1);
-        addObjData(addr, oid, name+"line", it->line, i);
-    }
+//    for(int i=0; i<LINE_NUM; ++i) {
+//        QString oid = "1." +QString::number(i+1);
+//        addObjData(addr, oid, name+"line", it->line, i);
+//    }
 
-    for(int i=0; i<LOOP_NUM; ++i) {
-        QString oid = "2." +QString::number(i+1);
-        addObjData(addr, oid, name+"loop", it->loop, i);
-    }
+//    for(int i=0; i<LOOP_NUM; ++i) {
+//        QString oid = "2." +QString::number(i+1);
+//        addObjData(addr, oid, name+"loop", it->loop, i);
+//    }
 
-    for(int i=0; i<OUTPUT_NUM; ++i) {
-        QString oid = "3." +QString::number(i+1);
-        addObjData(addr, oid, name+"output", it->output, i);
-    }
+//    for(int i=0; i<OUTPUT_NUM; ++i) {
+//        QString oid = "3." +QString::number(i+1);
+//        addObjData(addr, oid, name+"output", it->output, i);
+//    }
 
-    for(int i=0; i<SENOR_NUM; ++i) {
-        QString oid = "6." + QString::number(i+1);
-        addEnvData(addr, oid, name+"env", it->env, i);
-    }
+//    for(int i=0; i<SENOR_NUM; ++i) {
+//        QString oid = "6." + QString::number(i+1);
+//        addEnvData(addr, oid, name+"env", it->env, i);
+//    }
 
 }
 
-void Agent_Get::addOids()
+void Agent_Get::addOidSlot()
 {
     sDevData *dev = cm::devData(0);
     addDevData(8, dev);

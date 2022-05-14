@@ -8,10 +8,22 @@
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
+    //initSnmpConf();
     mSnmp = SnmpAgent::bulid(this);
-    connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Obj::snmpSetSlot);
+
+    //connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Obj::snmpSetSlot);
 }
 
+void Agent_Obj::initSnmpConf()
+{
+    QString cmd = "echo \"123456\" | sudo -S service snmpd stop";
+    system(cmd.toLatin1().data());
+
+    QString fn = "/home/lzy/work/NPDU/cores/commons/snmp/agent/net-snmp/";
+    cmd = "echo \"123456\" | sudo -S snmpd -f -Lo -C -c ";
+    cmd += fn +"snmpd.conf &";
+    system(cmd.toLatin1().data());
+}
 
 bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
 {
