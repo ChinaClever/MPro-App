@@ -5,6 +5,7 @@
 #include "http/http.h"
 #include "app_start.h"
 #include "agent_devdata.h"
+#include "op_zrtu.h"
 
 void ssdp_demo()
 {
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     Set_readWrite::bulid(p);
+    //OP_Core::bulid();
     App_Start::bulid(p);
 
 

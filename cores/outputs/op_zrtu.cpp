@@ -8,6 +8,12 @@
 
 OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 {
+
+    mThread = new CThread(parent);
+
+    timer = new QTimer(this);
+    //timer->start(3500);
+    connect(timer, SIGNAL(timeout()), this, SLOT(run()));
 }
 
 OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
@@ -20,6 +26,15 @@ OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
 #endif
     }
     return sington;
+}
+
+
+void OP_ZRtu::startFun()
+{
+
+    mThread->init(this, SLOT(run()));
+    mThread->onceRun();
+
 }
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
@@ -77,7 +92,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
     } else {
-        qDebug() << Q_FUNC_INFO << addr << cm::byteArrayToHexStr(recv);
+        qDebug() << "Error:" << Q_FUNC_INFO << addr << recv.size(); //cm::byteArrayToHexStr(recv);
     }
 
     return res;
@@ -104,14 +119,18 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 
 bool OP_ZRtu::readData(int addr)
 {
+    static uint lzy = 0;
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr); qDebug() << Q_FUNC_INFO<< addr << ret;
+    if(ret) fillData(addr); qDebug() << Q_FUNC_INFO<< addr << ret << lzy++;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
+
 void OP_ZRtu::run()
 {
+
+
     while (isRun) {
         int size = mDev->info.opNum;
         if(0 == size) size = 3;
