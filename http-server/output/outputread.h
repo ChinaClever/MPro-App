@@ -4,10 +4,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "mjson.h"
-#include "ipc_relayclient.h"
+#include "ipc_outputclient.h"
 
 extern std::vector<std::string *> gVeStr;
-extern IPC_RelayClient *gIpc_RelayClientObj;
+extern IPC_OutputClient *gIpc_RelayClientObj;
 
 
 class OutputRead : public QObject

@@ -24,7 +24,7 @@ bool SnmpModule::addOid(const sOidIt &it)
     if(it.enWrited)  maxAccess = QSNMPMaxAccess_ReadWrite;
     if(ptr) {mShash.insert(it.name, ptr);
         QSNMPVar *var = this->snmpCreateVar(it.name, type, maxAccess, mModuleOid, it.fieldId, toOid(it.oid));
-        qDebug() << var->oidString() << "\t\t"<< var->name();
+        qDebug() << var->oidString() << "\t" /*<<  it.enWrited*/ << "\t"<< var->name();
     }
 
     return ret;
@@ -58,7 +58,7 @@ bool SnmpModule::snmpSetValue(const QSNMPVar * var, const QVariant & v)
     case QSNMPType_Integer: *((int *)ptr) = v.toUInt(); break;
     case QSNMPType_OctetStr: qstrcpy((char *)ptr, v.toByteArray().data()); break;
     default: qDebug() << "Error: snmpSetValue" << var->fullName(); break;
-    } emit snmpSetSig(var->fieldId(), var->oidString(), v);
+    } emit snmpSetSig(var->fieldId(), var->oid(), v);
 
     return true;
 

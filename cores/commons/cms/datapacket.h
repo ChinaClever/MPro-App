@@ -92,9 +92,9 @@ struct sEnvData
     sAlarmUnit tem; // 温度
     sAlarmUnit hum; // 湿度
 
-    uchar door[SENOR_NUM]; // 门禁
-    uchar water[SENOR_NUM]; // 水浸
-    uchar smoke[SENOR_NUM]; // 烟雾
+    uint door[SENOR_NUM]; // 门禁
+    uint water[SENOR_NUM]; // 水浸
+    uint smoke[SENOR_NUM]; // 烟雾
 };
 
 struct sTgUnit
@@ -138,7 +138,6 @@ struct sDevInfo {
     uint lineNum; //设备单三相
 
     uint version;
-    char devName[NAME_SIZE]; // 设备名称
     uint slaveNum;  // 副机数量
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -152,13 +151,16 @@ struct sDevInfo {
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uchar chipStates[DEV_NUM];
+    uchar reserve[20];
 };
 
 struct sUutInfo {
+    char idc[NAME_SIZE];
     char room[NAME_SIZE];
     char module[NAME_SIZE];
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
+    char devName[NAME_SIZE]; // 设备名称
 };
 
 /**
@@ -171,8 +173,6 @@ struct sDevData
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
     uchar offLine; //离线标志 > 0在线
-    sDevInfo info;
-    sUutInfo uut;
 
     sObjData line; // 相数据
     sObjData loop; // 回路数据
@@ -181,10 +181,13 @@ struct sDevData
     sEnvData env; // 环境数据
     sRtuCount rtuCount; // 传输情况
 
+    sDevInfo info;
+    sUutInfo uut;
+
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)    
 };
 
 

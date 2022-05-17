@@ -14,14 +14,14 @@ SerialPort::SerialPort(QObject *parent)
     mRwLock = new QReadWriteLock;
 }
 
-bool SerialPort::openSerial(const QString &name,qint32 baudRate)
+bool SerialPort::openSerial(const QString &name,qint32 baudRate, QSerialPort::Parity parity)
 {
     mSerial->close(); mSerial->setPortName(name);
     bool ret = mSerial->open(QIODevice::ReadWrite);
     if(ret) {
+        mSerial->setParity(parity);    //无奇偶校验
         mSerial->setBaudRate(baudRate);  //波特率
-        mSerial->setDataBits(QSerialPort::Data8); //数据位
-        mSerial->setParity(QSerialPort::NoParity);    //无奇偶校验
+        mSerial->setDataBits(QSerialPort::Data8); //数据位        
         mSerial->setStopBits(QSerialPort::OneStop);   //无停止位
         mSerial->setFlowControl(QSerialPort::NoFlowControl);  //无控制
     } else qCritical() << Q_FUNC_INFO << mSerial->errorString();

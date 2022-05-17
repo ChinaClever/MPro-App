@@ -58,7 +58,11 @@ void Set_Fill::upDevData(sDevData *data, set::_sDevData *obj)
     size = data->env.size;
     for(int i=0; i< size; ++i) upEnvData(i, data->env, obj->env[i]);
 
-    obj->tg = data->tg; obj->login = cm::dataPacket()->login;
+    obj->tg = data->tg;
+    obj->info = data->info;
+    obj->uut = data->uut;
+
+    obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;
     obj->tg.pf = obj->tg.artPow = 0;
 }

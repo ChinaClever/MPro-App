@@ -31,8 +31,8 @@ void Cascade_Core::startFun()
 
 void Cascade_Core::initFunSlot()
 {
-    qint32 baudRate = QSerialPort::Baud38400;
-    openSerial("/dev/ttyUSB0", baudRate);
+    qint32 baudRate = QSerialPort::Baud57600;    
+    openSerial("/dev/ttyUSB0", baudRate, QSerialPort::EvenParity);
 }
 
 void Cascade_Core::stopFun()

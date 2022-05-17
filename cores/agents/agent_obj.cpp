@@ -3,26 +3,38 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "agent_obj.h"
 
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
-    //initSnmpConf();
-    mSnmp = SnmpAgent::bulid(this);
-
-    //connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Obj::snmpSetSlot);
+//    QTimer::singleShot(5,this,SLOT(snmpStop()));
+//    QTimer::singleShot(2050,this,SLOT(snmpConf()));
+    QTimer::singleShot(550,this,SLOT(snmpStart()));
 }
 
-void Agent_Obj::initSnmpConf()
+void Agent_Obj::snmpStop()
 {
     QString cmd = "echo \"123456\" | sudo -S service snmpd stop";
     system(cmd.toLatin1().data());
+}
 
+void Agent_Obj::snmpConf()
+{
     QString fn = "/home/lzy/work/NPDU/cores/commons/snmp/agent/net-snmp/";
-    cmd = "echo \"123456\" | sudo -S snmpd -f -Lo -C -c ";
+    QString cmd = "echo \"123456\" | sudo -S snmpd -f -Lo -C -c ";
     cmd += fn +"snmpd.conf &";
     system(cmd.toLatin1().data());
+}
+
+void Agent_Obj::snmpStart()
+{
+    mSnmp = SnmpAgent::bulid(this);
 }
 
 bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
@@ -47,7 +59,3 @@ bool Agent_Obj::addOidValue(uchar addr, uint oid, const QString &oidPrefix, cons
     return mSnmp->addOid(it);
 }
 
-void Agent_Obj::snmpSetSlot(uint addr, const QString &oid, const QVariant &value)
-{
-
-}

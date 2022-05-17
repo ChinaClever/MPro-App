@@ -134,7 +134,7 @@ void Json_Build::tgObjData(const sTgObjData &it, const QString &key, QJsonObject
 
 void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
-    QJsonArray array;
+    QJsonArray array; double r = 1;
     for(int i=0; i< it.size; ++i) {
         QJsonObject obj;
         obj.insert("id", i+1);
@@ -145,15 +145,15 @@ void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &js
     json.insert(key, QJsonValue(array));
 
     QJsonArray door;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.door[i]);
+    for(int i=0; i<SENOR_NUM; ++i) door.append(it.door[i]/r);
     json.insert("door", door);
 
     QJsonArray water;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.water[i]);
+    for(int i=0; i<SENOR_NUM; ++i) door.append(it.water[i]/r);
     json.insert("water", water);
 
     QJsonArray smoke;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.smoke[i]);
+    for(int i=0; i<SENOR_NUM; ++i) door.append(it.smoke[i]/r);
     json.insert("smoke", smoke);
 }
 
@@ -162,7 +162,6 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     QJsonObject obj; double r = 1;
     obj.insert("phases", it.lineNum/r);
     obj.insert("version", it.version/r);
-    obj.insert("dev_name", it.devName);
 
     obj.insert("op_num", it.opNum);
     obj.insert("slave_num", it.slaveNum/r);
@@ -187,10 +186,12 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
 void Json_Build::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
+    obj.insert("IDC", it.idc);
     obj.insert("room", it.room);
     obj.insert("cabinet", it.cab);
     obj.insert("module", it.module);
     obj.insert("road", it.road);
+    obj.insert("dev_name", it.devName);
     json.insert(key, QJsonValue(obj));
 }
 

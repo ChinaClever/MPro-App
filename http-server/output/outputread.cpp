@@ -74,7 +74,7 @@ void OutputRead::output_relay_ctrl(struct jsonrpc_request * r)
     mjson_get_mutilnumbers(r , 3 , ans);
     printf("addr: %f ---- id: %f-----ctrl: %f\n" , ans[0] ,ans[1] , ans[2]);
 
-    IPC_RelayClient::bulid()->ctrl( (int) ans[0] , (int) ans[1] , (int)ans[2] );
+    IPC_OutputClient::bulid()->ctrl( (int) ans[0] , (int) ans[1] , (int)ans[2] );
     char type[20] = "ctrlop_state";
     jsonrpc_return_success(r , "[%g,%g,%Q,%g]" , ans[0] ,  ans[1] , type , ctrl );
 }

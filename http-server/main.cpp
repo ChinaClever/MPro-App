@@ -4,14 +4,14 @@
 #include "mjson.h"
 #include "mongoose.h"
 #include "outputread.h"
-#include "ipc_relayclient.h"
+#include "ipc_outputclient.h"
 
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 std::vector<std::string *> gVeStr;
 QObject* gObj = NULL;
-IPC_RelayClient *gIpc_RelayClientObj = NULL;
+IPC_OutputClient *gIpc_RelayClientObj = NULL;
 
 void init()
 {
@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     QObject *p = a.parent();
-    IPC_RelayClient::bulid(p);
+    IPC_OutputClient::bulid(p);
 
     cm::mdelay(2000);
-    qDebug() << "AAAAAAAA" << IPC_RelayClient::bulid()->ctrl(0, 4, 0);
+    qDebug() << "AAAAAAAA" << IPC_OutputClient::bulid()->ctrl(0, 4, 0);
     std::thread th(http_main);
     th.detach();
 

@@ -9,7 +9,6 @@ OP_Core::OP_Core(QObject *parent)
     : OP_ZRtu{parent}
 {
     mThread = new CThread(this);
-    QTimer::singleShot(5,this,SLOT(initFunSlot()));
 }
 
 OP_Core *OP_Core::bulid(QObject *parent)
@@ -29,7 +28,8 @@ void OP_Core::initFunSlot()
 
 void OP_Core::startFun()
 {
+    QTimer::singleShot(1,this,SLOT(initFunSlot()));
     mThread->init(this, SLOT(run()));
-     mThread->start();
+    cm::mdelay(2); mThread->start();
 }
 

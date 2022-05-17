@@ -3,7 +3,7 @@
 
 #include "mb_regs.h"
 
-class Mb_Object : public Modbus_SlaveRtu , public Set_Relay
+class Mb_Object : public Modbus_SlaveRtu , public Set_Output
 {
     Q_OBJECT
 public:

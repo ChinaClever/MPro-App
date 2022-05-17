@@ -29,7 +29,7 @@ public:
     void sendTrap(const QString & name, quint32 fieldId, const QString &msg);
 
 signals:
-    void snmpSetSig(uint, const QString &, const QVariant &);
+    void snmpSetSig(uint, const QSNMPOid &, const QVariant &);
 
 protected:
     QSNMPOid toOid(const QString &oid);

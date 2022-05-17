@@ -55,7 +55,7 @@ void SM_Obj::initShareMemory(QObject *parent)
 void *SM_Obj::sharedMemory()
 {
 #if defined(Q_OS_LINUX)
-     return share_mem_get(sizeof(sDataPacket));
+     return share_mem_get(sizeof(sDataPacket)*1.1);
 #else
     if(!mSm) initShareMemory();
     return mSm->data();

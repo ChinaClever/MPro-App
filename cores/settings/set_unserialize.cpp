@@ -55,19 +55,23 @@ void Set_Unserialize::unDevData(sDevData *data, set::_sDevData *obj)
 {
     uchar size = obj->lineSize;
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
+    data->line.relay.size = 0;
 
     size = obj->loopSize;
     for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);
-    //data->loop.relay.size = 0;
 
     size = obj->outputSize;
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
+    data->output.vol.size = 0;
 
-    size = data->env.size = obj->envSize;
+    size = obj->envSize;
     for(int i=0; i< size; ++i) unEnvData(i, data->env, obj->env[i]);
     //data->env.hum.size = data->env.tem.size = size;
 
-    data->tg = obj->tg; cm::dataPacket()->login = obj->login;
+    data->tg = obj->tg;
+    data->info = obj->info;
+    data->uut = obj->uut;
+    cm::dataPacket()->login = obj->login;
 }
 
 void Set_Unserialize::unSequence()

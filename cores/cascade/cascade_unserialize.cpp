@@ -75,7 +75,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
 
     size = data->output.size = obj->outputSize; unDevSize(size, data->output);
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
-    //data->output.vol.size = 0;
+    data->output.vol.size = 0;
 
     size = data->env.size = obj->envSize;
     for(int i=0; i< size; ++i) unEnvData(i, data->env, obj->env[i]);
