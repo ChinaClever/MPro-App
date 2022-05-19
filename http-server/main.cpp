@@ -4,22 +4,9 @@
 #include "mjson.h"
 #include "mongoose.h"
 #include "outputread.h"
-#include "ipc_outputclient.h"
-
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
-std::vector<std::string *> gVeStr;
-QObject* gObj = NULL;
-IPC_OutputClient *gIpc_RelayClientObj = NULL;
-
-void init()
-{
-    for(int i = 0 ; i < 24 ; i++)
-    {
-        gVeStr.push_back( new std::string("output" + std::to_string(i+1)) );
-    }
-}
 
 static void sum(struct jsonrpc_request *r) {
     double a = 0.0, b = 0.0;
@@ -68,7 +55,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         char *response = NULL;
         jsonrpc_process(req.ptr, req.len, mjson_print_dynamic_buf, &response, NULL);
         mg_ws_send(c, response, strlen(response), WEBSOCKET_OP_TEXT);
-        LOG(LL_INFO, ("[%.*s] -> [%s]", (int) req.len, req.ptr, response));
+        //LOG(LL_INFO, ("[%.*s] -> [%s]", (int) req.len, req.ptr, response));
         free(response);
     }
     (void) fn_data;
@@ -90,21 +77,13 @@ int http_main(void) {
     //struct mg_timer t1;  // Timer
 
     mg_mgr_init(&mgr);  // Init event manager
-    init();
-    gObj = new QObject();
-    //gIpc_RelayClientObj = IPC_RelayClient::bulid(gObj);
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
     jsonrpc_export("sum", sum);       // And export a couple
     jsonrpc_export("mul", multiply);  // of RPC functions
-    OutputRead *opRead = OutputRead::bulid(gObj);
-    jsonrpc_export("get" , opRead->get);
-    jsonrpc_export("output_size_value" , opRead->output_size_value);
-    jsonrpc_export("output_name_value" , opRead->output_name_value);
-    jsonrpc_export("output_relay_status" , opRead->output_relay_status);
-    jsonrpc_export("output_relay_ctrl" , opRead->output_relay_ctrl);
 
+    OutputRead::bulid();
 
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
@@ -119,12 +98,10 @@ int http_main(void) {
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
     QObject *p = a.parent();
     IPC_OutputClient::bulid(p);
 
-    cm::mdelay(2000);
-    qDebug() << "AAAAAAAA" << IPC_OutputClient::bulid()->ctrl(0, 4, 0);
+
     std::thread th(http_main);
     th.detach();
 

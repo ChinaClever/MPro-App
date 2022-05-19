@@ -9,6 +9,8 @@ include($$CM_PATH/ipc/ipc.pri)
 include($$CM_PATH/cthread/cthread.pri)
 include($$CM_PATH/../ipcs/clients/clients.pri)
 
-HEADERS +=
+HEADERS += \
+    $$PWD/jsonrpcobj.h
 
-SOURCES +=
+SOURCES += \
+    $$PWD/jsonrpcobj.cpp
