@@ -38,7 +38,7 @@ void OutputRead::output_name_value(struct jsonrpc_request * r)
 void OutputRead::output_relay_status(struct jsonrpc_request * r)
 {
     double addr = getNumber(r, 0);
-    double id =  getNumber(r, 1);;
+    double id =  getNumber(r, 1);
 
 
     jsonrpc_return_success(r , "%g" , id );

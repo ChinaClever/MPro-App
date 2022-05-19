@@ -5,7 +5,6 @@
 #include "mjson.h"
 #include <QtCore>
 
-//using
 class JsonRpcObj
 {
 public:
