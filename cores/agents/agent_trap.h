@@ -9,8 +9,12 @@ class Agent_Trap : public Agent_Set
 public:
     explicit Agent_Trap(QObject *parent = nullptr);
 
-signals:
+private slots:
+    void initTrapSlot();
+    void alarmSlot(sAlarmIndex index, uchar value);
 
+private:
+    QSNMPOid  mModuleOid;
 };
 
 #endif // AGENT_TRAP_H

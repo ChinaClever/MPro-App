@@ -14,12 +14,6 @@ protected:
                 const QString &name, char *ptr, bool isWrite=true);
     bool addOidValue(uchar addr, uint oid, const QString &oidPrefix,
                      const QString &name, uint &value, bool isWrite=true);
-
-private slots:
-    void snmpStop();
-    void snmpConf();
-    void snmpStart();
-
 protected:
     SnmpModule *mSnmp;
 };

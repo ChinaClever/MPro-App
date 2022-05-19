@@ -33,7 +33,8 @@ QString Alarm_Log::alarmType(const sAlarmIndex &index)
     case AlarmIndex::Line: str += tr("相"); break;
     case AlarmIndex::Loop: str += tr("回路"); break;
     case AlarmIndex::Output: str += tr("输出位"); break;
-    case AlarmIndex::Env: str += tr("传感器"); break;
+    case AlarmIndex::Env: str += tr("环境"); break;
+    case AlarmIndex::Sensor: str += tr("传感器"); break;
     }
 
     switch (index.subtopic) {
@@ -42,7 +43,11 @@ QString Alarm_Log::alarmType(const sAlarmIndex &index)
     case AlarmIndex::Pow: str += tr("功率"); break;
     case AlarmIndex::Tem: str += tr("温度"); break;
     case AlarmIndex::Hum: str += tr("湿度"); break;
-    case AlarmIndex::Relay: str += tr("开关"); break;
+    case AlarmIndex::Door1: str += tr("门禁1"); break;
+    case AlarmIndex::Door2: str += tr("门禁２"); break;
+    case AlarmIndex::Water: str += tr("水浸"); break;
+    case AlarmIndex::Smoke: str += tr("烟雾"); break;
+    case AlarmIndex::Relay: if(index.type == AlarmIndex::Loop) str += tr("断路器"); else str += tr("开关"); break;
     }
 
     return str;
@@ -78,12 +83,19 @@ QString Alarm_Log::alarmContent(const sAlarmIndex &index)
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
-                    .arg(unit->value[id]/rate)
-                    .arg(unit->min[id] / 10.0)
-                    .arg(unit->crMin[id] / 10.0)
-                    .arg(unit->crMax[id] / 10.0)
-                    .arg(unit->max[id] / 10.0);
+            if(index.type == AlarmIndex::Env) {
+                str  = tr("当前值=%1　告警最小值=%2 告警最大值=%3")
+                        .arg(unit->value[id]/rate)
+                        .arg(unit->min[id] / 10.0)
+                        .arg(unit->max[id] / 10.0);
+            } else {
+                str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
+                        .arg(unit->value[id]/rate)
+                        .arg(unit->min[id] / 10.0)
+                        .arg(unit->crMin[id] / 10.0)
+                        .arg(unit->crMax[id] / 10.0)
+                        .arg(unit->max[id] / 10.0);
+            }
         } else qDebug() << Q_FUNC_INFO;
     } else {
         sTgUnit *unit = obj.getTgAlarmUnit(index);
@@ -100,35 +112,39 @@ QString Alarm_Log::alarmContent(const sAlarmIndex &index)
 }
 
 
-void Alarm_Log::alarmRelay(const sAlarmIndex &index, uchar value)
+QString Alarm_Log::alarmRelay(uchar value)
 {
-    sAlarmItem it; it.addr = tr("本机");
-    if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
-    if(value) it.state = tr("告警"); else it.state =tr("恢复正常");
-
-    QString str = tr("断路器");
-    if(index.type == AlarmIndex::Output) str = tr("继电器");
-    str += QString::number(index.id+1);
-    it.module = str;
-
+    QString str;
     switch (value) {
     case sRelay::CloseAlarm: str = tr("断开"); break;
     case sRelay::OpenALarm: str = tr("闭合"); break;
     case sRelay::NoAlarm: str = tr("恢复"); break;
-    } it.content = str;
-    Log_Core::bulid()->append(it);
+    }
+    return str;
 }
 
+QString Alarm_Log::alarmSensor(uchar value)
+{
+    QString str = tr("恢复正常");
+    if(value) str = tr("告警");
+    return str;
+}
 
 void Alarm_Log::alarmSlot(sAlarmIndex index, uchar value)
 {
-    if(index.subtopic != AlarmIndex::Relay) {
-        sAlarmItem it; it.addr = tr("本机");
-        if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
-        it.module = alarmType(index); it.module += alarmStatus(value, it.state);
+    sAlarmItem it; it.addr = tr("本机");
+    if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
+    if(value) it.state = tr("告警"); else it.state = tr("恢复正常");
+    it.module = alarmType(index);
+
+    if(index.subtopic == AlarmIndex::Relay) {
+        it.content = alarmRelay(value);
+    } if(index.type == AlarmIndex::Sensor) {
+        it.content = alarmSensor(value);
+    }else {
+        it.module += alarmStatus(value, it.state);
         it.content = alarmContent(index);
-        Log_Core::bulid()->append(it);
-    } else {
-        alarmRelay(index, value);
     }
+
+    Log_Core::bulid()->append(it);
 }

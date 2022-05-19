@@ -13,27 +13,6 @@
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
-//    QTimer::singleShot(5,this,SLOT(snmpStop()));
-//    QTimer::singleShot(2050,this,SLOT(snmpConf()));
-    QTimer::singleShot(550,this,SLOT(snmpStart()));
-}
-
-void Agent_Obj::snmpStop()
-{
-    QString cmd = "echo \"123456\" | sudo -S service snmpd stop";
-    system(cmd.toLatin1().data());
-}
-
-void Agent_Obj::snmpConf()
-{
-    QString fn = "/home/lzy/work/NPDU/cores/commons/snmp/agent/net-snmp/";
-    QString cmd = "echo \"123456\" | sudo -S snmpd -f -Lo -C -c ";
-    cmd += fn +"snmpd.conf &";
-    system(cmd.toLatin1().data());
-}
-
-void Agent_Obj::snmpStart()
-{
     mSnmp = SnmpAgent::bulid(this);
 }
 

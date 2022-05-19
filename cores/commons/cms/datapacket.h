@@ -35,7 +35,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uchar alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -221,7 +221,8 @@ struct sDataPacket
 
 
 enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum};
+enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum,
+                Sensor, Door1, Door2, Water, Smoke};
 
 struct sAlarmIndex
 {

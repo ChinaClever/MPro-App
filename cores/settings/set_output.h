@@ -11,6 +11,9 @@ public:
     bool outputDelaySet(int addr, int id, uchar delay);
     bool outputSwModeSet(int addr, int id, uchar mode);
     bool outputNameSet(int addr, int id, const QString &name);
+
+private:
+    void writeOpName(int id, const QString &name);
 };
 
 #endif // SET_OUTPUT_H

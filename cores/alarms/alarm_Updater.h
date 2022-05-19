@@ -26,6 +26,9 @@ private:
     uchar upTgUnit(sAlarmIndex &index, sTgUnit &it);
     bool upTgObjData(sAlarmIndex &index, sTgObjData &it);
     bool upEnvData(sAlarmIndex &index, sEnvData &it);
+
+    bool upSensorStatus(sAlarmIndex &index, uint *ptr, int id=0);
+    bool upSensors(sAlarmIndex &index, sEnvData &it);
     bool upDevAlarm(uchar addr);
 };
 

@@ -68,6 +68,14 @@ bool SnmpModule::snmpSetValue(const QSNMPVar * var, const QVariant & v)
     //    return callback(var->fieldId(), var->oidString(), v);
 }
 
+bool SnmpModule::sendTrap(const QSNMPOid & oid, const QString &msg)
+{    
+    QSNMPVar *var = this->snmpVar(oid); bool ret = true;
+    if(var) mSnmpAgent->sendTrap(msg, mModuleOid, var->fieldId(), var);
+    else ret = false;
+    return ret;
+}
+
 void SnmpModule::sendTrap(const QString & name, const QString &msg)
 {
     QSNMPVar *var = this->snmpVar(name);

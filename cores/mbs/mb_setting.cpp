@@ -185,7 +185,6 @@ void Mb_Setting::relaySet(ushort addr, ushort &value)
     if((addr >= 3000) && value) {
         uchar id = addr - 3000;
         OP_Core::bulid()->relayCtrl(id+1, value);
-        //outputRelayCtrl(0, id+1, value);
     }
 }
 

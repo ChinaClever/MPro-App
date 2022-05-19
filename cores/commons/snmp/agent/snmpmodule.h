@@ -25,6 +25,8 @@ public:
     virtual QVariant snmpGetValue(const QSNMPVar * var);
     virtual bool snmpSetValue(const QSNMPVar * var, const QVariant & v);
 
+    QSNMPOid moduleOid() {return mModuleOid;}
+    bool sendTrap(const QSNMPOid & oid, const QString &msg="Trap");
     void sendTrap(const QString & name, const QString &msg);
     void sendTrap(const QString & name, quint32 fieldId, const QString &msg);
 

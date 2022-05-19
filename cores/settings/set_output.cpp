@@ -61,10 +61,23 @@ bool Set_Output::outputNameSet(int addr, int id, const QString &name)
     if(addr) {
         ret = Cascade_Core::bulid()->masterOpNameSet(addr, id, name);
     } else {
-        sObjData *it = &(cm::masterDev()->output);
-        if(id) qstrcpy((char *)it->name[id-1], name.toLatin1().data());
-        else for(int i=0; i<it->size; ++i) qstrcpy((char *)it->name[i], name.toLatin1().data());
-        Set_ReadWrite::bulid()->writeSettings();
+        if(id) {
+            writeOpName(id-1, name);
+        } else {
+            sObjData *it = &(cm::masterDev()->output);
+            for(int i=0; i<it->size; ++i) writeOpName(i, name);
+        }
     }
     return ret;
+}
+
+void Set_Output::writeOpName(int id, const QString &name)
+{
+    QString prefix = "OutputName";
+    QString key = QString::number(id);
+    Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
+    cfg->writeCfg(key, name, prefix);
+
+    sObjData *it = &(cm::masterDev()->output);
+    qstrcpy((char *)it->name[id], name.toLatin1().data());
 }
