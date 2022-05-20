@@ -1,10 +1,8 @@
 #include <QCoreApplication>
 #include "ipc_coreserver.h"
 #include "ssdp_server.h"
-//#include "snmp/snmpagent.h"
 #include "http/http.h"
 #include "app_start.h"
-#include "agent_get.h"
 
 void ssdp_demo()
 {

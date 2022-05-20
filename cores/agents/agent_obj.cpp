@@ -3,15 +3,18 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "agent_obj.h"
 
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
     mSnmp = SnmpAgent::bulid(this);
-    connect(mSnmp, &SnmpModule::snmpSetSig, this, &Agent_Obj::snmpSetSlot);
 }
-
 
 bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
 {
@@ -35,7 +38,3 @@ bool Agent_Obj::addOidValue(uchar addr, uint oid, const QString &oidPrefix, cons
     return mSnmp->addOid(it);
 }
 
-void Agent_Obj::snmpSetSlot(uint addr, const QString &oid, const QVariant &value)
-{
-
-}

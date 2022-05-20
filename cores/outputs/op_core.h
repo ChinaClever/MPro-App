@@ -12,6 +12,9 @@ public:
     ~OP_Core(){isRun = false;}
     void startFun();
 
+private slots:
+    void initFunSlot();
+
 private:
     CThread *mThread;
 };

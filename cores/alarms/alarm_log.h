@@ -17,7 +17,9 @@ private:
     QString alarmType(const sAlarmIndex &index);
     QString alarmStatus(uchar value, QString &state);
     QString alarmContent(const sAlarmIndex &index);
-    void alarmRelay(const sAlarmIndex &index, uchar value);
+
+    QString alarmSensor(uchar value);
+    QString alarmRelay(uchar value);
 };
 
 #endif // ALARM_LOG_H

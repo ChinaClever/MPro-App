@@ -1,7 +1,7 @@
 #ifndef IPC_ALARMSERVER_H
 #define IPC_ALARMSERVER_H
 
-#include "ipc_delayserver.h"
+#include "ipc_outputserver.h"
 
 class IPC_AlarmServer : public IPC_ObjServer
 {

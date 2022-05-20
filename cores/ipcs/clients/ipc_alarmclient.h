@@ -1,7 +1,7 @@
 #ifndef IPC_ALARMCLIENT_H
 #define IPC_ALARMCLIENT_H
 
-#include "ipc_delayclient.h"
+#include "ipc_outputclient.h"
 
 class IPC_AlarmClient : public IPC_ObjClient
 {

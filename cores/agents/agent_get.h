@@ -9,8 +9,8 @@ class Agent_Get : public Agent_Obj
 public:
     explicit Agent_Get(QObject *parent = nullptr);
 
-protected:
-    void addOids();
+private slots:
+    void addOidSlot();
 
 private:
     void addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it);
@@ -19,7 +19,9 @@ private:
     void addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
     void addObjData(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index);
 
+    void addEnvAlarm(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
     void addEnvData(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);
+    void addDoors(uchar addr, const QString &oidPrefix, sEnvData &it);
     void addDevData(uchar addr, sDevData *it);
 };
 

@@ -22,9 +22,20 @@ OP_Core *OP_Core::bulid(QObject *parent)
     return sington;
 }
 
+void OP_Core::initFunSlot()
+{
+    qint32 baudRate = QSerialPort::Baud19200;
+    openSerial("/dev/ttyUSB0", baudRate);
+}
+
 void OP_Core::startFun()
 {
+    QTimer::singleShot(1,this,SLOT(initFunSlot()));
     mThread->init(this, SLOT(run()));
+<<<<<<< HEAD
     mThread->start();
+=======
+    cm::mdelay(2); mThread->start();
+>>>>>>> Lzy
 }
 

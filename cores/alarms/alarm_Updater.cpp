@@ -35,7 +35,7 @@ bool Alarm_Updater::upRelayUnit(sAlarmIndex &index, sRelayUnit &it)
         } else alarm = sRelay::NoAlarm; index.id = i;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
-    }    
+    }
 
     return ret;
 }
@@ -117,6 +117,33 @@ bool Alarm_Updater::upEnvData(sAlarmIndex &index, sEnvData &it)
     return ret;
 }
 
+bool Alarm_Updater::upSensorStatus(sAlarmIndex &index, uint *ptr, int id)
+{
+    bool ret = false; uchar alarm = 0;
+    if(ptr[id] == 2) alarm = 1; else alarm = 0;
+    if(ptr[id+2] != alarm) emit alarmSig(index, alarm);
+    ptr[id+2] = alarm; ret |= alarm;
+    return ret;
+}
+
+bool Alarm_Updater::upSensors(sAlarmIndex &index, sEnvData &it)
+{
+    bool ret = false;
+    index.subtopic = AlarmIndex::Door1;
+    ret |=  upSensorStatus(index, it.door);
+
+    index.subtopic = AlarmIndex::Door2;
+    ret |=  upSensorStatus(index, it.door,1);
+
+    index.subtopic = AlarmIndex::Water;
+    ret |=  upSensorStatus(index, it.water);
+
+    index.subtopic = AlarmIndex::Smoke;
+    ret |=  upSensorStatus(index, it.smoke);
+
+    return ret;
+}
+
 bool Alarm_Updater::upDevData(sAlarmIndex &index, sDevData *it)
 {
     bool ret = false;
@@ -134,7 +161,10 @@ bool Alarm_Updater::upDevData(sAlarmIndex &index, sDevData *it)
     ret |= upTgObjData(index, it->tg);
 
     index.type = AlarmIndex::Env;
-    ret |= upObjData(index, it->output);
+    ret |= upEnvData(index, it->env);
+
+    index.type = AlarmIndex::Sensor;
+    ret |= upSensors(index, it->env);
 
     return ret;
 }

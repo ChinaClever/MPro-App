@@ -14,7 +14,8 @@ public:
     bool isOpened(){return mSerial->isOpen();}
     QString nameSerial() {return mSerial->portName();}
     bool isContains(const QString &name) {return ports().contains(name);}
-    bool openSerial(const QString &name,qint32 baudRate = QSerialPort::Baud19200);
+    bool openSerial(const QString &name, qint32 baudRate = QSerialPort::Baud19200,
+                    QSerialPort::Parity parity = QSerialPort::NoParity);
 
     int writeSerial(quint8 *cmd, int len);
     bool writeSerial(const QByteArray &array);

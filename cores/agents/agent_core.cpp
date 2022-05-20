@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "agent_core.h"
 
 Agent_Core::Agent_Core(QObject *parent)
