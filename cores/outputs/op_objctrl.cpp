@@ -114,7 +114,7 @@ void OP_ObjCtrl::setClearEle(int id)
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uchar *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.delay;
     for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
     funDelay(cmd);
 }
@@ -122,7 +122,7 @@ void OP_ObjCtrl::setAllDelay(uchar sec)
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uchar *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.delay;
     cmd[id-1] = sec;
     funDelay(cmd);
 }

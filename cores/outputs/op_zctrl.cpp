@@ -53,7 +53,7 @@ void OP_ZCtrl::funClearEle(uchar *buf)
 }
 
 
-void OP_ZCtrl::funDelay(uchar *buf)
+void OP_ZCtrl::funDelay(uint *buf)
 {
     int k = 5;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x00, 0xA3, 0xB3};

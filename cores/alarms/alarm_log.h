@@ -11,12 +11,12 @@ public:
     static Alarm_Log *bulid(QObject *parent = nullptr);
 
 protected slots:
-    void alarmSlot(sAlarmIndex index, uchar value);
+    void alarmSlot(sDIndex index, uchar value);
 
 private:
-    QString alarmType(const sAlarmIndex &index);
+    QString alarmType(const sDIndex &index);
     QString alarmStatus(uchar value, QString &state);
-    QString alarmContent(const sAlarmIndex &index);
+    QString alarmContent(const sDIndex &index);
 
     QString alarmSensor(uchar value);
     QString alarmRelay(uchar value);

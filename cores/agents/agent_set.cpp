@@ -75,7 +75,7 @@ bool Agent_Set::setAlarmUnit(sSetAlarmUnit &unit, const QVariant &value)
     return ret;
 }
 
-bool Agent_Set::upAlarmIndex(sAlarmIndex &index)
+bool Agent_Set::upAlarmIndex(sDIndex &index)
 {
     bool ret = true;
     sIndex *it = &mIndex;
@@ -83,19 +83,19 @@ bool Agent_Set::upAlarmIndex(sAlarmIndex &index)
     index.id = it->id;
 
     switch (it->fc) {
-    case 1: index.type = AlarmIndex::Line; break;
-    case 2: index.type = AlarmIndex::Loop; break;
-    case 3: index.type = AlarmIndex::Output; break;
-    case 6: index.type = AlarmIndex::Env; break;
+    case 1: index.type = DType::Line; break;
+    case 2: index.type = DType::Loop; break;
+    case 3: index.type = DType::Output; break;
+    case 6: index.type = DType::Env; break;
     default: ret = false; break;
     }
 
     switch (it->type) {
-    case 2: index.subtopic = AlarmIndex::Vol; break;
-    case 3: index.subtopic = AlarmIndex::Cur; break;
-    case 4: index.subtopic = AlarmIndex::Pow; break;
-    case 6: index.subtopic = AlarmIndex::Tem; break;
-    case 7: index.subtopic = AlarmIndex::Hum; break;
+    case 2: index.topic = DTopic::Vol; break;
+    case 3: index.topic = DTopic::Cur; break;
+    case 4: index.topic = DTopic::Pow; break;
+    case 6: index.topic = DTopic::Tem; break;
+    case 7: index.topic = DTopic::Hum; break;
     default: ret = false; break;
     }
 

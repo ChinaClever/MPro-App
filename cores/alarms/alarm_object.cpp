@@ -10,11 +10,11 @@ Alarm_Object::Alarm_Object()
 
 }
 
-char Alarm_Object::alarmValue(const sAlarmIndex &index)
+char Alarm_Object::alarmValue(const sDIndex &index)
 {
     char alarm = -1;
     if(index.type) {
-        if(AlarmIndex::Relay == index.subtopic) {
+        if(DTopic::Relay == index.topic) {
             sRelayUnit *unit = getRelayUnit(index);
             if(unit) alarm = unit->alarm[index.id];
         } else {
@@ -29,84 +29,148 @@ char Alarm_Object::alarmValue(const sAlarmIndex &index)
     return alarm;
 }
 
-char Alarm_Object::alarmValue(const sAlarmIndex &index, AlarmType type)
+char Alarm_Object::alarmValue(const sDIndex &index, AlarmStatus type)
 {
     char alarm = alarmValue(index);
     alarm = (alarm&type) ? 1: 0;
     return alarm;
 }
 
-char Alarm_Object::alarmValue(const sAlarmIndex &index, sRelay::Alarm type)
+char Alarm_Object::alarmValue(const sDIndex &index, sRelay::Alarm type)
 {
     char alarm = alarmValue(index);
     alarm = (alarm==type) ? 1: 0;
     return alarm;
 }
 
-sObjData *Alarm_Object::getObjData(const sAlarmIndex &index)
+sObjData *Alarm_Object::getObjData(const sDIndex &index)
 {
     sObjData *obj = nullptr;
     sDevData *dev = cm::devData(index.addr);
     switch (index.type) {
-    case AlarmIndex::Line: obj = &(dev->line); break;
-    case AlarmIndex::Loop: obj = &(dev->loop); break;
-    case AlarmIndex::Output: obj = &(dev->output); break;
+    case DType::Line: obj = &(dev->line); break;
+    case DType::Loop: obj = &(dev->loop); break;
+    case DType::Output: obj = &(dev->output); break;
     }
     return obj;
 }
 
-sAlarmUnit *Alarm_Object::getAlarmUnit(const sAlarmIndex &index, sObjData *obj)
+sAlarmUnit *Alarm_Object::getAlarmUnit(const sDIndex &index, sObjData *obj)
 {
     sAlarmUnit *unit = nullptr;
-    switch (index.subtopic) {
-    case AlarmIndex::Vol: unit = &(obj->vol); break;
-    case AlarmIndex::Cur: unit = &(obj->cur); break;
-    case AlarmIndex::Pow: unit = &(obj->pow); break;
+    switch (index.topic) {
+    case DTopic::Vol: unit = &(obj->vol); break;
+    case DTopic::Cur: unit = &(obj->cur); break;
+    case DTopic::Pow: unit = &(obj->pow); break;
     }
     return unit;
 }
 
-sAlarmUnit *Alarm_Object::getAlarmUnit(const sAlarmIndex &index)
+sAlarmUnit *Alarm_Object::getAlarmUnit(const sDIndex &index)
 {
     sObjData *obj = nullptr; sAlarmUnit *unit = nullptr;
-    if(AlarmIndex::Tg == index.type) return unit;
+    if(DType::Tg == index.type) return unit;
     sDevData *dev = cm::devData(index.addr);
 
-    if(index.type < AlarmIndex::Env) {
+    if(index.type < DType::Env) {
         obj = getObjData(index);
         unit = getAlarmUnit(index, obj);
     } else {
-        switch (index.type) {
-        case AlarmIndex::Tem: unit = &(dev->env.tem);break;
-        case AlarmIndex::Hum: unit = &(dev->env.hum);break;
+        switch (index.topic) {
+        case DTopic::Tem: unit = &(dev->env.tem);break;
+        case DTopic::Hum: unit = &(dev->env.hum);break;
         }
     }
 
     return unit;
 }
 
-sTgUnit *Alarm_Object::getTgAlarmUnit(const sAlarmIndex &index)
+sTgUnit *Alarm_Object::getTgAlarmUnit(const sDIndex &index)
 {
     sTgUnit *unit = nullptr;
     sTgObjData *obj = &(cm::devData(index.addr)->tg);
-    if(AlarmIndex::Tg == index.type) {
-        switch (index.subtopic) {
-        case AlarmIndex::Vol: unit = &(obj->vol); break;
-        case AlarmIndex::Cur: unit = &(obj->cur); break;
-        case AlarmIndex::Pow: unit = &(obj->pow); break;
+    if(DType::Tg == index.type) {
+        switch (index.topic) {
+        case DTopic::Vol: unit = &(obj->vol); break;
+        case DTopic::Cur: unit = &(obj->cur); break;
+        case DTopic::Pow: unit = &(obj->pow); break;
         }
     }
 
     return unit;
 }
 
-sRelayUnit *Alarm_Object::getRelayUnit(const sAlarmIndex &index)
+sRelayUnit *Alarm_Object::getRelayUnit(const sDIndex &index)
 {
     sRelayUnit *unit = nullptr;
-    if(AlarmIndex::Relay == index.subtopic) {
+    if(DTopic::Relay == index.topic) {
         sObjData *obj = getObjData(index);
         if(obj) unit = &(obj->relay);
     }
 
     return unit;
+}
+
+uint *Alarm_Object::getValueAlarmUnit(const sDIndex &index)
+{
+    uint *ptr = nullptr;
+    sAlarmUnit *unit = getAlarmUnit(index);
+    if(unit) {
+        switch (index.subtopic) {
+        case DSub::Value: ptr = unit->value; break;
+        case DSub::Rate: ptr = unit->rated; break;
+        case DSub::Alarm: ptr = unit->alarm; break;
+        case DSub::VMax: ptr = unit->max; break;
+        case DSub::VMin: ptr = unit->min; break;
+        case DSub::VCrMin: ptr = unit->crMin; break;
+        case DSub::VCrMax: ptr = unit->crMax; break;
+        }
+        if(ptr) ptr = &(ptr[index.id]);
+    }
+
+    return ptr;
+}
+
+uint *Alarm_Object::getValueTgAlarmUnit(const sDIndex &index)
+{
+    uint *ret = nullptr;
+    sTgUnit *unit = getTgAlarmUnit(index);
+    if(unit) {
+        switch (index.subtopic) {
+        case DSub::Value: ret = &(unit->value); break;
+        case DSub::Rate: ret = &(unit->rated); break;
+        case DSub::Alarm: ret = &(unit->alarm); break;
+        case DSub::VMax: ret = &(unit->max); break;
+        case DSub::VMin: ret = &(unit->min); break;
+        case DSub::VCrMin: ret = &(unit->crMin); break;
+        case DSub::VCrMax: ret = &(unit->crMax); break;
+        }
+    }
+    return ret;
+}
+
+uint *Alarm_Object::getValueRelayUnit(const sDIndex &index)
+{
+    uint *ptr = nullptr;
+    sRelayUnit *unit = getRelayUnit(index);
+    if(unit) {
+        switch (index.subtopic) {
+        case DSub::Value: ptr = unit->sw; break;
+        case DSub::Rate: ptr = unit->mode; break;
+        case DSub::Alarm: ptr = unit->alarm; break;
+        case DSub::VMax: ptr = unit->delay; break;
+        }
+        if(ptr) ptr = &(ptr[index.id]);
+    }
+    return ptr;
+}
+
+uint *Alarm_Object::getValue(const sDIndex &index)
+{
+    uint *ret = nullptr;
+    if(DType::Tg == index.type) ret = getValueTgAlarmUnit(index);
+    else if(DTopic::Relay == index.topic) ret = getValueRelayUnit(index);
+    else ret = getValueAlarmUnit(index);
+
+    return ret;
 }

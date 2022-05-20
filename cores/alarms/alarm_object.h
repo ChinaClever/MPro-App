@@ -7,18 +7,22 @@ class Alarm_Object
 public:
     Alarm_Object();
 
-    char alarmValue(const sAlarmIndex &index);
-    char alarmValue(const sAlarmIndex &index, AlarmType type);
-    char alarmValue(const sAlarmIndex &index, sRelay::Alarm type);
+    char alarmValue(const sDIndex &index);
+    char alarmValue(const sDIndex &index, AlarmStatus type);
+    char alarmValue(const sDIndex &index, sRelay::Alarm type);
 
 //protected:
-    sTgUnit *getTgAlarmUnit(const sAlarmIndex &index);
-    sAlarmUnit *getAlarmUnit(const sAlarmIndex &index);
-    sRelayUnit *getRelayUnit(const sAlarmIndex &index);
+    sTgUnit *getTgAlarmUnit(const sDIndex &index);
+    sAlarmUnit *getAlarmUnit(const sDIndex &index);
+    sRelayUnit *getRelayUnit(const sDIndex &index);
+    uint *getValue(const sDIndex &index);
 
 private:
-    sObjData *getObjData(const sAlarmIndex &index);
-    sAlarmUnit *getAlarmUnit(const sAlarmIndex &index, sObjData *obj);
+    sObjData *getObjData(const sDIndex &index);
+    sAlarmUnit *getAlarmUnit(const sDIndex &index, sObjData *obj);
+    uint *getValueAlarmUnit(const sDIndex &index);
+    uint *getValueTgAlarmUnit(const sDIndex &index);
+    uint *getValueRelayUnit(const sDIndex &index);
 };
 
 #endif // ALARM_OBJECT_H

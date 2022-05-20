@@ -9,7 +9,7 @@
 Alarm_Log::Alarm_Log(QObject *parent)
     : QObject{parent}
 {
-    qRegisterMetaType<sAlarmIndex>("sAlarmIndex");
+    qRegisterMetaType<sDIndex>("sAlarmIndex");
     Alarm_Updater *alarm = Alarm_Updater::bulid(this);
     connect(alarm, &Alarm_Updater::alarmSig, this, &Alarm_Log::alarmSlot);
 }
@@ -24,30 +24,30 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
 }
 
 
-QString Alarm_Log::alarmType(const sAlarmIndex &index)
+QString Alarm_Log::alarmType(const sDIndex &index)
 {
     QString str;
     if(index.type) str = tr("第%１ ").arg(index.id+1);
     switch (index.type) {
-    case AlarmIndex::Tg: str += tr("总"); break;
-    case AlarmIndex::Line: str += tr("相"); break;
-    case AlarmIndex::Loop: str += tr("回路"); break;
-    case AlarmIndex::Output: str += tr("输出位"); break;
-    case AlarmIndex::Env: str += tr("环境"); break;
-    case AlarmIndex::Sensor: str += tr("传感器"); break;
+    case DType::Tg: str += tr("总"); break;
+    case DType::Line: str += tr("相"); break;
+    case DType::Loop: str += tr("回路"); break;
+    case DType::Output: str += tr("输出位"); break;
+    case DType::Env: str += tr("环境"); break;
+    case DType::Sensor: str += tr("传感器"); break;
     }
 
-    switch (index.subtopic) {
-    case AlarmIndex::Vol: str += tr("电压"); break;
-    case AlarmIndex::Cur: str += tr("电流"); break;
-    case AlarmIndex::Pow: str += tr("功率"); break;
-    case AlarmIndex::Tem: str += tr("温度"); break;
-    case AlarmIndex::Hum: str += tr("湿度"); break;
-    case AlarmIndex::Door1: str += tr("门禁1"); break;
-    case AlarmIndex::Door2: str += tr("门禁２"); break;
-    case AlarmIndex::Water: str += tr("水浸"); break;
-    case AlarmIndex::Smoke: str += tr("烟雾"); break;
-    case AlarmIndex::Relay: if(index.type == AlarmIndex::Loop) str += tr("断路器"); else str += tr("开关"); break;
+    switch (index.topic) {
+    case DTopic::Vol: str += tr("电压"); break;
+    case DTopic::Cur: str += tr("电流"); break;
+    case DTopic::Pow: str += tr("功率"); break;
+    case DTopic::Tem: str += tr("温度"); break;
+    case DTopic::Hum: str += tr("湿度"); break;
+    case DTopic::Door1: str += tr("门禁1"); break;
+    case DTopic::Door2: str += tr("门禁２"); break;
+    case DTopic::Water: str += tr("水浸"); break;
+    case DTopic::Smoke: str += tr("烟雾"); break;
+    case DTopic::Relay: if(index.type == DType::Loop) str += tr("断路器"); else str += tr("开关"); break;
     }
 
     return str;
@@ -56,34 +56,34 @@ QString Alarm_Log::alarmType(const sAlarmIndex &index)
 QString Alarm_Log::alarmStatus(uchar value, QString &state)
 {
     QString str; switch (value) {
-    case AlarmType::Ok: state = str = tr("恢复正常"); break;
-    case AlarmType::Min: state = tr("告警"); str = tr("过低"); break;
-    case AlarmType::CrMin: state = tr("预警"); str = tr("过低"); break;
-    case AlarmType::CrMax: state = tr("预警"); str = tr("过高"); break;
-    case AlarmType::Max: state = tr("告警"); str = tr("过高"); break;
+    case AlarmStatus::Ok: state = str = tr("恢复正常"); break;
+    case AlarmStatus::Min: state = tr("告警"); str = tr("过低"); break;
+    case AlarmStatus::CrMin: state = tr("预警"); str = tr("过低"); break;
+    case AlarmStatus::CrMax: state = tr("预警"); str = tr("过高"); break;
+    case AlarmStatus::Max: state = tr("告警"); str = tr("过高"); break;
     }
     return str;
 }
 
-QString Alarm_Log::alarmContent(const sAlarmIndex &index)
+QString Alarm_Log::alarmContent(const sDIndex &index)
 {
     QString str;
     double rate = 1;
     int id = index.id;
 
-    switch (index.subtopic) {
-    case AlarmIndex::Vol: rate = COM_RATE_VOL; break;
-    case AlarmIndex::Cur: rate = COM_RATE_CUR; break;
-    case AlarmIndex::Pow: rate = COM_RATE_POW; break;
-    case AlarmIndex::Tem: rate = COM_RATE_TEM; break;
-    case AlarmIndex::Hum: rate = COM_RATE_HUM; break;
+    switch (index.topic) {
+    case DTopic::Vol: rate = COM_RATE_VOL; break;
+    case DTopic::Cur: rate = COM_RATE_CUR; break;
+    case DTopic::Pow: rate = COM_RATE_POW; break;
+    case DTopic::Tem: rate = COM_RATE_TEM; break;
+    case DTopic::Hum: rate = COM_RATE_HUM; break;
     }
 
     Alarm_Object obj;
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-            if(index.type == AlarmIndex::Env) {
+            if(index.type == DType::Env) {
                 str  = tr("当前值=%1　告警最小值=%2 告警最大值=%3")
                         .arg(unit->value[id]/rate)
                         .arg(unit->min[id] / 10.0)
@@ -130,16 +130,16 @@ QString Alarm_Log::alarmSensor(uchar value)
     return str;
 }
 
-void Alarm_Log::alarmSlot(sAlarmIndex index, uchar value)
+void Alarm_Log::alarmSlot(sDIndex index, uchar value)
 {
     sAlarmItem it; it.addr = tr("本机");
     if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
     if(value) it.state = tr("告警"); else it.state = tr("恢复正常");
     it.module = alarmType(index);
 
-    if(index.subtopic == AlarmIndex::Relay) {
+    if(index.topic == DTopic::Relay) {
         it.content = alarmRelay(value);
-    } if(index.type == AlarmIndex::Sensor) {
+    } if(index.type == DType::Sensor) {
         it.content = alarmSensor(value);
     }else {
         it.module += alarmStatus(value, it.state);

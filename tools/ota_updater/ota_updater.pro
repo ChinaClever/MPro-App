@@ -10,6 +10,7 @@ CONFIG += c++17
 
 include(core/core.pri)
 include(home/home.pri)
+include(rpcs/rpcs.pri)
 include(common/common.pri)
 include(remote/remote.pri)
 include(progres/progres.pri)

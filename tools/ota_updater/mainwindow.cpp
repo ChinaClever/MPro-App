@@ -5,6 +5,7 @@
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "jsonrpcclient.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mNavBarWid, SIGNAL(navBarSig(int)), this, SLOT(navBarSlot(int)));
     qDebug() << "QSslSocket=" << QSslSocket::sslLibraryBuildVersionString();
     qDebug() << "OpenSSL支持情况:" << QSslSocket::supportsSsl();
+
+    JsonRpcClient *c = new JsonRpcClient(this);
+    c->startClient("127.0.0.1");
+    c->invokeMethodSync();
+    c->invokeStringMethodSync();
+    c->invokeNotification();
 }
 
 MainWindow::~MainWindow()

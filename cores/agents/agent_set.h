@@ -18,7 +18,7 @@ private:
     bool uutSet(const QVariant &value);
 
     bool setAlarmUnit(sSetAlarmUnit &unit, const QVariant &value);
-    bool upAlarmIndex(sAlarmIndex &index);
+    bool upAlarmIndex(sDIndex &index);
     bool upAlarmData(sSetAlarmUnit &unit);
     bool setAlarm(const QVariant &value);
 

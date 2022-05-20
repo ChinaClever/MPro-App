@@ -45,9 +45,9 @@ struct sRelayUnit
 {
     uchar size;
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用  0:不能控制；1:通；2:断
-    uchar mode[PACK_ARRAY_SIZE];
-    uchar alarm[PACK_ARRAY_SIZE];
-    uchar delay[PACK_ARRAY_SIZE];
+    uint mode[PACK_ARRAY_SIZE];
+    uint alarm[PACK_ARRAY_SIZE];
+    uint delay[PACK_ARRAY_SIZE];
 };
 
 
@@ -101,12 +101,12 @@ struct sTgUnit
 {
     uint value;
     uint rated;
-    ushort min;
-    ushort max;
+    uint min;
+    uint max;
 
-    ushort crMin;
-    ushort crMax;
-    uchar alarm;
+    uint crMin;
+    uint crMax;
+    uint alarm;
 };
 
 struct sTgObjData
@@ -187,7 +187,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)    
+    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
 
@@ -218,24 +218,24 @@ struct sDataPacket
     sDevLogin login;
 };
 
+enum DType{Tg, Line, Loop, Output, Env=6, Sensor,};
+enum DTopic{Relay=1, Vol, Cur, Pow, Tem, Hum, Door1, Door2, Water, Smoke};
+enum DSub{Name, Value, Rate, Alarm, VMax, VMin, VCrMin, VCrMax};
+enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
-
-enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum,
-                Sensor, Door1, Door2, Water, Smoke};
-
-struct sAlarmIndex
+struct sDIndex
 {
-    sAlarmIndex():addr(0){}
+    sDIndex():addr(0){}
     uchar addr;
     uchar type;
+    uchar topic;
     uchar subtopic;
     uchar id;
 };
 
 struct sSetAlarmUnit
 {
-    sAlarmIndex index;
+    sDIndex index;
     uint rated;
     uint min;
     uint max;
