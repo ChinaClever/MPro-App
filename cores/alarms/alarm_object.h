@@ -7,22 +7,24 @@ class Alarm_Object
 public:
     Alarm_Object();
 
-    char alarmValue(const sDIndex &index);
-    char alarmValue(const sDIndex &index, AlarmStatus type);
-    char alarmValue(const sDIndex &index, sRelay::Alarm type);
+    char alarmValue(const sDataItem &index);
+    char alarmValue(const sDataItem &index, AlarmStatus type);
+    char alarmValue(const sDataItem &index, sRelay::Alarm type);
 
-//protected:
-    sTgUnit *getTgAlarmUnit(const sDIndex &index);
-    sAlarmUnit *getAlarmUnit(const sDIndex &index);
-    sRelayUnit *getRelayUnit(const sDIndex &index);
-    uint *getValue(const sDIndex &index);
+    sTgUnit *getTgAlarmUnit(const sDataItem &index);
+    sAlarmUnit *getAlarmUnit(const sDataItem &index);
+
+    sRelayUnit *getRelayUnit(const sDataItem &index);
+    bool upIndexValue(sDataItem &index);
 
 private:
-    sObjData *getObjData(const sDIndex &index);
-    sAlarmUnit *getAlarmUnit(const sDIndex &index, sObjData *obj);
-    uint *getValueAlarmUnit(const sDIndex &index);
-    uint *getValueTgAlarmUnit(const sDIndex &index);
-    uint *getValueRelayUnit(const sDIndex &index);
+    sObjData *getObjData(const sDataItem &index);
+    sAlarmUnit *getAlarmUnit(const sDataItem &index, sObjData *obj);
+
+    bool alarmUnitValue(sDataItem &index);
+    bool tgAlarmUnitValue(sDataItem &index);
+    bool relayUnitValue(sDataItem &index);
+    bool sensorValue(sDataItem &index);
 };
 
 #endif // ALARM_OBJECT_H

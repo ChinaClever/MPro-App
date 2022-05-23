@@ -19,7 +19,7 @@ void Agent_Trap::initTrapSlot()
     connect(alarm, &Alarm_Updater::alarmSig, this, &Agent_Trap::alarmSlot);
 }
 
-void Agent_Trap::alarmSlot(sDIndex index, uchar value)
+void Agent_Trap::alarmSlot(sDataItem &index, uchar value)
 {
     QSNMPOid oid = mModuleOid;
     oid << index.addr;

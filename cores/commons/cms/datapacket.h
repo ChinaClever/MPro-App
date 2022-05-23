@@ -218,31 +218,31 @@ struct sDataPacket
     sDevLogin login;
 };
 
-enum DType{Tg, Line, Loop, Output, Env=6, Sensor,};
-enum DTopic{Relay=1, Vol, Cur, Pow, Tem, Hum, Door1, Door2, Water, Smoke};
-enum DSub{Name, Value, Rate, Alarm, VMax, VMin, VCrMin, VCrMax};
+enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
+enum DTopic{Relay=1, Vol, Cur, Pow, Tem=6, Hum, Door1, Door2, Water, Smoke};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
-struct sDIndex
+struct sDataItem
 {
-    sDIndex():addr(0){}
-    uchar addr;
-    uchar type;
-    uchar topic;
-    uchar subtopic;
-    uchar id;
+    sDataItem():addr(0),rw(0),value(0){}
+    uchar addr; // 地址
+    uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
+    uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
+    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    uint value;
 };
 
-struct sSetAlarmUnit
-{
-    sDIndex index;
-    uint rated;
-    uint min;
-    uint max;
-    uint crMin;
-    uint crMax;
+struct sStrItem{
+    sStrItem():addr(0),rw(0){}
+    uchar addr; // 地址
+    uchar fc;
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    char str[NAME_SIZE];
 };
-
 
 struct sRelay
 {

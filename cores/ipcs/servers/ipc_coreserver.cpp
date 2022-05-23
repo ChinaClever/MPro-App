@@ -23,8 +23,7 @@ IPC_CoreServer *IPC_CoreServer::bulid(QObject *parent)
 
 void IPC_CoreServer::initFunSlot()
 {
-    IPC_OutputServer::bulid(this);
-    IPC_AlarmServer::bulid(this);
+    IPC_WebServer::bulid(this);
     IPC_CfgServer::bulid(this);
     IPC_LogServer::bulid(this);
 }

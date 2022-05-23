@@ -9,9 +9,10 @@ Rpc_Read::Rpc_Read(QObject *parent)
 uint Rpc_Read::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     // jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString()
-    sDIndex *it = &mIt; it->addr = addr; it->type = type;
+    sDataItem *it = &mIt; it->addr = addr; it->type = type;
     it->topic = topic; it->subtopic = sub; it->id = id;
-    return *(Set_Core::bulid()->getValue(mIt));
+    Set_Core::bulid()->setting(mIt);
+    return mIt.value;
 }
 
 

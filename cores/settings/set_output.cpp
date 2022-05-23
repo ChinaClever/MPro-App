@@ -12,54 +12,76 @@ Set_Output::Set_Output()
 
 }
 
-bool Set_Output::outputRelayCtrl(int addr, int id, uchar on)
+bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
-    if(addr) {
-        ret = Cascade_Core::bulid()->masterRelayCtrl(addr, id, on);
-    } else {
-        OP_Core::bulid()->relayCtrl(id, on);
-    }
+    if(unit.addr) {
+        ret = Cascade_Core::bulid()->masterSet(unit);
+    } else if(unit.rw) {
+        switch (unit.subtopic) {
+        case DSub::Value: OP_Core::bulid()->relayCtrl(unit.id, unit.value); break;
+        case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value);break;
+        default: ret = upIndexValue(unit); break;
+        } Set_ReadWrite::bulid()->writeSettings();
+    } else qDebug() << Q_FUNC_INFO;
 
     return ret;
 }
 
+bool Set_Output::outputRelayCtrl(int addr, int id, uchar on)
+{
+    sDataItem unit;
+    unit.addr = addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Value;
+
+    unit.rw = 1;
+    unit.id = id;
+    unit.value = on;
+
+    return relaySet(unit);
+}
+
 bool Set_Output::outputDelaySet(int addr, int id, uchar delay)
 {
-    bool ret = true;
-    if(addr) {
-        ret = Cascade_Core::bulid()->masterDelaySet(addr, id, delay);
-    } else {
-        OP_Core::bulid()->setDelay(id, delay);
-        sRelayUnit *it = &(cm::masterDev()->output.relay);
-        if(id) it->delay[id-1] = delay;
-        else for(int i=0; i<it->size; ++i) it->delay[i] = delay;
-        Set_ReadWrite::bulid()->writeSettings();
-    }
-    return ret;
+    sDataItem unit;
+    unit.addr = addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::VMax; // 延时设置
+
+    unit.rw = 1;
+    unit.id = id;
+    unit.value = delay;
+
+    return relaySet(unit);
 }
 
 
 bool Set_Output::outputSwModeSet(int addr, int id, uchar mode)
 {
-    bool ret = true;
-    if(addr) {
-        ret = Cascade_Core::bulid()->masterSwModeSet(addr, id, mode);
-    } else {
-        sRelayUnit *it = &(cm::masterDev()->output.relay);
-        if(id) it->mode[id-1] = mode;
-        else for(int i=0; i<it->size; ++i) it->mode[i] = mode;
-        Set_ReadWrite::bulid()->writeSettings();
-    }
+    sDataItem unit;
+    unit.addr = addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Rated;
 
-    return ret;
+    unit.rw = 1;
+    unit.id = id;
+    unit.value = mode;
+
+    return relaySet(unit);
 }
 
 bool Set_Output::outputNameSet(int addr, int id, const QString &name)
 {
     bool ret = true;
     if(addr) {
-        ret = Cascade_Core::bulid()->masterOpNameSet(addr, id, name);
+        sStrItem item;
+        item.addr = addr; item.id = id; item.fc = 10; item.rw = 1;
+        qstrcpy((char *)item.str, name.toLatin1().data());
+        ret = Cascade_Core::bulid()->masterSetString(item);
     } else {
         if(id) {
             writeOpName(id-1, name);

@@ -9,7 +9,7 @@
 Alarm_Log::Alarm_Log(QObject *parent)
     : QObject{parent}
 {
-    qRegisterMetaType<sDIndex>("sAlarmIndex");
+    qRegisterMetaType<sDataItem>("sAlarmIndex");
     Alarm_Updater *alarm = Alarm_Updater::bulid(this);
     connect(alarm, &Alarm_Updater::alarmSig, this, &Alarm_Log::alarmSlot);
 }
@@ -24,7 +24,7 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
 }
 
 
-QString Alarm_Log::alarmType(const sDIndex &index)
+QString Alarm_Log::alarmType(const sDataItem &index)
 {
     QString str;
     if(index.type) str = tr("第%１ ").arg(index.id+1);
@@ -65,7 +65,7 @@ QString Alarm_Log::alarmStatus(uchar value, QString &state)
     return str;
 }
 
-QString Alarm_Log::alarmContent(const sDIndex &index)
+QString Alarm_Log::alarmContent(const sDataItem &index)
 {
     QString str;
     double rate = 1;
@@ -130,7 +130,7 @@ QString Alarm_Log::alarmSensor(uchar value)
     return str;
 }
 
-void Alarm_Log::alarmSlot(sDIndex index, uchar value)
+void Alarm_Log::alarmSlot(sDataItem &index, uchar value)
 {
     sAlarmItem it; it.addr = tr("本机");
     if(index.addr) it.addr = tr("副机 %1").arg(index.addr);

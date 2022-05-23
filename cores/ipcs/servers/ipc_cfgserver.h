@@ -1,7 +1,7 @@
 #ifndef IPC_CFGSERVER_H
 #define IPC_CFGSERVER_H
 
-#include "ipc_alarmserver.h"
+#include "ipc_webserver.h"
 #include "cfg_obj.h"
 
 class IPC_CfgServer : public IPC_ObjServer

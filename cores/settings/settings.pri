@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/set_alarm.h \
     $$PWD/set_core.h \
     $$PWD/set_fill.h \
+    $$PWD/set_info.h \
     $$PWD/set_object.h \
     $$PWD/set_output.h \
     $$PWD/set_stream.h \
@@ -16,6 +17,7 @@ SOURCES += \
     $$PWD/set_alarm.cpp \
     $$PWD/set_core.cpp \
     $$PWD/set_fill.cpp \
+    $$PWD/set_info.cpp \
     $$PWD/set_object.cpp \
     $$PWD/set_output.cpp \
     $$PWD/set_stream.cpp \

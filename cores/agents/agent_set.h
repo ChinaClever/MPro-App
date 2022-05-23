@@ -17,9 +17,7 @@ private:
     bool toIndex(uint addr, const QSNMPOid &oid);
     bool uutSet(const QVariant &value);
 
-    bool setAlarmUnit(sSetAlarmUnit &unit, const QVariant &value);
-    bool upAlarmIndex(sDIndex &index);
-    bool upAlarmData(sSetAlarmUnit &unit);
+    bool upAlarmIndex(sDataItem &index);
     bool setAlarm(const QVariant &value);
 
     bool relayCtrl(const QVariant &value);

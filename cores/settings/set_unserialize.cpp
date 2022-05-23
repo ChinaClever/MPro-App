@@ -70,7 +70,6 @@ void Set_Unserialize::unDevData(sDevData *data, set::_sDevData *obj)
 
     data->tg = obj->tg;
     data->info = obj->info;
-    data->uut = obj->uut;
     cm::dataPacket()->login = obj->login;
 }
 

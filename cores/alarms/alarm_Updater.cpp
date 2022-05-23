@@ -8,7 +8,7 @@
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
 {
-
+    qRegisterMetaType<sDataItem>("sDataItem");
 }
 
 Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
@@ -20,7 +20,7 @@ Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
     return sington;
 }
 
-bool Alarm_Updater::upRelayUnit(sDIndex &index, sRelayUnit &it)
+bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
@@ -40,7 +40,7 @@ bool Alarm_Updater::upRelayUnit(sDIndex &index, sRelayUnit &it)
     return ret;
 }
 
-bool Alarm_Updater::upAlarmUnit(sDIndex &index, sAlarmUnit &it)
+bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
@@ -57,7 +57,7 @@ bool Alarm_Updater::upAlarmUnit(sDIndex &index, sAlarmUnit &it)
     return ret;
 }
 
-bool Alarm_Updater::upObjData(sDIndex &index, sObjData &it)
+bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 {
     bool ret = false;
     index.topic = DTopic::Vol;
@@ -75,7 +75,7 @@ bool Alarm_Updater::upObjData(sDIndex &index, sObjData &it)
     return ret;
 }
 
-uchar Alarm_Updater::upTgUnit(sDIndex &index, sTgUnit &it)
+uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
 {
     bool ret = false;
     uint value = it.value; uchar alarm;
@@ -89,7 +89,7 @@ uchar Alarm_Updater::upTgUnit(sDIndex &index, sTgUnit &it)
     return ret;
 }
 
-bool Alarm_Updater::upTgObjData(sDIndex &index, sTgObjData &it)
+bool Alarm_Updater::upTgObjData(sDataItem &index, sTgObjData &it)
 {
     bool ret = false;
     index.topic = DTopic::Vol;
@@ -105,7 +105,7 @@ bool Alarm_Updater::upTgObjData(sDIndex &index, sTgObjData &it)
 }
 
 
-bool Alarm_Updater::upEnvData(sDIndex &index, sEnvData &it)
+bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
     index.topic = DTopic::Tem;
@@ -117,7 +117,7 @@ bool Alarm_Updater::upEnvData(sDIndex &index, sEnvData &it)
     return ret;
 }
 
-bool Alarm_Updater::upSensorStatus(sDIndex &index, uint *ptr, int id)
+bool Alarm_Updater::upSensorStatus(sDataItem &index, uint *ptr, int id)
 {
     bool ret = false; uchar alarm = 0;
     if(ptr[id] == 2) alarm = 1; else alarm = 0;
@@ -126,7 +126,7 @@ bool Alarm_Updater::upSensorStatus(sDIndex &index, uint *ptr, int id)
     return ret;
 }
 
-bool Alarm_Updater::upSensors(sDIndex &index, sEnvData &it)
+bool Alarm_Updater::upSensors(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
     index.topic = DTopic::Door1;
@@ -144,7 +144,7 @@ bool Alarm_Updater::upSensors(sDIndex &index, sEnvData &it)
     return ret;
 }
 
-bool Alarm_Updater::upDevData(sDIndex &index, sDevData *it)
+bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 {
     bool ret = false;
 
@@ -173,7 +173,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 {
     bool ret = false;
     sDevData *dev = cm::devData(addr);
-    sDIndex index; index.addr = addr;
+    sDataItem index; index.addr = addr;
     if(dev->offLine) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;

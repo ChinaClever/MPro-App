@@ -53,7 +53,6 @@ struct _sDevData
     _sEnvData env[SENOR_NUM]; // 环境数据
     sTgObjData tg; // 回路数据
     sDevInfo info;
-    sUutInfo uut;
     sDevLogin login;
 };
 }

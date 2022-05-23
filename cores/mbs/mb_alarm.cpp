@@ -25,7 +25,7 @@ void Mb_Alarm::mbAlarmUpdate()
 
 void Mb_Alarm::upBreakerAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Loop;
     index.topic = DTopic::Relay;
     for(int i=0; i<LOOP_NUM; ++i) {
@@ -36,7 +36,7 @@ void Mb_Alarm::upBreakerAlarm()
 
 void Mb_Alarm::upLineCrAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Cur;
 
@@ -59,7 +59,7 @@ void Mb_Alarm::upLineCrAlarm()
 
 void Mb_Alarm::upEnvAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Env;
     index.topic = DTopic::Tem;
     for(int i=0; i<SENOR_NUM; ++i) {
@@ -87,7 +87,7 @@ void Mb_Alarm::upEnvAlarm()
 
 void Mb_Alarm::upCurMaxAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Cur;
     vs << alarmValue(index, AlarmStatus::Max);
@@ -107,7 +107,7 @@ void Mb_Alarm::upCurMaxAlarm()
 
 void Mb_Alarm::upLineVolAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Vol;
     vs << alarmValue(index, AlarmStatus::Max);
@@ -127,7 +127,7 @@ void Mb_Alarm::upLineVolAlarm()
 
 void Mb_Alarm::upCurCrMaxAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Cur;
     vs << alarmValue(index, AlarmStatus::CrMax);
@@ -147,7 +147,7 @@ void Mb_Alarm::upCurCrMaxAlarm()
 
 void Mb_Alarm::upLoopAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Loop;
     index.topic = DTopic::Cur;
     for(int i=0; i<LOOP_NUM; ++i) {
@@ -167,7 +167,7 @@ void Mb_Alarm::upLoopAlarm()
 
 void Mb_Alarm::upOutputCrAlarm()
 {
-    sDIndex index; vshort vs;
+    sDataItem index; vshort vs;
     index.type = DType::Output;
     index.topic = DTopic::Cur;
 

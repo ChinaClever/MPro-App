@@ -1,12 +1,13 @@
 #ifndef SET_OUTPUT_H
 #define SET_OUTPUT_H
 
-#include "set_alarm.h"
+#include "set_info.h"
 
-class Set_Output : public Set_Alarm
+class Set_Output : public Set_Info
 {
 public:
     explicit Set_Output();
+    bool relaySet(sDataItem &unit);
     bool outputRelayCtrl(int addr, int id, uchar on);
     bool outputDelaySet(int addr, int id, uchar delay);
     bool outputSwModeSet(int addr, int id, uchar mode);

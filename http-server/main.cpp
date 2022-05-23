@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_OutputClient::bulid(p);
+    IPC_WebClient::bulid(p);
 
 
     std::thread th(http_main);

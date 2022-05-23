@@ -30,7 +30,6 @@ QDataStream& operator<<(QDataStream& in, Set_Stream& data)
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
     in << toByteArray(ptr->tg);
     in << toByteArray(ptr->info);
-    in << toByteArray(ptr->uut);
     in << toByteArray(ptr->login);
 
     return in;
@@ -56,7 +55,6 @@ QDataStream& operator>>(QDataStream& out, Set_Stream& data)
     for(int i=0; i<size; ++i) {out >> v; ptr->env[i] = toStruct<_sEnvData>(v);}
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
     out >> v; ptr->info = toStruct<sDevInfo>(v);
-    out >> v; ptr->uut = toStruct<sUutInfo>(v);
     out >> v; ptr->login = toStruct<sDevLogin>(v);
 
     return out;

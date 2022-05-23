@@ -56,44 +56,18 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
     } cm::mdelay(100);
 }
 
-bool Cascade_Master::masterSetAlarm(const sSetAlarmUnit &unit)
+bool Cascade_Master::masterSet(const sDataItem &unit)
 {
-    uchar fc = fc_writeAlarm; if(isOta) return isOta;
+    uchar fc = fc_setting; if(isOta) return isOta;
     QByteArray array = cm::toByteArray(unit);
-    return writeData(fc, unit.index.addr, array);
+    return writeData(fc, unit.addr, array);
 }
 
-bool Cascade_Master::masterSetUut(uchar addr, const sUutInfo &uut)
+
+bool Cascade_Master::masterSetString(const sStrItem &it)
 {
-    uchar fc = fc_writeUut; if(isOta) return isOta;
-    QByteArray array = cm::toByteArray(uut);
-    return writeData(fc, addr, array);
+    uchar fc = fc_setString; if(isOta) return isOta;
+    QByteArray array = cm::toByteArray(it);
+    return writeData(fc, it.addr, array);
 }
 
-bool Cascade_Master::masterRelayCtrl(uchar addr, uchar id, uchar on)
-{
-    uchar fc = fc_relayCtrl; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(on);
-    return writeData(fc, addr, array);
-}
-
-bool Cascade_Master::masterDelaySet(int addr, int id, uchar delay)
-{
-    uchar fc = fc_delaySet; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(delay);
-    return writeData(fc, addr, array);
-}
-
-bool Cascade_Master::masterSwModeSet(int addr, int id, uchar type)
-{
-    uchar fc = fc_swModeSet; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(type);
-    return writeData(fc, addr, array);
-}
-
-bool Cascade_Master::masterOpNameSet(int addr, int id, const QString &name)
-{
-    uchar fc = fc_opNameSet; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(name.toUtf8());
-    return writeData(fc, addr, array);
-}

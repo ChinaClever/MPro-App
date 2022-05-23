@@ -1,7 +1,7 @@
 #ifndef OUTPUTREAD_H
 #define OUTPUTREAD_H
 #include "jsonrpcobj.h"
-#include "ipc_outputclient.h"
+#include "ipc_webclient.h"
 
 class OutputRead : public JsonRpcObj
 {

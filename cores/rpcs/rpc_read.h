@@ -21,7 +21,7 @@ signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);
 
 private:
-    sDIndex mIt;
+    sDataItem mIt;
 };
 
 #endif // RPC_READ_H
