@@ -6,7 +6,25 @@ Set_Info::Set_Info()
 
 }
 
-bool Set_Info::setUut(uchar fc, char *str, uchar rw)
+QString Set_Info::getUut(int addr, uchar fc)
+{
+    char *ptr=nullptr;
+    sUutInfo *it = &(cm::devData(addr)->uut);
+
+    switch (fc) {
+    case 1: ptr = it->idc; break;
+    case 2: ptr = it->room; break;
+    case 3: ptr = it->module; break;
+    case 4: ptr = it->cab; break;
+    case 5: ptr = it->road; break;
+    case 6: ptr = it->devName; break;
+    default:  qDebug() << Q_FUNC_INFO; break;
+    }
+
+    return ptr;
+}
+
+bool Set_Info::setUut(uchar fc, char *str)
 {
     bool ret = true;
     QString prefix = "uut";
@@ -23,13 +41,9 @@ bool Set_Info::setUut(uchar fc, char *str, uchar rw)
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
-    if(rw) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
-        cfg->writeCfg(key, QString(ptr), prefix);
-        qstrcpy(ptr, str);
-    } else {
-        qstrcpy(str, ptr);
-    }
+    Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
+    cfg->writeCfg(key, QString(ptr), prefix);
+    qstrcpy(ptr, str);
 
     return ret;
 }

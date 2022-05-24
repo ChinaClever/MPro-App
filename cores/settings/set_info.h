@@ -10,6 +10,7 @@ public:
 
 protected:
     bool setUut(uchar fc, char *str);
+    QString getUut(int addr, uchar fc);
 };
 
 #endif // SET_INFO_H

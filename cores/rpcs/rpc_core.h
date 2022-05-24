@@ -1,20 +1,11 @@
 #ifndef RPC_CORE_H
 #define RPC_CORE_H
+#include "rpc_output.h"
 
-#include "rpc_read.h"
-
-class Rpc_Core : public JsonRpcObj
+class Rpc_Core : public Rpc_Output
 {
-    Q_OBJECT
-    explicit Rpc_Core(QObject *parent = nullptr);
 public:
-    static Rpc_Core *bulid(QObject *parent = nullptr);
-
-
-
-private slots:
-    void initFunSlot();
-
+    Rpc_Core();
 };
 
 #endif // RPC_CORE_H

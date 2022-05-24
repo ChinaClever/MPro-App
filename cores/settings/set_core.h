@@ -10,7 +10,7 @@ public:
     void writeSettings();
     bool setting(sDataItem &it);
     bool setString(sStrItem &it);
-
+    QString getString(sStrItem &it);
 };
 
 #endif // SET_CORE_H

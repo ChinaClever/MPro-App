@@ -3,7 +3,7 @@
 #include "ssdp_server.h"
 #include "http/http.h"
 #include "app_start.h"
-#include "rpc_core.h"
+
 
 void ssdp_demo()
 {
@@ -36,9 +36,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    //App_Start::bulid(p);
-
-    Rpc_Core::bulid(p);
+    App_Start::bulid(p);
 
 
 

@@ -1,24 +1,11 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "rpc_core.h"
-#include <QTimer>
 
-Rpc_Core::Rpc_Core(QObject *parent)
-    : JsonRpcObj{parent}
+Rpc_Core::Rpc_Core()
 {
-    QTimer::singleShot(550,this,SLOT(initFunSlot()));
-}
 
-
-Rpc_Core *Rpc_Core::bulid(QObject *parent)
-{
-    static Rpc_Core* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new Rpc_Core(parent);
-    }
-    return sington;
-}
-
-void Rpc_Core::initFunSlot()
-{
-    auto service1 = new Rpc_Read;
-    startServer({service1});
 }

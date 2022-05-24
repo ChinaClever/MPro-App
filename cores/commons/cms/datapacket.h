@@ -238,7 +238,7 @@ struct sDataItem
 struct sStrItem{
     sStrItem():addr(0),rw(0){}
     uchar addr; // 地址
-    uchar fc;
+    uchar fc; // 10  11
     uchar id; // 0 表示统一设置
     uchar rw; // 0 读  1 写
     char str[NAME_SIZE];

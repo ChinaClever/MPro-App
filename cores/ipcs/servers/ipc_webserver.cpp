@@ -36,11 +36,8 @@ QString IPC_WebServer::dbus_reply_slot(int fc, const QByteArray &array)
         bool ret = Set_Core::bulid()->upIndexValue(unit);
         if(ret) res = QString::number(unit.value);
     } else if(2 == fc) {
-
-
-
-        ////////==================
-
+        sStrItem unit = cm::toStruct<sStrItem>(array);
+        res = Set_Core::bulid()->getString(unit);
     }
 
     return res;

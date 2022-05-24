@@ -12,7 +12,7 @@ public:
 
 public slots:
     void dbus_recv_slot(int fc, const QByteArray &array);
-    int dbus_reply_slot(int fc, const QByteArray &array);
+    QString dbus_reply_slot(int fc, const QByteArray &array);
 
 protected:
     QList<const char *> busRecvMethods();

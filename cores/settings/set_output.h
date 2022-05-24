@@ -13,6 +13,8 @@ public:
     bool outputSwModeSet(int addr, int id, uchar mode);
     bool outputNameSet(int addr, int id, const QString &name);
 
+    QString outputName(int addr, int id);
+
 private:
     void writeOpName(int id, const QString &name);
 };
