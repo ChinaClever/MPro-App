@@ -11,7 +11,7 @@ public:
 
 private slots:
     void initTrapSlot();
-    void alarmSlot(sAlarmIndex index, uchar value);
+    void alarmSlot(sDataItem &index, uchar value);
 
 private:
     QSNMPOid  mModuleOid;

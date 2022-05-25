@@ -45,9 +45,9 @@ struct sRelayUnit
 {
     uchar size;
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用  0:不能控制；1:通；2:断
-    uchar mode[PACK_ARRAY_SIZE];
-    uchar alarm[PACK_ARRAY_SIZE];
-    uchar delay[PACK_ARRAY_SIZE];
+    uint mode[PACK_ARRAY_SIZE];
+    uint alarm[PACK_ARRAY_SIZE];
+    uint delay[PACK_ARRAY_SIZE];
 };
 
 
@@ -101,12 +101,12 @@ struct sTgUnit
 {
     uint value;
     uint rated;
-    ushort min;
-    ushort max;
+    uint min;
+    uint max;
 
-    ushort crMin;
-    ushort crMax;
-    uchar alarm;
+    uint crMin;
+    uint crMax;
+    uint alarm;
 };
 
 struct sTgObjData
@@ -187,7 +187,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)    
+    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
 
@@ -218,31 +218,31 @@ struct sDataPacket
     sDevLogin login;
 };
 
+enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
+enum DTopic{Relay=1, Vol, Cur, Pow, Tem=6, Hum, Door1, Door2, Water, Smoke};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax};
+enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
-
-enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum,
-                Sensor, Door1, Door2, Water, Smoke};
-
-struct sAlarmIndex
+struct sDataItem
 {
-    sAlarmIndex():addr(0){}
-    uchar addr;
-    uchar type;
-    uchar subtopic;
-    uchar id;
+    sDataItem():addr(0),rw(0),value(0){}
+    uchar addr; // 地址
+    uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
+    uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
+    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    uint value;
 };
 
-struct sSetAlarmUnit
-{
-    sAlarmIndex index;
-    uint rated;
-    uint min;
-    uint max;
-    uint crMin;
-    uint crMax;
+struct sStrItem{
+    sStrItem():addr(0),rw(0){}
+    uchar addr; // 地址
+    uchar fc; // 10  11
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    char str[NAME_SIZE];
 };
-
 
 struct sRelay
 {

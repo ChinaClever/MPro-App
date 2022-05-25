@@ -39,88 +39,62 @@ bool Agent_Set::uutSet(const QVariant &value)
     bool ret = false;
     sIndex *it = &mIndex;
     if(it->id == 0) {
-        sDevData *dev = cm::devData(it->addr);
-        sUutInfo uut = dev->uut; char *ptr = nullptr;
-        switch (it->type) {
-        case 1: ptr = uut.idc; break;
-        case 2: ptr = uut.room; break;
-        case 3: ptr = uut.module; break;
-        case 4: ptr = uut.cab; break;
-        case 5: ptr = uut.road; break;
-        case 6: ptr = uut.devName; break;
-        }
-        if(ptr) {
-            qstrcpy((char *)ptr, value.toByteArray().data());
-            ret = Set_Core::bulid()->setUut(it->addr, uut);
-        }
+        sStrItem item;
+        item.addr = it->addr;
+        item.id = it->type;
+        item.fc = 11; item.rw = 1;
+        qstrcpy((char *)item.str, value.toByteArray().data());
+        ret = Set_Core::bulid()->setString(item);
     }
     return ret;
 }
 
-bool Agent_Set::setAlarmUnit(sSetAlarmUnit &unit, const QVariant &value)
-{
-    bool ret = true;
-    sIndex *it = &mIndex;
-    uint v = value.toUInt();
-    switch (it->subtopic) {
-    case 2: unit.rated = v; break;
-    case 3: unit.max = v; break;
-    case 4: unit.crMax = v; break;
-    case 5: unit.crMin = v; break;
-    case 6: unit.min = v; break;
-    default: ret = false; break;
-    }
 
-    if(ret) ret = Set_Core::bulid()->setAlarm(unit);
-    return ret;
-}
-
-bool Agent_Set::upAlarmIndex(sAlarmIndex &index)
+bool Agent_Set::upAlarmIndex(sDataItem &index)
 {
+    uchar v=0;
     bool ret = true;
     sIndex *it = &mIndex;
     index.addr = it->addr;
     index.id = it->id;
+    index.rw = 1;
 
     switch (it->fc) {
-    case 1: index.type = AlarmIndex::Line; break;
-    case 2: index.type = AlarmIndex::Loop; break;
-    case 3: index.type = AlarmIndex::Output; break;
-    case 6: index.type = AlarmIndex::Env; break;
+    case 1: v = DType::Line; break;
+    case 2: v = DType::Loop; break;
+    case 3: v = DType::Output; break;
+    case 6: v = DType::Env; break;
     default: ret = false; break;
-    }
+    } index.type = v;
 
     switch (it->type) {
-    case 2: index.subtopic = AlarmIndex::Vol; break;
-    case 3: index.subtopic = AlarmIndex::Cur; break;
-    case 4: index.subtopic = AlarmIndex::Pow; break;
-    case 6: index.subtopic = AlarmIndex::Tem; break;
-    case 7: index.subtopic = AlarmIndex::Hum; break;
+    case 2: v = DTopic::Vol; break;
+    case 3: v = DTopic::Cur; break;
+    case 4: v = DTopic::Pow; break;
+    case 6: v = DTopic::Tem; break;
+    case 7: v = DTopic::Hum; break;
     default: ret = false; break;
-    }
+    } index.topic = v;
+
+    switch (it->subtopic) {
+    case 2: v = DSub::Rated; break;
+    case 3: v = DSub::VMax; break;
+    case 4: v = DSub::VCrMax; break;
+    case 5: v = DSub::VCrMin; break;
+    case 6: v = DSub::VMin; break;
+    default: ret = false; break;
+    } index.subtopic = v;
 
     return ret;
 }
 
-bool Agent_Set::upAlarmData(sSetAlarmUnit &unit)
-{
-    int id = unit.index.id; bool ret = true;
-    sAlarmUnit *it = Set_Core::bulid()->getAlarmUnit(unit.index);
-    if(it) {
-        unit.max = it->max[id];
-        unit.crMax = it->crMax[id];
-        unit.crMin = it->crMin[id];
-        unit.min = it->min[id];
-    } else ret = false;
-    return ret;
-}
 
 bool Agent_Set::setAlarm(const QVariant &value)
 {
-    sSetAlarmUnit unit;
-    bool ret = upAlarmIndex(unit.index);
-    if(ret) ret = upAlarmData(unit);
-    if(ret) ret = setAlarmUnit(unit, value);
+    sDataItem unit;
+    bool ret = upAlarmIndex(unit);
+    if(ret) unit.value = value.toInt();
+    if(ret) ret = Set_Core::bulid()->setting(unit);
     return ret;
 }
 

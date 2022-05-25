@@ -1,22 +1,20 @@
 #ifndef IPC_OUTPUTCLIENT_H
 #define IPC_OUTPUTCLIENT_H
 
-#include "ipc_cfgclient.h"
+#include "ipc_echoclient.h"
 
-class IPC_OutputClient : public IPC_ObjClient
+class IPC_OutputClient : public IPC_EchoClient
 {
-    Q_OBJECT
-    explicit IPC_OutputClient(QObject *parent = nullptr);
 public:
-    static IPC_OutputClient *bulid(QObject *parent = nullptr);
-    bool ctrl(int addr, int id, int value);
-    bool delaySet(int addr, int id, uchar value);
-    bool swModeSet(int addr, int id, uchar value);
+    explicit IPC_OutputClient(QObject *parent = nullptr);
+    bool relayCtrl(uchar addr, uchar id, uchar value);
+    bool relayDelay(uchar addr, uchar id, uchar value);
+    bool relayMode(uchar addr, uchar id, uchar value);
     bool opNameSet(int addr, int id, const QString &value);
+    QString opName(int addr, int id);
 
 private:
-    bool msgSend(int addr, int id, int fc, const QVariant &msg);
-    bool inputCheck(const QVariantList &values);
+    bool relaySet(uchar addr, uchar id, uchar fc, uchar value);
 };
 
 #endif // IPC_OUTPUTCLIENT_H

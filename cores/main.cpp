@@ -4,6 +4,7 @@
 #include "http/http.h"
 #include "app_start.h"
 
+
 void ssdp_demo()
 {
 
@@ -36,7 +37,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     App_Start::bulid(p);
-
 
 
 

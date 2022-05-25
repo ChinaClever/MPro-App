@@ -25,14 +25,54 @@ void Set_Core::writeSettings()
     Set_ReadWrite::bulid()->writeSettings();
 }
 
-bool Set_Core::setUut(uchar addr, const sUutInfo &uut)
+bool Set_Core::setString(sStrItem &it)
+{
+    bool ret = false;
+    if(it.rw) {
+        if(it.addr) {
+            ret = Cascade_Core::bulid()->masterSetString(it);
+        } else {
+            switch (it.fc) {
+            case 10: ret = outputNameSet(it.addr, it.id, it.str); break;
+            case 11: ret = setUut(it.id, it.str); break;
+            default: qDebug() << Q_FUNC_INFO << it.fc; break;
+            }
+        }
+    } else qDebug() << Q_FUNC_INFO;
+
+    return ret;
+}
+
+QString Set_Core::getString(sStrItem &it)
+{
+    QString str;
+    if(!it.rw) {
+        switch (it.fc) {
+        case 10: str = outputName(it.addr, it.id); break;
+        case 11: str = getUut(it.addr, it.id); break;
+        default: qDebug() << Q_FUNC_INFO << it.fc; break;
+        }
+    }
+
+    return str;
+}
+
+bool Set_Core::setting(sDataItem &it)
 {
     bool ret = true;
-    if(addr) ret = Cascade_Core::bulid()->masterSetUut(addr, uut);
-    else {
-        sDevData *dev = cm::masterDev();
-        dev->uut = uut; writeSettings();
+    if(it.rw) {
+        if(it.addr) {
+            ret = Cascade_Core::bulid()->masterSet(it);
+        } else if(it.topic == DTopic::Relay) {
+            ret = relaySet(it);
+        } else {
+            ret = setAlarm(it);
+        }
+    } else {
+        ret = false;
+        qDebug() << Q_FUNC_INFO;
     }
 
     return ret;
 }
+

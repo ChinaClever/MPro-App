@@ -15,7 +15,7 @@ public:
     void setDelay(int id, uchar sec);
 
 protected:    
-    virtual void funDelay(uchar *buf)=0;
+    virtual void funDelay(uint *buf)=0;
     virtual void funClearEle(uchar *buf)=0;
     virtual void funSwitch(uchar *on, uchar *off, uchar all=0)=0;
 

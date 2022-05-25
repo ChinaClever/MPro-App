@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  *  Created on: 2022年10月1日
  *      Author: Lzy
@@ -8,7 +8,7 @@
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
 {
-
+    qRegisterMetaType<sDataItem>("sDataItem");
 }
 
 Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
@@ -20,7 +20,7 @@ Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
     return sington;
 }
 
-bool Alarm_Updater::upRelayUnit(sAlarmIndex &index, sRelayUnit &it)
+bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
@@ -40,16 +40,16 @@ bool Alarm_Updater::upRelayUnit(sAlarmIndex &index, sRelayUnit &it)
     return ret;
 }
 
-bool Alarm_Updater::upAlarmUnit(sAlarmIndex &index, sAlarmUnit &it)
+bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
         uint value = it.value[i];
-        index.id = i; uchar alarm = AlarmType::Ok;
-        if(it.max[i]) if(value > it.max[i]) alarm += AlarmType::Max;
-        if(it.crMax[i]) if(value > it.crMax[i]) alarm += AlarmType::CrMax;
-        if(it.crMin[i]) if(value < it.crMin[i]) alarm += AlarmType::CrMin;
-        if(it.min[i]) if(value < it.min[i]) alarm += AlarmType::Min;
+        index.id = i; uchar alarm = AlarmStatus::Ok;
+        if(it.max[i]) if(value > it.max[i]) alarm += AlarmStatus::Max;
+        if(it.crMax[i]) if(value > it.crMax[i]) alarm += AlarmStatus::CrMax;
+        if(it.crMin[i]) if(value < it.crMin[i]) alarm += AlarmStatus::CrMin;
+        if(it.min[i]) if(value < it.min[i]) alarm += AlarmStatus::Min;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
     }
@@ -57,67 +57,67 @@ bool Alarm_Updater::upAlarmUnit(sAlarmIndex &index, sAlarmUnit &it)
     return ret;
 }
 
-bool Alarm_Updater::upObjData(sAlarmIndex &index, sObjData &it)
+bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 {
     bool ret = false;
-    index.subtopic = AlarmIndex::Vol;
+    index.topic = DTopic::Vol;
     ret |= upAlarmUnit(index, it.vol);
 
-    index.subtopic = AlarmIndex::Cur;
+    index.topic = DTopic::Cur;
     ret |= upAlarmUnit(index, it.cur);
 
-    index.subtopic = AlarmIndex::Pow;
+    index.topic = DTopic::Pow;
     ret |= upAlarmUnit(index, it.pow);
 
-    index.subtopic = AlarmIndex::Relay;
+    index.topic = DTopic::Relay;
     ret |= upRelayUnit(index, it.relay);
 
     return ret;
 }
 
-uchar Alarm_Updater::upTgUnit(sAlarmIndex &index, sTgUnit &it)
+uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
 {
     bool ret = false;
     uint value = it.value; uchar alarm;
-    if(value > it.max) alarm = AlarmType::Max;
-    else if(value > it.crMax) alarm = AlarmType::CrMax;
-    else if(value < it.crMin) alarm = AlarmType::CrMin;
-    else if(value < it.min) alarm = AlarmType::Min;
-    else {alarm = AlarmType::Ok;} index.id = 0xFF;
+    if(value > it.max) alarm = AlarmStatus::Max;
+    else if(value > it.crMax) alarm = AlarmStatus::CrMax;
+    else if(value < it.crMin) alarm = AlarmStatus::CrMin;
+    else if(value < it.min) alarm = AlarmStatus::Min;
+    else {alarm = AlarmStatus::Ok;} index.id = 0xFF;
     if(it.alarm != alarm) emit alarmSig(index, alarm);
     it.alarm = alarm; ret |= alarm;
     return ret;
 }
 
-bool Alarm_Updater::upTgObjData(sAlarmIndex &index, sTgObjData &it)
+bool Alarm_Updater::upTgObjData(sDataItem &index, sTgObjData &it)
 {
     bool ret = false;
-    index.subtopic = AlarmIndex::Vol;
+    index.topic = DTopic::Vol;
     ret |= upTgUnit(index, it.vol);
 
-    index.subtopic = AlarmIndex::Cur;
+    index.topic = DTopic::Cur;
     ret |= upTgUnit(index, it.cur);
 
-    index.subtopic = AlarmIndex::Pow;
+    index.topic = DTopic::Pow;
     ret |= upTgUnit(index, it.pow);
 
     return ret;
 }
 
 
-bool Alarm_Updater::upEnvData(sAlarmIndex &index, sEnvData &it)
+bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
-    index.subtopic = AlarmIndex::Tem;
+    index.topic = DTopic::Tem;
     ret |= upAlarmUnit(index, it.tem);
 
-    index.subtopic = AlarmIndex::Hum;
+    index.topic = DTopic::Hum;
     ret |= upAlarmUnit(index, it.hum);
 
     return ret;
 }
 
-bool Alarm_Updater::upSensorStatus(sAlarmIndex &index, uint *ptr, int id)
+bool Alarm_Updater::upSensorStatus(sDataItem &index, uint *ptr, int id)
 {
     bool ret = false; uchar alarm = 0;
     if(ptr[id] == 2) alarm = 1; else alarm = 0;
@@ -126,44 +126,44 @@ bool Alarm_Updater::upSensorStatus(sAlarmIndex &index, uint *ptr, int id)
     return ret;
 }
 
-bool Alarm_Updater::upSensors(sAlarmIndex &index, sEnvData &it)
+bool Alarm_Updater::upSensors(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
-    index.subtopic = AlarmIndex::Door1;
+    index.topic = DTopic::Door1;
     ret |=  upSensorStatus(index, it.door);
 
-    index.subtopic = AlarmIndex::Door2;
+    index.topic = DTopic::Door2;
     ret |=  upSensorStatus(index, it.door,1);
 
-    index.subtopic = AlarmIndex::Water;
+    index.topic = DTopic::Water;
     ret |=  upSensorStatus(index, it.water);
 
-    index.subtopic = AlarmIndex::Smoke;
+    index.topic = DTopic::Smoke;
     ret |=  upSensorStatus(index, it.smoke);
 
     return ret;
 }
 
-bool Alarm_Updater::upDevData(sAlarmIndex &index, sDevData *it)
+bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 {
     bool ret = false;
 
-    index.type = AlarmIndex::Line;
+    index.type = DType::Line;
     ret |= upObjData(index, it->line);
 
-    index.type = AlarmIndex::Loop;
+    index.type = DType::Loop;
     ret |= upObjData(index, it->loop);
 
-    index.type = AlarmIndex::Output;
+    index.type = DType::Output;
     ret |= upObjData(index, it->output);
 
-    index.type = AlarmIndex::Tg;
+    index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);
 
-    index.type = AlarmIndex::Env;
+    index.type = DType::Env;
     ret |= upEnvData(index, it->env);
 
-    index.type = AlarmIndex::Sensor;
+    index.type = DType::Sensor;
     ret |= upSensors(index, it->env);
 
     return ret;
@@ -173,7 +173,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 {
     bool ret = false;
     sDevData *dev = cm::devData(addr);
-    sAlarmIndex index; index.addr = addr;
+    sDataItem index; index.addr = addr;
     if(dev->offLine) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;

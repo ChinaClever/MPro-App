@@ -8,8 +8,9 @@ class Set_Core : public Set_Output
 public:
     static Set_Core *bulid();
     void writeSettings();
-
-    bool setUut(uchar addr, const sUutInfo &uut);
+    bool setting(sDataItem &it);
+    bool setString(sStrItem &it);
+    QString getString(sStrItem &it);
 };
 
 #endif // SET_CORE_H

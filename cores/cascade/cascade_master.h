@@ -10,12 +10,8 @@ public:
     explicit Cascade_Master(QObject *parent = nullptr);
 
     void masterReadDevs();
-    bool masterSetUut(uchar addr, const sUutInfo &uut);
-    bool masterSetAlarm(const sSetAlarmUnit &unit);
-    bool masterRelayCtrl(uchar addr, uchar id, uchar on);
-    bool masterDelaySet(int addr, int id, uchar delay);
-    bool masterSwModeSet(int addr, int id, uchar type);
-    bool masterOpNameSet(int addr, int id, const QString &name);
+    bool masterSet(const sDataItem &unit);
+    bool masterSetString(const sStrItem &it);
 
 private:
     bool masterRead(uchar addr);
