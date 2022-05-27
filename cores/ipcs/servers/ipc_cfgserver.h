@@ -7,6 +7,7 @@
 class IPC_CfgServer : public IPC_ObjServer
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", DBUS_SERVICE_NAME".cfgs")
     explicit IPC_CfgServer(QObject *parent = nullptr);
 public:
     static IPC_CfgServer *bulid(QObject *parent = nullptr);

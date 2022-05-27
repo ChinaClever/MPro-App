@@ -21,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 //    JsonRpcClient *c = new JsonRpcClient(this);
 //    c->startClient("127.0.0.1");
+
+//    c->pduSetData(0, 1, 2, 2, 1, 9);
+//    c->pduMetaData(0, 1, 2, 2, 1);
+
+
 //    c->invokeMethodSync();
 //    c->invokeStringMethodSync();
 //    c->invokeNotification();

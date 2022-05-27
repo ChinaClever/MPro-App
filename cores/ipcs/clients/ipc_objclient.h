@@ -4,10 +4,8 @@
 #include "lsocket_server.h"
 
 #define IPC_KEY_LOG         "logs"
-#define IPC_KEY_RELAY       "relays"
-#define IPC_KEY_DELAY       "delays"
 #define IPC_KEY_WEB         "webs"
-#define IPC_KEY_SETTING     "settings"
+#define IPC_KEY_CFG         "cfgs"
 
 enum eLogs{
     eUserLog,

@@ -11,9 +11,9 @@ Rpc_Obj::Rpc_Obj(QObject *parent)
 
 }
 
-uint Rpc_Obj::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+int Rpc_Obj::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
-    // jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString()
+    //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type;
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0;

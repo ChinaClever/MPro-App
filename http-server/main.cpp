@@ -99,8 +99,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient::bulid(p);
 
+    IPC_WebClient *ipc = IPC_WebClient::bulid(p);
+    ipc->setting(0, 1, 2, 2, 2, 9);
+    ipc->getValue(0, 1, 2, 2, 1);
 
     std::thread th(http_main);
     th.detach();
