@@ -3,24 +3,48 @@
 #include <thread>
 #include "mjson.h"
 #include "mongoose.h"
-#include "outputread.h"
+#include "jsonrpcobj.h"
+#include "ipc_echoclient.h"
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
+IPC_EchoClient *ipc_echoClient;
 
-static void sum(struct jsonrpc_request *r) {
-    double a = 0.0, b = 0.0;
-    mjson_get_number(r->params, r->params_len, "$[0]", &a);
-    mjson_get_number(r->params, r->params_len, "$[1]", &b);
-    jsonrpc_return_success(r, "%g", a + b);
+//static void sum(struct jsonrpc_request *r) {
+//    double a = 0.0, b = 0.0;
+//    mjson_get_number(r->params, r->params_len, "$[0]", &a);
+//    mjson_get_number(r->params, r->params_len, "$[1]", &b);
+//    jsonrpc_return_success(r, "%g", a + b);
+//}
+
+//static void multiply(struct jsonrpc_request *r) {
+//    double a = 0.0, b = 0.0;
+//    mjson_get_number(r->params, r->params_len, "$[0]", &a);
+//    mjson_get_number(r->params, r->params_len, "$[1]", &b);
+//    jsonrpc_return_success(r, "%g", a * b);
+//}
+
+static void pduReadData(struct jsonrpc_request *r) {
+    double value = 0.0;
+    QVector<double> its = JsonRpcObj::getNumbers(r , 5);
+    if(ipc_echoClient){
+        value = ipc_echoClient->getValue((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4));
+        printf("%.3f  \n" , value);
+        jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , value);
+    }
 }
 
-static void multiply(struct jsonrpc_request *r) {
-    double a = 0.0, b = 0.0;
-    mjson_get_number(r->params, r->params_len, "$[0]", &a);
-    mjson_get_number(r->params, r->params_len, "$[1]", &b);
-    jsonrpc_return_success(r, "%g", a * b);
+static void pduSetData(struct jsonrpc_request *r) {
+    double value = 0.0;
+    QVector<double> its = JsonRpcObj::getNumbers(r , 6);
+    if(ipc_echoClient){
+        ipc_echoClient->setting((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4), (int)its.at(5));
+        printf("%.3f  \n" , value);
+        jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , 1);
+    }
 }
+
+
 
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
@@ -80,10 +104,13 @@ int http_main(void) {
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
-    jsonrpc_export("sum", sum);       // And export a couple
-    jsonrpc_export("mul", multiply);  // of RPC functions
+//    jsonrpc_export("sum", sum);       // And export a couple
+//    jsonrpc_export("mul", multiply);  // of RPC functions
 
-    OutputRead::bulid();
+    jsonrpc_export("pduReadData", pduReadData);  // of RPC functions
+    //jsonrpc_export("pduReadString", pduReadString);
+    jsonrpc_export("pduSetData", pduSetData);
+    //jsonrpc_export("pduSetString", pduSetString);
 
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
@@ -99,7 +126,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient::bulid(p);
+    ipc_echoClient = new IPC_EchoClient(p);
 
 
     std::thread th(http_main);
