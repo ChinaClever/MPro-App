@@ -37,6 +37,8 @@ void Home_WorkWid::initLayout()
 void Home_WorkWid::initFunSlot()
 {
     initLayout(); isStart = false;
+    ui->targetEdit->setHidden(true);
+    mSsdp = Core_Ssdp::bulid(this);
     mSender = Core_Sender::bulid(this);
     connect(mSender, &Core_Sender::infoMessage, this, &Home_WorkWid::insertTextSlot);
     connect(mSender, &Core_Sender::finishSig, this, &Home_WorkWid::finishSlot);
@@ -154,7 +156,7 @@ void Home_WorkWid::initData(sFileTrans &it)
     it.size = File::Size(ui->fnLab->text());
     it.md5 = File::Md5(ui->fnLab->text());
     it.fc = ui->modeBox->currentIndex();
-    it.dev = ui->devBox->currentText();
+    it.dev = ui->modeBox->currentText();
     it.path = ui->pathEdit->text();
 }
 
@@ -165,7 +167,21 @@ bool Home_WorkWid::inputCheck()
     if(str.isEmpty()) {MsgBox::critical(this, tr("接收路径，未指定。")); return false;}
     else if(str.right(1) != "/") ui->pathEdit->setText(str + "/");
 
-    return true;
+    return inputIpCheck();
+}
+
+bool Home_WorkWid::inputIpCheck()
+{
+    bool ret = false;
+    QString str = ui->targetEdit->text();
+    int index = ui->searchBox->currentIndex();
+    if(1 == index) {
+        if(str.isEmpty()) MsgBox::critical(this, tr("机房名称，未指定。")); else ret = true;
+    } else if(2 == index) {
+        ret = cm::isIPaddress(str);  if(!ret) MsgBox::critical(this, tr("目标设备IP出错！"));
+    } else ret = true;
+
+    return ret;
 }
 
 bool Home_WorkWid::initWid()
@@ -185,14 +201,23 @@ bool Home_WorkWid::initWid()
     return ret;
 }
 
+QStringList Home_WorkWid::getIpList()
+{
+    QStringList ips;
+    switch (ui->searchBox->currentIndex()) {
+    case 0: ips = mSsdp->searchTarget(); break;
+    case 1: ips = mSsdp->searchTarget(ui->targetEdit->text()); break;
+    case 2: ips << ui->targetEdit->text(); break;
+    }
+
+    return ips;
+}
+
 void Home_WorkWid::on_startBtn_clicked()
 {
     if(isStart == false) {
         if(initWid()) {
-            QStringList ips;
-            ips << "127.0.0.1";
-            timer->start(500);
-
+            timer->start(500); QStringList ips = getIpList();
             mSender->sendFile(ips, ui->fnLab->text(), mFileIt);
         }
     } else {
@@ -204,10 +229,10 @@ void Home_WorkWid::on_startBtn_clicked()
 bool Home_WorkWid::fileCrc(const QString &fn)
 {
     bool ret = false;
-    int index = ui->devBox->currentIndex();
+    int index = ui->modeBox->currentIndex();
     switch (index) {
-    case 1: ret = File::CheckMd5(fn); break;
-    case 2: ret = File::CheckCrc(fn); break;
+    case 0: ret = File::CheckMd5(fn); break;
+    case 1: ret = File::CheckCrc(fn); break;
     default: MsgBox::critical(this, tr("请选择需要选择的设备类型")); return ret;
     }
 
@@ -232,5 +257,24 @@ void Home_WorkWid::on_imgBtn_clicked()
     ui->startBtn->setEnabled(en);
 }
 
+void Home_WorkWid::on_searchBtn_clicked()
+{
+    if(!inputIpCheck()) return;
+    QStringList res = getIpList();
+    if(res.size()) {
+        QString str = tr("已找到%1个IP目标").arg(res.size());
+        for(int i=0; i<res.size(); i++) {
+            if(i%5) str += "\t"; else str += "\n";
+            str += res.at(i);
+        } MsgBox::information(this, str);
+    } else {
+        MsgBox::critical(this, tr("未找到任何目标设备"));
+    }
+}
 
+
+void Home_WorkWid::on_searchBox_currentIndexChanged(int index)
+{
+    ui->targetEdit->setHidden(!index);
+}
 

@@ -2,6 +2,7 @@
 #define CORE_SENDER_H
 
 #include "dtls_sender.h"
+#include "core_ssdp.h"
 
 class Core_Sender : public QThread
 {
@@ -14,6 +15,7 @@ public:
     void stopRun() {isRun=false; Dtls_Sender::setRunState(isRun);}
 
 signals:
+    void devListSig(const QStringList &);
     void errorMessage(const QString &);
     void subProgress(const QString &,int);
     void infoMessage(bool,const QString &);

@@ -14,6 +14,7 @@ include($$CM_PATH/crc/crc.pri)
 include($$CM_PATH/ipc/ipc.pri)
 include($$CM_PATH/rpc/rpc.pri)
 include($$CM_PATH/dtls/dtls.pri)
+include($$CM_PATH/ssdp/ssdp.pri)
 include($$CM_PATH/cthread/cthread.pri)
 include($$CM_PATH/network/network.pri)
 

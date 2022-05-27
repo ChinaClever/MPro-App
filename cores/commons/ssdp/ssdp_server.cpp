@@ -4,9 +4,8 @@
  *      Author: Lzy
  */
 #include "ssdp_server.h"
-#include <thread>
 
-Ssdp_Server::Ssdp_Server(QObject *parent) : Ssdp_Client{parent}
+Ssdp_Server::Ssdp_Server(QObject *parent) : QObject{parent}
 {
     mPort = 16125;
     mSocket = new QUdpSocket(this);
@@ -14,13 +13,6 @@ Ssdp_Server::Ssdp_Server(QObject *parent) : Ssdp_Client{parent}
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
     if(!ok) qDebug() << "Error: SSDP Server" << mSocket->errorString();
-}
-
-Ssdp_Server *Ssdp_Server::bulid(QObject *parent)
-{
-    static Ssdp_Server* sington = nullptr;
-    if(!sington) sington = new Ssdp_Server(parent);
-    return sington;
 }
 
 bool Ssdp_Server::write(const QVariant &var)
@@ -39,23 +31,30 @@ QStringList Ssdp_Server::respondList(const QByteArray &key)
         while (mSocket->hasPendingDatagrams()) {
             reply.resize(mSocket->pendingDatagramSize());
             mSocket->readDatagram(reply.data(), reply.size(), &host);
-            if(reply.contains(key)) set << host.toString();
-        } if(set.size()) break; else cm::mdelay(100);
+            if(reply.contains(key)) {
+                QString ip = host.toString();
+                if(!set.contains(ip)) {
+                    emit targetSig(ip);
+                    set << ip;
+                    i = 800;
+                }
+            }
+        } /*if(set.size()) break; else */ cm::mdelay(100);
     }
 
     return set.values();
 }
 
-QStringList Ssdp_Server::searchTarget()
+QStringList Ssdp_Server::searchTarget(const QString &room)
 {
     QStringList ls;
-    QByteArray message("M-SEARCH * HTTP/1.1\r\n"        \
-                       "Host:239.255.43.21:1900\r\n" \
-                       "ST:urn:schemas-upnp-org:device:Pdu:1\r\n" \
-                       "Man:\"ssdp:discover\"\r\n" \
-                       "MX:3\r\n" \
-                       "\r\n");
-    bool ret = write(message);
-    if(ret) ls = respondList("ok");
+    QString message("M-SEARCH * HTTP/1.1\r\n"        \
+                    "Host:239.255.43.21:1900\r\n" \
+                    "ST:urn:schemas-upnp-org:device:Pdu:%1\r\n" \
+                    "Man:\"ssdp:discover\"\r\n" \
+                    "MX:3\r\n" \
+                    "\r\n");
+    bool ret = write(message.arg(room));
+    if(ret) ls = respondList(room.toLatin1());
     return ls;
 }
