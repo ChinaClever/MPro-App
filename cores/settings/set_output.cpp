@@ -77,7 +77,7 @@ bool Set_Output::outputSwModeSet(int addr, int id, uchar mode)
 QString Set_Output::outputName(int addr, int id)
 {
     sObjData *dev = &(cm::devData(addr)->output);
-    return dev->name[id-1];
+    return dev->name[id];
 }
 
 bool Set_Output::outputNameSet(int addr, int id, const QString &name)
