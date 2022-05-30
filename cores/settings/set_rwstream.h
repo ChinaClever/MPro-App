@@ -1,5 +1,5 @@
-#ifndef SET_STREAM_H
-#define SET_STREAM_H
+#ifndef SET_RWSTREAM_H
+#define SET_RWSTREAM_H
 #include "alarm_log.h"
 #include <QDataStream>
 
@@ -57,15 +57,15 @@ struct _sDevData
 };
 }
 
-class Set_Stream
+class Set_RwStream
 {
 public:
-    explicit Set_Stream(set::_sDevData *data);
-    friend QDataStream& operator>>(QDataStream&, Set_Stream&);
-    friend QDataStream& operator<<(QDataStream&, Set_Stream&);
+    explicit Set_RwStream(set::_sDevData *data);
+    friend QDataStream& operator>>(QDataStream&, Set_RwStream&);
+    friend QDataStream& operator<<(QDataStream&, Set_RwStream&);
 
 private:
     set::_sDevData *mDevData;
 };
 
-#endif // SET_STREAM_H
+#endif // SET_RWSTREAM_H

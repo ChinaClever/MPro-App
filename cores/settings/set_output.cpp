@@ -90,10 +90,10 @@ bool Set_Output::outputNameSet(int addr, int id, const QString &name)
         ret = Cascade_Core::bulid()->masterSetString(item);
     } else {
         if(id) {
-            writeOpName(id-1, name);
+            writeOpName(id, name);
         } else {
             sObjData *it = &(cm::masterDev()->output);
-            for(int i=0; i<it->size; ++i) writeOpName(i, name);
+            for(int i=0; i<it->size; ++i) writeOpName(i+1, name);
         }
     }
     return ret;
@@ -107,5 +107,5 @@ void Set_Output::writeOpName(int id, const QString &name)
     cfg->writeCfg(key, name, prefix);
 
     sObjData *it = &(cm::masterDev()->output);
-    qstrcpy((char *)it->name[id], name.toLatin1().data());
+    qstrcpy((char *)it->name[id-1], name.toLatin1().data());
 }

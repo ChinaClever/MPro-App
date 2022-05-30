@@ -3,24 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_unserialize.h"
+#include "set_rwunserialize.h"
 
-Set_Unserialize::Set_Unserialize(QObject *parent) : Set_Fill{parent}
+Set_RwUnserialize::Set_RwUnserialize(QObject *parent) : Set_RwFill{parent}
 {
 
 }
 
 
-Set_Unserialize *Set_Unserialize::bulid(QObject *parent)
-{
-    static Set_Unserialize* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new Set_Unserialize(parent);
-    }
-    return sington;
-}
-
-void Set_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
+void Set_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
 {
     unit.min[id] = it.min;
     unit.max[id] = it.max;
@@ -29,14 +20,14 @@ void Set_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it
     unit.rated[id] = it.rated;
 }
 
-void Set_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
+void Set_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
 {
     unit.sw[id] = it.sw;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
 }
 
-void Set_Unserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
+void Set_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
 {
     qstrcpy(data.name[id], obj.name);
     unAlarmUnit(id, data.vol, obj.vol);
@@ -45,13 +36,13 @@ void Set_Unserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
     unRelayUnit(id, data.relay, obj.relay);
 }
 
-void Set_Unserialize::unEnvData(uchar id, sEnvData &data, set::_sEnvData &obj)
+void Set_RwUnserialize::unEnvData(uchar id, sEnvData &data, set::_sEnvData &obj)
 {
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
 }
 
-void Set_Unserialize::unDevData(sDevData *data, set::_sDevData *obj)
+void Set_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
 {
     uchar size = obj->lineSize;
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
@@ -73,7 +64,7 @@ void Set_Unserialize::unDevData(sDevData *data, set::_sDevData *obj)
     cm::dataPacket()->login = obj->login;
 }
 
-void Set_Unserialize::unSequence()
+void Set_RwUnserialize::unSequence()
 {
     set::_sDevData *dev = getDev();
     unDevData(cm::masterDev(), dev);

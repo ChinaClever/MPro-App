@@ -1,13 +1,12 @@
-#ifndef SET_FILL_H
-#define SET_FILL_H
+#ifndef SET_RWFILL_H
+#define SET_RWFILL_H
 
-#include "set_object.h"
+#include "set_rwobj.h"
 
-class Set_Fill : public Set_Object
+class Set_RwFill : public Set_RwObj
 {
-    Q_OBJECT
 public:
-    explicit Set_Fill(QObject *parent = nullptr);
+    explicit Set_RwFill(QObject *parent = nullptr);
 
 protected:
     void fillData() override ;
@@ -20,4 +19,4 @@ private:
     void upDevData(sDevData *data, set::_sDevData *obj);
 };
 
-#endif // SET_FILL_H
+#endif // SET_RWFILL_H
