@@ -12,7 +12,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #define SHM_KEY	0x5105
-static void *share_mem_get(int size)
+static void *share_mem_get(uint size)
 {
     static void *shm = nullptr; if(shm) return shm;
     key_t key = ftok("/tmp", SHM_KEY);
@@ -45,9 +45,9 @@ SM_Obj::SM_Obj(QObject *parent) : QObject{parent}
 void SM_Obj::initShm()
 {
 #if LINUX_SHM
-    int size = sizeof(sDataPacket);
-    void *shm = sharedMemory();
-    memset(shm, 0, size);
+    uint size = sizeof(sDataPacket);
+    void *shm = share_mem_get(size);
+    if(shm) memset(shm, 0, size);
 #endif
 }
 

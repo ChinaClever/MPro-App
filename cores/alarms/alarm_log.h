@@ -11,7 +11,7 @@ public:
     static Alarm_Log *bulid(QObject *parent = nullptr);
 
 protected slots:
-    void alarmSlot(sDataItem &index, uchar value);
+    void alarmSlot(const sDataItem &index, uchar value);
 
 private:
     QString alarmType(const sDataItem &index);

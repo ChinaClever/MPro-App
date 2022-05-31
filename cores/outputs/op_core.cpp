@@ -32,6 +32,6 @@ void OP_Core::startFun()
 {
     QTimer::singleShot(1,this,SLOT(initFunSlot()));
     mThread->init(this, SLOT(run()));
-    cm::mdelay(2); mThread->start();
+    cm::mdelay(5); mThread->start();
 }
 

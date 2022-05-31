@@ -23,7 +23,6 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
     return sington;
 }
 
-
 QString Alarm_Log::alarmType(const sDataItem &index)
 {
     QString str;
@@ -130,7 +129,7 @@ QString Alarm_Log::alarmSensor(uchar value)
     return str;
 }
 
-void Alarm_Log::alarmSlot(sDataItem &index, uchar value)
+void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
     sAlarmItem it; it.addr = tr("本机");
     if(index.addr) it.addr = tr("副机 %1").arg(index.addr);

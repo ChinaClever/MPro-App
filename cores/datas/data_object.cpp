@@ -25,12 +25,15 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 }
 
 uint Data_Object::averageValue(const uint *ptr, int start, int end)
-{
+{   
     QList<uint> list;
-    for(int i=start; i<end; ++i) list << ptr[i];
-    std::sort(list.begin(), list.end());
-    int k = (list.size() + 1) / 2;
-    return list.at(k);
+    uint ret = 0; if(end > start) {
+        for(int i=start; i<end; ++i) list << ptr[i];
+        std::sort(list.begin(), list.end());
+        int k = (list.size() + 1) / 2;
+        ret = list.at(k);
+    } else ret = ptr[start];
+    return ret;
 }
 
 void Data_Object::averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end)
