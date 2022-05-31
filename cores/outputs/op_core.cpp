@@ -8,7 +8,7 @@
 OP_Core::OP_Core(QObject *parent)
     : OP_ZRtu{parent}
 {
-    mThread = new CThread(this);
+    mThread = new CThread(parent);
 }
 
 OP_Core *OP_Core::bulid(QObject *parent)
@@ -16,6 +16,8 @@ OP_Core *OP_Core::bulid(QObject *parent)
     static OP_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new OP_Core(parent);
+        qint32 baudRate = QSerialPort::Baud19200;
+        sington->openSerial("/dev/ttyUSB0", baudRate);
     }
     return sington;
 }
