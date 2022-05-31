@@ -60,6 +60,13 @@ bool JsonRpcObj::startServer(const QObjectList& services, int port, SocketType s
     }
     rpc_server->enableSendNotification(true);
     rpc_server->registerServices(services);
-    return rpc_server->listen(port);;
+    return rpc_server->listen(port);
 }
 
+bool JsonRpcObj::startLocalServer(const QObjectList &services)
+{
+    rpc_server = new jcon::JsonRpcTcpServer(this);
+    rpc_server->enableSendNotification(true);
+    rpc_server->registerServices(services);
+    return rpc_server->listen(QHostAddress::LocalHost, 6004);
+}

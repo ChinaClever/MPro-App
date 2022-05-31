@@ -9,6 +9,7 @@ public:
 
 protected:
     void lineWork();
+    void tgWork();
 };
 
 #endif // DATA_LINE_H

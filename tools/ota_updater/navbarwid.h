@@ -24,6 +24,8 @@ private slots:
     void on_setBtn_clicked();
     void on_logBtn_clicked();
 
+    void on_loginBtn_clicked();
+
 private:
     Ui::NavBarWid *ui;
 };

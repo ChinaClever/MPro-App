@@ -1,6 +1,4 @@
 #include <QCoreApplication>
-#include "ipc_coreserver.h"
-#include "ssdp_server.h"
 #include "http/http.h"
 #include "app_start.h"
 
@@ -8,11 +6,11 @@
 void ssdp_demo()
 {
 
-    Ssdp_Client *c = Ssdp_Client::bulid();
+//    Ssdp_Client *c = Ssdp_Client::bulid();
 
-    Ssdp_Server *s = Ssdp_Server::bulid();
-    qDebug() << s->searchTarget();
-    s->write("lzyluo");
+//    Ssdp_Server *s = Ssdp_Server::bulid();
+//    qDebug() << s->searchTarget();
+//    s->write("lzyluo");
 
 }
 

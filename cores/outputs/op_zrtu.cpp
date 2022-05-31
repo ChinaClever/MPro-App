@@ -105,7 +105,6 @@ void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        if(0 == size) size = 3;
         for(int i=0; i<size; ++i) {
             cmsWriteSlot(150);
             ota_updates();

@@ -24,6 +24,7 @@ Rpc_Service *Rpc_Service::bulid(QObject *parent)
 
 void Rpc_Service::initFunSlot()
 {
-    auto service1 = new Rpc_Core;
-    startServer({service1});
+    auto rpc = new Rpc_Core;
+    startServer({rpc});
+    startLocalServer({rpc});
 }

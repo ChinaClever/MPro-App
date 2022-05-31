@@ -28,8 +28,11 @@ protected:
 
     bool initWid();
     bool inputCheck();
+    bool inputIpCheck();
     void initData(sFileTrans &it);
     bool fileCrc(const QString &fn);
+
+    QStringList getIpList();
 
 private slots:
     void timeoutDone();
@@ -37,10 +40,12 @@ private slots:
     void updateResult();
 
     void updateCntSlot();
-    void on_startBtn_clicked();    
     void on_imgBtn_clicked();
+    void on_startBtn_clicked();
+    void on_searchBtn_clicked();
     void insertTextSlot(bool pass, const QString &msg);
     void finishSlot(bool pass, const QString &msg);
+    void on_searchBox_currentIndexChanged(int index);
 
 private:
     Ui::Home_WorkWid *ui;
@@ -49,11 +54,11 @@ private:
     bool isStart;
     bool mResult;
     QTimer *timer;
+    QTime startTime;
+    Core_Ssdp *mSsdp;
     sFileTrans mFileIt;
     Core_Sender *mSender;
 
-    QTime startTime;
-//    Test_CoreThread *mCoreThread;
 };
 
 #endif // HOME_WORKWID_H

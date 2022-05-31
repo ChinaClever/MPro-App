@@ -11,10 +11,10 @@ Rpc_Obj::Rpc_Obj(QObject *parent)
 
 }
 
-uint Rpc_Obj::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+int Rpc_Obj::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
-    // jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString()
-    sDataItem *it = &mIt; it->addr = addr; it->type = type;
+    //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
+    sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0;
     Set_Core::bulid()->upIndexValue(mIt);
@@ -31,7 +31,9 @@ bool Rpc_Obj::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar 
 
 QString Rpc_Obj::pduGetString(uchar addr, uchar fc, uchar id)
 {
-    sStrItem it; it.addr = addr; it.fc = fc; it.id = id;
+    sStrItem it; it.addr = addr;
+    it.fc = fc; if(id) id--;
+    it.id = id;
     return Set_Core::bulid()->getString(it);
 }
 

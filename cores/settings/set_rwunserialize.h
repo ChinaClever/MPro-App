@@ -1,14 +1,12 @@
-#ifndef _SET_UNSERIALIZE_H
-#define _SET_UNSERIALIZE_H
+#ifndef _SET_RWUNSERIALIZE_H
+#define _SET_RWUNSERIALIZE_H
 
-#include "set_fill.h"
+#include "set_rwfill.h"
 
-class Set_Unserialize : public Set_Fill
+class Set_RwUnserialize : public Set_RwFill
 {
-    Q_OBJECT
-    explicit Set_Unserialize(QObject *parent = nullptr);
 public:
-     static Set_Unserialize *bulid(QObject *parent = nullptr);
+    explicit Set_RwUnserialize(QObject *parent = nullptr);
 
 protected:
     void unSequence() override ;
@@ -21,5 +19,5 @@ private:
     void unDevData(sDevData *data, set::_sDevData *obj);
     void unDevSize(uchar size, sObjData &data);
 };
-using Set_ReadWrite = Set_Unserialize;
+
 #endif // SET_UNSERIALIZE_H

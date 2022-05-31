@@ -5,7 +5,7 @@
 #include "navbarwid.h"
 #include "home_mainwid.h"
 #include "remote_recvwid.h"
-#include "pro_widget.h"
+#include "pro_resultwid.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +28,7 @@ private:
     NavBarWid *mNavBarWid;
     Home_MainWid *mHomeWid;
     Remote_RecvWid *mRecvWid;
-    Pro_Widget *mPro;
+    Pro_StatusWid *mStatus;
+    Pro_ResultWid *mResult;
 };
 #endif // MAINWINDOW_H

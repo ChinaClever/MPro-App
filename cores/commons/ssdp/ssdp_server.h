@@ -3,17 +3,18 @@
 
 #include "ssdp_client.h"
 
-class Ssdp_Server : public Ssdp_Client
+class Ssdp_Server : public QObject
 {
     Q_OBJECT
 public:
     explicit Ssdp_Server(QObject *parent = nullptr);
-    static Ssdp_Server *bulid(QObject *parent = nullptr);
+    QStringList searchTarget(const QString &room="all");
 
+signals:
+    void targetSig(const QString &);
+
+private:
     bool write(const QVariant &var);
-    QStringList searchTarget();
-
-protected:
     QStringList respondList(const QByteArray &key);
 
 private:

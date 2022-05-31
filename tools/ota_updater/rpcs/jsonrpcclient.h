@@ -9,7 +9,13 @@ class JsonRpcClient : public JsonRpcObj
 public:
     explicit JsonRpcClient(QObject *parent = nullptr);
 
-    void invokeMethodSync();
+    int pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
+    bool pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value);
+
+    QString pduGetString(uchar addr, uchar fc, uchar id);
+    bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str);
+
+
     void invokeStringMethodSync();
     void invokeNotification();
 

@@ -6,19 +6,61 @@ JsonRpcClient::JsonRpcClient(QObject *parent)
 
 }
 
-
-void JsonRpcClient::invokeMethodSync()
+int JsonRpcClient::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
-    qsrand(std::time(nullptr));
-
-    auto result = rpc_client->call("pduMetaData", 0, 1,2,3);
-
+    int ret = -1;
+    auto result = rpc_client->call("pduMetaData", addr, type, topic, sub, id);
     if (result->isSuccess()) {
-        qDebug() << "result of synchronous RPC call:" << result->result();
+        ret = result->result().toInt();
+        //qDebug() << "result of pduMetaData RPC call:" << result->result();
     } else {
-        qDebug() << "RPC error:" << result->toString();
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
     }
+
+    return ret;
 }
+
+bool JsonRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+{
+    bool ret = false;
+    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value);
+    if (result->isSuccess()) {
+        ret = result->result().toBool();
+        //qDebug() << "result of pduSetData RPC call:" << result->result();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
+QString JsonRpcClient::pduGetString(uchar addr, uchar fc, uchar id)
+{
+    QString str;
+    auto result = rpc_client->call("pduGetString", addr, fc, id);
+    if (result->isSuccess()) {
+        str = result->result().toString();
+        qDebug() << "result of pduGetString RPC call:" << result->result();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+    return str;
+}
+
+bool JsonRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
+{
+    bool ret = false;
+    auto result = rpc_client->call("pduSetString", addr, fc, id, str);
+    if (result->isSuccess()) {
+        ret = result->result().toBool();
+        qDebug() << "result of pduSetString RPC call:" << result->result();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
 
 void JsonRpcClient::invokeStringMethodSync()
 {

@@ -1,15 +1,10 @@
 #include <QCoreApplication>
-#include <QtCore>
 #include <thread>
-#include "mjson.h"
-#include "mongoose.h"
-#include "jsonrpcobj.h"
-#include "ipc_echoclient.h"
 #include "devinfo.h"
+#include "pdurpcobj.h"
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
-IPC_EchoClient *ipc_echoClient;
 
 //static void sum(struct jsonrpc_request *r) {
 //    double a = 0.0, b = 0.0;
@@ -25,25 +20,27 @@ IPC_EchoClient *ipc_echoClient;
 //    jsonrpc_return_success(r, "%g", a * b);
 //}
 
-static void pduReadData(struct jsonrpc_request *r) {
-    double value = 0.0;
-    QVector<double> its = JsonRpcObj::getNumbers(r , 5);
-    if(ipc_echoClient){
-        value = ipc_echoClient->getValue((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4));
-        printf("%.3f  \n" , value);
-        jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , value);
-    }
-}
+//static void pduReadData(struct jsonrpc_request *r) {
+//    double value = 0.0;
+//    QVector<double> its = JsonRpcObj::getNumbers(r , 5);
+//    IPC_WebClient *ipc = IPC_WebClient::bulid();
 
-static void pduSetData(struct jsonrpc_request *r) {
-    double value = 0.0;
-    QVector<double> its = JsonRpcObj::getNumbers(r , 6);
-    if(ipc_echoClient){
-        ipc_echoClient->setting((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4), (int)its.at(5));
-        printf("%.3f  \n" , value);
-        jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , 1);
-    }
-}
+//    value = ipc->getValue((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4));
+//    printf("%.3f  \n" , value);
+//    jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , value);
+
+//}
+
+//static void pduSetData(struct jsonrpc_request *r) {
+//    double value = 0.0;
+//    QVector<double> its = JsonRpcObj::getNumbers(r , 6);
+//    IPC_WebClient *ipc = IPC_WebClient::bulid();
+
+//    ipc->setting((int)its.at(0) , (int)its.at(1) , (int)its.at(2) , (int)its.at(3) , (int)its.at(4), (int)its.at(5));
+//    printf("%.3f  \n" , value);
+//    jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , 1);
+
+//}
 
 
 
@@ -56,9 +53,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         //printf("MG_EV_OPEN\n");
     } else if (ev == MG_EV_WS_OPEN) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
-       // printf("MG_EV_WS_OPEN\n");
+        // printf("MG_EV_WS_OPEN\n");
     } else if (ev == MG_EV_HTTP_MSG) {
-       // printf("MG_EV_HTTP_MSG\n");
+        // printf("MG_EV_HTTP_MSG\n");
         struct mg_http_message *hm = (struct mg_http_message *) ev_data;
         if (mg_http_match_uri(hm, "/websocket")) {
             // Upgrade to websocket. From now on, a connection is a full-duplex
@@ -105,12 +102,13 @@ int http_main(void) {
     //mg_timer_init(&t1, 5000, MG_TIMER_REPEAT, timer_fn, &mgr);  // Init timer
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
-//    jsonrpc_export("sum", sum);       // And export a couple
-//    jsonrpc_export("mul", multiply);  // of RPC functions
+    //    jsonrpc_export("sum", sum);       // And export a couple
+    //    jsonrpc_export("mul", multiply);  // of RPC functions
 
-    jsonrpc_export("pduReadData", pduReadData);  // of RPC functions
+    PduRpcObj::rpc_export();
+//    jsonrpc_export("pduReadData", pduReadData);  // of RPC functions
     //jsonrpc_export("pduReadString", pduReadString);
-    jsonrpc_export("pduSetData", pduSetData);
+//    jsonrpc_export("pduSetData", pduSetData);
     //jsonrpc_export("pduSetString", pduSetString);
     DevInfo::init();
 
@@ -119,7 +117,7 @@ int http_main(void) {
 
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     for (;;) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
-/*    mg_timer_free(&t1);*/                           // Free timer resources
+    /*    mg_timer_free(&t1);*/                           // Free timer resources
     mg_mgr_free(&mgr);                            // Deallocate event manager
     return 0;
 }
@@ -128,8 +126,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    ipc_echoClient = new IPC_EchoClient(p);
-
+    IPC_WebClient::bulid(p);
 
     std::thread th(http_main);
     th.detach();

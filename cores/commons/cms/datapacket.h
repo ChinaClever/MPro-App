@@ -30,6 +30,7 @@ struct sAlarmUnit
     sAlarmUnit() {size=0;}
 
     uchar size;
+    uchar en[PACK_ARRAY_SIZE];
     uint value[PACK_ARRAY_SIZE];
     uint rated[PACK_ARRAY_SIZE];
 
@@ -99,6 +100,7 @@ struct sEnvData
 
 struct sTgUnit
 {
+    uchar en;
     uint value;
     uint rated;
     uint min;
@@ -118,7 +120,6 @@ struct sTgObjData
     uint ele; // 电能
     uint pf; // 功率因数
     uint artPow; // 袖在功率
-    uint tem;
 };
 
 
@@ -148,6 +149,9 @@ struct sDevInfo {
     uchar loopNum; // 回路数量
     uint outputNum;   //　输出位数量
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
+    uchar loopEnds[LOOP_NUM];
+    uchar loopStarts[LOOP_NUM];
+
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uchar chipStates[DEV_NUM];
@@ -238,7 +242,7 @@ struct sDataItem
 struct sStrItem{
     sStrItem():addr(0),rw(0){}
     uchar addr; // 地址
-    uchar fc; // 10  11
+    uchar fc; // 10 输出位  11 UUT信息
     uchar id; // 0 表示统一设置
     uchar rw; // 0 读  1 写
     char str[NAME_SIZE];

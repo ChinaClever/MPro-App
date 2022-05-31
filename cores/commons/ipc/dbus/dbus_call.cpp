@@ -21,10 +21,9 @@ QVariantList DBus_Call::callBus(const QVariant &v)
 }
 
 QVariantList DBus_Call::callBus(const QVariantList &arguments)
-{
-    QVariantList res;
+{    
     QDBusMessage msg = QDBusMessage::createMethodCall(mService, mBusPath, mInterface, "dbus_reply_slot");
-    msg.setArguments(arguments); QDBusMessage response = mBus.call(msg);
+    msg.setArguments(arguments); QDBusMessage response = mBus.call(msg); QVariantList res;
     if (response.type() == QDBusMessage::ReplyMessage) {
         res = response.arguments(); //for(auto i:res) qDebug() << i.typeName() << i;
     } else throwError(Q_FUNC_INFO);

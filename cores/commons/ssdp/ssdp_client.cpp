@@ -48,13 +48,23 @@ bool Ssdp_Client::rplySearchTarget(const QByteArray &array)
 {
     bool ret = false;
     if(array.contains("ssdp:discover")) {
-        ret = write("ok");
+        if(array.contains("Pdu:all")) {
+            ret = write("Pdu:all");
+        } else {
+            QString name = cm::masterDev()->uut.room;
+            if(name.size()) {
+                QString str = "Pdu:"+ name;
+                if(array.contains(str.toLatin1()))
+                    ret = write(str.toLatin1());
+            }
+        }
     }
+
     return ret;
 }
 
 void Ssdp_Client::recvMsg(const QByteArray &array)
 {
-    if(array.size() == 113) rplySearchTarget(array);
+    if(array.size() > 113) rplySearchTarget(array);
 }
 

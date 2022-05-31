@@ -6,6 +6,7 @@
 class IPC_LogServer : public IPC_ObjServer
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", DBUS_SERVICE_NAME".logs")
     explicit IPC_LogServer(QObject *parent = nullptr);
 public:
     static IPC_LogServer *bulid(QObject *parent = nullptr);

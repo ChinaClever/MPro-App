@@ -15,7 +15,7 @@ IPC_CfgClient *IPC_CfgClient::bulid(QObject *parent)
     static IPC_CfgClient *sington = nullptr;
     if(!sington) {
         sington = new IPC_CfgClient(parent);
-        sington->initFunction(IPC_KEY_SETTING);
+        sington->initFunction(IPC_KEY_CFG);
     }
     return sington;
 }

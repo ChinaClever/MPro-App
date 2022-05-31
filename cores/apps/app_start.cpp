@@ -7,6 +7,7 @@
 #include "cascade_core.h"
 #include "ipc_coreserver.h"
 #include "rpc_service.h"
+#include "ssdp_server.h"
 #include "agent_core.h"
 #include "data_core.h"
 #include "log_core.h"
@@ -35,11 +36,12 @@ App_Start *App_Start::bulid(QObject *parent)
 void App_Start::initFunSlot()
 {
     IPC_CoreServer::bulid(this);
-    Rpc_Service::bulid(this);
+    Ssdp_Client::bulid(this);
     Dtls_Recver::bulid(this);
+    Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);
-    Cascade_Core::bulid();
+    //Cascade_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
 }
