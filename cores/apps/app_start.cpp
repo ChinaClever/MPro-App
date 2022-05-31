@@ -55,7 +55,7 @@ void App_Start::startThreadSlot()
 
     QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Mb_Core::bulid(this));
-    //pool->start(Data_Core::bulid());
+    pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()
