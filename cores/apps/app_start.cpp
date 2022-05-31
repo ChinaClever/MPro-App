@@ -41,7 +41,7 @@ void App_Start::initFunSlot()
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);
-    Cascade_Core::bulid();
+    //Cascade_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
 }
@@ -49,7 +49,7 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     //Agent_Core::bulid(this);
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();
