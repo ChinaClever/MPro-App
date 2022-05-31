@@ -13,7 +13,9 @@ OP_ObjCtrl::OP_ObjCtrl(QObject *parent) : OP_ObjRtu{parent}
 void OP_ObjCtrl::relayCtrl(int id, int on)
 {
     if(id) {
-        if(on) openSwitch(id); else closeSwitch(id);
+        id -= 1;
+        if(1==on) openSwitch(id);
+        else closeSwitch(id);
     } else {
         orderCtrl(on, 0);
     }
@@ -112,7 +114,7 @@ void OP_ObjCtrl::setClearEle(int id)
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uchar *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.delay;
     for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
     funDelay(cmd);
 }
@@ -120,7 +122,7 @@ void OP_ObjCtrl::setAllDelay(uchar sec)
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uchar *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.delay;
     cmd[id-1] = sec;
     funDelay(cmd);
 }

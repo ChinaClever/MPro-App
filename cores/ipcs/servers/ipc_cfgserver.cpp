@@ -16,7 +16,7 @@ IPC_CfgServer *IPC_CfgServer::bulid(QObject *parent)
     static IPC_CfgServer *sington = nullptr;
     if(!sington) {
         sington = new IPC_CfgServer(parent);
-        sington->initFunction(IPC_KEY_SETTING);
+        sington->initFunction(IPC_KEY_CFG);
     }
     return sington;
 }

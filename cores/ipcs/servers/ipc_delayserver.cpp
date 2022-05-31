@@ -28,8 +28,12 @@ QList<const char *> IPC_DelayServer::busRecvMethods()
     return res;
 }
 
-void IPC_DelayServer::dbus_recv_slot(int addr, int id, int mode, int delay)
+void IPC_DelayServer::dbus_recv_slot(int addr, int id, int fc, int value)
 {
     Set_Core *set = Set_Core::bulid();
-    set->outputDelaySet(addr, id, mode, delay);
+    switch (fc) {
+    case 1: set->outputDelaySet(addr, id, value); break;
+    case 2: set->outputSwModeSet(addr, id, value); break;
+
+    }
 }

@@ -24,7 +24,7 @@ Core_Sender *Core_Sender::bulid(QObject *parent)
 
 bool Core_Sender::sendFile(const QStringList &ips, const QString &fn, const sFileTrans &it)
 {
-    bool ret = isRun = true;
+    bool ret = isRun = true; emit devListSig(ips);
     mHosts = ips; mFileTrans = it; QFile file(fn);
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
         Dtls_Sender::setRunState(isRun);

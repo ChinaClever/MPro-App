@@ -18,16 +18,17 @@ bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud)
     return connectDevice();
 }
 
-bool Modbus_SlaveRtu::connectRtu(const QString &name, int baud, int addr)
+bool Modbus_SlaveRtu::connectRtu(const QString &name, int addr, int baud, qint32 parity)
 {
     bool ret = true;
-    if(mDev) {
-        disconnectModbus();
-    } else {
+    if(!mDev) {
         mDev = new QModbusRtuSerialSlave(this);
         ret = initUnitMap();
+    } else  {
+        disconnectModbus();
     }
 
+    mSet.parity = parity;
     if(ret) setAddress(addr);
     if(ret) ret = connectModbus(name, baud);
     return ret;

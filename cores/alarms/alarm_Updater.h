@@ -11,21 +11,24 @@ public:
     static Alarm_Updater *bulid(QObject *parent = nullptr);
 
 signals:
-    void alarmSig(sAlarmIndex index, uchar value);
+    void alarmSig(sDataItem &index, uchar value);
 
 public slots:
     void run();
 
 private:
-    bool upRelayUnit(sAlarmIndex &index, sRelayUnit &it);
+    bool upRelayUnit(sDataItem &index, sRelayUnit &it);
 
-    bool upAlarmUnit(sAlarmIndex &index, sAlarmUnit &it);
-    bool upObjData(sAlarmIndex &index, sObjData &it);
-    bool upDevData(sAlarmIndex &index, sDevData *it);
+    bool upAlarmUnit(sDataItem &index, sAlarmUnit &it);
+    bool upObjData(sDataItem &index, sObjData &it);
+    bool upDevData(sDataItem &index, sDevData *it);
 
-    uchar upTgUnit(sAlarmIndex &index, sTgUnit &it);
-    bool upTgObjData(sAlarmIndex &index, sTgObjData &it);
-    bool upEnvData(sAlarmIndex &index, sEnvData &it);
+    uchar upTgUnit(sDataItem &index, sTgUnit &it);
+    bool upTgObjData(sDataItem &index, sTgObjData &it);
+    bool upEnvData(sDataItem &index, sEnvData &it);
+
+    bool upSensorStatus(sDataItem &index, uint *ptr, int id=0);
+    bool upSensors(sDataItem &index, sEnvData &it);
     bool upDevAlarm(uchar addr);
 };
 

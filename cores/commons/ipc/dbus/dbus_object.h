@@ -18,9 +18,12 @@ public:
 protected:
     void throwError(const QString &msg);
 
+private:
+    static QDBusConnection busConnection();
+
 protected:
     QString mService, mBusPath, mInterface, mBusSig;
-    QDBusConnection mBus{QDBusConnection::sessionBus()};
+    QDBusConnection mBus{busConnection()};
 };
 
 #endif // DBUS_OBJECT_H

@@ -9,7 +9,7 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 include(common/common.pri)
-include(output/output.pri)
+
 
 HEADERS +=
 
@@ -23,3 +23,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 }
+
+HEADERS += \
+    devinfo.h \
+    pdurpcobj.h
+
+SOURCES += \
+    devinfo.cpp \
+    pdurpcobj.cpp

@@ -30,10 +30,11 @@ void CThread::stop()
     mThread->wait();
 }
 
-void CThread::init(QObject *p, const char *fun)
+bool CThread::init(QObject *p, const char *fun)
 {
     connect(mThread, SIGNAL(started()), p, fun);
     p->moveToThread(mThread);
+    return true;
 }
 
 void CThread::finished()

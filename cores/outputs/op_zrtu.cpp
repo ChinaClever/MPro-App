@@ -11,19 +11,6 @@ OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 
 }
 
-
-OP_ZRtu *OP_ZRtu::bulid(QObject *parent)
-{
-    static OP_ZRtu* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new OP_ZRtu(parent);
-#if defined(Q_OS_LINUX)
-        sington->openSerial("/dev/ttyUSB0");
-#endif
-    }
-    return sington;
-}
-
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
@@ -79,7 +66,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
     } else {
-        qDebug() << Q_FUNC_INFO << addr << cm::byteArrayToHexStr(recv);
+        qDebug() << "Error:" << Q_FUNC_INFO << addr << recv.size(); //cm::byteArrayToHexStr(recv);
     }
 
     return res;
@@ -99,24 +86,25 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             it.content = tr("执行板 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(320);
+    } cm::mdelay(360);
 
     return ret;
 }
 
 bool OP_ZRtu::readData(int addr)
 {
+    static uint lzy = 0;
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr);
+    if(ret) fillData(addr); qDebug() << Q_FUNC_INFO<< addr << ret << lzy++;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
+
 
 void OP_ZRtu::run()
 {
     while (isRun) {
         int size = mDev->info.opNum;
-        //if(0 == size) size = 3;
         for(int i=0; i<size; ++i) {
             cmsWriteSlot(150);
             ota_updates();

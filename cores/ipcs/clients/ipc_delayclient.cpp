@@ -21,10 +21,10 @@ IPC_DelayClient *IPC_DelayClient::bulid(QObject *parent)
     return sington;
 }
 
-
-bool IPC_DelayClient::setDelay(int addr, int id, uchar mode, uchar delay)
+// fc == 1 设置延时功能　　fc == ２ 设置形状模式功能
+bool IPC_DelayClient::setDelay(int addr, int id, uchar fc, uchar delay)
 {
-    QVariantList lv{addr, id, mode, delay};
+    QVariantList lv{addr, id, fc, delay};
     bool ret = inputCheck(lv);
     if(ret) ret = mDbus->sendBus(lv);
     return ret;

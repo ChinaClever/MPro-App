@@ -20,6 +20,7 @@ bool Cascade_Master::masterRead(uchar addr)
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
     }
+    qDebug() << Q_FUNC_INFO << addr << ret;
 
     return ret;
 }
@@ -29,6 +30,7 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm;
     uint size = masterDev()->info.slaveNum;
+    //if(0 == size) size = 3;
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(i, ret, devData(i+1)->offLine);
@@ -54,23 +56,18 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
     } cm::mdelay(100);
 }
 
-bool Cascade_Master::masterSetAlarm(const sSetAlarmUnit &unit)
+bool Cascade_Master::masterSet(const sDataItem &unit)
 {
-    uchar fc = fc_writeAlarm; if(isOta) return isOta;
+    uchar fc = fc_setting; if(isOta) return isOta;
     QByteArray array = cm::toByteArray(unit);
-    return writeData(fc, unit.index.addr, array);
+    return writeData(fc, unit.addr, array);
 }
 
-bool Cascade_Master::masterRelayCtrl(uchar addr, uchar id, uchar on)
+
+bool Cascade_Master::masterSetString(const sStrItem &it)
 {
-    uchar fc = fc_relayCtrl; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(on);
-    return writeData(fc, addr, array);
+    uchar fc = fc_setString; if(isOta) return isOta;
+    QByteArray array = cm::toByteArray(it);
+    return writeData(fc, it.addr, array);
 }
 
-bool Cascade_Master::masterDelaySet(int addr, int id, uchar type, uchar delay)
-{
-    uchar fc = fc_delaySet; if(isOta) return isOta;
-    QByteArray array;  array.append(id); array.append(type); array.append(delay);
-    return writeData(fc, addr, array);
-}

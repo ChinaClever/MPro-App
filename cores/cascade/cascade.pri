@@ -4,6 +4,7 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/cascade_core.h \
     $$PWD/cascade_fill.h \
     $$PWD/cascade_master.h \
     $$PWD/cascade_object.h \
@@ -13,6 +14,7 @@ HEADERS += \
     $$PWD/cascade_updater.h
 
 SOURCES += \
+    $$PWD/cascade_core.cpp \
     $$PWD/cascade_fill.cpp \
     $$PWD/cascade_master.cpp \
     $$PWD/cascade_object.cpp \

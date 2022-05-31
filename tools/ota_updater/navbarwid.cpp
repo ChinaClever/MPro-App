@@ -16,7 +16,6 @@ NavBarWid::NavBarWid(QWidget *parent) :
     QGridLayout *gridLayout = new QGridLayout(parent);
     gridLayout->setContentsMargins(0, 0, 0, 6);
     gridLayout->addWidget(this);
-    ui->loginBtn->setHidden(true);
 }
 
 NavBarWid::~NavBarWid()
@@ -34,9 +33,15 @@ void NavBarWid::on_setBtn_clicked()
     emit navBarSig(1);
 }
 
-void NavBarWid::on_logBtn_clicked()
+void NavBarWid::on_loginBtn_clicked()
 {
     emit navBarSig(2);
 }
+
+void NavBarWid::on_logBtn_clicked()
+{
+    emit navBarSig(3);
+}
+
 
 

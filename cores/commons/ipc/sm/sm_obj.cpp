@@ -5,7 +5,9 @@
  */
 #include "sm_obj.h"
 
-#if defined(Q_OS_LINUX)
+#define LINUX_SHM 1
+
+#if LINUX_SHM
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -13,7 +15,8 @@
 static void *share_mem_get(int size)
 {
     static void *shm = nullptr; if(shm) return shm;
-    int shmid = shmget((key_t)SHM_KEY, size, 0666|IPC_CREAT);    //创建共享内存
+    key_t key = ftok("/tmp", SHM_KEY);
+    int shmid = shmget(key, size, 0666|IPC_CREAT);    //创建共享内存
     if(shmid == -1) {
         fprintf(stderr, "shmget failed\n");
         return NULL;
@@ -23,7 +26,8 @@ static void *share_mem_get(int size)
     if(shm == (void*)-1) {
         fprintf(stderr, "shmat failed\n");
         return NULL;
-    } else memset(shm, 0, size);
+    } //else memset(shm, 0, size);
+
     return shm;
 }
 #endif
@@ -31,7 +35,20 @@ static void *share_mem_get(int size)
 QSharedMemory* SM_Obj::mSm = nullptr;
 SM_Obj::SM_Obj(QObject *parent) : QObject{parent}
 {
+#if LINUX_SHM
+
+#else
     initShareMemory(parent);
+#endif
+}
+
+void SM_Obj::initShm()
+{
+#if LINUX_SHM
+    int size = sizeof(sDataPacket);
+    void *shm = sharedMemory();
+    memset(shm, 0, size);
+#endif
 }
 
 void SM_Obj::initShareMemory(QObject *parent)
@@ -48,7 +65,7 @@ void SM_Obj::initShareMemory(QObject *parent)
 
 void *SM_Obj::sharedMemory()
 {
-#if defined(Q_OS_LINUX)
+#if LINUX_SHM
      return share_mem_get(sizeof(sDataPacket));
 #else
     if(!mSm) initShareMemory();

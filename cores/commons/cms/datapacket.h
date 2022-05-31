@@ -3,7 +3,7 @@
 #include "cthread.h"
 
 #define LINE_NUM  3
-#define LOOP_NUM  12
+#define LOOP_NUM  6
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
 #define NAME_SIZE 32
@@ -30,12 +30,13 @@ struct sAlarmUnit
     sAlarmUnit() {size=0;}
 
     uchar size;
+    uchar en[PACK_ARRAY_SIZE];
     uint value[PACK_ARRAY_SIZE];
     uint rated[PACK_ARRAY_SIZE];
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uchar alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -44,10 +45,10 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     uchar size;
-    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用
-    uchar mode[PACK_ARRAY_SIZE];
-    uchar alarm[PACK_ARRAY_SIZE];
-    uchar delay[PACK_ARRAY_SIZE];
+    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用  0:不能控制；1:通；2:断
+    uint mode[PACK_ARRAY_SIZE];
+    uint alarm[PACK_ARRAY_SIZE];
+    uint delay[PACK_ARRAY_SIZE];
 };
 
 
@@ -92,21 +93,22 @@ struct sEnvData
     sAlarmUnit tem; // 温度
     sAlarmUnit hum; // 湿度
 
-    uchar door[SENOR_NUM]; // 门禁
-    uchar water[SENOR_NUM]; // 水浸
-    uchar smoke[SENOR_NUM]; // 烟雾
+    uint door[SENOR_NUM]; // 门禁
+    uint water[SENOR_NUM]; // 水浸
+    uint smoke[SENOR_NUM]; // 烟雾
 };
 
 struct sTgUnit
 {
+    uchar en;
     uint value;
     uint rated;
-    ushort min;
-    ushort max;
+    uint min;
+    uint max;
 
-    ushort crMin;
-    ushort crMax;
-    uchar alarm;
+    uint crMin;
+    uint crMax;
+    uint alarm;
 };
 
 struct sTgObjData
@@ -118,7 +120,6 @@ struct sTgObjData
     uint ele; // 电能
     uint pf; // 功率因数
     uint artPow; // 袖在功率
-    uint tem;
 };
 
 
@@ -138,24 +139,32 @@ struct sDevInfo {
     uint lineNum; //设备单三相
 
     uint version;
-    char devName[NAME_SIZE]; // 设备名称
     uint slaveNum;  // 副机数量
+    uchar modbusAddr; // 通讯地址
+    uchar buzzerSw; // 蜂鸣器开关
+    uchar drySw; // 报警干接点开关
 
     uint hz;
     uchar opNum;   //　执行板数量
     uchar loopNum; // 回路数量
     uint outputNum;   //　输出位数量
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
+    uchar loopEnds[LOOP_NUM];
+    uchar loopStarts[LOOP_NUM];
+
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uchar chipStates[DEV_NUM];
+    uchar reserve[20];
 };
 
 struct sUutInfo {
+    char idc[NAME_SIZE];
     char room[NAME_SIZE];
     char module[NAME_SIZE];
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
+    char devName[NAME_SIZE]; // 设备名称
 };
 
 /**
@@ -168,8 +177,6 @@ struct sDevData
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
     uchar offLine; //离线标志 > 0在线
-    sDevInfo info;
-    sUutInfo uut;
 
     sObjData line; // 相数据
     sObjData loop; // 回路数据
@@ -177,6 +184,9 @@ struct sDevData
     sTgObjData tg; // 回路数据
     sEnvData env; // 环境数据
     sRtuCount rtuCount; // 传输情况
+
+    sDevInfo info;
+    sUutInfo uut;
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -212,30 +222,31 @@ struct sDataPacket
     sDevLogin login;
 };
 
+enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
+enum DTopic{Relay=1, Vol, Cur, Pow, Tem=6, Hum, Door1, Door2, Water, Smoke};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax};
+enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
-
-enum AlarmType{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum AlarmIndex{Tg, Line, Loop, Output, Vol, Cur, Pow, Relay, Env, Tem, Hum};
-
-struct sAlarmIndex
+struct sDataItem
 {
-    sAlarmIndex():addr(0){}
-    uchar addr;
-    uchar type;
-    uchar subtopic;
-    uchar id;
+    sDataItem():addr(0),rw(0),value(0){}
+    uchar addr; // 地址
+    uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
+    uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
+    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    uint value;
 };
 
-struct sSetAlarmUnit
-{
-    sAlarmIndex index;
-    uint rated;
-    uint min;
-    uint max;
-    uint crMin;
-    uint crMax;
+struct sStrItem{
+    sStrItem():addr(0),rw(0){}
+    uchar addr; // 地址
+    uchar fc; // 10 输出位  11 UUT信息
+    uchar id; // 0 表示统一设置
+    uchar rw; // 0 读  1 写
+    char str[NAME_SIZE];
 };
-
 
 struct sRelay
 {

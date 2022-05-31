@@ -14,7 +14,7 @@ bool DBus_Receiver::busConnects()
     bool ret = true;
     QList<const char *> ls = busRecvMethods();
     foreach(auto &i, ls) {
-        if(i) ret = mBus.connect(mService, mBusPath, mInterface, mBusSig, this, i);
+        if(i) ret = mBus.connect(QString(), mBusPath, mInterface, mBusSig, this, i);
         if(ret) ret = mBus.isConnected(); else throwError(Q_FUNC_INFO + mInterface);
     }
 

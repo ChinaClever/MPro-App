@@ -13,11 +13,9 @@ Data_Loop::Data_Loop()
 void Data_Loop::loopWork()
 {
     int size = mDev->info.loopNum;
-    if(size == 0) size = 1;
-    int num = mDev->info.outputNum / size;
     for(int i=0; i<size; ++i) {
-        int start = i * num;
-        int end = (i+1) * num;
+        int start = mDev->info.loopStarts[i];
+        int end = mDev->info.loopEnds[i];
         loopData(i, start, end);
     }
 }

@@ -10,11 +10,12 @@ class SerialPort : public QObject
 public:
     explicit SerialPort(QObject *parent = nullptr);
     static QStringList ports();
+    void closeSerial() {mSerial->close();}
     bool isOpened(){return mSerial->isOpen();}
-    bool closeSerial() {return mSerial->clear();}
     QString nameSerial() {return mSerial->portName();}
     bool isContains(const QString &name) {return ports().contains(name);}
-    bool openSerial(const QString &name,qint32 baudRate = QSerialPort::Baud19200);
+    bool openSerial(const QString &name, qint32 baudRate = QSerialPort::Baud19200,
+                    QSerialPort::Parity parity = QSerialPort::NoParity);
 
     int writeSerial(quint8 *cmd, int len);
     bool writeSerial(const QByteArray &array);

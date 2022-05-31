@@ -1,22 +1,6 @@
 #include <QCoreApplication>
-#include "ipc_coreserver.h"
-#include "ssdp_server.h"
-//#include "snmp/snmpagent.h"
 #include "http/http.h"
 #include "app_start.h"
-//#include "agent_devdata.h"
-
-void ssdp_demo()
-{
-
-    Ssdp_Client *c = Ssdp_Client::bulid();
-
-    Ssdp_Server *s = Ssdp_Server::bulid();
-    qDebug() << s->searchTarget();
-    s->write("lzyluo");
-
-}
-
 
 void http_demo()
 {
@@ -37,8 +21,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    Set_readWrite::bulid(p);
     App_Start::bulid(p);
+
 
     return a.exec();
 }

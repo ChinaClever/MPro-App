@@ -26,10 +26,11 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 
 uint Data_Object::averageValue(const uint *ptr, int start, int end)
 {
-    uint value = summation(ptr, start, end);
-    uint size = end - start;
-    if(size<=0) size = 1;
-    return value/size;
+    QList<uint> list;
+    for(int i=start; i<end; ++i) list << ptr[i];
+    std::sort(list.begin(), list.end());
+    int k = (list.size() + 1) / 2;
+    return list.at(k);
 }
 
 void Data_Object::averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end)
@@ -41,9 +42,10 @@ uint Data_Object::calPf(int id, sObjData &obj)
 {
     uint ret = 0;
     uint pow = obj.pow.value[id];
-    if(pow) {
-        uint vol = obj.vol.value[id];
-        ret = pow / vol;
+    uint art = obj.artPow[id];
+    if(pow && art) {
+        ret = (pow * 100.0) / art;
+        if(ret > 99) ret = 99;
     }
 
     return ret;

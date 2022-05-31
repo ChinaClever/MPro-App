@@ -2,10 +2,13 @@ INCLUDEPATH += $$PWD
 
 
 HEADERS += \
-    $$PWD/pro_widget.h
+    $$PWD/pro_resultwid.h \
+    $$PWD/pro_statuswid.h
 
 SOURCES += \
-    $$PWD/pro_widget.cpp
+    $$PWD/pro_resultwid.cpp \
+    $$PWD/pro_statuswid.cpp
 
 FORMS += \
-    $$PWD/pro_widget.ui
+    $$PWD/pro_resultwid.ui \
+    $$PWD/pro_statuswid.ui

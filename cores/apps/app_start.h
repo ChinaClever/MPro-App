@@ -15,7 +15,7 @@ signals:
 private slots:
     void initFunSlot();
     void startThreadSlot();
-
+    void clearCacheSlot();
 };
 
 #endif // APP_START_H

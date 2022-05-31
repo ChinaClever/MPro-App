@@ -9,19 +9,19 @@
 class Ssdp_Client : public QObject
 {
     Q_OBJECT
-public:
     explicit Ssdp_Client(QObject *parent = nullptr);
+public:
     static Ssdp_Client *bulid(QObject *parent = nullptr);
 
-protected:
+private:
     bool write(const QVariant &var);
     void recvMsg(const QByteArray &array);
     bool rplySearchTarget(const QByteArray &array);
 
-protected slots:
+private slots:
     virtual void readMsgSlot();
 
-protected:
+private:
     int mPort;
     QUdpSocket *mSocket;
     QHostAddress mAddress;

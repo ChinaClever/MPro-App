@@ -1,7 +1,7 @@
 #ifndef IPC_DELAYCLIENT_H
 #define IPC_DELAYCLIENT_H
 
-#include "ipc_relayclient.h"
+#include "ipc_outputclient.h"
 
 class IPC_DelayClient : public IPC_ObjClient
 {
@@ -9,7 +9,7 @@ class IPC_DelayClient : public IPC_ObjClient
     explicit IPC_DelayClient(QObject *parent = nullptr);
 public:
     static IPC_DelayClient *bulid(QObject *parent = nullptr);
-    bool setDelay(int addr, int id, uchar mode, uchar delay);
+    bool setDelay(int addr, int id, uchar fc, uchar delay);
 
 signals:
 
