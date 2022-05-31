@@ -17,6 +17,7 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
+    SM_Obj::initShm();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));

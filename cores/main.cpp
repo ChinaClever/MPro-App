@@ -2,19 +2,6 @@
 #include "http/http.h"
 #include "app_start.h"
 
-
-void ssdp_demo()
-{
-
-//    Ssdp_Client *c = Ssdp_Client::bulid();
-
-//    Ssdp_Server *s = Ssdp_Server::bulid();
-//    qDebug() << s->searchTarget();
-//    s->write("lzyluo");
-
-}
-
-
 void http_demo()
 {
     // https://github.com/flaviotordini/http
@@ -35,8 +22,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     App_Start::bulid(p);
-
-
 
 
     return a.exec();
