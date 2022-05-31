@@ -2,73 +2,191 @@
   {
     "name": "首页",
     "icon": "homepage_fill",
-    "url": "pages/home.html"
-  },
-  {
-    "name": "OUTPUT",
-    "icon": "flag_fill",
     "base": "pages/output/",
     "subNav": [
       {
-        "name": "relay",
+        "name": "首页",
         "url": "relay_ctrl.html"
       },
       {
-        "name": "快速上手",
-        "url": "use.html"
+        "name": "输出位监测",
+        "url": "relay_ctrl.html"
+      }
+    ]
+  },
+  {
+    "name": "设备设置",
+    "icon": "flag_fill",
+    "base": "pages/device/",
+    "subNav": [
+      {
+        "name": "模式设置",
+        "url": "relay_ctrl.html"
       },
       {
-        "name": "自动化构建",
-        "url": "build.html"
+        "name": "分组设置",
+        "url": "output_monitoring.html"
       },
       {
-        "name": "定制",
+        "name": "单元设置",
+        "url": "threshold.html"
+      },
+      {
+        "name": "环控设置",
+        "url": "customize.html"
+      },
+      {
+        "name": "电能清零",
+        "url": "customize.html"
+      },
+      {
+        "name": "开关控制",
         "url": "customize.html"
       }
     ]
   },
   {
-    "name": "组件",
+    "name": "网络安全",
     "icon": "manage_fill",
     "base": "pages/unit/",
     "subNav": [
       {
-        "name": "全局样式",
+        "name": "本地连接",
         "url": "base.html"
       },
       {
-        "name": "表单控件",
+        "name": "无线连接",
         "url": "form.html"
       },
       {
-        "name": "按钮",
+        "name": "HTTP服务",
         "url": "button.html"
       },
       {
-        "name": "图标",
+        "name": "NTP服务",
         "url": "icon.html"
       },
       {
-        "name": "消息提示",
+        "name": "SMTP服务",
         "url": "message.html"
       },
       {
-        "name": "表格",
+        "name": "MAC滤池",
         "url": "table.html"
       },
       {
-        "name": "选项卡",
+        "name": "Telnet/SSH服务",
         "url": "tabs.html"
       },
       {
-        "name": "辅助类",
+        "name": "Modbus服务",
+        "url": "atom.html"
+      },
+      {
+        "name": "SNMP服务",
+        "url": "icon.html"
+      },
+      {
+        "name": "Radius服务",
+        "url": "message.html"
+      },
+      {
+        "name": "Syslog服务",
+        "url": "table.html"
+      },
+      {
+        "name": "LDAP服务",
+        "url": "tabs.html"
+      },
+      {
+        "name": "Zebra服务",
         "url": "atom.html"
       }
     ]
   },
   {
-    "name": "模板",
+    "name": "用户管理",
     "icon": "document_fill",
-    "url": "pages/template/index.html"
+    "base": "pages/output/",
+    "subNav": [
+      {
+        "name": "用户设置",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "用户组设置",
+        "url": "output_monitoring.html"
+      },
+      {
+        "name": "输出位权限设置",
+        "url": "unit_control.html"
+      }
+    ]
+  },
+  {
+    "name": "图表信息",
+    "icon": "flag_fill",
+    "base": "pages/output/",
+    "subNav": [
+      {
+        "name": "温度查询",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "湿度查询",
+        "url": "output_monitoring.html"
+      },
+      {
+        "name": "相电流查询",
+        "url": "unit_control.html"
+      },
+      {
+        "name": "相电压查询",
+        "url": "customize.html"
+      },
+      {
+        "name": "总有功功率",
+        "url": "customize.html"
+      }
+    ]
+  },
+  {
+    "name": "日志查询",
+    "icon": "flag_fill",
+    "base": "pages/output/",
+    "subNav": [
+      {
+        "name": "操作日志",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "告警日志",
+        "url": "output_monitoring.html"
+      },
+      {
+        "name": "电能查询",
+        "url": "unit_control.html"
+      },
+      {
+        "name": "历史数据",
+        "url": "customize.html"
+      }
+    ]
+  },
+  {
+    "name": "系统工具",
+    "icon": "flag_fill",
+    "base": "pages/output/",
+    "subNav": [
+      {
+        "name": "系统信息",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "系统命令",
+        "url": "output_monitoring.html"
+      }
+    ]
   }
+
 ]

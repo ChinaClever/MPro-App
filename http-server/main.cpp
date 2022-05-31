@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <thread>
+#include "devinfo.h"
 #include "pdurpcobj.h"
 
 static const char *s_listen_on = "ws://localhost:8000";
@@ -109,6 +110,7 @@ int http_main(void) {
     //jsonrpc_export("pduReadString", pduReadString);
 //    jsonrpc_export("pduSetData", pduSetData);
     //jsonrpc_export("pduSetString", pduSetString);
+    DevInfo::init();
 
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
