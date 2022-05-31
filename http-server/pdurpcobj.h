@@ -11,6 +11,9 @@ public:
 
 private:
     static void responRpc(jsonrpc_request *r, const QVector<double> &its, double value);
+
+protected:
+    static IPC_WebClient *mWebIpc;
 };
 
 #endif // PDURPCOBJ_H
