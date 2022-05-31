@@ -176,6 +176,7 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
     sRelayUnit *unit = getRelayUnit(index);
     if(unit) {
         switch (index.subtopic) {
+        case DSub::Size:
         case DSub::Value: ptr = unit->sw; break;
         case DSub::Rated: ptr = unit->mode; break;
         case DSub::Alarm: ptr = unit->alarm; break;

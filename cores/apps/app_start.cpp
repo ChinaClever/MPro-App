@@ -49,12 +49,12 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     //Agent_Core::bulid(this);
-    //OP_Core::bulid(this)->startFun();
+    OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Mb_Core::bulid(this));
-    pool->start(Data_Core::bulid());
+    //pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()

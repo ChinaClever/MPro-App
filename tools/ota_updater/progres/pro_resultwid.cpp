@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "pro_resultwid.h"
-#include "ui_pro_widget.h"
+#include "ui_pro_resultwid.h"
 
 Pro_ResultWid::Pro_ResultWid(QWidget *parent) :
     QWidget(parent),

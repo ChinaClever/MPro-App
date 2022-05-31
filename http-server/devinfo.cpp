@@ -17,7 +17,8 @@ int DevInfo::getLoopNum(int id)
 
 int DevInfo::getOpNum(int id)
 {
-    return cm::devData(id)->info.outputNum;
+//    return cm::devData(id)->info.outputNum;
+    return 24;
 }
 
 void DevInfo::pduGetInfo(struct jsonrpc_request *r)
@@ -32,8 +33,7 @@ void DevInfo::pduGetInfo(struct jsonrpc_request *r)
         {
         case DType::Line: value = getLineNum((int)id); break;
         case DType::Loop: value = getLoopNum((int)id); break;
-        case DType::Output: //value = getOpNum((int)id); break;
-            value = 24; break;
+        case DType::Output: value = getOpNum((int)id); break;
         default:value = getLineNum((int)id); break;
         }
         jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" , its.at(0) , its.at(1) ,its.at(2) , its.at(3),its.at(4), value);
