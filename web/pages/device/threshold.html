@@ -126,17 +126,18 @@
 					<td width ="10%">下临界(A)</td>\
 					<td width ="10%">上临界(A)</td>\
 					<td width ="10%">最大值(A)</td>\
-					<td width ="5%">关闭</td>';
+					<td width ="5%">选取</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ swtich_state[i + 1] +'</td>';
-				tbody += '<td></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
+				tbody += '<td><input></input></td>';
+				tbody += '<td><input></input></td>';
+				tbody += '<td><input></input></td>';
+				tbody += '<td><input></input></td>';
+				tbody += '<td><input></input></td>';
+				tbody += '<td><select id = "e'+ i + '" </select></td>';
 				tbody += '</tr>';
 			}
 
