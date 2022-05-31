@@ -4,11 +4,11 @@ var ws,pending = {};
 var rpcid = 0;
 var recv ={
   "dev_num":0,
-  "dev_type":1,
-  "dev_name":2,
-  "output_num":3,
-  "output_size":4,
-  "switch_state":5,
+  "phase":1,
+  "loop":2,
+  "output":3,
+  "recv1":4,
+  "recv2":5,
   "cur_value":6,
   "vol_value":7,
   "pow_value":8,
@@ -17,41 +17,64 @@ var recv ={
 };
 
 
-var output ={
-  output_num : new Array(42),
-  output_size : new Array(42),
-  cur_value : new Array(42),
-  vol_value : new Array(42),
-  pow_value : new Array(42),
-  acpow_value : new Array(42),
-  factor_value : new Array(42),
-
-};
 
 var jsonrpc = function()
 {
   var url = 'ws://localhost:8000/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
-  var type = 0;
+  var type = 0,topic = 0,subtopic = 0;
   ws.onclose = function(){};
   ws.onmessage = function(evt) {
-    // if (frame.id !== undefined) {
-    //   if (pending[frame.id] !== undefined) pending[frame.id](frame);  // Resolve
-    //   delete (pending[frame.id]);
-    // } else {
-    // }
-
-    type = JSON.parse(evt.data).result[2];
-    if(type  == "output_size")
+    type = parseInt(JSON.parse(evt.data).result[1]);
+    topic = parseInt(JSON.parse(evt.data).result[2]);
+    subtopic = parseInt(JSON.parse(evt.data).result[3]);
+    switch(type)
     {
-      output_num = JSON.parse(evt.data).result[3];
+      case 0:
+      break;
+      case 1:
+
+      break;
+      case 2:
+
+      break;
+      case 3:
+        if(topic == 0)
+        {
+          output_num = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 1)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+      break;
+      case 4:
+
+      break;
+      case 5:
+
+      break;
+      case 6:
+        
+      break;
+      case 7:
+      
+      break;
     }
-    else if(type  == "output_name"){
-      var i = JSON.parse(evt.data).result[1];
-      output_name[i] = JSON.parse(evt.data).result[3];
-      console.log(output_name[i]);
-    }
+    // if(type  == "output_size")
+    // {
+    //   output_num = JSON.parse(evt.data).result[3];
+    // }
+    // else if(type  == "output_name"){
+    //   var i = JSON.parse(evt.data).result[1];
+    //   output_name[i] = JSON.parse(evt.data).result[3];
+    //   console.log(output_name[i]);
+    // }
+    // else if(type  == "switch_state"){
+    //   var i = JSON.parse(evt.data).result[1];
+    //   swtich_state[i] = JSON.parse(evt.data).result[3];
+    // }
     tick--;
     if(tick == 0)
     {
@@ -59,7 +82,6 @@ var jsonrpc = function()
     }
   }
   ws.onopen = function(){
-    // ws.send("start");
   };
   return {
     close:() => ws.close(),

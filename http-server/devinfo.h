@@ -3,8 +3,6 @@
 #include "commons.h"
 #include "jsonrpcobj.h"
 
-enum sDevSizeType{Line_Num, Loop_Num, Output_Num};
-
 class DevInfo
 {
 public:

@@ -5,6 +5,7 @@
 #include "mongoose.h"
 #include "jsonrpcobj.h"
 #include "ipc_echoclient.h"
+#include "devinfo.h"
 
 static const char *s_listen_on = "ws://localhost:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
@@ -111,6 +112,7 @@ int http_main(void) {
     //jsonrpc_export("pduReadString", pduReadString);
     jsonrpc_export("pduSetData", pduSetData);
     //jsonrpc_export("pduSetString", pduSetString);
+    DevInfo::init();
 
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
