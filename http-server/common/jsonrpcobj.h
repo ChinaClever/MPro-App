@@ -1,9 +1,9 @@
 #ifndef JSONRPCOBJ_H
 #define JSONRPCOBJ_H
-#include <stdarg.h>
-#include <stdlib.h>
-#include "mjson.h"
 #include <QtCore>
+#include "mjson.h"
+#include "mongoose.h"
+#include "ipc_webclient.h"
 
 class JsonRpcObj
 {
