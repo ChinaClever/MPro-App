@@ -21,9 +21,15 @@ bool Set_RwInitial::initialData()
 
 void Set_RwInitial::initDevInfo(sDevInfo &it)
 {
+    it.opNum = 3;
     it.lineNum = LINE_NUM;
     it.loopNum = LOOP_NUM / 2;
     it.outputNum = OUTPUT_NUM / 2;
+
+    for(int i=0; i<it.loopNum; ++i) {
+        it.loopEnds[i] = 8*(i+1);
+        it.loopStarts[i] = 8*i;
+    }
 }
 
 void Set_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)

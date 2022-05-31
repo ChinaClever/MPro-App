@@ -21,3 +21,21 @@ void Data_Line::lineWork()
         lineData(i, start, end);
     }
 }
+
+void Data_Line::tgWork()
+{
+    sObjData *obj = &(mDev->output);
+    sTgObjData *tg = &(mDev->tg);
+    int size = obj->size;
+
+    tg->vol.value = averageValue(obj->vol.value, 0, size);
+    tg->cur.value = summation(obj->cur.value, 0, size);
+    tg->pow.value = summation(obj->pow.value, 0, size);
+    tg->artPow = summation(obj->artPow, 0, size);
+    tg->ele = summation(obj->ele, 0, size);
+
+    if(tg->artPow) {
+        tg->pf = tg->pow.value * 100.0 / tg->artPow;
+        if(tg->pf > 99) tg->pf = 99;
+    } else tg->pf = 0;
+}
