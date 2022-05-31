@@ -55,7 +55,9 @@ QString IPC_EchoClient::getString(sStrItem &unit)
 
 QString IPC_EchoClient::getString(uchar addr, uchar fc, uchar id)
 {
-    sStrItem it; it.addr = addr; it.fc = fc; it.id = id;
+    sStrItem it; it.addr = addr;
+    it.fc = fc; if(id) id--;
+    it.id = id;
     return getString(it);
 }
 
@@ -69,7 +71,7 @@ bool IPC_EchoClient::setting(uchar addr, uchar type, uchar topic, uchar sub, uch
 
 int IPC_EchoClient::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
 {
-    sDataItem it; it.addr = addr; it.type = type;
+    sDataItem it; it.addr = addr; it.type = type; if(id) id--;
     it.topic = topic; it.subtopic = sub; it.id = id;
     bool ret = this->getValue(it); int res = -1;
     if(ret) res = it.value;

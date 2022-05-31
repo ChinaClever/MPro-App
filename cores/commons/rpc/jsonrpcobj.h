@@ -12,6 +12,7 @@ class JsonRpcObj : public QObject
     Q_OBJECT
 public:
     explicit JsonRpcObj(QObject *parent = nullptr);
+    bool startLocalServer(const QObjectList &services);
     bool startServer(const QObjectList &services, int port=6002,
                      SocketType socket_type = SocketType::tcp);
 
