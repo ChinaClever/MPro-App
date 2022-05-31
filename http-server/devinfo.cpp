@@ -17,8 +17,7 @@ int DevInfo::getLoopNum(int id)
 
 int DevInfo::getOpNum(int id)
 {
-//    return cm::devData(id)->info.outputNum;
-    return 24;
+    return cm::devData(id)->info.outputNum;
 }
 
 void DevInfo::pduGetInfo(struct jsonrpc_request *r)
