@@ -9,7 +9,7 @@ public:
     static void pduReadData(struct jsonrpc_request *r);
     static void pduSetData(struct jsonrpc_request *r);
 
-private:
+protected:
     static void responRpc(jsonrpc_request *r, const QVector<double> &its, double value);
 
 protected:

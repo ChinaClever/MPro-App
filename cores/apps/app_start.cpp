@@ -24,7 +24,6 @@ App_Start::App_Start(QObject *parent)
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
-
 App_Start *App_Start::bulid(QObject *parent)
 {
     static App_Start* sington = nullptr;
