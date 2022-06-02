@@ -224,7 +224,7 @@ struct sDataPacket
 };
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
-enum DTopic{Relay=1, Vol, Cur, Pow, PF, Ele, ArtPow, ReactivePow, Tem=11, Hum, Door1, Door2, Water, Smoke};
+enum DTopic{Relay=1, Vol, Cur, Pow, PF, Ele, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
