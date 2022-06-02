@@ -47,7 +47,6 @@ void IPC_WebServer::dbus_recv_slot(int fc, const QByteArray &array)
 {
     if(1 == fc) {
         sDataItem unit = cm::toStruct<sDataItem>(array);
-        qDebug() << "GGGGGGGGGG" << unit.value;
         Set_Core::bulid()->setting(unit);
     } else if(2 == fc) {
         sStrItem unit = cm::toStruct<sStrItem>(array);

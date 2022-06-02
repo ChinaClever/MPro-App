@@ -19,6 +19,7 @@ private:
     void averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end);
     void sumObjData(int id, sObjData &dest, const sObjData &src, int start, int end);
     uint calPf(int id, sObjData &obj);
+    void calHz();
 
 protected:
     sDevData *mDev;

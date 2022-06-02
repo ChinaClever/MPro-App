@@ -23,8 +23,11 @@ private:
 
     bool alarmUnitValue(sDataItem &index);
     bool tgAlarmUnitValue(sDataItem &index);
+    bool tgValue(sDataItem &index);
+
     bool relayUnitValue(sDataItem &index);
     bool sensorValue(sDataItem &index);
+    bool pfEleValue(sDataItem &index);
 };
 
 #endif // ALARM_OBJECT_H
