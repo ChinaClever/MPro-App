@@ -31,6 +31,7 @@ void Data_Line::tgWork()
     tg->vol.value = averageValue(obj->vol.value, 0, size);
     tg->cur.value = summation(obj->cur.value, 0, size);
     tg->pow.value = summation(obj->pow.value, 0, size);
+    tg->reactivePow = summation(obj->reactivePow, 0, size);
     tg->artPow = summation(obj->artPow, 0, size);
     tg->ele = summation(obj->ele, 0, size);
 

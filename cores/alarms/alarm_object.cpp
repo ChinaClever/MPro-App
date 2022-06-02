@@ -213,13 +213,52 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     return ret;
 }
 
+bool Alarm_Object::pfEleValue(sDataItem &index)
+{
+    bool ret = true; uint *ptr = nullptr;
+    sObjData *obj = getObjData(index);
+    switch (index.topic) {
+    case DTopic::PF: ptr = obj->pf; break;
+    case DTopic::Ele: ptr = obj->ele; break;
+    case DTopic::ArtPow: ptr = obj->artPow; break;
+    case DTopic::ReactivePow: ptr = obj->reactivePow; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(ptr) index.value = ptr[index.id];
+    return ret;
+}
+
+bool Alarm_Object::tgValue(sDataItem &index)
+{
+    bool ret = true;
+    if(index.topic > DTopic::Pow) {
+        sTgObjData *tg = &(cm::devData(index.addr)->tg);
+        switch (index.topic) {
+        case DTopic::PF: index.value = tg->pf; break;
+        case DTopic::Ele: index.value = tg->ele; break;
+        case DTopic::ArtPow: index.value = tg->artPow; break;
+        case DTopic::ReactivePow: index.value = tg->reactivePow; break;
+        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        }
+    } else ret = tgAlarmUnitValue(index);
+    return ret;
+}
+
 bool Alarm_Object::upIndexValue(sDataItem &index)
 {
     bool  ret = false;
-    if(DType::Tg == index.type) ret = tgAlarmUnitValue(index);
-    else if(DTopic::Relay == index.topic) ret = relayUnitValue(index);
-    else if(DType::Sensor == index.type) ret = sensorValue(index);
-    else ret = alarmUnitValue(index);
+    switch (index.type) {
+    case DType::Tg: return tgValue(index);
+    case DType::Sensor: return sensorValue(index);
+    }
+
+    switch (index.topic) {
+    case DTopic::Relay: return relayUnitValue(index);
+    case DTopic::PF: case DTopic::Ele: case DTopic::ArtPow:
+    case DTopic::ReactivePow: ret = pfEleValue(index); break;
+    default: ret = alarmUnitValue(index); break;
+    }
 
     return ret;
 }
