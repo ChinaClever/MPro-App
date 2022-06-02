@@ -83,7 +83,7 @@ uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
         else if(value > it.crMax) alarm = AlarmStatus::CrMax;
         else if(value < it.crMin) alarm = AlarmStatus::CrMin;
         else if(value < it.min) alarm = AlarmStatus::Min;
-        else {alarm = AlarmStatus::Ok;} index.id = 0xFF;
+        else {alarm = AlarmStatus::Ok;} index.id = 0;
         if(it.alarm != alarm) emit alarmSig(index, alarm);
         it.alarm = alarm; ret |= alarm;
     }

@@ -10,12 +10,14 @@ class App_Start : public QObject
 public:
     static App_Start *bulid(QObject *parent = nullptr);
 
-signals:
+private:
+    void initUsb();
 
 private slots:
     void initFunSlot();
     void startThreadSlot();
     void clearCacheSlot();
+    void slotDeviceAdded(const QString &);
 };
 
 #endif // APP_START_H
