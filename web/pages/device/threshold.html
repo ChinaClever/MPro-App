@@ -54,11 +54,8 @@
 	<script>var value_now = 0, val = 0,tick = 0,push = 0;</script>
 	<script>
 		var dev_num = 0,output_num = 0;
-		var dev_type = new Array();
-		var dev_type = new Array();
-		var output_size = new Array();
 		var output_name = new Array();
-		var cur_size = new Array();
+		var cur_val = new Array();
 	</script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
@@ -70,11 +67,6 @@
 		var Input_state = new Array("开","闭","重启");
 		var Val = new Array(); 
 		var rpc = 0;
-		// ,dev_num = 0,output_num = 0;
-		// var dev_type = new Array();
-		// var dev_type = new Array();
-		// var output_size = new Array();
-		// var output_name = new Array();
 		var output_status = new Array();
 		var j = 0;
 		var logs;
@@ -131,7 +123,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td><input type = "text" class = "input" id = "b'+ i + '"></input></td>';
-				tbody += '<td id = "c'+ i + '">'+ (parseInt(cur_size[i + 1])/100).toFixed(2) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ (parseFloat(cur_val[i + 1])/100).toFixed(2) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '" </input></td>';
 				tbody += '<td><input type = "text" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input type = "text" class = "input" id = "f'+ i + '"></input></td>';

@@ -54,11 +54,12 @@
 	<script>var value_now = 0, val = 0,tick = 0,push = 0;</script>
 	<script>
 		var dev_num = 0,output_num = 0;
-		var dev_type = new Array();
-		var dev_type = new Array();
-		var output_size = new Array();
 		var output_name = new Array();
 		var swtich_state = new Array();
+		var cur_val = new Array();
+		var pf_val = new Array();
+		var pow_val= new Array();
+		var energe_val= new Array();
 	</script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
@@ -68,13 +69,9 @@
     <script>
 		//hljs.initHighlightingOnLoad();
 		var Input_state = new Array("开","闭","重启");
+		var State = new Array("关","开");
 		var Val = new Array(); 
 		var rpc = 0;
-		// ,dev_num = 0,output_num = 0;
-		// var dev_type = new Array();
-		// var dev_type = new Array();
-		// var output_size = new Array();
-		// var output_name = new Array();
 		var output_status = new Array();
 		var j = 0;
 		var logs;
@@ -97,14 +94,38 @@
 		}
 		rpc = jsonrpc();
 		var time2 = setTimeout(function(){
-			rpc.call('output_size_value',[0]);
+			rpc.call('pduGetInfo',[0,3,0,0,0]);
 			tick ++;
 			var time3 = setTimeout(function(){
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					tick ++;
-					rpc.call('output_name_value',[0,i]);
-				}},100);
+					rpc.call('pduReadData',[0,3,1,1,i]);
+				}},110);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
+					rpc.call('pduReadData',[0,3,3,1,i]);
+				}},120);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
+					rpc.call('pduReadData',[0,3,4,1,i]);
+				}},130);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
+					rpc.call('pduReadData',[0,3,5,1,i]);
+				}},140);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
+					rpc.call('pduReadData',[0,3,6,1,i]);
+				}},150);
 			},800);
 
 		var time3 = setInterval(function(){
@@ -119,22 +140,22 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="20%">名称</td>\
-					<td width ="18%">开关状态</td>\
-					<td width ="40%"></td>\
-					<td width ="8%">开启</td>\
-					<td width ="8%">关闭</td>';
+					thead = '<tr><td width ="8%">序号</td>\
+					<td width ="32%">名称</td>\
+					<td width ="12%">开关状态</td>\
+					<td width ="12%">输出电流(A)</td>\
+					<td width ="12%">有功功率(KW)</td>\
+					<td width ="12%">功率因数</td>\
+					<td width ="12%">电能消耗</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ swtich_state[i + 1] +'</td>';
-				tbody += '<td></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
+				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
+				tbody += '<td id = "d'+ i + '">' + parseFloat(cur_val[i+1]/100).toFixed(2) + '</td>';
+				tbody += '<td id = "e'+ i + '">'+ parseFloat(pow_val[i + 1]/1000).toFixed(2) +'</td>';
+				tbody += '<td id = "f'+ i + '">'+ pf_val[i + 1] +'</td>';
+				tbody += '<td id = "g'+ i + '">' + energe_val[i + 1] + '</td>';
 				tbody += '</tr>';
 			}
 
