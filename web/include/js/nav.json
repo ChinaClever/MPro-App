@@ -6,11 +6,11 @@
     "subNav": [
       {
         "name": "首页",
-        "url": "relay_ctrl.html"
+        "url": "home.html"
       },
       {
         "name": "输出位监测",
-        "url": "relay_ctrl.html"
+        "url": "output_monitoring.html"
       }
     ]
   },
@@ -21,11 +21,11 @@
     "subNav": [
       {
         "name": "模式设置",
-        "url": "relay_ctrl.html"
+        "url": "mode_setting.html"
       },
       {
         "name": "分组设置",
-        "url": "output_monitoring.html"
+        "url": "group.html"
       },
       {
         "name": "单元设置",
@@ -33,15 +33,15 @@
       },
       {
         "name": "环控设置",
-        "url": "customize.html"
+        "url": "envir_ctrl.html"
       },
       {
         "name": "电能清零",
-        "url": "customize.html"
+        "url": "energe_clr.html"
       },
       {
         "name": "开关控制",
-        "url": "customize.html"
+        "url": "relay_ctrl.html"
       }
     ]
   },
