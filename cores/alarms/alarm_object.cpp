@@ -130,6 +130,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::VMin: ptr = unit->min; break;
         case DSub::VCrMin: ptr = unit->crMin; break;
         case DSub::VCrMax: ptr = unit->crMax; break;
+        case DSub::EnAlarm: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -150,7 +151,7 @@ bool Alarm_Object::tgAlarmUnitValue(sDataItem &index)
     sTgUnit *unit = getTgAlarmUnit(index);
     if(unit) {
         switch (index.subtopic) {
-        case DSub::Size: index.value = 0; break;
+        case DSub::Size: index.value = 1; break;
         case DSub::Value: ptr = &(unit->value); break;
         case DSub::Rated: ptr = &(unit->rated); break;
         case DSub::Alarm: ptr = &(unit->alarm); break;
@@ -158,6 +159,7 @@ bool Alarm_Object::tgAlarmUnitValue(sDataItem &index)
         case DSub::VMin: ptr = &(unit->min); break;
         case DSub::VCrMin: ptr = &(unit->crMin); break;
         case DSub::VCrMax: ptr = &(unit->crMax); break;
+        case DSub::EnAlarm: ptr = &(unit->en); break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }

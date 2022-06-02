@@ -76,14 +76,26 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     default: ret = false; break;
     } index.topic = v;
 
-    switch (it->subtopic) {
-    case 2: v = DSub::Rated; break;
-    case 3: v = DSub::VMax; break;
-    case 4: v = DSub::VCrMax; break;
-    case 5: v = DSub::VCrMin; break;
-    case 6: v = DSub::VMin; break;
-    default: ret = false; break;
-    } index.subtopic = v;
+    if(index.type < 6) {
+        switch (it->subtopic) {
+        case 2: v = DSub::Rated; break;
+        case 3: v = DSub::VMax; break;
+        case 4: v = DSub::VCrMax; break;
+        case 5: v = DSub::VCrMin; break;
+        case 6: v = DSub::VMin; break;
+        case 7: v = DSub::EnAlarm; break;
+        default: ret = false; break;
+        }
+    } else {
+        switch (it->subtopic) {
+        case 2: v = DSub::VMax; break;
+        case 3: v = DSub::VMin; break;
+        case 4: v = DSub::EnAlarm; break;
+        default: ret = false; break;
+        }
+    }
+    index.subtopic = v;
+
 
     return ret;
 }

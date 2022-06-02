@@ -3,6 +3,7 @@
 #include <QtCore>
 #include "mjson.h"
 #include "mongoose.h"
+#include "commons.h"
 #include "ipc_webclient.h"
 
 class JsonRpcObj
