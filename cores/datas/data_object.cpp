@@ -31,7 +31,8 @@ uint Data_Object::averageValue(const uint *ptr, int start, int end)
         for(int i=start; i<end; ++i) list << ptr[i];
         std::sort(list.begin(), list.end());
         int k = (list.size() + 1) / 2;
-        ret = list.at(k);
+        if(k < list.size()) ret = list.at(k);
+        else ret = list.first();
     } else ret = ptr[start];
     return ret;
 }

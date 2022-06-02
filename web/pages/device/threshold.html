@@ -9,8 +9,8 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
 		<style>
 			.panel-default{
             border: none;
@@ -58,13 +58,13 @@
 		var dev_type = new Array();
 		var output_size = new Array();
 		var output_name = new Array();
-		var swtich_state = new Array();
+		var cur_size = new Array();
 	</script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
+	<script src="../../doc-lib/highlight.pack.js"></script>
+	<script src="../../doc-lib/doc.js"></script>
     <script>
 		//hljs.initHighlightingOnLoad();
 		var Input_state = new Array("开","闭","重启");
@@ -103,16 +103,16 @@
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					tick ++;
-					rpc.call('pduReadData',[0,3,1,0,i]);
-				}},100);
-			},800);
+					rpc.call('pduReadData',[0,3,3,1,i]);
+				}},10);
+			},1000);
 
 		var time3 = setInterval(function(){
 			if(!tick && push){
 				push = 0;
 				$('.table-striped').html(buildTable(output_num));
 			}
-		},1000);
+		},200);
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
@@ -130,14 +130,14 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ swtich_state[i + 1] +'</td>';
-				tbody += '<td><input></input></td>';
-				tbody += '<td><input></input></td>';
-				tbody += '<td><input></input></td>';
-				tbody += '<td><input></input></td>';
-				tbody += '<td><input></input></td>';
-				tbody += '<td><select id = "e'+ i + '" </select></td>';
+				tbody += '<td><input type = "text" class = "input" id = "b'+ i + '"></input></td>';
+				tbody += '<td id = "c'+ i + '">'+ parseInt(cur_size[i + 1])/100 +'</td>';
+				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
+				tbody += '<td><input type = "text" class = "input" id = "e'+ i + '"></input></td>';
+				tbody += '<td><input type = "text" class = "input" id = "f'+ i + '"></input></td>';
+				tbody += '<td><input type = "text" class = "input" id = "g'+ i + '"></input></td>';
+				tbody += '<td><input type = "text" class = "input" id = "h'+ i + '"></input></td>';
+				tbody += '<td><input  type = "checkbox" class = "input" id = "f'+ i + '" </input></td>';
 				tbody += '</tr>';
 			}
 

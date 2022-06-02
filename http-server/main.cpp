@@ -71,7 +71,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
 
     } else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
-        printf("MG_EV_WS_MSG\n");
+        // printf("MG_EV_WS_MSG\n");
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
         struct mg_str req = wm->data;
         char *response = NULL;

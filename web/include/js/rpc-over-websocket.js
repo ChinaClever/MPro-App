@@ -48,6 +48,46 @@ var jsonrpc = function()
         {
           swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
+        else if(topic == 2)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 3)
+        {
+          cur_size[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 4)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 5)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 6)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 7)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 8)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 9)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 10)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 11)
+        {
+          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
       break;
       case 4:
 
