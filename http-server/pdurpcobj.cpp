@@ -4,10 +4,10 @@ IPC_WebClient *PduRpcObj::mWebIpc = nullptr;
 void PduRpcObj::rpc_export()
 {
     mWebIpc = IPC_WebClient::bulid();
-    jsonrpc_export("pduReadData", pduReadData);  // of RPC functions
-    jsonrpc_export("pduReadString", pduReadString);
     jsonrpc_export("pduSetData", pduSetData);
+    jsonrpc_export("pduReadData", pduReadData);
     jsonrpc_export("pduSetString", pduSetString);
+    jsonrpc_export("pduReadString", pduReadString);
 }
 
 
@@ -29,14 +29,15 @@ void PduRpcObj::pduSetData(struct jsonrpc_request *r)
 
 void PduRpcObj::responRpcData(jsonrpc_request *r, const QVector<double> &its, double value)
 {
-    jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%g]" ,
-                           its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , value);
+    jsonrpc_return_success(r, "[%g,%g,%g,%g,%g,%g]" ,
+                           its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value);
 }
 
 void PduRpcObj::responRpcString(jsonrpc_request *r, const QVector<double> &its, QString value)
 {
-    jsonrpc_return_success(r , "[%g,%g,%g,%g,%g,%Q]" ,
-                           its.at(0) , its.at(1) , its.at(2) , its.at(3) , its.at(4) , value.toStdString().c_str());
+    jsonrpc_return_success(r, "[%g,%g,%g,%g,%g,%Q]" ,
+                           its.at(0), its.at(1), its.at(2), its.at(3), its.at(4),
+                           value.toStdString().c_str());
 }
 
 void PduRpcObj::pduReadString(struct jsonrpc_request *r)

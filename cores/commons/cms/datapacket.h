@@ -240,6 +240,8 @@ struct sDataItem
     uint value;
 };
 
+enum SFnCode{OutputName=10, Uuts};
+
 struct sStrItem{
     sStrItem():addr(0),rw(0){}
     uchar addr; // 地址

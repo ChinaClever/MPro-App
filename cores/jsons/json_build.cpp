@@ -68,7 +68,8 @@ void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJs
 
     obj.insert("warn_min", it.crMin[id]/r);
     obj.insert("warn_max", it.crMax[id]/r);
-    obj.insert("alarm", it.alarm[id]?true:false);
+    obj.insert("alarm_status", it.alarm[id]?true:false);
+    obj.insert("alarm_enable", it.en[id]?true:false);
 
     json.insert(key, QJsonValue(obj));
 }
@@ -111,10 +112,10 @@ void Json_Build::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json
     QJsonObject obj; double r = 1;
     obj.insert("value", it.value/r);
     obj.insert("rated", it.rated/r);
-    obj.insert("min", it.min/r);
-    obj.insert("max", it.max/r);
-    obj.insert("near_emin", it.crMin/r);
-    obj.insert("near_max", it.crMax/r);
+    obj.insert("alarm_min", it.min/r);
+    obj.insert("alarm_max", it.max/r);
+    obj.insert("warn_min", it.crMin/r);
+    obj.insert("warn_max", it.crMax/r);
 
     json.insert(key, QJsonValue(obj));
 }
@@ -164,6 +165,7 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     obj.insert("version", it.version/r);
 
     obj.insert("op_num", it.opNum);
+    obj.insert("loop_num", it.loopNum);
     obj.insert("slave_num", it.slaveNum/r);
     obj.insert("output_num", it.outputNum/r);
 

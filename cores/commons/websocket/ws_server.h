@@ -12,9 +12,10 @@ public:
     explicit WS_Server(QObject *parent = nullptr);
     bool initServer(int port) {return initServer(QWebSocketServer::NonSecureMode, port);}
     bool initSslServer(int port) {return initServer(QWebSocketServer::SecureMode, port);}
+
 protected:
-    void sslCfg();
     bool listen(int port);
+    void sslCfg(QWebSocketServer *socket);
     bool initServer(QWebSocketServer::SslMode secureMode, int port);
 
 Q_SIGNALS:

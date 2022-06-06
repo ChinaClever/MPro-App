@@ -17,26 +17,30 @@ bool WS_Server::initServer(QWebSocketServer::SslMode secureMode, int port)
     connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &WS_Server::onNewConnection);
     connect(m_pWebSocketServer, &QWebSocketServer::sslErrors, this, &WS_Server::onSslErrors);
     connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WS_Server::closed);
-    if(QWebSocketServer::SecureMode == secureMode) sslCfg();
+    if(QWebSocketServer::SecureMode == secureMode) sslCfg(m_pWebSocketServer);
     return listen(port);
 }
 
-void WS_Server::sslCfg()
+void WS_Server::sslCfg(QWebSocketServer *socket)
 {
     QSslConfiguration sslConfiguration;
     QFile certFile(QStringLiteral("ssl/cert.pem"));
     QFile keyFile(QStringLiteral("ssl/key.pem"));
-    certFile.open(QIODevice::ReadOnly);
-    keyFile.open(QIODevice::ReadOnly);
-    QSslCertificate certificate(&certFile, QSsl::Pem);
-    QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
-    certFile.close();
-    keyFile.close();
-    sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
-    sslConfiguration.setLocalCertificate(certificate);
-    sslConfiguration.setPrivateKey(sslKey);
-    sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
-    m_pWebSocketServer->setSslConfiguration(sslConfiguration);
+    if(!certFile.exists()) certFile.setFileName(QStringLiteral("ssl/localhost.cert"));
+    if(!keyFile.exists()) keyFile.setFileName(QStringLiteral("ssl/localhost.key"));
+
+    bool ret = keyFile.open(QIODevice::ReadOnly);
+    if(ret) ret = certFile.open(QIODevice::ReadOnly);
+    if(ret) {
+        QSslCertificate certificate(&certFile, QSsl::Pem);
+        QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
+        sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
+        sslConfiguration.setLocalCertificate(certificate);
+        sslConfiguration.setPrivateKey(sslKey);
+        sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
+        socket->setSslConfiguration(sslConfiguration);
+    } else qDebug() <<"Error ssl cfg" << Q_FUNC_INFO;
+    certFile.close(); keyFile.close();
 }
 
 bool WS_Server::listen(int port)

@@ -33,8 +33,8 @@ bool Set_Core::setString(sStrItem &it)
             ret = Cascade_Core::bulid()->masterSetString(it);
         } else {
             switch (it.fc) {
-            case 10: ret = outputNameSet(it.addr, it.id, it.str); break;
-            case 11: ret = setUut(it.id, it.str); break;
+            case SFnCode::OutputName: ret = outputNameSet(it.addr, it.id, it.str); break;
+            case SFnCode::Uuts: ret = setUut(it.id, it.str); break;
             default: qDebug() << Q_FUNC_INFO << it.fc; break;
             }
         }
@@ -48,8 +48,8 @@ QString Set_Core::getString(sStrItem &it)
     QString str;
     if(!it.rw) {
         switch (it.fc) {
-        case 10: str = outputName(it.addr, it.id); break;
-        case 11: str = getUut(it.addr, it.id); break;
+        case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
+        case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
         default: qDebug() << Q_FUNC_INFO << it.fc; break;
         }
     }
