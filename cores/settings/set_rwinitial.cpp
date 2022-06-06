@@ -54,9 +54,9 @@ void Set_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 
 void Set_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
-    setVolAlarm(it.vol, size, 220);
     setAlarmUnit(it.cur, size, curRated);
-    setAlarmUnit(it.pow, size, 220*curRated/10);
+    setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
+    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR/COM_RATE_VOL);
 }
 
 void Set_RwInitial::setTgVol(sTgUnit &it, uint rated)
@@ -75,8 +75,8 @@ void Set_RwInitial::setTgUnit(sTgUnit &it, uint rated)
 
 void Set_RwInitial::initTgObjData(sTgObjData &it)
 {
-    setTgVol(it.vol, 220);
-    setTgUnit(it.cur, 320);
+    setTgVol(it.vol, 220*COM_RATE_VOL);
+    setTgUnit(it.cur, 32*COM_RATE_CUR);
     setTgUnit(it.pow, 220*32);
 }
 
@@ -89,9 +89,9 @@ void Set_RwInitial::initEnvData(sEnvData &it)
 
 void Set_RwInitial::initDevData(sDevData *dev)
 {
-    initObjData(dev->line, LINE_NUM, 320);
-    initObjData(dev->loop, LOOP_NUM, 160);
-    initObjData(dev->output, OUTPUT_NUM, 100);
+    initObjData(dev->line, LINE_NUM, 32*COM_RATE_CUR);
+    initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
+    initObjData(dev->output, OUTPUT_NUM, 10*COM_RATE_CUR);
     setRelayUnit(dev->line.relay, LINE_NUM, sRelay::NormaOpen);
 
     initTgObjData(dev->tg);

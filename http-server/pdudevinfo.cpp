@@ -18,7 +18,7 @@ void PduDevInfo::pduGetInfo(struct jsonrpc_request *r)
         case DType::Output: value = dev->info.outputNum; break;
         default: qDebug() << Q_FUNC_INFO << type; break;
         }
-        responRpc(r, its, value);
+        responRpcData(r, its, value);
   }
 }
 

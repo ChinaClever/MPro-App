@@ -23,6 +23,5 @@ int main(int argc, char *argv[])
     QObject *p = a.parent();
     App_Start::bulid(p);
 
-
     return a.exec();
 }

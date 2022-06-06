@@ -26,7 +26,7 @@ void Data_Line::tgWork()
 {
     sObjData *obj = &(mDev->output);
     sTgObjData *tg = &(mDev->tg);
-    int size = obj->size;
+    int size = obj->size; calHz();
 
     tg->vol.value = averageValue(obj->vol.value, 0, size);
     tg->cur.value = summation(obj->cur.value, 0, size);
@@ -39,4 +39,12 @@ void Data_Line::tgWork()
         tg->pf = tg->pow.value * 100.0 / tg->artPow;
         if(tg->pf > 99) tg->pf = 99;
     } else tg->pf = 0;
+}
+
+void Data_Line::calHz()
+{
+    for(uint i=0; i<mDev->info.loopNum; ++i) {
+        uchar hz = mDev->info.hzs[i];
+        if(hz) {mDev->hz = mDev->info.hz = hz; break;}
+    }
 }

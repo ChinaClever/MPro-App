@@ -82,10 +82,3 @@ void Data_Object::lineData(int id, int start, int end)
     sumObjData(id, mDev->line, mDev->loop, start, end);
 }
 
-void Data_Object::calHz()
-{
-    for(uint i=0; i<mDev->info.outputNum; ++i) {
-        uchar hz = mDev->info.hzs[i];
-        if(hz) mDev->hz = hz;
-    }
-}
