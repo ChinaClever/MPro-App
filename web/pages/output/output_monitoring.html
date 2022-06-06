@@ -37,10 +37,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<ul sytle="float:right;font-family:courier;">
-									<span id="lang_2"></span>
-									<select id ="ms" style ="width:200px;" onchange = "change();"></select>
-								</ul>
+								<span id="lang_2">单元设置</span>
+								<select id ="ms" style ="width:200px;float:right;" onchange = "change();"></select>
 							</div>
 						</div>
 					</div>
@@ -154,8 +152,8 @@
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td id = "d'+ i + '">' + parseFloat(cur_val[i+1]/100).toFixed(2) + '</td>';
 				tbody += '<td id = "e'+ i + '">'+ parseFloat(pow_val[i + 1]/1000).toFixed(2) +'</td>';
-				tbody += '<td id = "f'+ i + '">'+ pf_val[i + 1] +'</td>';
-				tbody += '<td id = "g'+ i + '">' + energe_val[i + 1] + '</td>';
+				tbody += '<td id = "f'+ i + '">'+ parseFloat(pf_val[i + 1]/100).toFixed(2) +'</td>';
+				tbody += '<td id = "g'+ i + '">' + parseFloat(energe_val[i + 1]/10).toFixed(1) + '</td>';
 				tbody += '</tr>';
 			}
 

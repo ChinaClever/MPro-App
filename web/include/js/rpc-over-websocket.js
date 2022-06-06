@@ -54,7 +54,30 @@ var jsonrpc = function()
         }
         else if(topic == 3)
         {
-          cur_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          if(subtopic == 1){
+            cur_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 2){
+            cur_rated[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 3){
+            cur_alarm[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 4){
+            cur_max[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 5){
+            cur_min[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 6){
+            vcrmin[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 7){
+            vcrmax[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 8){
+            cur_enable[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
         }
         else if(topic == 4)
         {
@@ -68,27 +91,27 @@ var jsonrpc = function()
         {
           energe_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 7)
+        else if(topic == 11)
         {
           tem_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 8)
+        else if(topic == 12)
         {
           hum_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 9)
+        else if(topic == 21)
         {
           door1[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 10)
+        else if(topic == 22)
         {
           door2[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 11)
+        else if(topic == 23)
         {
           water[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
-        else if(topic == 12)
+        else if(topic == 24)
         {
           smoke[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
@@ -106,19 +129,6 @@ var jsonrpc = function()
       
       break;
     }
-    // if(type  == "output_size")
-    // {
-    //   output_num = JSON.parse(evt.data).result[3];
-    // }
-    // else if(type  == "output_name"){
-    //   var i = JSON.parse(evt.data).result[1];
-    //   output_name[i] = JSON.parse(evt.data).result[3];
-    //   console.log(output_name[i]);
-    // }
-    // else if(type  == "switch_state"){
-    //   var i = JSON.parse(evt.data).result[1];
-    //   swtich_state[i] = JSON.parse(evt.data).result[3];
-    // }
     tick--;
     if(tick == 0)
     {
