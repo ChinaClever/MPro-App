@@ -1,7 +1,7 @@
 #ifndef APP_START_H
 #define APP_START_H
 
-#include <QObject>
+#include "app_usb.h"
 
 class App_Start : public QObject
 {
@@ -17,7 +17,9 @@ private slots:
     void initFunSlot();
     void startThreadSlot();
     void clearCacheSlot();
-    void slotDeviceAdded(const QString &);
+
+private:
+    App_Usb *mUsb;
 };
 
 #endif // APP_START_H

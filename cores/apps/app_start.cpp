@@ -65,14 +65,6 @@ void App_Start::clearCacheSlot()
 
 void App_Start::initUsb()
 {
-    QDBusConnection::systemBus().connect("org.freedesktop.Hal",
-                                         "/org/freedesktop/Hal/Manager",
-                                         "org.freedesktop.Hal.Manager",
-                                         "DeviceAdded", this,
-                                         SLOT(slotDeviceAdded(QString)));
-}
-
-void App_Start::slotDeviceAdded(const QString &)
-{
-    qDebug() << "AAAAAAAAAAAAAAA";
+    mUsb = new App_Usb(this);
+    mUsb->start();
 }

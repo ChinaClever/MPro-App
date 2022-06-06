@@ -9,7 +9,7 @@
 Alarm_Log::Alarm_Log(QObject *parent)
     : QObject{parent}
 {
-    qRegisterMetaType<sDataItem>("sAlarmIndex");
+    //qRegisterMetaType<sDataItem>("sAlarmIndex");
     Alarm_Updater *alarm = Alarm_Updater::bulid(this);
     connect(alarm, &Alarm_Updater::alarmSig, this, &Alarm_Log::alarmSlot);
 }

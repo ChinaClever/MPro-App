@@ -24,8 +24,8 @@ bool WS_Server::initServer(QWebSocketServer::SslMode secureMode, int port)
 void WS_Server::sslCfg()
 {
     QSslConfiguration sslConfiguration;
-    QFile certFile(QStringLiteral(":/localhost.cert"));
-    QFile keyFile(QStringLiteral(":/localhost.key"));
+    QFile certFile(QStringLiteral("ssl/cert.pem"));
+    QFile keyFile(QStringLiteral("ssl/key.pem"));
     certFile.open(QIODevice::ReadOnly);
     keyFile.open(QIODevice::ReadOnly);
     QSslCertificate certificate(&certFile, QSsl::Pem);
@@ -35,6 +35,7 @@ void WS_Server::sslCfg()
     sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
     sslConfiguration.setLocalCertificate(certificate);
     sslConfiguration.setPrivateKey(sslKey);
+    sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
     m_pWebSocketServer->setSslConfiguration(sslConfiguration);
 }
 
