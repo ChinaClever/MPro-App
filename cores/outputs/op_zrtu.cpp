@@ -93,10 +93,10 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 
 bool OP_ZRtu::readData(int addr)
 {
-    static uint lzy = 0;
+    //static uint lzy = 0;
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr); qDebug() << Q_FUNC_INFO<< addr << ret << lzy++;
+    if(ret) fillData(addr); //qDebug() << Q_FUNC_INFO<< addr << ret << lzy++;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 

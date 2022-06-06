@@ -68,6 +68,8 @@
     <script>
 		//hljs.initHighlightingOnLoad();
 		var Input_state = new Array("开","闭","重启");
+		var State = new Array("关","开");
+
 		var Val = new Array(); 
 		var rpc = 0;
 		// ,dev_num = 0,output_num = 0;
@@ -120,16 +122,18 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="20%">名称</td>\
-					<td width ="18%">开关状态</td>\
-					<td width ="40%"></td>\
+					<td width ="26%">名称</td>\
+					<td width ="12%">开关状态</td>\
+					<td width ="10%">顺序延时(S)</td>\
+					<td width ="30%"></td>\
 					<td width ="8%">开启</td>\
 					<td width ="8%">关闭</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ swtich_state[i + 1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
+				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
 				tbody += '<td></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';

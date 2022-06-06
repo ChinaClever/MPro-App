@@ -11,7 +11,7 @@ public:
     static Alarm_Updater *bulid(QObject *parent = nullptr);
 
 signals:
-    void alarmSig(sDataItem &index, uchar value);
+    void alarmSig(const sDataItem &index, uchar value);
 
 public slots:
     void run();

@@ -17,12 +17,12 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
+    SM_Obj::initShm(); initUsb();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
-
 
 App_Start *App_Start::bulid(QObject *parent)
 {
@@ -54,11 +54,25 @@ void App_Start::startThreadSlot()
 
     QThreadPool *pool = QThreadPool::globalInstance();
     //pool->start(Mb_Core::bulid(this));
-    //pool->start(Data_Core::bulid());
+    pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()
 {
     //QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
     //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
+}
+
+void App_Start::initUsb()
+{
+    QDBusConnection::systemBus().connect("org.freedesktop.Hal",
+                                         "/org/freedesktop/Hal/Manager",
+                                         "org.freedesktop.Hal.Manager",
+                                         "DeviceAdded", this,
+                                         SLOT(slotDeviceAdded(QString)));
+}
+
+void App_Start::slotDeviceAdded(const QString &)
+{
+    qDebug() << "AAAAAAAAAAAAAAA";
 }

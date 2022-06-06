@@ -25,12 +25,18 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 }
 
 uint Data_Object::averageValue(const uint *ptr, int start, int end)
-{
+{   
     QList<uint> list;
-    for(int i=start; i<end; ++i) list << ptr[i];
-    std::sort(list.begin(), list.end());
-    int k = (list.size() + 1) / 2;
-    return list.at(k);
+    uint ret = 0; if(end > start) {
+        for(int i=start; i<end; ++i) if(ptr[i]) list << ptr[i];
+        if(list.size()) {
+            std::sort(list.begin(), list.end());
+            int k = (list.size() + 1) / 2;
+            if(k < list.size()) ret = list.at(k);
+            else ret = list.first();
+        }
+    } else ret = ptr[start];
+    return ret;
 }
 
 void Data_Object::averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end)
@@ -66,6 +72,9 @@ void Data_Object::sumObjData(int id, sObjData &dest, const sObjData &src, int st
 void Data_Object::loopData(int id, int start, int end)
 {
     sumObjData(id, mDev->loop, mDev->output, start, end);
+    uint *ptr = mDev->output.vol.value; uint sw = 0;
+    if(ptr[start] || ptr[end-1]) sw = 1;
+    mDev->loop.relay.sw[id] = sw;
 }
 
 void Data_Object::lineData(int id, int start, int end)

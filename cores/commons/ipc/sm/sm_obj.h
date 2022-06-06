@@ -11,6 +11,7 @@ class SM_Obj : public QObject
 public:
     explicit SM_Obj(QObject *parent = nullptr);
     static void *sharedMemory();
+    static void initShm();
 
 private:
     static void initShareMemory(QObject *parent = nullptr);

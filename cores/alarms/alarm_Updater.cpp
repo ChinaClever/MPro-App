@@ -44,13 +44,13 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
-        uint value = it.value[i];
+        uint value = it.value[i]; bool en = it.en[i];
         index.id = i; uchar alarm = AlarmStatus::Ok;
-        if(it.max[i]) if(value > it.max[i]) alarm += AlarmStatus::Max;
-        if(it.crMax[i]) if(value > it.crMax[i]) alarm += AlarmStatus::CrMax;
-        if(it.crMin[i]) if(value < it.crMin[i]) alarm += AlarmStatus::CrMin;
-        if(it.min[i]) if(value < it.min[i]) alarm += AlarmStatus::Min;
-        if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
+        if(en && it.max[i]) if(value > it.max[i]) alarm += AlarmStatus::Max;
+        if(en && it.crMax[i]) if(value > it.crMax[i]) alarm += AlarmStatus::CrMax;
+        if(en && it.crMin[i]) if(value < it.crMin[i]) alarm += AlarmStatus::CrMin;
+        if(en && it.min[i]) if(value < it.min[i]) alarm += AlarmStatus::Min;
+        if(en && it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
     }
 
@@ -77,15 +77,16 @@ bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 
 uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
 {
-    bool ret = false;
-    uint value = it.value; uchar alarm;
-    if(value > it.max) alarm = AlarmStatus::Max;
-    else if(value > it.crMax) alarm = AlarmStatus::CrMax;
-    else if(value < it.crMin) alarm = AlarmStatus::CrMin;
-    else if(value < it.min) alarm = AlarmStatus::Min;
-    else {alarm = AlarmStatus::Ok;} index.id = 0xFF;
-    if(it.alarm != alarm) emit alarmSig(index, alarm);
-    it.alarm = alarm; ret |= alarm;
+    bool ret = false; if(it.en) {
+        uint value = it.value; uchar alarm;
+        if(value > it.max) alarm = AlarmStatus::Max;
+        else if(value > it.crMax) alarm = AlarmStatus::CrMax;
+        else if(value < it.crMin) alarm = AlarmStatus::CrMin;
+        else if(value < it.min) alarm = AlarmStatus::Min;
+        else {alarm = AlarmStatus::Ok;} index.id = 0;
+        if(it.alarm != alarm) emit alarmSig(index, alarm);
+        it.alarm = alarm; ret |= alarm;
+    }
     return ret;
 }
 

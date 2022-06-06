@@ -130,6 +130,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::VMin: ptr = unit->min; break;
         case DSub::VCrMin: ptr = unit->crMin; break;
         case DSub::VCrMax: ptr = unit->crMax; break;
+        case DSub::EnAlarm: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -150,7 +151,7 @@ bool Alarm_Object::tgAlarmUnitValue(sDataItem &index)
     sTgUnit *unit = getTgAlarmUnit(index);
     if(unit) {
         switch (index.subtopic) {
-        case DSub::Size: index.value = 0; break;
+        case DSub::Size: index.value = 1; break;
         case DSub::Value: ptr = &(unit->value); break;
         case DSub::Rated: ptr = &(unit->rated); break;
         case DSub::Alarm: ptr = &(unit->alarm); break;
@@ -158,6 +159,7 @@ bool Alarm_Object::tgAlarmUnitValue(sDataItem &index)
         case DSub::VMin: ptr = &(unit->min); break;
         case DSub::VCrMin: ptr = &(unit->crMin); break;
         case DSub::VCrMax: ptr = &(unit->crMax); break;
+        case DSub::EnAlarm: ptr = &(unit->en); break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -176,7 +178,7 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
     sRelayUnit *unit = getRelayUnit(index);
     if(unit) {
         switch (index.subtopic) {
-        case DSub::Size:
+        case DSub::Size: index.value = unit->size; break;
         case DSub::Value: ptr = unit->sw; break;
         case DSub::Rated: ptr = unit->mode; break;
         case DSub::Alarm: ptr = unit->alarm; break;
@@ -211,13 +213,52 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     return ret;
 }
 
+bool Alarm_Object::pfEleValue(sDataItem &index)
+{
+    bool ret = true; uint *ptr = nullptr;
+    sObjData *obj = getObjData(index);
+    switch (index.topic) {
+    case DTopic::PF: ptr = obj->pf; break;
+    case DTopic::Ele: ptr = obj->ele; break;
+    case DTopic::ArtPow: ptr = obj->artPow; break;
+    case DTopic::ReactivePow: ptr = obj->reactivePow; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(ptr) index.value = ptr[index.id];
+    return ret;
+}
+
+bool Alarm_Object::tgValue(sDataItem &index)
+{
+    bool ret = true;
+    if(index.topic > DTopic::Pow) {
+        sTgObjData *tg = &(cm::devData(index.addr)->tg);
+        switch (index.topic) {
+        case DTopic::PF: index.value = tg->pf; break;
+        case DTopic::Ele: index.value = tg->ele; break;
+        case DTopic::ArtPow: index.value = tg->artPow; break;
+        case DTopic::ReactivePow: index.value = tg->reactivePow; break;
+        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        }
+    } else ret = tgAlarmUnitValue(index);
+    return ret;
+}
+
 bool Alarm_Object::upIndexValue(sDataItem &index)
 {
     bool  ret = false;
-    if(DType::Tg == index.type) ret = tgAlarmUnitValue(index);
-    else if(DTopic::Relay == index.topic) ret = relayUnitValue(index);
-    else if(DType::Sensor == index.type) ret = sensorValue(index);
-    else ret = alarmUnitValue(index);
+    switch (index.type) {
+    case DType::Tg: return tgValue(index);
+    case DType::Sensor: return sensorValue(index);
+    }
+
+    switch (index.topic) {
+    case DTopic::Relay: return relayUnitValue(index);
+    case DTopic::PF: case DTopic::Ele: case DTopic::ArtPow:
+    case DTopic::ReactivePow: ret = pfEleValue(index); break;
+    default: ret = alarmUnitValue(index); break;
+    }
 
     return ret;
 }

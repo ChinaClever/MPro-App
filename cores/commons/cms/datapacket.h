@@ -30,7 +30,7 @@ struct sAlarmUnit
     sAlarmUnit() {size=0;}
 
     uchar size;
-    uchar en[PACK_ARRAY_SIZE];
+    uint en[PACK_ARRAY_SIZE];
     uint value[PACK_ARRAY_SIZE];
     uint rated[PACK_ARRAY_SIZE];
 
@@ -100,7 +100,7 @@ struct sEnvData
 
 struct sTgUnit
 {
-    uchar en;
+    uint en;
     uint value;
     uint rated;
     uint min;
@@ -120,6 +120,7 @@ struct sTgObjData
     uint ele; // 电能
     uint pf; // 功率因数
     uint artPow; // 袖在功率
+    uint reactivePow;
 };
 
 
@@ -223,8 +224,8 @@ struct sDataPacket
 };
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
-enum DTopic{Relay=1, Vol, Cur, Pow, Tem=6, Hum, Door1, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax};
+enum DTopic{Relay=1, Vol, Cur, Pow, PF, Ele, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
 struct sDataItem
