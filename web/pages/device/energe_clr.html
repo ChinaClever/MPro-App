@@ -36,11 +36,9 @@
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
-								<ul sytle="float:right;font-family:courier;">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-									<span id="lang_2"></span>
-									<select id ="ms" style ="width:200px;" onchange = "change();"></select>
-								</ul>
+								<span id="lang_2">电能清零</span>
+								<select id ="ms" style ="width:200px;float:right;" onchange = "change();"></select>
 							</div>
 						</div>
 					</div>
@@ -54,11 +52,8 @@
 	<script>var value_now = 0, val = 0,tick = 0,push = 0;</script>
 	<script>
 		var dev_num = 0,output_num = 0;
-		var dev_type = new Array();
-		var dev_type = new Array();
-		var output_size = new Array();
 		var output_name = new Array();
-		var swtich_state = new Array();
+		var energe_val = new Array();
 	</script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
@@ -66,17 +61,8 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		//hljs.initHighlightingOnLoad();
-		var Input_state = new Array("开","闭","重启");
-		var State = new Array("关","开");
-
 		var Val = new Array(); 
 		var rpc = 0;
-		// ,dev_num = 0,output_num = 0;
-		// var dev_type = new Array();
-		// var dev_type = new Array();
-		// var output_size = new Array();
-		// var output_name = new Array();
 		var output_status = new Array();
 		var j = 0;
 		var logs;
@@ -105,7 +91,7 @@
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					tick ++;
-					rpc.call('pduReadData',[0,3,1,0,i]);
+					rpc.call('pduReadData',[0,3,6,1,i]);
 				}},100);
 			},800);
 
@@ -122,24 +108,28 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">名称</td>\
-					<td width ="12%">开关状态</td>\
-					<td width ="10%">顺序延时(S)</td>\
-					<td width ="30%"></td>\
-					<td width ="8%">开启</td>\
-					<td width ="8%">关闭</td>';
+					<td width ="26%">单元名称</td>\
+					<td width ="12%">电能消耗(kWh)</td>\
+					<td width ="44%"></td>\
+					<td width ="8%">重置清零</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
-				tbody += '<td></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]/10).toFixed(1) +'</td>';
+				tbody += '<td id = "d'+ i + '"></td>';
+				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
 				tbody += '</tr>';
+				if(i === rows - 1){
+					i++;
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
+					tbody += '<td id = "c'+ i + '"></td>';
+					tbody += '<td id = "d'+ i + '"></td>';
+					tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
+					tbody += '</tr>';
+				}
 			}
 
 			return '<thead>' + thead + '</thead>'

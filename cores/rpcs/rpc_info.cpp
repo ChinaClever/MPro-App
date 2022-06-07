@@ -14,10 +14,10 @@ Rpc_Info::Rpc_Info(QObject *parent)
 
 bool Rpc_Info::pduDevNameSet(int addr, const QString &value)
 {
-     return pduSetString(addr, 11, 6, value);
+     return pduSetString(addr, SFnCode::Uuts, 6, value);
 }
 
 QString Rpc_Info::pduDevNameGet(int addr)
 {
-    return pduGetString(addr, 11, 6);
+    return pduGetString(addr, SFnCode::Uuts, 6);
 }

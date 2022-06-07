@@ -85,7 +85,8 @@ bool Set_Output::outputNameSet(int addr, int id, const QString &name)
     bool ret = true;
     if(addr) {
         sStrItem item;
-        item.addr = addr; item.id = id; item.fc = 10; item.rw = 1;
+        item.fc = SFnCode::OutputName;
+        item.addr = addr; item.id = id; item.rw = 1;
         qstrcpy((char *)item.str, name.toLatin1().data());
         ret = Cascade_Core::bulid()->masterSetString(item);
     } else {
