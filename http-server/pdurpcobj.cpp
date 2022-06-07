@@ -43,7 +43,7 @@ void PduRpcObj::pduReadString(struct jsonrpc_request *r)
 {
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);
     QString value = mWebIpc->getString((uchar)its.at(0), (uchar)its.at(1),
-                                 (uchar)its.at(2));
+                                 (uchar)its.at(4));
     responRpcString(r, its, value);
 }
 
