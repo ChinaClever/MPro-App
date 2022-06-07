@@ -5,7 +5,8 @@
 class Rpc_Core : public Rpc_Output
 {
 public:
-    Rpc_Core();
+    Rpc_Core(uchar txType, QObject *parent = nullptr);
+
 };
 
 #endif // RPC_CORE_H

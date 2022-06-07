@@ -28,7 +28,7 @@ bool IPC_EchoClient::setString(const sStrItem &unit)
 bool IPC_EchoClient::setString(uchar addr, uchar fc, uchar id, const QString &str)
 {
     sStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
-    qstrcpy((char *)it.str, str.toLatin1().data());
+    qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = DTxType::TxWeb;
     return this->setString(it);
 }
 
@@ -65,7 +65,7 @@ bool IPC_EchoClient::setting(uchar addr, uchar type, uchar topic, uchar sub, uch
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id;
-    it.rw = 1; it.value = value;
+    it.rw = 1; it.value = value; it.txType = DTxType::TxWeb;
     return this->setting(it);
 }
 

@@ -11,7 +11,7 @@ class Db_Op : public Db_Obj<sOpItem>
     Db_Op();
 public:
     static Db_Op* bulid();
-    QString tableName(){return "ops";}
+    QString tableName() {return "ops";}
 
 protected:
     QJsonArray itemJson(const sOpItem &it);

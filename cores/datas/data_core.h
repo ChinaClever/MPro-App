@@ -12,6 +12,7 @@ public:
 protected:
     void run() override;
     void upAlarm();
+    void outletNums();
 
 private:
     bool isRun=true;

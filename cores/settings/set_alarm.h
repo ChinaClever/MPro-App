@@ -10,6 +10,9 @@ public:
 
 protected:
     bool setAlarm(sDataItem &unit);
+
+private:
+    QString opSrc(uchar txType);
 };
 
 #endif // SET_ALARM_H

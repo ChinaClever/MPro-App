@@ -22,11 +22,19 @@ void Data_Line::lineWork()
     }
 }
 
+void Data_Line::inletNum()
+{
+    int size = mDev->info.lineNum;
+    sObjData *obj = &(mDev->line); obj->relay.size = 0;
+    obj->size = obj->vol.size = obj->cur.size = obj->pow.size = size;
+}
+
 void Data_Line::tgWork()
 {
     sObjData *obj = &(mDev->output);
     sTgObjData *tg = &(mDev->tg);
     int size = obj->size; calHz();
+    inletNum();
 
     tg->vol.value = averageValue(obj->vol.value, 0, size);
     tg->cur.value = summation(obj->cur.value, 0, size);

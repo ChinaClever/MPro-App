@@ -11,7 +11,7 @@ protected:
     void loopWork();
 
 private:
-
+    void loopNum();
 };
 
 #endif // DATA_LOOP_H
