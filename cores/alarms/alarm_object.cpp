@@ -138,7 +138,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
     if(ptr) {
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
-            else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
+            else for(int i=0; i<24/*unit->size*/; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
     }
 

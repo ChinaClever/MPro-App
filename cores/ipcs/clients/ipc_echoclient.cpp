@@ -66,6 +66,7 @@ bool IPC_EchoClient::setting(uchar addr, uchar type, uchar topic, uchar sub, uch
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id;
     it.rw = 1; it.value = value; it.txType = DTxType::TxWeb;
+    qDebug()<<addr<<":"<<type<<":"<<topic<<":"<<sub<<":"<<id<<":"<<value;
     return this->setting(it);
 }
 
