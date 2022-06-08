@@ -20,7 +20,7 @@ bool Set_Output::relaySet(sDataItem &unit)
     } else if(unit.rw) {
         switch (unit.subtopic) {
         case DSub::Value: OP_Core::bulid()->relayCtrl(unit.id, unit.value); break;
-        case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value);break;
+        case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
         default: ret = upIndexValue(unit); break;
         } Set_ReadWrite::bulid()->writeSettings();
     } else qDebug() << Q_FUNC_INFO;

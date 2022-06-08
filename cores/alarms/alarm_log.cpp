@@ -39,6 +39,7 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     case DTopic::Vol: str += tr("电压"); break;
     case DTopic::Cur: str += tr("电流"); break;
     case DTopic::Pow: str += tr("功率"); break;
+    case DTopic::Ele: str += tr("电能"); break;
     case DTopic::Tem: str += tr("温度"); break;
     case DTopic::Hum: str += tr("湿度"); break;
     case DTopic::Door1: str += tr("门禁1"); break;
