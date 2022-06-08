@@ -82,7 +82,7 @@
 			else{
 				stat = 2;
 			}
-			rpc.call('pduSetData',[0,addr,stat]);
+			rpc.call('pduSetData',[0,3,3,2,addr,stat]);
 			alter("sending");
 		}
 		rpc = jsonrpc();
