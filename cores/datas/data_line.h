@@ -10,8 +10,10 @@ public:
 protected:
     void lineWork();
     void tgWork();
+
 private:
     void calHz();
+    void inletNum();
 };
 
 #endif // DATA_LINE_H

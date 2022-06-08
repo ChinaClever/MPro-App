@@ -23,5 +23,5 @@ IPC_WebClient *IPC_WebClient::bulid(QObject *parent)
 
 bool IPC_WebClient::devNameSet(int addr, const QString &value, int id)
 {
-     return setString(addr, 11, id, value);
+     return setString(addr, SFnCode::Uuts, id, value);
 }

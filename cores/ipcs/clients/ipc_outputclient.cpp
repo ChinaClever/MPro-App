@@ -34,10 +34,10 @@ bool IPC_OutputClient::relayMode(uchar addr, uchar id, uchar value)
 
 bool IPC_OutputClient::opNameSet(int addr, int id, const QString &value)
 {
-    return setString(addr, 10, id, value);
+    return setString(addr, SFnCode::OutputName, id, value);
 }
 
 QString IPC_OutputClient::opName(int addr, int id)
 {
-    return getString(addr, 10, id);
+    return getString(addr, SFnCode::OutputName, id);
 }

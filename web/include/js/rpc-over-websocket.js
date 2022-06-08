@@ -15,8 +15,20 @@ var recv ={
   "acpow_value":9,
   "factor_value":10,
 };
-
-
+var value_now = 0, val = 0,tick = 0,push = 0;
+var output_name = new Array();
+var dev_num = 0,output_num = 0;
+var cur_val = new Array();
+var cur_rated = new Array();
+var cur_max = new Array();
+var cur_min = new Array();
+var vcrmax = new Array();
+var vcrmin = new Array();
+var cur_alarm = new Array();
+var cur_enable = new Array();
+var dev_type = new Array();
+var output_size = new Array();
+var swtich_state = new Array();
 
 var jsonrpc = function()
 {
@@ -128,6 +140,11 @@ var jsonrpc = function()
       case 7:
       
       break;
+      case 10:
+        output_name[parseInt(JSON.parse(evt.data).result[4])] = JSON.parse(evt.data).result[5];
+      break;
+      default:
+        break;
     }
     tick--;
     if(tick == 0)

@@ -10,6 +10,12 @@ public:
 
 protected:
     bool setAlarm(sDataItem &unit);
+
+private:
+    QString opSrc(uchar txType);
+    QString opContent(const sDataItem &index);
+
+    void oplog(const sDataItem &it);
 };
 
 #endif // SET_ALARM_H

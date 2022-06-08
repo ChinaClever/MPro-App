@@ -9,12 +9,12 @@ class Alarm_Log : public QObject
     explicit Alarm_Log(QObject *parent = nullptr);
 public:
     static Alarm_Log *bulid(QObject *parent = nullptr);
+    QString alarmType(const sDataItem &index);
 
 protected slots:
     void alarmSlot(const sDataItem &index, uchar value);
 
 private:
-    QString alarmType(const sDataItem &index);
     QString alarmStatus(uchar value, QString &state);
     QString alarmContent(const sDataItem &index);
 
