@@ -29,6 +29,9 @@ var cur_enable = new Array();
 var dev_type = new Array();
 var output_size = new Array();
 var swtich_state = new Array();
+var energe_val = new Array();
+var pf_val = new Array();
+var pow_val= new Array();
 
 var jsonrpc = function()
 {
