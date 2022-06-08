@@ -7,15 +7,15 @@ class Set_Output : public Set_Info
 {
 public:
     explicit Set_Output();
-    bool relaySet(sDataItem &unit);
-    bool outputRelayCtrl(int addr, int id, uchar on);
-    bool outputDelaySet(int addr, int id, uchar delay);
-    bool outputSwModeSet(int addr, int id, uchar mode);
-    bool outputNameSet(int addr, int id, const QString &name);
 
+protected:
+    bool relaySet(sDataItem &unit);
+    bool outputNameSet(sStrItem &it);
     QString outputName(int addr, int id);
 
 private:
+    void opNameLog(const sStrItem &it);
+    void relayOpLog(const sDataItem &it);
     void writeOpName(int id, const QString &name);
 };
 

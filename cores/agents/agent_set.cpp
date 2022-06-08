@@ -72,6 +72,7 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     case 2: v = DTopic::Vol; break;
     case 3: v = DTopic::Cur; break;
     case 4: v = DTopic::Pow; break;
+    case 5: v = DTopic::Ele; break;
     case 6: v = DTopic::Tem; break;
     case 7: v = DTopic::Hum; break;
     default: ret = false; break;
@@ -113,9 +114,16 @@ bool Agent_Set::setAlarm(const QVariant &value)
 
 bool Agent_Set::relayCtrl(const QVariant &value)
 {
-    uint v = value.toUInt();
-    uchar addr = mIndex.addr; uchar id = mIndex.id;
-    return Set_Core::bulid()->outputRelayCtrl(addr, id, v);
+    sDataItem unit;
+    unit.rw = 1;
+    unit.id = mIndex.id;
+    unit.addr = mIndex.addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Value;
+    unit.txType = DTxType::TxSnmp;
+    unit.value = value.toUInt();
+    return Set_Core::bulid()->setting(unit);
 }
 
 bool Agent_Set::setOutputName(const QVariant &value)

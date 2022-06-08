@@ -64,8 +64,8 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
 
     addAlarmUnit(addr, id++, oid, name+"cur", it.cur, index);
     addAlarmUnit(addr, id++, oid, name+"pow", it.pow, index);
-    addOidValue(addr, id++, oid, name+"pf", it.pf[index]);
     addOidValue(addr, id++, oid, name+"ele", it.ele[index]);
+    addOidValue(addr, id++, oid, name+"pf", it.pf[index]);
 }
 
 void Agent_Get::addEnvAlarm(uchar addr, uchar key, const QString &oidPrefix,

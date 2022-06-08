@@ -5,7 +5,6 @@
  */
 #include "set_alarm.h"
 #include "cascade_core.h"
-#include "log_core.h"
 
 Set_Alarm::Set_Alarm()
 {

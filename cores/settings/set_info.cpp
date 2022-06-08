@@ -24,7 +24,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     return ptr;
 }
 
-bool Set_Info::setUut(uchar fc, char *str)
+bool Set_Info::setUut(uchar fc, char *str, uchar txType)
 {
     bool ret = true;
     QString prefix = "uut";
@@ -41,9 +41,13 @@ bool Set_Info::setUut(uchar fc, char *str)
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
+    qstrcpy(ptr, str);
     Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
     cfg->writeCfg(key, QString(ptr), prefix);
-    qstrcpy(ptr, str);
+
+    sOpItem db; db.op_src = opSrc(txType);
+    db.content = QObject::tr("%1 修改为 %2").arg(key).arg(str);
+    Log_Core::bulid()->append(db);
 
     return ret;
 }
