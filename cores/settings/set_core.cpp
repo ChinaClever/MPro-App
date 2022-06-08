@@ -67,6 +67,7 @@ bool Set_Core::setting(sDataItem &it)
             ret = relaySet(it);
         } else {
             ret = setAlarm(it);
+           if(ret) writeSettings();
         }
     } else {
         ret = false;

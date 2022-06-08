@@ -23,7 +23,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
 
 void OP_ObjCtrl::orderCtrl(int on, uchar all)
 {
-    if(on) openAllSwitch(all); else closeAllSwitch(all);
+    if(on) openAllSwitch(all); else closeAllSwitch(1);
 }
 
 void OP_ObjCtrl::clearEle(int id)

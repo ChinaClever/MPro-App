@@ -25,7 +25,7 @@ void Set_RwObj::writeSettings()
 
 bool Set_RwObj::saveSettings()
 {
-    mThread->msleep(350);
+    mThread->msleep(450);
     mFile->setFileName(Cfg_Obj::pathOfCfg(SET_DATA_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
@@ -43,7 +43,8 @@ bool Set_RwObj::readSetting(const QString &fn)
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         QByteArray array = mFile->readAll();
         if(array.size()) {
-            if(deDataStream(array)) unSequence();
+            ret = deDataStream(array);
+            if(ret) unSequence();
         }  mFile->close();
     }
 

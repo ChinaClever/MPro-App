@@ -45,10 +45,9 @@ bool Set_Output::relaySet(sDataItem &unit)
         switch (unit.subtopic) {
         case DSub::Value: OP_Core::bulid()->relayCtrl(unit.id, unit.value); break;
         case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-        default: ret = upIndexValue(unit); break;
-        } Set_ReadWrite::bulid()->writeSettings();
-        relayOpLog(unit);
-    } else qDebug() << Q_FUNC_INFO;
+        default: ret = upIndexValue(unit); Set_ReadWrite::bulid()->writeSettings(); break;
+        } relayOpLog(unit);
+    } else {ret = false; qDebug() << Q_FUNC_INFO;}
 
     return ret;
 }
