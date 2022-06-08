@@ -17,7 +17,11 @@ public:
 signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);
 
+protected:
+    void setTxType(uchar txType) {mTxType=txType;}
+
 private:
+    uchar mTxType=0;
     sDataItem mIt;
 };
 

@@ -5,7 +5,8 @@
  */
 #include "rpc_core.h"
 
-Rpc_Core::Rpc_Core()
+Rpc_Core::Rpc_Core(uchar txType, QObject *parent)
+    : Rpc_Output{parent}
 {
-
+    setTxType(txType);
 }

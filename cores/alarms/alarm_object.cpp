@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "alarm_object.h"
+#include "op_core.h"
 
 Alarm_Object::Alarm_Object()
 {
@@ -138,7 +139,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
     if(ptr) {
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
-            else for(int i=0; i<24/*unit->size*/; ++i) ptr[i] = index.value;
+            else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
     }
 
@@ -213,19 +214,37 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     return ret;
 }
 
-bool Alarm_Object::pfEleValue(sDataItem &index)
+bool Alarm_Object::powPfValue(sDataItem &index)
 {
     bool ret = true; uint *ptr = nullptr;
     sObjData *obj = getObjData(index);
     switch (index.topic) {
     case DTopic::PF: ptr = obj->pf; break;
-    case DTopic::Ele: ptr = obj->ele; break;
     case DTopic::ArtPow: ptr = obj->artPow; break;
     case DTopic::ReactivePow: ptr = obj->reactivePow; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
     if(ptr) index.value = ptr[index.id];
+    return ret;
+}
+
+bool Alarm_Object::eleValue(sDataItem &index)
+{
+    bool ret = true; uint *ptr = nullptr;
+    sObjData *obj = getObjData(index);
+    switch (index.topic) {
+    case DTopic::Ele: ptr = obj->ele; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(ptr) {
+        if(index.rw){
+            OP_Core::bulid()->clearEle(index.id);
+            if(index.id) ptr[index.id-1] = 0;
+            else for(int i=0; i<obj->size; ++i) ptr[i] = 0;
+        } else index.value = ptr[index.id];
+    }
     return ret;
 }
 
@@ -254,9 +273,10 @@ bool Alarm_Object::upIndexValue(sDataItem &index)
     }
 
     switch (index.topic) {
-    case DTopic::Relay: return relayUnitValue(index);
-    case DTopic::PF: case DTopic::Ele: case DTopic::ArtPow:
-    case DTopic::ReactivePow: ret = pfEleValue(index); break;
+    case DTopic::Relay: ret = relayUnitValue(index); break;
+    case DTopic::Ele: ret = eleValue(index); break;
+    case DTopic::ArtPow: case DTopic::ReactivePow:
+    case DTopic::PF: ret = powPfValue(index); break;
     default: ret = alarmUnitValue(index); break;
     }
 

@@ -44,9 +44,11 @@ bool Set_RwObj::readSetting(const QString &fn)
         QByteArray array = mFile->readAll();
         if(array.size()) {
             if(deDataStream(array)) unSequence();
-            else qCritical() << "Error: read settings" << fn << Q_FUNC_INFO;
         }  mFile->close();
     }
+
+    if(!ret) qCritical() << "Error: read settings" << Cfg_Obj::pathOfCfg(fn)
+                         << mFile->errorString() << Q_FUNC_INFO;
 
     return ret;
 }

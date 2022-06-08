@@ -25,7 +25,7 @@ bool Rpc_Obj::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar 
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id;
-    it.value = value; it.rw = 1;
+    it.value = value; it.rw = 1; it.txType = mTxType;
     return Set_Core::bulid()->setting(it);
 }
 
@@ -40,7 +40,7 @@ QString Rpc_Obj::pduGetString(uchar addr, uchar fc, uchar id)
 bool Rpc_Obj::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
 {
     sStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
-    qstrcpy((char *)it.str, str.toLatin1().data());
+    qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = mTxType;
     return Set_Core::bulid()->setString(it);
 }
 

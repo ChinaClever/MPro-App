@@ -9,8 +9,8 @@ public:
     explicit Set_Info();
 
 protected:
-    bool setUut(uchar fc, char *str);
     QString getUut(int addr, uchar fc);
+    bool setUut(uchar fc, char *str, uchar txType);
 };
 
 #endif // SET_INFO_H

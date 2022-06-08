@@ -27,7 +27,8 @@ private:
 
     bool relayUnitValue(sDataItem &index);
     bool sensorValue(sDataItem &index);
-    bool pfEleValue(sDataItem &index);
+    bool powPfValue(sDataItem &index);
+    bool eleValue(sDataItem &index);
 };
 
 #endif // ALARM_OBJECT_H

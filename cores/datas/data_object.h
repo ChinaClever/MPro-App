@@ -10,7 +10,7 @@ public:
 
 protected:
     void loopData(int id, int start, int end);
-    void lineData(int id, int start, int end);
+    void lineData(int id, int start, int end);    
     uint summation(const uint *ptr, int start, int end);
     uint averageValue(const uint *ptr, int start, int end);
 
