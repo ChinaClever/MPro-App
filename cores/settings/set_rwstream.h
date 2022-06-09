@@ -16,7 +16,7 @@ struct _sAlarmIt
 
 struct _sRelayIt
 {
-    uchar sw;
+    uchar en;
     uchar state;
     uchar delay;
 };

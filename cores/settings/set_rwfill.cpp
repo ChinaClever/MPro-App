@@ -24,7 +24,7 @@ void Set_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
 
 void Set_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
 {
-    it.sw = unit.sw[id];
+    it.en = unit.en[id];
     it.state = unit.mode[id];
     it.delay = unit.delay[id];
 }
