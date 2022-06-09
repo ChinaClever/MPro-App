@@ -34,6 +34,7 @@ var pf_val = new Array();
 var pow_val= new Array();
 var seq_delay = new Array();
 var switch_mode = new Array();
+var switch_enable = new Array();
 
 var jsonrpc = function()
 {
@@ -69,8 +70,11 @@ var jsonrpc = function()
           else if(subtopic == 2){
             switch_mode[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
           }
-          else if(subtopic == 3){
+          else if(subtopic == 4){
             seq_delay[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 8){
+            switch_enable[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
           }
         }
         else if(topic == 2)
