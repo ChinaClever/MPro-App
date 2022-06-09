@@ -55,7 +55,7 @@
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		//hljs.initHighlightingOnLoad();
-		var Input_state = new Array("开","闭","重启");
+		var Input_state = new Array("开","闭","复位");
 		var State = new Array("关","开");
 
 		var Val = new Array(); 
@@ -94,13 +94,19 @@
 				{
 					tick ++;
 					rpc.call('pduReadData',[0,3,1,1,i]);
-				}},100);
+				}},60);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
+					rpc.call('pduReadString',[0,3,1,3,i]);
+				}},60);
 				var time3 = setTimeout(function(){
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					tick ++;
 					rpc.call('pduReadString',[0,10,0,0,i]);
-				}},100);
+				}},60);
 			},800);
 
 		var time3 = setInterval(function(){
@@ -115,24 +121,25 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">名称</td>\
-					<td width ="12%">开关状态</td>\
+					thead = '<tr><td width ="5%">序号</td>\
+					<td width ="25%">名称</td>\
+					<td width ="10%">开关状态</td>\
 					<td width ="10%">顺序延时(S)</td>\
-					<td width ="30%"></td>\
-					<td width ="8%">开启</td>\
-					<td width ="8%">关闭</td>';
+					<td width ="20%">开关使能</td>\
+					<td width ="10%">开启</td>\
+					<td width ="10%">关闭</td>\
+					<td width ="10%">复位</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
+				tbody += '<td><input type = "text" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
-				tbody += '<td></td>';
+				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
+				tbody += '<td><select id = "d'+ i + '"></select></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
 				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
+				 tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
 				tbody += '</tr>';
 			}
 

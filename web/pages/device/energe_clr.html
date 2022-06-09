@@ -65,7 +65,12 @@
 		{
 			var addr = parseInt(btn.id.slice(1))+1;
 			var stat = 0;
-			rpc.call('pduSetData',[0,3,5,1,addr,stat]);
+			if(addr !== output_num + 1){
+				rpc.call('pduSetData',[0,3,5,1,addr,stat]);
+			}
+			else{
+				rpc.call('pduSetData',[0,3,5,1,0,stat]);
+			}
 		}
 		rpc = jsonrpc();
 		var time2 = setTimeout(function(){

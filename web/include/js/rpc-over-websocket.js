@@ -32,6 +32,8 @@ var swtich_state = new Array();
 var energe_val = new Array();
 var pf_val = new Array();
 var pow_val= new Array();
+var seq_delay = new Array();
+var switch_mode = new Array();
 
 var jsonrpc = function()
 {
@@ -61,7 +63,15 @@ var jsonrpc = function()
         }
         else if(topic == 1)
         {
-          swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          if(subtopic == 1){
+            swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 2){
+            switch_mode[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
+          else if(subtopic == 3){
+            seq_delay[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          }
         }
         else if(topic == 2)
         {
