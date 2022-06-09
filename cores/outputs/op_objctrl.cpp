@@ -13,11 +13,20 @@ OP_ObjCtrl::OP_ObjCtrl(QObject *parent) : OP_ObjRtu{parent}
 void OP_ObjCtrl::relayCtrl(int id, int on)
 {
     if(id) {
-        id -= 1;
-        if(1==on) openSwitch(id);
-        else closeSwitch(id);
-    } else {
-        orderCtrl(on, 0);
+        if(sRelay::On == on) openSwitch(id-1); else closeSwitch(id-1);
+    } else orderCtrl(on, 0);
+    if(sRelay::Reset == on) {
+        sRelayUnit *unit = &(mDev->output.relay);
+        int t = unit->delay[id-1];  mList << id; if(!t) t = 5;
+        QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
+    }
+}
+
+void OP_ObjCtrl::relayResetSlot()
+{
+    if(mList.size()) {
+        int id = mList.takeFirst();
+        relayCtrl(id, sRelay::On);
     }
 }
 
