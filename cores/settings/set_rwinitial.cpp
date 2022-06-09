@@ -92,13 +92,12 @@ void Set_RwInitial::initDevData(sDevData *dev)
     initObjData(dev->line, LINE_NUM, 32*COM_RATE_CUR);
     initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
     initObjData(dev->output, OUTPUT_NUM, 10*COM_RATE_CUR);
-    setRelayUnit(dev->line.relay, LINE_NUM, sRelay::NormaOpen);
-
+    initRelayUnit(dev->output.relay, OUTPUT_NUM);
     initTgObjData(dev->tg);
     initEnvData(dev->env);
 }
 
-void Set_RwInitial::setRelayUnit(sRelayUnit &it, uchar size, uchar rated)
+void Set_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
-    for(int i=0; i<size; ++i) it.mode[i] = rated;
+    for(int i=0; i<size; ++i) it.en[i] = 1;
 }

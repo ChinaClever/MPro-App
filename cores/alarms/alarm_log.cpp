@@ -115,8 +115,7 @@ QString Alarm_Log::alarmRelay(uchar value)
 {
     QString str;
     switch (value) {
-    case sRelay::CloseAlarm: str = tr("断开"); break;
-    case sRelay::OpenALarm: str = tr("闭合"); break;
+    case sRelay::OffALarm: str = tr("断开"); break;
     case sRelay::NoAlarm: str = tr("恢复"); break;
     }
     return str;

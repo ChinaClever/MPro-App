@@ -27,11 +27,8 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
         uchar alarm = 0;
         uchar value = it.sw[i];
         uchar state = it.mode[i];
-
-        if(state == sRelay::NormaOpen) {
-            if(value == sRelay::Off) alarm = sRelay::CloseAlarm;
-        } else if(state == sRelay::NormaClose){
-            if(value == sRelay::On) alarm = sRelay::OpenALarm;
+        if(state == sRelay::EnOffALarm) {
+            if(value == sRelay::Off) alarm = sRelay::OffALarm;
         } else alarm = sRelay::NoAlarm; index.id = i;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
