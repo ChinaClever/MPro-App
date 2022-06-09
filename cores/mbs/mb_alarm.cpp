@@ -29,7 +29,7 @@ void Mb_Alarm::upBreakerAlarm()
     index.type = DType::Loop;
     index.topic = DTopic::Relay;
     for(int i=0; i<LOOP_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, sRelay::OpenALarm);
+        index.id = i; vs << alarmValue(index, sRelay::OffALarm);
     }
     setCoils(MbReg_Alarms+368, vs);
 }

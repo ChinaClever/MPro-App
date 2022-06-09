@@ -23,8 +23,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
         break;
     case DSub::Rated:
         str += QObject::tr("输出位继电器模式切换 ");
-        if(sRelay::NormaOpen == it.value) str += QObject::tr("常闭合");
-        else if(sRelay::NormaClose == it.value) str += QObject::tr("常断开");
+        if(sRelay::OffALarm == it.value) str += QObject::tr("断开报警模式");
         else {str += QObject::tr("默认");} break;
     case DSub::VMax: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
     default: qDebug() << Q_FUNC_INFO; break;
@@ -36,6 +35,17 @@ void Set_Output::relayOpLog(const sDataItem &it)
     Log_Core::bulid()->append(db);
 }
 
+bool Set_Output::outputCtrl(sDataItem &unit)
+{
+    bool ret = true; int id = unit.id;
+    sRelayUnit *it = &(cm::masterDev()->output.relay);
+    if(it->en[id] || unit.txType == DTxType::TxWeb) {
+        OP_Core::bulid()->relayCtrl(unit.id, unit.value);
+    } else ret = false;
+
+    return ret;
+}
+
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
@@ -43,7 +53,7 @@ bool Set_Output::relaySet(sDataItem &unit)
         ret = Cascade_Core::bulid()->masterSet(unit);
     } else if(unit.rw) {
         switch (unit.subtopic) {
-        case DSub::Value: OP_Core::bulid()->relayCtrl(unit.id, unit.value); break;
+        case DSub::Value:  ret = outputCtrl(unit); break;
         case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
         default: ret = upIndexValue(unit); Set_ReadWrite::bulid()->writeSettings(); break;
         } relayOpLog(unit);

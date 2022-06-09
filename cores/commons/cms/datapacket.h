@@ -45,8 +45,9 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     uchar size;
-    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0 表示未启用  0:不能控制；1:通；2:断
-    uint mode[PACK_ARRAY_SIZE];
+    uint en[PACK_ARRAY_SIZE];
+    uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
+    uint mode[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE];
     uint delay[PACK_ARRAY_SIZE];
 };
@@ -256,10 +257,10 @@ struct sStrItem{
 
 struct sRelay
 {
-    enum State{Off, On};
+    enum State{Off, On, Reset};
     enum Type{Breaker, Relay};
-    enum Mode{Standard, NormaOpen, NormaClose};
-    enum Alarm{NoAlarm, OpenALarm, CloseAlarm};
+    enum Mode{Standard, EnOffALarm};
+    enum Alarm{NoAlarm, OffALarm};
 };
 
 

@@ -14,6 +14,7 @@ protected:
     QString outputName(int addr, int id);
 
 private:
+    bool outputCtrl(sDataItem &unit);
     void opNameLog(const sStrItem &it);
     void relayOpLog(const sDataItem &it);
     void writeOpName(int id, const QString &name);

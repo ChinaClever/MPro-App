@@ -21,8 +21,7 @@ private:
 
     void initEnvData(sEnvData &it);
     void initDevData(sDevData *dev);
-
-    void setRelayUnit(sRelayUnit &it, uchar size, uchar rated);
+    void initRelayUnit(sRelayUnit &it, uchar size);
 };
 
 #endif // SET_RWINITIAL_H
