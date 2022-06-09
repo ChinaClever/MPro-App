@@ -58,7 +58,8 @@
 		var Input_state = new Array("开","闭","复位");
 		var State = new Array("关","开");
 
-		var sw_sate  = new Array(); 
+		var sw_state  = new Array(); 
+		var mode_state  = new Array(); 
 		var rpc = 0;
 		var output_status = new Array();
 		var j = 0;
@@ -100,6 +101,12 @@
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					tick ++;
+					rpc.call('pduReadData',[0,3,1,2,i]);
+				}},60);
+				var time3 = setTimeout(function(){
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					tick ++;
 					rpc.call('pduReadData',[0,3,1,4,i]);
 				}},60);
 				var time3 = setTimeout(function(){
@@ -116,10 +123,16 @@
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					if(switch_enable[i] === 1){
-						sw_sate[i] = true;
+						sw_state[i] = true;
 					}
 					else{
-						sw_sate[i] = false;
+						sw_state[i] = false;
+					}
+					if(switch_mode[i] === 1){
+						mode_state[i] = true;
+					}
+					else{
+						mode_state[i] = false;
 					}
 				}
 				$('.table-striped').html(buildTable(output_num));
@@ -146,8 +159,8 @@
 				tbody += '<td><input type = "text" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "e'+ i + '" checked = "'+ sw_sate[i+1]+'"</input></td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "f'+ i + '" checked = "'+ sw_sate[i+1]+'"</input></td>';
+				tbody += '<td><input  type = "checkbox" class = "input" id = "e'+ i + '" checked = "'+ sw_state[i+1]+'"</input></td>';
+				tbody += '<td><input  type = "checkbox" class = "input" id = "f'+ i + '" checked = "'+ mode_state[i+1]+'"</input></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
