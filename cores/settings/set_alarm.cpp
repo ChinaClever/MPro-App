@@ -13,13 +13,10 @@ Set_Alarm::Set_Alarm()
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
 {
-    bool ret = true;
+    bool ret = false;
     if(unit.rw) {
         ret = upIndexValue(unit);
-        if(ret && unit.rw) {
-            oplog(unit);
-            Set_ReadWrite::bulid()->writeSettings();
-        }
+        if(ret) oplog(unit);
     }
     return ret;
 }
