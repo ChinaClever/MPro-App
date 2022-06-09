@@ -2,9 +2,10 @@
 
 bool JsonRpcObj::getString(jsonrpc_request* r, int id, char *s)
 {
-    char buffer[10] = {0}; static char buf[256] = {0};
+    char buffer[10] = {0};
+    static char buf[256] = {0};
     sprintf(buffer , "$[%d]" , id);
-    int n = mjson_get_string(r->params, r->params_len, buffer, buf , sizeof(buf));
+    int n = mjson_get_string(r->params, r->params_len, buffer, buf, sizeof(buf));
     if(n > 0) qstrcpy(s, buf); else s[0] = '\0';
     return n == -1 ?false:true;
 }

@@ -65,6 +65,42 @@
 		var j = 0;
 		var logs;
 		var time1 = 0;
+		function cked(ckd)
+		{
+			var stat;
+			var type1 = ckd.id.substr(0,1);
+			var addr = parseInt(ckd.id.slice(1))+1;
+			if(type1 === 'e' && (addr !== output_num + 1)){
+				if(ckd.checked == true){
+					stat = 1;
+				}else{
+					stat = 0;
+				}
+				rpc.call('pduSetData',[0,3,1,8,addr,stat]);
+			}
+			else if(type1 === 'f' && (addr !== output_num + 1)){
+				if(ckd.checked == true){
+					stat = 1;
+				}else{
+					stat = 0;
+				}
+				rpc.call('pduSetData',[0,3,1,2,addr,stat]);
+			}
+		}
+		function setdata(ipt)
+		{
+			var stat;
+			var type1 = ipt.id.substr(0,1);
+			var addr = parseInt(ipt.id.slice(1))+1;
+			if(type1 === 'b' && (addr !== output_num + 1)){
+				stat = ipt.value;
+				rpc.call('pduSetString',[0,10,0,0,addr,stat]);
+			}
+			else if(type1 === 'd' && (addr !== output_num + 1)){
+				stat = parseInt(ipt.value);
+				rpc.call('pduSetData',[0,3,1,4,addr,stat]);
+			}
+		}
 		function btn_click(btn)
 		{
 			var addr = parseInt(btn.id.slice(1))+1;
@@ -75,7 +111,7 @@
 			else if(btn.innerText == Input_state[1]){
 				stat = 0;
 			}
-			else{
+			else if(btn.innerText == Input_state[2]){
 				stat = 2;
 			}
 			rpc.call('pduSetData',[0,3,1,1,addr,stat]);
@@ -115,8 +151,7 @@
 					tick ++;
 					rpc.call('pduReadString',[0,10,0,0,i]);
 				}},60);
-			},800);
-
+			},800);btn_click
 		var time3 = setInterval(function(){
 			if(!tick && push){
 				push = 0;
@@ -156,11 +191,11 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td><input type = "text" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "e'+ i + '" checked = "'+ sw_state[i+1]+'"</input></td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "f'+ i + '" checked = "'+ mode_state[i+1]+'"</input></td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "e'+ i + '" checked = "'+ sw_state[i+1]+'"</input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "f'+ i + '" checked = "'+ mode_state[i+1]+'"</input></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';

@@ -50,11 +50,11 @@ void PduRpcObj::pduReadString(struct jsonrpc_request *r)
 
 void PduRpcObj::pduSetString(struct jsonrpc_request *r)
 {
-    QVector<double> its = JsonRpcObj::getNumbers(r , 5);
     std::string value;
-    JsonRpcObj::getString(r , 6 , (char*)value.c_str());
-    bool ret = mWebIpc->setString((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2),
-                            (char*)value.c_str());
+    QVector<double> its = JsonRpcObj::getNumbers(r, 5);
+    bool ret = JsonRpcObj::getString(r, 5, (char*)value.c_str());
+    if(ret) ret = mWebIpc->setString((uchar)its.at(0), (uchar)its.at(1),
+                                     (uchar)its.at(4), (char*)value.c_str());
     responRpcData(r, its, ret?1:0);
 }
 /*
