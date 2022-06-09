@@ -22,7 +22,7 @@ void Set_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &
 
 void Set_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
 {
-    unit.sw[id] = it.sw;
+    unit.en[id] = it.en;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
 }
