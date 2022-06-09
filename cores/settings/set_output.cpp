@@ -37,7 +37,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
 bool Set_Output::outputCtrl(sDataItem &unit)
 {
-    bool ret = true; int id = unit.id;
+    bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(it->en[id] || unit.txType == DTxType::TxWeb) {
         OP_Core::bulid()->relayCtrl(unit.id, unit.value);

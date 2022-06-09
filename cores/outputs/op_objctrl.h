@@ -19,6 +19,9 @@ protected:
     virtual void funClearEle(uchar *buf)=0;
     virtual void funSwitch(uchar *on, uchar *off, uchar all=0)=0;
 
+private slots:
+    void relayResetSlot();
+
 private:
     void openAllSwitch(uchar all);
     void closeAllSwitch(uchar all);
@@ -35,6 +38,9 @@ private:
     void setAllDelay(uchar sec);
     void setOutputDelay(int id, uchar sec);
     void setBitControl(int id, uchar *buf);
+
+private:
+    QList<int> mList;
 };
 
 #endif // OP_OBJCTRL_H
