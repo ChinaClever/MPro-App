@@ -43,8 +43,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped"></table></br>
-						<button id = "lang_12" style="float:right;" onclick="setdata();">提交</button>
+						<table class="table table-striped"></table>
 					</div>
 				</div>
 			</div>
@@ -57,7 +56,6 @@
     <script>
 		//hljs.initHighlightingOnLoad();
 		var Input_state = new Array("开","闭","重启");
-		var box_state = new Array(); 
 		var rpc = 0;
 		var output_status = new Array();
 		var j = 0;
@@ -65,13 +63,26 @@
 		var time1 = 0;
 		function setdata(ipt)
 		{
+			var sub = 0;
+			var type1 = ipt.id.substr(0,1);
 			var addr = parseInt(ipt.id.slice(1))+1;
 			var stat = parseFloat(ipt.value) * 100;
+			if(type1 === 'e'){
+				sub = 2;
+			}else if(type1 === 'f'){
+				sub = 5;
+			}else if(type1 === 'g'){
+				sub = 6;
+			}else if(type1 === 'h'){
+				sub = 7;
+			}else if(type1 === 'i'){
+				sub = 4;
+			}
 			if(addr !== output_num + 1){
-				rpc.call('pduSetData',[0,3,3,2,addr,stat]);
+				rpc.call('pduSetData',[0,3,3,sub,addr,stat]);
 			}
 			else{
-				rpc.call('pduSetData',[0,3,3,2,0,stat]);
+				rpc.call('pduSetData',[0,3,3,sub,0,stat]);
 			}
 		}
 		rpc = jsonrpc();
@@ -138,16 +149,25 @@
 		var time3 = setInterval(function(){
 			if(!tick && push){
 				push = 0;
+				$('.table-striped').html(buildTable(output_num));
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
+					var ss = document.getElementById('d'+(i -1));
+					var cs = document.getElementById('c'+(i -1));
 					if(cur_enable[i] === 1){
-						box_state[i] = true;
+						ss.checked = true;
 					}
 					else{
-						box_state[i] = false;
+						ss.checked = false;
 					}
+					if(cur_alarm[i] === 1){
+						cs.bgColor = 'red';
+					}
+					else{
+						cs.bgColor = '';
+					}
+
 				}
-				$('.table-striped').html(buildTable(output_num));
 			}
 		},1000);
 		function buildTable(rows) {
@@ -169,12 +189,12 @@
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ (parseFloat(cur_val[i + 1])/100).toFixed(2) +'</td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '" checked = "'+ box_state[i+1]+'"</input></td>';
+				tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(cur_rated[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(cur_min[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcrmin[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(vcrmax[i + 1])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(cur_max[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ (parseFloat(cur_max[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -182,12 +202,12 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '" checked = "'+ box_state[i+1]+'"</input></td>';
+					tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="10.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="10.00"></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="10.00"></input></td>';
 					tbody += '</tr>';
 				}
 			}

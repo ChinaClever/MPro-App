@@ -155,22 +155,24 @@
 		var time3 = setInterval(function(){
 			if(!tick && push){
 				push = 0;
+				$('.table-striped').html(buildTable(output_num));
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
+					var ss = document.getElementById('e'+(i -1));
+					var ms = document.getElementById('f'+(i -1));
 					if(switch_enable[i] === 1){
-						sw_state[i] = true;
+						ss.checked = true;
 					}
 					else{
-						sw_state[i] = false;
+						ss.checked = false;
 					}
 					if(switch_mode[i] === 1){
-						mode_state[i] = true;
+						ms.checked = true;
 					}
 					else{
-						mode_state[i] = false;
+						ms.checked = false;
 					}
 				}
-				$('.table-striped').html(buildTable(output_num));
 			}
 		},1000);
 		function buildTable(rows) {
@@ -194,8 +196,8 @@
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "e'+ i + '" checked = "'+ sw_state[i+1]+'"</input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "f'+ i + '" checked = "'+ mode_state[i+1]+'"</input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "e'+ i + '"></input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)"class = "input" id = "f'+ i + '" ></input></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';

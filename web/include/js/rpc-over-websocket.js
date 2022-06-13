@@ -114,11 +114,11 @@ var jsonrpc = function()
         }
         else if(topic == 5)
         {
-          pf_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          energe_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
         else if(topic == 6)
         {
-          energe_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          pf_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
         else if(topic == 11)
         {
