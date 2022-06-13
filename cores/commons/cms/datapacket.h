@@ -242,7 +242,7 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts,ECfgNum, EDevInfo};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo};
 
 struct sNumStrItem{
     sNumStrItem():addr(0),isDigit(0),rw(0),value(0){}
