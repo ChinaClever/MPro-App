@@ -145,7 +145,7 @@
   {
     "name": "图表信息",
     "icon": "flag_fill",
-    "base": "pages/output/",
+    "base": "pages/chart/",
     "subNav": [
       {
         "name": "温度查询",
@@ -172,7 +172,7 @@
   {
     "name": "日志查询",
     "icon": "flag_fill",
-    "base": "pages/log/",
+    "base": "pages/logs/",
     "subNav": [
       {
         "name": "告警日志",

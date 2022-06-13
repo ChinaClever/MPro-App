@@ -54,13 +54,29 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		//hljs.initHighlightingOnLoad();
 		var Input_state = new Array("开","闭","重启");
 		var rpc = 0;
 		var output_status = new Array();
 		var j = 0;
 		var logs;
 		var time1 = 0;
+		var frist = 1;
+		function cked(ckd)
+		{
+			var stat;
+			var addr = parseInt(ckd.id.slice(1))+1;
+			if(ckd.checked == true){
+				stat = 1;
+			}else{
+				stat = 0;
+			}
+			if(addr !== output_num + 1){
+				rpc.call('pduSetData',[0,3,3,8,addr,stat]);
+			}
+			else {
+				rpc.call('pduSetData',[0,3,3,8,0,stat]);
+			}
+		}
 		function setdata(ipt)
 		{
 			var sub = 0;
@@ -147,28 +163,29 @@
 			},800);
 
 		var time3 = setInterval(function(){
-			if(!tick && push){
+			if(!tick && push && frist){
 				push = 0;
+				frist = 0;
 				$('.table-striped').html(buildTable(output_num));
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					var ss = document.getElementById('d'+(i -1));
-					var cs = document.getElementById('c'+(i -1));
-					if(cur_enable[i] === 1){
-						ss.checked = true;
-					}
-					else{
-						ss.checked = false;
-					}
-					if(cur_alarm[i] === 1){
-						cs.bgColor = 'red';
-					}
-					else{
-						cs.bgColor = '';
-					}
-
-				}
 			}
+			else if(!tick && !push )
+				for(var i = 1 ;i < output_num + 1;i++)
+					{
+						var ss = document.getElementById('d'+(i -1));
+						var cs = document.getElementById('c'+(i -1));
+						if(cur_enable[i] === 1){
+							ss.checked = true;
+						}
+						else{
+							ss.checked = false;
+						}
+						if(cur_alarm[i] === 1){
+							cs.bgColor = 'red';
+						}
+						else{
+							cs.bgColor = '';
+						}
+					}
 		},1000);
 		function buildTable(rows) {
 			var thead = '',
@@ -189,7 +206,7 @@
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ (parseFloat(cur_val[i + 1])/100).toFixed(2) +'</td>';
-				tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '"></input></td>';
+				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(cur_rated[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(cur_min[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcrmin[i + 1])/100).toFixed(2)  +'"></input></td>';
@@ -202,7 +219,7 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td><input  type = "checkbox" class = "input" id = "d'+ i + '"></input></td>';
+					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="10.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
