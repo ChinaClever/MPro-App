@@ -164,8 +164,8 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     obj.insert("phases", it.lineNum/r);
     obj.insert("version", it.version/r);
 
-    obj.insert("op_num", it.opNum);
-    obj.insert("loop_num", it.loopNum);
+    obj.insert("op_num", it.opNum/r);
+    obj.insert("loop_num", it.loopNum/r);
     obj.insert("slave_num", it.slaveNum/r);
     obj.insert("output_num", it.outputNum/r);
 

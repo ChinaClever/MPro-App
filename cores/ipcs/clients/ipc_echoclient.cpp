@@ -19,7 +19,7 @@ bool IPC_EchoClient::msgSend(int fc, const QByteArray &msg)
     return ret;
 }
 
-bool IPC_EchoClient::setString(const sStrItem &unit)
+bool IPC_EchoClient::setNumStr(const sNumStrItem &unit)
 {
     QByteArray array = cm::toByteArray(unit);
     return msgSend(2, array);
@@ -27,9 +27,9 @@ bool IPC_EchoClient::setString(const sStrItem &unit)
 
 bool IPC_EchoClient::setString(uchar addr, uchar fc, uchar id, const QString &str)
 {
-    sStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1; it.isDigit = 0;
     qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = DTxType::TxWeb;
-    return this->setString(it);
+    return this->setNumStr(it);
 }
 
 bool IPC_EchoClient::setting(const sDataItem &unit)
@@ -46,7 +46,7 @@ bool IPC_EchoClient::getValue(sDataItem &unit)
     return ret;
 }
 
-QString IPC_EchoClient::getString(sStrItem &unit)
+QString IPC_EchoClient::getNumStr(sNumStrItem &unit)
 {
     QByteArray array = cm::toByteArray(unit);
     QString res = readBus(QVariantList {2, array}).toString();
@@ -55,10 +55,24 @@ QString IPC_EchoClient::getString(sStrItem &unit)
 
 QString IPC_EchoClient::getString(uchar addr, uchar fc, uchar id)
 {
-    sStrItem it; it.addr = addr;
-    it.fc = fc; if(id) id--;
-    it.id = id;
-    return getString(it);
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id;
+    if((SFnCode::OutputName == fc) && id) it.id --;
+    it.isDigit = 0; it.str[0] = 0;
+    return getNumStr(it);
+}
+
+int IPC_EchoClient::getDevCfg(uchar addr, uchar fc, uchar type)
+{
+    sNumStrItem it; it.addr = addr;
+    it.fc = fc; it.id = type; it.isDigit = 1;
+    return getNumStr(it).toInt();
+}
+
+bool IPC_EchoClient::setDevCfg(uchar addr, uchar fc, uchar type, int value)
+{
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
+    it.value = value; it.isDigit = 1;  it.txType = DTxType::TxWeb;
+    return this->setNumStr(it);
 }
 
 bool IPC_EchoClient::setting(uchar addr, uchar type, uchar topic, uchar sub, uchar id, uint value)

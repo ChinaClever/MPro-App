@@ -25,35 +25,74 @@ void Set_Core::writeSettings()
     Set_ReadWrite::bulid()->writeSettings();
 }
 
-bool Set_Core::setString(sStrItem &it)
+bool Set_Core::setString(sNumStrItem &it)
 {
     bool ret = false;
-    if(it.rw) {
-        if(it.addr) {
-            ret = Cascade_Core::bulid()->masterSetString(it);
-        } else {
-            switch (it.fc) {
-            case SFnCode::OutputName: ret = outputNameSet(it); break;
-            case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
-            default: qDebug() << Q_FUNC_INFO << it.fc; break;
-            }
-        }
-    } else qDebug() << Q_FUNC_INFO;
+    switch (it.fc) {
+    case SFnCode::OutputName: ret = outputNameSet(it); break;
+    case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
 
     return ret;
 }
 
-QString Set_Core::getString(sStrItem &it)
+QString Set_Core::getString(sNumStrItem &it)
+{
+    QString str; switch (it.fc) {
+    case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
+    case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+
+    return str;
+}
+
+bool Set_Core::setNumber(sNumStrItem &it)
+{
+    bool ret = false;
+    switch (it.fc) {
+    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
+    //case SFnCode::EDevInfo:      break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+
+    return ret;
+}
+
+int Set_Core::getNumber(sNumStrItem &it)
+{
+    int ret = 0;
+    switch (it.fc) {
+    case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
+    case SFnCode::EDevInfo: ret = devInfos(it.addr, it.id);  break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+
+    return ret;
+}
+
+bool Set_Core::setNumStr(sNumStrItem &it)
+{
+    bool ret = false;
+    if(it.rw) {
+        if(it.addr) {
+            ret = Cascade_Core::bulid()->masterSetNumStr(it);
+        } else {
+            if(it.isDigit) ret = setNumber(it);
+            else ret = setString(it);
+        }
+    }
+    return ret;
+}
+
+QString Set_Core::getNumStr(sNumStrItem &it)
 {
     QString str;
     if(!it.rw) {
-        switch (it.fc) {
-        case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
-        case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
-        default: qDebug() << Q_FUNC_INFO << it.fc; break;
-        }
-    }
-
+        if(it.isDigit) str = QString::number(getNumber(it));
+        else str = getString(it);
+    } else qDebug() << Q_FUNC_INFO;
     return str;
 }
 
@@ -62,12 +101,12 @@ bool Set_Core::setting(sDataItem &it)
     bool ret = true;
     if(it.rw) {
         if(it.addr) {
-            ret = Cascade_Core::bulid()->masterSet(it);
+            ret = Cascade_Core::bulid()->masterSeting(it);
         } else if(it.topic == DTopic::Relay) {
             ret = relaySet(it);
         } else {
             ret = setAlarm(it);
-           if(ret) writeSettings();
+            if(ret) writeSettings();
         }
     } else {
         ret = false;

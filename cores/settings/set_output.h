@@ -10,12 +10,12 @@ public:
 
 protected:
     bool relaySet(sDataItem &unit);
-    bool outputNameSet(sStrItem &it);
+    bool outputNameSet(sNumStrItem &it);
     QString outputName(int addr, int id);
 
 private:
     bool outputCtrl(sDataItem &unit);
-    void opNameLog(const sStrItem &it);
+    void opNameLog(const sNumStrItem &it);
     void relayOpLog(const sDataItem &it);
     void writeOpName(int id, const QString &name);
 };

@@ -56,7 +56,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
     } cm::mdelay(100);
 }
 
-bool Cascade_Master::masterSet(const sDataItem &unit)
+bool Cascade_Master::masterSeting(const sDataItem &unit)
 {
     uchar fc = fc_setting; if(isOta) return isOta;
     QByteArray array = cm::toByteArray(unit);
@@ -64,9 +64,9 @@ bool Cascade_Master::masterSet(const sDataItem &unit)
 }
 
 
-bool Cascade_Master::masterSetString(const sStrItem &it)
+bool Cascade_Master::masterSetNumStr(const sNumStrItem &it)
 {
-    uchar fc = fc_setString; if(isOta) return isOta;
+    uchar fc = fc_setNumStr; if(isOta) return isOta;
     QByteArray array = cm::toByteArray(it);
     return writeData(fc, it.addr, array);
 }

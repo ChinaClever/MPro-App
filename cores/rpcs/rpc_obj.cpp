@@ -31,16 +31,28 @@ bool Rpc_Obj::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar 
 
 QString Rpc_Obj::pduGetString(uchar addr, uchar fc, uchar id)
 {
-    sStrItem it; it.addr = addr;
-    it.fc = fc; if(id) id--;
-    it.id = id;
-    return Set_Core::bulid()->getString(it);
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id;
+    if((SFnCode::OutputName == fc) && id) it.id --;
+    return Set_Core::bulid()->getNumStr(it);
 }
 
 bool Rpc_Obj::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
 {
-    sStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
     qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = mTxType;
-    return Set_Core::bulid()->setString(it);
+    return Set_Core::bulid()->setNumStr(it);
 }
 
+int Rpc_Obj::pduDevCfg(uchar addr, uchar fc, uchar type)
+{
+    sNumStrItem it; it.addr = addr;
+    it.fc = fc; it.id = type; it.isDigit = 1;
+    return Set_Core::bulid()->getNumStr(it).toInt();
+}
+
+bool Rpc_Obj::pduSetCfg(uchar addr, uchar fc, uchar type, int value)
+{
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
+    it.value = value; it.isDigit = 1;  it.txType = mTxType;
+    return Set_Core::bulid()->setNumStr(it);
+}

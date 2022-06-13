@@ -15,7 +15,7 @@ protected:
 private:
     bool replyDevData(uchar fc);
     bool replySet(QByteArray &rcv);
-    bool replyString(QByteArray &rcv);
+    bool replyNumStr(QByteArray &rcv);
 };
 
 #endif // CASCADE_SLAVE_H

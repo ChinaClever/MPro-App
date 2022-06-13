@@ -9,8 +9,14 @@ public:
     static Set_Core *bulid();
     void writeSettings();
     bool setting(sDataItem &it);
-    bool setString(sStrItem &it);
-    QString getString(sStrItem &it);
+    bool setNumStr(sNumStrItem &it);
+    QString getNumStr(sNumStrItem &it);
+
+private:
+    bool setNumber(sNumStrItem &it);
+    int getNumber(sNumStrItem &it);
+    bool setString(sNumStrItem &it);
+    QString getString(sNumStrItem &it);
 };
 
 #endif // SET_CORE_H
