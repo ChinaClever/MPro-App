@@ -10,8 +10,8 @@ public:
     explicit Cascade_Master(QObject *parent = nullptr);
 
     void masterReadDevs();
-    bool masterSet(const sDataItem &unit);
-    bool masterSetString(const sStrItem &it);
+    bool masterSeting(const sDataItem &unit);
+    bool masterSetNumStr(const sNumStrItem &it);
 
 private:
     bool masterRead(uchar addr);

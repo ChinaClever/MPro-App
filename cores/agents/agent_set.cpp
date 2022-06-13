@@ -39,13 +39,13 @@ bool Agent_Set::uutSet(const QVariant &value)
     bool ret = false;
     sIndex *it = &mIndex;
     if(it->id == 0) {
-        sStrItem item;
+        sNumStrItem item;
         item.addr = it->addr;
         item.id = it->type;
         item.fc = SFnCode::Uuts;
         item.txType = DTxType::TxSnmp; item.rw = 1;
         qstrcpy((char *)item.str, value.toByteArray().data());
-        ret = Set_Core::bulid()->setString(item);
+        ret = Set_Core::bulid()->setNumStr(item);
     }
     return ret;
 }
@@ -129,11 +129,11 @@ bool Agent_Set::relayCtrl(const QVariant &value)
 bool Agent_Set::setOutputName(const QVariant &value)
 {
     QString name = value.toString();
-    sStrItem item; item.txType = DTxType::TxSnmp;
+    sNumStrItem item; item.txType = DTxType::TxSnmp;
     item.fc = SFnCode::OutputName; item.rw = 1;
     item.addr = mIndex.addr; item.id = mIndex.id;
     qstrcpy((char *)item.str, name.toLatin1().data());
-    return Set_Core::bulid()->setString(item);
+    return Set_Core::bulid()->setNumStr(item);
 }
 
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)

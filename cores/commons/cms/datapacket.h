@@ -135,10 +135,8 @@ struct sRtuCount
 
 
 struct sDevInfo {
-    uint devType; //设备类型
     uint devSpec; // 设备规格 A\B\C\D
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uint lineNum; //设备单三相
 
     uint version;
     uint slaveNum;  // 副机数量
@@ -147,8 +145,9 @@ struct sDevInfo {
     uchar drySw; // 报警干接点开关
 
     uint hz;
-    uchar opNum;   //　执行板数量
-    uchar loopNum; // 回路数量
+    uint lineNum; //设备单三相
+    uint opNum;   //　执行板数量
+    uint loopNum; // 回路数量
     uint outputNum;   //　输出位数量
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
     uchar loopEnds[LOOP_NUM];
@@ -243,15 +242,17 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts};
+enum SFnCode{OutputName=10, Uuts,ECfgNum, EDevInfo};
 
-struct sStrItem{
-    sStrItem():addr(0),rw(0){}
+struct sNumStrItem{
+    sNumStrItem():addr(0),isDigit(0),rw(0),value(0){}
     uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
+    uchar isDigit; // 0 字符串 1 数字
     uchar fc; // 10 输出位  11 UUT信息
-    uchar id; // 0 表示统一设置
+    uchar id; // 功能id　0 表示统一设置
     uchar rw; // 0 读  1 写
+    uint value;
     char str[NAME_SIZE];
 };
 

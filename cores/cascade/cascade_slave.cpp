@@ -24,11 +24,11 @@ bool Cascade_Slave::replySet(QByteArray &rcv)
     return set->setting(unit);
 }
 
-bool Cascade_Slave::replyString(QByteArray &rcv)
+bool Cascade_Slave::replyNumStr(QByteArray &rcv)
 {
-    sStrItem unit = cm::toStruct<sStrItem>(rcv);
+    sNumStrItem unit = cm::toStruct<sNumStrItem>(rcv);
     unit.addr = 0; Set_Core *set = Set_Core::bulid();
-    return set->setString(unit);
+    return set->setNumStr(unit);
 }
 
 
@@ -39,7 +39,7 @@ bool Cascade_Slave::workDown(c_sFrame &it)
         switch (it.fc) {
         case fc_readDev: ret = replyDevData(it.fc); break;
         case fc_setting: ret = replySet(it.data); break;
-        case fc_setString: ret = replyString(it.data); break;
+        case fc_setNumStr: ret = replyNumStr(it.data); break;
 
         case fc_otaStart: ret = otaReplyStart(it.data); break;
         case fc_otaEnd: ret = otaReplyFinish(it.data); break;

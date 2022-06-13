@@ -50,7 +50,7 @@ bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
     if(unit.addr) {
-        ret = Cascade_Core::bulid()->masterSet(unit);
+        ret = Cascade_Core::bulid()->masterSeting(unit);
     } else if(unit.rw) {
         switch (unit.subtopic) {
         case DSub::Value:  ret = outputCtrl(unit); break;
@@ -68,7 +68,7 @@ QString Set_Output::outputName(int addr, int id)
     return dev->name[id];
 }
 
-void Set_Output::opNameLog(const sStrItem &it)
+void Set_Output::opNameLog(const sNumStrItem &it)
 {
     QString str = QObject::tr("全部");
     if(it.id) str = QObject::tr("第%１").arg(it.id);
@@ -80,7 +80,7 @@ void Set_Output::opNameLog(const sStrItem &it)
     Log_Core::bulid()->append(db);
 }
 
-bool Set_Output::outputNameSet(sStrItem &it)
+bool Set_Output::outputNameSet(sNumStrItem &it)
 {
     bool ret = true;
     if(it.id) {

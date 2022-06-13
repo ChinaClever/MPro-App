@@ -11,15 +11,18 @@ public:
     QString getString(uchar addr, uchar fc, uchar id);
     bool setString(uchar addr, uchar fc, uchar id, const QString &str);
 
+    int getDevCfg(uchar addr, uchar fc, uchar type);
+    bool setDevCfg(uchar addr, uchar fc, uchar type, int value);
+
     int getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
     bool setting(uchar addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
 
 private:
     bool getValue(sDataItem &unit);
-    QString getString(sStrItem &unit);
+    QString getNumStr(sNumStrItem &unit);
 
     bool setting(const sDataItem &unit);
-    bool setString(const sStrItem &unit);
+    bool setNumStr(const sNumStrItem &unit);
 
     bool msgSend(int fc, const QByteArray &msg);
 };

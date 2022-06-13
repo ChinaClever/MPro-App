@@ -36,8 +36,8 @@ QString IPC_WebServer::dbus_reply_slot(int fc, const QByteArray &array)
         bool ret = Set_Core::bulid()->upIndexValue(unit);
         if(ret) res = QString::number(unit.value);
     } else if(2 == fc) {
-        sStrItem unit = cm::toStruct<sStrItem>(array);
-        res = Set_Core::bulid()->getString(unit);
+        sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
+        res = Set_Core::bulid()->getNumStr(unit);
     }
 
     return res;
@@ -49,9 +49,7 @@ void IPC_WebServer::dbus_recv_slot(int fc, const QByteArray &array)
         sDataItem unit = cm::toStruct<sDataItem>(array);
         Set_Core::bulid()->setting(unit);
     } else if(2 == fc) {
-        sStrItem unit = cm::toStruct<sStrItem>(array);
-        Set_Core::bulid()->setString(unit);
+        sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
+        Set_Core::bulid()->setNumStr(unit);
     }
-
-
 }
