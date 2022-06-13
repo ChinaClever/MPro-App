@@ -2,7 +2,7 @@
   {
     "name": "首页",
     "icon": "homepage_fill",
-    "base": "pages/output/",
+    "base": "pages/dashboard/",
     "subNav": [
       {
         "name": "首页",
@@ -15,25 +15,44 @@
     ]
   },
   {
-    "name": "设备设置",
+    "name": "阈值设置",
     "icon": "flag_fill",
-    "base": "pages/device/",
+    "base": "pages/alarmset/",
     "subNav": [
       {
-        "name": "模式设置",
-        "url": "mode_setting.html"
+        "name": "相设置",
+        "url": "inlet_set.html"
       },
       {
-        "name": "分组设置",
-        "url": "group.html"
+        "name": "回路设置",
+        "url": "loop_set.html"
       },
       {
-        "name": "单元设置",
-        "url": "threshold.html"
+        "name": "单元电流",
+        "url": "outlet_cur.html"
+      },
+      {
+        "name": "单元功率",
+        "url": "outlet_pow.html"
       },
       {
         "name": "环控设置",
         "url": "envir_ctrl.html"
+      }
+    ]
+  },
+  {
+    "name": "设备设置",
+    "icon": "flag_fill",
+    "base": "pages/devset/",
+    "subNav": [
+      {
+        "name": "模式设置",
+        "url": "mode_set.html"
+      },
+      {
+        "name": "分组设置",
+        "url": "group.html"
       },
       {
         "name": "电能清零",
@@ -48,7 +67,7 @@
   {
     "name": "网络安全",
     "icon": "manage_fill",
-    "base": "pages/unit/",
+    "base": "pages/network/",
     "subNav": [
       {
         "name": "本地连接",
@@ -107,7 +126,7 @@
   {
     "name": "用户管理",
     "icon": "document_fill",
-    "base": "pages/output/",
+    "base": "pages/usermange/",
     "subNav": [
       {
         "name": "用户设置",
@@ -153,19 +172,19 @@
   {
     "name": "日志查询",
     "icon": "flag_fill",
-    "base": "pages/output/",
+    "base": "pages/log/",
     "subNav": [
       {
-        "name": "操作日志",
-        "url": "relay_ctrl.html"
-      },
-      {
         "name": "告警日志",
-        "url": "output_monitoring.html"
+        "url": "alarm_log.html"
       },
       {
-        "name": "电能查询",
-        "url": "unit_control.html"
+        "name": "操作日志",
+        "url": "op_log.html"
+      },
+      {
+        "name": "系统日志",
+        "url": "sys_log.html"
       },
       {
         "name": "历史数据",
@@ -174,12 +193,32 @@
     ]
   },
   {
-    "name": "系统工具",
+    "name": "系统维护",
     "icon": "flag_fill",
-    "base": "pages/output/",
+    "base": "pages/maintain/",
     "subNav": [
       {
         "name": "系统信息",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "更新固件",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "固件历史",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "批量配置",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "备份/恢复",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "下载诊断",
         "url": "relay_ctrl.html"
       },
       {
