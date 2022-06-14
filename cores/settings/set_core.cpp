@@ -53,19 +53,18 @@ bool Set_Core::setNumber(sNumStrItem &it)
     bool ret = false;
     switch (it.fc) {
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
-    //case SFnCode::EDevInfo:      break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    }
+    } if(ret) writeSettings();
 
     return ret;
 }
 
 int Set_Core::getNumber(sNumStrItem &it)
 {
-    int ret = 0;
-    switch (it.fc) {
+    int ret = 0; switch (it.fc) {
     case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
-    case SFnCode::EDevInfo: ret = devInfos(it.addr, it.id);  break;
+    case SFnCode::EDevInfo: ret = devInfoCfg(it.addr, it.id);  break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 

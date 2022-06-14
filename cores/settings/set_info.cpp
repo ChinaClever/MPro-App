@@ -6,7 +6,7 @@ Set_Info::Set_Info()
 
 }
 
-int Set_Info::devInfos(int addr, int type)
+int Set_Info::devInfoCfg(int addr, int type)
 {
     sDevData *dev = cm::devData(addr);
     sDevInfo *it = &(dev->info);
@@ -27,6 +27,23 @@ int Set_Info::devInfos(int addr, int type)
 
     return ret;
 }
+
+
+bool Set_Info::setInfoCfg(int addr, int type, int value)
+{
+    sDevInfo *it = &(cm::devData(addr)->info);
+    bool ret = true; switch (type) {
+    case 1: it->devSpec = value; break;
+    case 2: it->slaveNum = value; break;
+    case 3: it->modbusAddr = value; break;
+    case 5: it->buzzerSw = value; break;
+    case 7: it->opNum = value; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
+    }
+
+    return ret;
+}
+
 
 int Set_Info::devCfgNum(int addr, int type)
 {
@@ -67,6 +84,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     case 4: ptr = it->cab; break;
     case 5: ptr = it->road; break;
     case 6: ptr = it->devName; break;
+    case 7: ptr = it->sn; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -87,6 +105,7 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     case 4: key = "cab";  ptr = it->cab; break;
     case 5: key = "road";  ptr = it->road; break;
     case 6: key = "devName";  ptr = it->devName; break;
+    case 7: key = "sn";  ptr = it->sn; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 

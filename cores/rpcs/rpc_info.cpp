@@ -21,3 +21,13 @@ QString Rpc_Info::pduDevNameGet(int addr)
 {
     return pduGetString(addr, SFnCode::Uuts, 6);
 }
+
+QString Rpc_Info::pduDevSnGet(int addr)
+{
+    return pduGetString(addr, SFnCode::Uuts, 7);
+}
+
+bool Rpc_Info::pduDevSnSet(int addr, const QString &value)
+{
+    return pduSetString(addr, SFnCode::Uuts, 7, value);
+}

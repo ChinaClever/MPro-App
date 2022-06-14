@@ -53,6 +53,6 @@ int Rpc_Obj::pduDevCfg(uchar addr, uchar fc, uchar type)
 bool Rpc_Obj::pduSetCfg(uchar addr, uchar fc, uchar type, int value)
 {
     sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
-    it.value = value; it.isDigit = 1;  it.txType = mTxType;
+    it.value = value; it.isDigit = 1; it.txType = mTxType;
     return Set_Core::bulid()->setNumStr(it);
 }

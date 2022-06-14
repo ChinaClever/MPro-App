@@ -170,15 +170,15 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     obj.insert("output_num", it.outputNum/r);
 
     QJsonArray ops;
-    for(int i=0; i<it.opNum; ++i) ops.append(it.ops[i]);
+    for(uint i=0; i<it.opNum; ++i) ops.append(it.ops[i]);
     obj.insert("ops_num", ops);
 
     QJsonArray vs;
-    for(int i=0; i<it.opNum; ++i) ops.append(it.opVers[i]);
+    for(uint i=0; i<it.opNum; ++i) ops.append(it.opVers[i]);
     obj.insert("op_vers", vs);
 
     QJsonArray hz;
-    for(int i=0; i<it.opNum; ++i) ops.append(it.hzs[i]);
+    for(uint i=0; i<it.opNum; ++i) ops.append(it.hzs[i]);
     obj.insert("hzs", hz);
 
     json.insert(key, QJsonValue(obj));

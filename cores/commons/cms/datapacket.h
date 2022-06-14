@@ -166,6 +166,7 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
+    char sn[NAME_SIZE];
 };
 
 /**
