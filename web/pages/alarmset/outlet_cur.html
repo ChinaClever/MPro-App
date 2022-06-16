@@ -61,6 +61,7 @@
 		var logs;
 		var time1 = 0;
 		var frist = 1;
+		var type1;
 		function cked(ckd)
 		{
 			var stat;
@@ -76,11 +77,17 @@
 			else {
 				rpc.call('pduSetData',[0,3,3,8,0,stat]);
 			}
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,8,i]);
+			}},60);
 		}
 		function setdata(ipt)
 		{
 			var sub = 0;
-			var type1 = ipt.id.substr(0,1);
+			type1 = ipt.id.substr(0,1);
 			var addr = parseInt(ipt.id.slice(1))+1;
 			var stat = parseFloat(ipt.value) * 100;
 			if(type1 === 'e'){
@@ -100,92 +107,100 @@
 			else{
 				rpc.call('pduSetData',[0,3,3,sub,0,stat]);
 			}
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,sub,i]);
+			}
+			},60);
 		}
 		rpc = jsonrpc();
 		var time2 = setTimeout(function(){
 			rpc.call('pduGetInfo',[0,3,0,0,0]);
 			tick ++;
 			var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,1,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,2,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,3,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,4,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,5,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,6,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,7,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,8,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadString',[0,10,0,0,i]);
-				}},60);
-
-			},800);
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,1,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,2,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,3,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,4,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,5,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,6,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,7,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,8,i]);
+			}},60);
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadString',[0,10,0,0,i]);
+			}},60);
+		},800);
 
 		var time3 = setInterval(function(){
 			if(!tick && push && frist){
 				push = 0;
 				frist = 0;
 				$('.table-striped').html(buildTable(output_num));
-			}
-			else if(!tick && !push )
-				for(var i = 1 ;i < output_num + 1;i++)
-					{
-						var ss = document.getElementById('d'+(i -1));
-						var cs = document.getElementById('c'+(i -1));
-						if(cur_enable[i] === 1){
-							ss.checked = true;
-						}
-						else{
-							ss.checked = false;
-						}
-						if(cur_alarm[i] === 1){
-							cs.bgColor = 'red';
-						}
-						else{
-							cs.bgColor = '';
-						}
+				for(var i = 1 ;i < output_num + 1;i++){
+					var ss = document.getElementById('d'+(i -1));
+					var cs = document.getElementById('c'+(i -1));
+					if(cur_enable[i] === 1){
+						ss.checked = true;
 					}
+					else{
+						ss.checked = false;
+					}
+					if(cur_alarm[i] === 1){
+						cs.bgColor = 'red';
+					}
+					else{
+						cs.bgColor = '';
+					}
+				}
+			}
+			// else if(!tick && !push ){
+				
+			// }
+				
 		},1000);
 		function buildTable(rows) {
 			var thead = '',
@@ -207,7 +222,7 @@
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ (parseFloat(cur_val[i + 1])/100).toFixed(2) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(cur_rated[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + (parseFloat(cur_rated[i + 1])/100).toFixed(2)+'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(cur_min[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcrmin[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(vcrmax[i + 1])/100).toFixed(2)  +'"></input></td>';
@@ -220,7 +235,7 @@
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="10.00"></input></td>';
+					tbody += '<<td id = "e'+ i + '"></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
