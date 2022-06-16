@@ -3,19 +3,19 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_rwobj.h"
+#include "cfg_rwobj.h"
 
-Set_RwObj::Set_RwObj(QObject *parent) : QObject{parent}
+Cfg_RwObj::Cfg_RwObj(QObject *parent) : QObject{parent}
 {
     isRun = false;
     mFile = new QFile;
     mData = new set::_sDevData;
     mThread = new CThread(this);
-    mDataStream = new Set_RwStream(mData);
+    mDataStream = new Cfg_RwStream(mData);
     memset((void *)mData, 0, sizeof(set::_sDevData));
 }
 
-void Set_RwObj::writeSettings()
+void Cfg_RwObj::writeSettings()
 {
     if(!isRun) {
         isRun = true;
@@ -23,10 +23,10 @@ void Set_RwObj::writeSettings()
     }
 }
 
-bool Set_RwObj::saveSettings()
+bool Cfg_RwObj::saveSettings()
 {
     mThread->msleep(450);
-    mFile->setFileName(Cfg_Obj::pathOfCfg(SET_DATA_FN)); fillData();
+    mFile->setFileName(Cfg_Obj::pathOfCfg(CFG_DATA_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
@@ -37,7 +37,7 @@ bool Set_RwObj::saveSettings()
     return ret;
 }
 
-bool Set_RwObj::readSetting(const QString &fn)
+bool Cfg_RwObj::readSetting(const QString &fn)
 {
     bool ret = false; mFile->setFileName(Cfg_Obj::pathOfCfg(fn));
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
@@ -54,7 +54,7 @@ bool Set_RwObj::readSetting(const QString &fn)
     return ret;
 }
 
-QByteArray Set_RwObj::toDataStream()
+QByteArray Cfg_RwObj::toDataStream()
 {
     QByteArray array; ushort end = END_CRC;
     QDataStream in(&array, QIODevice::WriteOnly);
@@ -62,7 +62,7 @@ QByteArray Set_RwObj::toDataStream()
     return array;
 }
 
-set::_sDevData *Set_RwObj::deDataStream(QByteArray &array)
+set::_sDevData *Cfg_RwObj::deDataStream(QByteArray &array)
 {
     QDataStream out(&array, QIODevice::ReadOnly);
     ushort end; out >> *mDataStream >> end;

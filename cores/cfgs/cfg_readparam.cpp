@@ -3,21 +3,21 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_rwparam.h"
+#include "cfg_readparam.h"
 
-Set_RwParam::Set_RwParam(QObject *parent)
-    : Set_RwInitial{parent}
+Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
+    : Cfg_RwInitial{parent}
 {
     mCfg = Cfg_Obj::bulid(CFG_FN);
 }
 
-void Set_RwParam::readCfgParams()
+void Cfg_ReadParam::readCfgParams()
 {
     readUut();
     outputName();
 }
 
-void Set_RwParam::readUut()
+void Cfg_ReadParam::readUut()
 {
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
@@ -38,7 +38,7 @@ void Set_RwParam::readUut()
     }
 }
 
-void Set_RwParam::outputName()
+void Cfg_ReadParam::outputName()
 {
     QString prefix = "OutputName";
     sDevData *dev = cm::masterDev();

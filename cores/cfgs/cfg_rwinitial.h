@@ -1,12 +1,12 @@
-#ifndef SET_RWINITIAL_H
-#define SET_RWINITIAL_H
+#ifndef CFG_RWINITIAL_H
+#define CFG_RWINITIAL_H
 
-#include "set_rwunserialize.h"
+#include "cfg_rwunserialize.h"
 
-class Set_RwInitial : public Set_RwUnserialize
+class Cfg_RwInitial : public Cfg_RwUnserialize
 {
 public:
-    explicit Set_RwInitial(QObject *parent = nullptr);
+    explicit Cfg_RwInitial(QObject *parent = nullptr);
     bool initialData();
 
 private:
@@ -24,4 +24,4 @@ private:
     void initRelayUnit(sRelayUnit &it, uchar size);
 };
 
-#endif // SET_RWINITIAL_H
+#endif // CFG_RWINITIAL_H

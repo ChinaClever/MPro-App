@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_rwstream.h"
+#include "cfg_rwstream.h"
 
-Set_RwStream::Set_RwStream(set::_sDevData *data) : mDevData{data}
+Cfg_RwStream::Cfg_RwStream(set::_sDevData *data) : mDevData{data}
 {
 
 }
 
 
-QDataStream& operator<<(QDataStream& in, Set_RwStream& data)
+QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
 {
     using namespace cm;
     set::_sDevData *ptr = data.mDevData;
@@ -35,7 +35,7 @@ QDataStream& operator<<(QDataStream& in, Set_RwStream& data)
     return in;
 }
 
-QDataStream& operator>>(QDataStream& out, Set_RwStream& data)
+QDataStream& operator>>(QDataStream& out, Cfg_RwStream& data)
 {
     using namespace cm; using namespace set;
     set::_sDevData *ptr = data.mDevData;

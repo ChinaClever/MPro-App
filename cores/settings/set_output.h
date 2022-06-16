@@ -1,9 +1,9 @@
 #ifndef SET_OUTPUT_H
 #define SET_OUTPUT_H
 
-#include "set_info.h"
+#include "set_login.h"
 
-class Set_Output : public Set_Info
+class Set_Output : public Set_Login
 {
 public:
     explicit Set_Output();

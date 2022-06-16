@@ -8,7 +8,7 @@
 
 Set_Core::Set_Core()
 {
-    Set_ReadWrite::bulid();
+    Cfg_ReadWrite::bulid();
 }
 
 Set_Core *Set_Core::bulid()
@@ -22,7 +22,7 @@ Set_Core *Set_Core::bulid()
 
 void Set_Core::writeSettings()
 {
-    Set_ReadWrite::bulid()->writeSettings();
+    Cfg_ReadWrite::bulid()->writeSettings();
 }
 
 bool Set_Core::setString(sNumStrItem &it)
@@ -31,6 +31,7 @@ bool Set_Core::setString(sNumStrItem &it)
     switch (it.fc) {
     case SFnCode::OutputName: ret = outputNameSet(it); break;
     case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
+    case SFnCode::EDevLogin: ret = loginSet(it.id, it.str, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -40,8 +41,9 @@ bool Set_Core::setString(sNumStrItem &it)
 QString Set_Core::getString(sNumStrItem &it)
 {
     QString str; switch (it.fc) {
-    case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
     case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
+    case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
+    case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 

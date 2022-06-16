@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_info.h"
 #include "cfg_obj.h"
 
@@ -109,12 +114,12 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
-    qstrcpy(ptr, str);
+    if(ptr) qstrcpy(ptr, str);
     Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
     cfg->writeCfg(key, QString(ptr), prefix);
 
     sOpItem db; db.op_src = opSrc(txType);
-    db.content = QObject::tr("%1 修改为 %2").arg(key).arg(str);
+    db.content = QObject::tr("%1 修改为 %2").arg(key, str);
     Log_Core::bulid()->append(db);
 
     return ret;

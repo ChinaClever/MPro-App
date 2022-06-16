@@ -36,17 +36,21 @@ QDBusConnection DBus_Object::busConnection()
 
 bool DBus_Object::registerBusService()
 {
+#if IPC_PC
     QString service = DBUS_SERVICE_NAME;
     busConnection().unregisterService(service);
     bool ret = busConnection().registerService(service);
-    if(!ret) qDebug() << "Err: DBus register Service: " << service;
+#else
+    bool ret = busConnection().isConnected();
+#endif
+    if(!ret) qDebug() << "Err: DBus register Service: " << busConnection().name() <<Q_FUNC_INFO;
     return ret;
 }
 
 bool DBus_Object::registerBusObject()
 {
     bool ret = mBus.registerObject(mBusPath, this,
-               QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
+                                   QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
     if(!ret) throwError(Q_FUNC_INFO);
     return ret;
 }

@@ -1,12 +1,12 @@
-#ifndef _SET_RWUNSERIALIZE_H
-#define _SET_RWUNSERIALIZE_H
+#ifndef _CFG_RWUNSERIALIZE_H
+#define _CFG_RWUNSERIALIZE_H
 
-#include "set_rwfill.h"
+#include "cfg_rwfill.h"
 
-class Set_RwUnserialize : public Set_RwFill
+class Cfg_RwUnserialize : public Cfg_RwFill
 {
 public:
-    explicit Set_RwUnserialize(QObject *parent = nullptr);
+    explicit Cfg_RwUnserialize(QObject *parent = nullptr);
 
 protected:
     void unSequence() override ;
