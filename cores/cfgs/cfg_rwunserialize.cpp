@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_rwunserialize.h"
+#include "cfg_rwunserialize.h"
 
-Set_RwUnserialize::Set_RwUnserialize(QObject *parent) : Set_RwFill{parent}
+Cfg_RwUnserialize::Cfg_RwUnserialize(QObject *parent) : Cfg_RwFill{parent}
 {
 
 }
 
 
-void Set_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
+void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
 {
     unit.min[id] = it.min;
     unit.max[id] = it.max;
@@ -20,14 +20,14 @@ void Set_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &
     unit.rated[id] = it.rated;
 }
 
-void Set_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
+void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
 {
     unit.en[id] = it.en;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
 }
 
-void Set_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
+void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
 {
     qstrcpy(data.name[id], obj.name);
     unAlarmUnit(id, data.vol, obj.vol);
@@ -36,13 +36,13 @@ void Set_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
     unRelayUnit(id, data.relay, obj.relay);
 }
 
-void Set_RwUnserialize::unEnvData(uchar id, sEnvData &data, set::_sEnvData &obj)
+void Cfg_RwUnserialize::unEnvData(uchar id, sEnvData &data, set::_sEnvData &obj)
 {
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
 }
 
-void Set_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
+void Cfg_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
 {
     uchar size = obj->lineSize;
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
@@ -64,7 +64,7 @@ void Set_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
     cm::dataPacket()->login = obj->login;
 }
 
-void Set_RwUnserialize::unSequence()
+void Cfg_RwUnserialize::unSequence()
 {
     set::_sDevData *dev = getDev();
     unDevData(cm::masterDev(), dev);

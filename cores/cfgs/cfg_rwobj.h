@@ -1,17 +1,17 @@
-#ifndef SET_RWOBJ_H
-#define SET_RWOBJ_H
+#ifndef CFG_RWOBJ_H
+#define CFG_RWOBJ_H
 
 #include "cfg_obj.h"
-#include "set_rwstream.h"
+#include "cfg_rwstream.h"
 
-#define SET_DATA_FN     "set_datas.ini"
-#define SET_DEFAULT_FN  "set_default.ini"
+#define CFG_DATA_FN     "cfg_datas.ini"
+#define CFG_DEFAULT_FN  "cfg_default.ini"
 
-class Set_RwObj : public QObject
+class Cfg_RwObj : public QObject
 {
     Q_OBJECT
 public:
-    explicit Set_RwObj(QObject *parent = nullptr);
+    explicit Cfg_RwObj(QObject *parent = nullptr);
 
     void writeSettings();
 
@@ -36,7 +36,7 @@ private:
     bool isRun;
     QFile *mFile;
     set::_sDevData *mData;
-    Set_RwStream *mDataStream;
+    Cfg_RwStream *mDataStream;
 };
 
-#endif // SET_RWOBJ_H
+#endif // CFG_RWOBJ_H

@@ -11,6 +11,9 @@ public:
     Q_INVOKABLE QString pduDevNameGet(int addr);
     Q_INVOKABLE bool pduDevNameSet(int addr, const QString &value);
 
+    Q_INVOKABLE QString pduDevSnGet(int addr);
+    Q_INVOKABLE bool pduDevSnSet(int addr, const QString &value);
+
 };
 
 #endif // RPC_INFO_H

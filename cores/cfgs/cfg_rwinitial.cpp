@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "set_rwinitial.h"
+#include "cfg_rwinitial.h"
 
-Set_RwInitial::Set_RwInitial(QObject *parent)
-    : Set_RwUnserialize{parent}
+Cfg_RwInitial::Cfg_RwInitial(QObject *parent)
+    : Cfg_RwUnserialize{parent}
 {
 
 }
 
-bool Set_RwInitial::initialData()
+bool Cfg_RwInitial::initialData()
 {
     sDevData *dev = cm::masterDev();
     initDevInfo(dev->info);
@@ -19,7 +19,7 @@ bool Set_RwInitial::initialData()
     return true;
 }
 
-void Set_RwInitial::initDevInfo(sDevInfo &it)
+void Cfg_RwInitial::initDevInfo(sDevInfo &it)
 {
     it.opNum = 3;
     it.lineNum = LINE_NUM;
@@ -32,7 +32,7 @@ void Set_RwInitial::initDevInfo(sDevInfo &it)
     }
 }
 
-void Set_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
+void Cfg_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
@@ -42,7 +42,7 @@ void Set_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
     }
 }
 
-void Set_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
+void Cfg_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
@@ -52,42 +52,42 @@ void Set_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
     }
 }
 
-void Set_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
+void Cfg_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
     setAlarmUnit(it.cur, size, curRated);
     setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
     setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR/COM_RATE_VOL);
 }
 
-void Set_RwInitial::setTgVol(sTgUnit &it, uint rated)
+void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)
 {
     it.rated = rated;
     it.max = it.crMax = rated * 1.2;
     it.min = it.crMin = rated * 0.8;
 }
 
-void Set_RwInitial::setTgUnit(sTgUnit &it, uint rated)
+void Cfg_RwInitial::setTgUnit(sTgUnit &it, uint rated)
 {
     it.rated = rated;
     it.max = rated;
     it.crMax = rated * 0.8;
 }
 
-void Set_RwInitial::initTgObjData(sTgObjData &it)
+void Cfg_RwInitial::initTgObjData(sTgObjData &it)
 {
     setTgVol(it.vol, 220*COM_RATE_VOL);
     setTgUnit(it.cur, 32*COM_RATE_CUR);
     setTgUnit(it.pow, 220*32);
 }
 
-void Set_RwInitial::initEnvData(sEnvData &it)
+void Cfg_RwInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
     setAlarmUnit(it.tem, size, 60);
     setAlarmUnit(it.hum, size, 99);
 }
 
-void Set_RwInitial::initDevData(sDevData *dev)
+void Cfg_RwInitial::initDevData(sDevData *dev)
 {
     initObjData(dev->line, LINE_NUM, 32*COM_RATE_CUR);
     initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
@@ -97,7 +97,7 @@ void Set_RwInitial::initDevData(sDevData *dev)
     initEnvData(dev->env);
 }
 
-void Set_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
+void Cfg_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) it.en[i] = 1;
 }

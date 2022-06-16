@@ -49,7 +49,7 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     //Agent_Core::bulid(this);
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();

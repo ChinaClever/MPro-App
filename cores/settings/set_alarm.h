@@ -1,7 +1,7 @@
 #ifndef SET_ALARM_H
 #define SET_ALARM_H
 
-#include "set_rwmain.h"
+#include "cfg_rwmain.h"
 #include "log_core.h"
 
 class Set_Alarm : public Alarm_Object

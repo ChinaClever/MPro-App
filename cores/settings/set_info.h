@@ -15,7 +15,8 @@ protected:
     int devCfgNum(int addr, int type);
     bool setCfgNum(int addr, int type, int value);
 
-    int devInfos(int addr, int type);
+    int devInfoCfg(int addr, int type);
+    bool setInfoCfg(int addr, int type, int value);
 };
 
 #endif // SET_INFO_H
