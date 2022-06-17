@@ -227,7 +227,7 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxUdp, TxTcp, TxWebocket,TxSsh};
 
@@ -238,7 +238,7 @@ struct sDataItem
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
-    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态
+    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态  11 多开关控制
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar id; // 0 表示统一设置
     uchar rw; // 0 读  1 写

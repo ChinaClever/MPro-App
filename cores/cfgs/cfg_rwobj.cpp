@@ -9,10 +9,10 @@ Cfg_RwObj::Cfg_RwObj(QObject *parent) : QObject{parent}
 {
     isRun = false;
     mFile = new QFile;
-    mData = new set::_sDevData;
+    mData = new cfg::_sDevData;
     mThread = new CThread(this);
     mDataStream = new Cfg_RwStream(mData);
-    memset((void *)mData, 0, sizeof(set::_sDevData));
+    memset((void *)mData, 0, sizeof(cfg::_sDevData));
 }
 
 void Cfg_RwObj::writeSettings()
@@ -62,7 +62,7 @@ QByteArray Cfg_RwObj::toDataStream()
     return array;
 }
 
-set::_sDevData *Cfg_RwObj::deDataStream(QByteArray &array)
+cfg::_sDevData *Cfg_RwObj::deDataStream(QByteArray &array)
 {
     QDataStream out(&array, QIODevice::ReadOnly);
     ushort end; out >> *mDataStream >> end;

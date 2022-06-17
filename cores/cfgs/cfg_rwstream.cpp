@@ -5,7 +5,7 @@
  */
 #include "cfg_rwstream.h"
 
-Cfg_RwStream::Cfg_RwStream(set::_sDevData *data) : mDevData{data}
+Cfg_RwStream::Cfg_RwStream(cfg::_sDevData *data) : mDevData{data}
 {
 
 }
@@ -14,7 +14,7 @@ Cfg_RwStream::Cfg_RwStream(set::_sDevData *data) : mDevData{data}
 QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
 {
     using namespace cm;
-    set::_sDevData *ptr = data.mDevData;
+    cfg::_sDevData *ptr = data.mDevData;
 
     in << ptr->version;
     uchar size = ptr->lineSize = LINE_NUM; in << size;
@@ -37,8 +37,8 @@ QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
 
 QDataStream& operator>>(QDataStream& out, Cfg_RwStream& data)
 {
-    using namespace cm; using namespace set;
-    set::_sDevData *ptr = data.mDevData;
+    using namespace cm; using namespace cfg;
+    cfg::_sDevData *ptr = data.mDevData;
     QByteArray v; uchar size;
 
     out >> ptr->version;

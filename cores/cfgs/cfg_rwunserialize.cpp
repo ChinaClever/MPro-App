@@ -11,7 +11,7 @@ Cfg_RwUnserialize::Cfg_RwUnserialize(QObject *parent) : Cfg_RwFill{parent}
 }
 
 
-void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
+void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
     unit.en[id] = it.en;
     unit.min[id] = it.min;
@@ -21,14 +21,14 @@ void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &
     unit.rated[id] = it.rated;
 }
 
-void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, set::_sRelayIt &it)
+void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     unit.en[id] = it.en;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
 }
 
-void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
+void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
     qstrcpy(data.name[id], obj.name);
     unAlarmUnit(id, data.vol, obj.vol);
@@ -37,13 +37,13 @@ void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, set::_sObjData &obj)
     unRelayUnit(id, data.relay, obj.relay);
 }
 
-void Cfg_RwUnserialize::unEnvData(uchar id, sEnvData &data, set::_sEnvData &obj)
+void Cfg_RwUnserialize::unEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 {
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
 }
 
-void Cfg_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
+void Cfg_RwUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
 {
     uchar size = obj->lineSize;
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
@@ -67,6 +67,6 @@ void Cfg_RwUnserialize::unDevData(sDevData *data, set::_sDevData *obj)
 
 void Cfg_RwUnserialize::unSequence()
 {
-    set::_sDevData *dev = getDev();
+    cfg::_sDevData *dev = getDev();
     unDevData(cm::masterDev(), dev);
 }

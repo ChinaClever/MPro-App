@@ -15,6 +15,7 @@ void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &
 {
     unit.value[id] = it.value;
     unit.rated[id] = it.rated;
+    unit.en[id] = it.en;
 
     unit.min[id] = it.min;
     unit.max[id] = it.max;
@@ -25,6 +26,7 @@ void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &
 void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     unit.sw[id] = it.sw;
+    unit.en[id] = it.en;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
 }

@@ -3,7 +3,7 @@
 #include "alarm_log.h"
 #include <QDataStream>
 
-namespace set {
+namespace cfg {
 struct _sAlarmIt
 {
     uint rated;
@@ -61,12 +61,12 @@ struct _sDevData
 class Cfg_RwStream
 {
 public:
-    explicit Cfg_RwStream(set::_sDevData *data);
+    explicit Cfg_RwStream(cfg::_sDevData *data);
     friend QDataStream& operator>>(QDataStream&, Cfg_RwStream&);
     friend QDataStream& operator<<(QDataStream&, Cfg_RwStream&);
 
 private:
-    set::_sDevData *mDevData;
+    cfg::_sDevData *mDevData;
 };
 
 #endif // CFG_RWSTREAM_H

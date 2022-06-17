@@ -21,6 +21,15 @@ bool Rpc_Output::pduOutputNameSet(int addr, int id, const QString &value)
     return pduSetString(addr, SFnCode::OutputName, id, value);
 }
 
+bool Rpc_Output::pduRelaysCtrl(int addr, int start, int num, uchar on)
+{
+    uchar topic = DTopic::Relay;
+    uchar sub = DSub::Relays;
+    uchar type = start;
+
+    return pduSetData(addr, type, topic, sub, num, on);
+}
+
 bool Rpc_Output::pduRelayCtrl(int addr, int id, uchar on)
 {
     uchar type = DType::Output;

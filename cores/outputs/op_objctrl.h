@@ -11,8 +11,9 @@ public:
 
     void clearEle(int id);
     void relayCtrl(int id, int on);
-    void orderCtrl(int on, uchar all=1);
     void setDelay(int id, uchar sec);
+    void orderCtrl(int on, uchar all=1);
+    void relaysCtrl(int start, int end, int v);
 
 protected:    
     virtual void funDelay(uint *buf)=0;
