@@ -22,12 +22,12 @@ protected:
     virtual void fillData()=0;
     virtual void unSequence()=0;
     bool readSetting(const QString &fn);
-    set::_sDevData *getDev() {return mData;}
+    cfg::_sDevData *getDev() {return mData;}
 
 private:
     bool saveSettings();
     QByteArray toDataStream();
-    set::_sDevData *deDataStream(QByteArray &array);
+    cfg::_sDevData *deDataStream(QByteArray &array);
 
 protected:
     CThread *mThread;
@@ -35,7 +35,7 @@ protected:
 private:
     bool isRun;
     QFile *mFile;
-    set::_sDevData *mData;
+    cfg::_sDevData *mData;
     Cfg_RwStream *mDataStream;
 };
 
