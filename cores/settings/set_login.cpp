@@ -34,7 +34,10 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     case 2: ptr = it->pwd[id]; break;
     case 3: ptr = it->token[id]; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    } if(ptr) qstrcpy(ptr, str);
+    }
+
+    if(ptr) qstrcpy(ptr, str);
+    Cfg_ReadWrite::bulid()->writeSettings();
 
     return ret;
 }

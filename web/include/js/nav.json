@@ -65,6 +65,33 @@
     ]
   },
   {
+    "name": "集成接口",
+    "icon": "document_fill",
+    "base": "pages/integrate/",
+    "subNav": [
+      {
+        "name": "Modbus服务",
+        "url": "modbus.html"
+      },
+      {
+        "name": "SNMP服务",
+        "url": "snmp.html"
+      },
+      {
+        "name": "RPC服务",
+        "url": "rpc.html"
+      },
+      {
+        "name": "推送服务",
+        "url": "push.html"
+      },
+      {
+        "name": "远程反控",
+        "url": "control.html"
+      }
+    ]
+  },
+  {
     "name": "网络安全",
     "icon": "manage_fill",
     "base": "pages/network/",
@@ -122,26 +149,7 @@
         "url": "atom.html"
       }
     ]
-  },
-  {
-    "name": "用户管理",
-    "icon": "document_fill",
-    "base": "pages/usermange/",
-    "subNav": [
-      {
-        "name": "用户设置",
-        "url": "relay_ctrl.html"
-      },
-      {
-        "name": "用户组设置",
-        "url": "output_monitoring.html"
-      },
-      {
-        "name": "输出位权限设置",
-        "url": "unit_control.html"
-      }
-    ]
-  },
+  },  
   {
     "name": "图表信息",
     "icon": "flag_fill",

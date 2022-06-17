@@ -8,7 +8,7 @@
 Core_Ssdp::Core_Ssdp(QObject *parent)
     : Ssdp_Server{parent}
 {
-
+    bind();
 }
 
 

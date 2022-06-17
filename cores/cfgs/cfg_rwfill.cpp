@@ -13,6 +13,7 @@ Cfg_RwFill::Cfg_RwFill(QObject *parent) : Cfg_RwObj{parent}
 
 void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
 {
+    it.en = unit.en[id];
     it.rated = unit.rated[id];
 
     it.min = unit.min[id];

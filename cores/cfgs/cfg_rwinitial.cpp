@@ -26,7 +26,7 @@ void Cfg_RwInitial::initDevInfo(sDevInfo &it)
     it.loopNum = LOOP_NUM / 2;
     it.outputNum = OUTPUT_NUM / 2;
 
-    for(int i=0; i<it.loopNum; ++i) {
+    for(uint i=0; i<it.loopNum; ++i) {
         it.loopEnds[i] = 8*(i+1);
         it.loopStarts[i] = 8*i;
     }

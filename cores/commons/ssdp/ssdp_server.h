@@ -9,6 +9,8 @@ class Ssdp_Server : public QObject
 public:
     explicit Ssdp_Server(QObject *parent = nullptr);
     QStringList searchTarget(const QString &room="all");
+    bool send(int fc, const QString &describe, const QByteArray &data);
+    bool bind();
 
 signals:
     void targetSig(const QString &);

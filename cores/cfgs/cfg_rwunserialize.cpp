@@ -13,6 +13,7 @@ Cfg_RwUnserialize::Cfg_RwUnserialize(QObject *parent) : Cfg_RwFill{parent}
 
 void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, set::_sAlarmIt &it)
 {
+    unit.en[id] = it.en;
     unit.min[id] = it.min;
     unit.max[id] = it.max;
     unit.crMin[id] = it.crMin;
