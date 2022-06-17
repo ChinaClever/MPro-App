@@ -46,6 +46,19 @@ bool Set_Output::outputCtrl(sDataItem &unit)
     return ret;
 }
 
+bool Set_Output::outputsCtrl(sDataItem &unit)
+{
+    bool ret = false; int start = unit.type-1; int end = start + unit.id;
+    sRelayUnit *it = &(cm::masterDev()->output.relay);
+    for(int i=start; i<end; ++i) {
+        if(it->en[i] || unit.txType == DTxType::TxWeb) ret = true;
+         else {ret = false; break;}
+    }
+
+    if(ret && unit.id) OP_Core::bulid()->relaysCtrl(start, end, unit.value);
+    return ret;
+}
+
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
@@ -54,6 +67,7 @@ bool Set_Output::relaySet(sDataItem &unit)
     } else if(unit.rw) {
         switch (unit.subtopic) {
         case DSub::Value:  ret = outputCtrl(unit); break;
+        case DSub::Relays: ret = outputsCtrl(unit); break;
         case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
         default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeSettings(); break;
         } relayOpLog(unit);
