@@ -22,20 +22,24 @@
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
     function sign_in(){
-      alert("aaa");
+      var div= document.getElementsByClassName('center_form');
+      for(var i = 0; i<div[0].childElementCount;i++){
+        div[0].removeChild(div[0].childNodes[i]);
+      }
       $('.center_form').html(builddiv('signin'));
       $('.signIn_btn').html(builddiv1('signin'));
     }
     var rpc = jsonrpc();
     function builddiv1(Reg){
       var tbody = '';
-      if(Reg === 'register'){
+      if(Reg === 'signin'){
         tbody += '<input type = "button" value = "SIGN IN" onclick="sign_in()"></input>';
-      }else if(Reg==='signin') {
+      }else if(Reg==='register') {
         tbody += '<input type = "button" value = "REGISTER" onclick="register()"></input>';
       }else if(Reg==='submite') {
         tbody += '<input type = "button" value = "SIGN IN" onclick="submite()"></input>';
       }
+      return tbody;
     }
     function builddiv(Reg){
       var tbody = '';
@@ -46,19 +50,20 @@
         tbody += '<p><input type="password" autocomplete="off" placeholder="Password"></p>';
         tbody += '<p><input type="password" autocomplete="off" placeholder="Confirm Password"></p>';
         tbody += '<div class="chk">';
-        tbody += '<span>please click here to</span>&nbsp;<a herf="https://www.baidu.com">Register</a>';
+        tbody += '<span>please click here to</span>&nbsp;<a herf="https://www.baidu.com">Register</a></div>';
       }else if(Reg==='signin') {
         tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span></p>';
         tbody += '<p><input type="text" autocomplete="off" placeholder="User Name"></p>';
         tbody += '<p><input type="password" autocomplete="off" placeholder="Password"></p>';
         tbody += '<div class="chk">';
-        tbody += '<span>please click here to</span>&nbsp<a>Register</a></div>';
+        tbody += '<span>please click here to</span>&nbsp<a>Signin</a></div>';
       }else if(Reg === 'submite'){
 
       }
       return tbody;
     }
-    $('.center_form').html(builddiv('register'));
+    $('.center_form').html(builddiv('signin'));
+    $('.signIn_btn').html(builddiv1('signin'));
   </script>
 
 </body>
