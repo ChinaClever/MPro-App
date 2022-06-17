@@ -21,8 +21,8 @@ void PduRpcObj::pduReadData(jsonrpc_request *r)
 
 void PduRpcObj::pduSetData(jsonrpc_request *r)
 {
-    QVector<double> its = JsonRpcObj::getNumbers(r , 6);
-    bool ret = mWebIpc->setting((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2),
+    QVector<double> its = JsonRpcObj::getNumbers(r, 6);
+    bool ret = mWebIpc->setting((uint)its.at(0), (uchar)its.at(1), (uchar)its.at(2),
                             (uchar)its.at(3), (uchar)its.at(4), (uint)its.at(5));
     responRpcData(r, its, ret?1:0);
 }
@@ -53,7 +53,7 @@ void PduRpcObj::pduSetString(jsonrpc_request *r)
     std::string value;
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);
     bool ret = JsonRpcObj::getString(r, 5, (char*)value.c_str());
-    if(ret) ret = mWebIpc->setString((uchar)its.at(0), (uchar)its.at(1),
+    if(ret) ret = mWebIpc->setString((uint)its.at(0), (uchar)its.at(1),
                                      (uchar)its.at(4), (char*)value.c_str());
     responRpcData(r, its, ret?1:0);
 }
@@ -67,8 +67,8 @@ void PduRpcObj::pduReadCfg(jsonrpc_request *r)
 
 void PduRpcObj::pduSetCfg(jsonrpc_request *r)
 {
-    QVector<double> its = JsonRpcObj::getNumbers(r , 6);
-    bool ret = mWebIpc->setDevCfg((uchar)its.at(0), (uchar)its.at(1),
+    QVector<double> its = JsonRpcObj::getNumbers(r, 6);
+    bool ret = mWebIpc->setDevCfg((uint)its.at(0), (uchar)its.at(1),
                                   (uchar)its.at(2), (uint)its.at(5));
     responRpcData(r, its, ret?1:0);
 }

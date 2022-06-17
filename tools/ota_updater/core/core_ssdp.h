@@ -9,9 +9,6 @@ class Core_Ssdp : public Ssdp_Server
     explicit Core_Ssdp(QObject *parent = nullptr);
 public:
     static Core_Ssdp *bulid(QObject *parent = nullptr);
-
-signals:
-
 };
 
 #endif // CORE_SSDP_H

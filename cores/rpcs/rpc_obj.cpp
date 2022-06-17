@@ -21,9 +21,9 @@ int Rpc_Obj::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar 
     return mIt.value;
 }
 
-bool Rpc_Obj::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool Rpc_Obj::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi)
 {
-    sDataItem it; it.addr = addr; it.type = type;
+    sDataItem it; it.addr = addr; it.type = type; it.soi = soi;
     it.topic = topic; it.subtopic = sub; it.id = id;
     it.value = value; it.rw = 1; it.txType = mTxType;
     return Set_Core::bulid()->setting(it);
@@ -36,9 +36,9 @@ QString Rpc_Obj::pduGetString(uchar addr, uchar fc, uchar id)
     return Set_Core::bulid()->getNumStr(it);
 }
 
-bool Rpc_Obj::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
+bool Rpc_Obj::pduSetString(uchar addr, uchar fc, uchar id, const QString &str, uchar soi)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1;
+    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1; it.soi = soi;
     qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = mTxType;
     return Set_Core::bulid()->setNumStr(it);
 }
@@ -50,9 +50,9 @@ int Rpc_Obj::pduDevCfg(uchar addr, uchar fc, uchar type)
     return Set_Core::bulid()->getNumStr(it).toInt();
 }
 
-bool Rpc_Obj::pduSetCfg(uchar addr, uchar fc, uchar type, int value)
+bool Rpc_Obj::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi)
 {
     sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
-    it.value = value; it.isDigit = 1; it.txType = mTxType;
+    it.value = value; it.isDigit = 1; it.txType = mTxType; it.soi = soi;
     return Set_Core::bulid()->setNumStr(it);
 }

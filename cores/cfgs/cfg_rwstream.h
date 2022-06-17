@@ -7,6 +7,7 @@ namespace set {
 struct _sAlarmIt
 {
     uint rated;
+    uchar en;
     ushort min; // 最小值
     ushort max; // 最大值
 

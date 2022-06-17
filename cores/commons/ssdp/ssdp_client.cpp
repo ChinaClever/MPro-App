@@ -44,18 +44,17 @@ void Ssdp_Client::readMsgSlot()
     }
 }
 
-bool Ssdp_Client::rplySearchTarget(const QByteArray &array)
+bool Ssdp_Client::rplySearchTarget(const QString &room, const QByteArray &array)
 {
     bool ret = false;
     if(array.contains("ssdp:discover")) {
         if(array.contains("Pdu:all")) {
             ret = write("Pdu:all");
-        } else {
+        } else if(room.size()){
             QString name = cm::masterDev()->uut.room;
-            if(name.size()) {
+            if(name == room) {
                 QString str = "Pdu:"+ name;
-                if(array.contains(str.toLatin1()))
-                    ret = write(str.toLatin1());
+                ret = write(str.toLatin1());
             }
         }
     }
@@ -63,8 +62,13 @@ bool Ssdp_Client::rplySearchTarget(const QByteArray &array)
     return ret;
 }
 
-void Ssdp_Client::recvMsg(const QByteArray &array)
+void Ssdp_Client::recvMsg(QByteArray &array)
 {
-    if(array.size() > 113) rplySearchTarget(array);
+    QDataStream out(&array, QIODevice::ReadOnly); sSdpIt it;
+    out >> it.version >> it.fc >> it.describe >> it.array >> it.crc;
+    if(it.crc == END_CRC) {
+        if(it.fc) emit recvSig(it.fc, it.describe, it.array);
+        else rplySearchTarget(it.describe, it.array);
+    }
 }
 

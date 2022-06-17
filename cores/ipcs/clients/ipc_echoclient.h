@@ -9,13 +9,13 @@ public:
     explicit IPC_EchoClient(QObject *parent = nullptr);
 
     QString getString(uchar addr, uchar fc, uchar id);
-    bool setString(uchar addr, uchar fc, uchar id, const QString &str);
+    bool setString(uint addr, uchar fc, uchar id, const QString &str);
 
     int getDevCfg(uchar addr, uchar fc, uchar type);
-    bool setDevCfg(uchar addr, uchar fc, uchar type, int value);
+    bool setDevCfg(uint addr, uchar fc, uchar type, int value);
 
     int getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
-    bool setting(uchar addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
+    bool setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
 
 private:
     bool getValue(sDataItem &unit);
