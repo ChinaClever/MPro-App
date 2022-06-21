@@ -152,6 +152,7 @@ struct sDevInfo {
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
     uchar loopEnds[LOOP_NUM];
     uchar loopStarts[LOOP_NUM];
+    uchar opSpecs[LOOP_NUM];
 
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
