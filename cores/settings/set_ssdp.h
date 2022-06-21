@@ -15,6 +15,8 @@ public:
 
 private slots:
     void recvSlot(uchar fc, const QString &room, const QByteArray &rcv);
+    void recvNumStrSlot(const sNumStrItem &it);
+    void recvSetSlot(const sDataItem &it);
 
 private:
     Ssdp_Server *mSsdp;

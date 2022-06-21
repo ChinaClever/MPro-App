@@ -77,7 +77,7 @@ void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJs
 void Json_Build::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
     if(!it.size) return;
-    QJsonObject obj; double r = 1;
+    QJsonObject obj; double r = 1;    
     obj.insert("state", it.sw[id]/r);
     obj.insert("mode", it.mode[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
@@ -99,9 +99,9 @@ void Json_Build::ObjData(const sObjData &it, const QString &key, QJsonObject &js
         obj.insert("id", id+1);
         obj.insert("pf", it.pf[id]/r);
         obj.insert("ele", it.ele[id]/r);
-        obj.insert("name", it.name[id]);
         obj.insert("apparent_pow", it.artPow[id]/r);
         obj.insert("active_pow", it.reactivePow[id]/r);
+        if(strlen(it.name[id])) obj.insert("name", it.name[id]);
         array.append(obj);
     }
     json.insert(key, QJsonValue(array));
@@ -164,6 +164,7 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     obj.insert("phases", it.lineNum/r);
     obj.insert("version", it.version/r);
 
+    obj.insert("hz", it.hz/r);
     obj.insert("op_num", it.opNum/r);
     obj.insert("loop_num", it.loopNum/r);
     obj.insert("slave_num", it.slaveNum/r);
@@ -177,10 +178,6 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
     for(uint i=0; i<it.opNum; ++i) ops.append(it.opVers[i]);
     obj.insert("op_vers", vs);
 
-    QJsonArray hz;
-    for(uint i=0; i<it.opNum; ++i) ops.append(it.hzs[i]);
-    obj.insert("hzs", hz);
-
     json.insert(key, QJsonValue(obj));
 }
 
@@ -192,8 +189,9 @@ void Json_Build::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &js
     obj.insert("room", it.room);
     obj.insert("cabinet", it.cab);
     obj.insert("module", it.module);
+    obj.insert("name", it.devName);
     obj.insert("road", it.road);
-    obj.insert("dev_name", it.devName);
+    obj.insert("sn", it.sn);
     json.insert(key, QJsonValue(obj));
 }
 

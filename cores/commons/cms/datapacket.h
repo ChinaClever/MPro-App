@@ -230,7 +230,7 @@ enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxUdp, TxTcp, TxWebocket,TxSsh};
+enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
 struct sDataItem
 {
