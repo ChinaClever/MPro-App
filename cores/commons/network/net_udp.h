@@ -14,9 +14,15 @@ public:
     bool writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port);
     bool bind(int port, const QHostAddress &address = QHostAddress::Any);
     bool broadcastDatagram(const QByteArray &datagram, quint16 port);
-    QByteArray readDatagram(QHostAddress *host = nullptr);
 
 signals:
+    void recvSig(const QByteArray &array);
+
+private slots:
+    void recvSlot();
+
+private:
+    QByteArray readDatagram(QHostAddress *host = nullptr);
 
 private:
     QUdpSocket *udpSocket = nullptr;

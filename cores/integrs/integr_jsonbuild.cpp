@@ -3,16 +3,14 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "json_build.h"
+#include "integr_jsonbuild.h"
 
-
-Json_Build::Json_Build()
+Integr_JsonBuild::Integr_JsonBuild()
 {
     mJson = new QJsonObject();
 }
 
-
-QByteArray Json_Build::getJson(uchar addr)
+QByteArray Integr_JsonBuild::getJson(uchar addr)
 {
     QByteArray array;
     sDevData *dev = cm::devData(addr);  QJsonObject json;
@@ -31,7 +29,7 @@ QByteArray Json_Build::getJson(uchar addr)
     return array;
 }
 
-bool Json_Build::saveJson(const QString &name, QJsonObject &json)
+bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
 {
     QFile file("F:/" + name+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
@@ -47,7 +45,7 @@ bool Json_Build::saveJson(const QString &name, QJsonObject &json)
 }
 
 
-void Json_Build::uutInfo(const sUutInfo &it, QJsonObject &json)
+void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
 {
     QJsonObject obj;
     obj.insert("room", it.room);
@@ -56,7 +54,7 @@ void Json_Build::uutInfo(const sUutInfo &it, QJsonObject &json)
     json.insert("uut_info", QJsonValue(obj));
 }
 
-void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJsonObject &json)
 {
     if(!it.size) return;
     QJsonObject obj; double r = 10.0;
@@ -74,10 +72,10 @@ void Json_Build::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJs
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
     if(!it.size) return;
-    QJsonObject obj; double r = 1;    
+    QJsonObject obj; double r = 1;
     obj.insert("state", it.sw[id]/r);
     obj.insert("mode", it.mode[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
@@ -85,7 +83,7 @@ void Json_Build::relayUnit(int id, const sRelayUnit &it, const QString &key, QJs
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonArray array;
     for(int id=0; id< it.size; ++id) {
@@ -107,7 +105,7 @@ void Json_Build::ObjData(const sObjData &it, const QString &key, QJsonObject &js
     json.insert(key, QJsonValue(array));
 }
 
-void Json_Build::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
     obj.insert("value", it.value/r);
@@ -120,7 +118,7 @@ void Json_Build::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
     tgUnit(it.vol, "vol", obj);
@@ -133,7 +131,7 @@ void Json_Build::tgObjData(const sTgObjData &it, const QString &key, QJsonObject
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
     QJsonArray array; double r = 1;
     for(int i=0; i< it.size; ++i) {
@@ -158,7 +156,7 @@ void Json_Build::envData(const sEnvData &it, const QString &key, QJsonObject &js
     json.insert("smoke", smoke);
 }
 
-void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
     obj.insert("phases", it.lineNum/r);
@@ -182,7 +180,7 @@ void Json_Build::devInfo(const sDevInfo &it, const QString &key, QJsonObject &js
 }
 
 
-void Json_Build::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
     obj.insert("IDC", it.idc);
@@ -195,7 +193,7 @@ void Json_Build::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &js
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::devData(const sDevData *it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
     obj.insert("id", it->id);
@@ -214,7 +212,7 @@ void Json_Build::devData(const sDevData *it, const QString &key, QJsonObject &js
     json.insert(key, QJsonValue(obj));
 }
 
-void Json_Build::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
     obj.insert("mode", it.mode);
@@ -225,15 +223,3 @@ void Json_Build::netAddr(const sNetAddr &it, const QString &key, QJsonObject &js
     obj.insert("mac", it.mac);
     json.insert(key, QJsonValue(obj));
 }
-
-
-
-
-
-
-
-
-
-
-
-

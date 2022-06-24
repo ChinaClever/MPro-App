@@ -1,14 +1,13 @@
-#ifndef JSON_RECV_H
-#define JSON_RECV_H
+#ifndef INTEGR_JSONRECV_H
+#define INTEGR_JSONRECV_H
+#include "integr_jsonbuild.h"
 
-#include "json_build.h"
-
-class Json_Recv : public QObject
+class Integr_JsonRecv : public QObject
 {
     Q_OBJECT
-    explicit Json_Recv(QObject *parent = nullptr);
+    explicit Integr_JsonRecv(QObject *parent = nullptr);
 public:
-    static Json_Recv *bulid(QObject *parent = nullptr);
+    static Integr_JsonRecv *bulid(QObject *parent = nullptr);
     bool recv(const QByteArray &msg);
 
 signals:
@@ -30,4 +29,4 @@ private:
     bool analyticalData(const QJsonObject &object);
 };
 
-#endif // JSON_RECV_H
+#endif // INTEGR_JSONRECV_H

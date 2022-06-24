@@ -1,14 +1,12 @@
-#ifndef JSON_BUILD_H
-#define JSON_BUILD_H
-
+#ifndef INTEGR_JSONBUILD_H
+#define INTEGR_JSONBUILD_H
 #include "commons.h"
 #define JSON_VERSION   1
 
-class Json_Build
+class Integr_JsonBuild
 {
 public:
-    Json_Build();
-
+    Integr_JsonBuild();
     QByteArray getJson(uchar addr);
     bool saveJson(const QString &name, QJsonObject &json);
 
@@ -29,4 +27,4 @@ private:
     QJsonObject *mJson;
 };
 
-#endif // JSON_BUILD_H
+#endif // INTEGR_JSONBUILD_H

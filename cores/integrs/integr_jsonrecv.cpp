@@ -3,24 +3,24 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "json_recv.h"
+#include "integr_jsonrecv.h"
 
-Json_Recv::Json_Recv(QObject *parent)
+Integr_JsonRecv::Integr_JsonRecv(QObject *parent)
     : QObject{parent}
 {
 
 }
 
-Json_Recv *Json_Recv::bulid(QObject *parent)
+Integr_JsonRecv *Integr_JsonRecv::bulid(QObject *parent)
 {
-    static Json_Recv* sington = NULL;
+    static Integr_JsonRecv* sington = NULL;
     if(sington == NULL) {
-        sington = new Json_Recv(parent);
+        sington = new Integr_JsonRecv(parent);
     }
     return sington;
 }
 
-QJsonValue Json_Recv::getValue(const QJsonObject &object, const QString &key)
+QJsonValue Integr_JsonRecv::getValue(const QJsonObject &object, const QString &key)
 {
     QJsonValue value;
     if (object.contains(key))  {
@@ -29,7 +29,7 @@ QJsonValue Json_Recv::getValue(const QJsonObject &object, const QString &key)
     return value;
 }
 
-QString Json_Recv::getString(const QJsonObject &object, const QString &key)
+QString Integr_JsonRecv::getString(const QJsonObject &object, const QString &key)
 {
     QString str;
     QJsonValue value = getValue(object, key);
@@ -40,7 +40,7 @@ QString Json_Recv::getString(const QJsonObject &object, const QString &key)
     return str;
 }
 
-double Json_Recv::getData(const QJsonObject &object, const QString &key)
+double Integr_JsonRecv::getData(const QJsonObject &object, const QString &key)
 {
     double ret = -1;
     QJsonValue value = getValue(object, key);
@@ -51,7 +51,7 @@ double Json_Recv::getData(const QJsonObject &object, const QString &key)
     return ret;
 }
 
-QJsonObject Json_Recv::getObject(const QJsonObject &object, const QString &key)
+QJsonObject Integr_JsonRecv::getObject(const QJsonObject &object, const QString &key)
 {
     QJsonObject obj;
     if (object.contains(key)){
@@ -63,7 +63,7 @@ QJsonObject Json_Recv::getObject(const QJsonObject &object, const QString &key)
     return obj;
 }
 
-QJsonArray Json_Recv::getArray(const QJsonObject &object, const QString &key)
+QJsonArray Integr_JsonRecv::getArray(const QJsonObject &object, const QString &key)
 {
     QJsonArray array;
     if (object.contains(key)) {
@@ -77,7 +77,7 @@ QJsonArray Json_Recv::getArray(const QJsonObject &object, const QString &key)
 }
 
 
-bool Json_Recv::company(const QJsonObject &object)
+bool Integr_JsonRecv::company(const QJsonObject &object)
 {
     bool ret = false;
     QString strName = getString(object, "company");
@@ -87,7 +87,7 @@ bool Json_Recv::company(const QJsonObject &object)
 }
 
 
-bool Json_Recv::versionNumber(const QJsonObject &object)
+bool Integr_JsonRecv::versionNumber(const QJsonObject &object)
 {
     bool ret = true; //company(object);
     if(ret) {
@@ -99,7 +99,7 @@ bool Json_Recv::versionNumber(const QJsonObject &object)
 }
 
 
-bool Json_Recv::setDataItem(const QJsonObject &object)
+bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
 {
     QString key = "setDataItem";
     bool ret = true; sDataItem it;
@@ -119,7 +119,7 @@ bool Json_Recv::setDataItem(const QJsonObject &object)
     return ret;
 }
 
-bool Json_Recv::setNumStrItem(const QJsonObject &object)
+bool Integr_JsonRecv::setNumStrItem(const QJsonObject &object)
 {
     QString key = "sNumStrItem";
     bool ret = true; sNumStrItem it;
@@ -139,7 +139,7 @@ bool Json_Recv::setNumStrItem(const QJsonObject &object)
     return ret;
 }
 
-bool Json_Recv::analyticalData(const QJsonObject &object)
+bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
 {
     bool ret = versionNumber(object);
     if(ret) {
@@ -150,7 +150,7 @@ bool Json_Recv::analyticalData(const QJsonObject &object)
     return ret;
 }
 
-bool Json_Recv::recv(const QByteArray &msg)
+bool Integr_JsonRecv::recv(const QByteArray &msg)
 {
     QJsonParseError jsonerror; bool ret = false;
     QJsonDocument doc = QJsonDocument::fromJson(msg, &jsonerror);
@@ -163,3 +163,4 @@ bool Json_Recv::recv(const QByteArray &msg)
 
     return ret;
 }
+

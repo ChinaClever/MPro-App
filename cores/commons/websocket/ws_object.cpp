@@ -19,8 +19,10 @@ void WS_Object::initSocket(QWebSocket *socket)
     mSocket->setParent(parent());
     connect(mSocket, SIGNAL(connected()), this, SLOT(connected()));
     connect(mSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    //connect(mSocket, SIGNAL(textMessageReceived(QString)), this, SIGNAL(textMessageSig(QString)));
+    connect(mSocket, SIGNAL(binaryMessageReceived(QByteArray)), this, SIGNAL(binaryMessageSig(QByteArray)));
     connect(mSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(textMessageReceived(QString)));
-    connect(mSocket, SIGNAL(binaryMessageReceived(QByteArray)), this, SLOT(binaryMessageReceived(QByteArray)));
+    //connect(mSocket, SIGNAL(binaryMessageReceived(QByteArray)), this, SLOT(binaryMessageReceived(QByteArray)));
     connect(mSocket, QOverload<const QList<QSslError>&>::of(&QWebSocket::sslErrors),this, &WS_Object::onSslErrors);
 }
 
@@ -87,7 +89,8 @@ void WS_Object::disconnected()
 
 void WS_Object::textMessageReceived(const QString &message)
 {
-    mRecvVar = message;
+    emit binaryMessageSig(message.toLatin1());
+    //mRecvVar = message;
     isRecved = true;
 }
 

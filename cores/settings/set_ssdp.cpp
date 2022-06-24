@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_ssdp.h"
-#include "json_recv.h"
+#include "integr_jsonrecv.h"
 
 Set_Ssdp::Set_Ssdp(QObject *parent)
     : QObject{parent}
@@ -13,9 +13,9 @@ Set_Ssdp::Set_Ssdp(QObject *parent)
     Ssdp_Client *c = Ssdp_Client::bulid(this);
     connect(c, &Ssdp_Client::recvSig, this, &Set_Ssdp::recvSlot);
 
-    Json_Recv *j = Json_Recv::bulid(this);
-    connect(j, &Json_Recv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
-    connect(j, &Json_Recv::recvNumStrSig, this, &Set_Ssdp::recvNumStrSlot);
+    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this);
+    connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
+    connect(j, &Integr_JsonRecv::recvNumStrSig, this, &Set_Ssdp::recvNumStrSlot);
 }
 
 Set_Ssdp *Set_Ssdp::bulid(QObject *parent)
