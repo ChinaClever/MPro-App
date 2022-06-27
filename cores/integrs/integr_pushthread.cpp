@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_pushthread.h"
+#include "http/http.h"
 
 Integr_PushThread::Integr_PushThread(QObject *parent)
     : QThread{parent}
@@ -33,9 +34,30 @@ void Integr_PushThread::stopFun()
     isRun = false;
 }
 
-void Integr_PushThread::startFun()
+void Integr_PushThread::startFun(const sPushIt &it)
 {
+    mItem = it;
     if(!isRun) start();
+}
+
+void Integr_PushThread::udpPush(const QByteArray &array)
+{
+    QHostAddress host(mItem.ip);
+    mUdp->writeDatagram(array, host, mItem.port);
+}
+
+void Integr_PushThread::httpPost(const QByteArray &array)
+{
+    QUrl url(mItem.url); //https://github.com/flaviotordini/http
+    Http::instance().setReadTimeout(mItem.timeout);
+    auto reply = Http::instance().post(url, array, "application/json");
+    connect(reply, &HttpReply::finished, this, [](auto &reply) {
+        if (reply.isSuccessful()) {
+            qDebug() << "Feel the bytes!" << reply.body();
+        } else {
+            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
+        }
+    });
 }
 
 void Integr_PushThread::workDown()
@@ -43,16 +65,18 @@ void Integr_PushThread::workDown()
     for(int i=0; i<DEV_NUM; ++i) {
         sDevData *dev = cm::devData(i);
         if(dev->offLine) {
-            QHostAddress host(mHost);
             QByteArray res = mJson->getJson(i);
-            mUdp->writeDatagram(res, host, mPort);
+            switch (mItem.type) {
+            case 1: udpPush(res);break;
+            case 2: httpPost(res);break;
+            }
         } delay();
     }
 }
 
 void Integr_PushThread::delay()
 {
-    int sec = mSec; if(!sec) sec = 5;
+    int sec = mItem.sec; if(!sec) sec = 5;
     for(int i=0; i<sec*100; i+=100) {
         if(isRun) msleep(100); else break;
     } int t = QRandomGenerator::global()->bounded(100); msleep(t);
