@@ -47,7 +47,7 @@
 }
 
 input {
-  width: 310px;
+  width: 280px;
   margin: 10px 50px 0px 40px;
   height: 35px;
   padding-left: 20px;
@@ -63,15 +63,20 @@ input {
   line-height: 60px;
   margin: 10px 40px 0px 40px;
   display: flex;
-  justify-content:flex-end;
+  justify-content:space-between;
   font-size: 14px;
 }
-.chk span input {
+.chk span input a{
   width: 15px;
   height: 15px;
   margin: 10px;
 }
-
+.error
+{
+  color:red;
+  text-align: center;
+  font-weight: bold;
+}
 /*两侧小三角形 */
 .inner_box .left_label,.right_label {
   width: 0px;

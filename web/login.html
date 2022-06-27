@@ -21,6 +21,40 @@
   <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
+    var rpc = jsonrpc();
+    var time1 = setTimeout(function(){
+      var time = setTimeout(function(){
+        tick ++;
+        rpc.call('pduReadString',[0,14,0,0,1]);
+      },60);
+      var time = setTimeout(function(){
+        tick ++;
+        rpc.call('pduReadString',[0,14,0,0,2]);
+      },60);
+      var time = setTimeout(function(){
+        tick ++;
+        rpc.call('pduReadString',[0,14,0,0,3]);
+      },60);
+		},600);
+    var time2 = setInterval(function(){
+			if(!tick && push){
+				push = 0;
+        readstaticdata();
+				if(user_name !== '' && password !==''){
+          $('.center_form').html(builddiv('signin'));
+          $('.signIn_btn').html(builddiv1('signin'));
+        }else{
+          $('.center_form').html(builddiv('register'));
+          $('.signIn_btn').html(builddiv1('register'));
+        }
+			}
+		},650);
+    function readstaticdata()
+    {
+      clearInterval(time2);
+    }
+
+
     function sign_in(){
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){
@@ -28,16 +62,93 @@
       }
       $('.center_form').html(builddiv('signin'));
       $('.signIn_btn').html(builddiv1('signin'));
+      window.open('http://localhost:8000','_self');
     }
-    var rpc = jsonrpc();
+    function submite(){
+      var div= document.getElementsByClassName('center_form');
+      for(var i = 0; i<div[0].childElementCount;i++){
+        div[0].removeChild(div[0].childNodes[i]);
+      }
+      $('.center_form').html(builddiv('submite'));
+      $('.signIn_btn').html(builddiv1('submite'));
+    }
+    function register(){
+      var div= document.getElementsByClassName('center_form');
+      for(var i = 0; i<div[0].childElementCount;i++){
+        div[0].removeChild(div[0].childNodes[i]);
+      }
+      $('.center_form').html(builddiv('register'));
+      $('.signIn_btn').html(builddiv1('register'));
+    }
+    function submite1(){
+      var div= document.getElementsByClassName('center_form');
+      for(var i = 0; i<div[0].childElementCount;i++){
+        div[0].removeChild(div[0].childNodes[i]);
+      }
+      $('.center_form').html(builddiv('signin'));
+      $('.signIn_btn').html(builddiv1('signin'));
+    }
+    function register1(){
+      var div= document.getElementsByClassName('center_form');
+      for(var i = 0; i<div[0].childElementCount;i++){
+        div[0].removeChild(div[0].childNodes[i]);
+      }
+      $('.center_form').html(builddiv('signin'));
+      $('.signIn_btn').html(builddiv1('signin'));
+    }
+    function printError(elemId, hintMsg)
+    {
+      document.getElementById(elemId).innerHTML = hintMsg;
+    }
+    function validataForm(ipt)
+    {
+      var con = document.getElementById("conpsd");
+      var code = document.getElementById("ident");
+      if(code != null)
+      {
+        if(ipt.value == "" && ipt.id == "username"){
+          printError("Errinfo", "用户名不能为空");
+        }else if(ipt.value == "" && ipt.id == "ident"){
+          printError("Errinfo", "身份验证信息不能为空");
+        }else{
+          printError("Errinfo", "");
+        }
+      }
+      if(con == null)
+      {
+        if(ipt.value == "" && ipt.id == "username"){
+          printError("Errinfo", "用户名不能为空");
+        }else if(ipt.value == "" && ipt.id == "psd"){
+          printError("Errinfo", "密码不能为空");
+        }
+        else{
+          printError("Errinfo", "");
+        }
+      }
+      else{
+        var psd_val = document.getElementById("psd");
+        if(ipt.value == "" && ipt.id == "username"){
+          printError("Errinfo", "用户名不能为空");
+        }else if(ipt.value == "" && ipt.id == "psd"){
+          printError("Errinfo", "请输入正确的密码");
+        }
+        else if((ipt.value == "" || ipt.value !== psd_val.value)&& ipt.id == "conpsd"){
+          printError("Errinfo", "两次密码不一致，请重新输入");
+        }
+        else{
+          printError("Errinfo", "");
+        }
+      }
+      
+    }
     function builddiv1(Reg){
       var tbody = '';
       if(Reg === 'signin'){
         tbody += '<input type = "button" value = "SIGN IN" onclick="sign_in()"></input>';
       }else if(Reg==='register') {
-        tbody += '<input type = "button" value = "REGISTER" onclick="register()"></input>';
+        tbody += '<input type = "button" value = "REGISTER" onclick="register1()"></input>';
       }else if(Reg==='submite') {
-        tbody += '<input type = "button" value = "SIGN IN" onclick="submite()"></input>';
+        tbody += '<input type = "button" value = "SUBMITE" onclick="submite1()"></input>';
       }
       return tbody;
     }
@@ -45,25 +156,23 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span></p>';
-        tbody += '<p><input type="text" placeholder="User Name"></p>';
-        tbody += '<p><input type="password" autocomplete="off" placeholder="Password"></p>';
-        tbody += '<p><input type="password" autocomplete="off" placeholder="Confirm Password"></p>';
-        tbody += '<div class="chk">';
-        tbody += '<span>please click here to</span>&nbsp;<a herf="https://www.baidu.com">Register</a></div>';
+        tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
+        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Confirm Password"></span></p>';
       }else if(Reg==='signin') {
-        tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span></p>';
-        tbody += '<p><input type="text" autocomplete="off" placeholder="User Name"></p>';
-        tbody += '<p><input type="password" autocomplete="off" placeholder="Password"></p>';
+        tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span><br/><span class="error" id = "Errinfo"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="text" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
         tbody += '<div class="chk">';
-        tbody += '<span>please click here to</span>&nbsp<a>Signin</a></div>';
+        tbody += '<span></span><span><a href ="javascript:submite();">identify</a></span></div>';
       }else if(Reg === 'submite'){
-
+        tbody += '<p class="title"><span>R&nbsp;e&nbsp;t&nbsp;r&nbsp;i&nbsp;e&nbsp;v&nbsp;e&nbsp;</span><br/><span class="error" id = "Errinfo"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="User Name">';
+        tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
       }
       return tbody;
     }
-    $('.center_form').html(builddiv('signin'));
-    $('.signIn_btn').html(builddiv1('signin'));
   </script>
 
 </body>

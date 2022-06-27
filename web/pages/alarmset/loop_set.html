@@ -38,10 +38,10 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">单元电流</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
-								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
-									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
-									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_2">单元设置</span><span style="padding-left: 250px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
+								<span style="padding-left: 70px;padding-right: 5px;" ><input type ="checkbox" onchange ="groupset();"></input></span><span>分组设置</span>
+								<span style="padding-left: 70px;padding-right: 5px;" ><input type ="checkbox" onchange ="allset();" ></input></span><span>全部设置</span>
+								<select id ="ms" style ="width:200px;float:right;" onchange = "change();"></select>
 							</div>
 						</div>
 					</div>
@@ -58,8 +58,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		var type1,cs,ss;
-		var mode = 0;
-		var  read  = 0;
+		var group = 0,all = 0;
 		var output_name = new Array();
 		var cur_enable = new Array();
 		var cur_val = new Array();
@@ -70,9 +69,6 @@
 		var cur_max = new Array();
 		var cur_alarm = new Array();
 		var output_num = parseInt(sessionStorage.getItem("output_num"));
-		var dev_num = sessionStorage.getItem("dev_num");
-		// var slave_num = sessionStorage.getItem("slave_num");
-		var slave_num = 10;
 		var rpc = jsonrpc();
 		for(var i = 1 ;i < output_num + 1;i++){
 			output_name[i] = sessionStorage.getItem("output_name"+i);
@@ -84,23 +80,16 @@
 			vcrmax[i] = sessionStorage.getItem("vcrmax"+i);
 			cur_max[i] = sessionStorage.getItem("cur_max"+i);
 			cur_alarm[i] = sessionStorage.getItem("cur_alarm"+i);
-			// for(var i = 1 ;i < slave_num + 1;i++){
-			// 	output_name[i] = sessionStorage.getItem("slave_name"+i);
-			// }
 		}
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
-		function buildSel(rows)
-		{
-			var tbody = '';
-			for(var i = 0;i<rows;i++)
-			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
-			}
-			return tbody;
-		}
 		showdata();
 		modeset();
+		function groupset(){
+			group = 1;
+		}
+		function allset(){
+			all = 1;
+		}
 		function showdata(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
@@ -119,8 +108,7 @@
 				}
 			}
 		}
-		function modeset(modesel){
-			var ms = document.getElementById("sel");
+		function modeset(){
 			var iptname = document.getElementsByTagName("input");
 			for(var i = 0; i<iptname.length;i++)
 			{
@@ -131,9 +119,6 @@
 		function readonlyset(ros){
 			if(read === 0){
 				read = 1;
-				var ms = document.getElementById("sel");
-				ms.style.display = "";
-				ros.style.backgroundColor = 'red';
 				ros.innerHTML = "设置模式";
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -142,10 +127,7 @@
 				}
 			}
 			else{
-				var ms = document.getElementById("sel");
-				ms.style.display = "none";
 				read = 0;
-				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -243,7 +225,7 @@
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
-					tbody += '<td id = "e'+ i + '"></td>';
+					tbody += '<<td id = "e'+ i + '"></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';

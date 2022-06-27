@@ -16,25 +16,10 @@ var recv ={
   "factor_value":10,
 };
 var value_now = 0, val = 0,tick = 0,push = 0;
-var output_name = new Array();
-var dev_num = 0,output_num = 0;
-var cur_val = new Array();
-var cur_rated = new Array();
-var cur_max = new Array();
-var cur_min = new Array();
-var vcrmax = new Array();
-var vcrmin = new Array();
-var cur_alarm = new Array();
-var cur_enable = new Array();
-var dev_type = new Array();
-var output_size = new Array();
-var swtich_state = new Array();
-var energe_val = new Array();
-var pf_val = new Array();
-var pow_val= new Array();
-var seq_delay = new Array();
-var switch_mode = new Array();
-var switch_enable = new Array();
+var user_name='user_name';
+var password = 'password';
+var identify = '';
+var output_num1 = 0;
 
 var jsonrpc = function()
 {
@@ -55,70 +40,106 @@ var jsonrpc = function()
 
       break;
       case 2:
+        if(topic == 2)
+        {
 
-      break;
-      case 3:
-        if(topic == 0)
-        {
-          output_num = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        else if(topic == 1)
-        {
-          if(subtopic == 1){
-            swtich_state[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 2){
-            switch_mode[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 4){
-            seq_delay[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 8){
-            switch_enable[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-        }
-        else if(topic == 2)
-        {
-          vol_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
         else if(topic == 3)
         {
           if(subtopic == 1){
-            cur_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+            sessionStorage.setItem("cur_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 2){
+            sessionStorage.setItem("cur_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 3){
+            sessionStorage.setItem("cur_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 4){
+            sessionStorage.setItem("cur_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 5){
+            sessionStorage.setItem("cur_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 6){
+            sessionStorage.setItem("vcrmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 7){
+            sessionStorage.setItem("vcrmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 8){
+            sessionStorage.setItem("cur_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
           }
-          else if(subtopic == 2){
-            cur_rated[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+      break;
+      case 3:
+        if(topic == 0)
+        {
+          output_num1 = parseInt(JSON.parse(evt.data).result[5]);
+          sessionStorage.setItem("output_num",parseInt(JSON.parse(evt.data).result[5])); 
+        }
+        else if(topic == 1)
+        {
+          if(subtopic == 1){
+            sessionStorage.setItem("swtich_state"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          } else if(subtopic == 2){
+            sessionStorage.setItem("switch_mode"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 4){
+            sessionStorage.setItem("seq_delay"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 8){
+            sessionStorage.setItem("switch_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
           }
-          else if(subtopic == 3){
-            cur_alarm[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 4){
-            cur_max[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 5){
-            cur_min[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 6){
-            vcrmin[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 7){
-            vcrmax[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-          }
-          else if(subtopic == 8){
-            cur_enable[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+        }
+        else if(topic == 2)
+        {
+          sessionStorage.setItem("vol_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }
+        else if(topic == 3)
+        {
+          if(subtopic == 1){
+            sessionStorage.setItem("cur_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 2){
+            sessionStorage.setItem("cur_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 3){
+            sessionStorage.setItem("cur_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 4){
+            sessionStorage.setItem("cur_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 5){
+            sessionStorage.setItem("cur_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 6){
+            sessionStorage.setItem("vcrmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 7){
+            sessionStorage.setItem("vcrmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 8){
+            sessionStorage.setItem("cur_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
           }
         }
         else if(topic == 4)
         {
-          pow_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          if(subtopic == 1){
+            sessionStorage.setItem("pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 2){
+            sessionStorage.setItem("pow_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 3){
+            sessionStorage.setItem("pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 4){
+            sessionStorage.setItem("pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 5){
+            sessionStorage.setItem("pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 6){
+            sessionStorage.setItem("vcpowmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 7){
+            sessionStorage.setItem("vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }else if(subtopic == 8){
+            sessionStorage.setItem("pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+          }
         }
         else if(topic == 5)
         {
-          energe_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          sessionStorage.setItem("energe_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
         }
         else if(topic == 6)
         {
-          pf_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
+          sessionStorage.setItem("pf_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }
+        else if(subtopic == 7){
+          sessionStorage.setItem("acpow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }
+        else if(subtopic == 8){
+          sessionStorage.setItem("reac_pow"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
         }
         else if(topic == 11)
         {
@@ -128,6 +149,7 @@ var jsonrpc = function()
         {
           hum_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
         }
+        
         else if(topic == 21)
         {
           door1[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
@@ -158,7 +180,36 @@ var jsonrpc = function()
       
       break;
       case 10:
-        output_name[parseInt(JSON.parse(evt.data).result[4])] = JSON.parse(evt.data).result[5];
+        sessionStorage.setItem("output_name"+ parseInt(JSON.parse(evt.data).result[4]),JSON.parse(evt.data).result[5]); 
+      break;
+      case 13:
+        if(topic == 1){
+          sessionStorage.setItem("pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 2){
+          sessionStorage.setItem("slave_num",parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 3){
+          sessionStorage.setItem("pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 4){
+          sessionStorage.setItem("pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 5){
+          sessionStorage.setItem("pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 6){
+          sessionStorage.setItem("vcpowmin"+ parseInt(sJSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 7){
+          sessionStorage.setItem("vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }else if(topic == 8){
+          sessionStorage.setItem("pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
+        }
+      case 14:
+        if(parseInt(JSON.parse(evt.data).result[4]) == 1){
+          user_name = JSON.parse(evt.data).result[5];
+        }
+        else if(parseInt(JSON.parse(evt.data).result[4]) == 1){
+          password = JSON.parse(evt.data).result[5];
+        }
+        else if(parseInt(JSON.parse(evt.data).result[4]) == 1){
+          identify = JSON.parse(evt.data).result[5];
+        }
       break;
       default:
         break;

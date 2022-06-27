@@ -4,6 +4,8 @@ IPC_WebClient *PduRpcObj::mWebIpc = nullptr;
 void PduRpcObj::rpc_export()
 {
     mWebIpc = IPC_WebClient::bulid();
+    jsonrpc_export("pduSetCfg", pduSetCfg);
+    jsonrpc_export("pduReadCfg", pduReadCfg);
     jsonrpc_export("pduSetData", pduSetData);
     jsonrpc_export("pduReadData", pduReadData);
     jsonrpc_export("pduSetString", pduSetString);

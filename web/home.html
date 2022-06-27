@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Document</title> 
+</head> 
+<body> 
+  <button id="btn1" onclick="btn(1)">按钮1</button> 
+  <button id="btn2" onclick="btn(2)">按钮2</button> 
+  <button id="btn3" onclick="btn(3)">按钮3</button> 
+ 
+  <script> 
+    //设置背景颜色 
+    //如果设置参数函数会节省函数数量吧 
+    //设置flag+参数函数 
+    flag = "btn1"; 
+    function btn1(){ 
+      document.getElementById("btn2").style.color = "black"; 
+      document.getElementById("btn3").style.color = "black"; 
+      document.getElementById("btn1").style.color = "red"; 
+    } 
+    function btn2(){ 
+      document.getElementById("btn1").style.color = "black"; 
+      document.getElementById("btn2").style.color = "red"; 
+      document.getElementById("btn3").style.color = "black"; 
+    } 
+    function btn3(){ 
+      document.getElementById("btn1").style.color = "black"; 
+      document.getElementById("btn2").style.color = "black"; 
+      document.getElementById("btn3").style.color = "red"; 
+    } 
+    function btn(num){ 
+      if(num == 1){ 
+        document.getElementById(flag).style.color = "black"; 
+        document.getElementById(flag).style.backgroundColor = "white"; 
+        document.getElementById("btn1").style.color = "red"; 
+        document.getElementById("btn1").style.backgroundColor = "blue"; 
+        flag = "btn1"; 
+      } 
+      if(num == 2){ 
+        document.getElementById(flag).style.color = "black"; 
+        document.getElementById(flag).style.backgroundColor = "white"; 
+        document.getElementById("btn2").style.color = "red"; 
+        document.getElementById("btn2").style.backgroundColor = "blue"; 
+        flag = "btn2"; 
+      } 
+      if(num == 3){ 
+        document.getElementById(flag).style.color = "black"; 
+        document.getElementById(flag).style.backgroundColor = "white"; 
+        document.getElementById("btn3").style.color = "red"; 
+        document.getElementById("btn3").style.backgroundColor = "blue"; 
+        flag = "btn3"; 
+      } 
+    } 
+ 
+  </script> 
+</body> 
+</html>
