@@ -9,6 +9,7 @@ Net_Udp::Net_Udp(QObject *parent)
     : QObject{parent}
 {
     udpSocket = new QUdpSocket(this);
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(recvSlot()));
 }
 
 bool Net_Udp::bind(int port, const QHostAddress &address)
@@ -37,4 +38,12 @@ QByteArray Net_Udp::readDatagram(QHostAddress *host)
         if(ret < 0) qCritical() << udpSocket->errorString();
     }
     return datagram;
+}
+
+
+void Net_Udp::recvSlot()
+{
+    QHostAddress host;
+    QByteArray res = readDatagram(&host);
+    if(res.size()) emit recvSig(res);
 }

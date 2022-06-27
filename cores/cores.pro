@@ -14,12 +14,12 @@ include(apps/apps.pri)
 include(ipcs/ipcs.pri)
 include(rpcs/rpcs.pri)
 include(datas/datas.pri)
-include(jsons/jsons.pri)
 include(agents/agents.pri)
 include(alarms/alarms.pri)
 include(cascade/cascade.pri)
 include(outputs/outputs.pri)
 include(commons/commons.pri)
+include(integrs/integrs.pri)
 include(settings/settings.pri)
 
 SOURCES += \

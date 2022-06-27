@@ -18,6 +18,10 @@ public:
     bool sendBinaryMessage(const QByteArray &data);
     QVariant transmit(const QVariant &var, int msecs=1000);
 
+signals:
+    void textMessageSig(const QString &message);
+    void binaryMessageSig(const QByteArray &data);
+
 protected slots:
     void connected();
     void disconnected();
