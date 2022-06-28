@@ -2,6 +2,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     cores \
-#    ssh/cmd_pdu \
-    http-server \
+    ssh/pdu_cmd \
+    http_server \
     tools/ota_updater

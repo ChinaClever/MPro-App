@@ -9,10 +9,13 @@ class SshRpcClient : public JsonRpcObj
 public:
     static SshRpcClient *bulid(QObject *parent = nullptr);
     int pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
-    bool pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value);
+    bool pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi=0);
 
     QString pduGetString(uchar addr, uchar fc, uchar id);
-    bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str);
+    bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str, uchar soi=0);
+
+    int pduDevCfg(uchar addr, uchar fc, uchar type);
+    bool pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi=0);
 };
 
 #endif // SSHRPCCLIENT_H
