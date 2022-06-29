@@ -35,7 +35,7 @@
 
 #ifndef QT_NO_SSL
 
-#include <qmqtt_socketinterface.h>
+#include "qmqtt_socketinterface.h"
 
 #include <QObject>
 #include <QHostAddress>

@@ -32,7 +32,7 @@
 #ifndef QMQTT_NETWORK_P_H
 #define QMQTT_NETWORK_P_H
 
-#include <qmqtt_networkinterface.h>
+#include "qmqtt_networkinterface.h"
 
 #include <QObject>
 #include <QHostAddress>

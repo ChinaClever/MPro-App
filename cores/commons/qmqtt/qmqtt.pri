@@ -1,6 +1,6 @@
 #INCLUDEPATH += $$PWD
 #qtHaveModule(websockets): QMQTT_WEBSOCKETS: QT += websockets
-DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+#DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 DEFINES += MQTT_PROJECT_INCLUDE_SRC QT_WEBSOCKETS_LIB
 # https://github.com/emqx/qmqtt
 
@@ -23,6 +23,7 @@ PRIVATE_HEADERS += \
     $$PWD/qmqtt_timer_p.h
 
 SOURCES += \
+#    $$PWD/example.cpp \
     $$PWD/qmqtt_client_p.cpp \
     $$PWD/qmqtt_client.cpp \
     $$PWD/qmqtt_frame.cpp \

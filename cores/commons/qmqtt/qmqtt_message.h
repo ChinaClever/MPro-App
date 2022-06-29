@@ -32,7 +32,7 @@
 #ifndef QMQTT_MESSAGE_H
 #define QMQTT_MESSAGE_H
 
-#include <qmqtt_global.h>
+#include "qmqtt_global.h"
 
 #include <QMetaType>
 #include <QString>

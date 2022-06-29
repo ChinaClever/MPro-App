@@ -32,7 +32,7 @@
 #ifndef QMQTT_FRAME_H
 #define QMQTT_FRAME_H
 
-#include <qmqtt_global.h>
+#include "qmqtt_global.h"
 
 #include <QMetaType>
 #include <QByteArray>

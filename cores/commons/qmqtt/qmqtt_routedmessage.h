@@ -33,7 +33,7 @@
 #ifndef QMQTT_ROUTEDMESSAGE_H
 #define QMQTT_ROUTEDMESSAGE_H
 
-#include <qmqtt_message.h>
+#include "qmqtt_message.h"
 
 #include <QMetaType>
 #include <QHash>

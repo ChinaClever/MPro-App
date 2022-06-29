@@ -32,7 +32,7 @@
 #ifndef QMQTT_SOCKET_P_H
 #define QMQTT_SOCKET_P_H
 
-#include <qmqtt_socketinterface.h>
+#include "qmqtt_socketinterface.h"
 
 #include <QObject>
 #include <QHostAddress>

@@ -33,7 +33,7 @@
 #ifndef QMQTT_ROUTESUBSCRIPTION_H
 #define QMQTT_ROUTESUBSCRIPTION_H
 
-#include <qmqtt_global.h>
+#include "qmqtt_global.h"
 
 #include <QObject>
 #include <QPointer>

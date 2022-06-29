@@ -33,7 +33,7 @@
 #ifndef QMQTT_ROUTER_H
 #define QMQTT_ROUTER_H
 
-#include <qmqtt_global.h>
+#include "qmqtt_global.h"
 
 #include <QObject>
 

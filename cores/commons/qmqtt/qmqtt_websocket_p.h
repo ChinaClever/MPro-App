@@ -34,8 +34,8 @@
 
 #ifdef QT_WEBSOCKETS_LIB
 
-#include <qmqtt_socketinterface.h>
-#include <qmqtt_websocketiodevice_p.h>
+#include "qmqtt_socketinterface.h"
+#include "qmqtt_websocketiodevice_p.h"
 
 #include <QObject>
 #include <QWebSocket>

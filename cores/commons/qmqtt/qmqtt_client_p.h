@@ -32,7 +32,7 @@
 #ifndef QMQTT_CLIENT_P_H
 #define QMQTT_CLIENT_P_H
 
-#include <qmqtt_client.h>
+#include "qmqtt_client.h"
 
 #include <QHostAddress>
 #include <QString>
