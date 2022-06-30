@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>表格</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
+		<style>
+			.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+			}
+			.panel-default > .panel-heading{
+				color: #222;
+				font-size:13px;
+				background-color: #fff;
+				border-color: #e6e6e6;
+				padding: 10px 12px;
+			}
+			
+		</style>
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_2">单元功率</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
+								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
+									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-striped"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../doc-lib/highlight.pack.js"></script>
+	<script src="../../doc-lib/doc.js"></script>
+    <script>
+		var type1,cs,ss;
+		var  read  = 0;
+		var mode = 0;
+		var output_name = new Array();
+		var pow_enable = new Array();
+		var pow_val = new Array();
+		var pow_rated = new Array();
+		var pow_min = new Array();
+		var vcpowmin = new Array();
+		var vcpowmax = new Array();
+		var pow_max = new Array();
+		var pow_alarm = new Array();
+		var output_num = parseInt(sessionStorage.getItem("output_num"));
+		var dev_num = sessionStorage.getItem("dev_num");
+		// var slave_num = sessionStorage.getItem("slave_num");
+		var slave_num = 10;
+		var rpc = jsonrpc();
+		for(var i = 1 ;i < output_num + 1;i++){
+			output_name[i] = sessionStorage.getItem("output_name"+i);
+			pow_enable[i] = sessionStorage.getItem("pow_enable"+i);
+			pow_val[i] = sessionStorage.getItem("pow_val"+i);
+			pow_rated[i] = sessionStorage.getItem("pow_rated"+i);
+			pow_min[i] = sessionStorage.getItem("pow_min"+i);
+			vcpowmin[i] = sessionStorage.getItem("vcpowmin"+i);
+			vcpowmax[i] = sessionStorage.getItem("vcpowmax"+i);
+			pow_max[i] = sessionStorage.getItem("pow_max"+i);
+			pow_alarm[i] = sessionStorage.getItem("pow_alarm"+i);
+			// for(var i = 1 ;i < slave_num + 1;i++){
+			// 	output_name[i] = sessionStorage.getItem("slave_name"+i);
+			// }
+		}
+		$('.table-striped').html(buildTable(output_num));
+		$('.devname').html(buildSel(slave_num));
+		function buildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
+			}
+			return tbody;
+		}
+		showdata();
+		modeset();
+		function showdata(){
+			for(var i = 1 ;i < output_num + 1;i++){
+				ss = document.getElementById('d'+(i -1));
+				cs = document.getElementById('c'+(i -1));
+				if(pow_enable[i] === 1){
+					ss.checked = true;
+				}
+				else{
+					ss.checked = false;
+				}
+				if(pow_alarm[i] === 1){
+					cs.bgColor = 'red';
+				}
+				else{
+					cs.bgColor = '';
+				}
+			}
+		}
+		function modeset(modesel){
+			var ms = document.getElementById("sel");
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+		}
+		function readonlyset(ros){
+			if(read === 1){
+				read = 0;
+				var ms = document.getElementById("sel");
+				ms.style.display = "";
+				ros.style.backgroundColor = 'red';
+				ros.innerHTML = "设置模式";
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = false;
+				}
+			}
+			else{
+				var ms = document.getElementById("sel");
+				ms.style.display = "none";
+				read = 1;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = "阅读模式";
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = true;
+				}
+			}
+		}
+		function cked(ckd)
+		{
+			var stat;
+			var addr = parseInt(ckd.id.slice(1))+1;
+			if(ckd.checked == true){
+				stat = 1;
+			}else{
+				stat = 0;
+			}
+			if(addr !== output_num + 1){
+				rpc.call('pduSetData',[0,3,4,8,addr,stat]);
+			}
+			else {
+				rpc.call('pduSetData',[0,3,4,8,0,stat]);
+			}
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,4,8,i]);
+			}},60);
+		}
+		function clearNum(obj){
+			obj.value = obj.value.replace(/[^\d.]/g,""); 
+		}
+		function setdata(ipt)
+		{
+			var sub = 0;
+			type1 = ipt.id.substr(0,1);
+			var addr = parseInt(ipt.id.slice(1))+1;
+			var stat = parseFloat(ipt.value) * 100;
+			if(type1 === 'e'){
+				sub = 2;
+			}else if(type1 === 'f'){
+				sub = 5;
+			}else if(type1 === 'g'){
+				sub = 6;
+			}else if(type1 === 'h'){
+				sub = 7;
+			}else if(type1 === 'i'){
+				sub = 4;
+			}
+			if(addr !== output_num + 1){
+				rpc.call('pduSetData',[0,3,4,sub,addr,stat]);
+			}
+			else{
+				rpc.call('pduSetData',[0,3,4,sub,0,stat]);
+			}
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,4,sub,i]);
+			}
+			},60);
+		}
+		function buildTable(rows) {
+			var thead = '',
+				tbody = '';
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+					thead = '<tr><td width ="4%">序号</td>\
+					<td width ="19%">单元名称</td>\
+					<td width ="11%">有功功率(W)</td>\
+					<td width ="11%">告警使能</td>\
+					<td width ="11%">额定值(W)</td>\
+					<td width ="11%">最小值(W)</td>\
+					<td width ="11%">下临界(W)</td>\
+					<td width ="11%">上临界(W)</td>\
+					<td width ="11%">最大值(W)</td>';
+				}
+				tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ (parseFloat(pow_val[i + 1])/100).toFixed(2) +'</td>';
+				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + (parseFloat(pow_rated[i + 1])/100).toFixed(2)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(pow_min[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcpowmin[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(vcpowmax[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ (parseFloat(pow_max[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '</tr>';
+				if(i === rows - 1){
+					i++;
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+					tbody += '<td id = "b'+ i + '">统一设置</td>';
+					tbody += '<td id = "c'+ i + '"></td>';
+					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
+					tbody += '<td id = "e'+ i + '"></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "i'+ i + '"value="10.00"></input></td>';
+					tbody += '</tr>';
+				}
+			}
+
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		// var timer = setInterval(function(){
+		// 	var time = setTimeout(function(){
+		// 		for(var i = 1 ;i < output_num + 1;i++){
+		// 			tick ++;
+		// 			rpc.call('pduReadData',[0,3,3,1,i]);
+		// 		}
+		// 	}, 80);
+		// 	var time = setTimeout(function(){
+		// 		for(var i = 1 ;i < output_num + 1;i++){
+		// 		tick++
+		// 		rpc.call('pduReadData',[0,3,3,1,i]);
+		// 		}
+		// 	}, 80);
+		// 	showdata();
+		// },2000);
+    </script>
+</body>
+</html>

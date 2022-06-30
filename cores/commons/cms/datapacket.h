@@ -9,7 +9,7 @@
 #define NAME_SIZE 32
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
-
+#define USER_NUM 1
 #define PACK_ARRAY_SIZE   OUTPUT_NUM
 
 // 倍率定义
@@ -152,6 +152,7 @@ struct sDevInfo {
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
     uchar loopEnds[LOOP_NUM];
     uchar loopStarts[LOOP_NUM];
+    uchar opSpecs[LOOP_NUM];
 
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
@@ -209,9 +210,10 @@ struct sNetAddr
 };
 
 struct sDevLogin {
-    uchar permit[DEV_NUM];
-    char user[DEV_NUM][NAME_SIZE];
-    char pwd[DEV_NUM][NAME_SIZE];
+    uchar permit[USER_NUM];
+    char token[USER_NUM][NAME_SIZE];
+    char user[USER_NUM][NAME_SIZE];
+    char pwd[USER_NUM][NAME_SIZE];
 };
 
 /**
@@ -226,32 +228,35 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxUdp, TxTcp, TxWebocket,TxSsh};
+enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
 struct sDataItem
 {
-    sDataItem():addr(0),rw(0),value(0){}
+    sDataItem():soi(0),addr(0),rw(0),value(0){}
+    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
-    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态
+    uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态  11 多开关控制
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar id; // 0 表示统一设置
     uchar rw; // 0 读  1 写
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin};
 
 struct sNumStrItem{
-    sNumStrItem():addr(0),isDigit(0),rw(0),value(0){}
+    sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
+    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar isDigit; // 0 字符串 1 数字
     uchar fc; // 10 输出位  11 UUT信息
     uchar id; // 功能id　0 表示统一设置
+    uchar sub;
     uchar rw; // 0 读  1 写
     uint value;
     char str[NAME_SIZE];

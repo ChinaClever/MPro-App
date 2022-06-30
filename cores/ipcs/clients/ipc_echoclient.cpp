@@ -25,10 +25,12 @@ bool IPC_EchoClient::setNumStr(const sNumStrItem &unit)
     return msgSend(2, array);
 }
 
-bool IPC_EchoClient::setString(uchar addr, uchar fc, uchar id, const QString &str)
+bool IPC_EchoClient::setString(uint addr, uchar fc, uchar id, const QString &str)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1; it.isDigit = 0;
-    qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = DTxType::TxWeb;
+    sNumStrItem it; it.txType = DTxType::TxWeb;
+    it.addr = (0xFF & addr); it.soi = addr >> 8;
+    it.fc = fc; it.id = id; it.rw = 1; it.isDigit = 0;
+    qstrcpy((char *)it.str, str.toLatin1().data());
     return this->setNumStr(it);
 }
 
@@ -68,19 +70,22 @@ int IPC_EchoClient::getDevCfg(uchar addr, uchar fc, uchar type)
     return getNumStr(it).toInt();
 }
 
-bool IPC_EchoClient::setDevCfg(uchar addr, uchar fc, uchar type, int value)
+bool IPC_EchoClient::setDevCfg(uint addr, uchar fc, uchar type, int value)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
-    it.value = value; it.isDigit = 1;  it.txType = DTxType::TxWeb;
+    sNumStrItem it; it.txType = DTxType::TxWeb;
+    it.addr = (0xFF & addr); it.soi = addr >> 8;
+    it.fc = fc; it.id = type; it.rw = 1;
+    it.value = value; it.isDigit = 1;
     return this->setNumStr(it);
 }
 
-bool IPC_EchoClient::setting(uchar addr, uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool IPC_EchoClient::setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
-    sDataItem it; it.addr = addr; it.type = type;
+    sDataItem it; it.type = type;
+    it.addr = (0xFF & addr); it.soi = addr >> 8;
     it.topic = topic; it.subtopic = sub; it.id = id;
     it.rw = 1; it.value = value; it.txType = DTxType::TxWeb;
-    qDebug()<<addr<<":"<<type<<":"<<topic<<":"<<sub<<":"<<id<<":"<<value;
+    //qDebug()<<addr<<":"<<type<<":"<<topic<<":"<<sub<<":"<<id<<":"<<value;
     return this->setting(it);
 }
 

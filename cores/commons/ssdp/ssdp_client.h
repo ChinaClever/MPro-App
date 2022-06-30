@@ -6,6 +6,14 @@
 #include <QHostAddress>
 #include "commons.h"
 
+struct sSdpIt{
+    uchar fc;
+    uchar version;
+    QString describe;
+    QByteArray array;
+    ushort crc;
+};
+
 class Ssdp_Client : public QObject
 {
     Q_OBJECT
@@ -13,10 +21,13 @@ class Ssdp_Client : public QObject
 public:
     static Ssdp_Client *bulid(QObject *parent = nullptr);
 
+signals:
+    void recvSig(uchar fc, const QString &, const QByteArray&);
+
 private:
     bool write(const QVariant &var);
-    void recvMsg(const QByteArray &array);
-    bool rplySearchTarget(const QByteArray &array);
+    void recvMsg(QByteArray &array);
+    bool rplySearchTarget(const QString &room, const QByteArray &array);
 
 private slots:
     virtual void readMsgSlot();

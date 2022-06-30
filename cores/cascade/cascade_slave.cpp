@@ -20,14 +20,14 @@ bool Cascade_Slave::replyDevData(uchar fc)
 bool Cascade_Slave::replySet(QByteArray &rcv)
 {
     sDataItem unit = cm::toStruct<sDataItem>(rcv);
-    unit.addr = 0; Set_Core *set = Set_Core::bulid();
+    unit.addr = unit.soi = 0; Set_Core *set = Set_Core::bulid();
     return set->setting(unit);
 }
 
 bool Cascade_Slave::replyNumStr(QByteArray &rcv)
 {
     sNumStrItem unit = cm::toStruct<sNumStrItem>(rcv);
-    unit.addr = 0; Set_Core *set = Set_Core::bulid();
+    unit.addr = unit.soi = 0; Set_Core *set = Set_Core::bulid();
     return set->setNumStr(unit);
 }
 

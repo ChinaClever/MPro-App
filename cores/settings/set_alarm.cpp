@@ -29,8 +29,7 @@ QString Set_Alarm::opSrc(uchar txType)
     case TxModbus: str = "Modbus"; break;
     case TxSnmp: str = "SNMP"; break;
     case TxRpc: str = "RPC"; break;
-    case TxUdp: str = "UDP"; break;
-    case TxTcp: str = "TCP"; break;
+    case TxJson: str = "JSON"; break;
     case TxSsh: str = "SSH"; break;
     case TxWebocket: str = "WebSocket"; break;
     default: qDebug() << Q_FUNC_INFO; break;

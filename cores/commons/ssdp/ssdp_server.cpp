@@ -10,9 +10,15 @@ Ssdp_Server::Ssdp_Server(QObject *parent) : QObject{parent}
     mPort = 16125;
     mSocket = new QUdpSocket(this);
     mAddress = QHostAddress("239.255.43.21");
+    //mSocket->joinMulticastGroup(mAddress);
+}
+
+bool Ssdp_Server::bind()
+{
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
     if(!ok) qDebug() << "Error: SSDP Server" << mSocket->errorString();
+    return ok;
 }
 
 bool Ssdp_Server::write(const QVariant &var)
@@ -21,6 +27,13 @@ bool Ssdp_Server::write(const QVariant &var)
     auto rcv = mSocket->writeDatagram(var.toByteArray(), mAddress, mPort+1); mSocket->flush();
     if(rcv < 0) { ret = false; qDebug() << "Error: SSDP Server write" << mSocket->errorString();}
     return ret;
+}
+
+bool Ssdp_Server::send(int fc, const QString &describe, const QByteArray &data)
+{
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << (int)1 << fc << describe << data << END_CRC;
+    return write(array);
 }
 
 QStringList Ssdp_Server::respondList(const QByteArray &key)
@@ -54,7 +67,7 @@ QStringList Ssdp_Server::searchTarget(const QString &room)
                     "Man:\"ssdp:discover\"\r\n" \
                     "MX:3\r\n" \
                     "\r\n");
-    bool ret = write(message.arg(room));
+    bool ret = send(0, room, message.arg(room).toLatin1());
     if(ret) ls = respondList(room.toLatin1());
     return ls;
 }

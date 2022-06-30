@@ -26,6 +26,7 @@
 				border-color: #e6e6e6;
 				padding: 10px 12px;
 			}
+			
 		</style>
 	</head>
 <body>
@@ -37,8 +38,10 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">单元设置</span>
-								<select id ="ms" style ="width:200px;float:right;" onchange = "change();"></select>
+								<span id="lang_2">单元电流</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
+								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
+									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
 							</div>
 						</div>
 					</div>
@@ -54,13 +57,103 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var Input_state = new Array("开","闭","重启");
-		var rpc = 0;
-		var output_status = new Array();
-		var j = 0;
-		var logs;
-		var time1 = 0;
-		var frist = 1;
+		var type1,cs,ss;
+		var mode = 0;
+		var  read  = 0;
+		var output_name = new Array();
+		var cur_enable = new Array();
+		var cur_val = new Array();
+		var cur_rated = new Array();
+		var cur_min = new Array();
+		var vcrmin = new Array();
+		var vcrmax = new Array();
+		var cur_max = new Array();
+		var cur_alarm = new Array();
+		var output_num = parseInt(sessionStorage.getItem("output_num"));
+		var dev_num = sessionStorage.getItem("dev_num");
+		// var slave_num = sessionStorage.getItem("slave_num");
+		var slave_num = 10;
+		var rpc = jsonrpc();
+		for(var i = 1 ;i < output_num + 1;i++){
+			output_name[i] = sessionStorage.getItem("output_name"+i);
+			cur_enable[i] = sessionStorage.getItem("cur_enable"+i);
+			cur_val[i] = sessionStorage.getItem("cur_val"+i);
+			cur_rated[i] = sessionStorage.getItem("cur_rated"+i);
+			cur_min[i] = sessionStorage.getItem("cur_min"+i);
+			vcrmin[i] = sessionStorage.getItem("vcrmin"+i);
+			vcrmax[i] = sessionStorage.getItem("vcrmax"+i);
+			cur_max[i] = sessionStorage.getItem("cur_max"+i);
+			cur_alarm[i] = sessionStorage.getItem("cur_alarm"+i);
+			// for(var i = 1 ;i < slave_num + 1;i++){
+			// 	output_name[i] = sessionStorage.getItem("slave_name"+i);
+			// }
+		}
+		$('.table-striped').html(buildTable(output_num));
+		$('.devname').html(buildSel(slave_num));
+		function buildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
+			}
+			return tbody;
+		}
+		showdata();
+		modeset();
+		function showdata(){
+			for(var i = 1 ;i < output_num + 1;i++){
+				ss = document.getElementById('d'+(i -1));
+				cs = document.getElementById('c'+(i -1));
+				if(cur_enable[i] === 1){
+					ss.checked = true;
+				}
+				else{
+					ss.checked = false;
+				}
+				if(cur_alarm[i] === 1){
+					cs.bgColor = 'red';
+				}
+				else{
+					cs.bgColor = '';
+				}
+			}
+		}
+		function modeset(modesel){
+			var ms = document.getElementById("sel");
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+		}
+		var  read  = 0;
+		function readonlyset(ros){
+			if(read === 0){
+				read = 1;
+				var ms = document.getElementById("sel");
+				ms.style.display = "";
+				ros.style.backgroundColor = 'red';
+				ros.innerHTML = "设置模式";
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = false;
+				}
+			}
+			else{
+				var ms = document.getElementById("sel");
+				ms.style.display = "none";
+				read = 0;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = "阅读模式";
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = true;
+				}
+			}
+		}
 		function cked(ckd)
 		{
 			var stat;
@@ -76,11 +169,20 @@
 			else {
 				rpc.call('pduSetData',[0,3,3,8,0,stat]);
 			}
+			var time3 = setTimeout(function(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,8,i]);
+			}},60);
+		}
+		function clearNum(obj){
+			obj.value = obj.value.replace(/[^\d.]/g,""); 
 		}
 		function setdata(ipt)
 		{
 			var sub = 0;
-			var type1 = ipt.id.substr(0,1);
+			type1 = ipt.id.substr(0,1);
 			var addr = parseInt(ipt.id.slice(1))+1;
 			var stat = parseFloat(ipt.value) * 100;
 			if(type1 === 'e'){
@@ -100,93 +202,14 @@
 			else{
 				rpc.call('pduSetData',[0,3,3,sub,0,stat]);
 			}
-		}
-		rpc = jsonrpc();
-		var time2 = setTimeout(function(){
-			rpc.call('pduGetInfo',[0,3,0,0,0]);
-			tick ++;
 			var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,1,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,2,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,3,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,4,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,5,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,6,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,7,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,3,8,i]);
-				}},60);
-				var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadString',[0,10,0,0,i]);
-				}},60);
-
-			},800);
-
-		var time3 = setInterval(function(){
-			if(!tick && push && frist){
-				push = 0;
-				frist = 0;
-				$('.table-striped').html(buildTable(output_num));
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				tick ++;
+				rpc.call('pduReadData',[0,3,3,sub,i]);
 			}
-			else if(!tick && !push )
-				for(var i = 1 ;i < output_num + 1;i++)
-					{
-						var ss = document.getElementById('d'+(i -1));
-						var cs = document.getElementById('c'+(i -1));
-						if(cur_enable[i] === 1){
-							ss.checked = true;
-						}
-						else{
-							ss.checked = false;
-						}
-						if(cur_alarm[i] === 1){
-							cs.bgColor = 'red';
-						}
-						else{
-							cs.bgColor = '';
-						}
-					}
-		},1000);
+			},60);
+		}
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
@@ -207,11 +230,11 @@
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ (parseFloat(cur_val[i + 1])/100).toFixed(2) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(cur_rated[i + 1])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(cur_min[i + 1])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcrmin[i + 1])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(vcrmax[i + 1])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ (parseFloat(cur_max[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + (parseFloat(cur_rated[i + 1])/100).toFixed(2)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(cur_min[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(vcrmin[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(vcrmax[i + 1])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ (parseFloat(cur_max[i + 1])/100).toFixed(2)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -220,11 +243,11 @@
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="10.00"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="10.00"></input></td>';
+					tbody += '<td id = "e'+ i + '"></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="10.00"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -232,8 +255,21 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-
-		
+		// var timer = setInterval(function(){
+		// 	var time = setTimeout(function(){
+		// 		for(var i = 1 ;i < output_num + 1;i++){
+		// 			tick ++;
+		// 			rpc.call('pduReadData',[0,3,3,1,i]);
+		// 		}
+		// 	}, 80);
+		// 	var time = setTimeout(function(){
+		// 		for(var i = 1 ;i < output_num + 1;i++){
+		// 		tick++
+		// 		rpc.call('pduReadData',[0,3,3,1,i]);
+		// 		}
+		// 	}, 80);
+		// 	showdata();
+		// },2000);
     </script>
 </body>
 </html>

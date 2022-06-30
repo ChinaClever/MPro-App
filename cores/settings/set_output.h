@@ -1,9 +1,9 @@
 #ifndef SET_OUTPUT_H
 #define SET_OUTPUT_H
 
-#include "set_info.h"
+#include "set_login.h"
 
-class Set_Output : public Set_Info
+class Set_Output : public Set_Login
 {
 public:
     explicit Set_Output();
@@ -15,6 +15,7 @@ protected:
 
 private:
     bool outputCtrl(sDataItem &unit);
+    bool outputsCtrl(sDataItem &unit);
     void opNameLog(const sNumStrItem &it);
     void relayOpLog(const sDataItem &it);
     void writeOpName(int id, const QString &name);

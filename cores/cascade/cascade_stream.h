@@ -5,12 +5,12 @@
 #include <QDataStream>
 
 namespace cascade {
-struct _sAlarmUnit : set::_sAlarmIt
+struct _sAlarmUnit : cfg::_sAlarmIt
 {
     uint value;
 };
 
-struct _sRelayUnit : set::_sRelayIt
+struct _sRelayUnit : cfg::_sRelayIt
 {
     uchar sw; // 开关状态 0 表示未启用
 };

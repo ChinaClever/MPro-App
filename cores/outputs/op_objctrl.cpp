@@ -14,7 +14,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
 {
     if(id) {
         if(sRelay::On == on) openSwitch(id-1); else closeSwitch(id-1);
-    } else orderCtrl(on, 0);
+    } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
         sRelayUnit *unit = &(mDev->output.relay);
         int t = unit->delay[id-1];  mList << id; if(!t) t = 5;
@@ -32,7 +32,7 @@ void OP_ObjCtrl::relayResetSlot()
 
 void OP_ObjCtrl::orderCtrl(int on, uchar all)
 {
-    if(on) openAllSwitch(all); else closeAllSwitch(1);
+    if(on) openAllSwitch(all); else closeAllSwitch(all);
 }
 
 void OP_ObjCtrl::clearEle(int id)
@@ -43,6 +43,19 @@ void OP_ObjCtrl::clearEle(int id)
 void OP_ObjCtrl::setDelay(int id, uchar sec)
 {
     if(id) setOutputDelay(id,sec); else setAllDelay(sec);
+}
+
+void OP_ObjCtrl::relaysCtrl(int start, int end, int v)
+{
+    uchar on[8], off[8];
+    for(int i=0; i<6; i++) on[i] = 0x00;  //打开有效位
+    for(int i=0; i<6; i++) off[i] = 0x00;  //关闭有效位
+    for(int i=start; i<end; ++i) {
+        if(v) setBitControl(i, on);
+        else setBitControl(i, off);
+    }
+
+    funSwitch(on, off);
 }
 
 void OP_ObjCtrl::openAllSwitch(uchar all)

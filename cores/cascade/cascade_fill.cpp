@@ -12,6 +12,7 @@ Cascade_Fill::Cascade_Fill(QObject *parent) : Cascade_Master{parent}
 
 void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 {
+    it.en = unit.en[id];
     it.value = unit.value[id];
     it.rated = unit.rated[id];
 
@@ -25,6 +26,7 @@ void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     it.sw = unit.sw[id];
+    it.en = unit.en[id];
     it.state = unit.mode[id];
     it.delay = unit.delay[id];
 }
