@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "sshrpcclient.h"
 
 SshRpcClient::SshRpcClient(QObject *parent)
@@ -29,10 +34,10 @@ int SshRpcClient::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value);
+    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value, soi);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {
@@ -54,10 +59,36 @@ QString SshRpcClient::pduGetString(uchar addr, uchar fc, uchar id)
     return str;
 }
 
-bool SshRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
+bool SshRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &str, uchar soi)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetString", addr, fc, id, str);
+    auto result = rpc_client->call("pduSetString", addr, fc, id, str, soi);
+    if (result->isSuccess()) {
+        ret = result->result().toBool();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
+int SshRpcClient::pduDevCfg(uchar addr, uchar fc, uchar type)
+{
+    int ret = -1;
+    auto result = rpc_client->call("pduDevCfg", addr, fc, type);
+    if (result->isSuccess()) {
+        ret = result->result().toInt();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
+bool SshRpcClient::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi)
+{
+    bool ret = false;
+    auto result = rpc_client->call("pduSetCfg", addr, fc, type, value, soi);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {
