@@ -1,6 +1,6 @@
 [
   {
-    "name": "首页",
+    "name": "设备监测",
     "icon": "homepage_fill",
     "base": "pages/dashboard/",
     "subNav": [
