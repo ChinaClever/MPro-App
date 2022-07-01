@@ -26,6 +26,7 @@ void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &
     unit.en[id] = it.en;
     unit.mode[id] = it.state;
     unit.delay[id] = it.delay;
+    unit.resTime[id] = it.resTime;
 }
 
 void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
@@ -62,7 +63,7 @@ void Cfg_RwUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
 
     data->tg = obj->tg;
     data->info = obj->info;
-    cm::dataPacket()->login = obj->login;
+    //cm::dataPacket()->login = obj->login;
 }
 
 void Cfg_RwUnserialize::unSequence()

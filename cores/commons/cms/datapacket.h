@@ -48,8 +48,9 @@ struct sRelayUnit
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint mode[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
-    uint alarm[PACK_ARRAY_SIZE];
-    uint delay[PACK_ARRAY_SIZE];
+    uint alarm[PACK_ARRAY_SIZE]; // 报警状态
+    uint delay[PACK_ARRAY_SIZE]; // 上电延时
+    uint resTime[PACK_ARRAY_SIZE]; // 复位延时
 };
 
 
@@ -228,7 +229,7 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, Relays=11};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, UpTime=4, ResTime, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 

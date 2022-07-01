@@ -80,6 +80,7 @@ void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &ke
     obj.insert("mode", it.mode[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
     obj.insert("delay", it.delay[id]/r);
+    obj.insert("resTime", it.resTime[id]/r);
     json.insert(key, QJsonValue(obj));
 }
 
@@ -114,6 +115,7 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
     obj.insert("alarm_max", it.max/r);
     obj.insert("warn_min", it.crMin/r);
     obj.insert("warn_max", it.crMax/r);
+    obj.insert("alarm_enable", it.en?true:false);
 
     json.insert(key, QJsonValue(obj));
 }

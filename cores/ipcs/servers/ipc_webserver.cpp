@@ -6,7 +6,7 @@
 #include "ipc_webserver.h"
 
 IPC_WebServer::IPC_WebServer(QObject *parent)
-    : IPC_ObjServer{parent}
+    : IPC_LogServer{parent}
 {
 
 }
@@ -38,6 +38,9 @@ QString IPC_WebServer::dbus_reply_slot(int fc, const QByteArray &array)
     } else if(2 == fc) {
         sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
         res = Set_Core::bulid()->getNumStr(unit);
+    } else if(6 == fc) {
+        sIpcLog it = cm::toStruct<sIpcLog>(array);
+        res = logFun(it);
     }
 
     return res;
@@ -51,5 +54,14 @@ void IPC_WebServer::dbus_recv_slot(int fc, const QByteArray &array)
     } else if(2 == fc) {
         sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
         Set_Core::bulid()->setNumStr(unit);
+    }else if(6 == fc) {
+        sIpcLog it = cm::toStruct<sIpcLog>(array);
+        logFun(it);
     }
+}
+
+QByteArray IPC_WebServer::lsRecv(const QByteArray &v)
+{
+    sIpcLog it = cm::toStruct<sIpcLog>(v);
+    return logFun(it).toLatin1();
 }

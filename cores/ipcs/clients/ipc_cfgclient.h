@@ -1,7 +1,7 @@
 #ifndef IPC_CFGCLIENT_H
 #define IPC_CFGCLIENT_H
 
-#include "ipc_logclient.h"
+#include "ipc_objclient.h"
 
 class IPC_CfgClient : public IPC_ObjClient
 {

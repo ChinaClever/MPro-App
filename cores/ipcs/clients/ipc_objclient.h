@@ -6,13 +6,20 @@
 #define IPC_KEY_LOG         "logs"
 #define IPC_KEY_WEB         "webs"
 #define IPC_KEY_CFG         "cfgs"
-
 enum eLogs{
     eUserLog,
+    eAlarmLog,
     eOpLog,
     eSysLog,
-    eAlarmLog,
+    eEleLog,
+};
 
+struct sIpcLog {
+    sIpcLog() {id=fc=0; page=0;noe=30;}
+    uchar id;
+    uchar fc;
+    uchar noe;
+    ushort page;
 };
 
 class IPC_ObjClient : public QObject
