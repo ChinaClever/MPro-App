@@ -91,8 +91,10 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     } else {
         switch (it->subtopic) {
         case 2: v = DSub::VMax; break;
-        case 3: v = DSub::VMin; break;
-        case 4: v = DSub::EnAlarm; break;
+        case 3: v = DSub::VCrMax; break;
+        case 4: v = DSub::VCrMin; break;
+        case 5: v = DSub::VMin; break;
+        case 6: v = DSub::EnAlarm; break;
         default: ret = false; break;
         }
     }

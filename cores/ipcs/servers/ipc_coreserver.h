@@ -1,7 +1,7 @@
 #ifndef IPC_CORESERVER_H
 #define IPC_CORESERVER_H
 
-#include "ipc_logserver.h"
+#include "ipc_cfgserver.h"
 
 class IPC_CoreServer : public QObject
 {

@@ -8,13 +8,31 @@
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
 {
-    mCfg = Cfg_Obj::bulid(CFG_FN);
+    mCfg = Cfg_Obj::bulid();
 }
 
 void Cfg_ReadParam::readCfgParams()
 {
+    login();
     readUut();
     outputName();
+}
+
+void Cfg_ReadParam::login()
+{
+    QString prefix = "login";
+    QString key; char *ptr=nullptr;
+    sDevLogin *it = &(cm::dataPacket()->login);
+
+    for(int i=1; i<3; ++i) {
+        switch (i) {
+        case 1: key = "user";  ptr = it->user[0]; break;
+        case 2: key = "pwd";  ptr = it->pwd[0]; break;
+        case 3: key = "token";  ptr = it->token[0]; break;
+        }
+        QString res = mCfg->readCfg(key, "", prefix).toString();
+        qstrcpy(ptr, res.toLatin1().data());
+    }
 }
 
 void Cfg_ReadParam::readUut()
@@ -31,6 +49,7 @@ void Cfg_ReadParam::readUut()
         case 4: key = "cab";  ptr = it->cab; break;
         case 5: key = "road";  ptr = it->road; break;
         case 6: key = "devName";  ptr = it->devName; break;
+        case 7: key = "sn";  ptr = it->sn; break;
         }
 
         QString res = mCfg->readCfg(key, "", prefix).toString();

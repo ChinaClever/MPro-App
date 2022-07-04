@@ -115,7 +115,7 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     }
 
     if(ptr) qstrcpy(ptr, str);
-    Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
+    Cfg_Obj *cfg = Cfg_Obj::bulid();
     cfg->writeCfg(key, QString(ptr), prefix);
 
     sOpItem db; db.op_src = opSrc(txType);

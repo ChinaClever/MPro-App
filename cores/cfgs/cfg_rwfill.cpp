@@ -28,6 +28,7 @@ void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     it.en = unit.en[id];
     it.state = unit.mode[id];
     it.delay = unit.delay[id];
+    it.resTime = unit.resTime[id];
 }
 
 void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
@@ -62,7 +63,7 @@ void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     obj->tg = data->tg;
     obj->info = data->info;
 
-    obj->login = cm::dataPacket()->login;
+    //obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;
     obj->tg.pf = obj->tg.artPow = 0;
 }

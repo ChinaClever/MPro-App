@@ -1,21 +1,21 @@
 #ifndef IPC_LOGCLIENT_H
 #define IPC_LOGCLIENT_H
 
-#include "ipc_objclient.h"
+#include "ipc_echoclient.h"
 
-class IPC_LogClient : public IPC_ObjClient
+class IPC_LogClient : public IPC_EchoClient
 {
     Q_OBJECT
-    explicit IPC_LogClient(QObject *parent = nullptr);
 public:
-    static IPC_LogClient *bulid(QObject *parent = nullptr);
-    bool write(eLogs id, const QStringList &value);
-    QVariant read(eLogs id, int page);
-    int countLog(eLogs id);
-    void clearLog(eLogs id);
+    explicit IPC_LogClient(QObject *parent = nullptr);
 
+    int log_counts(int id);
+    bool log_clear(int id);
+    QString log_read(int id, int page, int noe);
+    QVariant log_fun(const sIpcLog &it);
 private:
-    bool inputCheck(const QVariantList &values);
+    QString log_get(const sIpcLog &unit);
+    bool log_msgSend(const sIpcLog &msg);
 };
 
 #endif // IPC_LOGCLIENT_H

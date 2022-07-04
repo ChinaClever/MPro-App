@@ -183,7 +183,8 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         case DSub::Value: ptr = unit->sw; break;
         case DSub::Rated: ptr = unit->mode; break;
         case DSub::Alarm: ptr = unit->alarm; break;
-        case DSub::VMax: ptr = unit->delay; break;
+        case DSub::UpTime: ptr = unit->delay; break;
+        case DSub::ResTime: ptr = unit->resTime; break;
         case DSub::EnAlarm: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }

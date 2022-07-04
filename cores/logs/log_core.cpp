@@ -40,6 +40,7 @@ void Log_Core::saveLogSlot()
 {
     Db_Tran t;
     while(mOpIts.size()) mOp->insertItem(mOpIts.takeFirst());
+    while(mEleIts.size()) mEle->insertItem(mEleIts.takeFirst());
     while(mSysIts.size()) mSys->insertItem(mSysIts.takeFirst());
     while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
@@ -55,4 +56,5 @@ void Log_Core::timeoutDone()
     mSys->countsRemove(cnt);
     mUser->countsRemove(cnt);
     mAlarm->countsRemove(cnt);
+    mEle->countsRemove(10*cnt);
 }

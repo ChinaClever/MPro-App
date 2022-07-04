@@ -99,5 +99,8 @@ void Cfg_RwInitial::initDevData(sDevData *dev)
 
 void Cfg_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
-    for(int i=0; i<size; ++i) it.en[i] = 1;
+    for(int i=0; i<size; ++i) {
+        it.en[i] = 1;
+        it.resTime[i] = 5;
+    }
 }

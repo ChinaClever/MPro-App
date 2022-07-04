@@ -25,5 +25,5 @@ void IPC_CoreServer::initFunSlot()
 {
     IPC_WebServer::bulid(this);
     IPC_CfgServer::bulid(this);
-    IPC_LogServer::bulid(this);
+    //IPC_LogServer::bulid(this);
 }
