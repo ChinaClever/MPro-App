@@ -9,7 +9,7 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  background-image: url('../images/background.jpg');
+  /* background-image: url('../images/background.jpg'); */
   background-size: 100% 100%;
 }
 
@@ -19,8 +19,8 @@
   width: 450px;
   height: 350px;
   /* background-color: rgba(127, 255, 212, 0.5); */
-  left: 25%;
-  top: 50%;
+  left: 45%;
+  top: 45%;
   transform: translate(-50%, -50%);
   /* display: flex; */
 }
@@ -31,8 +31,8 @@
 .inner_box .center_form {
   width: 410px;
   height: 300px;
-  background-color: rgba(134, 221, 221, 0.219);
-  box-shadow: 0px 0px 3px rgb(76, 219, 219);
+  background-color: rgba(179, 187, 186, 0.575);
+  box-shadow: 0px 0px 3px rgb(217, 224, 224);
 }
 .inner_box .center_form p {
   height: 60px;
@@ -42,7 +42,7 @@
 .title {
   height: 50px !important;
   line-height: 50px;
-  background-color: rgba(82, 202, 182, 0.575);
+  background-color: rgba(179, 187, 186, 0.575);
   margin-bottom: 40px;
 }
 
@@ -98,10 +98,11 @@ input {
 /* 登录按钮 */
 .signIn_btn {
   height: 50px;
-  width: 450px;
+  width: 410px;
   line-height: 50px;
-  background-color: #fff;
-  text-align: center;
+  left: 45%;
+  background-color: rgba(179, 187, 186, 0.575);;
+  /* text-align: center; */
 }
 .signIn_btn input{
   font-size: 20px;

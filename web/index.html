@@ -30,479 +30,171 @@
 	<script src="include/js/index.min.js"></script>
 	<script src="include/js/rpc-over-websocket.js"></script>
 	<script>
+		var start  = 0;
+		var sub_num = 8;
+		var hum_num = 2,num_num = 3,cfg_num = 7;
+		var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
+		var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,engre_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 		var rpc = jsonrpc();
+		function read_phase_data(addr)
+		{
+			var phase_num = sessionStorage.getItem('phase_num' + addr);
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(j >= parseInt(sub_num + 1)){
+					clearInterval(time1);
+				}
+				tick ++;
+				rpc.call('pduReadData',[addr,phase,vol_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,phase,cur_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,phase,pow_,j,i]);
+				var time = setTimeout(function(){
+					i++;
+					if(i >= parseInt(phase_num + 1)){
+						i = 1;
+						j++;
+					}
+				},10);
+			},40);
+		}
+		function read_loop_data(addr)
+		{
+			var loop_num = sessionStorage.getItem('loop_num' + addr);
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(j >= parseInt(sub_num + 1)){
+					clearInterval(time1);
+				}
+				// tick ++;
+				// rpc.call('pduReadData',[addr,output,vol_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,output,cur_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,output,pow_,j,i]);
+				var time = setTimeout(function(){
+					i++;
+					if(i >= parseInt(loop_num + 1)){
+						i = 1;
+						j++;
+					}
+				},10);
+			},40);
+		}
+		function read_output_data(addr)
+		{
+			var output_num = sessionStorage.getItem('output_num' + addr);
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(j >= parseInt(sub_num + 1)){
+					clearInterval(time1);
+				}
+				if(j == 1){
+					tick ++;
+					rpc.call('pduReadData',[addr,output,engre_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,output,pf_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
+				}
+				if(j == 1 || j == 2 || j == 4 || j ==8){
+					tick ++;
+					rpc.call('pduReadData',[addr,output,switch_,j,i]);
+				}
+				tick ++;
+				rpc.call('pduReadData',[addr,output,cur_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,output,pow_,j,i]);
+				var time = setTimeout(function(){
+					i++;
+					if(i >= parseInt(output_num + 1)){
+						i = 1;
+						j++;
+					}
+				},10);
+			},40);
+		}
+		function read_sensor_data(addr)
+		{
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(j >= parseInt(sub_num + 1)){
+					clearInterval(time1);
+				}
+				if(j == 1 && i == 1){
+					tick ++;
+					rpc.call('pduReadData',[addr,sensor,door1_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,sensor,door2_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,sensor,water_,j,i]);
+					tick ++;
+					rpc.call('pduReadData',[addr,sensor,smoke_,j,i]);
+				}
+				tick ++;
+				rpc.call('pduReadData',[addr,loop,tmp_,j,i]);
+				tick ++;
+				rpc.call('pduReadData',[addr,loop,hum_,j,i]);
+				var time = setTimeout(function(){
+					i++;
+					if(i >= parseInt(hum_num + 1)){
+						i = 1;
+						j++;
+					}
+				},10);
+			},40);
+		}
+		function read_num_info(addr){
+			var j = 1;
+			var time1 = setInterval(function(){
+				tick ++;
+				rpc.call('pduReadCfg',[addr,num,j,0,0]);
+				var time = setTimeout(function(){
+					j++;
+					if(j >= parseInt(num_num + 1)){
+						clearInterval(time1);
+					}
+				},10);
+			},50);
+		}
+		function read_cfg_info(addr){
+			var j = 0;
+			var time1 = setInterval(function(){
+				tick ++;
+				rpc.call('pduReadCfg',[addr,cfg,j,0,0]);
+				var time = setTimeout(function(){
+					j++;
+					if(j >= parseInt(cfg_num)){
+						clearInterval(time1);
+					}
+				},10);
+			},50);
+		}
+		function read_output_name(addr){
+			var output_num = sessionStorage.getItem('output_num' + addr);
+			var j = 1;
+			var time1 = setInterval(function(){
+				tick ++;
+				rpc.call('pduReadString',[addr,bit,0,0,j]);
+				var time = setTimeout(function(){
+					j++;
+					if(j >= parseInt(output_num + 1)){
+						clearInterval(time1);
+					}
+				},10);
+			},50);
+		}
 		var time1 = setTimeout(function(){
-      		rpc.call('pduGetInfo',[0,3,0,0,0]);
-			tick ++;
-			var time = setTimeout(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[0,12,1,0,0]);
-			},100);
-			var time = setTimeout(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[0,13,2,0,0]);
-			},100);
-			var time = setTimeout(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[0,12,2,0,0]);
-			},100);
-			var time = setTimeout(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[0,12,3,0,0]);
-			},100);
-			// var time = setTimeout(function(){
-			// 	read_phase_data(phase_num1);
-			// },100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,1,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,5,i]);
-			}},200);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,2,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,1,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,5,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,3,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,1,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,5,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < phase_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,1,4,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,1,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,5,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,2,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,1,i]);
-			}},200);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,5,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,3,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,1,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,2,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,3,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,4,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,5,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,6,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,7,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < loop_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,2,4,8,i]);
-			}},400);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadString',[0,10,0,0,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,1,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,1,2,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,1,4,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,1,8,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,2,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,2,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,3,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,4,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,5,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,6,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,7,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,3,8,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,2,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,3,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,4,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,5,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,6,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,7,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,4,8,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,5,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,6,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,7,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadData',[0,3,8,1,i]);
-			}},100);
-			var time = setTimeout(function(){
-			for(var i = 1 ;i < output_num1 + 1;i++)
-			{
-				tick ++;
-				rpc.call('pduReadString',[0,10,0,0,i]);
-			}},100);
+			read_num_info(0);
+			read_cfg_info(0);
+			read_output_name(0);
+			read_phase_data(0);
+			read_loop_data(0);
+			read_output_data(0);
+			read_sensor_data(0);
 		},800);
 	</script>
 </body>
