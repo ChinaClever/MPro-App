@@ -6,7 +6,7 @@ var value_now = 0, val = 0,tick = 0,push = 0;
 var user_name='user_name';
 var password = 'password';
 var identify = '';
-var type_info = new Array("phase","loop","output");
+var type_info = new Array("Phase","Loop","Output");
 var type_name = new Array("","Phs","Loop","","","","TH","sensor","","","Output","Uut","Num","Cfg","User");
 var data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
@@ -59,7 +59,7 @@ var jsonrpc = function()
         sessionStorage.setItem(uut_name[num]+ addr ,JSON.parse(evt.data).result[5]); 
       break;
       case 12:
-        sessionStorage.setItem(type_info[topic]+ "num" + addr +'_'+num ,JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_info[topic - 1]+ "Num" + addr +'_'+num ,JSON.parse(evt.data).result[5]);
       break;
       case 13:
         sessionStorage.setItem(cfg_name[topic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5]));

@@ -38,7 +38,7 @@
 		var rpc = jsonrpc();
 		function read_phase_data(addr)
 		{
-			var phase_num = sessionStorage.getItem('phase_num' + addr);
+			var phase_num = sessionStorage.getItem('PhaseNum' + addr);
 			var j = 1;var i = 1;
 			var time1 = setInterval(function(){
 				if(j >= parseInt(sub_num + 1)){
@@ -61,7 +61,7 @@
 		}
 		function read_loop_data(addr)
 		{
-			var loop_num = sessionStorage.getItem('loop_num' + addr);
+			var loop_num = sessionStorage.getItem('LoopNum' + addr);
 			var j = 1;var i = 1;
 			var time1 = setInterval(function(){
 				if(j >= parseInt(sub_num + 1)){
@@ -84,7 +84,7 @@
 		}
 		function read_output_data(addr)
 		{
-			var output_num = sessionStorage.getItem('output_num' + addr);
+			var output_num = sessionStorage.getItem('OutputNum' + addr);
 			var j = 1;var i = 1;
 			var time1 = setInterval(function(){
 				if(j >= parseInt(sub_num + 1)){
@@ -189,12 +189,12 @@
 		}
 		var time1 = setTimeout(function(){
 			read_num_info(0);
-			read_cfg_info(0);
-			read_output_name(0);
-			read_phase_data(0);
-			read_loop_data(0);
-			read_output_data(0);
-			read_sensor_data(0);
+			// read_cfg_info(0);
+			// read_output_name(0);
+			// read_phase_data(0);
+			// read_loop_data(0);
+			// read_output_data(0);
+			// read_sensor_data(0);
 		},800);
 	</script>
 </body>
