@@ -18,7 +18,7 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-    SM_Obj::initShm(); //initUsb();
+    Shm::initShm(); //initUsb();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
@@ -54,12 +54,12 @@ void App_Start::startThreadSlot()
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();
-    //pool->start(Mb_Core::bulid(this));
+    pool->start(Mb_Core::bulid(this));
     pool->start(Data_Core::bulid());
 }
 
 void App_Start::clearCacheSlot()
-{
+{    
     //QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
     //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
 }

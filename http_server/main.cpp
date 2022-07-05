@@ -2,10 +2,13 @@
 #include <thread>
 #include "pdudevinfo.h"
 
-static const char *s_listen_on = "ws://localhost:8000";
+#define PC 1
+static const char *s_listen_on = "ws://0.0.0.0:8000";
+#if PC
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
-
-
+#else
+static const char *s_web_root = "/usr/data/clever/web";
+#endif
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
 //   any other URI serves static files from s_web_root
@@ -79,7 +82,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient::bulid(p);
+    IPC_WebClient *cc = IPC_WebClient::bulid(p);
+    qDebug() << cc->opName(0,2);
 
     std::thread th(http_main);
     th.detach();

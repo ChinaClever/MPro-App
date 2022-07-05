@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "commons.h"
-#include "sm_obj.h"
+#include "shm.h"
 
 
 void cm::mdelay(int msec)
@@ -91,7 +91,7 @@ QString cm::byteArrayToUcharStr(const QByteArray &array)
 
 sDataPacket *cm::dataPacket()
 {
-    sDataPacket *packet = (sDataPacket *)SM_Obj::sharedMemory();
+    sDataPacket *packet = (sDataPacket *)Shm::sharedMemory();
     if(!packet) qDebug() << "Error cm dataPacket";
     return packet;
 }

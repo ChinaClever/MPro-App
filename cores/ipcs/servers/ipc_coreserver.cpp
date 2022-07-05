@@ -16,7 +16,6 @@ IPC_CoreServer *IPC_CoreServer::bulid(QObject *parent)
     static IPC_CoreServer *sington = nullptr;
     if(!sington) {
         sington = new IPC_CoreServer(parent);
-        DBus_Object::registerBusService();
     }
     return sington;
 }
@@ -24,6 +23,4 @@ IPC_CoreServer *IPC_CoreServer::bulid(QObject *parent)
 void IPC_CoreServer::initFunSlot()
 {
     IPC_WebServer::bulid(this);
-    IPC_CfgServer::bulid(this);
-    //IPC_LogServer::bulid(this);
 }

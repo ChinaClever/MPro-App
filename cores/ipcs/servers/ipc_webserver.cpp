@@ -16,28 +16,24 @@ IPC_WebServer *IPC_WebServer::bulid(QObject *parent)
     static IPC_WebServer *sington = nullptr;
     if(!sington) {
         sington = new IPC_WebServer(parent);
-        sington->initFunction(IPC_KEY_WEB);
     }
     return sington;
 }
 
-QList<const char *> IPC_WebServer::busRecvMethods()
+QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
 {
-    QList<const char *> res;
-    res << SLOT(dbus_recv_slot(int, QByteArray));
-    return res;
-}
-
-QString IPC_WebServer::dbus_reply_slot(int fc, const QByteArray &array)
-{
-    QString res;
+    QVariant res;
     if(1 == fc) {
         sDataItem unit = cm::toStruct<sDataItem>(array);
-        bool ret = Set_Core::bulid()->upIndexValue(unit);
-        if(ret) res = QString::number(unit.value);
+        if(unit.rw) Set_Core::bulid()->setting(unit);
+        else {
+            bool ret = Set_Core::bulid()->upIndexValue(unit);
+            if(ret) res = QString::number(unit.value);
+        }
     } else if(2 == fc) {
         sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
-        res = Set_Core::bulid()->getNumStr(unit);
+        if(unit.rw) Set_Core::bulid()->setNumStr(unit);
+        else res = Set_Core::bulid()->getNumStr(unit);
     } else if(6 == fc) {
         sIpcLog it = cm::toStruct<sIpcLog>(array);
         res = logFun(it);
@@ -46,22 +42,3 @@ QString IPC_WebServer::dbus_reply_slot(int fc, const QByteArray &array)
     return res;
 }
 
-void IPC_WebServer::dbus_recv_slot(int fc, const QByteArray &array)
-{
-    if(1 == fc) {
-        sDataItem unit = cm::toStruct<sDataItem>(array);
-        Set_Core::bulid()->setting(unit);
-    } else if(2 == fc) {
-        sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
-        Set_Core::bulid()->setNumStr(unit);
-    }else if(6 == fc) {
-        sIpcLog it = cm::toStruct<sIpcLog>(array);
-        logFun(it);
-    }
-}
-
-QByteArray IPC_WebServer::lsRecv(const QByteArray &v)
-{
-    sIpcLog it = cm::toStruct<sIpcLog>(v);
-    return logFun(it).toLatin1();
-}

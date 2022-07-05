@@ -1,6 +1,6 @@
 #ifndef ALARM_OBJECT_H
 #define ALARM_OBJECT_H
-#include "sm_obj.h"
+#include "shm.h"
 
 class Alarm_Object
 {

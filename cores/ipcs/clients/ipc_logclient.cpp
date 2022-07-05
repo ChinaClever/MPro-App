@@ -14,7 +14,7 @@ bool IPC_LogClient::log_msgSend(const sIpcLog &msg)
 {
     QVariantList lv{6, cm::toByteArray(msg)};
     bool ret = inputCheck(lv);
-    if(ret) ret = mDbus->sendBus(lv);
+    if(ret) ret = sendSocket(lv);
     //mDbus->writeLsc(str.toLocal8Bit());;
     return ret;
 }
@@ -22,8 +22,8 @@ bool IPC_LogClient::log_msgSend(const sIpcLog &msg)
 QString IPC_LogClient::log_get(const sIpcLog &unit)
 {
     QByteArray array = cm::toByteArray(unit);
-    //QString res = readBus(QVariantList {6, array}).toString();
-    QByteArray res = mDbus->transLsc(array, 5000);
+    QString res = readSocket(QVariantList {6, array}, 5000).toString();
+//    QByteArray res = mDbus->transLsc(array, 5000);
     return res;
 }
 

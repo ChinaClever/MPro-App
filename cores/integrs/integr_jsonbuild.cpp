@@ -19,7 +19,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
         json.insert("company", "CLEVER");
         json.insert("version", JSON_VERSION);
         devData(dev, "pdu_data", json);
-        saveJson("cc", json);
+        //saveJson("cc", json);
 
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,7 +31,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
 
 bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
 {
-    QFile file("F:/" + name+".json");
+    QFile file("/home/lzy/" + name+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QJsonDocument jsonDoc(json);

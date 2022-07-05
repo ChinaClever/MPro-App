@@ -1,7 +1,7 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/sm_obj.h
+    $$PWD/shm.h
 
 SOURCES += \
-    $$PWD/sm_obj.cpp
+    $$PWD/shm.cpp

@@ -8,29 +8,27 @@
 IPC_ObjClient::IPC_ObjClient(QObject *parent)
     : QObject{parent}
 {
-    mDbus = nullptr;
+    mSocket = new Domain_SocketCli(this);
 }
 
 sDataPacket *IPC_ObjClient::dataPacket()
 {
-    sDataPacket *res = nullptr;
-    if(mDbus) res = (sDataPacket *)mDbus->sharedMemory();
+    sDataPacket *res = (sDataPacket *)Shm::sharedMemory();
     return res;
 }
 
-void IPC_ObjClient::initFunction(const QString &key, bool f)
+bool IPC_ObjClient::sendSocket(const QVariantList &v)
 {
-    if(!mDbus) mDbus = new DBus_Call(key, this);
-    if(f) QTimer::singleShot(1, mDbus, SLOT(lscReconnect()));
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << v.first().toInt() << v.last().toByteArray();
+    int ret = mSocket->send(array);
+    return ret>0 ? true: false;
 }
 
-QVariant IPC_ObjClient::readBus(const QVariantList &v)
+QVariant IPC_ObjClient::readSocket(const QVariantList &v, int msec)
 {
-    QVariant res;
-    if(inputCheck(v)) {
-        QVariantList lv = mDbus->callBus(v);
-        if(lv.size()) res = lv.first();
-    }
-    return  res;
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << v.first().toInt() << v.last().toByteArray();
+    return mSocket->trans(array, msec);
 }
 

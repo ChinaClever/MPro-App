@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mb_core.h"
 
 Mb_Core::Mb_Core(QObject *parent)
@@ -11,8 +16,8 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
     static Mb_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
-        //sington->connectTcp(1);
-        sington->connectRtu(1, QSerialPort::Baud57600);
+        sington->connectTcp(1);
+        //sington->connectRtu(1, QSerialPort::Baud57600);
     }
     return sington;
 }

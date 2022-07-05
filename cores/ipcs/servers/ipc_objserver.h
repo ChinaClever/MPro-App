@@ -3,15 +3,17 @@
 #include "set_core.h"
 #include "ipc_objclient.h"
 
-class IPC_ObjServer : public LSocket_Server
+class IPC_ObjServer : public Domain_SocketServ
 {
     Q_OBJECT
 public:
     explicit IPC_ObjServer(QObject *parent = nullptr);
-     sDataPacket *dataPacket();
 
 protected:
-    virtual void initFunction(const QString &key, bool f=false);
+    virtual QVariant ipc_recv_msg(int fc, const QByteArray &array) = 0;
+
+private:
+     QVariant ipc_reply(const QByteArray &array) override;
 };
 
 #endif // IPC_OBJSERVER_H
