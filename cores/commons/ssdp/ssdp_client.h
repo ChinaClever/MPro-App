@@ -7,8 +7,8 @@
 #include "commons.h"
 
 struct sSdpIt{
-    uchar fc;
-    uchar version;
+    int fc;
+    int version;
     QString describe;
     QByteArray array;
     ushort crc;

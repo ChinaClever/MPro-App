@@ -10,7 +10,6 @@ Ssdp_Server::Ssdp_Server(QObject *parent) : QObject{parent}
     mPort = 16125;
     mSocket = new QUdpSocket(this);
     mAddress = QHostAddress("239.255.43.21");
-    //mSocket->joinMulticastGroup(mAddress);
 }
 
 bool Ssdp_Server::bind()

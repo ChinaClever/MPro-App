@@ -69,6 +69,6 @@ void Ssdp_Client::recvMsg(QByteArray &array)
     if(it.crc == END_CRC) {
         if(it.fc) emit recvSig(it.fc, it.describe, it.array);
         else rplySearchTarget(it.describe, it.array);
-    }
+    } else qDebug() << Q_FUNC_INFO << it.fc << it.crc << array.size();
 }
 
