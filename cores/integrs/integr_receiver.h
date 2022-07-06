@@ -3,7 +3,7 @@
 #include "ws_server.h"
 #include "integr_pushthread.h"
 
-class Integr_Receiver : public QObject
+class Integr_Receiver : public Integr_PushThread
 {
     Q_OBJECT
 public:

@@ -21,6 +21,7 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     addOid(addr, id++, oid, prefix+"cabinet", it.cab);
     addOid(addr, id++, oid, prefix+"road", it.road);
     addOid(addr, id++, oid, prefix+"name", it.devName);
+    addOid(addr, id++, oid, prefix+"sn", it.sn);
 }
 
 void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev)
