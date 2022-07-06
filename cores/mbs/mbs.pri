@@ -25,5 +25,5 @@ SOURCES += \
     $$PWD/mb_loop.cpp \
     $$PWD/mb_object.cpp \
     $$PWD/mb_output.cpp \
-    $$PWD/mb_restore.cpp \
-    $$PWD/mb_setting.cpp
+    $$PWD/mb_setting.cpp \
+    $$PWD/mb_update.cpp
