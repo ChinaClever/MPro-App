@@ -12,6 +12,7 @@ public:
 
 private:
     void initUsb();
+    void initSystem();
 
 private slots:
     void initFunSlot();

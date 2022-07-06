@@ -2,13 +2,15 @@
 #include <thread>
 #include "pdudevinfo.h"
 
-#define PC 1
+
 static const char *s_listen_on = "ws://0.0.0.0:8000";
-#if PC
+
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
+
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
 //   any other URI serves static files from s_web_root

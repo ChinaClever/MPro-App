@@ -18,10 +18,9 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-    Shm::initShm(); //initUsb();
+    Shm::initShm(); initSystem();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
-    //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -58,10 +57,21 @@ void App_Start::startThreadSlot()
     pool->start(Data_Core::bulid());
 }
 
+void App_Start::initSystem()
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    //initUsb();
+    system("ifconfig eth0 up");
+    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
+    qDebug() << "AAAAAAAAAAAAA" << App_Run::isRun("http_server");
+#endif
+}
+
 void App_Start::clearCacheSlot()
 {    
-    //QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
-    //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
+    QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
+    system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
 }
 
 void App_Start::initUsb()
