@@ -10,6 +10,7 @@ public:
     void readCfgParams();
 
 private:
+    void login();
     void readUut();
     void outputName();
 

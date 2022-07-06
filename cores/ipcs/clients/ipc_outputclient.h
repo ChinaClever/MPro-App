@@ -1,9 +1,9 @@
 #ifndef IPC_OUTPUTCLIENT_H
 #define IPC_OUTPUTCLIENT_H
 
-#include "ipc_echoclient.h"
+#include "ipc_logclient.h"
 
-class IPC_OutputClient : public IPC_EchoClient
+class IPC_OutputClient : public IPC_LogClient
 {
 public:
     explicit IPC_OutputClient(QObject *parent = nullptr);

@@ -75,6 +75,9 @@ void Agent_Get::addEnvAlarm(uchar addr, uchar key, const QString &oidPrefix,
     QString oid = oidPrefix + QString::number(key) +".";
     addOidValue(addr, id++, oid, name+"value", it.value[index], false);
     addOidValue(addr, id++, oid, name+"alarm_max", it.max[index]);
+    addOidValue(addr, id++, oid, name+"warn_max", it.crMax[index]);
+
+    addOidValue(addr, id++, oid, name+"warn_min", it.crMin[index]);
     addOidValue(addr, id++, oid, name+"alarm_min", it.min[index]);
     addOidValue(addr, id++, oid, name+"alarm_enable", it.en[index]);
     addOidValue(addr, id++, oid, name+"alarm_status", it.alarm[index]);

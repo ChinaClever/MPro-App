@@ -2,9 +2,14 @@
 #include <thread>
 #include "pdudevinfo.h"
 
-static const char *s_listen_on = "ws://localhost:8000";
-static const char *s_web_root = "/home/lzy/work/NPDU/web";
 
+static const char *s_listen_on = "ws://0.0.0.0:8000";
+
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+static const char *s_web_root = "/home/lzy/work/NPDU/web";
+#else
+static const char *s_web_root = "/usr/data/clever/web";
+#endif
 
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
@@ -94,7 +99,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient::bulid(p);
+    IPC_WebClient *cc = IPC_WebClient::bulid(p);
+    qDebug() << cc->opName(0,2);
 
     std::thread th(http_main);
     th.detach();

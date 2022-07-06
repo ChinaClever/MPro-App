@@ -6,7 +6,7 @@
 #include "ipc_outputclient.h"
 
 IPC_OutputClient::IPC_OutputClient(QObject *parent)
-    : IPC_EchoClient{parent}
+    : IPC_LogClient{parent}
 {
 
 }
@@ -24,7 +24,7 @@ bool IPC_OutputClient::relayCtrl(uchar addr, uchar id, uchar value)
 
 bool IPC_OutputClient::relayDelay(uchar addr, uchar id, uchar value)
 {
-    return relaySet(addr, id, DSub::VMax, value);
+    return relaySet(addr, id, DSub::UpTime, value);
 }
 
 bool IPC_OutputClient::relayMode(uchar addr, uchar id, uchar value)

@@ -19,7 +19,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
         json.insert("company", "CLEVER");
         json.insert("version", JSON_VERSION);
         devData(dev, "pdu_data", json);
-        //'saveJson("cc", json);
+        //saveJson("cc", json);
 
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,7 +31,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
 
 bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
 {
-    QFile file("F:/" + name+".json");
+    QFile file("/home/lzy/" + name+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QJsonDocument jsonDoc(json);
@@ -80,6 +80,7 @@ void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &ke
     obj.insert("mode", it.mode[id]/r);
     obj.insert("alarm", it.alarm[id]?true:false);
     obj.insert("delay", it.delay[id]/r);
+    obj.insert("resTime", it.resTime[id]/r);
     json.insert(key, QJsonValue(obj));
 }
 
@@ -114,6 +115,7 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
     obj.insert("alarm_max", it.max/r);
     obj.insert("warn_min", it.crMin/r);
     obj.insert("warn_max", it.crMax/r);
+    obj.insert("alarm_enable", it.en?true:false);
 
     json.insert(key, QJsonValue(obj));
 }
@@ -159,10 +161,12 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
 void Integr_JsonBuild::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
-    obj.insert("phases", it.lineNum/r);
-    obj.insert("version", it.version/r);
+    obj.insert("pdu_type", "MPDU-Pro");
+    obj.insert("pdu_ver", it.version/r);
+    obj.insert("line_num", it.lineNum/r);
+    obj.insert("pdu_spec", it.devSpec/r);
 
-    obj.insert("hz", it.hz/r);
+    obj.insert("pdu_hz", it.hz/r);
     obj.insert("op_num", it.opNum/r);
     obj.insert("loop_num", it.loopNum/r);
     obj.insert("slave_num", it.slaveNum/r);
@@ -185,10 +189,10 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     QJsonObject obj;
     obj.insert("IDC", it.idc);
     obj.insert("room", it.room);
-    obj.insert("cabinet", it.cab);
     obj.insert("module", it.module);
-    obj.insert("name", it.devName);
+    obj.insert("cabinet", it.cab);
     obj.insert("road", it.road);
+    obj.insert("name", it.devName);
     obj.insert("sn", it.sn);
     json.insert(key, QJsonValue(obj));
 }

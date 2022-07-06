@@ -12,103 +12,59 @@ IPC_LogServer::IPC_LogServer(QObject *parent)
 
 }
 
-IPC_LogServer *IPC_LogServer::bulid(QObject *parent)
-{
-    static IPC_LogServer *sington = nullptr;
-    if(!sington) {
-        sington = new IPC_LogServer(parent);
-        sington->initFunction(IPC_KEY_LOG, true);
-    }
-    return sington;
-}
-
-QList<const char *> IPC_LogServer::busRecvMethods()
-{
-    QList<const char *> res;
-    res << SLOT(dbus_recv_slot(int, QStringList));
-    return res;
-}
-
-void IPC_LogServer::userWrite(const QStringList &ls)
-{
-    int k=0;
-    sUserItem it;
-
-    it.name = ls.at(k++);
-    it.pwd = ls.at(k++);
-    it.jurisdiction = ls.at(k++);
-
-    it.email = ls.at(k++);
-    it.telephone = ls.at(k++);
-    it.remarks = ls.at(k++);
-    Log_Core::bulid(this)->append(it);
-}
-
-
-void IPC_LogServer::opWrite(const QStringList &ls)
-{
-    int k=0; sOpItem it;
-    it.op_src = ls.at(k++);
-    it.content = ls.at(k++);
-    Log_Core::bulid(this)->append(it);
-}
-
-void IPC_LogServer::dbus_recv_slot(int id, const QStringList &ls)
-{
-    switch (id) {
-    case eUserLog: userWrite(ls); break;
-    case eOpLog: opWrite(ls); break;
-    default: qDebug() << Q_FUNC_INFO << id; break;
-    }
-}
-
 template <typename T, typename U>
-static QString ipc_log_read(U *db, int page)
+static QString ipc_log_read(U *db, int page, int cnt)
 {
     QVector<T> its;
-    int cnt = 45; if(page) {
+    if(page) {
         int min = (page-1) * cnt;
         int max = page * cnt;
+        int minId = db->minId();
+        if(minId > 1) {minId--; min += minId; max += minId;}
         its = db->selectBetween(min, max);
     } else its = db->selectAll();
     return db->toJson(its);
 }
 
-QStringList IPC_LogServer::dbus_reply_slot(int id, int page)
+QString IPC_LogServer::readLog(int id, int page, int cnt)
 {
     QVariant v; switch (id) {
-    case eUserLog: v = ipc_log_read<sUserItem>(Db_User::bulid(), page); break;
-    case eOpLog: v = ipc_log_read<sOpItem>(Db_Op::bulid(), page);  break;
-    case eSysLog: v = ipc_log_read<sSysItem>(Db_Sys::bulid(), page);  break;
-    case eAlarmLog: v = ipc_log_read<sAlarmItem>(Db_Alarm::bulid(), page); break;
+    case eUserLog: v = ipc_log_read<sUserItem>(Db_User::bulid(), page, cnt); break;
+    case eAlarmLog: v = ipc_log_read<sAlarmItem>(Db_Alarm::bulid(), page, cnt); break;
+    case eOpLog: v = ipc_log_read<sOpItem>(Db_Op::bulid(), page, cnt);  break;
+    case eSysLog: v = ipc_log_read<sSysItem>(Db_Sys::bulid(), page, cnt);  break;
+    case eEleLog: v = ipc_log_read<sEleItem>(Db_Ele::bulid(), page, cnt);  break;
     default: qDebug() << Q_FUNC_INFO << id; break;
     }
 
-    QStringList res{v.toString()};
-    return res;
+    return v.toString();
 }
 
-
-QByteArray IPC_LogServer::lsRecv(const QByteArray &v)
+Sql_Statement *IPC_LogServer::getSql(int id)
 {
-    QStringList ls = QString(v).split(";");
-    int id = ls.first().toInt();
-    int fc = ls.last().toInt();
-
     Sql_Statement *sql = nullptr;
     switch (id) {
     case eUserLog: sql = Db_User::bulid(); break;
+    case eAlarmLog: sql = Db_Alarm::bulid();  break;
     case eOpLog: sql = Db_Op::bulid();  break;
     case eSysLog: sql = Db_Sys::bulid();  break;
+    case eEleLog: sql = Db_Ele::bulid();  break;
     default: qDebug() << Q_FUNC_INFO << id; break;
     }
+    return sql;
+}
 
-    QByteArray res; if(sql) {
-        switch (fc) {
-        case 1: sql->clear(); break;
-        case 2: id = sql->counts(); res = QString::number(id).toLocal8Bit(); break;
-        }
+
+QString IPC_LogServer::logFun(const sIpcLog &it)
+{
+    QString res;
+    Sql_Statement *sql = getSql(it.id);
+    switch (it.fc) {
+    case 3: sql->clear(); break;
+    case 1: res = sql->counts(); break;
+    case 2: res = readLog(it.id, it.page, it.noe); break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
-
     return res;
 }
+

@@ -25,7 +25,8 @@ void Set_Output::relayOpLog(const sDataItem &it)
         str += QObject::tr("输出位继电器模式切换 ");
         if(sRelay::OffALarm == it.value) str += QObject::tr("断开报警模式");
         else {str += QObject::tr("默认");} break;
-    case DSub::VMax: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
+    case DSub::UpTime: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
+    case DSub::ResTime: str += QObject::tr("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -52,7 +53,7 @@ bool Set_Output::outputsCtrl(sDataItem &unit)
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     for(int i=start; i<end; ++i) {
         if(it->en[i] || unit.txType == DTxType::TxWeb) ret = true;
-         else {ret = false; break;}
+        else {ret = false; break;}
     }
 
     if(ret && unit.id) OP_Core::bulid()->relaysCtrl(start, end, unit.value);
@@ -68,7 +69,7 @@ bool Set_Output::relaySet(sDataItem &unit)
         switch (unit.subtopic) {
         case DSub::Value:  ret = outputCtrl(unit); break;
         case DSub::Relays: ret = outputsCtrl(unit); break;
-        case DSub::VMax:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+        case DSub::UpTime:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
         default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeSettings(); break;
         } relayOpLog(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
@@ -110,7 +111,7 @@ void Set_Output::writeOpName(int id, const QString &name)
 {
     QString prefix = "OutputName";
     QString key = QString::number(id);
-    Cfg_Obj *cfg = Cfg_Obj::bulid(CFG_FN);
+    Cfg_Obj *cfg = Cfg_Obj::bulid();
     cfg->writeCfg(key, name, prefix);
 
     sObjData *it = &(cm::masterDev()->output);

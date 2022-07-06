@@ -11,7 +11,7 @@ class Db_Alarm : public Db_Obj<sAlarmItem>
     Db_Alarm();
 public:
     static Db_Alarm* bulid();
-    QString tableName(){return "alarm";}
+    QString tableName(){return "alarms";}
 
 protected:
     QJsonArray itemJson(const sAlarmItem &it);

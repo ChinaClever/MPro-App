@@ -8,7 +8,7 @@ class Cfg_Obj
 {
     Cfg_Obj(const QString& fn, QObject *parent = nullptr);
 public:
-    static Cfg_Obj* bulid(const QString& fn, QObject *parent = nullptr);
+    static Cfg_Obj* bulid(const QString& fn=CFG_FN, QObject *parent = nullptr);
     static QString pathOfCfg(const QString& name);
 
     void writeCfg(const QMap<QString,QVariant> &map, const QString &g="Cfg");
@@ -20,7 +20,7 @@ public:
 
 private:
     static void initCfg();
-    bool openCfg(QObject *parent = nullptr, const QString& fn = "cfg.ini");
+    bool openCfg(QObject *parent = nullptr, const QString& fn = CFG_FN);
 
 private:
     static QSettings  *mCfgIni; //*mCfgIni;

@@ -16,7 +16,6 @@ IPC_WebClient *IPC_WebClient::bulid(QObject *parent)
     static IPC_WebClient *sington = nullptr;
     if(!sington) {
         sington = new IPC_WebClient(parent);
-        sington->initFunction(IPC_KEY_WEB);
     }
     return sington;
 }

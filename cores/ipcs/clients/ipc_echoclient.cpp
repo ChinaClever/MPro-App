@@ -15,7 +15,7 @@ bool IPC_EchoClient::msgSend(int fc, const QByteArray &msg)
 {
     QVariantList lv{fc, msg};
     bool ret = inputCheck(lv);
-    if(ret) ret = mDbus->sendBus(lv);
+    if(ret) ret = sendSocket(lv);
     return ret;
 }
 
@@ -43,7 +43,7 @@ bool IPC_EchoClient::setting(const sDataItem &unit)
 bool IPC_EchoClient::getValue(sDataItem &unit)
 {
     bool ret = true; QByteArray array = cm::toByteArray(unit);
-    QString res = readBus(QVariantList {1, array}).toString();
+    QString res = readSocket(QVariantList {1, array}).toString();
     if(res.size()) unit.value = res.toUInt(); else ret = false;
     return ret;
 }
@@ -51,7 +51,7 @@ bool IPC_EchoClient::getValue(sDataItem &unit)
 QString IPC_EchoClient::getNumStr(sNumStrItem &unit)
 {
     QByteArray array = cm::toByteArray(unit);
-    QString res = readBus(QVariantList {2, array}).toString();
+    QString res = readSocket(QVariantList {2, array}).toString();
     return res;
 }
 

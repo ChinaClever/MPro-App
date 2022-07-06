@@ -5,51 +5,56 @@
  */
 #include "ipc_logclient.h"
 
-IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_ObjClient{parent}
+IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_EchoClient{parent}
 {
 
 }
 
-IPC_LogClient *IPC_LogClient::bulid(QObject *parent)
+bool IPC_LogClient::log_msgSend(const sIpcLog &msg)
 {
-    static IPC_LogClient *sington = nullptr;
-    if(!sington) {
-        sington = new IPC_LogClient(parent);
-        sington->initFunction(IPC_KEY_LOG, true);
-    }
-    return sington;
-}
-
-bool IPC_LogClient::write(eLogs id, const QStringList &value)
-{
-    QVariantList lv{id, value};
+    QVariantList lv{6, cm::toByteArray(msg)};
     bool ret = inputCheck(lv);
-    if(ret) ret = mDbus->sendBus(lv);
+    if(ret) ret = sendSocket(lv);
+    //mDbus->writeLsc(str.toLocal8Bit());;
     return ret;
 }
 
-QVariant IPC_LogClient::read(eLogs id, int page)
+QString IPC_LogClient::log_get(const sIpcLog &unit)
 {
-    return  readBus(QVariantList {id, page});
+    QByteArray array = cm::toByteArray(unit);
+    QString res = readSocket(QVariantList {6, array}, 5000).toString();
+//    QByteArray res = mDbus->transLsc(array, 5000);
+    return res;
 }
 
-bool IPC_LogClient::inputCheck(const QVariantList &values)
+QVariant IPC_LogClient::log_fun(const sIpcLog &it)
 {
-    bool ret = false;
-    int id = values.first().toInt();
-    if(id <= 6) ret = true;
-    return ret;
+    if(3 == it.fc) return log_msgSend(it);
+    else return log_get(it);
 }
 
-int IPC_LogClient::countLog(eLogs id)
+QString IPC_LogClient::log_read(int id, int page, int noe)
 {
-    QString str = tr("%1;%2").arg(id).arg(2);
-    QByteArray array = mDbus->transLsc(str.toLocal8Bit());;
-    return array.toInt();
+   sIpcLog it;
+   it.id = id;
+   it.fc = 2;
+   it.noe = noe;
+   it.page = page;
+   return log_get(it);
 }
 
-void IPC_LogClient::clearLog(eLogs id)
+int IPC_LogClient::log_counts(int id)
 {
-    QString str = tr("%1;%2").arg(id).arg(1);
-    mDbus->writeLsc(str.toLocal8Bit());;
+    sIpcLog it;
+    it.id = id;
+    it.fc = 1;
+    return log_get(it).toInt();
+}
+
+bool IPC_LogClient::log_clear(int id)
+{
+    sIpcLog it;
+    it.id = id;
+    it.fc = 3;
+    return log_msgSend(it);
 }

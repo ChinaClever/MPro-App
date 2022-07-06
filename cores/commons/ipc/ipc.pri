@@ -1,7 +1,6 @@
 
-include(sm/sm.pri)
-include(dbus/dbus.pri)
-include(lsocket/lsocket.pri)
+include(shm/shm.pri)
+include(domain/domain.pri)
 
 HEADERS += \
 

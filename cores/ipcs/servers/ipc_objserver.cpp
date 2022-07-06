@@ -5,19 +5,16 @@
  */
 #include "ipc_objserver.h"
 
-IPC_ObjServer::IPC_ObjServer(QObject *parent) : LSocket_Server{parent}
+IPC_ObjServer::IPC_ObjServer(QObject *parent) : Domain_SocketServ{parent}
 {
 
 }
 
-sDataPacket *IPC_ObjServer::dataPacket()
+QVariant IPC_ObjServer::ipc_reply(const QByteArray &array)
 {
-    return (sDataPacket *)sharedMemory();
-}
+    int fc; QByteArray msg(array), rcv;
+    QDataStream out(&msg, QIODevice::ReadOnly);
+    out >> fc >> rcv;
 
-void IPC_ObjServer::initFunction(const QString &key, bool f)
-{
-    setKey(key); if(f)lsListen();
-    registerBusObject();
-    busConnects();
+    return ipc_recv_msg(fc, rcv);
 }
