@@ -18,7 +18,8 @@ void PduRpcObj::pduReadData(jsonrpc_request *r)
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);
     double value = mWebIpc->getValue((uchar)its.at(0), (uchar)its.at(1),
                                  (uchar)its.at(2),(uchar)its.at(3), (uchar)its.at(4));
-    //qDebug()<<"AAAAAAAA"<<its.at(0)<<its.at(1)<<its.at(2)<<its.at(3)<<its.at(4);
+    //qDebug()<<"AAAAAAAA"<<its.at(0)<<its.at(1)<<its.at(2)<<its.at(3)<<its.at(4)
+    //       << value << QTime::currentTime().toString("mm:ss zzz");
     responRpcData(r, its, value);
 }
 

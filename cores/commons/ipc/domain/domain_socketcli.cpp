@@ -37,6 +37,7 @@ QVariant Domain_SocketCli::trans(const QVariant &var, int msec)
     if(ret > 0) {
         for(int i=0; i<msec; ++i) {
             if(m_recv.size()) break; else cm::mdelay(1);
+            //if(i > 2)  qDebug() << "cli _1" << QTime::currentTime().toString("mm:ss zzz") << msec;
         }
     }
 
@@ -79,6 +80,6 @@ void Domain_SocketCli::run()
 {
     while(isRun) {
         workDown();
-        msleep(1);
+        //msleep(1);
     }
 }

@@ -12,7 +12,7 @@ public:
     ~Domain_SocketCli();
 
     int send(const QVariant &var);
-    QVariant trans(const QVariant &var, int msec=1000);
+    QVariant trans(const QVariant &var, int msec=10);
 
 private:
     void run();

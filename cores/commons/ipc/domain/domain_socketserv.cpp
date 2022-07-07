@@ -48,13 +48,14 @@ void Domain_SocketServ::workDown()
                          (struct sockaddr *)&cliaddr, len);
             if(rtn<0) qDebug() << Q_FUNC_INFO << rtn << array.size() << cliaddr.sun_path;
         }
-    }
+        //qDebug() << "serv _1" << QTime::currentTime().toString("mm:ss zzz");
+    } else qDebug() << Q_FUNC_INFO << rtn;
 }
 
 void Domain_SocketServ::run()
 {
     while(isRun) {
         workDown();
-        msleep(1);
+        //msleep(1);
     }
 }

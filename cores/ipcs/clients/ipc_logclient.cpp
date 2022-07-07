@@ -15,15 +15,14 @@ bool IPC_LogClient::log_msgSend(const sIpcLog &msg)
     QVariantList lv{6, cm::toByteArray(msg)};
     bool ret = inputCheck(lv);
     if(ret) ret = sendSocket(lv);
-    //mDbus->writeLsc(str.toLocal8Bit());;
     return ret;
 }
 
 QString IPC_LogClient::log_get(const sIpcLog &unit)
 {
-    QByteArray array = cm::toByteArray(unit);
-    QString res = readSocket(QVariantList {6, array}, 5000).toString();
-//    QByteArray res = mDbus->transLsc(array, 5000);
+    int t = 100; if(unit.fc == 2) t = 300;
+    QByteArray array = cm::toByteArray(unit);    
+    QString res = readSocket(QVariantList {6, array}, t).toString();
     return res;
 }
 
