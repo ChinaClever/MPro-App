@@ -68,7 +68,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 //  命令  版本   -c 共同体  管理机  Enterprise-OID  snmp代理地址   陷阱类型 oid   数据类型    数据类型
 void Agent_Trap::sendTrap(const QString &ip, const QString &dstOid, const QString &oid, const QString &msg)
 {
-    QString cmd = "snmptrap -v 2c -c public %1 %2 %3 s '%4'";
+    QString cmd = "snmptrap -v 2c -c public %1 '' %2 %3 s '%4'";
     QString str = cmd.arg(ip,dstOid,oid, msg);
     system(str.toLatin1().data());
 }
