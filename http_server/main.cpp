@@ -53,7 +53,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
 
     } else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
-        // printf("MG_EV_WS_MSG\n");
+        //printf("MG_EV_WS_MSG\n");
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
         struct mg_str req = wm->data;
         char *response = NULL;
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     IPC_WebClient *cc = IPC_WebClient::bulid(p);
-    qDebug() << cc->opName(0,2);
+    //qDebug() << cc->opName(0,2);
 
     std::thread th(http_main);
     th.detach();
