@@ -55,6 +55,15 @@ void Cfg_ReadParam::readUut()
         QString res = mCfg->readCfg(key, "", prefix).toString();
         qstrcpy(ptr, res.toLatin1().data());
     }
+
+
+    ///////////=============
+    for(int i=0; i<8; ++i) {
+        sUutInfo *it = &(cm::devData(i)->uut);
+        sprintf(it->devName, "devName_%d", i);
+    }
+    cm::masterDev()->info.slaveNum = 8;   ///////////=============
+
 }
 
 void Cfg_ReadParam::outputName()

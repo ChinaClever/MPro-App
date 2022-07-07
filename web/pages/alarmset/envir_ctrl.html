@@ -40,7 +40,9 @@
 								<span id="lang_2">环控设置</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
 								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_2">温湿度设置</span>
 							</div>
 						</div>
 					</div>
@@ -67,6 +69,7 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
+		var Input_state = new Array("开","闭","复位");
     	var sensor_name = new Array("温度1","温度2","湿度1","湿度2","门禁1","门禁2","水禁","烟雾");
     	var head = new Array("tmp1_","tmp2_","hum1_","hum2_","door1_","door2_","water_","smoke_");
 		var end = new Array("val","rated","alarm","max","min","vcmin","vcmax","enable");
@@ -104,48 +107,16 @@
 		showdata();
 		modeset();
 		function showdata(){
-			for(var i = 1 ;i < phase_num + 1;i++){
-				ss = document.getElementById('r'+(i -1));
-				cs = document.getElementById('s'+(i -1));
-				if(phs_pow_enable[i] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phs_pow_alarm[i] == 1){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-			}
-			for(var i = 1 ;i < phase_num + 1;i++){
-				ss = document.getElementById('g'+(i -1));
-				cs = document.getElementById('k'+(i -1));
-				if(phs_cur_enable[i] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phs_cur_alarm[i] == 1){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-			}
-			for(var i = 1 ;i < phase_num + 1;i++){
+			for(var i = 1 ;i < head.length + 1;i++){
 				ss = document.getElementById('c'+(i -1));
 				cs = document.getElementById('b'+(i -1));
-				if(phs_vol_enable[i] == 1){
+				if(data[i][8] == 1){
 					ss.checked = true;
 				}
 				else{
 					ss.checked = false;
 				}
-				if(phs_vol_alarm[i] == 1){
+				if(data[i][2] == 1){
 					cs.bgColor = 'red';
 				}
 				else{
@@ -181,7 +152,7 @@
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
 				var iptname = document.getElementsByTagName("input");
-				for(var i = 0; i<iptname.length;i++)
+				for(var i = 0; i<ipttranslateme.length;i++)
 				{
 					iptname[i].disabled = true;
 				}
@@ -237,7 +208,7 @@
 			for (var i = 0; i < rows; i++) {
 				for (var i = 0; i < rows; i++) {
 					if (i === 0) {
-						thead = '<tr><td width ="9%">相序</td>\
+						thead = '<tr><td width ="9%">类型</td>\
 						<td width ="13%">当前值</td>\
 						<td width ="13%">告警使能</td>\
 						<td width ="13%">额定值</td>\
@@ -263,26 +234,18 @@
 		}
 		function buildTableOth(rows) {
 			var thead = '',tbody = '';
-			for (var i = 4; i < rows + 4; i++) {
-				if (i === 4) {
-					thead = '<tr><td width ="9%">相序</td>\
-					<td width ="13%">当前值</td>\
-					<td width ="13%">告警使能</td>\
-					<td width ="13%">额定值</td>\
-					<td width ="13%">最小值</td>\
-					<td width ="13%">下临界</td>\
-					<td width ="13%">上临界</td>\
-					<td width ="13%">最大值</td>';
+			for (var i = 0; i < rows ; i++) {
+				if (i === 0) {
+					thead = '<tr><td width ="9%">类型</td>\
+					<td width ="65%"></td>\
+					<td width ="13%">开</td>\
+					<td width ="13%">关</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "a'+ i + '">' + sensor_name[i]+'</td>';
-					tbody += '<td id = "b'+ i + '">'+ parseFloat(data[i][0]) +'</td>';
-					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
-					tbody += '<td id = "d'+ i +'">' + parseFloat(data[i][1])+'</td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ parseFloat(data[i][4])  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(data[i][5])  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(data[i][6]) +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(data[i][3])  +'"></input></td>';
+					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 4]+'</td>';
+					tbody += '<td id = "j'+ i + '"></td>';
+					tbody += '<td><button id = "k'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
+					tbody += '<td><button id = "l'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
 					tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'

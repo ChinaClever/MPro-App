@@ -635,6 +635,20 @@ input[type=text].input {
     text-align: center;
 }
 
+.panel-default{
+    border: none;
+    border-radius: 0px;
+    margin-bottom: 0px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.panel-default > .panel-heading{
+    color: #222;
+    font-size:13px;
+    background-color: #fff;
+    border-color: #e6e6e6;
+    padding: 10px 12px;
+}
 
 label {
     font-size: 13px;

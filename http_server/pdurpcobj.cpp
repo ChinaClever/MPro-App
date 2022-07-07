@@ -45,6 +45,7 @@ void PduRpcObj::responRpcString(jsonrpc_request *r, const QVector<double> &its, 
 
 void PduRpcObj::pduReadString(jsonrpc_request *r)
 {
+//    qDebug()<<__FUNCTION__<< "     "<<__LINE__;
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);
     QString value = mWebIpc->getString((uchar)its.at(0), (uchar)its.at(1),
                                  (uchar)its.at(4));

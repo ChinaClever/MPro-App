@@ -21,7 +21,12 @@ App_Start::App_Start(QObject *parent)
 {
     Shm::initShm();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
+<<<<<<< HEAD
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
+=======
+   // QTimer::singleShot(150,this,SLOT(startThreadSlot()));
+    //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
+>>>>>>> zsh
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -51,7 +56,7 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-//    Agent_Core::bulid(this);
+    Agent_Core::bulid(this);
 #endif
 
     //OP_Core::bulid(this)->startFun();
