@@ -93,10 +93,8 @@ var jsonrpc = function()
       });
     },
   };
-<<<<<<< HEAD
-};
-=======
 }
+
 
 var rpc = jsonrpc();
 var start  = 0;
@@ -274,4 +272,4 @@ function read_output_name(addr){
     j++;
   },10);
 }
->>>>>>> zsh
+

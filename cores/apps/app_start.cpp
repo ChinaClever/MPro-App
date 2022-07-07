@@ -21,12 +21,7 @@ App_Start::App_Start(QObject *parent)
 {
     Shm::initShm();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
-<<<<<<< HEAD
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
-=======
-   // QTimer::singleShot(150,this,SLOT(startThreadSlot()));
-    //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
->>>>>>> zsh
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 

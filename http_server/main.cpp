@@ -2,12 +2,11 @@
 #include <thread>
 #include "pdudevinfo.h"
 
-
-static const char *s_listen_on = "ws://0.0.0.0:8000";
-
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+static const char *s_listen_on = "ws://0.0.0.0:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
+static const char *s_listen_on = "ws://0.0.0.0:8000";
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
 
