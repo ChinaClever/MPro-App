@@ -5,14 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
     <meta name="renderer" content="webkit">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
 	<title>ZPDU</title>
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="icon" href="include/images/logo.png">
 	<link rel="stylesheet" href="include/css/public.min.css">
 	<link rel="stylesheet" href="include/css/iconfont.min.css">
 	<link rel="stylesheet" href="include/css/index.min.css">
+
+	<script src="include/js/jquery-1.11.3.min.js"></script>
+	<script src="include/js/index.min.js"></script>
+	<script src="include/js/rpc-over-websocket.js"></script>
 </head>
 <body>
+	<script>
+		var login_mark = sessionStorage.getItem("login_mark");
+		if(login_mark == null || login_mark == '')
+			var time1 =setTimeout(function(){
+				window.open('login.html','_self');
+				sessionStorage.setItem("login_mark",1);
+			},500);
+	</script>
 	<div class="side-box">
 		<a class="sys-title" href="javascript:;">
 			<img class="logo" src="include/images/logo.png" alt="logo">
@@ -26,176 +39,5 @@
 		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
-	<script src="include/js/jquery-1.11.3.min.js"></script>
-	<script src="include/js/index.min.js"></script>
-	<script src="include/js/rpc-over-websocket.js"></script>
-	<script>
-		var start  = 0;
-		var sub_num = 8;
-		var hum_num = 2,num_num = 3,cfg_num = 7;
-		var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
-		var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,engre_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
-		var rpc = jsonrpc();
-		function read_phase_data(addr)
-		{
-			var phase_num = sessionStorage.getItem('PhaseNum' + addr);
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(j >= parseInt(sub_num + 1)){
-					clearInterval(time1);
-				}
-				tick ++;
-				rpc.call('pduReadData',[addr,phase,vol_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,phase,cur_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,phase,pow_,j,i]);
-				var time = setTimeout(function(){
-					i++;
-					if(i >= parseInt(phase_num + 1)){
-						i = 1;
-						j++;
-					}
-				},10);
-			},40);
-		}
-		function read_loop_data(addr)
-		{
-			var loop_num = sessionStorage.getItem('LoopNum' + addr);
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(j >= parseInt(sub_num + 1)){
-					clearInterval(time1);
-				}
-				// tick ++;
-				// rpc.call('pduReadData',[addr,output,vol_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,output,cur_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,output,pow_,j,i]);
-				var time = setTimeout(function(){
-					i++;
-					if(i >= parseInt(loop_num + 1)){
-						i = 1;
-						j++;
-					}
-				},10);
-			},40);
-		}
-		function read_output_data(addr)
-		{
-			var output_num = sessionStorage.getItem('OutputNum' + addr);
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(j >= parseInt(sub_num + 1)){
-					clearInterval(time1);
-				}
-				if(j == 1){
-					tick ++;
-					rpc.call('pduReadData',[addr,output,engre_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,output,pf_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
-				}
-				if(j == 1 || j == 2 || j == 4 || j ==8){
-					tick ++;
-					rpc.call('pduReadData',[addr,output,switch_,j,i]);
-				}
-				tick ++;
-				rpc.call('pduReadData',[addr,output,cur_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,output,pow_,j,i]);
-				var time = setTimeout(function(){
-					i++;
-					if(i >= parseInt(output_num + 1)){
-						i = 1;
-						j++;
-					}
-				},10);
-			},40);
-		}
-		function read_sensor_data(addr)
-		{
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(j >= parseInt(sub_num + 1)){
-					clearInterval(time1);
-				}
-				if(j == 1 && i == 1){
-					tick ++;
-					rpc.call('pduReadData',[addr,sensor,door1_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,sensor,door2_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,sensor,water_,j,i]);
-					tick ++;
-					rpc.call('pduReadData',[addr,sensor,smoke_,j,i]);
-				}
-				tick ++;
-				rpc.call('pduReadData',[addr,loop,tmp_,j,i]);
-				tick ++;
-				rpc.call('pduReadData',[addr,loop,hum_,j,i]);
-				var time = setTimeout(function(){
-					i++;
-					if(i >= parseInt(hum_num + 1)){
-						i = 1;
-						j++;
-					}
-				},10);
-			},40);
-		}
-		function read_num_info(addr){
-			var j = 1;
-			var time1 = setInterval(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[addr,num,j,0,0]);
-				var time = setTimeout(function(){
-					j++;
-					if(j >= parseInt(num_num + 1)){
-						clearInterval(time1);
-					}
-				},10);
-			},50);
-		}
-		function read_cfg_info(addr){
-			var j = 0;
-			var time1 = setInterval(function(){
-				tick ++;
-				rpc.call('pduReadCfg',[addr,cfg,j,0,0]);
-				var time = setTimeout(function(){
-					j++;
-					if(j >= parseInt(cfg_num)){
-						clearInterval(time1);
-					}
-				},10);
-			},50);
-		}
-		function read_output_name(addr){
-			var output_num = sessionStorage.getItem('output_num' + addr);
-			var j = 1;
-			var time1 = setInterval(function(){
-				tick ++;
-				rpc.call('pduReadString',[addr,bit,0,0,j]);
-				var time = setTimeout(function(){
-					j++;
-					if(j >= parseInt(output_num + 1)){
-						clearInterval(time1);
-					}
-				},10);
-			},50);
-		}
-		var time1 = setTimeout(function(){
-			read_num_info(0);
-			// read_cfg_info(0);
-			// read_output_name(0);
-			// read_phase_data(0);
-			// read_loop_data(0);
-			// read_output_data(0);
-			// read_sensor_data(0);
-		},800);
-	</script>
 </body>
 </html>

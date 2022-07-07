@@ -19,6 +19,7 @@ void PduRpcObj::pduReadData(jsonrpc_request *r)
     double value = mWebIpc->getValue((uchar)its.at(0), (uchar)its.at(1),
                                  (uchar)its.at(2),(uchar)its.at(3), (uchar)its.at(4));
    // qDebug()<<"AAAAAAAA"<<its.at(0)<<its.at(1)<<its.at(2)<<its.at(3)<<its.at(4);
+//    qDebug()<<__FUNCTION__<< "     "<<__LINE__;
     responRpcData(r, its, value);
 }
 
@@ -45,6 +46,7 @@ void PduRpcObj::responRpcString(jsonrpc_request *r, const QVector<double> &its, 
 
 void PduRpcObj::pduReadString(jsonrpc_request *r)
 {
+//    qDebug()<<__FUNCTION__<< "     "<<__LINE__;
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);
     QString value = mWebIpc->getString((uchar)its.at(0), (uchar)its.at(1),
                                  (uchar)its.at(4));

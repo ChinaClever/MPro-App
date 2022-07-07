@@ -20,7 +20,7 @@ App_Start::App_Start(QObject *parent)
 {
     SM_Obj::initShm(); //initUsb();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
-    QTimer::singleShot(150,this,SLOT(startThreadSlot()));
+   // QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     //QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
@@ -50,7 +50,7 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     //Agent_Core::bulid(this);
-    //OP_Core::bulid(this)->startFun();
+    OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();
