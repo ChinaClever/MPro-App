@@ -8,6 +8,7 @@
 #include "ipc_coreserver.h"
 #include "rpc_service.h"
 #include "ssdp_server.h"
+#include "integr_core.h"
 #include "agent_core.h"
 #include "data_core.h"
 #include "log_core.h"
@@ -18,7 +19,7 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-    Shm::initShm(); initSystem();
+    Shm::initShm();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
@@ -42,13 +43,17 @@ void App_Start::initFunSlot()
     Log_Core::bulid(this);
     Set_Ssdp::bulid(this);
     //Cascade_Core::bulid();
+    Integr_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
 }
 
 void App_Start::startThreadSlot()
 {
-    //Agent_Core::bulid(this);
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    Agent_Core::bulid(this);
+#endif
+
     //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
@@ -57,25 +62,3 @@ void App_Start::startThreadSlot()
     pool->start(Data_Core::bulid());
 }
 
-void App_Start::initSystem()
-{
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    //initUsb();
-    system("ifconfig eth0 up");
-    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
-    QTimer::singleShot(2500,this,SLOT(clearCacheSlot()));
-    qDebug() << "AAAAAAAAAAAAA" << App_Run::isRun("http_server");
-#endif
-}
-
-void App_Start::clearCacheSlot()
-{    
-    QTimer::singleShot(24*60*60*1000,this,SLOT(clearCacheSlot()));
-    system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
-}
-
-void App_Start::initUsb()
-{
-    mUsb = new App_Usb(this);
-    mUsb->start();
-}

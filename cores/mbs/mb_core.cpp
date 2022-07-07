@@ -39,13 +39,14 @@ bool Mb_Core::connectRtu(int addr, int baud, int parity)
 {
     bool ret = mRtu->isConnectedModbus();
     if(!ret) {
-       ret = mRtu->connectRtu(MB_NAME, addr, baud, parity);
+        ret = mRtu->connectRtu(MB_NAME, addr, baud, parity);
     }
     return ret;
 }
 
 void Mb_Core::run()
 {
+    cm::mdelay(500);
     bool ret = true;
     while (isRun) {
         ret = mRtu->isConnectedModbus();

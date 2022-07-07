@@ -1,6 +1,7 @@
 #ifndef COMMONS_H
 #define COMMONS_H
 #include "datapacket.h"
+#include "crc.h"
 
 namespace cm {
 void mdelay(int msec=1);

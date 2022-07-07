@@ -14,6 +14,10 @@ private slots:
     void alarmSlot(const sDataItem &index, uchar value);
 
 private:
+    void sendTrap(const QString &ip, const QString &dstOid,
+                  const QString &oid, const QString &msg);
+
+private:
     QSNMPOid  mModuleOid;
 };
 

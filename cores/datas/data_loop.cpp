@@ -23,7 +23,7 @@ void Data_Loop::loopWork()
 void Data_Loop::loopNum()
 {
     int size = mDev->info.loopNum;
-    sObjData *obj = &(mDev->loop); obj->vol.size = 0;
+    sObjData *obj = &(mDev->loop); obj->vol.size = size;  ///////====   0
     obj->size = obj->relay.size = obj->cur.size = obj->pow.size = size;
     for(int i=0; i<obj->size; ++i) obj->relay.mode[i] = sRelay::OffALarm;
 }

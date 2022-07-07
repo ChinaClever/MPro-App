@@ -6,7 +6,7 @@
 #include "integr_receiver.h"
 
 Integr_Receiver::Integr_Receiver(QObject *parent)
-    : QObject{parent}
+    : Integr_PushThread{parent}
 {
     mUdp = new Net_Udp(this);
     mWs = new WS_Server(this);
