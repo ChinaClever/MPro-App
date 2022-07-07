@@ -16,7 +16,8 @@ var uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","Loo
 var user_info = new Array("UserName","Password","Identify");
 var jsonrpc = function()
 {
-  var url = 'ws://0.0.0.0:8000/websocket';
+  var url_ = window.location.host;
+  var url = 'ws://'+ url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
   var type = 0,topic = 0,subtopic = 0,addr = 0,num = 0;

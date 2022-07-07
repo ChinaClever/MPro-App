@@ -18,7 +18,7 @@
 	<script src="./include/js/rpc-over-websocket.js"></script>
 	<script src="include/js/fn_public.js"></script>
   <script>
-   var time = setTimeout(read_user_data(),5000);
+    read_user_data();
     function read_user_data(){
       user_name = sessionStorage.getItem(user_info[0]);
       password = sessionStorage.getItem(user_info[1]);
@@ -116,8 +116,8 @@
       if(Reg === 'register')
       {
         tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
-        tbody += '<p><input id ="username" type="text" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20";style="ime-mode:inactive"  placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="text" maxlength="20"; autocomplete="off" style="ime-mode:disable" onblur = "validataForm(this)"  placeholder="Password"></p>';
         tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Confirm Password"></span></p>';
         tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></span></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
