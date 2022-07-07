@@ -25,7 +25,7 @@ var loop_num1 = 0;
 
 var jsonrpc = function()
 {
-  var url = 'ws://0.0.0.0:8000/websocket';
+  var url = 'ws://local:8000/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
   var type = 0,topic = 0,subtopic = 0;
