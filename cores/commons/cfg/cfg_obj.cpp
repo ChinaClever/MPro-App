@@ -34,12 +34,17 @@ Cfg_Obj *Cfg_Obj::bulid(const QString& fn, QObject *parent)
   */
 QString Cfg_Obj::pathOfCfg(const QString& name)
 {    
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     initCfg(); QDir dataDir(QCoreApplication::applicationDirPath());  //QDir::home()
     QString dirName = "." + QCoreApplication::organizationName();
     if(!dataDir.exists(dirName)) {dataDir.mkdir(dirName);} dataDir.cd(dirName);
 
     dirName = QCoreApplication::applicationName();
     if(!dataDir.exists(dirName)) {dataDir.mkdir(dirName);} dataDir.cd(dirName);
+#else
+    QDir dataDir("/usr/data/clever/"); QString dirName = "cfg";
+    if(!dataDir.exists(dirName)) {dataDir.mkdir(dirName);} dataDir.cd(dirName);
+#endif
     return dataDir.absoluteFilePath(name);
 }
 

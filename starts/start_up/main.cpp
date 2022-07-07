@@ -8,8 +8,8 @@
 
 static void initSystem()
 {
-    system("ifconfig eth0 up");
     system("echo 3 > /proc/sys/vm/drop_caches");
+    system("ifconfig eth0 up"); system("dhclient");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
 }
@@ -19,8 +19,7 @@ static void startSnmpd()
     QString custom = "/usr/data";
     QString fn = "/etc/snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
-    bool ret = App_Run::isRun("snmpd");
-    if(ret) return ;
+    // bool ret = App_Run::isRun("snmpd"); if(ret) return ;
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";
     } else if(QFile::exists(custom + fn)) {

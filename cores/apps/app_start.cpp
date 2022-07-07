@@ -39,11 +39,11 @@ void App_Start::initFunSlot()
     IPC_CoreServer::bulid(this);
     Dtls_Recver::bulid(this);
     Rpc_Service::bulid(this);
-    Integr_Core::bulid(this);
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);
     Set_Ssdp::bulid(this);
     //Cascade_Core::bulid();
+    Integr_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
 }

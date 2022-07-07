@@ -5,7 +5,7 @@
 #include "integr_jsonrecv.h"
 #define INTEGR_UDP_SIZE  2
 
-class Integr_PushThread : public QThread
+class Integr_PushThread : public QObject
 {
     Q_OBJECT
 public:
@@ -17,12 +17,13 @@ public:
     void push_setTime(int sec=5);
     void push_stop(int id=0);
 
-protected:
+public slots:
     void run();
+    void startSlot();
 
 private:
     void delay();
-    void workDown();
+    void workDown();    
     void udpPush(const QByteArray &array);
     void httpPost(const QByteArray &array);
 
@@ -30,6 +31,7 @@ private:
     bool isRun = false;
     Net_Udp *mUdp = nullptr;
     Integr_JsonBuild *mJson;
+    CThread *mThread = nullptr;
 
     struct sPushIt {
         sPushIt() {sec=5;http_timeout=1;}

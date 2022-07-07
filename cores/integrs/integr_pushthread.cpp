@@ -7,16 +7,18 @@
 #include "http/http.h"
 
 Integr_PushThread::Integr_PushThread(QObject *parent)
-    : QThread{parent}
+    : QObject{parent}
 {
-    mJson = new Integr_JsonBuild();
     mUdp = new Net_Udp(this);
+    mJson = new Integr_JsonBuild();
+    mThread = new CThread(this);
 }
 
 Integr_PushThread::~Integr_PushThread()
 {
     isRun = false;
-    wait();
+    mThread->stop();
+    //wait();
 }
 
 
@@ -30,11 +32,19 @@ void Integr_PushThread::push_stop(int id)
     }
 }
 
+void Integr_PushThread::startSlot()
+{
+    if(!isRun) {
+        mThread->init(this, SLOT(run()));
+         mThread->start();
+    }
+}
+
 void Integr_PushThread::push_startHttp(const QString &url, int timeout)
 {
     mItem.http_url = url;
     mItem.http_timeout = timeout;
-    if(!isRun) start();
+    if(!isRun) QTimer::singleShot(50,this,SLOT(startSlot()));
 }
 
 void Integr_PushThread::push_startUdp(int id, const QString &ip, int port)
@@ -42,7 +52,7 @@ void Integr_PushThread::push_startUdp(int id, const QString &ip, int port)
     if(id < INTEGR_UDP_SIZE) {
         mItem.udp_ip[id] = ip;
         mItem.port[id] = port;
-        if(!isRun) start();
+        if(!isRun) QTimer::singleShot(50,this,SLOT(startSlot()));
     }
 }
 
@@ -87,8 +97,8 @@ void Integr_PushThread::delay()
 {
     int sec = mItem.sec; if(!sec) sec = 5;
     for(int i=0; i<sec*100; i+=100) {
-        if(isRun) msleep(100); else break;
-    } int t = QRandomGenerator::global()->bounded(100); msleep(t);
+        if(isRun) cm::mdelay(100); else break;
+    } int t = QRandomGenerator::global()->bounded(100); cm::mdelay(t);
 }
 
 void Integr_PushThread::run()
