@@ -6,7 +6,7 @@
 static const char *s_listen_on = "ws://0.0.0.0:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
-static const char *s_listen_on = "ws://0.0.0.0:8000";
+static const char *s_listen_on = "ws://0.0.0.0:80";
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
 
