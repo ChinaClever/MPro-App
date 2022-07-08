@@ -116,10 +116,10 @@
       if(Reg === 'register')
       {
         tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
-        tbody += '<p><input id ="username" type="text" maxlength="20";style="ime-mode:inactive"  placeholder="User Name" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="text" maxlength="20"; autocomplete="off" style="ime-mode:disable" onblur = "validataForm(this)"  placeholder="Password"></p>';
-        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Confirm Password"></span></p>';
-        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></span></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="text" maxlength="20"; placeholder="Password"></p>';
+        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; placeholder="Confirm Password"></p>';
+        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
         tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span><br/><span class="error" id = "Errinfo"></p>';
@@ -148,7 +148,7 @@
         read_output_data(0);
         read_sensor_data(0);
       },500);
-    },100);
+    },500);
 
   </script>
 
