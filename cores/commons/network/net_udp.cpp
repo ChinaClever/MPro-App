@@ -40,7 +40,6 @@ QByteArray Net_Udp::readDatagram(QHostAddress *host)
     return datagram;
 }
 
-
 void Net_Udp::recvSlot()
 {
     QHostAddress host;

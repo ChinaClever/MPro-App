@@ -22,18 +22,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
         // printf("MG_EV_WS_OPEN\n");
     }else if(ev == MG_EV_HTTP_CHUNK && mg_http_match_uri(hm, "/upload")){
-        LOG(LL_INFO,("Got chunk len %lu", (unsigned long) hm->chunk.len));
-        LOG(LL_INFO,("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        LOG(LL_INFO,("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
+        MG_INFO(("Got chunk len %lu", (unsigned long) hm->chunk.len));
+        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+        // MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
         mg_http_delete_chunk(c, hm);
         if (hm->chunk.len == 0) {
-            LOG(LL_INFO,("Last chunk received, sending response"));
+            MG_INFO(("Last chunk received, sending response"));
             mg_http_reply(c, 200, "", "ok (chunked)\n");
         }
     }else if (ev == MG_EV_HTTP_MSG && mg_http_match_uri(hm, "/upload")) {
-        LOG(LL_INFO,("Got all %lu bytes!", (unsigned long) hm->body.len));
-        LOG(LL_INFO,("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        LOG(LL_INFO,("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
+        MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
+        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+        // MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
         mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
     } else if (ev == MG_EV_HTTP_MSG) {
         // printf("MG_EV_HTTP_MSG\n");
