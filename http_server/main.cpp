@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <thread>
-#include "pdudevinfo.h"
+#include "pdurpcobj.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
 static const char *s_listen_on = "ws://0.0.0.0:8000";
@@ -84,7 +84,6 @@ int http_main(void) {
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
     PduRpcObj::rpc_export();
-    PduDevInfo::devInfoExport();
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
@@ -98,7 +97,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient *cc = IPC_WebClient::bulid(p);
+    IPC_WebClient::bulid(p);
     //qDebug() << cc->opName(0,2);
 
     std::thread th(http_main);

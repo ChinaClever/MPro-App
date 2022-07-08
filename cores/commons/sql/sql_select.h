@@ -13,7 +13,7 @@ class Sql_Select : public Sql_Statement
 public:
     T selectById(int id) {
         QString sql = QString("where id = %1").arg(id);
-        return selectItems(sql).frist();
+        return selectItems(sql).first();
     }
 
     QVector<T> selectAll(){return selectItems();}

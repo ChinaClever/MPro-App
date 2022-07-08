@@ -18,6 +18,7 @@ void usage()
     cout << "*    pduSetString    addr fc id str" <<endl;
     cout << "*    pduDevCfg       addr fc type" <<endl;
     cout << "*    pduSetCfg       addr fc type value" <<endl;
+    cout << "*    pduLogFun       type fc id noe" <<endl;
     cout << "*******************************************************" <<endl;
 }
 
@@ -108,6 +109,20 @@ void pduSetCfg(const QStringList &ls)
     } else qCritical() << "pduSetCfg Parameter error";
 }
 
+void pduLogFun(const QStringList &ls)
+{
+    SshRpcClient *rpc = SshRpcClient::bulid();
+    int k = 0; if(ls.size() == 3) {
+        uchar type = ls.at(k++).toInt();
+        uchar fc = ls.at(k++).toInt();
+        uchar id = ls.at(k++).toInt();
+        uchar noe = ls.at(k++).toInt();
+        qDebug() << rpc->pduLogFun(type, fc, id, noe);
+    } else qCritical() << "pduLogFun Parameter error";
+}
+
+
+
 bool workDown()
 {
     bool ret = true;
@@ -120,6 +135,7 @@ bool workDown()
         else if(fc == "pduSetString") pduSetString(cmds);
         else if(fc == "pduDevCfg") pduDevCfg(cmds);
         else if(fc == "pduSetCfg") pduSetCfg(cmds);
+        else if(fc == "pduLogFun") pduLogFun(cmds);
         else if(fc == "quit") ret = false;
         else usage();
     }

@@ -4,6 +4,7 @@ IPC_WebClient *PduRpcObj::mWebIpc = nullptr;
 void PduRpcObj::rpc_export()
 {
     mWebIpc = IPC_WebClient::bulid();
+    jsonrpc_export("pduLogFun", pduLogFun);
     jsonrpc_export("pduSetCfg", pduSetCfg);
     jsonrpc_export("pduReadCfg", pduReadCfg);
     jsonrpc_export("pduSetData", pduSetData);
@@ -76,4 +77,12 @@ void PduRpcObj::pduSetCfg(jsonrpc_request *r)
     bool ret = mWebIpc->setDevCfg((uint)its.at(0), (uchar)its.at(1),
                                   (uchar)its.at(2), (uint)its.at(5));
     responRpcData(r, its, ret?1:0);
+}
+
+void PduRpcObj::pduLogFun(jsonrpc_request *r)
+{
+    QVector<double> its = JsonRpcObj::getNumbers(r, 5);
+    QString value = mWebIpc->log_fun((uchar)its.at(0), (uchar)its.at(1),
+                                 (uint)its.at(2), (uchar)its.at(3)).toString();
+    responRpcString(r, its, value);
 }
