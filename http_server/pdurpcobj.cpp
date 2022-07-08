@@ -13,7 +13,6 @@ void PduRpcObj::rpc_export()
     jsonrpc_export("pduReadString", pduReadString);
 }
 
-
 void PduRpcObj::pduReadData(jsonrpc_request *r)
 {
     QVector<double> its = JsonRpcObj::getNumbers(r, 5);

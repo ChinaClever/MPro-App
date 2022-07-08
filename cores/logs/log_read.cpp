@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "log_read.h"
 
 Log_Read::Log_Read(QObject *parent)
@@ -31,11 +36,11 @@ static QString log_read_once(U *db, int id)
 QString Log_Read::log_readOnce(int type, int id)
 {
     QVariant v; switch (type) {
-    case eUserLog: v = log_read_once<sUserItem>(Db_User::bulid(), id); break;
-    case eAlarmLog: v = log_read_once<sAlarmItem>(Db_Alarm::bulid(), id); break;
-    case eOpLog: v = log_read_once<sOpItem>(Db_Op::bulid(), id);  break;
-    case eSysLog: v = log_read_once<sSysItem>(Db_Sys::bulid(), id);  break;
-    case eEleLog: v = log_read_once<sEleItem>(Db_Ele::bulid(), id);  break;
+    case eLogs::eUserLog: v = log_read_once<sUserItem>(Db_User::bulid(), id); break;
+    case eLogs::eAlarmLog: v = log_read_once<sAlarmItem>(Db_Alarm::bulid(), id); break;
+    case eLogs::eOpLog: v = log_read_once<sOpItem>(Db_Op::bulid(), id);  break;
+    case eLogs::eSysLog: v = log_read_once<sSysItem>(Db_Sys::bulid(), id);  break;
+    case eLogs::eEleLog: v = log_read_once<sEleItem>(Db_Ele::bulid(), id);  break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
@@ -46,11 +51,11 @@ QString Log_Read::log_readOnce(int type, int id)
 QString Log_Read::log_readPage(int type, int page, int cnt)
 {
     QVariant v; switch (type) {
-    case eUserLog: v = log_read_page<sUserItem>(Db_User::bulid(), page, cnt); break;
-    case eAlarmLog: v = log_read_page<sAlarmItem>(Db_Alarm::bulid(), page, cnt); break;
-    case eOpLog: v = log_read_page<sOpItem>(Db_Op::bulid(), page, cnt);  break;
-    case eSysLog: v = log_read_page<sSysItem>(Db_Sys::bulid(), page, cnt);  break;
-    case eEleLog: v = log_read_page<sEleItem>(Db_Ele::bulid(), page, cnt);  break;
+    case eLogs::eUserLog: v = log_read_page<sUserItem>(Db_User::bulid(), page, cnt); break;
+    case eLogs::eAlarmLog: v = log_read_page<sAlarmItem>(Db_Alarm::bulid(), page, cnt); break;
+    case eLogs::eOpLog: v = log_read_page<sOpItem>(Db_Op::bulid(), page, cnt);  break;
+    case eLogs::eSysLog: v = log_read_page<sSysItem>(Db_Sys::bulid(), page, cnt);  break;
+    case eLogs::eEleLog: v = log_read_page<sEleItem>(Db_Ele::bulid(), page, cnt);  break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
@@ -61,11 +66,11 @@ Sql_Statement *Log_Read::getSql(int type)
 {
     Sql_Statement *sql = nullptr;
     switch (type) {
-    case eUserLog: sql = Db_User::bulid(); break;
-    case eAlarmLog: sql = Db_Alarm::bulid();  break;
-    case eOpLog: sql = Db_Op::bulid();  break;
-    case eSysLog: sql = Db_Sys::bulid();  break;
-    case eEleLog: sql = Db_Ele::bulid();  break;
+    case eLogs::eUserLog: sql = Db_User::bulid(); break;
+    case eLogs::eAlarmLog: sql = Db_Alarm::bulid();  break;
+    case eLogs::eOpLog: sql = Db_Op::bulid();  break;
+    case eLogs::eSysLog: sql = Db_Sys::bulid();  break;
+    case eLogs::eEleLog: sql = Db_Ele::bulid();  break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return sql;

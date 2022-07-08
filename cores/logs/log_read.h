@@ -9,7 +9,6 @@ class Log_Read : public QObject
     Q_OBJECT
 public:
     explicit Log_Read(QObject *parent = nullptr);
-
     QString log_readFun(const sLogFcIt &it);
 
 private:
