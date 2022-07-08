@@ -15,14 +15,14 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
     QByteArray array;
     sDevData *dev = cm::devData(addr);  QJsonObject json;
     if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
-    if(dev->offLine > 0) {
+    if(dev->offLine > 0 || addr == 0) {
         json.insert("company", "CLEVER");
         json.insert("version", JSON_VERSION);
         devData(dev, "pdu_data", json);
-        saveJson("cc", json);
+        //saveJson("cc", json);
 
         QJsonDocument doc(json);
-        array = doc.toJson(QJsonDocument::Compact);
+        array = doc.toJson(QJsonDocument::Indented);//
     } else {
     }
 
@@ -31,7 +31,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
 
 bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
 {
-    QFile file("F:/" + name+".json");
+    QFile file("/home/lzy/" + name+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QJsonDocument jsonDoc(json);
@@ -87,7 +87,7 @@ void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &ke
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonArray array;
-    for(int id=0; id< it.size; ++id) {
+    for(int id=0; id<it.size; ++id) {
         QJsonObject obj;
         alarmUnit(id, it.vol, "vol", obj);
         alarmUnit(id, it.cur, "cur", obj);

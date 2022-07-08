@@ -46,11 +46,11 @@ void Modbus_Object::onStateChanged(int state)
 {
     QString str;
     switch (state) {
-    case QModbusDevice::UnconnectedState: str = tr("Modbus 已断开"); break;
-    case QModbusDevice::ConnectingState: str = tr("Modbus 连接中"); break;
-    case QModbusDevice::ConnectedState: str = tr("Modbus 已连接"); break;
-    case QModbusDevice::ClosingState: str = tr("Modbus 已关闭"); break;
-    } qDebug() << str;
+    case QModbusDevice::UnconnectedState: str = tr("Modbus Unconnected"); break;
+    case QModbusDevice::ConnectingState: str = tr("Modbus Connecting"); break;
+    case QModbusDevice::ConnectedState: str = tr("Modbus Connected"); break;
+    case QModbusDevice::ClosingState: str = tr("Modbus Closing"); break;
+    } //qDebug() << str;
 }
 
 void Modbus_Object::handleDeviceError(QModbusDevice::Error newError)

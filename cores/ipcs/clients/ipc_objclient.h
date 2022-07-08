@@ -1,11 +1,8 @@
 #ifndef IPC_OBJCLIENT_H
 #define IPC_OBJCLIENT_H
 
-#include "lsocket_server.h"
+#include "domain_socketcli.h"
 
-#define IPC_KEY_LOG         "logs"
-#define IPC_KEY_WEB         "webs"
-#define IPC_KEY_CFG         "cfgs"
 enum eLogs{
     eUserLog,
     eAlarmLog,
@@ -30,12 +27,12 @@ public:
     sDataPacket *dataPacket();
 
 protected:
-    QVariant readBus(const QVariantList &v);
-    virtual void initFunction(const QString &key, bool f=false);
+    bool sendSocket(const QVariantList &v);
+    QVariant readSocket(const QVariantList &v, int msec=3);
     virtual bool inputCheck(const QVariantList &){return true;}
 
-protected :
-    DBus_Call *mDbus;
+private:
+    Domain_SocketCli *mSocket;
 };
 
 #endif // IPC_OBJCLIENT_H

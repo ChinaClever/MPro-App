@@ -1,7 +1,7 @@
 #ifndef IPC_ECHOCLIENT_H
 #define IPC_ECHOCLIENT_H
 
-#include "ipc_cfgclient.h"
+#include "ipc_objclient.h"
 
 class IPC_EchoClient : public IPC_ObjClient
 {

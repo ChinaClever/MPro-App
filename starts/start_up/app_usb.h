@@ -1,7 +1,7 @@
 #ifndef APP_USB_H
 #define APP_USB_H
 
-#include <QtCore>
+#include "app_run.h"
 
 class App_Usb : public QThread
 {

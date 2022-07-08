@@ -95,6 +95,7 @@ var jsonrpc = function()
   };
 }
 
+
 var rpc = jsonrpc();
 var start  = 0;
 var hum_num = 2,num_num = 3,cfg_num = 8,uut_num = 6, sub_num = 8;
@@ -271,3 +272,4 @@ function read_output_name(addr){
     j++;
   },10);
 }
+

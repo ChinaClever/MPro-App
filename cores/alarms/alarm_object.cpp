@@ -210,7 +210,7 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     case DTopic::Door2: index.value = env->door[1]; break;
     case DTopic::Water: index.value = env->water[0]; break;
     case DTopic::Smoke: index.value = env->smoke[0]; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << index.topic; break;
     }
 
     return ret;
