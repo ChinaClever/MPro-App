@@ -136,20 +136,20 @@
       return tbody;
     }
 
-    // var time1 = setTimeout(function(){
-    //   console.log("start");
-    //   read_num_info(0);
-    //   read_uut_info(0);
-    //   read_cfg_info(0);
-    //   read_dev_name();
-    //   setTimeout(function(){
-    //     read_phase_data(0);
-    //     read_output_name(0);
-    //     read_loop_data(0);
-    //     read_output_data(0);
-    //     read_sensor_data(0);
-    //   },500);
-    // },500);
+    var time1 = setTimeout(function(){
+      console.log("start");
+      read_num_info(0);
+      read_uut_info(0);
+      read_cfg_info(0);
+      read_dev_name();
+      setTimeout(function(){
+        read_phase_data(0);
+        read_output_name(0);
+        read_loop_data(0);
+        read_output_data(0);
+        read_sensor_data(0);
+      },500);
+    },500);
 
   </script>
 
