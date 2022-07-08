@@ -116,7 +116,7 @@
       if(Reg === 'register')
       {
         tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
-        tbody += '<p><input id ="username" type="text" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" maxlength="20"; placeholder="Password"></p>';
         tbody += '<p><input id ="conpsd" type="password" maxlength="20"; placeholder="Confirm Password"></p>';
         tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
@@ -133,7 +133,7 @@
         tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
         tbody += '<p></p><p class = "signIn_btn"><input type = "button" value = "SUBMITE" onclick="submite1()"></input></p>';
       }
-      return tbo+dy;
+      return tbody;
     }
 
     // var time1 = setTimeout(function(){
