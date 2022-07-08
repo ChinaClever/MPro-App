@@ -76,6 +76,7 @@ var jsonrpc = function()
     var login_mark = sessionStorage.getItem("login_mark");
 		if(login_mark == null || login_mark == ''){
       read_user_info();
+      console.log(start);
     }
   };
   return {
@@ -115,7 +116,7 @@ function read_user_info(){
       rpc.call('pduReadString',[0,user,0,0,j]);
     }
     j++;
-  },10);
+  },1);
 }
 function read_dev_name(){
   var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + 0));
@@ -128,7 +129,7 @@ function read_dev_name(){
       rpc.call('pduReadString',[j,uut,0,0,dev_]);
     }
     j++;
-  },10);
+  },1);
 }
 function read_uut_info(addr)
 {
@@ -141,7 +142,7 @@ function read_uut_info(addr)
       rpc.call('pduReadString',[addr,uut,0,0,j]);
     }
     j++;
-  },10);
+  },1);
 }
 function read_phase_data(addr)
 {
@@ -161,7 +162,7 @@ function read_phase_data(addr)
       i = 1;
       j++;
     }
-  },10);
+  },1);
 }
 function read_loop_data(addr)
 {
@@ -181,7 +182,7 @@ function read_loop_data(addr)
       i = 1;
       j++;
     }
-  },10);
+  },1);
 }
 function read_output_data(addr)
 {
@@ -209,7 +210,7 @@ function read_output_data(addr)
         i = 1;
         j++;
       }
-  },10);
+  },1);
 }
 function read_sensor_data(addr)
 {
@@ -219,21 +220,21 @@ function read_sensor_data(addr)
       clearInterval(time1);
     }
     if(i <= hum_num && j <= sub_num){
-      if(j == 1 && i == 1){
+      if((j == 1 || j == 3 || j ==8) && i == 1){
         rpc.call('pduReadData',[addr,sensor,door1_,j,i]);
         rpc.call('pduReadData',[addr,sensor,door2_,j,i]);
         rpc.call('pduReadData',[addr,sensor,water_,j,i]);
         rpc.call('pduReadData',[addr,sensor,smoke_,j,i]);
       }
-      rpc.call('pduReadData',[addr,sensor,tmp_,j,i]);
-      rpc.call('pduReadData',[addr,sensor,hum_,j,i]);
+      rpc.call('pduReadData',[addr,envir,tmp_,j,i]);
+      rpc.call('pduReadData',[addr,envir,hum_,j,i]);
       i++;
       if(i >= parseInt(hum_num + 1)){
         i = 1;
         j++;
       }
     }
-  },10);
+  },1);
 }
 function read_num_info(addr){
   var j = 1;
@@ -245,7 +246,7 @@ function read_num_info(addr){
       rpc.call('pduReadCfg',[addr,num,j,0,0]);
     }
     j++;
-  },10);
+  },1);
 }
 function read_cfg_info(addr){
   var j = 0;
@@ -257,7 +258,7 @@ function read_cfg_info(addr){
       rpc.call('pduReadCfg',[addr,cfg,j,0,0]);
     }
     j++;
-  },10);
+  },1);
 }
 function read_output_name(addr){
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
@@ -270,6 +271,6 @@ function read_output_name(addr){
       rpc.call('pduReadString',[addr,bit,0,0,j]);
     }
     j++;
-  },10);
+  },1);
 }
 

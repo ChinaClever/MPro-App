@@ -118,7 +118,7 @@
         tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
         tbody += '<p><input id ="username" type="text" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" maxlength="20"; placeholder="Password"></p>';
-        tbody += '<p><input id ="conpsd" type="text" maxlength="20"; placeholder="Confirm Password"></p>';
+        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; placeholder="Confirm Password"></p>';
         tbody += '<p><input id ="conpsd" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
@@ -136,19 +136,20 @@
       return tbody;
     }
 
-    var time1 = setTimeout(function(){
-      read_num_info(0);
-      read_uut_info(0);
-      read_cfg_info(0);
-      read_dev_name();
-      setTimeout(function(){
-        read_phase_data(0);
-        read_output_name(0);
-        read_loop_data(0);
-        read_output_data(0);
-        read_sensor_data(0);
-      },500);
-    },500);
+    // var time1 = setTimeout(function(){
+    //   console.log("start");
+    //   read_num_info(0);
+    //   read_uut_info(0);
+    //   read_cfg_info(0);
+    //   read_dev_name();
+    //   setTimeout(function(){
+    //     read_phase_data(0);
+    //     read_output_name(0);
+    //     read_loop_data(0);
+    //     read_output_data(0);
+    //     read_sensor_data(0);
+    //   },500);
+    // },500);
 
   </script>
 
