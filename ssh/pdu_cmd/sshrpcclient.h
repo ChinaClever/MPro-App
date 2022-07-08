@@ -16,6 +16,8 @@ public:
 
     int pduDevCfg(uchar addr, uchar fc, uchar type);
     bool pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi=0);
+
+    QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
 };
 
 #endif // SSHRPCCLIENT_H

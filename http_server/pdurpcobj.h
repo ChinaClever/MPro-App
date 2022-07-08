@@ -13,6 +13,7 @@ public:
 
     static void pduReadCfg(jsonrpc_request *r);
     static void pduSetCfg(jsonrpc_request *r);
+    static void pduLogFun(jsonrpc_request *r);
 
 protected:
     static void responRpcData(jsonrpc_request *r, const QVector<double> &its, double value);

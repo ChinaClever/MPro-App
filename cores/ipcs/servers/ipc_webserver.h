@@ -1,9 +1,9 @@
 #ifndef IPC_WEBSERVER_H
 #define IPC_WEBSERVER_H
 
-#include "ipc_logserver.h"
+#include "ipc_objserver.h"
 
-class IPC_WebServer : public IPC_LogServer
+class IPC_WebServer : public IPC_ObjServer
 {
     Q_OBJECT
     explicit IPC_WebServer(QObject *parent = nullptr);

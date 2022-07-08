@@ -25,9 +25,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 }
 
 HEADERS += \
-    pdudevinfo.h \
     pdurpcobj.h
 
 SOURCES += \
-    pdudevinfo.cpp \
     pdurpcobj.cpp

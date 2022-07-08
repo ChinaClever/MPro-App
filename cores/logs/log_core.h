@@ -1,9 +1,9 @@
 #ifndef LOG_CORE_H
 #define LOG_CORE_H
 
-#include "db_alarm.h"
+#include "log_read.h"
 
-class Log_Core : public QObject
+class Log_Core : public Log_Read
 {
     Q_OBJECT
     explicit Log_Core(QObject *parent = nullptr);

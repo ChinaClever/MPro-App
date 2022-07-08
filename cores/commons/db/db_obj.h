@@ -45,15 +45,23 @@ public:
         return modifyItem(item,sql.arg(tableName(),val));
     }
 
-    QByteArray toJson(const QVector<T> &its) {
+    QByteArray toPageJson(const QVector<T> &its, int minId) {
         QJsonObject json; if(its.size()) {
-            int min = its.first().id; int max = its.last().id;
+            int min = its.first().id-minId;
+            int max = its.last().id-minId;
             json.insert("table", tableJson(min, max));
         }
         QJsonObject logs; for(auto &it: its) {
-            logs.insert(QString::number(it.id), itemJson(it));
+            logs.insert(QString::number(it.id-minId), itemJson(it));
         }
         json.insert("logs", logs);
+        QJsonDocument doc; doc.setObject(json);
+        return doc.toJson(QJsonDocument::Indented);
+    }
+
+    QByteArray toOnceJson(const T &it, int minId) {
+        QJsonObject json;
+        json.insert(QString::number(it.id-minId), itemJson(it));
         QJsonDocument doc; doc.setObject(json);
         return doc.toJson(QJsonDocument::Indented);
     }

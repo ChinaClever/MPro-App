@@ -18,6 +18,7 @@ public:
 
     Q_INVOKABLE int pduDevCfg(uchar addr, uchar fc, uchar type);
     Q_INVOKABLE bool pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi=0);
+    Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
 
 signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);

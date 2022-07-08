@@ -6,7 +6,7 @@
 #include "log_core.h"
 
 Log_Core::Log_Core(QObject *parent)
-    : QObject{parent}
+    : Log_Read{parent}
 {
     uint t = 6*60*60*1000;
     timer = new QTimer(this);
