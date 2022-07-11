@@ -18,14 +18,6 @@
 	<script src="include/js/rpc-over-websocket.js"></script>
 </head>
 <body>
-	<script>
-		var login_mark = sessionStorage.getItem("login_mark");
-		if(login_mark == null || login_mark == '')
-			var time1 =setTimeout(function(){
-				window.open('login.html','_self');
-				sessionStorage.setItem("login_mark",1);
-			},500);
-	</script>
 	<div class="side-box">
 		<a class="sys-title" href="javascript:;">
 			<img class="logo" src="include/images/logo.png" alt="logo">

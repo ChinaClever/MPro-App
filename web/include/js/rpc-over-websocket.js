@@ -13,7 +13,7 @@ var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcma
 var alarm_name = new Array("","State","Mode","Alarm","Delay");
 var cfg_name = new Array("Offline","Serial","SlaveNum","ModbusAddr","Version","Buz","Freq","BoardNum");
 var uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","LoopName","DevName");
-var user_info = new Array("UserName","Password","Identify");
+var user_info = new Array("","UserName","Password","Identify");
 var jsonrpc = function()
 {
   var url_ = window.location.host;
@@ -73,11 +73,7 @@ var jsonrpc = function()
     }
   }
   ws.onopen = function(){
-    var login_mark = sessionStorage.getItem("login_mark");
-		if(login_mark == null || login_mark == ''){
       read_user_info();
-      console.log(start);
-    }
   };
   return {
     close:() => ws.close(),

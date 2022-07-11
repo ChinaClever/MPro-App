@@ -490,7 +490,7 @@ typedef int socklen_t;
 #endif
 
 #ifndef MG_HTTP_INDEX
-#define MG_HTTP_INDEX "index.html"
+#define MG_HTTP_INDEX "login.html"
 #endif
 
 #ifndef MG_PATH_MAX
