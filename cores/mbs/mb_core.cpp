@@ -8,7 +8,7 @@
 Mb_Core::Mb_Core(QObject *parent)
 {
     mRtu = new Mb_Update(parent);
-    mTcp = new Mb_Update(parent);
+    mTcp = new Mb_Update(parent);    
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)
@@ -17,7 +17,7 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
         sington->connectTcp(1);
-        //sington->connectRtu(1, QSerialPort::Baud57600);
+        sington->connectRtu(1, QSerialPort::Baud57600);
     }
     return sington;
 }
@@ -32,6 +32,7 @@ bool Mb_Core::connectTcp(int addr, int port)
 {
     bool ret = mTcp->isConnectedModbus();
     if(!ret) ret = mTcp->connectTcp(addr, port);
+    if(ret) mTcp->mbUpdates();
     return ret;
 }
 
@@ -40,13 +41,15 @@ bool Mb_Core::connectRtu(int addr, int baud, int parity)
     bool ret = mRtu->isConnectedModbus();
     if(!ret) {
         ret = mRtu->connectRtu(MB_NAME, addr, baud, parity);
+        if(ret) mRtu->mbUpdates();
     }
     return ret;
 }
 
 void Mb_Core::run()
 {
-    cm::mdelay(500);
+    //cm::mdelay(500);
+
     bool ret = true;
     while (isRun) {
         ret = mRtu->isConnectedModbus();

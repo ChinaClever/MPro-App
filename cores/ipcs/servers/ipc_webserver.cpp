@@ -4,9 +4,10 @@
  *      Author: Lzy
  */
 #include "ipc_webserver.h"
+#include "log_core.h"
 
 IPC_WebServer::IPC_WebServer(QObject *parent)
-    : IPC_LogServer{parent}
+    : IPC_ObjServer{parent}
 {
 
 }
@@ -35,8 +36,8 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
         if(unit.rw) Set_Core::bulid()->setNumStr(unit);
         else res = Set_Core::bulid()->getNumStr(unit);
     } else if(6 == fc) {
-        sIpcLog it = cm::toStruct<sIpcLog>(array);
-        res = logFun(it);
+        sLogFcIt it = cm::toStruct<sLogFcIt>(array);
+        res = Log_Core::bulid()->log_readFun(it);
     }
 
     return res;

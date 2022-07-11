@@ -2,267 +2,44 @@
 var JSONRPC_TIMEOUT_MS = 1000;
 var ws,pending = {};
 var rpcid = 0;
-var recv ={
-  "dev_num":0,
-  "phase":1,
-  "loop":2,
-  "output":3,
-  "recv1":4,
-  "recv2":5,
-  "cur_value":6,
-  "vol_value":7,
-  "pow_value":8,
-  "acpow_value":9,
-  "factor_value":10,
-};
-var value_now = 0, val = 0,tick = 0,push = 0;
+var value_now = 0, val = 0;
 var user_name='user_name';
 var password = 'password';
 var identify = '';
-var output_num1 = 0;
-var phase_num1 = 0;
-var loop_num1 = 0;
-
+var type_info = new Array("Phase","Loop","Output");
+var type_name = new Array("","Phs","Loop","","","","TH","Sensor","","","Output","Uut","Num","Cfg","User");
+var data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
+var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
+var alarm_name = new Array("","State","Mode","Alarm","Delay");
+var cfg_name = new Array("Offline","Serial","SlaveNum","ModbusAddr","Version","Buz","Freq","BoardNum");
+var uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","LoopName","DevName");
+var user_info = new Array("","UserName","Password","Identify");
 var jsonrpc = function()
 {
-  var url = 'ws://0.0.0.0:8000/websocket';
+  var url_ = window.location.host;
+  var url = 'ws://'+ url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
-  var type = 0,topic = 0,subtopic = 0;
+  var type = 0,topic = 0,subtopic = 0,addr = 0,num = 0;
   ws.onclose = function(){};
   ws.onmessage = function(evt) {
+    addr  = parseInt(JSON.parse(evt.data).result[0]);
     type = parseInt(JSON.parse(evt.data).result[1]);
     topic = parseInt(JSON.parse(evt.data).result[2]);
     subtopic = parseInt(JSON.parse(evt.data).result[3]);
+    num = parseInt(JSON.parse(evt.data).result[4]);
     switch(type)
     {
       case 0:
       break;
       case 1:
-        if(topic == 2)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("phs_vol_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("phs_vol_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("phs_vol_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("phs_vol_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("phs_vol_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("phs_vcvolmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("phs_vcvolmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("phs_vol_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 3)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("phs_cur_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("phs_cur_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("phs_cur_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("phs_cur_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("phs_cur_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("phs_vccurmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("phs_vccurmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("phs_cur_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 4)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("phs_pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("phs_pow_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("phs_pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("phs_pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("phs_pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("phs_vcpowmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("phs_vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("phs_pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 2:
-        if(topic == 2)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("loop_vol_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("loop_vol_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("loop_vol_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("loop_vol_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("loop_vol_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("loop_vcvolmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("loop_vcvolmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("loop_vol_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 3)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("loop_cur_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("loop_cur_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("loop_cur_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("loop_cur_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("loop_cur_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("loop_vccurmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("loop_vccurmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("loop_cur_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 4)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("loop_pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("loop_pow_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("loop_pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("loop_pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("loop_pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("loop_vcpowmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("loop_vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("loop_pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 3:
-        if(topic == 0)
-        {
-          output_num1 = parseInt(JSON.parse(evt.data).result[5]);
-          sessionStorage.setItem("output_num",parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(topic == 1)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("swtich_state"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          } else if(subtopic == 2){
-            sessionStorage.setItem("switch_mode"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("seq_delay"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("switch_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 2)
-        {
-          sessionStorage.setItem("vol_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(topic == 3)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("cur_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("cur_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("cur_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("cur_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("cur_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("vcrmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("vcrmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("cur_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 4)
-        {
-          if(subtopic == 1){
-            sessionStorage.setItem("pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 2){
-            sessionStorage.setItem("pow_rated"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 3){
-            sessionStorage.setItem("pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 4){
-            sessionStorage.setItem("pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 5){
-            sessionStorage.setItem("pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 6){
-            sessionStorage.setItem("vcpowmin"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 7){
-            sessionStorage.setItem("vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }else if(subtopic == 8){
-            sessionStorage.setItem("pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-          }
-        }
-        else if(topic == 5)
-        {
-          sessionStorage.setItem("energe_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(topic == 6)
-        {
-          sessionStorage.setItem("pf_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(subtopic == 7){
-          sessionStorage.setItem("acpow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(subtopic == 8){
-          sessionStorage.setItem("reac_pow"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        else if(topic == 11)
-        {
-          tem_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        else if(topic == 12)
-        {
-          hum_val[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        
-        else if(topic == 21)
-        {
-          door1[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        else if(topic == 22)
-        {
-          door2[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        else if(topic == 23)
-        {
-          water[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
-        else if(topic == 24)
-        {
-          smoke[parseInt(JSON.parse(evt.data).result[4])] = parseInt(JSON.parse(evt.data).result[5]);
-        }
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 4:
 
@@ -271,70 +48,32 @@ var jsonrpc = function()
 
       break;
       case 6:
-        
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 7:
-      
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 10:
-        sessionStorage.setItem("output_name"+ parseInt(JSON.parse(evt.data).result[4]),JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem("Output_name"+ addr +'_'+num,JSON.parse(evt.data).result[5]); 
+      break;
+      case 11:
+        sessionStorage.setItem(uut_name[num]+ addr ,JSON.parse(evt.data).result[5]); 
       break;
       case 12:
-        if(topic == 1)
-        {
-          phase_num1 = parseInt(JSON.parse(evt.data).result[5]);
-          sessionStorage.setItem("phase_num",parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        if(topic == 2)
-        {
-          loop_num1 = parseInt(JSON.parse(evt.data).result[5]);
-          sessionStorage.setItem("loop_num",parseInt(JSON.parse(evt.data).result[5])); 
-        }
-        if(topic == 3)
-        {
-          output_num1 = parseInt(JSON.parse(evt.data).result[5]);
-          sessionStorage.setItem("output_num",parseInt(JSON.parse(evt.data).result[5])); 
-        }
+        sessionStorage.setItem(type_info[topic - 1]+ "Num" + addr ,JSON.parse(evt.data).result[5]);
       break;
       case 13:
-        if(topic == 1){
-          sessionStorage.setItem("pow_val"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 2){
-          sessionStorage.setItem("slave_num",parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 3){
-          sessionStorage.setItem("pow_alarm"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 4){
-          sessionStorage.setItem("pow_max"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 5){
-          sessionStorage.setItem("pow_min"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 6){
-          sessionStorage.setItem("vcpowmin"+ parseInt(sJSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 7){
-          sessionStorage.setItem("vcpowmax"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }else if(topic == 8){
-          sessionStorage.setItem("pow_enable"+ parseInt(JSON.parse(evt.data).result[4]),parseInt(JSON.parse(evt.data).result[5])); 
-        }
+        sessionStorage.setItem(cfg_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
+      break;
       case 14:
-        if(parseInt(JSON.parse(evt.data).result[4]) == 1){
-          user_name = JSON.parse(evt.data).result[5];
-        }
-        else if(parseInt(JSON.parse(evt.data).result[4]) == 1){
-          password = JSON.parse(evt.data).result[5];
-        }
-        else if(parseInt(JSON.parse(evt.data).result[4]) == 1){
-          identify = JSON.parse(evt.data).result[5];
-        }
+        sessionStorage.setItem(user_info[num] , JSON.parse(evt.data).result[5]);
       break;
       default:
         break;
     }
-    tick--;
-    if(tick == 0)
-    {
-      push = 1;
-    }
   }
   ws.onopen = function(){
+      read_user_info();
   };
   return {
     close:() => ws.close(),
@@ -351,4 +90,183 @@ var jsonrpc = function()
       });
     },
   };
-};
+}
+
+
+var rpc = jsonrpc();
+var start  = 0;
+var hum_num = 2,num_num = 3,cfg_num = 8,uut_num = 6, sub_num = 8;
+var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
+var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
+var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
+window.addr = 0;
+
+
+function read_user_info(){
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= 4){
+      clearInterval(time1);
+    }
+    if(j < 4 ){
+      rpc.call('pduReadString',[0,user,0,0,j]);
+    }
+    j++;
+  },1);
+}
+function read_dev_name(){
+  var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + 0));
+  var j = 0;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(slave_num)){
+      clearInterval(time1);
+    }
+    if(j < slave_num){
+      rpc.call('pduReadString',[j,uut,0,0,dev_]);
+    }
+    j++;
+  },1);
+}
+function read_uut_info(addr)
+{
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(uut_num + 1)){
+      clearInterval(time1);
+    }
+    if(j <= uut_num){
+      rpc.call('pduReadString',[addr,uut,0,0,j]);
+    }
+    j++;
+  },1);
+}
+function read_phase_data(addr)
+{
+  var phase_num = parseInt(sessionStorage.getItem('PhaseNum' + addr));
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= phase_num && j <= sub_num){
+      rpc.call('pduReadData',[addr,phase,vol_,j,i]);
+      rpc.call('pduReadData',[addr,phase,cur_,j,i]);
+      rpc.call('pduReadData',[addr,phase,pow_,j,i]);
+    }
+    i++;
+    if(i >= (phase_num + 1)){
+      i = 1;
+      j++;
+    }
+  },1);
+}
+function read_loop_data(addr)
+{
+  var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= loop_num && j <= sub_num){
+      rpc.call('pduReadData',[addr,loop,vol_,j,i]);
+      rpc.call('pduReadData',[addr,loop,cur_,j,i]);
+      rpc.call('pduReadData',[addr,loop,pow_,j,i]);
+    }
+    i++;
+    if(i >= (loop_num + 1)){
+      i = 1;
+      j++;
+    }
+  },1);
+}
+function read_output_data(addr)
+{
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= output_num && j <= sub_num){
+      if(j == 1 && i <= output_num){
+        rpc.call('pduReadData',[addr,output,energe_,j,i]);
+        rpc.call('pduReadData',[addr,output,pf_,j,i]);
+        rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
+        rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
+      }
+      if((j == 1 || j == 2 || j == 4 || j == 8) && i <= output_num){
+        rpc.call('pduReadData',[addr,output,switch_,j,i]);
+      }
+      rpc.call('pduReadData',[addr,output,cur_,j,i]);
+      rpc.call('pduReadData',[addr,output,pow_,j,i]);
+    }
+      i++;
+      if(i >= parseInt(output_num + 1)){
+        i = 1;
+        j++;
+      }
+  },1);
+}
+function read_sensor_data(addr)
+{
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= hum_num && j <= sub_num){
+      if((j == 1 || j == 3 || j ==8) && i == 1){
+        rpc.call('pduReadData',[addr,sensor,door1_,j,i]);
+        rpc.call('pduReadData',[addr,sensor,door2_,j,i]);
+        rpc.call('pduReadData',[addr,sensor,water_,j,i]);
+        rpc.call('pduReadData',[addr,sensor,smoke_,j,i]);
+      }
+      rpc.call('pduReadData',[addr,envir,tmp_,j,i]);
+      rpc.call('pduReadData',[addr,envir,hum_,j,i]);
+      i++;
+      if(i >= parseInt(hum_num + 1)){
+        i = 1;
+        j++;
+      }
+    }
+  },1);
+}
+function read_num_info(addr){
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(num_num + 1)){
+      clearInterval(time1);
+    }
+    if(j <= num_num){
+      rpc.call('pduReadCfg',[addr,num,j,0,0]);
+    }
+    j++;
+  },1);
+}
+function read_cfg_info(addr){
+  var j = 0;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(cfg_num)){
+      clearInterval(time1);
+    }
+    if(j < cfg_num){
+      rpc.call('pduReadCfg',[addr,cfg,j,0,0]);
+    }
+    j++;
+  },1);
+}
+function read_output_name(addr){
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(output_num + 1)){
+      clearInterval(time1);
+    }
+    if(j <= output_num){
+      rpc.call('pduReadString',[addr,bit,0,0,j]);
+    }
+    j++;
+  },1);
+}
+

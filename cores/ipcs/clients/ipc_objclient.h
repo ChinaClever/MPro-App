@@ -2,7 +2,6 @@
 #define IPC_OBJCLIENT_H
 
 #include "domain_socketcli.h"
-
 enum eLogs{
     eUserLog,
     eAlarmLog,
@@ -11,12 +10,19 @@ enum eLogs{
     eEleLog,
 };
 
-struct sIpcLog {
-    sIpcLog() {id=fc=0; page=0;noe=30;}
-    uchar id;
+enum eLogFc {
+    eLog_cnt=1,
+    eLog_read,
+    eLog_page,
+    eLog_clear,
+};
+
+struct sLogFcIt {
+    sLogFcIt() {type=fc=0; id=0;noe=30;}
+    uchar type;
     uchar fc;
     uchar noe;
-    ushort page;
+    uint id;
 };
 
 class IPC_ObjClient : public QObject
@@ -28,7 +34,7 @@ public:
 
 protected:
     bool sendSocket(const QVariantList &v);
-    QVariant readSocket(const QVariantList &v, int msec=1000);
+    QVariant readSocket(const QVariantList &v, int msec=3);
     virtual bool inputCheck(const QVariantList &){return true;}
 
 private:

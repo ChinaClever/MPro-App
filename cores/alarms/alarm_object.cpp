@@ -141,6 +141,10 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             if(index.id) ptr[index.id-1] = index.value;
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
+
+        //if((index.type == DType::Output) && (index.topic == DTopic::Cur) ) {
+        //    qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
+        //}
     }
 
     return ret;
@@ -210,7 +214,7 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     case DTopic::Door2: index.value = env->door[1]; break;
     case DTopic::Water: index.value = env->water[0]; break;
     case DTopic::Smoke: index.value = env->smoke[0]; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << index.topic; break;
     }
 
     return ret;

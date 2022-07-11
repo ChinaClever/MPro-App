@@ -44,10 +44,10 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
         if(it.en[i]) {
             uint value = it.value[i];
             index.id = i; uchar alarm = AlarmStatus::Ok;
-            if(value > it.max[i]) alarm += AlarmStatus::Max;
-            if(value > it.crMax[i]) alarm += AlarmStatus::CrMax;
-            if(value < it.crMin[i]) alarm += AlarmStatus::CrMin;
-            if(value < it.min[i]) alarm += AlarmStatus::Min;
+            if(value > it.max[i]) alarm = AlarmStatus::Max;
+            if(value > it.crMax[i]) alarm = AlarmStatus::CrMax;
+            if(value < it.crMin[i]) alarm = AlarmStatus::CrMin;
+            if(value < it.min[i]) alarm = AlarmStatus::Min;
             if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
             it.alarm[i] = alarm; ret |= alarm;
         } else it.alarm[i] = AlarmStatus::Ok;

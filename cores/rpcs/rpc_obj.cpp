@@ -56,3 +56,11 @@ bool Rpc_Obj::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi)
     it.value = value; it.isDigit = 1; it.txType = mTxType; it.soi = soi;
     return Set_Core::bulid()->setNumStr(it);
 }
+
+QString Rpc_Obj::pduLogFun(uchar type, uchar fc, int id, int noe)
+{
+    sLogFcIt it;
+    it.type = type; it.fc = fc;
+    it.noe = noe; it.id = id;
+    return Log_Core::bulid()->log_readFun(it);
+}

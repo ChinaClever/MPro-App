@@ -1,13 +1,12 @@
 #include <QCoreApplication>
 #include <thread>
-#include "pdudevinfo.h"
-
-
-static const char *s_listen_on = "ws://0.0.0.0:8000";
+#include "pdurpcobj.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+static const char *s_listen_on = "ws://0.0.0.0:8000";
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
+static const char *s_listen_on = "ws://0.0.0.0:80";
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
 
@@ -23,18 +22,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
         // printf("MG_EV_WS_OPEN\n");
     }else if(ev == MG_EV_HTTP_CHUNK && mg_http_match_uri(hm, "/upload")){
-        LOG(LL_INFO,("Got chunk len %lu", (unsigned long) hm->chunk.len));
-        LOG(LL_INFO,("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        LOG(LL_INFO,("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
+        MG_INFO(("Got chunk len %lu", (unsigned long) hm->chunk.len));
+        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+        // MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
         mg_http_delete_chunk(c, hm);
         if (hm->chunk.len == 0) {
-            LOG(LL_INFO,("Last chunk received, sending response"));
+            MG_INFO(("Last chunk received, sending response"));
             mg_http_reply(c, 200, "", "ok (chunked)\n");
         }
     }else if (ev == MG_EV_HTTP_MSG && mg_http_match_uri(hm, "/upload")) {
-        LOG(LL_INFO,("Got all %lu bytes!", (unsigned long) hm->body.len));
-        LOG(LL_INFO,("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        LOG(LL_INFO,("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
+        MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
+        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+        // MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
         mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
     } else if (ev == MG_EV_HTTP_MSG) {
         // printf("MG_EV_HTTP_MSG\n");
@@ -85,7 +84,6 @@ int http_main(void) {
 
     jsonrpc_init(NULL, NULL);         // Init JSON-RPC instance
     PduRpcObj::rpc_export();
-    PduDevInfo::devInfoExport();
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
@@ -99,7 +97,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    IPC_WebClient *cc = IPC_WebClient::bulid(p);
+    IPC_WebClient::bulid(p);
     //qDebug() << cc->opName(0,2);
 
     std::thread th(http_main);

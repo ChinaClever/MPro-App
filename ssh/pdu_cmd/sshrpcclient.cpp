@@ -97,3 +97,15 @@ bool SshRpcClient::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar 
 
     return ret;
 }
+
+QString SshRpcClient::pduLogFun(uchar type, uchar fc, int id, int noe)
+{
+    QString str;
+    auto result = rpc_client->call("pduLogFun", type, fc, id, noe);
+    if (result->isSuccess()) {
+        str = result->result().toString();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+    return str;
+}
