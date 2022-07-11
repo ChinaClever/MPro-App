@@ -6,7 +6,7 @@
     "subNav": [
       {
         "name": "首页",
-        "url": "home.html"
+        "url": "login.html"
       },
       {
         "name": "输出位监测",
