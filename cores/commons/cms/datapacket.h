@@ -1,6 +1,18 @@
 #ifndef DATAPACKET_H
 #define DATAPACKET_H
+#ifndef LCD_AWTK
 #include "cthread.h"
+#else
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef unsigned char uchar;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+#endif
 
 #define LINE_NUM  3
 #define LOOP_NUM  6
@@ -9,7 +21,7 @@
 #define NAME_SIZE 32
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
-#define USER_NUM 1
+#define USER_NUM 5
 #define PACK_ARRAY_SIZE   OUTPUT_NUM
 
 // 倍率定义
@@ -27,8 +39,9 @@
  */
 struct sAlarmUnit
 {
+#ifndef LCD_AWTK
     sAlarmUnit() {size=0;}
-
+#endif
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint value[PACK_ARRAY_SIZE];
@@ -59,13 +72,15 @@ struct sRelayUnit
  */
 struct sObjData
 {
+#ifndef LCD_AWTK
     sObjData() {size=0;}
+#endif
     uchar size;
 
-    sAlarmUnit vol; // 电压
-    sAlarmUnit cur; // 电流
-    sAlarmUnit pow; // 有功功率
-    sRelayUnit relay;
+    struct sAlarmUnit vol; // 电压
+    struct sAlarmUnit cur; // 电流
+    struct sAlarmUnit pow; // 有功功率
+    struct sRelayUnit relay;
 
     uint ele[PACK_ARRAY_SIZE]; // 电能
     uint pf[PACK_ARRAY_SIZE]; // 功率因数
@@ -87,13 +102,15 @@ struct sObjData
  */
 struct sEnvData
 {
+#ifndef LCD_AWTK
     sEnvData() {size=0;}
+#endif
     uchar size;
     uchar type_index;//1:温度 2:湿度 3:门禁 4:门磁 5:水浸 6:烟雾
 
     char name[SENOR_NUM][NAME_SIZE];
-    sAlarmUnit tem; // 温度
-    sAlarmUnit hum; // 湿度
+    struct sAlarmUnit tem; // 温度
+    struct sAlarmUnit hum; // 湿度
 
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
@@ -115,9 +132,9 @@ struct sTgUnit
 
 struct sTgObjData
 {
-    sTgUnit vol; // 电压
-    sTgUnit cur;  // 电流
-    sTgUnit pow; // 功率
+    struct sTgUnit vol; // 电压
+    struct sTgUnit cur;  // 电流
+    struct sTgUnit pow; // 功率
 
     uint ele; // 电能
     uint pf; // 功率因数
@@ -176,21 +193,23 @@ struct sUutInfo {
  */
 struct sDevData
 {
+#ifndef LCD_AWTK
     sDevData() {id=0; offLine=0; alarm=0; }
+#endif
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
     uchar offLine; //离线标志 > 0在线
 
-    sObjData line; // 相数据
-    sObjData loop; // 回路数据
-    sObjData output; //位数据
-    sTgObjData tg; // 回路数据
-    sEnvData env; // 环境数据
-    sRtuCount rtuCount; // 传输情况
+    struct sObjData line; // 相数据
+    struct sObjData loop; // 回路数据
+    struct sObjData output; //位数据
+    struct sTgObjData tg; // 回路数据
+    struct sEnvData env; // 环境数据
+    struct sRtuCount rtuCount; // 传输情况
 
-    sDevInfo info;
-    sUutInfo uut;
+    struct sDevInfo info;
+    struct sUutInfo uut;
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -201,7 +220,9 @@ struct sDevData
 
 struct sNetAddr
 {
+#ifndef LCD_AWTK
     sNetAddr() {mode=0;}
+#endif
     uchar mode;
     char ip[NAME_SIZE];
     char mask[NAME_SIZE];
@@ -222,10 +243,11 @@ struct sDevLogin {
  */
 struct sDataPacket
 {
-    sNetAddr net; //设备IP
-    sDevData data[DEV_NUM]; //设备数据
-    sDevLogin login;
+    struct sNetAddr net; //设备IP
+    struct sDevData data[DEV_NUM]; //设备数据
+    struct sDevLogin login;
 };
+
 
 enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
@@ -235,7 +257,9 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
 struct sDataItem
 {
+#ifndef LCD_AWTK
     sDataItem():soi(0),addr(0),rw(0),value(0){}
+#endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
@@ -250,7 +274,9 @@ struct sDataItem
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin};
 
 struct sNumStrItem{
+#ifndef LCD_AWTK
     sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
+#endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
@@ -263,6 +289,7 @@ struct sNumStrItem{
     char str[NAME_SIZE];
 };
 
+#ifndef LCD_AWTK
 struct sRelay
 {
     enum State{Off, On, Reset};
@@ -270,6 +297,6 @@ struct sRelay
     enum Mode{Standard, EnOffALarm};
     enum Alarm{NoAlarm, OffALarm};
 };
-
+#endif
 
 #endif // DATAPACKET_H

@@ -10,13 +10,14 @@
 #include <sys/un.h>
 
 #define UNIXDG_SERV_PATH "/tmp/unix_serv.dg"
+#define UNIXLCD_SERV_PATH "/tmp/unix_serv.lcd"
 #define IPC_BUFFER_SIZE 8192
 
 class Domain_SocketServ : public QThread
 {
     Q_OBJECT
 public:
-    explicit Domain_SocketServ(QObject *parent = nullptr);
+    explicit Domain_SocketServ(const QString &path, QObject *parent = nullptr);
     ~Domain_SocketServ();
 
 protected:
@@ -28,8 +29,10 @@ private:
     int createSocket();
 
 private:
-    bool isRun=true;
     int m_sockfd;
+    QString m_path;
+    bool isRun=true;
+    char *m_buf = nullptr;
 };
 
 #endif // DOMAIN_SOCKETSERV_H
