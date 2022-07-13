@@ -232,7 +232,7 @@ struct sNetAddr
 };
 
 struct sDevLogin {
-    uchar permit[USER_NUM];
+    char permit[USER_NUM][3];
     char token[USER_NUM][NAME_SIZE];
     char user[USER_NUM][NAME_SIZE];
     char pwd[USER_NUM][NAME_SIZE];

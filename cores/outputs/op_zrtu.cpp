@@ -106,7 +106,7 @@ void OP_ZRtu::run()
     while (isRun) {
         int size = mDev->info.opNum;
         for(int i=0; i<size; ++i) {
-            cmsWriteSlot(150);
+            cmsWriteSlot(175);
             ota_updates();
             readData(i+1);
         } cm::mdelay(10);
