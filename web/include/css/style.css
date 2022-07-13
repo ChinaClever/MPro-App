@@ -31,7 +31,8 @@
 .inner_box .center_form {
   width: 450px;
   height: 350px;
-  background-color: rgba(179, 187, 186, 0.575);
+  background-color:rgb(101, 100, 100);
+  /* background-color: rgba(179, 187, 186, 0.575); */
   box-shadow: 0px 0px 3px rgb(217, 224, 224);
 }
 .inner_box .center_form p{
@@ -53,6 +54,7 @@ input {
   padding-left: 20px;
   background: none;
   border: none;
+  color :#fff;
   border-bottom: 1px solid #fff;
   font-size: 15px;
   ime-mode:inactive;

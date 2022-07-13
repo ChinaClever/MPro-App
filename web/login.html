@@ -115,13 +115,15 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
-        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="text" maxlength="20"; placeholder="Password"></p>';
-        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; placeholder="Confirm Password"></p>';
-        tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
+        
       }else if(Reg==='signin') {
+        tbody += '<tr id = "register"><td>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</td>';
+        tbody += '<td><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)"></td>';
+        tbody += '<td><input id ="psd" type="text" maxlength="20"; placeholder="Password"></td>';
+        tbody += '<td><input id ="conpsd" type="password" maxlength="20"; placeholder="Confirm Password"></td>';
+        tbody += '<td><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></td>';
+        tbody += '<td class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></td></tr>';
+        
         tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span><br/><span class="error" id = "Errinfo"></p>';
         tbody += '<br/><p><input id ="username" type="text" maxlength="20" placeholder="User Name" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';

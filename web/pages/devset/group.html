@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>devset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -55,17 +55,15 @@
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		var output_name = new Array();
-		var rpc = jsonrpc();
-		var output_num = parseInt(sessionStorage.getItem("output_num"));
-		var dev_num = sessionStorage.getItem("dev_num");
-		// var slave_num = sessionStorage.getItem("slave_num");
-		var slave_num = 10;
+		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		var dev_name =new Array();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		for(var i = 1 ;i < output_num + 1;i++)
 		{
-			output_name[i] = sessionStorage.getItem("output_name"+i);
-			// for(var i = 1 ;i < slave_num + 1;i++){
-			// 	output_name[i] = sessionStorage.getItem("slave_name"+i);
-			// }
+			output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+num);
+			for(var i = 0;i<slave_num;i++){
+				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			}
 		}
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));

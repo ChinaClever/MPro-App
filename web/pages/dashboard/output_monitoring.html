@@ -59,6 +59,8 @@
 		var cur_val = new Array();
 		var swtich_state = new Array();
 		var pow_val = new Array();
+		var cur_alarm = new Array();
+		var pow_alarm = new Array();
 		var pf_val = new Array();
 		var energe_val = new Array();
 		var Input_state = new Array("开","闭","重启");
@@ -74,6 +76,8 @@
 				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+data_name[1]+addr+'_'+i));
 				cur_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
 				pow_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
+				cur_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[3]+addr+'_'+i));
+				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+addr+'_'+i));
 				pf_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pf_]+data_name[1]+addr+'_'+i));
 				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
 			}
@@ -91,6 +95,46 @@
 				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
 			}
 			return tbody;
+		}
+		function showdata(){
+			for(var i = 1 ;i < output_num+ 1;i++){
+				var ss = document.getElementById('d'+(i-1));
+				var cs = document.getElementById('e'+(i-1));
+				if(pow_alarm[i] == 1 || pow_alarm[i] == 8){
+					cs.bgColor = 'red';
+				}else if(pow_alarm[i] == 2|| pow_alarm[i] == 4){
+					cs.bgColor = 'yellow';
+				}
+				else{
+					cs.bgColor = '';
+				}
+				if(cur_alarm[i] == 1 || cur_alarm[i] == 8){
+					ss.bgColor = 'red';
+				}else if(cur_alarm[i] == 2|| cur_alarm[i] == 4){
+					ss.bgColor = 'yellow';
+				}
+				else{
+					ss.bgColor = '';
+				}
+			}
+		}
+		function read_monitoring_data(){
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(i >= parseInt(output_num + 1)){
+					clearInterval(time1);
+				}
+				if(i <= output_num){
+					rpc.call('pduReadData',[addr,output,energe_,j,i]);
+					rpc.call('pduReadData',[addr,output,pf_,j,i]);
+					rpc.call('pduReadData',[addr,output,switch_,j,i]);
+					rpc.call('pduReadData',[addr,output,cur_,j,i]);
+					rpc.call('pduReadData',[addr,output,pow_,j,i]);
+					rpc.call('pduReadData',[addr,output,cur_,3,i]);
+					rpc.call('pduReadData',[addr,output,pow_,3,i]);
+				}
+				i++;
+			},1);
 		}
 		function buildTable(rows) {
 			var thead = '',tbody = '';
@@ -117,6 +161,27 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				state1_ = document.getElementById('d'+i);
+				state2_ = document.getElementById('e'+i);
+				state3_ = document.getElementById('f'+i);
+				state4_ = document.getElementById('g'+i);
+				state1_.innerHTML = (parseFloat(cur_val[i + 1])/100).toFixed(2);
+				state2_.innerHTML = (parseFloat(pow_val[i + 1])/1000).toFixed(2);
+				state3_.innerHTML = (parseFloat(pf_val[i + 1])/100).toFixed(2);
+				state4_.innerHTML = (parseFloat(energe_val[i + 1])/10).toFixed(2);
+			}
+		}
+		setInterval(function(){
+			read_monitoring_data();
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>

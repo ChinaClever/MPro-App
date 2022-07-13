@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>alarmset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -87,8 +87,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(output_info[i][2] === 1){
+				if(output_info[i][2] == 1 || output_info[i][2] == 8){
 					cs.bgColor = 'red';
+				}else if(output_info[i][2] == 2 || output_info[i][2] == 4){
+					cs.bgColor = 'yellow';
 				}
 				else{
 					cs.bgColor = '';
@@ -266,6 +268,21 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		var state_ = 0;
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				state_ = document.getElementById('c' + i);
+				state_.innerHTML = output_info[i+1][0];
+			}
+		}
+		setInterval(function(){
+			read_output_cur_data();
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>
