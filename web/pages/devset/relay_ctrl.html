@@ -76,6 +76,7 @@
 				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
 				switch_mode[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[2]+addr+'_'+i));
 				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
+				reset_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[5]+addr+'_'+i));
 				switch_enable[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -222,6 +223,9 @@
 				else if(type1 === 'd' && (num !== output_num + 1)){
 					stat = parseInt(ipt.value);
 					rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
+				}else if(type1 === 'j' && (num !== output_num + 1)){
+					stat = parseInt(ipt.value);
+					rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
 				}
 				flash_html(ipt);
 			}else{}
@@ -252,20 +256,22 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%">序号</td>\
-					<td width ="25%">名称</td>\
+					<td width ="24%">名称</td>\
 					<td width ="10%">开关状态</td>\
 					<td width ="10%">顺序延时(S)</td>\
+					<td width ="10%">复位延时(S)</td>\
 					<td width ="10%">开关使能</td>\
 					<td width ="10%">断开告警</td>\
-					<td width ="10%">开启</td>\
-					<td width ="10%">关闭</td>\
-					<td width ="10%">复位</td>';
+					<td width ="7%">开启</td>\
+					<td width ="7%">关闭</td>\
+					<td width ="7%">复位</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';
