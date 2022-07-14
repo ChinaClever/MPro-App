@@ -5,7 +5,7 @@
  */
 #include "ipc_objserver.h"
 
-IPC_ObjServer::IPC_ObjServer(QObject *parent) : Domain_SocketServ{parent}
+IPC_ObjServer::IPC_ObjServer(QObject *parent) : Domain_SocketServ{UNIXDG_SERV_PATH, parent}
 {
 
 }

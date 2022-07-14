@@ -23,4 +23,5 @@ IPC_CoreServer *IPC_CoreServer::bulid(QObject *parent)
 void IPC_CoreServer::initFunSlot()
 {
     IPC_WebServer::bulid(this);
+    IPC_LcdServer::bulid(this);
 }
