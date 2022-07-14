@@ -78,7 +78,7 @@ void Cfg_ReadParam::modbus()
         case 12: key = "port";  ptr = &cfg->port; value = 502; break;
         default: key.clear(); break;
         }
-        if(key.size()) *ptr = mCfg->readCfg(key, value, prefix).toInt();
+        if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
     }
 }
 
