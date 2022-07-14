@@ -5,11 +5,12 @@
  */
 #include "mb_core.h"
 
+sModbusSetting Mb_Core::modbusCfg;
 Mb_Core::Mb_Core(QObject *parent)
 {
     mRtu = new Mb_Update(parent);
     mTcp = new Mb_Update(parent);
-    mCfg = new sModbusSetting();
+    mCfg = &modbusCfg;
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)

@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "cfg_readparam.h"
+#include "agent_core.h"
 #include "mb_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
@@ -14,9 +15,32 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    snmp();
     login();
+    modbus();
     readUut();
     outputName();
+}
+
+void Cfg_ReadParam::snmp()
+{
+    sAgentCfg *cfg = &(Agent_Core::snmpCfg);
+    QString prefix = "snmp";  QString key;
+    QString *ptr = nullptr;
+    for(int i=1; i<7; ++i) {
+        switch (i) {
+        case 1: key = "trap1"; ptr = &cfg->trap1; break;
+        case 2: key = "trap2"; ptr = &cfg->trap2; break;
+        case 3: key = "enV3"; break;
+        case 4: key = "usr"; ptr = &cfg->usr; break;
+        case 5: key = "pwd"; ptr = &cfg->pwd; break;
+        case 6: key = "key"; ptr = &cfg->key; break;
+        default: ptr = nullptr; break;
+        }
+
+        if(ptr) *ptr = mCfg->readCfg(key, "", prefix).toString();
+        else cfg->enV3 = mCfg->readCfg(key, "", prefix).toInt();
+    }
 }
 
 void Cfg_ReadParam::login()
@@ -41,7 +65,7 @@ void Cfg_ReadParam::modbus()
 {
     int *ptr = nullptr; int value = 0;
     QString prefix = "modbus"; QString key;
-    sModbusSetting *cfg = Mb_Core::bulid()->cfg();
+    sModbusSetting *cfg = &(Mb_Core::modbusCfg);
     for(int i=0; i<13; ++i) {
         switch (i) {
         case 1: key = "enRtu";  ptr = &cfg->enRtu; value = 0; break;
