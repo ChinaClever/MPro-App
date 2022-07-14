@@ -319,7 +319,7 @@
 				}else{
 					number1 = number;
 				}
-				rpc.call('pduSetData',[addr_,phase,type,sub,number1,stat]);
+				rpc.call('pduSetData',[addr_,phase,type,sub,number1,parseInt(stat.toFixed(0))]);
 				flash_html(ipt);
 			}
 			else
@@ -456,8 +456,8 @@
 				state1_ = document.getElementById('cur'+(i)).childNodes[1];
 				state2_ = document.getElementById('pow'+i).childNodes[1];
 				state_.innerHTML = (parseFloat(phase_info[i + 1][0])/10).toFixed(1);
-				state1_.innerHTML = (parseFloat(phase_info[i + 1][8])/10).toFixed(1);
-				state2_.innerHTML = (parseFloat(phase_info[i + 1][16])/10).toFixed(1);
+				state1_.innerHTML = (parseFloat(phase_info[i + 1][8])/10).toFixed(2);
+				state2_.innerHTML = (parseFloat(phase_info[i + 1][16])/10);
 			}
 		}
 		setInterval(function(){

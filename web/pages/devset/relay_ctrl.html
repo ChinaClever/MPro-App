@@ -64,6 +64,7 @@
 		var swtich_state = new Array();
 		var output_name = new Array();
 		var seq_delay = new Array();
+		var reset_delay = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
@@ -164,6 +165,7 @@
 				rpc.call('pduReadData',[addr,output,switch_,1,i]);
 				rpc.call('pduReadData',[addr,output,switch_,2,i]);
 				rpc.call('pduReadData',[addr,output,switch_,4,i]);
+				rpc.call('pduReadData',[addr,output,switch_,5,i]);
 				rpc.call('pduReadData',[addr,output,switch_,8,i]);
 				rpc.call('pduReadString',[addr,bit,0,0,i]);
 			}

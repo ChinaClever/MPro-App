@@ -31,7 +31,7 @@
 .inner_box .center_form {
   width: 450px;
   height: 350px;
-  background-color:rgb(101, 100, 100);
+  background-color:rgb(213, 213, 213);
   /* background-color: rgba(179, 187, 186, 0.575); */
   box-shadow: 0px 0px 3px rgb(217, 224, 224);
 }
@@ -46,7 +46,12 @@
   background-color: rgba(179, 187, 186, 0.575);
   margin-bottom: 40px;
 }
-
+table {
+  position:relative;
+}
+td {
+  position:relative;
+}
 input {
   width: 280px;
   margin: 10px 50px 0px 40px;
@@ -57,7 +62,7 @@ input {
   color :#fff;
   border-bottom: 1px solid #fff;
   font-size: 15px;
-  ime-mode:inactive;
+  ime-mode:disabled;
 }
 /* remember me */
 .center_form .chk{

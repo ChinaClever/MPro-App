@@ -317,7 +317,7 @@
 				}else{
 					number1 = number;
 				}
-				rpc.call('pduSetData',[addr_,loop,type,sub,number1,stat]);
+				rpc.call('pduSetData',[addr_,loop,type,sub,number1,parseInt(stat.toFixed(0))]);
 				flash_html(ipt);
 			}
 			else

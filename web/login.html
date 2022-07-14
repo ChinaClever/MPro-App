@@ -30,12 +30,14 @@
         }
     },300);
     function sign_in(){
-      var div= document.getElementsByClassName('center_form');
-      for(var i = 0; i<div[0].childElementCount;i++){
-        div[0].removeChild(div[0].childNodes[i]);
+      let usr = document.getElementById('username').value;
+      let psd = document.getElementById('psd').value;
+      if(usr == user_name && psd == password){
+        window.open('index.html','_self');
       }
-      $('.center_form').html(builddiv('signin'));
-      window.open('index.html','_self');
+      else{
+        alert("用户名或密码输入有误，请重新输入！");
+      }
     }
     function submite(){
       var div= document.getElementsByClassName('center_form');
@@ -52,18 +54,46 @@
       $('.center_form').html(builddiv('register'));
     }
     function submite1(){
-      var div= document.getElementsByClassName('center_form');
-      for(var i = 0; i<div[0].childElementCount;i++){
-        div[0].removeChild(div[0].childNodes[i]);
+      let usr = document.getElementById('username').value;
+      let psd = document.getElementById('psd').value;
+      let conpsd = document.getElementById('conpsd').value;
+      let ident = document.getElementById('ident').value;
+      if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || ident != identify){
+        alert("输入有误请重新输入！");
       }
-      $('.center_form').html(builddiv('signin'));
+      else{
+        rpc.call('pduSetString',[0,user,0,0,2,psd]);
+        setTimeout(function(){
+          read_user_info();
+          var div= document.getElementsByClassName('center_form');
+          for(var i = 0; i<div[0].childElementCount;i++){
+            div[0].removeChild(div[0].childNodes[i]);
+          }
+          $('.center_form').html(builddiv('signin'));
+        },800);
+      }
     }
     function register1(){
-      var div= document.getElementsByClassName('center_form');
-      for(var i = 0; i<div[0].childElementCount;i++){
-        div[0].removeChild(div[0].childNodes[i]);
+      let usr = document.getElementById('username').value;
+      let psd = document.getElementById('psd').value;
+      let conpsd = document.getElementById('conpsd').value;
+      let ient = document.getElementById('ident').value;
+      if(user =='' || psd == '' || conpsd == ''||ient == '' || psd != conpsd){
+        alert("输入有误请重新输入！");
       }
-      $('.center_form').html(builddiv('signin'));
+      else{
+        rpc.call('pduSetString',[0,user,0,0,1,usr]);
+        rpc.call('pduSetString',[0,user,0,0,2,psd]);
+        rpc.call('pduSetString',[0,user,0,0,3,ient]);
+        setTimeout(function(){
+          read_user_info();
+          var div= document.getElementsByClassName('center_form');
+          for(var i = 0; i<div[0].childElementCount;i++){
+            div[0].removeChild(div[0].childNodes[i]);
+          }
+          $('.center_form').html(builddiv('signin'));
+        },800);
+      }
     }
     function printError(elemId, hintMsg)
     {
@@ -73,17 +103,22 @@
     {
       var con = document.getElementById("conpsd");
       var code = document.getElementById("ident");
-      if(code != null)
+      var psd_val = document.getElementById("psd");
+      if(code != null && con != null)
       {
         if(ipt.value == "" && ipt.id == "username"){
           printError("Errinfo", "用户名不能为空");
+        }else if(ipt.value == "" && ipt.id == "psd"){
+          printError("Errinfo", "密码不能为空");
+        }else if((ipt.value == "" || ipt.value !== psd_val.value)&& ipt.id == "conpsd"){
+          printError("Errinfo", "两次密码不一致，请重新输入");
         }else if(ipt.value == "" && ipt.id == "ident"){
           printError("Errinfo", "身份验证信息不能为空");
         }else{
           printError("Errinfo", "");
         }
       }
-      if(con == null)
+      else if(con == null && code == null)
       {
         if(ipt.value == "" && ipt.id == "username"){
           printError("Errinfo", "用户名不能为空");
@@ -95,16 +130,10 @@
         }
       }
       else{
-        var psd_val = document.getElementById("psd");
         if(ipt.value == "" && ipt.id == "username"){
           printError("Errinfo", "用户名不能为空");
-        }else if(ipt.value == "" && ipt.id == "psd"){
-          printError("Errinfo", "请输入正确的密码");
-        }
-        else if((ipt.value == "" || ipt.value !== psd_val.value)&& ipt.id == "conpsd"){
-          printError("Errinfo", "两次密码不一致，请重新输入");
         }else if(ipt.value == "" && ipt.id == "ident"){
-          printError("Errinfo", "身份验证信息不能为空");
+          printError("Errinfo", "请输入正确的验证信息");
         }else{
           printError("Errinfo", "");
         }
@@ -115,25 +144,25 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        
+        tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span><br/><span class="error" id = "Errinfo"></span></p>';
+        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Password"></p>';
+        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Confirm Password"></p>';
+        tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<tr id = "register"><td>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</td>';
-        tbody += '<td><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)"></td>';
-        tbody += '<td><input id ="psd" type="text" maxlength="20"; placeholder="Password"></td>';
-        tbody += '<td><input id ="conpsd" type="password" maxlength="20"; placeholder="Confirm Password"></td>';
-        tbody += '<td><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></td>';
-        tbody += '<td class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></td></tr>';
-        
         tbody += '<p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span><br/><span class="error" id = "Errinfo"></p>';
-        tbody += '<br/><p><input id ="username" type="text" maxlength="20" placeholder="User Name" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="text" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
+        tbody += '<br/><p><input id ="username" type="text" maxlength="20" placeholder="User Name" onblur = "validataForm(this)"></p>';
+        tbody += '<p><input id ="psd" type="password" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">identify</a></span></div><p></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "SIGN IN" onclick="sign_in()"></p></input>';
       }else if(Reg === 'submite'){
         tbody += '<p class="title"><span>R&nbsp;e&nbsp;t&nbsp;r&nbsp;i&nbsp;e&nbsp;v&nbsp;e&nbsp;</span><br/><span class="error" id = "Errinfo"></p>';
-        tbody += '<br/><p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="User Name">';
+        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="User Name"></p>';
+        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="NeW Password"></p>';
+        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Confirm Password"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
-        tbody += '<p></p><p class = "signIn_btn"><input type = "button" value = "SUBMITE" onclick="submite1()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button" value = "SUBMITE" onclick="submite1()"></input></p>';
       }
       return tbody;
     }

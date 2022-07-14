@@ -216,7 +216,7 @@
 			let number = parseInt(ipt.id.slice(1))+1;
 			let number1  = 0;
 			let id = 0;
-			let stat = parseFloat(ipt.value) * 10;
+			let stat = (parseFloat(ipt.value) * 10).toFixed(0);
 			let retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
@@ -235,7 +235,7 @@
 				}else if(type1 === 'h'){
 					sub = 4;
 				}
-				rpc.call('pduSetData',[addr_,envir,number1,sub,id,stat]);
+				rpc.call('pduSetData',[addr_,envir,number1,sub,id,parseInt(stat)]);
 				flash_html(ipt);
 			}else{}
 		}
@@ -288,7 +288,7 @@
 		var state_ = 0 ,state1_ = 0;
 		function putdata(){
 			for(let i = 0;i < 4;i++){
-				state_ = document.getElementById('a' + i);
+				state_ = document.getElementById('b' + i);
 				state_.innerHTML = data[i][0];
 				state1_ = document.getElementById('k' + i);
 				state_.innerHTML = data[i+4][0];

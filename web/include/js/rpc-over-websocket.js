@@ -10,7 +10,7 @@ var type_info = new Array("Phase","Loop","Output");
 var type_name = new Array("","Phs","Loop","","","","TH","Sensor","","","Output","Uut","Num","Cfg","User");
 var data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
-var alarm_name = new Array("","State","Mode","","Delay","","","","Enable");
+var alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
 var cfg_name = new Array("Offline","Serial","SlaveNum","ModbusAddr","Version","Buz","Freq","BoardNum");
 var uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","LoopName","DevName");
 var user_info = new Array("","UserName","Password","Identify");
@@ -200,7 +200,7 @@ function read_output_data(addr)
         rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
         rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
       }
-      if((j == 1 || j == 2 || j == 4 || j == 8) && i <= output_num){
+      if((j == 1 || j == 2 || j == 4 || j == 5 || j == 8) && i <= output_num){
         rpc.call('pduReadData',[addr,output,switch_,j,i]);
       }
       rpc.call('pduReadData',[addr,output,cur_,j,i]);

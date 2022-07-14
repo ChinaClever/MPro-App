@@ -11,22 +11,6 @@
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../doc-lib/doc.css">
-		<style>
-			.panel-default{
-            border: none;
-            border-radius: 0px;
-            margin-bottom: 0px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-			}
-			.panel-default > .panel-heading{
-				color: #222;
-				font-size:13px;
-				background-color: #fff;
-				border-color: #e6e6e6;
-				padding: 10px 12px;
-			}
-		</style>
 	</head>
 <body>
 	<div class="page-cont">
@@ -58,9 +42,12 @@
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-		for(var i = 1 ;i < output_num + 1;i++)
-		{
-			output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+num);
+		read_data();
+		function read_data(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
@@ -87,7 +74,7 @@
 				}else{
 					stat = 0;
 				}
-				rpc.call('pduSetData',[0,3,1,8,addr,stat]);
+				//rpc.call('pduSetData',[0,3,1,8,addr,stat]);
 			}
 			else if(type1 === 'f' && (addr !== output_num + 1)){
 				if(ckd.checked == true){
@@ -95,7 +82,7 @@
 				}else{
 					stat = 0;
 				}
-				rpc.call('pduSetData',[0,3,1,2,addr,stat]);
+				//rpc.call('pduSetData',[0,3,1,2,addr,stat]);
 			}
 		}
 		function buildTable(rows) {
