@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>devset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -64,22 +64,25 @@
 		var swtich_state = new Array();
 		var output_name = new Array();
 		var seq_delay = new Array();
-		var rpc = jsonrpc();
-		var output_num = parseInt(sessionStorage.getItem("output_num"));
-		var dev_num = sessionStorage.getItem("dev_num");
-		// var slave_num = sessionStorage.getItem("slave_num");
-		var slave_num = 10;
-		for(var i = 1 ;i < output_num + 1;i++)
-		{
-			output_name[i] = sessionStorage.getItem("output_name"+i);
-			switch_enable[i] = sessionStorage.getItem("switch_enable"+i);
-			seq_delay[i] = sessionStorage.getItem("seq_delay"+i);
-			switch_mode[i] = sessionStorage.getItem("switch_mode"+i);
-			swtich_state[i] = sessionStorage.getItem("swtich_state"+i);
+		var reset_delay = new Array();
+		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		var dev_name =new Array();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		read_data();
+		function read_data(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
+				switch_mode[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[2]+addr+'_'+i));
+				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
+				reset_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[5]+addr+'_'+i));
+				switch_enable[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
+			}
+			for(var i = 0;i<slave_num;i++){
+				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			}
 		}
-				// for(var i = 1 ;i < slave_num + 1;i++){
-				// 	output_name[i] = sessionStorage.getItem("slave_name"+i);
-				// }
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));
 		function buildSel(rows)
@@ -91,24 +94,8 @@
 			}
 			return tbody;
 		}
-		for(var i = 1 ;i < output_num + 1;i++)
-		{
-			var ss = document.getElementById('e'+(i -1));
-			var ms = document.getElementById('f'+(i -1));
-			if(switch_enable[i] === 1){
-				ss.checked = true;
-			}
-			else{
-				ss.checked = false;
-			}
-			if(switch_mode[i] === 1){
-				ms.checked = true;
-			}
-			else{
-				ms.checked = false;
-			}
-		}
 		modeset();
+		showdata();
 		function modeset(modesel){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
@@ -125,8 +112,6 @@
 		function readonlyset(ros){
 			if(read === 0){
 				read = 1;
-				// var ms = document.getElementById("sel");
-				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = "设置模式";
 				var iptname = document.getElementsByTagName("input");
@@ -141,8 +126,6 @@
 				}
 			}
 			else{
-				// var ms = document.getElementById("sel");
-				// ms.style.display = "none";
 				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
@@ -158,57 +141,114 @@
 				}
 			}
 		}
+		function showdata(){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				var ss = document.getElementById('e'+(i -1));
+				var ms = document.getElementById('f'+(i -1));
+				if(switch_enable[i] === 1){
+					ss.checked = true;
+				}
+				else{
+					ss.checked = false;
+				}
+				if(switch_mode[i] === 1){
+					ms.checked = true;
+				}
+				else{
+					ms.checked = false;
+				}
+			}
+		}
+		function read_sw_data(addr){
+			for(var i = 1 ;i < output_num + 1;i++)
+			{
+				rpc.call('pduReadData',[addr,output,switch_,1,i]);
+				rpc.call('pduReadData',[addr,output,switch_,2,i]);
+				rpc.call('pduReadData',[addr,output,switch_,4,i]);
+				rpc.call('pduReadData',[addr,output,switch_,5,i]);
+				rpc.call('pduReadData',[addr,output,switch_,8,i]);
+				rpc.call('pduReadString',[addr,bit,0,0,i]);
+			}
+		}
+		function flash_html(par)
+		{
+			read_sw_data(addr);
+			setTimeout(function(){
+				par.parentNode.parentNode.parentNode.remove();
+				read_data();
+				$('.table-striped').html(buildTable(output_num));
+				showdata();
+			},800);
+		}
 		function cked(ckd)
 		{
 			var stat;
 			var type1 = ckd.id.substr(0,1);
-			var addr = parseInt(ckd.id.slice(1))+1;
-			if(type1 === 'e' && (addr !== output_num + 1)){
-				if(ckd.checked == true){
-					stat = 1;
-				}else{
-					stat = 0;
+			var num = parseInt(ckd.id.slice(1))+1;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				if(type1 === 'e' && (num !== output_num + 1)){
+					if(ckd.checked == true){
+						stat = 1;
+					}else{
+						stat = 0;
+					}
+					rpc.call('pduSetData',[addr,output,switch_,8,num,stat]);
 				}
-				rpc.call('pduSetData',[0,3,1,8,addr,stat]);
-			}
-			else if(type1 === 'f' && (addr !== output_num + 1)){
-				if(ckd.checked == true){
-					stat = 1;
-				}else{
-					stat = 0;
+				else if(type1 === 'f' && (num !== output_num + 1)){
+					if(ckd.checked == true){
+						stat = 1;
+					}else{
+						stat = 0;
+					}
+					rpc.call('pduSetData',[addr,output,switch_,2,num,stat]);
 				}
-				rpc.call('pduSetData',[0,3,1,2,addr,stat]);
-			}
+				flash_html(ckd);
+			}else{}
 		}
 		function setdata(ipt)
 		{
 			var stat;
 			var type1 = ipt.id.substr(0,1);
-			var addr = parseInt(ipt.id.slice(1))+1;
-			if(type1 === 'b' && (addr !== output_num + 1)){
-				stat = ipt.value;
-				rpc.call('pduSetString',[0,10,0,0,addr,stat]);
-			}
-			else if(type1 === 'd' && (addr !== output_num + 1)){
-				stat = parseInt(ipt.value);
-				rpc.call('pduSetData',[0,3,1,4,addr,stat]);
-			}
+			var num = parseInt(ipt.id.slice(1))+1;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				if(type1 === 'b' && (num !== output_num + 1)){
+					stat = ipt.value;
+					rpc.call('pduSetString',[addr,bit,0,0,num,stat]);
+				}
+				else if(type1 === 'd' && (num !== output_num + 1)){
+					stat = parseInt(ipt.value);
+					rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
+				}else if(type1 === 'j' && (num !== output_num + 1)){
+					stat = parseInt(ipt.value);
+					rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
+				}
+				flash_html(ipt);
+			}else{}
 		}
 		function btn_click(btn)
 		{
 			var addr = parseInt(btn.id.slice(1))+1;
 			var stat = 0;
-			if(btn.innerText == Input_state[0]){
-				stat = 1;
-			}
-			else if(btn.innerText == Input_state[1]){
-				stat = 0;
-			}
-			else if(btn.innerText == Input_state[2]){
-				stat = 2;
-			}
-			rpc.call('pduSetData',[0,3,1,1,addr,stat]);
-			alter("sending");
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				if(btn.innerText == Input_state[0]){
+					stat = 1;
+				}
+				else if(btn.innerText == Input_state[1]){
+					stat = 0;
+				}
+				else if(btn.innerText == Input_state[2]){
+					stat = 2;
+				}
+				rpc.call('pduSetData',[addr,output,switch_,1,addr,stat]);
+				flash_html(btn);
+			}else{}
 		}
 		function buildTable(rows) {
 			var thead = '',
@@ -216,20 +256,22 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%">序号</td>\
-					<td width ="25%">名称</td>\
+					<td width ="24%">名称</td>\
 					<td width ="10%">开关状态</td>\
 					<td width ="10%">顺序延时(S)</td>\
+					<td width ="10%">复位延时(S)</td>\
 					<td width ="10%">开关使能</td>\
 					<td width ="10%">断开告警</td>\
-					<td width ="10%">开启</td>\
-					<td width ="10%">关闭</td>\
-					<td width ="10%">复位</td>';
+					<td width ="7%">开启</td>\
+					<td width ="7%">关闭</td>\
+					<td width ="7%">复位</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 				// tbody += '<td id = "d'+ i + '"></td>';

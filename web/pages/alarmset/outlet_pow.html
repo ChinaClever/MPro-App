@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>alarmset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -71,7 +71,7 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_info[i] =  new Array();
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+num);
+				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
 				for(var j = 0;j <len;j++){
 					output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j + 1]+addr+'_'+i));
 				}
@@ -104,8 +104,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(output_info[i][2] === 1){
+				if(output_info[i][2] === 1 || output_info[i][2] === 8){
 					cs.bgColor = 'red';
+				}else if(output_info[i][2] === 2 || output_info[i][2] === 4){
+					cs.bgColor = 'yelloe';
 				}
 				else{
 					cs.bgColor = '';
@@ -160,7 +162,6 @@
 					clearInterval(time1);
 				}
 				if(i <= output_num){
-					tick ++;
 					rpc.call('pduReadData',[addr,output,pow_,dt,i]);
 				}
 				i++;
@@ -212,7 +213,7 @@
 			var opt_val = parseInt(document.getElementById("opt_").value);
 			var addr_ = addr + opt_val * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseFloat(ipt.value);
+			var stat = parseInt(ipt.value);
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
@@ -282,6 +283,21 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		var state_ = 0;
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				state_ = document.getElementById('c' + i);
+				state_.innerHTML = output_info[i+1][0];
+			}
+		}
+		setInterval(function(){
+			read_output_pow_data();
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>
