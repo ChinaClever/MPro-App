@@ -8,7 +8,6 @@ class Modbus_MasterObj : public Modbus_Object
     Q_OBJECT
 public:
     explicit Modbus_MasterObj(QObject *parent = nullptr);
-
     int writeCoils(int addr, int start, const vshort &data);
     int writeHoldingRegisters(int addr, int start, const vshort &data);
 

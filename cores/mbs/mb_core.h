@@ -2,26 +2,33 @@
 #define MB_CORE_H
 
 #include "mb_update.h"
-#define MB_NAME  "/dev/ttyUSB0"
 
 class Mb_Core : public QRunnable
 {
     explicit Mb_Core(QObject *parent = nullptr);
 public:
     static Mb_Core *bulid(QObject *parent = nullptr);
-    bool connectRtu(int addr=1, int baud = QSerialPort::Baud57600, int parity=QSerialPort::EvenParity);
     void disconnectRtu() {mRtu->disconnectModbus();}
     void disconnectTcp() {mTcp->disconnectModbus();}
-    bool connectTcp(int addr, int port=1502);
+    void setRtu(int parameter, const QVariant &value);
+    sModbusSetting *cfg() {return mCfg;}
     void setAddress(int addr);
+    void setPort(int port);
 
 public slots:
     void run() override;
+    bool connectTcp(int en);
+    bool connectRtu(int en);
+
+private:
+    void initFun();
+    bool connectModbus(Mb_Update *mb, bool en, int rt);
 
 private:
     bool isRun=true;
     Mb_Update *mRtu;
     Mb_Update *mTcp;
+    sModbusSetting *mCfg;
 };
 
 #endif // MB_CORE_H

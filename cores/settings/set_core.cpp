@@ -55,6 +55,7 @@ bool Set_Core::setNumber(sNumStrItem &it)
     bool ret = false; switch (it.fc) {
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
+    case SFnCode::EModbus: ret = modbusSet(it.id, it.value, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     } if(ret) writeSettings();
 
@@ -66,6 +67,7 @@ int Set_Core::getNumber(sNumStrItem &it)
     int ret = 0; switch (it.fc) {
     case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
     case SFnCode::EDevInfo: ret = devInfoCfg(it.addr, it.id);  break;
+    case SFnCode::EModbus: ret = modbusCfg(it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -76,7 +78,7 @@ bool Set_Core::setNumStr(sNumStrItem &it)
 {    
     bool ret = false; if(it.rw) {
         if(it.soi > 1) {
-           ret = Set_Ssdp::bulid()->setNumStr(it);
+            ret = Set_Ssdp::bulid()->setNumStr(it);
         } else if(it.addr  || it.soi) {
             if(it.soi) it.addr = 0xFF;
             int num = cm::masterDev()->info.slaveNum;
@@ -103,7 +105,7 @@ bool Set_Core::setting(sDataItem &it)
 {
     bool ret = true; if(it.rw) {
         if(it.soi > 1) {
-           ret = Set_Ssdp::bulid()->setting(it);
+            ret = Set_Ssdp::bulid()->setting(it);
         } else if(it.addr || it.soi) {
             if(it.soi) it.addr = 0xFF;
             int num = cm::masterDev()->info.slaveNum;

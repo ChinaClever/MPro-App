@@ -10,7 +10,6 @@ Mb_Env::Mb_Env(QObject *parent) : Mb_Loop{parent}
 
 }
 
-
 void Mb_Env::mbEnvUpdate()
 {
     upEnvData();

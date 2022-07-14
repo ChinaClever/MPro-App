@@ -8,7 +8,7 @@ class Modbus_SlaveObj : public Modbus_Object
     Q_OBJECT
 public:
     explicit Modbus_SlaveObj(QObject *parent = nullptr);
-    void setAddress(int addr) {mDev->setServerAddress(addr);}
+    void setAddress(int addr) {if(mDev) mDev->setServerAddress(addr);}
 
     bool setCoil(quint16 reg, ushort v){return setCoils(reg, vshort{v});}
     bool setCoils(quint16 address, const vshort &values);
