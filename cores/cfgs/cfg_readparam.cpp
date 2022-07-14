@@ -24,11 +24,12 @@ void Cfg_ReadParam::login()
     QString key; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login);
 
-    for(int i=1; i<3; ++i) {
+    for(int i=1; i<4; ++i) {
         switch (i) {
         case 1: key = "user";  ptr = it->user[0]; break;
         case 2: key = "pwd";  ptr = it->pwd[0]; break;
         case 3: key = "token";  ptr = it->token[0]; break;
+        case 4: key = "permit";  ptr = it->permit[0]; break;
         }
         QString res = mCfg->readCfg(key, "", prefix).toString();
         qstrcpy(ptr, res.toLatin1().data());

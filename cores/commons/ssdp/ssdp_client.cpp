@@ -51,11 +51,13 @@ bool Ssdp_Client::rplySearchTarget(const QString &room, const QByteArray &array)
         if(array.contains("Pdu:all")) {
             ret = write("Pdu:all");
         } else if(room.size()){
+#ifdef Q_OS_LINUX
             QString name = cm::masterDev()->uut.room;
             if(name == room) {
                 QString str = "Pdu:"+ name;
                 ret = write(str.toLatin1());
             }
+#endif
         }
     }
 

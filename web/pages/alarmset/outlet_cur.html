@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>alarmset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -42,7 +42,6 @@
 		</div>
     <script>
 		var  read  = 0,dt = 0;
-		var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
 		var mode = 0,cur_mark = 0;
 		var len  = data_name.length -1;
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
@@ -54,7 +53,7 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_info[i] =  new Array();
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+num);
+				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
 				for(var j = 0;j <len;j++){
 					output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[j + 1]+addr+'_'+i));
 				}
@@ -87,8 +86,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(output_info[i][2] === 1){
+				if(output_info[i][2] == 1 || output_info[i][2] == 8){
 					cs.bgColor = 'red';
+				}else if(output_info[i][2] == 2 || output_info[i][2] == 4){
+					cs.bgColor = 'yellow';
 				}
 				else{
 					cs.bgColor = '';
@@ -196,7 +197,7 @@
 			var opt_val = parseInt(document.getElementById("opt_").value);
 			var addr_ = addr + opt_val * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseFloat(ipt.value) * 100;
+			var stat = (parseFloat(ipt.value) * 100).toFixed(0);
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
@@ -217,7 +218,7 @@
 					number1 = number;
 				}
 				dt = sub;
-				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
+				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,parseInt(stat)]);
 				flash_html(ipt);
 			}else{}
 		}
@@ -266,6 +267,21 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		var state_ = 0;
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				state_ = document.getElementById('c' + i);
+				state_.innerHTML = (parseFloat(output_info[i + 1][0])/100).toFixed(2);
+			}
+		}
+		setInterval(function(){
+			read_output_cur_data();
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>

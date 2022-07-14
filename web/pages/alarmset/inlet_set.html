@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>表格</title>
+		<title>alarmset</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -112,8 +112,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][18] == 1){
+				if(phase_info[i][18] == 1 || phase_info[i][18] == 8){
 					cs.bgColor = 'red';
+				}else if(phase_info[i][18] == 2 || phase_info[i][18] == 4){
+					cs.bgColor = 'yellow';
 				}
 				else{
 					cs.bgColor = '';
@@ -135,8 +137,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][10] == 1){
+				if(phase_info[i][10] == 1 || phase_info[i][10] == 8){
 					cs.bgColor = 'red';
+				}else if(phase_info[i][10] == 2 || phase_info[i][10] == 4){
+					cs.bgColor = 'yellow';
 				}
 				else{
 					cs.bgColor = '';
@@ -158,8 +162,11 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][2] == 1){
+				if(phase_info[i][2] == 1 || phase_info[i][2] == 8){
 					cs.bgColor = 'red';
+				}
+				else if(phase_info[i][2] == 2 || phase_info[i][2] == 4){
+					cs.bgColor = 'yellow';
 				}
 				else{
 					cs.bgColor = '';
@@ -312,7 +319,7 @@
 				}else{
 					number1 = number;
 				}
-				rpc.call('pduSetData',[addr_,phase,type,sub,number1,stat]);
+				rpc.call('pduSetData',[addr_,phase,type,sub,number1,parseInt(stat.toFixed(0))]);
 				flash_html(ipt);
 			}
 			else
@@ -442,6 +449,25 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		var state_ = 0,state1_ = 0,state2_ = 0;
+		function putdata(){
+			for(let i = 0;i < phase_num;i++){
+				state_ = document.getElementById('vol'+(i)).childNodes[1];
+				state1_ = document.getElementById('cur'+(i)).childNodes[1];
+				state2_ = document.getElementById('pow'+i).childNodes[1];
+				state_.innerHTML = (parseFloat(phase_info[i + 1][0])/10).toFixed(1);
+				state1_.innerHTML = (parseFloat(phase_info[i + 1][8])/10).toFixed(2);
+				state2_.innerHTML = (parseFloat(phase_info[i + 1][16])/10);
+			}
+		}
+		setInterval(function(){
+			read_phase_data(addr);
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>

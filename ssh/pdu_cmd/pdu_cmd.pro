@@ -10,6 +10,9 @@ CONFIG -= app_bundle
 CM_PATH = ../../cores/commons
 include($$CM_PATH/rpc/rpc.pri)
 
+HEADERS += \
+    sshrpcclient.h
+
 SOURCES += \
         main.cpp \
         sshrpcclient.cpp
@@ -19,5 +22,3 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    sshrpcclient.h

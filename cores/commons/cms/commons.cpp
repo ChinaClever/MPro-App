@@ -4,8 +4,9 @@
  *      Author: Lzy
  */
 #include "commons.h"
+#ifdef Q_OS_LINUX
 #include "shm.h"
-
+#endif
 
 void cm::mdelay(int msec)
 {
@@ -88,7 +89,7 @@ QString cm::byteArrayToUcharStr(const QByteArray &array)
         strArray += QString::number((uchar)array.at(i)) + " ";  // 十进制
     return strArray;
 }
-
+#ifdef Q_OS_LINUX
 sDataPacket *cm::dataPacket()
 {
     sDataPacket *packet = (sDataPacket *)Shm::sharedMemory();
@@ -105,7 +106,7 @@ sDevData *cm::masterDev()
 {
     return devData(0);
 }
-
+#endif
 const QDateTime cm::buildDateTime()
 {
    QString dateTime;

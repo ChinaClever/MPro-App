@@ -17,6 +17,7 @@ QString Set_Login::loginUsrPwd(int type, int id)
     case 1: ptr = it->user[id]; break;
     case 2: ptr = it->pwd[id]; break;
     case 3: ptr = it->token[id]; break;
+    case 4: ptr = it->permit[id]; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -34,6 +35,7 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     case 1: key = "user"; ptr = it->user[id]; break;
     case 2: key = "pwd"; ptr = it->pwd[id]; break;
     case 3: key = "token"; ptr = it->token[id]; break;
+    case 4: key = "permit"; ptr = it->permit[id]; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
