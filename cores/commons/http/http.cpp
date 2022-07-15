@@ -1,5 +1,9 @@
-#include "httpclient.h"
-
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
+#include "http.h"
 
 QPair<bool, QByteArray> Http::post(const QString &url, const QByteArray &body, const int &timeout)
 {

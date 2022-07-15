@@ -1,5 +1,5 @@
-#ifndef HTTPCLIENT_H
-#define HTTPCLIENT_H
+#ifndef HTTP_H
+#define HTTP_H
 #include <JQNet>
 
 class Http
@@ -8,4 +8,4 @@ public:
     static QPair<bool, QByteArray> post(const QString &url, const QByteArray &body, const int &timeout=1000);
 };
 
-#endif // HTTPCLIENT_H
+#endif // HTTP_H
