@@ -8,7 +8,7 @@ class Modbus_MasterTcp : public Modbus_MasterObj
     Q_OBJECT
 public:
     explicit Modbus_MasterTcp(QObject *parent = nullptr);
-    bool connectModbus(const QString &url, int port);
+    bool connectModbusTcp(const QString &url, int port);
 };
 
 #endif // MODBUS_MASTERTCP_H

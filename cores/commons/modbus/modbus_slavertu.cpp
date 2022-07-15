@@ -10,26 +10,16 @@ Modbus_SlaveRtu::Modbus_SlaveRtu(QObject *parent) : Modbus_SlaveTcp{parent}
 
 }
 
-
-bool Modbus_SlaveRtu::connectModbus(const QString &name, int baud)
+bool Modbus_SlaveRtu::connectRtu(const sModbusSetting &cfg)
 {
-    initConnects();
-    initModbusSerial(name, baud);
-    return connectDevice();
-}
-
-bool Modbus_SlaveRtu::connectRtu(const QString &name, int addr, int baud, qint32 parity)
-{
-    bool ret = true;
-    if(!mDev) {
+    bool ret = true; if(mDev) {
         mDev = new QModbusRtuSerialSlave(this);
         ret = initUnitMap();
-    } else  {
-        disconnectModbus();
+        if(ret) initConnects();
     }
 
-    mSet.parity = parity;
-    if(ret) setAddress(addr);
-    if(ret) ret = connectModbus(name, baud);
+    if(ret) initModbusSerial(cfg);
+    if(ret) setAddress(cfg.addr);
+    if(ret) ret = connectDevice();
     return ret;
 }

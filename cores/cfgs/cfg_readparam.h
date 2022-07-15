@@ -10,7 +10,9 @@ public:
     void readCfgParams();
 
 private:
+    void snmp();
     void login();
+    void modbus();
     void readUut();
     void outputName();
 

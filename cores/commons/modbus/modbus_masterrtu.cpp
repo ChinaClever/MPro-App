@@ -10,11 +10,11 @@ Modbus_MasterRtu::Modbus_MasterRtu(QObject *parent) : Modbus_MasterObj{parent}
     mModbus = new QModbusRtuSerialMaster(nullptr);
 }
 
-bool Modbus_MasterRtu::connectModbus(const QString &name, int baud)
+bool Modbus_MasterRtu::connectModbusRtu(const sModbusSetting &set)
 {    
     initConnects();
-    initModbusSerial(name, baud);
-    mModbus->setNumberOfRetries(mSet.numberOfRetries);
-    mModbus->setTimeout(mSet.responseTime);
+    initModbusSerial(set);
+    mModbus->setNumberOfRetries(set.numberOfRetries);
+    mModbus->setTimeout(set.responseTime);
     return connectDevice();
 }

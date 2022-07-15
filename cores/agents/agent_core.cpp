@@ -5,10 +5,11 @@
  */
 #include "agent_core.h"
 
+sAgentCfg Agent_Core::snmpCfg;
 Agent_Core::Agent_Core(QObject *parent)
     : Agent_Trap{parent}
 {
-
+    mCfg = &snmpCfg;
 }
 
 Agent_Core *Agent_Core::bulid(QObject *parent)

@@ -1,8 +1,8 @@
 #ifndef SET_CORE_H
 #define SET_CORE_H
-#include "set_output.h"
+#include "set_integr.h"
 
-class Set_Core : public Set_Output
+class Set_Core : public Set_Integr
 {
     Set_Core();
 public:

@@ -5,6 +5,7 @@
  */
 #include "agent_trap.h"
 #include "alarm_Updater.h"
+#include "agent_core.h"
 
 Agent_Trap::Agent_Trap(QObject *parent)
     : Agent_Set{parent}
@@ -58,9 +59,14 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
     else oid << 8;
 
     if(value) {
-        QString ip = "192.168.1.102";
         QString doid = toString(dstOid << 11);
-        sendTrap(ip, doid, toString(oid), msg);
+        sAgentCfg *cfg = &Agent_Core::snmpCfg;
+
+        QString ip = cfg->trap1;
+        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
+
+        ip = cfg->trap2;
+        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
         //mSnmp->sendTrap(oid);
     }
 }
@@ -69,6 +75,6 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 void Agent_Trap::sendTrap(const QString &ip, const QString &dstOid, const QString &oid, const QString &msg)
 {
     QString cmd = "snmptrap -v 2c -c public %1 '' %2 %3 s '%4'";
-    QString str = cmd.arg(ip,dstOid,oid, msg);
+    QString str = cmd.arg(ip, dstOid, oid, msg);
     system(str.toLatin1().data());
 }

@@ -8,7 +8,7 @@ class Modbus_MasterRtu : public Modbus_MasterObj
     Q_OBJECT
 public:
     explicit Modbus_MasterRtu(QObject *parent = nullptr);
-    bool connectModbus(const QString &name, int baud);
+    bool connectModbusRtu(const sModbusSetting &set);
 };
 
 #endif // MODBUS_MASTERRTU_H
