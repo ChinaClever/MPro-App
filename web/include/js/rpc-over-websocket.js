@@ -7,7 +7,7 @@ var user_name='user_name';
 var password = 'password';
 var identify = '';
 var type_info = new Array("Phase","Loop","Output");
-var type_name = new Array("","Phs","Loop","","","","TH","Sensor","","","Output","Uut","Num","Cfg","User");
+var type_name = new Array("","Phs","Loop","","","","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp");
 var data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 var alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
@@ -15,6 +15,8 @@ var cfg_name = new Array("Offline","Serial","SlaveNum","ModbusAddr","Version","B
 var uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","LoopName","DevName");
 var user_info = new Array("","UserName","Password","Identify");
 var log_info = new Array("","LogNum","LogInfo");
+var modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
+var snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
 var jsonrpc = function()
 {
   var url_ = window.location.host;
@@ -74,6 +76,12 @@ var jsonrpc = function()
       case 14:
         sessionStorage.setItem(user_info[num] , JSON.parse(evt.data).result[5]);
       break;
+      case 15:
+        sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 16:
+        sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+      break;
       case 51:
         sessionStorage.setItem(log_info[subtopic] , JSON.parse(evt.data).result[5]);
       break;
@@ -105,7 +113,7 @@ var jsonrpc = function()
 var rpc = jsonrpc();
 var start  = 0;
 var hum_num = 2,num_num = 3,cfg_num = 8,uut_num = 6, sub_num = 8;
-var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,log = 51;
+var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,log = 51;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
@@ -278,7 +286,31 @@ function read_output_name(addr){
     j++;
   },1);
 }
+function read_modbus_data(){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(13)){
+      clearInterval(time1);
+    }
+    if(j <= 12 && (j > 6 && j < 11)){
+      rpc.call('pduReadCfg',[0,modbus,j,0,0]);
+    }
+    j++;
+  },1);
+}
 
+function read_snmp_data(){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(7)){
+      clearInterval(time1);
+    }
+    if(j <= 6 ){
+      rpc.call('pduReadCfg',[0,snmp,0,0,j]);
+    }
+    j++;
+  },1);
+}
 function read_log_data(type,name,start,num){
   rpc.call('pduLogFun',[start,log,type,name,num]);
 }

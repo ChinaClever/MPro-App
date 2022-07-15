@@ -2,13 +2,18 @@
 
 bool JsonRpcObj::getString(mg_str r, int id, char *s)
 {
+    bool ret = true;
     char buffer[10] = {0};
     //static char buf[256] = {0};
     sprintf(buffer , "$[%d]" , id);
-    s = mg_json_get_str(r, buffer);
+    char *ptr = mg_json_get_str(r, buffer);
+    if(ptr) {qstrcpy(s, ptr); free(ptr);}
+    else ret = false;
+
+    return ret;
     //if(n > 0) qstrcpy(s, buf); else s[0] = '\0';
     //return n == -1 ?false:true;
-    return s == nullptr ?false:true;
+    //return s == nullptr ?false:true;
 }
 
 double JsonRpcObj::getNumber(mg_str r, int id)
