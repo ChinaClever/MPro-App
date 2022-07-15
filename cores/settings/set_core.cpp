@@ -31,6 +31,7 @@ bool Set_Core::setString(sNumStrItem &it)
     bool ret = false; switch (it.fc) {
     case SFnCode::OutputName: ret = outputNameSet(it); break;
     case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
+    case SFnCode::ESnmp: ret = snmpSet(it.id, it.str, it.txType); break;
     case SFnCode::EDevLogin: ret = loginSet(it.id, it.str, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
@@ -42,6 +43,7 @@ QString Set_Core::getString(sNumStrItem &it)
 {
     QString str; switch (it.fc) {
     case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
+    case SFnCode::ESnmp: str = snmpCfg(it.id); break;
     case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
     case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;

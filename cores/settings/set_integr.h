@@ -9,6 +9,9 @@ public:
 protected:
     int modbusCfg(uchar fc);
     bool modbusSet(uchar fc, int value, uchar txType);
+
+    QString snmpCfg(uchar fc);
+    bool snmpSet(uchar fc, const QString &value, uchar txType);
 };
 
 #endif // SET_INTEGR_H

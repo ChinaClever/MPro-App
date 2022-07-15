@@ -12,6 +12,7 @@ public:
     void disconnectTcp() {mTcp->disconnectModbus();}
     void setRtu(int parameter, const QVariant &value);
     sModbusSetting *cfg() {return mCfg;}
+    static sModbusSetting modbusCfg;
     void setAddress(int addr);
     void setPort(int port);
 
