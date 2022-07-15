@@ -1,22 +1,11 @@
-QT *= network
+INCLUDEPATH += $$PWD
 
-#INCLUDEPATH += $$PWD
-#DEPENDPATH += $$PWD
-#DEFINES += HTTP
+include($$PWD/JQLibrary/JQLibrary.pri )
 
-HEADERS += \
-    $$PWD/cachedhttp.h \
-    $$PWD/http.h \
-    $$PWD/httpreply.h \
-    $$PWD/httprequest.h \
-    $$PWD/localcache.h \
-    $$PWD/networkhttpreply.h \
-    $$PWD/throttledhttp.h
+HEADERS +=  \
+    $$PWD/httpclient.h \
+    $$PWD/httpserver.h
 
-SOURCES += \
-    $$PWD/cachedhttp.cpp \
-    $$PWD/http.cpp \
-    $$PWD/httpreply.cpp \
-    $$PWD/localcache.cpp \
-    $$PWD/networkhttpreply.cpp \
-    $$PWD/throttledhttp.cpp
+SOURCES +=  \
+    $$PWD/httpclient.cpp \
+    $$PWD/httpserver.cpp

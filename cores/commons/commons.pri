@@ -21,7 +21,6 @@ include(modbus/modbus.pri)
 include(cthread/cthread.pri)
 include(network/network.pri)
 include(websocket/websocket.pri)
-include(httpserver/httpserver.pri)
 
 INCLUDEPATH += $$PWD
 

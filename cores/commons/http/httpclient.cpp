@@ -1,11 +1,7 @@
 #include "httpclient.h"
 
-HttpClient::HttpClient()
-{
 
-}
-
-QPair<bool, QByteArray> HttpClient::post(const QString &url, const QByteArray &body, const int &timeout)
+QPair<bool, QByteArray> Http::post(const QString &url, const QByteArray &body, const int &timeout)
 {
     const auto &&reply = JQNet::HTTP::post(url, body, timeout);
     //qDebug() << "HTTP post reply:" << reply.first << reply.second;

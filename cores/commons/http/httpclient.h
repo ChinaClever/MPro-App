@@ -2,10 +2,9 @@
 #define HTTPCLIENT_H
 #include <JQNet>
 
-class HttpClient
+class Http
 {
 public:
-    HttpClient();
     static QPair<bool, QByteArray> post(const QString &url, const QByteArray &body, const int &timeout=1000);
 };
 
