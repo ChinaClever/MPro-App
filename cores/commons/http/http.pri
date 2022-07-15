@@ -2,7 +2,7 @@ QT *= network
 
 #INCLUDEPATH += $$PWD
 #DEPENDPATH += $$PWD
-DEFINES += HTTP
+#DEFINES += HTTP
 
 HEADERS += \
     $$PWD/cachedhttp.h \
