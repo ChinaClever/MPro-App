@@ -64,6 +64,15 @@ static const char *s_web_root = "/usr/data/clever/web";
 //    (void) fn_data;
 //}
 
+char* responseStr(char *response, char *result, struct mg_str id)
+{
+    response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
+                          "result", result);
+    free(result);
+    return response;
+}
+
+
 static void process_json_message(struct mg_connection *c, struct mg_str frame) {
     struct mg_str params = mg_str(""), id = mg_str("");
     int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
@@ -83,39 +92,25 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
                               "message", (int) frame.len, frame.ptr);
     } else if (strcmp(method, "pduReadData") == 0) {
         char *result = PduRpcObj::pduReadData(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     } else if (strcmp(method, "pduSetData") == 0) {
         char *result = PduRpcObj::pduSetData(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     } else if (strcmp(method, "pduReadString") == 0) {
         char *result = PduRpcObj::pduReadString(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     }else if (strcmp(method, "pduSetString") == 0) {
         char *result = PduRpcObj::pduSetString(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     }else if (strcmp(method, "pduReadCfg") == 0) {
         char *result = PduRpcObj::pduReadCfg(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     }else if (strcmp(method, "pduSetCfg") == 0) {
         char *result = PduRpcObj::pduSetCfg(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     }else if (strcmp(method, "pduLogFun") == 0) {
         char *result = PduRpcObj::pduLogFun(params);
-        response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                              "result", result);
-        free(result);
+        response = responseStr(response , result , id);
     }else {
         response =
                 mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
