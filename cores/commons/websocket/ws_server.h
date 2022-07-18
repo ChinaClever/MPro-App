@@ -12,6 +12,7 @@ public:
     explicit WS_Server(QObject *parent = nullptr);
     bool initServer(int port) {return initServer(QWebSocketServer::NonSecureMode, port);}
     bool initSslServer(int port) {return initServer(QWebSocketServer::SecureMode, port);}
+    void close() {if(m_pWebSocketServer) m_pWebSocketServer->close();}
 
 protected:
     bool listen(int port);

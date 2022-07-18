@@ -5,17 +5,37 @@
 #include "integr_jsonrecv.h"
 #define INTEGR_UDP_SIZE  2
 
+struct sPushUdpCfg{
+    int en = 0;
+    QString host;
+    int port=1124;
+};
+
+struct sPushHttpCfg{
+    int en = 0; // 0 禁此 1 post 2 put
+    QString url;
+    int timeout=1;
+
+    int enTls =0;
+    int port=3066;
+};
+
+struct sPushCfg{
+    sPushUdpCfg udp[INTEGR_UDP_SIZE];
+    sPushHttpCfg http;
+    int recvPort=3096;
+    int recvEn = 0; // 0 禁此 1 UDP 2 TCP 3
+    int sec = 5;
+};
+
+
 class Integr_PushThread : public QObject
 {
     Q_OBJECT
 public:
     explicit Integr_PushThread(QObject *parent = nullptr);
     ~Integr_PushThread();
-
-    void push_startUdp(int id, const QString &ip, int port);
-    void push_startHttp(const QString &url, int timeout);
-    void push_setTime(int sec=5);
-    void push_stop(int id=0);
+    static sPushCfg pushCfg;
 
 public slots:
     void run();
@@ -23,7 +43,7 @@ public slots:
 
 private:
     void delay();
-    void workDown();    
+    void workDown();
     void udpPush(const QByteArray &array);
     void httpPost(const QByteArray &array);
 
@@ -32,16 +52,7 @@ private:
     Net_Udp *mUdp = nullptr;
     Integr_JsonBuild *mJson;
     CThread *mThread = nullptr;
-
-    struct sPushIt {
-        sPushIt() {sec=5;http_timeout=1;}
-        QString udp_ip[INTEGR_UDP_SIZE]; // UDP推送地址
-        int port[INTEGR_UDP_SIZE]; // UDP推送端口
-
-        QString http_url; // http网址
-        int http_timeout; // http趕时
-        int sec; // 推送时间间隔
-    } mItem;
+    sPushCfg *mCfg = &pushCfg;
 };
 
 #endif // INTEGR_PUSHTHREAD_H

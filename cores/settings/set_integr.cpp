@@ -2,6 +2,7 @@
 #include "mb_core.h"
 #include "agent_core.h"
 #include "rpc_service.h"
+#include "integr_core.h"
 
 Set_Integr::Set_Integr()
 {
@@ -97,7 +98,6 @@ bool Set_Integr::snmpSet(uchar fc, const QString &value, uchar txType)
     return ret;
 }
 
-
 int Set_Integr::rpcCfg(uchar fc)
 {
     sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
@@ -130,3 +130,64 @@ bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
 
     return ret;
 }
+
+QVariant Set_Integr::pushCfg(uchar fc)
+{
+    sPushCfg *cfg = &Integr_Core::pushCfg;
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->udp[0].en; break;
+    case 2: res = cfg->udp[0].host; break;
+    case 3: res = cfg->udp[0].port; break;
+    case 4: res = cfg->udp[1].en; break;
+    case 5: res = cfg->udp[1].host; break;
+    case 6: res = cfg->udp[1].port; break;
+    case 7: res = cfg->recvEn; break;
+    case 8: res = cfg->recvPort; break;
+    case 9: res = cfg->sec; break;
+    case 11: res = cfg->http.en; break;
+    case 12: res = cfg->http.url; break;
+    case 13: res = cfg->http.timeout; break;
+    case 14: res = cfg->http.enTls; break;
+    case 15: res = cfg->http.port; break;
+    default: qDebug() << Q_FUNC_INFO << fc; break;
+    }
+    return res;
+}
+
+
+bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
+{
+    sPushCfg *cfg = &Integr_Core::pushCfg;
+    Integr_Core *obj = Integr_Core::bulid();
+    QString prefix = "push";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "udpEn"; cfg->udp[0].en = value.toInt(); break;
+    case 2: key = "ddpHost"; cfg->udp[0].host = value.toString(); break;
+    case 3: key = "udpPort"; cfg->udp[0].port = value.toInt(); break;
+    case 4: key = "udp2En"; cfg->udp[1].en = value.toInt(); break;
+    case 5: key = "ddp2Host"; cfg->udp[1].host = value.toString(); break;
+    case 6: key = "udp2Port"; cfg->udp[1].port = value.toInt(); break;
+    case 7: key = "recvEn"; obj->startRecv(value.toInt()); break;
+    case 8: key = "recvPort"; obj->setRecvPort(value.toInt()); break;
+    case 9: key = "sec"; cfg->sec = value.toInt(); break;
+
+    case 11: key = "httpEn"; cfg->http.en = value.toInt(); break;
+    case 12: key = "httpUrl"; cfg->http.url = value.toString(); ; break;
+    case 13: key = "httpTimeout"; cfg->http.timeout = value.toInt(); break;
+    case 14: key = "httpTls"; cfg->http.enTls = value.toInt(); break;
+    case 15: key = "httpPort"; cfg->http.port = value.toInt(); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    }
+
+    if(ret) {
+        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        cfg->writeCfg(key, value, prefix);
+
+        sOpItem db; db.op_src = opSrc(txType);
+        db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
+        Log_Core::bulid()->append(db);
+    }
+
+    return ret;
+}
+

@@ -15,6 +15,9 @@ protected:
 
     int rpcCfg(uchar fc);
     bool rpcSet(uchar fc, int value, uchar txType);
+
+    QVariant pushCfg(uchar fc);
+    bool pushSet(uchar fc, QVariant value, uchar txType);
 };
 
 #endif // SET_INTEGR_H

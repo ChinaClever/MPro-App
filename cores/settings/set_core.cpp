@@ -31,6 +31,7 @@ bool Set_Core::setString(sNumStrItem &it)
     bool ret = false; switch (it.fc) {
     case SFnCode::OutputName: ret = outputNameSet(it); break;
     case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
+    case SFnCode::EPush: ret = pushSet(it.id, it.str, it.txType); break;
     case SFnCode::ESnmp: ret = snmpSet(it.id, it.str, it.txType); break;
     case SFnCode::EDevLogin: ret = loginSet(it.id, it.str, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
@@ -44,6 +45,7 @@ QString Set_Core::getString(sNumStrItem &it)
     QString str; switch (it.fc) {
     case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
     case SFnCode::ESnmp: str = snmpCfg(it.id); break;
+    case SFnCode::EPush: str = pushCfg(it.id).toString(); break;
     case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
     case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
@@ -58,6 +60,7 @@ bool Set_Core::setNumber(sNumStrItem &it)
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
     case SFnCode::EModbus: ret = modbusSet(it.id, it.value, it.txType); break;
+    case SFnCode::EPush: ret = pushSet(it.id, it.value, it.txType); break;
     case SFnCode::ERpc: ret = rpcSet(it.id, it.value, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     } if(ret) writeAlarm();
@@ -70,6 +73,7 @@ int Set_Core::getNumber(sNumStrItem &it)
     int ret = 0; switch (it.fc) {
     case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
     case SFnCode::EDevInfo: ret = devInfoCfg(it.addr, it.id);  break;
+    case SFnCode::EPush: ret = pushCfg(it.id).toInt(); break;
     case SFnCode::EModbus: ret = modbusCfg(it.id); break;
     case SFnCode::ERpc: ret = rpcCfg(it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
