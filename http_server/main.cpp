@@ -65,19 +65,22 @@ int state = 0;
 //    (void) fn_data;
 //}
 
-char* responseStr(char *response, char *result, struct mg_str id)
+static void process_json_reply(struct mg_connection *c, const struct mg_str &frame, char *result)
 {
-    response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int) id.len, id.ptr,
-                          "result", result);
-    free(result);
-    return response;
-}
+    char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
+    if (response) {
+        mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
+        //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
+    }
 
+    free(response);
+    free(result);
+}
 
 static void process_json_message(struct mg_connection *c, struct mg_str frame) {
     struct mg_str params = mg_str(""), id = mg_str("");
     int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
-    char *response = NULL;
+    char *response = nullptr, *result = nullptr;
 
     // Parse websocket message, which should be a JSON-RPC frame like this:
     // { "id": 3, "method": "sum", "params": [1,2] }
@@ -92,40 +95,30 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
         response = mg_mprintf("{%Q:{%Q:%d,%Q:%.*Q}", "error", "code", -32700,
                               "message", (int) frame.len, frame.ptr);
     } else if (strcmp(method, "pduReadData") == 0) {
-        char *result = PduRpcObj::pduReadData(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduReadData(params);
     } else if (strcmp(method, "pduSetData") == 0) {
-        char *result = PduRpcObj::pduSetData(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduSetData(params);
     } else if (strcmp(method, "pduReadString") == 0) {
-        char *result = PduRpcObj::pduReadString(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduReadString(params);
     }else if (strcmp(method, "pduSetString") == 0) {
-        char *result = PduRpcObj::pduSetString(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduSetString(params);
     }else if (strcmp(method, "pduReadCfg") == 0) {
-        char *result = PduRpcObj::pduReadCfg(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduReadCfg(params);
     }else if (strcmp(method, "pduSetCfg") == 0) {
-        char *result = PduRpcObj::pduSetCfg(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduSetCfg(params);
     }else if (strcmp(method, "pduLogFun") == 0) {
-        char *result = PduRpcObj::pduLogFun(params);
-        response = responseStr(response , result , id);
+        result = PduRpcObj::pduLogFun(params);
     }else {
-        response =
-                mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
+        response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
                            "error", "code", -32601, "message", "Method not found");
     }
 
     // Send the response back to the client
     if (response) {
         mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
-        MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
-    }
-
+        MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response)); free(response);
+    } else process_json_reply(c, id, result);
     free(method);
-    free(response);
 }
 
 // This RESTful server implements the following endpoints:
@@ -201,7 +194,6 @@ int http_main(void) {
     struct mg_mgr mgr;   // Event manager
 
     mg_mgr_init(&mgr);  // Init event manager
-
     PduRpcObj::rpc_export();
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);

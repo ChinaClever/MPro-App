@@ -216,5 +216,5 @@ void Mb_Setting::registerRecvSlot(int address, ushort value)
     else if(address < 3050) relaySet(address, value);
     else if(address == 4000) restoreFactoryDefaults();
     else if(address < 4050) eleClear(value);
-    if(address < 2000) Set_Core::bulid()->writeSettings();
+    if(address < 2000) Set_Core::bulid()->writeAlarm();
 }

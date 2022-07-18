@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_pushthread.h"
-#include "http/http.h"
+//#include "http/http.h"
 
 Integr_PushThread::Integr_PushThread(QObject *parent)
     : QObject{parent}
@@ -69,16 +69,16 @@ void Integr_PushThread::udpPush(const QByteArray &array)
 
 void Integr_PushThread::httpPost(const QByteArray &array)
 {
-    QUrl url(mItem.http_url); //https://github.com/flaviotordini/http
-    Http::instance().setReadTimeout(mItem.http_timeout);
-    auto reply = Http::instance().post(url, array, "application/json");
-    connect(reply, &HttpReply::finished, this, [](auto &reply) {
-        if (reply.isSuccessful()) {
-            qDebug() << "Feel the bytes!" << reply.body();
-        } else {
-            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
-        }
-    });
+//    QUrl url(mItem.http_url); //https://github.com/flaviotordini/http
+//    Http::instance().setReadTimeout(mItem.http_timeout);
+//    auto reply = Http::instance().post(url, array, "application/json");
+//    connect(reply, &HttpReply::finished, this, [](auto &reply) {
+//        if (reply.isSuccessful()) {
+//            qDebug() << "Feel the bytes!" << reply.body();
+//        } else {
+//            qDebug() << "Something's wrong here" << reply.statusCode() << reply.reasonPhrase();
+//        }
+//    });
 }
 
 void Integr_PushThread::workDown()

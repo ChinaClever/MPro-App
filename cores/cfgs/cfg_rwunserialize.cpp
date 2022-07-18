@@ -62,7 +62,7 @@ void Cfg_RwUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
     //data->env.hum.size = data->env.tem.size = size;
 
     data->tg = obj->tg;
-    data->info = obj->info;
+    //data->info = obj->info;
     //cm::dataPacket()->login = obj->login;
 }
 

@@ -8,9 +8,9 @@
 class JsonRpcObj
 {
 public:
-    static double getNumber(mg_str r, int id);
-    static QVector<double> getNumbers(mg_str r, int num);
-    static bool getString(mg_str r, int id, char *s);
+    static double getNumber(mg_str &r, int id);
+    static QVector<double> getNumbers(mg_str &r, int num);
+    static QString getString(mg_str &r, int id);
 };
 
 #endif // JSONRPCOBJ_H

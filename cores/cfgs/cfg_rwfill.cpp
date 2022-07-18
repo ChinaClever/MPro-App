@@ -61,7 +61,7 @@ void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     for(int i=0; i<size; ++i) upEnvData(i, data->env, obj->env[i]);
 
     obj->tg = data->tg;
-    obj->info = data->info;
+    //obj->info = data->info;
 
     //obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;

@@ -4,8 +4,11 @@
 #include "cfg_obj.h"
 #include "cfg_rwstream.h"
 
-#define CFG_DATA_FN     "cfg_datas.ini"
-#define CFG_DEFAULT_FN  "cfg_default.ini"
+#define CFG_ALARM_FN    "cfg_alarm.ini"
+#define CFG_ALARM_DF    "cfg_alarm.df"
+#define CFG_PARAM_FN    "cfg_param.ini"
+#define CFG_PARAM_DN    "cfg_param.df"
+
 
 class Cfg_RwObj : public QObject
 {
@@ -13,19 +16,21 @@ class Cfg_RwObj : public QObject
 public:
     explicit Cfg_RwObj(QObject *parent = nullptr);
 
-    void writeSettings();
+    bool writeParams();
+    void writeAlarms();
 
 public slots:
-    void run() {saveSettings();}
+    void run() {saveAlarms();}
 
 protected:
     virtual void fillData()=0;
     virtual void unSequence()=0;
-    bool readSetting(const QString &fn);
+    bool readParam(const QString &fn);
+    bool readAlarm(const QString &fn);
     cfg::_sDevData *getDev() {return mData;}
 
 private:
-    bool saveSettings();
+    bool saveAlarms();
     QByteArray toDataStream();
     cfg::_sDevData *deDataStream(QByteArray &array);
 
