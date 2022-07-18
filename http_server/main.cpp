@@ -76,7 +76,7 @@ static void process_json_reply(struct mg_connection *c, const struct mg_str &fra
     free(result);
 }
 
-static void process_json_message(struct mg_connection *c, struct mg_str &frame) {
+static void process_json_message(struct mg_connection *c, struct mg_str frame) {
     struct mg_str params = mg_str(""), id = mg_str("");
     int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
     char *response = nullptr, *result = nullptr;
