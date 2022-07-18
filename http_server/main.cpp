@@ -11,67 +11,12 @@ static const char *s_web_root = "/usr/data/clever/web";
 #endif
 FILE* fp = NULL;
 int state = 0;
-// This RESTful server implements the following endpoints:
-//   /websocket - upgrade to Websocket, and implement websocket echo server
-//   any other URI serves static files from s_web_root
-//static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
-//    struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-//    if (ev == MG_EV_OPEN) {
-//        // c->is_hexdumping = 1;
-//        //printf("MG_EV_OPEN\n");
-//    } else if (ev == MG_EV_WS_OPEN) {
-//        c->label[0] = 'W';  // Mark this connection as an established WS client
-//        // printf("MG_EV_WS_OPEN\n");
-//    }else if(ev == MG_EV_HTTP_CHUNK && mg_http_match_uri(hm, "/upload")){
-//        MG_INFO(("Got chunk len %lu", (unsigned long) hm->chunk.len));
-//        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-//        // MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
-//        mg_http_delete_chunk(c, hm);
-//        if (hm->chunk.len == 0) {
-//            MG_INFO(("Last chunk received, sending response"));
-//            mg_http_reply(c, 200, "", "ok (chunked)\n");
-//        }
-//    }else if (ev == MG_EV_HTTP_MSG && mg_http_match_uri(hm, "/upload")) {
-//        MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
-//        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-//        // MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
-//        mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
-//    } else if (ev == MG_EV_HTTP_MSG) {
-//        // printf("MG_EV_HTTP_MSG\n");
-
-//        if (mg_http_match_uri(hm, "/websocket")) {
-//            // Upgrade to websocket. From now on, a connection is a full-duplex
-//            // Websocket connection, which will receive MG_EV_WS_MSG events.
-//            mg_ws_upgrade(c, hm, NULL);
-
-//        } else {
-//            // Serve static files
-//            struct mg_http_serve_opts opts = {.root_dir = s_web_root};
-//            mg_http_serve_dir(c, (mg_http_message *)ev_data, &opts);
-//            //printf("mg_http_serve_dir\n");
-//        }
-
-//    } else if (ev == MG_EV_WS_MSG) {
-//        // Got websocket frame. Received data is wm->data
-//        //printf("MG_EV_WS_MSG\n");
-//        struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
-//        struct mg_str req = wm->data;
-//        char *response = NULL;
-//        jsonrpc_process(req.ptr, req.len, mjson_print_dynamic_buf, &response, NULL);
-//        mg_ws_send(c, response, strlen(response), WEBSOCKET_OP_TEXT);
-//        //LOG(LL_INFO, ("[%.*s] -> [%s]", (int) req.len, req.ptr, response));
-//        free(response);
-//    }
-//    (void) fn_data;
-//}
 
 static void process_json_reply(struct mg_connection *c, const struct mg_str &frame, char *result)
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
-    if (response) {
-        mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
-        //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
-    }
+    if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
+     //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
 
     free(response);
     free(result);

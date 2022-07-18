@@ -6,6 +6,7 @@
 #include "cfg_readparam.h"
 #include "agent_core.h"
 #include "mb_core.h"
+#include "rpc_service.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -15,6 +16,7 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    rpc();
     snmp();
     login();
     modbus();
@@ -76,6 +78,22 @@ void Cfg_ReadParam::modbus()
         case 6: key = "stopBits";  ptr = &cfg->stopBits; value = 1; break;
         case 11: key = "enTcp";  ptr = &cfg->enTcp; value = 0;  break;
         case 12: key = "port";  ptr = &cfg->port; value = 502; break;
+        default: key.clear(); break;
+        }
+        if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
+    }
+}
+
+void Cfg_ReadParam::rpc()
+{
+    int *ptr = nullptr; int value = 0;
+    QString prefix = "rpc"; QString key;
+    sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
+
+    for(int i=0; i<3; ++i) {
+        switch (i) {
+        case 1: key = "enRpc";  ptr = &cfg->en; value = 0; break;
+        case 2: key = "port";  ptr = &cfg->port; value = 6002; break;
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();

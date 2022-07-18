@@ -58,6 +58,7 @@ bool Set_Core::setNumber(sNumStrItem &it)
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
     case SFnCode::EModbus: ret = modbusSet(it.id, it.value, it.txType); break;
+    case SFnCode::ERpc: ret = rpcSet(it.id, it.value, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     } if(ret) writeAlarm();
 
@@ -70,6 +71,7 @@ int Set_Core::getNumber(sNumStrItem &it)
     case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
     case SFnCode::EDevInfo: ret = devInfoCfg(it.addr, it.id);  break;
     case SFnCode::EModbus: ret = modbusCfg(it.id); break;
+    case SFnCode::ERpc: ret = rpcCfg(it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 

@@ -9,7 +9,7 @@
 Cfg_RwMain::Cfg_RwMain(QObject *parent)
     : Cfg_ReadParam{parent}
 {
-    QTimer::singleShot(15,this,SLOT(readSettings()));
+    QTimer::singleShot(1,this,SLOT(readSettings()));
 }
 
 Cfg_RwMain *Cfg_RwMain::bulid(QObject *parent)

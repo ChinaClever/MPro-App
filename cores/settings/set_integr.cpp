@@ -1,6 +1,7 @@
 #include "set_integr.h"
 #include "mb_core.h"
 #include "agent_core.h"
+#include "rpc_service.h"
 
 Set_Integr::Set_Integr()
 {
@@ -90,6 +91,40 @@ bool Set_Integr::snmpSet(uchar fc, const QString &value, uchar txType)
 
         sOpItem db; db.op_src = opSrc(txType);
         db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
+        Log_Core::bulid()->append(db);
+    }
+
+    return ret;
+}
+
+
+int Set_Integr::rpcCfg(uchar fc)
+{
+    sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
+    int res = 0; switch (fc) {
+    case 1: res = cfg->en; break;
+    case 2: res = cfg->port; break;
+    default: qDebug() << Q_FUNC_INFO << fc; break;
+    }
+    return res;
+}
+
+bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
+{
+    Rpc_Service *obj = Rpc_Service::bulid();
+    QString prefix = "rpc";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "enRpc"; obj->startRpc(value); break;
+    case 2: key = "port"; obj->setPort(value); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    }
+
+    if(ret) {
+        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        cfg->writeCfg(key, value, prefix);
+
+        sOpItem db; db.op_src = opSrc(txType);
+        db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
         Log_Core::bulid()->append(db);
     }
 
