@@ -636,7 +636,7 @@ int sscanf(const char *, const char *, ...);
 #endif
 
 #ifndef MG_ENABLE_IPV6
-#define MG_ENABLE_IPV6 0
+#define MG_ENABLE_IPV6 1
 #endif
 
 #ifndef MG_ENABLE_MD5

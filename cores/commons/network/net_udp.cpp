@@ -14,6 +14,7 @@ Net_Udp::Net_Udp(QObject *parent)
 
 bool Net_Udp::bind(int port, const QHostAddress &address)
 {
+    udpSocket->open(QIODevice::ReadWrite);
     return udpSocket->bind(address, port, QUdpSocket::ShareAddress);
 }
 

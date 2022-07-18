@@ -7,7 +7,7 @@ class Set_Core : public Set_Integr
     Set_Core();
 public:
     static Set_Core *bulid();
-    void writeSettings();
+    void writeAlarm();
     bool setting(sDataItem &it);
     bool setNumStr(sNumStrItem &it);
     QString getNumStr(sNumStrItem &it);

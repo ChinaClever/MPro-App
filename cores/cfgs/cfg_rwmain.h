@@ -9,8 +9,9 @@ class Cfg_RwMain : public Cfg_ReadParam
     explicit Cfg_RwMain(QObject *parent = nullptr);
 public:
     static Cfg_RwMain *bulid(QObject *parent = nullptr);
-    bool readDefault() {return readSetting(CFG_DEFAULT_FN);}
-    void writeDefault();
+    bool readParamDefault() {return readParam(CFG_PARAM_DN);}
+    bool readAlarmDefault() {return readAlarm(CFG_ALARM_DF);}
+    void writeAlarmDefault();
 
 private slots:
     bool readSettings();

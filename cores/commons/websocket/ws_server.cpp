@@ -26,8 +26,8 @@ void WS_Server::sslCfg(QWebSocketServer *socket)
     QSslConfiguration sslConfiguration;
     QFile certFile(QStringLiteral("ssl/cert.pem"));
     QFile keyFile(QStringLiteral("ssl/key.pem"));
-    if(!certFile.exists()) certFile.setFileName(QStringLiteral("ssl/localhost.cert"));
-    if(!keyFile.exists()) keyFile.setFileName(QStringLiteral("ssl/localhost.key"));
+    if(!certFile.exists()) certFile.setFileName(":/server.crt");
+    if(!keyFile.exists()) keyFile.setFileName(":/server.key");
 
     bool ret = keyFile.open(QIODevice::ReadOnly);
     if(ret) ret = certFile.open(QIODevice::ReadOnly);
@@ -37,7 +37,7 @@ void WS_Server::sslCfg(QWebSocketServer *socket)
         sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
         sslConfiguration.setLocalCertificate(certificate);
         sslConfiguration.setPrivateKey(sslKey);
-        sslConfiguration.setProtocol(QSsl::TlsV1SslV3);
+        sslConfiguration.setProtocol(QSsl::AnyProtocol);
         socket->setSslConfiguration(sslConfiguration);
     } else qDebug() <<"Error ssl cfg" << Q_FUNC_INFO;
     certFile.close(); keyFile.close();

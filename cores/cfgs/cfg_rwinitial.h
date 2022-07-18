@@ -8,7 +8,7 @@ class Cfg_RwInitial : public Cfg_RwUnserialize
 public:
     explicit Cfg_RwInitial(QObject *parent = nullptr);
     bool initialData();
-
+    bool initialParam();
 private:
     void initDevInfo(sDevInfo &it);
     void setAlarmUnit(sAlarmUnit &it, uchar size, uint rated);

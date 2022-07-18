@@ -271,7 +271,7 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush};
 
 struct sNumStrItem{
 #ifndef LCD_AWTK

@@ -70,7 +70,7 @@ bool Set_Output::relaySet(sDataItem &unit)
         case DSub::Value:  ret = outputCtrl(unit); break;
         case DSub::Relays: ret = outputsCtrl(unit); break;
         case DSub::UpTime:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-        default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeSettings(); break;
+        default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
         } relayOpLog(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
 
