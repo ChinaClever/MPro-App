@@ -44,7 +44,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 5: it->buzzerSw = value; break;
     case 7: it->opNum = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
-    }
+    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     return ret;
 }

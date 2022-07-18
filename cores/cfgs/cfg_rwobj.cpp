@@ -15,7 +15,7 @@ Cfg_RwObj::Cfg_RwObj(QObject *parent) : QObject{parent}
     memset((void *)mData, 0, sizeof(cfg::_sDevData));
 }
 
-void Cfg_RwObj::writeSettings()
+void Cfg_RwObj::writeAlarms()
 {
     if(!isRun) {
         isRun = true;
@@ -23,10 +23,41 @@ void Cfg_RwObj::writeSettings()
     }
 }
 
-bool Cfg_RwObj::saveSettings()
+bool Cfg_RwObj::writeParams()
+{
+    QFile file(Cfg_Obj::pathOfCfg(CFG_PARAM_FN));
+    bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+    if(ret) {
+        QByteArray array; ushort end = END_CRC;
+        QDataStream in(&array, QIODevice::WriteOnly);
+        in << cm::toByteArray(cm::masterDev()->info) << end;
+        file.write(array);
+    }
+    mFile->close();
+    return ret;
+}
+
+bool Cfg_RwObj::readParam(const QString &fn)
+{
+    bool ret = false; QFile file(Cfg_Obj::pathOfCfg(fn));
+    if(file.exists() && file.open(QIODevice::ReadOnly)) {
+        QByteArray array = mFile->readAll();
+        if(array.size()) {
+            QDataStream out(&array, QIODevice::ReadOnly);
+            QByteArray v; ushort end; out >> v >> end;
+            if(end == END_CRC){cm::masterDev()->info = cm::toStruct<sDevInfo>(v); ret = true;}
+            else qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
+                             << mFile->errorString() << Q_FUNC_INFO;
+        }
+    }file.close();
+
+    return ret;
+}
+
+bool Cfg_RwObj::saveAlarms()
 {
     mThread->msleep(450);
-    mFile->setFileName(Cfg_Obj::pathOfCfg(CFG_DATA_FN)); fillData();
+    mFile->setFileName(Cfg_Obj::pathOfCfg(CFG_ALARM_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
@@ -37,19 +68,17 @@ bool Cfg_RwObj::saveSettings()
     return ret;
 }
 
-bool Cfg_RwObj::readSetting(const QString &fn)
+bool Cfg_RwObj::readAlarm(const QString &fn)
 {
     bool ret = false; mFile->setFileName(Cfg_Obj::pathOfCfg(fn));
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         QByteArray array = mFile->readAll();
         if(array.size()) {
-            ret = deDataStream(array);
-            if(ret) unSequence();
+            ret = deDataStream(array); if(ret) unSequence();
+            else qCritical() << "Error: read alarm" << Cfg_Obj::pathOfCfg(fn)
+                                 << mFile->errorString() << Q_FUNC_INFO;
         }  mFile->close();
     }
-
-    if(!ret) qCritical() << "Error: read settings" << Cfg_Obj::pathOfCfg(fn)
-                         << mFile->errorString() << Q_FUNC_INFO;
 
     return ret;
 }

@@ -21,21 +21,25 @@ Cfg_RwMain *Cfg_RwMain::bulid(QObject *parent)
     return sington;
 }
 
-void Cfg_RwMain::writeDefault()
+void Cfg_RwMain::writeAlarmDefault()
 {
     QString cmd = "rm -f %1";
-    system(cmd.arg(CFG_DEFAULT_FN).toLatin1().data());
+    system(cmd.arg(CFG_ALARM_DF).toLatin1().data());
 
     cmd = "cp -rf %1 %2";
-    cmd = cmd.arg(CFG_DATA_FN, CFG_DEFAULT_FN);
+    cmd = cmd.arg(CFG_ALARM_FN, CFG_ALARM_DF);
     system(cmd.toLatin1().data());
 }
 
 bool Cfg_RwMain::readSettings()
 {
     mThread->init(this, SLOT(run()));
-    bool ret = readSetting(CFG_DATA_FN);
-    if(!ret) ret = readDefault();
+    bool ret = readParam(CFG_PARAM_FN);
+    if(!ret) ret = readParamDefault();
+    if(!ret) initialParam();
+
+    ret = readAlarm(CFG_ALARM_FN);
+    if(!ret) ret = readAlarmDefault();
     if(!ret) ret = initialData();
     readCfgParams();
 

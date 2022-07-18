@@ -21,9 +21,9 @@ Set_Core *Set_Core::bulid()
     return sington;
 }
 
-void Set_Core::writeSettings()
+void Set_Core::writeAlarm()
 {
-    Cfg_ReadWrite::bulid()->writeSettings();
+    Cfg_ReadWrite::bulid()->writeAlarms();
 }
 
 bool Set_Core::setString(sNumStrItem &it)
@@ -59,7 +59,7 @@ bool Set_Core::setNumber(sNumStrItem &it)
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
     case SFnCode::EModbus: ret = modbusSet(it.id, it.value, it.txType); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    } if(ret) writeSettings();
+    } if(ret) writeAlarm();
 
     return ret;
 }
@@ -117,7 +117,7 @@ bool Set_Core::setting(sDataItem &it)
             ret = relaySet(it);
         } else {
             ret = setAlarm(it);
-            if(ret) writeSettings();
+            if(ret) writeAlarm();
         }
     } else {
         ret = false;

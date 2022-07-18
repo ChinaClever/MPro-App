@@ -13,9 +13,15 @@ Cfg_RwInitial::Cfg_RwInitial(QObject *parent)
 
 bool Cfg_RwInitial::initialData()
 {
+    sDevData *dev = cm::masterDev();    
+    initDevData(dev);
+    return true;
+}
+
+bool Cfg_RwInitial::initialParam()
+{
     sDevData *dev = cm::masterDev();
     initDevInfo(dev->info);
-    initDevData(dev);
     return true;
 }
 
