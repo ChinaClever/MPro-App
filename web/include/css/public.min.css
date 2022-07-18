@@ -293,7 +293,6 @@ blockquote {
 	background-color: #fff;
 	
 }
-
 .page-title {
     padding: 6px 0;
     line-height: 1.5;
@@ -342,9 +341,15 @@ blockquote {
 .table th {
     padding: 2px 5px;
     border: 1px solid #d6d6d9;
+}
+.text-center td,
+.text-center th {
     text-align: center;
 }
-
+.text-left td,
+.text-left th {
+    text-align: left;
+}
 .table th {
     background: #f6f6f6;
     border-bottom-width: 2px
@@ -943,4 +948,10 @@ kbd {
 
 .ml20 {
     margin-left: 20px
+}
+.border-none{
+    border-bottom:10px solid rgb(208,208,208);
+    border-top:10px solid rgb(208,208,208);
+    border-left:12px solid rgb(208,208,208);
+    border-right:12px solid rgb(208,208,208);
 }
