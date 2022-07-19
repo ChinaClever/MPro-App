@@ -4,10 +4,12 @@
 
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
 static const char *s_listen_on = "ws://0.0.0.0:8000";
+static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
 static const char *s_listen_on = "ws://0.0.0.0:80";
 static const char *s_web_root = "/usr/data/clever/web";
+static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 #endif
 FILE* fp = NULL;
 int state = 0;
@@ -55,7 +57,7 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
         result = PduRpcObj::pduLogFun(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
-                           "error", "code", -32601, "message", "Method not found");
+                              "error", "code", -32601, "message", "Method not found");
     }
 
     // Send the response back to the client
@@ -75,6 +77,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         // c->is_hexdumping = 1;
     } else if (ev == MG_EV_WS_OPEN) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
+    } else if (ev == MG_EV_ACCEPT && fn_data != NULL) {
+        struct mg_tls_opts opts = {
+            //.ca = "ca.pem",         // Uncomment to enable two-way SSL
+            .cert = "client.crt",     // Certificate PEM file
+            .certkey = "client.key",  // This pem contains both cert and key
+        };
+        mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
 
         if (mg_http_match_uri(hm, "/websocket")) {
@@ -143,6 +152,7 @@ int http_main(void) {
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
+    mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
     for (;;) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
     mg_mgr_free(&mgr);                            // Deallocate event manager
     return 0;
