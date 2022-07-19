@@ -22,6 +22,7 @@
   left: 45%;
   top: 45%;
   transform: translate(-50%, -50%);
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   /* display: flex; */
 }
 .inner_box div {
@@ -31,7 +32,8 @@
 .inner_box .center_form {
   width: 450px;
   height: 350px;
-  background-color:rgb(239, 233, 233);
+  background-color:rgb(232,232,232);
+  border-radius: 10px;
   /* background-color: rgba(179, 187, 186, 0.575); */
   box-shadow: 0px 0px 3px rgb(217, 224, 224);
 }
@@ -43,26 +45,31 @@
 .title {
   height: 50px !important;
   line-height: 50px;
-  background-color: rgba(179, 187, 186, 0.575);
-  margin-bottom: 40px;
+  border-radius: 10px;
+  background-color: rgb(232,232,232);
+  /* margin-bottom: 40px; */
+  font-weight: 800;
+  font-size: 25px;
 }
-table {
-  position:relative;
-}
-td {
-  position:relative;
+span{
+  color:rgb(56,56,56);
 }
 input {
   width: 280px;
   margin: 10px 50px 0px 40px;
   height: 35px;
   padding-left: 20px;
-  background: none;
+  /* background: none; */
   border: none;
-  color :#fff;
+  color :rgb(64,64,64);
   border-bottom: 1px solid #fff;
   font-size: 15px;
   ime-mode:disabled;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+a{
+  color :rgb(104,104,104);
+  font-size: 18px;
 }
 /* remember me */
 .center_form .chk{
@@ -74,7 +81,7 @@ input {
   justify-content:space-between;
   font-size: 14px;
 }
-.chk span input a{
+.chk span input {
   width: 15px;
   height: 15px;
   margin: 10px;
@@ -82,27 +89,15 @@ input {
 .error
 {
   color:red;
+  display:inline-block;
   text-align: center;
+  height: 30px;
+  width: 449px;
   font-weight: bold;
+  font-size: 15px;
+  line-height: 200%;
 }
-/*两侧小三角形 */
-.inner_box .left_label,.right_label {
-  width: 0px;
-  height: 0px;
-  margin-top: 280px;
-}
-.inner_box .left_label {
-  border-top: solid 10px rgba(255, 255, 255, 0);
-  border-right: solid 10px rgb(255, 255, 255);
-  border-bottom: solid 10px rgb(255, 255, 255);
-  border-left: solid 10px rgba(255, 255, 255, 0);
-}
-.inner_box .right_label {
-  border-top: solid 10px rgba(255, 255, 255, 0);
-  border-right: solid 10px rgba(255, 255, 255, 0);
-  border-bottom: solid 10px rgb(255, 255, 255);
-  border-left: solid 10px rgb(255, 255, 255);
-}
+
 /* 登录按钮 */
 .signIn_btn {
   height: 60px;
@@ -114,18 +109,7 @@ input {
 }
 .signIn_btn input{
   font-size: 20px;
-  color:rgb(93, 182, 204);
+  color:#FFF;
+  background-color: rgb(136, 170, 170);
   text-align: center;
-}
-.auto{
-	ime-mode:auto;
-}
-.normal{
-	ime-mode:normal;
-}
-.active{
-	ime-mode:active;
-}
-.inactive{
-	ime-mode:inactive;
 }
