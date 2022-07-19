@@ -24,7 +24,6 @@
 #endif
 
 
-
 static int mg_b64idx(int c) {
   if (c < 26) {
     return c + 'A';
