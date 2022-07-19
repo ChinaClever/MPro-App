@@ -24,7 +24,7 @@ var jsonrpc = function()
   var url_ = window.location.host;
   if(pro_ == "http:"){
     pro = "ws://";
-  }else if(pro_ == "https://"){
+  }else if(pro_ == "https:"){
     pro = "wss://";
   }
   var url = pro + url_ +'/websocket';
