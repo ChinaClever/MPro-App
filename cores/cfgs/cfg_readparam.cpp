@@ -124,7 +124,7 @@ void Cfg_ReadParam::push()
         case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 12: key = "httpUrl"; str = &cfg->http.url; break;
         case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 14: key = "httpTls"; ptr = &cfg->http.enTls; value = 0; break;
+        case 14: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
         case 15: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }

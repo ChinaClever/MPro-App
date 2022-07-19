@@ -10,9 +10,29 @@ Integr_JsonBuild::Integr_JsonBuild()
     mJson = new QJsonObject();
 }
 
+Integr_JsonBuild *Integr_JsonBuild::bulid()
+{
+    static Integr_JsonBuild* sington = NULL;
+    if(sington == NULL) {
+        sington = new Integr_JsonBuild();
+    }
+    return sington;
+}
+
 QByteArray Integr_JsonBuild::getJson(uchar addr)
 {
     QByteArray array;
+    QJsonObject json = getJsonObject(addr);
+    if(!json.isEmpty()) {
+        QJsonDocument doc(json);
+        array = doc.toJson(QJsonDocument::Indented);
+    }
+
+    return array;
+}
+
+QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
+{
     sDevData *dev = cm::devData(addr);  QJsonObject json;
     if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
@@ -20,13 +40,10 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
         json.insert("version", JSON_VERSION);
         devData(dev, "pdu_data", json);
         //saveJson("cc", json);
-
-        QJsonDocument doc(json);
-        array = doc.toJson(QJsonDocument::Indented);//
     } else {
-    }
 
-    return array;
+    }
+    return json;
 }
 
 bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)

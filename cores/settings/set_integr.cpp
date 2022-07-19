@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_integr.h"
 #include "mb_core.h"
 #include "agent_core.h"
@@ -147,7 +152,7 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;
-    case 14: res = cfg->http.enTls; break;
+    case 14: res = cfg->http.enServ; break;
     case 15: res = cfg->http.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
@@ -174,7 +179,7 @@ bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
     case 11: key = "httpEn"; cfg->http.en = value.toInt(); break;
     case 12: key = "httpUrl"; cfg->http.url = value.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = value.toInt(); break;
-    case 14: key = "httpTls"; cfg->http.enTls = value.toInt(); break;
+    case 14: key = "enServ"; cfg->http.enServ = value.toInt(); break;
     case 15: key = "httpPort"; cfg->http.port = value.toInt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }

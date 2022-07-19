@@ -8,9 +8,16 @@
 Integr_Core::Integr_Core(QObject *parent)
     : Integr_Receiver{parent}
 {
-
+    httpServer();
 }
 
+void Integr_Core::httpServer()
+{
+    switch (pushCfg.http.enServ) {
+    case 1: Integr_HttpServer::initHttpServer(pushCfg.http.port); break;
+    case 2: Integr_HttpServer::initHttpsServer(pushCfg.http.port); break;
+    }
+}
 
 Integr_Core *Integr_Core::bulid(QObject *parent)
 {
