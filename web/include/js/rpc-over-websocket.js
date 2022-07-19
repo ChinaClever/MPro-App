@@ -19,8 +19,15 @@ var modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","",
 var snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
 var jsonrpc = function()
 {
+  var pro = 0;
+  var pro_  = window.location.protocol;
   var url_ = window.location.host;
-  var url = 'ws://'+ url_ +'/websocket';
+  if(pro_ == "http:"){
+    pro = "ws://";
+  }else if(pro_ == "https://"){
+    pro = "wss://";
+  }
+  var url = pro + url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
   var type = 0,topic = 0,subtopic = 0,addr = 0,num = 0;
