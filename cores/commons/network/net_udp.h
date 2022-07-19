@@ -14,6 +14,7 @@ public:
     bool writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port);
     bool bind(int port, const QHostAddress &address = QHostAddress::Any);
     bool broadcastDatagram(const QByteArray &datagram, quint16 port);
+    void close() {udpSocket->close();}
 
 signals:
     void recvSig(const QByteArray &array);

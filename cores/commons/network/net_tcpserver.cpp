@@ -12,6 +12,10 @@ Net_TcpServer::Net_TcpServer(QObject *parent)
     connect(tcpServer,SIGNAL(newConnection()),this,SLOT(onNewConnection()));
 }
 
+bool Net_TcpServer::listen(int port)
+{
+    return tcpServer->listen(QHostAddress::Any, port);
+}
 
 void Net_TcpServer::onNewConnection()
 {

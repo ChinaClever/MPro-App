@@ -9,7 +9,8 @@ class Net_TcpServer : public QObject
     Q_OBJECT
 public:
     explicit Net_TcpServer(QObject *parent = nullptr);
-    bool listen(int port){return tcpServer->listen(QHostAddress::Any, port);}
+    void close() {tcpServer->close();}
+    bool listen(int port);
 
 signals:
     void recvSig(const QByteArray &array);

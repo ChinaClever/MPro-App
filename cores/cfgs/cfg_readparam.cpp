@@ -6,6 +6,8 @@
 #include "cfg_readparam.h"
 #include "agent_core.h"
 #include "mb_core.h"
+#include "rpc_service.h"
+#include "integr_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -15,6 +17,8 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    rpc();
+    push();
     snmp();
     login();
     modbus();
@@ -82,13 +86,64 @@ void Cfg_ReadParam::modbus()
     }
 }
 
+void Cfg_ReadParam::rpc()
+{
+    int *ptr = nullptr; int value = 0;
+    QString prefix = "rpc"; QString key;
+    sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
+
+    for(int i=1; i<3; ++i) {
+        switch (i) {
+        case 1: key = "enRpc";  ptr = &cfg->en; value = 0; break;
+        case 2: key = "port";  ptr = &cfg->port; value = 6002; break;
+        default: key.clear(); break;
+        }
+        if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
+    }
+}
+
+void Cfg_ReadParam::push()
+{
+    QString *str = nullptr;
+    int *ptr = nullptr; int value = 0;
+    QString prefix = "push"; QString key;
+    sPushCfg *cfg = &Integr_Core::pushCfg;
+
+    for(int i=1; i<16; ++i) {
+        switch (i) {
+        case 1: key = "udpEn"; ptr = &cfg->udp[0].en; value = 0; break;
+        case 2: key = "ddpHost"; str = &cfg->udp[0].host; break;
+        case 3: key = "udpPort"; ptr = &cfg->udp[0].port; value = 1124; break;
+        case 4: key = "udp2En"; ptr = &cfg->udp[1].en; value = 0; break;
+        case 5: key = "ddp2Host"; str = &cfg->udp[1].host; break;
+        case 6: key = "udp2Port"; ptr = &cfg->udp[1].port; value = 1125; break;
+        case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
+        case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
+        case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
+
+        case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
+        case 12: key = "httpUrl"; str = &cfg->http.url; break;
+        case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
+        case 14: key = "httpTls"; ptr = &cfg->http.enTls; value = 0; break;
+        case 15: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
+        default: key.clear(); break;
+        }
+
+        if(key.size()) {
+            if(ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
+            else *str = mCfg->readCfg(key, value, prefix).toString();
+            ptr = nullptr;
+        }
+    }
+}
+
 void Cfg_ReadParam::readUut()
 {
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
     sUutInfo *it = &(cm::masterDev()->uut);
 
-    for(int i=1; i<7; ++i) {
+    for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "idc";  ptr = it->idc; break;
         case 2: key = "room";  ptr = it->room; break;

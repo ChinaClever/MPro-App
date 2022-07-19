@@ -19,7 +19,7 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-    Shm::initShm();
+    Shm::initShm(); Cfg_ReadWrite::bulid();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);

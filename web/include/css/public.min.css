@@ -293,7 +293,6 @@ blockquote {
 	background-color: #fff;
 	
 }
-
 .page-title {
     padding: 6px 0;
     line-height: 1.5;
@@ -342,9 +341,16 @@ blockquote {
 .table th {
     padding: 2px 5px;
     border: 1px solid #d6d6d9;
+}
+.text-center td,
+.text-center th {
     text-align: center;
 }
-
+.text-left td,
+.text-left th {
+    text-align: left;
+    height: 35px;
+}
 .table th {
     background: #f6f6f6;
     border-bottom-width: 2px
@@ -672,6 +678,10 @@ label>input[disabled]+span {
 
 select,
 select:active {
+    border:#ccc solid 1px;
+    height: 24px;
+    width: 200px;
+    line-height: 10px;
     background-color: #f3f3f3;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(90%, #ececec), to(#f3f3f3));
     background-image: -webkit-linear-gradient(white 0, #ececec 90%, #f3f3f3);
@@ -943,4 +953,10 @@ kbd {
 
 .ml20 {
     margin-left: 20px
+}
+.border-none{
+    border-bottom:10px solid rgb(240,240,240);
+    border-top:10px solid rgb(240,240,240);
+    border-left:12px solid rgb(240,240,240);
+    border-right:12px solid rgb(240,240,240);
 }

@@ -14,14 +14,11 @@ static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 FILE* fp = NULL;
 int state = 0;
 
-
 static void process_json_reply(struct mg_connection *c, const struct mg_str &frame, char *result)
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
-    if (response) {
-        mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
-        //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
-    }
+    if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
+     //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
 
     free(response);
     free(result);
