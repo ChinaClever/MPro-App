@@ -21,6 +21,7 @@ include(outputs/outputs.pri)
 include(commons/commons.pri)
 include(integrs/integrs.pri)
 include(settings/settings.pri)
+include(updaters/updaters.pri)
 
 SOURCES += \
         main.cpp

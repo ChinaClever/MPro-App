@@ -24,3 +24,8 @@ bool IPC_WebClient::devNameSet(int addr, const QString &value, int id)
 {
      return setString(addr, SFnCode::Uuts, id, value);
 }
+
+bool IPC_WebClient::upload(const QString &fn, const QString &md5)
+{
+    return multipleStrings(2, fn, md5);
+}

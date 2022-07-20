@@ -102,7 +102,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
 
 
         if(state == 0){
-            char file_path[256]="/tmp/";
+            char file_path[256]="/tmp/";  // /usr/data/clever/upload/
             int n = strlen(file_path);
             int y = 0;
             for(int i = 0 ; i < (int)strlen(hm->query.ptr) ; i++){

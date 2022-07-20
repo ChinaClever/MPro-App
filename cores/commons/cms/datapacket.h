@@ -1,6 +1,6 @@
 #ifndef DATAPACKET_H
 #define DATAPACKET_H
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
 #include "cthread.h"
 #else
 #include <stdio.h>
@@ -39,7 +39,7 @@ typedef unsigned int uint;
  */
 struct sAlarmUnit
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sAlarmUnit() {size=0;}
 #endif
     uchar size;
@@ -72,7 +72,7 @@ struct sRelayUnit
  */
 struct sObjData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sObjData() {size=0;}
 #endif
     uchar size;
@@ -102,7 +102,7 @@ struct sObjData
  */
 struct sEnvData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sEnvData() {size=0;}
 #endif
     uchar size;
@@ -193,7 +193,7 @@ struct sUutInfo {
  */
 struct sDevData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sDevData() {id=0; offLine=0; alarm=0; }
 #endif
 
@@ -220,7 +220,7 @@ struct sDevData
 
 struct sNetAddr
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sNetAddr() {mode=0;}
 #endif
     uchar mode;
@@ -257,7 +257,7 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
 struct sDataItem
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sDataItem():soi(0),addr(0),rw(0),value(0){}
 #endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
@@ -274,7 +274,7 @@ struct sDataItem
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush};
 
 struct sNumStrItem{
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
 #endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
@@ -289,7 +289,7 @@ struct sNumStrItem{
     char str[NAME_SIZE];
 };
 
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
 struct sRelay
 {
     enum State{Off, On, Reset};
@@ -297,6 +297,14 @@ struct sRelay
     enum Mode{Standard, EnOffALarm};
     enum Alarm{NoAlarm, OffALarm};
 };
+
+struct sMultipleStrings
+{
+    sMultipleStrings():fc(0){}
+    char str[2][NAME_SIZE];
+    uchar fc; // 1 登陆  2 升级
+};
+
 #endif
 
 #endif // DATAPACKET_H

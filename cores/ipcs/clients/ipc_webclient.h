@@ -10,6 +10,7 @@ class IPC_WebClient : public IPC_OutputClient
 public:
     static IPC_WebClient *bulid(QObject *parent = nullptr);
     bool devNameSet(int addr, const QString &value, int id=6);
+    bool upload(const QString &fn,const QString &md5="");
 };
 
 #endif // IPC_WEBCLIENT_H
