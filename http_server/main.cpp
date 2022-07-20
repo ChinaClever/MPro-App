@@ -18,7 +18,7 @@ static void process_json_reply(struct mg_connection *c, const struct mg_str &fra
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
     if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
-     //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
+    //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
 
     free(response);
     free(result);
@@ -81,7 +81,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         struct mg_tls_opts opts = {
             //.ca = "ca.pem",         // Uncomment to enable two-way SSL
             .cert = "client.crt",     // Certificate PEM file
-            .certkey = "client.key",  // This pem contains both cert and key
+                    .certkey = "client.key",  // This pem contains both cert and key
         };
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
@@ -90,7 +90,28 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
             // Upgrade to websocket. From now on, a connection is a full-duplex
             // Websocket connection, which will receive MG_EV_WS_MSG events.
             mg_ws_upgrade(c, hm, NULL);
-        } else {
+        } else if(mg_http_match_uri(hm, "/upload")){
+            MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
+            MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+            MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
+            char file_path[256], name[256];
+            mg_http_get_var(&hm->query, "name", name, sizeof(name));
+            printf("%s \n", name);
+            if (name[0] == '\0') {
+                mg_http_reply(c, 400, "", "%s", "name required");
+            } else {
+                mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
+            }
+            printf("%s \n", name);
+            if((int) hm->query.len > 5){
+                printf("%s \n", file_path);
+                fp = fopen(file_path , "w+b");
+            }
+            fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
+            fclose(fp);//
+            fp = NULL;//
+            mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
+        }else {
             // Serve static files
             struct mg_http_serve_opts opts = {.root_dir = s_web_root};
             mg_http_serve_dir(c, hm, &opts);
@@ -102,22 +123,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
 
 
         if(state == 0){
-            char file_path[256]="/tmp/";
-            int n = strlen(file_path);
-            int y = 0;
-            for(int i = 0 ; i < (int)strlen(hm->query.ptr) ; i++){
-                if(hm->query.ptr[i] == ' ') {y = i;break;}
+            char file_path[256], name[256];
+            mg_http_get_var(&hm->query, "name", name, sizeof(name));
+            printf("%s \n", name);
+            if (name[0] == '\0') {
+                mg_http_reply(c, 400, "", "%s", "name required");
+            } else {
+                mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
             }
-            printf("%d \n" , n);
-            printf("%s \n", hm->query.ptr);
-            int j = n;
-            for(int k = 5; k < y ; j++ , k++){
-                file_path[j] = hm->query.ptr[k];
+            if((int) hm->query.len > 5){
+                printf("%s \n", file_path);
+                fp = fopen(file_path , "w+b");
+                state = 1;
             }
-            file_path[j]='\0';
-            printf("%s \n", file_path);
-            fp = fopen(file_path , "w+b");
-            state = 1;
         }
         if(state == 1 && hm->chunk.len != 0){
             fwrite(hm->chunk.ptr ,(int) hm->chunk.len, 1 , fp);
@@ -131,11 +149,6 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
             MG_INFO(("Last chunk received, sending response"));
             mg_http_reply(c, 200, "", "ok (chunked)\n");
         }
-    } else if (ev == MG_EV_HTTP_MSG && mg_http_match_uri(hm, "/upload")) {
-        MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
-        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
-        mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
     }else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
