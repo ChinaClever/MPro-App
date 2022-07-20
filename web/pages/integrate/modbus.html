@@ -47,6 +47,7 @@
 		var databits_name = new Array("6","7","8");
 		var parity_name = new Array("None","Even","Odd");
 		var stopbits_name = new Array("1","2");
+		var select_name = new Array("addr","baud","databits","parity","stopbits","tcp_port")
 		read_data();
 		function read_data(){
 			for(var i = 0;i<slave_num;i++){
@@ -66,13 +67,21 @@
 			return tbody;
 		}
 		
-		function rtuSet(rtu){
-			alert("");
+		function rtuSet(){
+			var sel =0;
+			for(var i = 0 ;i<(select_name.length -1);i++){
+				sel = document.getElementById(select_name[i]);
+				if(sel != select_val[i+1]){
+					rpc.call();
+				}
+			}
 
 		}
-		function tcpSet(tcp){
-			alert("");
-
+		function tcpSet(){
+			var sel = document.getElementById(select_name[select_name.length]);
+			if(sel != select_val[select_name.length+1]){
+				rpc.call();
+			}
 
 		}
 		function buildTableRtu() {
@@ -109,7 +118,7 @@
 				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input type = "button" style ="width:60%" value = "保存" onclick = rtuSet(this);></input></td>';
+			tbody += '<tr><td><input type = "button" style ="width:60%" value = "保存" onclick = rtuSet();></input></td>';
 			tbody += '<td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
@@ -120,7 +129,7 @@
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td>Modbus端口号：</td>';
 			tbody += '<td><input id = "tcp_port" value = "502" style="width:200px"></td></tr>';
-			tbody += '<tr><td><input style ="width:60%" type = "button" value = "保存" onclick = tcpSet(this);></input></td>';
+			tbody += '<tr><td><input style ="width:60%" type = "button" value = "保存" onclick = tcpSet();></input></td>';
 			tbody += '<td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
