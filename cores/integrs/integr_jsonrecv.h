@@ -14,12 +14,18 @@ signals:
     void recvSetSig(const sDataItem &it);
     void recvNumStrSig(const sNumStrItem &it);
 
-private:
+public:
+    bool checkInput(const QByteArray &msg, QJsonObject &obj);
     QJsonValue getValue(const QJsonObject &object, const QString &key);
-    QJsonObject getObject(const QJsonObject &object, const QString &key);
     QJsonArray getArray(const QJsonObject &object, const QString &key);
+    QJsonObject getObject(const QJsonObject &object, const QString &key);
+    QJsonObject getObject(const QByteArray &msg, const QString &key);
+
     QString getString(const QJsonObject &object, const QString &key);
+    QString getString(const QByteArray &msg, const QString &key);
+
     double getData(const QJsonObject &object, const QString &key);
+    double getData(const QByteArray &msg, const QString &key);
 
     bool company(const QJsonObject &object);
     bool versionNumber(const QJsonObject &object);

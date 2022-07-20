@@ -11,7 +11,7 @@ Integr_PushThread::Integr_PushThread(QObject *parent)
     : QObject{parent}
 {
     mUdp = new Net_Udp(this);
-    mJson = new Integr_JsonBuild();
+    mJson = Integr_JsonBuild::bulid();
     mThread = new CThread(this);
 }
 

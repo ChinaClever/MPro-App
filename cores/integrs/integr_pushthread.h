@@ -16,7 +16,7 @@ struct sPushHttpCfg{
     QString url;
     int timeout=1;
 
-    int enTls =0;
+    int enServ =0;
     int port=3066;
 };
 

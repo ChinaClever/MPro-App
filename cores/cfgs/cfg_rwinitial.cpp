@@ -62,7 +62,7 @@ void Cfg_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
     setAlarmUnit(it.cur, size, curRated);
     setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
-    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR/COM_RATE_VOL);
+    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR);
 }
 
 void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)

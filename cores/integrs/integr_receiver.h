@@ -1,7 +1,7 @@
 #ifndef INTEGR_RECEIVER_H
 #define INTEGR_RECEIVER_H
 #include "ws_server.h"
-#include "integr_pushthread.h"
+#include "integr_httpserver.h"
 
 class Integr_Receiver : public Integr_PushThread
 {
