@@ -32,107 +32,6 @@ int Set_Integr::modbusCfg(uchar fc)
     return res;
 }
 
-int Set_Integr::baudTo(int value)
-{
-    int res = 0;
-    switch(value) {
-    case QSerialPort::Baud9600: res = 0; break;
-    case QSerialPort::Baud19200: res = 1; break;
-    case QSerialPort::Baud38400: res = 2; break;
-    case QSerialPort::Baud57600: res = 3; break;
-    case QSerialPort::Baud115200: res = 4; break;
-    }
-    return res;
-}
-
-int Set_Integr::toBaud(int value)
-{
-    int res = QSerialPort::Baud9600;
-    switch(value) {
-    case 0: res = QSerialPort::Baud9600; break;
-    case 1: res = QSerialPort::Baud19200; break;
-    case 2: res = QSerialPort::Baud38400; break;
-    case 3: res = QSerialPort::Baud57600; break;
-    case 4: res = QSerialPort::Baud115200; break;
-    }
-    return res;
-}
-
-int Set_Integr::parityTo(int value)
-{
-    int res = 0;
-    switch(value) {
-    case QSerialPort::NoParity: res = 0; break;
-    case QSerialPort::EvenParity: res = 1; break;
-    case QSerialPort::OddParity: res = 2; break;
-    case QSerialPort::SpaceParity: res = 3; break;
-    case QSerialPort::MarkParity: res = 4; break;
-    }
-    return res;
-}
-
-int Set_Integr::toParity(int value)
-{
-    int res = QSerialPort::NoParity;
-    switch(value) {
-    case 0: res = QSerialPort::NoParity; break;
-    case 1: res = QSerialPort::EvenParity; break;
-    case 2: res = QSerialPort::OddParity; break;
-    case 3: res = QSerialPort::SpaceParity; break;
-    case 4: res = QSerialPort::MarkParity; break;
-    }
-    return res;
-}
-
-
-int Set_Integr::dataBitsTo(int value)
-{
-    int res = 3;
-    switch(value) {
-    case QSerialPort::Data5: res = 0; break;
-    case QSerialPort::Data6: res = 1; break;
-    case QSerialPort::Data7: res = 2; break;
-    case QSerialPort::Data8: res = 3; break;
-    }
-    return res;
-}
-
-int Set_Integr::toDataBits(int value)
-{
-    int res = QSerialPort::Data8;
-    switch(value) {
-    case 0: res = QSerialPort::Data5; break;
-    case 1: res = QSerialPort::Data6; break;
-    case 2: res = QSerialPort::Data7; break;
-    case 3: res = QSerialPort::Data8; break;
-    }
-    return res;
-}
-
-
-int Set_Integr::stopBitsTo(int value)
-{
-    int res = 0;
-    switch(value) {
-    case QSerialPort::OneStop: res = 0; break;
-    case QSerialPort::TwoStop: res = 1; break;
-    case QSerialPort::OneAndHalfStop: res = 2; break;
-    }
-    return res;
-}
-
-
-int Set_Integr::toStopBits(int value)
-{
-    int res = QSerialPort::OneStop;
-    switch(value) {
-    case 0: res = QSerialPort::OneStop; break;
-    case 1: res = QSerialPort::TwoStop; break;
-    case 2: res = QSerialPort::OneAndHalfStop; break;
-    }
-    return res;
-}
-
 bool Set_Integr::modbusSet(uchar fc, int value, uchar txType)
 {
     Mb_Core *mb = Mb_Core::bulid();
@@ -297,3 +196,104 @@ bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
     return ret;
 }
 
+
+
+
+
+int Set_Integr::baudTo(int value)
+{
+    int res = 0;
+    switch(value) {
+    case QSerialPort::Baud9600: res = 0; break;
+    case QSerialPort::Baud19200: res = 1; break;
+    case QSerialPort::Baud38400: res = 2; break;
+    case QSerialPort::Baud57600: res = 3; break;
+    case QSerialPort::Baud115200: res = 4; break;
+    }
+    return res;
+}
+
+int Set_Integr::toBaud(int value)
+{
+    int res = QSerialPort::Baud9600;
+    switch(value) {
+    case 0: res = QSerialPort::Baud9600; break;
+    case 1: res = QSerialPort::Baud19200; break;
+    case 2: res = QSerialPort::Baud38400; break;
+    case 3: res = QSerialPort::Baud57600; break;
+    case 4: res = QSerialPort::Baud115200; break;
+    }
+    return res;
+}
+
+int Set_Integr::parityTo(int value)
+{
+    int res = 0;
+    switch(value) {
+    case QSerialPort::NoParity: res = 0; break;
+    case QSerialPort::EvenParity: res = 1; break;
+    case QSerialPort::OddParity: res = 2; break;
+    case QSerialPort::SpaceParity: res = 3; break;
+    case QSerialPort::MarkParity: res = 4; break;
+    }
+    return res;
+}
+
+int Set_Integr::toParity(int value)
+{
+    int res = QSerialPort::NoParity;
+    switch(value) {
+    case 0: res = QSerialPort::NoParity; break;
+    case 1: res = QSerialPort::EvenParity; break;
+    case 2: res = QSerialPort::OddParity; break;
+    case 3: res = QSerialPort::SpaceParity; break;
+    case 4: res = QSerialPort::MarkParity; break;
+    }
+    return res;
+}
+
+int Set_Integr::dataBitsTo(int value)
+{
+    int res = 3;
+    switch(value) {
+    case QSerialPort::Data5: res = 0; break;
+    case QSerialPort::Data6: res = 1; break;
+    case QSerialPort::Data7: res = 2; break;
+    case QSerialPort::Data8: res = 3; break;
+    }
+    return res;
+}
+
+int Set_Integr::toDataBits(int value)
+{
+    int res = QSerialPort::Data8;
+    switch(value) {
+    case 0: res = QSerialPort::Data5; break;
+    case 1: res = QSerialPort::Data6; break;
+    case 2: res = QSerialPort::Data7; break;
+    case 3: res = QSerialPort::Data8; break;
+    }
+    return res;
+}
+
+int Set_Integr::stopBitsTo(int value)
+{
+    int res = 0;
+    switch(value) {
+    case QSerialPort::OneStop: res = 0; break;
+    case QSerialPort::TwoStop: res = 1; break;
+    case QSerialPort::OneAndHalfStop: res = 2; break;
+    }
+    return res;
+}
+
+int Set_Integr::toStopBits(int value)
+{
+    int res = QSerialPort::OneStop;
+    switch(value) {
+    case 0: res = QSerialPort::OneStop; break;
+    case 1: res = QSerialPort::TwoStop; break;
+    case 2: res = QSerialPort::OneAndHalfStop; break;
+    }
+    return res;
+}
