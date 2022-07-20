@@ -14,6 +14,7 @@ public:
     void setDelay(int id, uchar sec);
     void orderCtrl(int on, uchar all=1);
     void relaysCtrl(int start, int end, int v);
+    void relaysCtrl(const QList<int> &ids, int v);
 
 protected:    
     virtual void funDelay(uint *buf)=0;

@@ -23,6 +23,9 @@ QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
     size = ptr->loopSize = LOOP_NUM; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->loop[i]);
 
+    size = ptr->groupSize = GROUP_NUM; in << size;
+    for(int i=0; i<size; ++i) in << toByteArray(ptr->group[i]);
+
     size = ptr->outputSize = OUTPUT_NUM; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
@@ -47,6 +50,9 @@ QDataStream& operator>>(QDataStream& out, Cfg_RwStream& data)
 
     out >> size; ptr->loopSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->loop[i] = toStruct<_sObjData>(v);}
+
+    out >> size; ptr->groupSize = size;
+    for(int i=0; i<size; ++i) {out >> v; ptr->group[i] = toStruct<_sObjData>(v);}
 
     out >> size; ptr->outputSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->output[i] = toStruct<_sObjData>(v);}

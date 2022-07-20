@@ -155,7 +155,10 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     ret |= upObjData(index, it->loop);
 
     index.type = DType::Output;
-    ret |= upObjData(index, it->output);
+    ret |= upObjData(index, it->output);    
+
+    index.type = DType::Group;
+    ret |= upObjData(index, it->group);
 
     index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);
