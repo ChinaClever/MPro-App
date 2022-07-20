@@ -10,13 +10,18 @@ Data_Object::Data_Object()
     mDev = cm::masterDev();
 }
 
+uint Data_Object::summation(const uint *ptr, const QList<int> &ls)
+{
+     uint ret = 0;
+     foreach(auto i, ls) ret += ptr[i];
+     return ret;
+}
+
 uint Data_Object::summation(const uint *ptr, int start, int end)
 {
-    uint ret = 0;
-    for(int i=start; i<end; i++) {
-        ret += ptr[i];
-    }
-    return ret;
+    QList<int> ls;
+    for(int i=start; i<end; i++) ls << i;
+    return summation(ptr, ls);
 }
 
 void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end)
@@ -24,24 +29,39 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
     dest.value[id] = summation(src.value, start, end);
 }
 
+void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, const QList<int> &ls)
+{
+    dest.value[id] = summation(src.value, ls);
+}
+
+uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
+{
+     QList<uint> list;  uint ret = 0;
+     foreach(auto i, ls) if(ptr[i]) list << ptr[i];
+     if(list.size()) {
+         std::sort(list.begin(), list.end());
+         int k = (list.size() + 1) / 2;
+         if(k < list.size()) ret = list.at(k);
+         else ret = list.first();
+     }
+
+     return ret;
+}
 uint Data_Object::averageValue(const uint *ptr, int start, int end)
 {   
-    QList<uint> list;
-    uint ret = 0; if(end > start) {
-        for(int i=start; i<end; ++i) if(ptr[i]) list << ptr[i];
-        if(list.size()) {
-            std::sort(list.begin(), list.end());
-            int k = (list.size() + 1) / 2;
-            if(k < list.size()) ret = list.at(k);
-            else ret = list.first();
-        }
-    } else ret = ptr[start];
-    return ret;
+    QList<int> ls;
+    for(int i=start; i<end; ++i) ls << i;
+    return averageValue(ptr, ls);
 }
 
 void Data_Object::averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end)
 {
     dest.value[id] = averageValue(src.value, start, end);
+}
+
+void Data_Object::averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, const QList<int> &ls)
+{
+    dest.value[id] = averageValue(src.value, ls);
 }
 
 uint Data_Object::calPf(int id, sObjData &obj)
@@ -59,13 +79,20 @@ uint Data_Object::calPf(int id, sObjData &obj)
 
 void Data_Object::sumObjData(int id, sObjData &dest, const sObjData &src, int start, int end)
 {
-    averAlarmUnit(id, dest.vol, src.vol, start, end);
-    sumAlarmUnit(id, dest.cur, src.cur, start, end);
-    sumAlarmUnit(id, dest.pow, src.pow, start, end);
+    QList<int> ls;
+    for(int i=start; i<end; ++i) ls << i;
+    return sumObjData(id, dest, src, ls);
+}
 
-    dest.ele[id] = summation(src.ele, start, end);
-    dest.artPow[id] = summation(src.artPow, start, end);
-    dest.reactivePow[id] = summation(src.reactivePow, start, end);
+void Data_Object::sumObjData(int id, sObjData &dest, const sObjData &src, const QList<int> &ls)
+{
+    averAlarmUnit(id, dest.vol, src.vol, ls);
+    sumAlarmUnit(id, dest.cur, src.cur, ls);
+    sumAlarmUnit(id, dest.pow, src.pow, ls);
+
+    dest.ele[id] = summation(src.ele, ls);
+    dest.artPow[id] = summation(src.artPow, ls);
+    dest.reactivePow[id] = summation(src.reactivePow, ls);
     dest.pf[id] = calPf(id, dest);
 }
 

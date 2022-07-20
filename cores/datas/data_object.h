@@ -11,13 +11,23 @@ public:
 protected:
     void loopData(int id, int start, int end);
     void lineData(int id, int start, int end);    
+
+    uint summation(const uint *ptr, const QList<int> &ls);
     uint summation(const uint *ptr, int start, int end);
+
+    uint averageValue(const uint *ptr, const QList<int> &ls);
     uint averageValue(const uint *ptr, int start, int end);
 
 private:
     void sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end);
+    void sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, const QList<int> &ls);
+
     void averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, int start, int end);
+    void averAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, const QList<int> &ls);
+
+    void sumObjData(int id, sObjData &dest, const sObjData &src, const QList<int> &ls);
     void sumObjData(int id, sObjData &dest, const sObjData &src, int start, int end);
+
     uint calPf(int id, sObjData &obj);
 
 protected:
