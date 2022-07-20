@@ -22,7 +22,6 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">modbus设置</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
 							</div>
 						</div>
 					</div>
@@ -35,38 +34,59 @@
 				</div>
 			</div>
 		</div>
+	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		read_modbus_data();
+		var mode_set = new Array("关闭","开启");
 		var baud_name = new Array("9600","19200","38400","57600","115200");
 		var databits_name = new Array("6","7","8");
 		var parity_name = new Array("None","Even","Odd");
 		var stopbits_name = new Array("1","2");
-		var select_name = new Array("addr","baud","databits","parity","stopbits","tcp_port")
-		read_data();
+		var select_name = new Array("rtu","addr","baud","databits","parity","stopbits","tcp","tcp_port");
+		var modbus_data = new Array();
 		function read_data(){
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			for(var j = 1;j<13;j++){
+				if(j < 7 || j > 10){
+					modbus_data[j] = sessionStorage.getItem(type_name[15]+ modbus_info[j]);
+				}
 			}
 		}
 		$('.rtu_mode').html(buildTableRtu());
 		$('.tcp_mode').html(buildTableTcp());
-		$('.devname').html(buildSel(slave_num));
-		function buildSel(rows)
-		{
-			var tbody = '';
-			for(var i = 0;i<rows;i++)
-			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+		setTimeout(function(){
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			if(modbus_data[1] =='1'){
+				
+			}else{
+				var ipt = document.getElementsByName('input');
+				var sel = document.getElementsByName('select');
+				for(let i = 0;i < ipt.length;i++){
+
+				}
+				for(let j = 0;j < sel.length;j++){
+					
+				}
 			}
-			return tbody;
 		}
-		
+		function set(btn){
+			if(btn.value == mode_set[0])
+			{
+				btn.value = mode_set[1];
+			}else{
+				btn.value = mode_set[0];
+			}
+			if(btn.id =="rtu"){
+				rpc.call('pduSetCfg',[0,modbus,j,0,0]);
+			}
+		}
 		function rtuSet(){
 			var sel =0;
 			for(var i = 0 ;i<(select_name.length -1);i++){
@@ -88,11 +108,10 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%">Modbus RTU设置</td>\
 			<td width ="85%"></td></tr>';
+			tbody += '<tr><td>ModbusRtu是否开启：</td>';
+			tbody += '<td><button  id = "rtu" style ="width:10%" value = "开启" onclick = "Set(this)"></button></td></tr>';
 			tbody += '<tr><td>Modbus地址：</td>';
-			tbody += '<td><select id ="addr">';
-			for(var i = 0; i<255;i++){
-				tbody +='<option value ="'+i+'">'+(i+1) +'</option>';
-			}
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td>波特率：</td>';
 			tbody += '<td><select id ="baud">';
@@ -118,8 +137,7 @@
 				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input type = "button" style ="width:60%" value = "保存" onclick = rtuSet();></input></td>';
-			tbody += '<td></tr>';
+			tbody += '<tr><td><input type = "button" style ="width:60%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -127,10 +145,11 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%">Modbus TCP设置</td>\
 				<td width ="85%"></td></tr>';
+			tbody += '<tr><td>ModbusTcp是否开启：</td>';
+			tbody += '<td><button id = "tcp" style ="width:10%" value = "开启" onclick = "Set(this)"></button></td></tr>';
 			tbody += '<tr><td>Modbus端口号：</td>';
-			tbody += '<td><input id = "tcp_port" value = "502" style="width:200px"></td></tr>';
-			tbody += '<tr><td><input style ="width:60%" type = "button" value = "保存" onclick = tcpSet();></input></td>';
-			tbody += '<td></tr>';
+			tbody += '<td><input id = "tcp_port" value = "502" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

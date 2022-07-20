@@ -299,7 +299,7 @@ function read_modbus_data(){
     if(j >= parseInt(13)){
       clearInterval(time1);
     }
-    if(j <= 12 && (j > 6 && j < 11)){
+    if(j <= 12 && (j < 7 ||(j>10))){
       rpc.call('pduReadCfg',[0,modbus,j,0,0]);
     }
     j++;
