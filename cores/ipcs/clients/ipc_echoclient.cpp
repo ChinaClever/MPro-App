@@ -25,6 +25,15 @@ bool IPC_EchoClient::setNumStr(const sNumStrItem &unit)
     return msgSend(2, array);
 }
 
+bool IPC_EchoClient::multipleStrings(uchar fc, const QString &key, const QString &value)
+{
+    sMultipleStrings it; it.fc = fc;
+    qstrcpy(it.str[0], key.toLatin1().data());
+    qstrcpy(it.str[1], value.toLatin1().data());
+    QByteArray array = cm::toByteArray(it);
+    return msgSend(3, array);
+}
+
 bool IPC_EchoClient::setString(uint addr, uchar fc, uchar id, const QString &str)
 {
     sNumStrItem it; it.txType = DTxType::TxWeb;

@@ -33,12 +33,25 @@ static void startSnmpd()
     else qDebug() << "Error: start snmpd error";
 }
 
+static void createDirectory()
+{
+    system("mkdir -p /usr/data/etc/ssl");
+    system("mkdir -p /usr/data/etc/ssh");
+    system("mkdir -p /usr/data/etc/snmp");
+    system("mkdir -p /usr/data/clever/app");
+    system("mkdir -p /usr/data/clever/cfg");
+    system("mkdir -p /usr/data/clever/awtk");
+    system("mkdir -p /usr/data/clever/upload");
+}
 
+extern void init_share_mem();
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     initSystem();
+    createDirectory();
+    init_share_mem();
     startSnmpd();
 
     QObject *p = a.parent();
