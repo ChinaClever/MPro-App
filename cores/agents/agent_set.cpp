@@ -64,6 +64,7 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     case 1: v = DType::Line; break;
     case 2: v = DType::Loop; break;
     case 3: v = DType::Output; break;
+    case 4: v = DType::Group; break;
     case 6: v = DType::Env; break;
     default: ret = false; break;
     } index.type = v;

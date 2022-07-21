@@ -47,15 +47,21 @@ void OP_ObjCtrl::setDelay(int id, uchar sec)
 
 void OP_ObjCtrl::relaysCtrl(int start, int end, int v)
 {
+    QList<int> ids;
+    for(int i=start; i<=end; i++) ids.append(i);
+    relaysCtrl(ids, v);
+}
+
+void OP_ObjCtrl::relaysCtrl(const QList<int> &ids, int v)
+{
     uchar on[8], off[8];
     for(int i=0; i<6; i++) on[i] = 0x00;  //打开有效位
     for(int i=0; i<6; i++) off[i] = 0x00;  //关闭有效位
-    for(int i=start; i<end; ++i) {
+    foreach(auto &i, ids) {
         if(v) setBitControl(i, on);
         else setBitControl(i, off);
     }
-
-    funSwitch(on, off);
+    if(ids.size()) funSwitch(on, off);
 }
 
 void OP_ObjCtrl::openAllSwitch(uchar all)

@@ -9,6 +9,7 @@ public:
     explicit Rpc_Output(QObject *parent = nullptr);
     Q_INVOKABLE uint pduRelayStatus(int addr, int id);
     Q_INVOKABLE bool pduRelayCtrl(int addr, int id, uchar on);
+    Q_INVOKABLE bool pduGroupCtrl(int addr, int id, uchar on);
     Q_INVOKABLE bool pduRelayModeSet(int addr, int id, uchar mode);
     Q_INVOKABLE bool pduRelayDelaySet(int addr, int id, uchar delay);
     Q_INVOKABLE bool pduRelaysCtrl(int addr, int start, int num, uchar on);

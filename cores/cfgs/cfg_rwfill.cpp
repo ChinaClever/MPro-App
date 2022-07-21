@@ -54,6 +54,9 @@ void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     size = data->loop.size;
     for(int i=0; i<size; ++i) upObjData(i, data->loop, obj->loop[i]);
 
+    size = data->group.size;
+    for(int i=0; i<size; ++i) upObjData(i, data->group, obj->group[i]);
+
     size = data->output.size;
     for(int i=0; i<size; ++i) upObjData(i, data->output, obj->output[i]);
 

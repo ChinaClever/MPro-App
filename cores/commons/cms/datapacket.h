@@ -22,6 +22,7 @@ typedef unsigned int uint;
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
+#define GROUP_NUM 8
 #define PACK_ARRAY_SIZE   OUTPUT_NUM
 
 // 倍率定义
@@ -171,6 +172,8 @@ struct sDevInfo {
     uchar loopEnds[LOOP_NUM];
     uchar loopStarts[LOOP_NUM];
     uchar opSpecs[LOOP_NUM];
+    uchar group[GROUP_NUM][OUTPUT_NUM];
+    uchar groupEn;
 
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
@@ -203,6 +206,7 @@ struct sDevData
 
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
+    struct sObjData group; //组数据
     struct sObjData output; //位数据
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
@@ -249,7 +253,7 @@ struct sDataPacket
 };
 
 
-enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
+enum DType{Tg, Line, Loop, Output, Group, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, UpTime=4, ResTime, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
@@ -262,7 +266,7 @@ struct sDataItem
 #endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
-    uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
+    uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
     uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态  11 多开关控制
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
@@ -271,7 +275,8 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
+            GroupName=20};
 
 struct sNumStrItem{
 #ifndef SUPPORT_C

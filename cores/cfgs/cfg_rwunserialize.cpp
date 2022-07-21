@@ -53,6 +53,9 @@ void Cfg_RwUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
     size = obj->loopSize;
     for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);
 
+    size = obj->groupSize;
+    for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
+
     size = obj->outputSize;
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
     data->output.vol.size = 0;

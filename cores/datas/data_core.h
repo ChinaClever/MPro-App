@@ -1,8 +1,8 @@
 #ifndef DATA_CORE_H
 #define DATA_CORE_H
-#include "data_line.h"
+#include "data_group.h"
 
-class Data_Core : public Data_Line
+class Data_Core : public Data_Group
 {
     explicit Data_Core();
 public:

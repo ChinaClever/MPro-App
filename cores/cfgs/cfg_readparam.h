@@ -16,6 +16,7 @@ private:
     void login();
     void modbus();
     void readUut();
+    void groupName();
     void outputName();
 
 private:

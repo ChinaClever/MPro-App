@@ -30,6 +30,7 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     case DType::Tg: str += tr("总"); break;
     case DType::Line: str += tr("相"); break;
     case DType::Loop: str += tr("回路"); break;
+    case DType::Group: str += tr("组"); break;
     case DType::Output: str += tr("输出位"); break;
     case DType::Env: str += tr("环境"); break;
     case DType::Sensor: str += tr("传感器"); break;
@@ -82,19 +83,19 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-//            if(index.type == DType::Env) {
-//                str  = tr("当前值=%1　告警最小值=%2 告警最大值=%3")
-//                        .arg(unit->value[id]/rate)
-//                        .arg(unit->min[id] / rate)
-//                        .arg(unit->max[id] / rate);
-//            } else {
-                str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
-                        .arg(unit->value[id]/rate)
-                        .arg(unit->min[id] / rate)
-                        .arg(unit->crMin[id] / rate)
-                        .arg(unit->crMax[id] / rate)
-                        .arg(unit->max[id] / rate);
-//            }
+            //            if(index.type == DType::Env) {
+            //                str  = tr("当前值=%1　告警最小值=%2 告警最大值=%3")
+            //                        .arg(unit->value[id]/rate)
+            //                        .arg(unit->min[id] / rate)
+            //                        .arg(unit->max[id] / rate);
+            //            } else {
+            str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
+                    .arg(unit->value[id]/rate)
+                    .arg(unit->min[id] / rate)
+                    .arg(unit->crMin[id] / rate)
+                    .arg(unit->crMax[id] / rate)
+                    .arg(unit->max[id] / rate);
+            //            }
         } else qDebug() << Q_FUNC_INFO;
     } else {
         sTgUnit *unit = obj.getTgAlarmUnit(index);
