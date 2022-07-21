@@ -18,7 +18,7 @@ static void process_json_reply(struct mg_connection *c, const struct mg_str &fra
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
     if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
-     //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
+    //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
 
     free(response);
     free(result);
@@ -78,11 +78,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     } else if (ev == MG_EV_WS_OPEN) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
     } else if (ev == MG_EV_ACCEPT && fn_data != NULL) {
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
         struct mg_tls_opts opts = {
             //.ca = "ca.pem",         // Uncomment to enable two-way SSL
             .cert = "client.crt",     // Certificate PEM file
             .certkey = "client.key",  // This pem contains both cert and key
         };
+#else
+        struct mg_tls_opts opts;
+        opts.cert = "client.crt";
+        opts.certkey = "client.key";
+#endif
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
 

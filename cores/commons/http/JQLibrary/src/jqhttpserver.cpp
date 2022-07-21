@@ -42,7 +42,7 @@
 #include <QBuffer>
 #include <QPainter>
 #include <QtConcurrent>
-
+#include <QStringView>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QLocalServer>
@@ -1632,7 +1632,7 @@ QString JQHttpServer::Service::snakeCaseToCamelCase(const QString &source, const
                 {
                     result += splitTag[ 0 ].toUpper();
 
-#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
                     result += QStringView( splitTag ).mid( 1 );
 #else
                     result += splitTag.midRef( 1 );
@@ -1647,7 +1647,7 @@ QString JQHttpServer::Service::snakeCaseToCamelCase(const QString &source, const
             {
                 result += splitTag[ 0 ].toUpper();
 
-#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
                 result += QStringView( splitTag ).mid( 1 );
 #else
                 result += splitTag.midRef( 1 );
