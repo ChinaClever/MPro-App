@@ -17,6 +17,7 @@ public:
     int pduDevCfg(uchar addr, uchar fc, uchar type);
     bool pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi=0);
 
+    bool pduRelaysCtrl(int addr, int start, int num, uchar on);
     QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
 };
 
