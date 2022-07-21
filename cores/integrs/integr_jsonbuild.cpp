@@ -225,6 +225,7 @@ void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObje
 
     ObjData(it->line, "line_item_list", obj);
     ObjData(it->loop, "loop_item_list", obj);
+    ObjData(it->group, "group_item_list", obj);
     ObjData(it->output, "output_item_list", obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);

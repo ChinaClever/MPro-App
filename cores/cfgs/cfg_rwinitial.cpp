@@ -99,6 +99,7 @@ void Cfg_RwInitial::initDevData(sDevData *dev)
     initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
     initObjData(dev->output, OUTPUT_NUM, 10*COM_RATE_CUR);
     initRelayUnit(dev->output.relay, OUTPUT_NUM);
+    initRelayUnit(dev->group.relay, GROUP_NUM);
     initTgObjData(dev->tg);
     initEnvData(dev->env);
 }

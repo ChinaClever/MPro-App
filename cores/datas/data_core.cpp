@@ -38,6 +38,7 @@ void Data_Core::run()
     while(isRun) {
         outletNums();
         cm::mdelay(1100);tgWork();
+        groupWork(); cm::mdelay(100);
         loopWork(); cm::mdelay(100);
         lineWork(); cm::mdelay(100);
         upAlarm(); cm::mdelay(100);

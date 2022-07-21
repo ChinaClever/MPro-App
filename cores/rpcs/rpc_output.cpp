@@ -39,6 +39,15 @@ bool Rpc_Output::pduRelayCtrl(int addr, int id, uchar on)
     return pduSetData(addr, type, topic, sub, id, on);
 }
 
+bool Rpc_Output::pduGroupCtrl(int addr, int id, uchar on)
+{
+    uchar type = DType::Group;
+    uchar topic = DTopic::Relay;
+    uchar sub = DSub::Value;
+
+    return pduSetData(addr, type, topic, sub, id, on);
+}
+
 uint Rpc_Output::pduRelayStatus(int addr, int id)
 {
     uchar type = DType::Output;

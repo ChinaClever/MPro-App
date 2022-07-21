@@ -168,6 +168,18 @@ void Cfg_ReadParam::readUut()
 
 }
 
+void Cfg_ReadParam::groupName()
+{
+    QString prefix = "GroupName";
+    sDevData *dev = cm::masterDev();
+    for(int i=0; i<GROUP_NUM; ++i) {
+        QString key = QString::number(i+1);
+        QString v = "Group" + key;
+        QString res = mCfg->readCfg(key, v, prefix).toString();
+        qstrcpy(dev->group.name[i], res.toLatin1().data());
+    }
+}
+
 void Cfg_ReadParam::outputName()
 {
     QString prefix = "OutputName";
