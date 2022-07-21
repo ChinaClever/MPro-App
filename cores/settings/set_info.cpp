@@ -26,6 +26,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 5: ret = it->buzzerSw; break;
     case 6: ret = it->hz; break;
     case 7: ret = it->opNum; break;
+    case 8: ret = it->groupEn; break;
 
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
@@ -43,6 +44,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 3: it->modbusAddr = value; break;
     case 5: it->buzzerSw = value; break;
     case 7: it->opNum = value; break;
+    case 8: it->groupEn = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
@@ -71,7 +73,7 @@ bool Set_Info::setCfgNum(int addr, int type, int value)
     case DType::Loop: ptr = &(it->loopNum); break;
     case DType::Output: ptr = &(it->outputNum); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
-    }
+    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) *ptr = value; else ret = false;
     return ret;

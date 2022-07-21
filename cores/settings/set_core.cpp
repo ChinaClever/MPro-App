@@ -29,6 +29,7 @@ void Set_Core::writeAlarm()
 bool Set_Core::setString(sNumStrItem &it)
 {
     bool ret = false; switch (it.fc) {
+    case SFnCode::Grouping: ret = groupingSet(it); break;
     case SFnCode::GroupName: ret = groupNameSet(it); break;
     case SFnCode::OutputName: ret = outputNameSet(it); break;
     case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
@@ -48,6 +49,7 @@ QString Set_Core::getString(sNumStrItem &it)
     case SFnCode::ESnmp: str = snmpCfg(it.id); break;
     case SFnCode::EPush: str = pushCfg(it.id).toString(); break;
     case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
+    case SFnCode::Grouping: str = grouping(it.addr, it.id); break;
     case SFnCode::GroupName: str = groupName(it.addr, it.id); break;
     case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;

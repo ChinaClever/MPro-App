@@ -98,6 +98,15 @@ bool Set_Output::relaySet(sDataItem &unit)
     return ret;
 }
 
+
+QString Set_Output::grouping(int addr, int id)
+{
+    QString res;
+    QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
+    foreach(auto &i, ids) res += QString::number(i) +": ";
+    return res;
+}
+
 QString Set_Output::groupName(int addr, int id)
 {
     sObjData *dev = &(cm::devData(addr)->group);
@@ -143,6 +152,19 @@ bool Set_Output::groupNameSet(sNumStrItem &it)
         sObjData *obj = &(cm::masterDev()->group);
         for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, it.str);
     } opNameLog(it);
+    return ret;
+}
+
+bool Set_Output::groupingSet(sNumStrItem &it)
+{
+    QStringList strs = QString(it.str).split("; ");
+    sDevData *dev = cm::devData(it.addr);
+    uchar *ptr = dev->info.group[it.id];
+    memset(ptr, 0, OUTPUT_NUM);
+    foreach(auto &str, strs) {
+        int id = str.toInt(); ptr[id] = 1;
+    } bool ret = false;
+    if(strs.size()) ret = Cfg_ReadWrite::bulid()->writeParams();
     return ret;
 }
 

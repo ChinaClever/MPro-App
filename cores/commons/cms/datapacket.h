@@ -173,7 +173,7 @@ struct sDevInfo {
     uchar loopStarts[LOOP_NUM];
     uchar opSpecs[LOOP_NUM];
     uchar group[GROUP_NUM][OUTPUT_NUM];
-    uchar groupEn;
+    uint groupEn; // 组开关使能
 
     uchar hzs[DEV_NUM];  // 电压频率
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
@@ -276,7 +276,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-            GroupName=20};
+            Grouping=21,GroupName};
 
 struct sNumStrItem{
 #ifndef SUPPORT_C

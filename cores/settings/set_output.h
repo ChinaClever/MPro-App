@@ -16,6 +16,9 @@ protected:
     bool groupNameSet(sNumStrItem &it);
     QString groupName(int addr, int id);
 
+    bool groupingSet(sNumStrItem &it);
+    QString grouping(int addr, int id);
+
 private:
     bool groupCtrl(sDataItem &unit);
     bool outputCtrl(sDataItem &unit);
