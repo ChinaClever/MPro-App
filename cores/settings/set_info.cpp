@@ -126,3 +126,24 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
 
     return ret;
 }
+
+QString Set_Info::qrcodeStr(int addr)
+{
+    char *ptr = cm::devData(addr)->info.qrcode;
+    return ptr;
+}
+
+bool Set_Info::qrcodeGenerator(const QString& msg)
+{
+    int s = 5; QString fn = "catQR.png";
+    char *ptr = cm::masterDev()->info.qrcode;
+    if(msg.size()) {
+        QString cmd = "qrencode -o %1 -s %2 '%3'";
+        QString qr = cmd.arg(fn).arg(s).arg(msg);
+        qstrcpy(ptr, msg.toLatin1().data());
+        system(qr.toLatin1().data());
+    } else ptr[0] = 0;
+    Cfg_ReadWrite::bulid()->writeParams();
+
+    return true;
+}

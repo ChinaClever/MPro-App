@@ -18,7 +18,7 @@ typedef unsigned int uint;
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
-#define NAME_SIZE 32
+#define NAME_SIZE 64
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
@@ -109,7 +109,7 @@ struct sEnvData
     uchar size;
     uchar type_index;//1:温度 2:湿度 3:门禁 4:门磁 5:水浸 6:烟雾
 
-    char name[SENOR_NUM][NAME_SIZE];
+    //char name[SENOR_NUM][NAME_SIZE];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -172,6 +172,7 @@ struct sDevInfo {
     uchar loopEnds[LOOP_NUM];
     uchar loopStarts[LOOP_NUM];
     uchar opSpecs[LOOP_NUM];
+    char qrcode[NAME_SIZE]; // 二维码
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
 
@@ -276,7 +277,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-            Grouping=21,GroupName};
+            EGrouping=21,EGroupName, EQRcode};
 
 struct sNumStrItem{
 #ifndef SUPPORT_C
