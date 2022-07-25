@@ -13,7 +13,6 @@ RpcXmlClient::RpcXmlClient(QObject *parent)
     //  rpc = new MaiaXmlRpcClient(QUrl("http://localhost:8082/RPC2"), this);
     rpc = new MaiaXmlRpcClient(QUrl("http://localhost:8082"), this);
 
-
     QSslConfiguration config = rpc->sslConfiguration();
     config.setProtocol(QSsl::AnyProtocol);
     rpc->setSslConfiguration(config);
