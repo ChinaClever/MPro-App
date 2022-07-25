@@ -30,13 +30,13 @@ int Domain_SocketCli::send(const QVariant &var)
     return ret;
 }
 
-QVariant Domain_SocketCli::trans(const QVariant &var, int usec)
+QVariant Domain_SocketCli::trans(const QVariant &var, int msec)
 {
     m_recv.clear();
     int ret = send(var);
-    if(ret > 0) {
-        for(int i=0; i<usec; ++i) {
-            if(m_recv.size()) break; else usleep(1); //cm::mdelay(1);
+    usleep(10); if(ret > 0) {
+        for(int i=0; i<msec; ++i) {
+            if(m_recv.size()) break; else cm::mdelay(1); //
             //if(i > 2)  qDebug() << "cli _1" << QTime::currentTime().toString("mm:ss zzz") << msec;
         }
     }
@@ -78,6 +78,6 @@ void Domain_SocketCli::run()
 {
     while(isRun) {
         workDown();
-        usleep(1);
+        //usleep(1);
     }
 }

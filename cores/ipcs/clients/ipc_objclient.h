@@ -34,7 +34,7 @@ public:
 
 protected:
     bool sendSocket(const QVariantList &v);
-    QVariant readSocket(const QVariantList &v, int usec=150);
+    QVariant readSocket(const QVariantList &v, int msec=3);
     virtual bool inputCheck(const QVariantList &){return true;}
 
 private:

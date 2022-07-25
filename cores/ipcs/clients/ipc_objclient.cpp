@@ -25,10 +25,10 @@ bool IPC_ObjClient::sendSocket(const QVariantList &v)
     return ret>0 ? true: false;
 }
 
-QVariant IPC_ObjClient::readSocket(const QVariantList &v, int usec)
+QVariant IPC_ObjClient::readSocket(const QVariantList &v, int msec)
 {
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << v.first().toInt() << v.last().toByteArray();
-    return mSocket->trans(array, usec);
+    return mSocket->trans(array, msec);
 }
 
