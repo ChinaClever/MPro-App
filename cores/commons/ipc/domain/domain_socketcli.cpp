@@ -30,12 +30,12 @@ int Domain_SocketCli::send(const QVariant &var)
     return ret;
 }
 
-QVariant Domain_SocketCli::trans(const QVariant &var, int msec)
+QVariant Domain_SocketCli::trans(const QVariant &var, int usec)
 {
     m_recv.clear();
     int ret = send(var);
     if(ret > 0) {
-        for(int i=0; i<1000*msec; ++i) {
+        for(int i=0; i<usec; ++i) {
             if(m_recv.size()) break; else usleep(1); //cm::mdelay(1);
             //if(i > 2)  qDebug() << "cli _1" << QTime::currentTime().toString("mm:ss zzz") << msec;
         }
