@@ -1,25 +1,37 @@
 #ifndef RPC_SERVICE_H
 #define RPC_SERVICE_H
+#include "rpc_xml.h"
 
-#include "rpc_core.h"
-struct sRpcCfg{
-    int en = 0; // 0 禁用 1 TCP  2 websocket
-    int port = 6002;
+struct sRpcIt {
+    int en = 0;
+    int port = 8082;
 };
 
-class Rpc_Service : public JsonRpcObj
+struct sRpcCfg{
+    sRpcIt json;
+    sRpcIt xml;
+};
+
+class Rpc_Service : public QObject
 {
     Q_OBJECT
     explicit Rpc_Service(QObject *parent = nullptr);
 public:
     static Rpc_Service *bulid(QObject *parent = nullptr);    
     static sRpcCfg rpcCfg;
-    bool startRpc(int en);
-    bool setPort(int port);
+
+    bool startJsonRpc(int en);
+    bool setJsonPort(int port);
+
+    bool startXmlRpc(int en);
+    bool setXmlPort(int port);
 
 private slots:
     void initFunSlot();
 
+private:
+    Rpc_Xml *mXml;
+    Rpc_Json *mJson;
 };
 
 #endif // RPC_SERVICE_H

@@ -92,10 +92,12 @@ void Cfg_ReadParam::rpc()
     QString prefix = "rpc"; QString key;
     sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
 
-    for(int i=1; i<3; ++i) {
+    for(int i=1; i<6; ++i) {
         switch (i) {
-        case 1: key = "enRpc";  ptr = &cfg->en; value = 0; break;
-        case 2: key = "port";  ptr = &cfg->port; value = 6002; break;
+        case 1: key = "jsonRpcEn";  ptr = &cfg->json.en; value = 0; break;
+        case 2: key = "jsonRpcPort";  ptr = &cfg->json.port; value = 6002; break;
+        case 4: key = "xmlRpcEn";  ptr = &cfg->xml.en; value = 0; break;
+        case 5: key = "xmlRpcPort";  ptr = &cfg->xml.port; value = 6082; break;
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
