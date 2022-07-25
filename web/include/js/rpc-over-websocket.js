@@ -335,15 +335,16 @@ function read_log_data(type,name,start,num){
   rpc.call('pduLogFun',[start,log,type,name,num]);
 }
 function read_push_data(){
-  rpc.call('pduReadString',[0,push,0,0,2]);
-  rpc.call('pduReadString',[0,push,0,0,5]);
+  rpc.call('pduReadString',[0,push,2,0,0]);
+  rpc.call('pduReadString',[0,push,5,0,0]);
   let j = 1;
   var time1 = setInterval(function(){
     if(j >= parseInt(10)){
       clearInterval(time1);
     }
-    if(j <= 9 && (j!= 2 ||  j!=5)){
-      rpc.call('pduReadCfg',[0,push,0,0,j]);
+    if(j <= 9 && (2 != parseInt(j) ||  5 != parseInt(j))){
+      rpc.call('pduReadCfg',[0,push,j,0,0]);
+      console.log(j);
     }
     j++;
   },1);
@@ -351,14 +352,14 @@ function read_push_data(){
 
 }
 function read_http_data(){
-  rpc.call('pduReadString',[0,push,0,0,12]);
+  rpc.call('pduReadString',[0,push,12,0,0]);
   let j = 11;
   var time1 = setInterval(function(){
     if(j >= parseInt(10)){
       clearInterval(time1);
     }
     if(j <= 15 && (j!= 12)){
-      rpc.call('pduReadCfg',[0,push,0,0,j]);
+      rpc.call('pduReadCfg',[0,push,j,0,0]);
     }
     j++;
   },1);
