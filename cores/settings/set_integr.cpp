@@ -107,8 +107,10 @@ int Set_Integr::rpcCfg(uchar fc)
 {
     sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
     int res = 0; switch (fc) {
-    case 1: res = cfg->en; break;
-    case 2: res = cfg->port; break;
+    case 1: res = cfg->json.en; break;
+    case 2: res = cfg->json.port; break;
+    case 4: res = cfg->xml.en; break;
+    case 5: res = cfg->xml.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
     return res;
@@ -119,8 +121,10 @@ bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
     Rpc_Service *obj = Rpc_Service::bulid();
     QString prefix = "rpc";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "enRpc"; obj->startRpc(value); break;
-    case 2: key = "port"; obj->setPort(value); break;
+    case 1: key = "jsonRpcEn"; obj->startJsonRpc(value); break;
+    case 2: key = "jsonRpcPort"; obj->setJsonPort(value); break;
+    case 4: key = "xmlRpcEn"; obj->startXmlRpc(value); break;
+    case 5: key = "xmlRpcPort"; obj->setXmlPort(value); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 

@@ -1,9 +1,8 @@
-INCLUDEPATH += $$PWD
+#INCLUDEPATH += $$PWD
 
-include(jcon/jcon.pri)
+include($$PWD/xml/xmlrpc.pri)
+include($$PWD/json/jsonrpc.pri)
 
-HEADERS += \
-    $$PWD/jsonrpcobj.h
+HEADERS +=
 
-SOURCES += \
-    $$PWD/jsonrpcobj.cpp
+SOURCES +=
