@@ -18,6 +18,7 @@ let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
 let snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
 let rpc_info = new Array("","Mode","Port");
+let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","CtrlMode","Ctrlport","Delay","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let url_1;
 var jsonrpc = function()
 {
@@ -95,7 +96,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ rpc_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 18:
-        sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
         sessionStorage.setItem(log_info[subtopic] , JSON.parse(evt.data).result[5]);
@@ -332,4 +333,33 @@ function read_snmp_data(){
 }
 function read_log_data(type,name,start,num){
   rpc.call('pduLogFun',[start,log,type,name,num]);
+}
+function read_push_data(){
+  rpc.call('pduReadString',[0,push,0,0,2]);
+  rpc.call('pduReadString',[0,push,0,0,5]);
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10)){
+      clearInterval(time1);
+    }
+    if(j <= 9 && (j!= 2 ||  j!=5)){
+      rpc.call('pduReadCfg',[0,push,0,0,j]);
+    }
+    j++;
+  },1);
+
+
+}
+function read_http_data(){
+  rpc.call('pduReadString',[0,push,0,0,12]);
+  let j = 11;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10)){
+      clearInterval(time1);
+    }
+    if(j <= 15 && (j!= 12)){
+      rpc.call('pduReadCfg',[0,push,0,0,j]);
+    }
+    j++;
+  },1);
 }

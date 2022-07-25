@@ -41,27 +41,21 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_modbus_data();
-		var mode_set = new Array("关闭","开启");
-		var baud_name = new Array("9600","19200","38400","57600","115200");
-		var databits_name = new Array("5","6","7","8");
-		var parity_name = new Array("None","Even","Odd");
-		var stopbits_name = new Array("1","2");
-		var select_name = new Array("rtu","addr","baud","parity","databits","stopbits","tcp","tcp_port");
-		var modbus_data = new Array();
+		read_http_data();
+		var mode_set = new Array("禁用","启用");
+		var select_name = new Array("push","addr","delay","encrypt","port");
+		var http_data = new Array();
 		function read_data(){
-			for(var j = 1;j<13;j++){
-				if(j < 7 || j > 10){
-					modbus_data[j] = parseInt(sessionStorage.getItem(type_name[15]+ modbus_info[j]));
-				}
+			for(var j = 11; j<16;j++){
+				http_data[j] = parseInt(sessionStorage.getItem(type_name[18]+ push_info[j]));
 			}
 		}
-		$('.rtu_mode').html(buildTablePush());
-		$('.tcp_mode').html(buildTableRecv());
-		// setTimeout(function(){
-		// 	read_data();
-		// 	showdata();
-		// },500);
+		$('.push_mode').html(buildTablePush());
+		$('.recv_mode').html(buildTableRecv());
+		setTimeout(function(){
+			read_data();
+			showdata();
+		},500);
 		function showdata(){
 			var lab = 0,btn1 = 0,btn2 = 0,setbtn =0;
 			btn1 = document.getElementById(select_name[0]);
@@ -161,13 +155,17 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%">HTTP推送设置</td>\
 			<td width ="85%"></td></tr>';
-			tbody += '<tr><td>开启推送服务：</td>';
-			tbody += '<td><input  id = "push" type = "button" style ="width:10%" value = "开启" onclick = "SetData(this)"></input></td></tr>';
+			tbody += '<tr><td>推送服务启用：</td>';
+			tbody += '<td><select id ="enable1" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
 			tbody += '<tr><td>目的地址：</td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td>时间间隔：</td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text"  ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td><input id = "save1" type = "button" style ="width:60%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
@@ -179,9 +177,13 @@
 			thead = '<tr><td width ="15%">HTTP接收设置</td>\
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td>启用加密：</td>';
-			tbody += '<td><input id = "tcp" type = "button" style ="width:10%" value = "开启" onclick = "SetData(this)"></input></td></tr>';
+			tbody += '<td><select id ="enable2" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
 			tbody += '<tr><td>Modbus端口号：</td>';
-			tbody += '<td><input id = "tcp_port" value = "502" style="width:24.5%"></td></tr>';
+			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
