@@ -13,7 +13,7 @@ public:
 
     Q_INVOKABLE QString pduDevSnGet(int addr);
     Q_INVOKABLE bool pduDevSnSet(int addr, const QString &value);
-
+    Q_INVOKABLE bool pduQRcodeGenerator(const QString &value, int addr);
 };
 
 #endif // RPC_INFO_H

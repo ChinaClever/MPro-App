@@ -31,3 +31,8 @@ bool Rpc_Info::pduDevSnSet(int addr, const QString &value)
 {
     return pduSetString(addr, SFnCode::Uuts, 7, value);
 }
+
+bool Rpc_Info::pduQRcodeGenerator(const QString &value, int addr)
+{
+    return pduSetString(addr, SFnCode::EQRcode, 0, value);
+}

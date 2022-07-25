@@ -19,11 +19,12 @@ void Data_Group::setGroupSize()
     //for(int i=0; i<obj->size; ++i) obj->relay.mode[i] = sRelay::NoAlarm;
 }
 
-QList<int> Data_Group::outletByGroup(int id)
+QList<int> Data_Group::outletByGroup(int id, int addr)
 {
     QList<int> res;
-    if(mDev->info.groupEn) {
-        uchar *ptr = mDev->info.group[id];
+    sDevData *dev = cm::devData(addr);
+    if(dev->info.groupEn) {
+        uchar *ptr = dev->info.group[id];
         for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
     } else disGroupAlarm(id);
 

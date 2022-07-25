@@ -26,6 +26,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 5: ret = it->buzzerSw; break;
     case 6: ret = it->hz; break;
     case 7: ret = it->opNum; break;
+    case 8: ret = it->groupEn; break;
 
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
@@ -43,6 +44,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 3: it->modbusAddr = value; break;
     case 5: it->buzzerSw = value; break;
     case 7: it->opNum = value; break;
+    case 8: it->groupEn = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
@@ -71,7 +73,7 @@ bool Set_Info::setCfgNum(int addr, int type, int value)
     case DType::Loop: ptr = &(it->loopNum); break;
     case DType::Output: ptr = &(it->outputNum); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
-    }
+    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) *ptr = value; else ret = false;
     return ret;
@@ -123,4 +125,25 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     Log_Core::bulid()->append(db);
 
     return ret;
+}
+
+QString Set_Info::qrcodeStr(int addr)
+{
+    char *ptr = cm::devData(addr)->info.qrcode;
+    return ptr;
+}
+
+bool Set_Info::qrcodeGenerator(const QString& msg)
+{
+    int s = 5; QString fn = "catQR.png";
+    char *ptr = cm::masterDev()->info.qrcode;
+    if(msg.size()) {
+        QString cmd = "qrencode -o %1 -s %2 '%3'";
+        QString qr = cmd.arg(fn).arg(s).arg(msg);
+        qstrcpy(ptr, msg.toLatin1().data());
+        system(qr.toLatin1().data());
+    } else ptr[0] = 0;
+    Cfg_ReadWrite::bulid()->writeParams();
+
+    return true;
 }

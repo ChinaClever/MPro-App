@@ -8,7 +8,7 @@ class Data_Group : public Data_Line
 public:
     explicit Data_Group();
 
-    QList<int> outletByGroup(int id);
+    QList<int> outletByGroup(int id, int addr=0);
 protected:
     void groupWork();
 

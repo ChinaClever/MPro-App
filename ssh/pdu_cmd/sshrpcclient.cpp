@@ -98,6 +98,19 @@ bool SshRpcClient::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar 
     return ret;
 }
 
+bool SshRpcClient::pduRelaysCtrl(int addr, int start, int num, uchar on)
+{
+    bool ret = false;
+    auto result = rpc_client->call("pduRelaysCtrl", addr, start, num, on);
+    if (result->isSuccess()) {
+        ret = result->result().toBool();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
 QString SshRpcClient::pduLogFun(uchar type, uchar fc, int id, int noe)
 {
     QString str;

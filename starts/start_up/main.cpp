@@ -9,7 +9,7 @@
 static void initSystem()
 {
     system("echo 3 > /proc/sys/vm/drop_caches");
-    system("ifconfig eth0 up"); system("dhclient");
+    system("ifconfig eth0 up"); //system("dhclient");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
 }

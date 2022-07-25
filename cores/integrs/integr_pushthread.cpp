@@ -39,6 +39,10 @@ void Integr_PushThread::udpPush(const QByteArray &array)
             mUdp->writeDatagram(array, host, mCfg->udp[i].port);
         }
     }
+
+    ///////////==============
+    QHostAddress host("192.168.1.102");
+    //mUdp->writeDatagram(array, host, 8766);
 }
 
 void Integr_PushThread::httpPost(const QByteArray &array)
@@ -64,7 +68,7 @@ void Integr_PushThread::workDown()
 
 void Integr_PushThread::delay()
 {
-    int sec = mCfg->sec; if(!sec) sec = 5;
+    int sec = mCfg->sec; if(!sec) sec = 3;
     for(int i=0; i<sec*100; i+=100) {
         if(isRun) cm::mdelay(100); else break;
     } int t = QRandomGenerator::global()->bounded(100); cm::mdelay(t);

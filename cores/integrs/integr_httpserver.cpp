@@ -74,7 +74,6 @@ bool Integr_HttpServer::setNumStrItem(const QByteArray &body)
     return ret;
 }
 
-
 bool Integr_HttpServer::execute(const QByteArray &body)
 {
     bool ret = true;

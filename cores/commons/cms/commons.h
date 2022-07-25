@@ -8,7 +8,6 @@ void mdelay(int msec=1);
 
 bool isDigitStr(const QString &src);
 bool isIPaddress(const QString& ip);
-
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
 

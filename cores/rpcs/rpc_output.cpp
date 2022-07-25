@@ -11,7 +11,17 @@ Rpc_Output::Rpc_Output(QObject *parent)
 
 }
 
-QString  Rpc_Output::pduOutputNameGet(int addr, int id)
+QString Rpc_Output::pduGroupingGet(int addr, int id)
+{
+    return pduGetString(addr, SFnCode::EGrouping, id);
+}
+
+QString Rpc_Output::pduGroupNameGet(int addr, int id)
+{
+    return pduGetString(addr, SFnCode::EGroupName, id);
+}
+
+QString Rpc_Output::pduOutputNameGet(int addr, int id)
 {
     return pduGetString(addr, SFnCode::OutputName, id);
 }
@@ -19,6 +29,16 @@ QString  Rpc_Output::pduOutputNameGet(int addr, int id)
 bool Rpc_Output::pduOutputNameSet(int addr, int id, const QString &value)
 {
     return pduSetString(addr, SFnCode::OutputName, id, value);
+}
+
+bool Rpc_Output::pduGroupNameSet(int addr, int id, const QString &value)
+{
+    return pduSetString(addr, SFnCode::EGroupName, id, value);
+}
+
+bool Rpc_Output::pduGroupingSet(int addr, int id, const QString &value)
+{
+    return pduSetString(addr, SFnCode::EGrouping, id, value);
 }
 
 bool Rpc_Output::pduRelaysCtrl(int addr, int start, int num, uchar on)
