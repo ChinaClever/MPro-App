@@ -1,9 +1,31 @@
 #ifndef IPC_LOGCLIENT_H
 #define IPC_LOGCLIENT_H
 
-#include "ipc_echoclient.h"
+#include "ipc_objclient.h"
+enum eLogs{
+    eUserLog,
+    eAlarmLog,
+    eOpLog,
+    eSysLog,
+    eEleLog,
+};
 
-class IPC_LogClient : public IPC_EchoClient
+enum eLogFc {
+    eLog_cnt=1,
+    eLog_read,
+    eLog_page,
+    eLog_clear,
+};
+
+struct sLogFcIt {
+    sLogFcIt() {type=fc=0; id=0;noe=30;}
+    uchar type;
+    uchar fc;
+    uchar noe;
+    uint id;
+};
+
+class IPC_LogClient : public IPC_ObjClient
 {
     Q_OBJECT
 public:
