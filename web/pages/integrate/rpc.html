@@ -39,23 +39,31 @@
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		read_rpc_data();
-		var mode_name = new Array("关闭","TCP","WebSocket");
+		var mode_name = new Array("禁用","TCP","WebSocket");
 		var data_id  = new Array("mode","rpc_port");
 		var rpc_data = new Array();
 		function read_data(){
 			rpc_data[1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[1]));
 			rpc_data[2] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[2]));
 		}
-		$('.rpc_mode').html(buildTableRtu());
+		$('.rpc_mode').html(buildTableRpc());
 		setTimeout(function(){
 			read_data();
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0;
-			for(var i = 0 i < (data_id.length);i++){
-				lab = document.getElementById(data_id[i]);
-				lab.value = rpc_data[i + 1];
+			var lab = 0,sel = 0,btn =0;
+			btn = document.getElementById("save");
+			sel = document.getElementById(data_id[0]);
+			sel[rpc_data[1]].selected = true;
+			lab = document.getElementById(data_id[1]);
+			lab.value = rpc_data[2];
+			if(rpc_data[1] == 0){
+				lab.disabled =true;
+				btn.disabled =true;
+			}else{
+				lab.disabled =fasle;
+				btn.disabled =fasle;
 			}
 			
 		}
@@ -68,7 +76,7 @@
 		}
 		function Set(){
 			var lab = 0;
-			for(var i = 0 i < (data_id.length);i++){
+			for(var i = 0; i < (data_id.length);i++){
 				lab = parseInt(document.getElementById(data_id[i]).value);
 				if(lab != rpc_data[i+1]){
 					rpc.call('pduSetCfg',[0,rpc_cfg,i,0,0,lab]);
@@ -80,7 +88,7 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%">RPC集成设置</td>\
 				<td width ="85%"></td></tr>';
-			tbody += '<tr><td>RPC模式</td>';
+			tbody += '<tr><td>RPC模式选择</td>';
 			tbody += '<td><select id ="mode">';
 			for(var i = 0; i<mode_name.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
