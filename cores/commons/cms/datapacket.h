@@ -298,10 +298,10 @@ struct sNumStrItem{
 #ifndef SUPPORT_C
 struct sRelay
 {
-    enum State{Off, On, Reset};
     enum Type{Breaker, Relay};
     enum Mode{Standard, EnOffALarm};
     enum Alarm{NoAlarm, OffALarm};
+    enum State{Off, On, Reset};
 };
 
 struct sMultipleStrings
