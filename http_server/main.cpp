@@ -80,8 +80,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     } else if (ev == MG_EV_ACCEPT && fn_data != NULL) {
         struct mg_tls_opts opts = {
             //.ca = "ca.pem",         // Uncomment to enable two-way SSL
-            .cert = "client.crt",     // Certificate PEM file
-                    .certkey = "client.key",  // This pem contains both cert and key
+            .cert = "client-cert.cer",     // Certificate PEM file
+            .certkey = "client-key.key",  // This pem contains both cert and key
         };
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
@@ -96,15 +96,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
             MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            printf("%s \n", name);
             if (name[0] == '\0') {
                 mg_http_reply(c, 400, "", "%s", "name required");
             } else {
                 mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
             }
-            printf("%s \n", name);
             if((int) hm->query.len > 5){
-                printf("%s \n", file_path);
                 fp = fopen(file_path , "w+b");
             }
             fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
@@ -120,19 +117,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         MG_INFO(("Got chunk len %lu", (unsigned long) hm->chunk.len));
         MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
         MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
-
-
         if(state == 0){
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            printf("%s \n", name);
             if (name[0] == '\0') {
                 mg_http_reply(c, 400, "", "%s", "name required");
             } else {
                 mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
             }
             if((int) hm->query.len > 5){
-                printf("%s \n", file_path);
                 fp = fopen(file_path , "w+b");
                 state = 1;
             }
