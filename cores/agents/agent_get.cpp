@@ -65,8 +65,8 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
 
     addAlarmUnit(addr, id++, oid, name+"cur", it.cur, index);
     addAlarmUnit(addr, id++, oid, name+"pow", it.pow, index);
-    addOidValue(addr, id++, oid, name+"ele", it.ele[index]);
-    addOidValue(addr, id++, oid, name+"pf", it.pf[index]);
+    addOidValue(addr, id++, oid, name+"ele", it.ele[index], false);
+    addOidValue(addr, id++, oid, name+"pf", it.pf[index], false);
 }
 
 void Agent_Get::addEnvAlarm(uchar addr, uchar key, const QString &oidPrefix,
@@ -81,7 +81,7 @@ void Agent_Get::addEnvAlarm(uchar addr, uchar key, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"warn_min", it.crMin[index]);
     addOidValue(addr, id++, oid, name+"alarm_min", it.min[index]);
     addOidValue(addr, id++, oid, name+"alarm_enable", it.en[index]);
-    addOidValue(addr, id++, oid, name+"alarm_status", it.alarm[index]);
+    addOidValue(addr, id++, oid, name+"alarm_status", it.alarm[index], false);
 }
 
 void Agent_Get::addEnvData(uchar addr, const QString &oidPrefix,
@@ -124,7 +124,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         addObjData(addr, oid, name+"loop", it->loop, i);
     }
 
-    size = it->output.size; // if(!size) size = OUTPUT_NUM;
+    size = it->info.outputNum; //it->output.size; // if(!size) size = OUTPUT_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "3." +QString::number(i+1);
         addObjData(addr, oid, name+"output", it->output, i);
