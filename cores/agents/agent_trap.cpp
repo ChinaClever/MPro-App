@@ -18,6 +18,23 @@ void Agent_Trap::initTrapSlot()
     mModuleOid = mSnmp->moduleOid();
     Alarm_Updater *alarm = Alarm_Updater::bulid();
     connect(alarm, &Alarm_Updater::alarmSig, this, &Agent_Trap::alarmSlot);
+
+    timer = new QTimer(this);
+    timer->start(3000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeoutDone()));
+}
+
+void Agent_Trap::timeoutDone()
+{
+    sDataItem it;
+    it.addr = 0;
+    it.type = 1;
+    it.topic = 2;
+    it.subtopic = 3;
+    it.id = 0;
+    it.value =1;
+
+    alarmSlot(it, 1);
 }
 
 void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
@@ -68,6 +85,8 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
         ip = cfg->trap2;
         if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
         //mSnmp->sendTrap(oid);
+
+        sendTrap("192.168.1.102", doid, toString(oid), msg);
     }
 }
 
