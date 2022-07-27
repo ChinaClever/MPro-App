@@ -21,20 +21,44 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     addOid(addr, id++, oid, prefix+"cabinet", it.cab);
     addOid(addr, id++, oid, prefix+"road", it.road);
     addOid(addr, id++, oid, prefix+"name", it.devName);
+    addOid(addr, id++, oid, prefix+"qrcode", it.qrcode);
     addOid(addr, id++, oid, prefix+"sn", it.sn);
+}
+
+void Agent_Get::addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev)
+{
+    bool w = false; QString oid = "0.1.";
+    int id = 1; QString prefix = oidPrefix + "num_";
+    addOidValue(addr, id++, oid, prefix+"line", dev.lineNum, w);
+    addOidValue(addr, id++, oid, prefix+"loop", dev.loopNum, w);
+    addOidValue(addr, id++, oid, prefix+"output", dev.outputNum, w);
+    addOidValue(addr, id++, oid, prefix+"slave", dev.slaveNum, w);
+    addOidValue(addr, id++, oid, prefix+"board", dev.opNum, w);
+    addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
+}
+
+void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &dev)
+{
+    bool w = false; QString oid = "0.2.";
+    int id = 1; QString prefix = oidPrefix + "info_";
+    addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
+    addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
+}
+
+void Agent_Get::addDevVer(uchar addr, const QString &oidPrefix, sVersions &dev)
+{
+    bool w = false; QString oid = "0.3.";
+    int id = 1; QString prefix = oidPrefix + "ver_";
+    addOid(addr, id++, oid, prefix+"version", dev.coreVer, w);
+    addOid(addr, id++, oid, prefix+"compileTime", dev.coreCompileTime, w);
 }
 
 void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev)
 {
-    bool w = false; QString oid = "0.1.";
-    int id = 1; QString prefix = oidPrefix + "info_";
-
-    addOidValue(addr, id++, oid, prefix+"type", dev.param.devSpec, w);
-    addOidValue(addr, id++, oid, prefix+"lineNum", dev.nums.lineNum, w);
-    addOidValue(addr, id++, oid, prefix+"outputNum", dev.nums.outputNum, w);
-    addOidValue(addr, id++, oid, prefix+"slaveNum", dev.nums.slaveNum, w);
-    addOidValue(addr, id++, oid, prefix+"version", dev.vers.version, w);
-    //addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
+    addUutInfo(addr, oidPrefix, dev.uut);
+    addDevNums(addr, oidPrefix, dev.nums);
+    addDevParam(addr, oidPrefix, dev.param);
+    addDevVer(addr, oidPrefix, dev.vers);
 }
 
 void Agent_Get::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix,
@@ -108,8 +132,6 @@ void Agent_Get::addDoors(uchar addr, const QString &oidPrefix, sEnvData &it)
 void Agent_Get::addDevData(uchar addr, sDevData *it)
 {
     QString name = tr("pdu_%1_").arg(addr);
-
-    addUutInfo(addr, name, it->cfg.uut);
     addDevInfo(addr, name, it->cfg);
 
     int size = it->cfg.nums.lineNum; // if(!size) size = LINE_NUM;

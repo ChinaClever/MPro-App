@@ -27,3 +27,10 @@ QVector<double> JsonRpcObj::getNumbers(mg_str &r, int num)
     }
     return res;
 }
+
+void JsonRpcObj::compileTime()
+{
+    sVersions *vers = &(cm::masterDev()->cfg.vers);
+    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(vers->webCompileTime, str.toLatin1().data());
+}

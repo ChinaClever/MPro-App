@@ -11,7 +11,7 @@ public:
     static App_Start *bulid(QObject *parent = nullptr);
 
 private:
-    void initUsb();
+    void compileTime();
 
 private slots:
     void initFunSlot();

@@ -181,6 +181,11 @@ struct sVersions
     uint lcd;
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
+
+    uint start;
+    char startVer[NAME_SIZE];
+    char startCompileTime[NAME_SIZE];
+
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uint version;
 };
@@ -201,11 +206,11 @@ struct sParameter {
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
+    uint hz;
     uchar reserve[20];
 };
 
 struct sDevCfg {
-    //uint hz;
     struct sUutInfo uut;
     struct sDevNums nums;
     struct sVersions vers;
