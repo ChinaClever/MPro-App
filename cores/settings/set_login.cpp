@@ -58,10 +58,11 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
 
 bool Set_Login::loginCheck(const QString &str)
 {
-    bool ret = false;
     QStringList ls = str.split("; ");
-    sDevLogin *it = &(cm::dataPacket()->login[0]);
-    QString usr = it->user, pwd = it->pwd;
-    if((ls.first() == usr) && (ls.last() == pwd)) ret = true;
+    bool ret = false; if(ls.size() == 2) {
+        sDevLogin *it = &(cm::dataPacket()->login[0]);
+        QString usr = it->user, pwd = it->pwd;
+        if((ls.first() == usr) && (ls.last() == pwd)) ret = true;
+    }
     return ret;
 }
