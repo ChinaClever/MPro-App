@@ -24,17 +24,17 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     addOid(addr, id++, oid, prefix+"sn", it.sn);
 }
 
-void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev)
+void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev)
 {
     bool w = false; QString oid = "0.1.";
     int id = 1; QString prefix = oidPrefix + "info_";
 
-    addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
-    addOidValue(addr, id++, oid, prefix+"lineNum", dev.lineNum, w);
-    addOidValue(addr, id++, oid, prefix+"outputNum", dev.outputNum, w);
-    addOidValue(addr, id++, oid, prefix+"slaveNum", dev.slaveNum, w);
-    addOidValue(addr, id++, oid, prefix+"version", dev.version, w);
-    addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
+    addOidValue(addr, id++, oid, prefix+"type", dev.param.devSpec, w);
+    addOidValue(addr, id++, oid, prefix+"lineNum", dev.nums.lineNum, w);
+    addOidValue(addr, id++, oid, prefix+"outputNum", dev.nums.outputNum, w);
+    addOidValue(addr, id++, oid, prefix+"slaveNum", dev.nums.slaveNum, w);
+    addOidValue(addr, id++, oid, prefix+"version", dev.vers.version, w);
+    //addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
 }
 
 void Agent_Get::addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix,
@@ -109,22 +109,22 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
 {
     QString name = tr("pdu_%1_").arg(addr);
 
-    addUutInfo(addr, name, it->uut);
-    addDevInfo(addr, name, it->info);
+    addUutInfo(addr, name, it->cfg.uut);
+    addDevInfo(addr, name, it->cfg);
 
-    int size = it->info.lineNum; // if(!size) size = LINE_NUM;
+    int size = it->cfg.nums.lineNum; // if(!size) size = LINE_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "1." +QString::number(i+1);
         addObjData(addr, oid, name+"line", it->line, i);
     }
 
-    size = it->info.loopNum;  // if(!size) size = LOOP_NUM;
+    size = it->cfg.nums.loopNum;  // if(!size) size = LOOP_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "2." +QString::number(i+1);
         addObjData(addr, oid, name+"loop", it->loop, i);
     }
 
-    size = it->info.outputNum; //it->output.size;  if(!size) size = OUTPUT_NUM;
+    size = it->cfg.nums.outputNum; //it->output.size;  if(!size) size = OUTPUT_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "3." +QString::number(i+1);
         addObjData(addr, oid, name+"output", it->output, i);
@@ -145,7 +145,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
 
 void Agent_Get::addOidSlot()
 {
-    uint size = cm::masterDev()->info.slaveNum;
+    uint size = cm::masterDev()->cfg.nums.slaveNum;
     for(uint i=0; i<=size; ++i) {
         sDevData *dev = cm::devData(i);
         addDevData(i, dev);

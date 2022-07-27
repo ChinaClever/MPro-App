@@ -23,7 +23,7 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        for(int i=0; i< mDev->info.opNum; ++i) {
+        for(uint i=0; i< mDev->cfg.nums.opNum; ++i) {
             ret = ota_update(i+1, fn);
             emit otaFinish(i+1, ret);
         } cm::mdelay(220);

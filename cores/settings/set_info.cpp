@@ -14,19 +14,19 @@ Set_Info::Set_Info()
 int Set_Info::devInfoCfg(int addr, int type)
 {
     sDevData *dev = cm::devData(addr);
-    sDevInfo *it = &(dev->info);
+    sDevCfg *it = &(dev->cfg);
     int ret = 0;
 
     switch (type) {
     case 0: ret = dev->offLine;  break;
-    case 1: ret = it->devSpec; break;
-    case 2: ret = it->slaveNum; break;
-    case 3: ret = it->modbusAddr; break;
-    case 4: ret = it->version; break;
-    case 5: ret = it->buzzerSw; break;
-    case 6: ret = it->hz; break;
-    case 7: ret = it->opNum; break;
-    case 8: ret = it->groupEn; break;
+    case 1: ret = it->param.devSpec; break;
+    case 2: ret = it->nums.slaveNum; break;
+    case 3: ret = it->param.modbusAddr; break;
+    case 4: ret = it->vers.version; break;
+    case 5: ret = it->param.buzzerSw; break;
+//    case 6: ret = it->hz; break;
+    case 7: ret = it->nums.opNum; break;
+    case 8: ret = it->nums.groupEn; break;
 
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
@@ -37,14 +37,14 @@ int Set_Info::devInfoCfg(int addr, int type)
 
 bool Set_Info::setInfoCfg(int addr, int type, int value)
 {
-    sDevInfo *it = &(cm::devData(addr)->info);
+    sDevCfg *it = &(cm::devData(addr)->cfg);
     bool ret = true; switch (type) {
-    case 1: it->devSpec = value; break;
-    case 2: it->slaveNum = value; break;
-    case 3: it->modbusAddr = value; break;
-    case 5: it->buzzerSw = value; break;
-    case 7: it->opNum = value; break;
-    case 8: it->groupEn = value; break;
+    case 1: it->param.devSpec = value; break;
+    case 2: it->nums.slaveNum = value; break;
+    case 3: it->param.modbusAddr = value; break;
+    case 5: it->param.buzzerSw = value; break;
+    case 7: it->nums.opNum = value; break;
+    case 8: it->nums.groupEn = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
@@ -54,7 +54,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
 
 int Set_Info::devCfgNum(int addr, int type)
 {
-    sDevInfo *it = &(cm::devData(addr)->info);
+    sDevNums *it = &(cm::devData(addr)->cfg.nums);
     int value = 0; switch(type) {
     case DType::Line: value = it->lineNum; break;
     case DType::Loop: value = it->loopNum; break;
@@ -67,7 +67,7 @@ int Set_Info::devCfgNum(int addr, int type)
 bool Set_Info::setCfgNum(int addr, int type, int value)
 {
     bool ret = true;
-    sDevInfo *it = &(cm::devData(addr)->info);
+    sDevNums *it = &(cm::devData(addr)->cfg.nums);
     uint *ptr = nullptr; switch(type) {
     case DType::Line: ptr = &(it->lineNum); break;
     case DType::Loop: ptr = &(it->loopNum); break;
@@ -82,7 +82,7 @@ bool Set_Info::setCfgNum(int addr, int type, int value)
 QString Set_Info::getUut(int addr, uchar fc)
 {
     char *ptr=nullptr;
-    sUutInfo *it = &(cm::devData(addr)->uut);
+    sUutInfo *it = &(cm::devData(addr)->cfg.uut);
 
     switch (fc) {
     case 1: ptr = it->idc; break;
@@ -103,7 +103,7 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
-    sUutInfo *it = &(cm::masterDev()->uut);
+    sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     switch (fc) {
     case 1: key = "idc";  ptr = it->idc; break;
@@ -129,14 +129,14 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
 
 QString Set_Info::qrcodeStr(int addr)
 {
-    char *ptr = cm::devData(addr)->info.qrcode;
+    char *ptr = cm::devData(addr)->cfg.uut.qrcode;
     return ptr;
 }
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
 {
     int s = 5; QString fn = "catQR.png";
-    char *ptr = cm::masterDev()->info.qrcode;
+    char *ptr = cm::masterDev()->cfg.uut.qrcode;
     if(msg.size()) {
         QString cmd = "qrencode -o %1 -s %2 '%3'";
         QString qr = cmd.arg(fn).arg(s).arg(msg);

@@ -21,11 +21,11 @@ bool Cfg_RwInitial::initialData()
 bool Cfg_RwInitial::initialParam()
 {
     sDevData *dev = cm::masterDev();
-    initDevInfo(dev->info);
+    initDevInfo(dev->cfg.nums);
     return true;
 }
 
-void Cfg_RwInitial::initDevInfo(sDevInfo &it)
+void Cfg_RwInitial::initDevInfo(sDevNums &it)
 {
     it.opNum = 3;
     it.lineNum = LINE_NUM;

@@ -186,6 +186,6 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 
 void Alarm_Updater::run()
 {
-    int num = cm::masterDev()->info.slaveNum;
+    int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
 }

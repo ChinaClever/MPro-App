@@ -30,7 +30,7 @@ bool Cfg_RwObj::writeParams()
     if(ret) {
         QByteArray array; ushort end = END_CRC;
         QDataStream in(&array, QIODevice::WriteOnly);
-        in << cm::toByteArray(cm::masterDev()->info) << end;
+        in << cm::toByteArray(cm::masterDev()->cfg) << end;
         file.write(array);
     }
     mFile->close();
@@ -45,7 +45,7 @@ bool Cfg_RwObj::readParam(const QString &fn)
         if(array.size()) {
             QDataStream out(&array, QIODevice::ReadOnly);
             QByteArray v; ushort end; out >> v >> end;
-            if(end == END_CRC){cm::masterDev()->info = cm::toStruct<sDevInfo>(v); ret = true;}
+            if(end == END_CRC){cm::masterDev()->cfg = cm::toStruct<sDevCfg>(v); ret = true;}
             else qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
                              << mFile->errorString() << Q_FUNC_INFO;
         }

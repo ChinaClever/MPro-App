@@ -30,7 +30,6 @@ bool IPC_WebClient::upload(const QString &fn, const QString &md5)
     return multipleStrings(2, fn, md5);
 }
 
-
 bool IPC_WebClient::msgSend(int fc, const QByteArray &msg)
 {
     QVariantList lv{fc, msg};

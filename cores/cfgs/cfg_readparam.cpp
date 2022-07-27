@@ -51,14 +51,14 @@ void Cfg_ReadParam::login()
 {
     QString prefix = "login";
     QString key; char *ptr=nullptr;
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[0]);
 
     for(int i=1; i<4; ++i) {
         switch (i) {
-        case 1: key = "user";  ptr = it->user[0]; break;
-        case 2: key = "pwd";  ptr = it->pwd[0]; break;
-        case 3: key = "token";  ptr = it->token[0]; break;
-        case 4: key = "permit";  ptr = it->permit[0]; break;
+        case 1: key = "user";  ptr = it->user; break;
+        case 2: key = "pwd";  ptr = it->pwd; break;
+        case 3: key = "token";  ptr = it->token; break;
+        case 4: key = "permit";  ptr = it->permit; break;
         }
         QString res = mCfg->readCfg(key, "", prefix).toString();
         qstrcpy(ptr, res.toLatin1().data());
@@ -143,7 +143,7 @@ void Cfg_ReadParam::readUut()
 {
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
-    sUutInfo *it = &(cm::masterDev()->uut);
+    sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     for(int i=1; i<8; ++i) {
         switch (i) {
@@ -163,10 +163,10 @@ void Cfg_ReadParam::readUut()
 
     ///////////=============
     for(int i=0; i<8; ++i) {
-        sUutInfo *it = &(cm::devData(i)->uut);
+        sUutInfo *it = &(cm::devData(i)->cfg.uut);
         sprintf(it->devName, "devName_%d", i);
     }
-    cm::masterDev()->info.slaveNum = 8;   ///////////=============
+    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
 
 }
 

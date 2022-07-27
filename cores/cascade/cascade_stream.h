@@ -47,8 +47,8 @@ struct _sDevData
     uchar version;
 
     uchar id;  // 设备号
-    sDevInfo info;
-    sUutInfo uut;
+    sDevCfg cfg;
+    //sUutInfo uut;
 
     uchar lineSize;
     _sObjData line[LINE_NUM]; // 相数据
@@ -64,13 +64,12 @@ struct _sDevData
 
     uchar envSize;
     _sEnvData env[SENOR_NUM]; // 环境数据
-    sRtuCount rtuCount; // 传输情况
+    sRtuBoard rtu; // 传输情况
     sTgObjData tg; // 回路数据
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
 struct _sFrame {

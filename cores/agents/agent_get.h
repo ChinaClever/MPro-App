@@ -14,7 +14,7 @@ private slots:
 
 private:
     void addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it);
-    void addDevInfo(uchar addr, const QString &oidPrefix, sDevInfo &dev);
+    void addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev);
 
     void addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
     void addObjData(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index);

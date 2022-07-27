@@ -14,11 +14,12 @@ typedef unsigned short ushort;
 typedef unsigned int uint;
 #endif
 
+#define NET_NUM 2
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
-#define NAME_SIZE 64
+#define NAME_SIZE 32
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
@@ -107,9 +108,6 @@ struct sEnvData
     sEnvData() {size=0;}
 #endif
     uchar size;
-    uchar type_index;//1:温度 2:湿度 3:门禁 4:门磁 5:水浸 6:烟雾
-
-    //char name[SENOR_NUM][NAME_SIZE];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -145,41 +143,46 @@ struct sTgObjData
 
 
 /**
- * RTU传输统计结构体
+ * RTU执行板结构体
  */
-struct sRtuCount
+struct sRtuBoard
 {
-    uchar offLines[4];
+    uchar hzs[DEV_NUM];  // 电压频率
+    uchar offLines[DEV_NUM];
+    uchar chipStates[DEV_NUM];    
+    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
-
-struct sDevInfo {
-    uint devSpec; // 设备规格 A\B\C\D
-    uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-
-    uint version;
+struct sDevNums
+{
     uint slaveNum;  // 副机数量
-    uchar modbusAddr; // 通讯地址
-    uchar buzzerSw; // 蜂鸣器开关
-    uchar drySw; // 报警干接点开关
-
-    uint hz;
     uint lineNum; //设备单三相
     uint opNum;   //　执行板数量
     uint loopNum; // 回路数量
     uint outputNum;   //　输出位数量
     uchar ops[DEV_NUM]; //　每块执行板的输出位数量
-    uchar loopEnds[LOOP_NUM];
+    uchar loopEnds[LOOP_NUM]; //
     uchar loopStarts[LOOP_NUM];
-    uchar opSpecs[LOOP_NUM];
-    char qrcode[NAME_SIZE]; // 二维码
+    uchar opSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
+};
 
-    uchar hzs[DEV_NUM];  // 电压频率
+struct sVersions
+{
+    uint core;
+    char coreVer[NAME_SIZE];
+    char coreCompileTime[NAME_SIZE];
+
+    uint web;
+    char webVer[NAME_SIZE];
+    char webCompileTime[NAME_SIZE];
+
+    uint lcd;
+    char lcdVer[NAME_SIZE];
+    char lcdCompileTime[NAME_SIZE];
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
-    uchar chipStates[DEV_NUM];
-    uchar reserve[20];
+    uint version;
 };
 
 struct sUutInfo {
@@ -189,7 +192,24 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
+    char qrcode[2*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
+};
+
+struct sParameter {
+    uint devSpec; // 设备规格 A\B\C\D
+    uchar modbusAddr; // 通讯地址
+    uchar buzzerSw; // 蜂鸣器开关
+    uchar drySw; // 报警干接点开关
+    uchar reserve[20];
+};
+
+struct sDevCfg {
+    //uint hz;
+    struct sUutInfo uut;
+    struct sDevNums nums;
+    struct sVersions vers;
+    struct sParameter param;
 };
 
 /**
@@ -211,15 +231,12 @@ struct sDevData
     struct sObjData output; //位数据
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
-    struct sRtuCount rtuCount; // 传输情况
-
-    struct sDevInfo info;
-    struct sUutInfo uut;
+    struct sRtuBoard rtu; // 执行板
+    struct sDevCfg cfg;
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
-    uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    uint hz; // 电压频率
 };
 
 
@@ -229,18 +246,23 @@ struct sNetAddr
     sNetAddr() {mode=0;}
 #endif
     uchar mode;
+    char mac[NAME_SIZE];
     char ip[NAME_SIZE];
     char mask[NAME_SIZE];
     char gw[NAME_SIZE];
     char dns[NAME_SIZE];
-    char mac[NAME_SIZE];
+
+    char ipv6[NAME_SIZE];
+    char gwv6[NAME_SIZE];
+    char dnsv6[NAME_SIZE];
+    uint maskv6[NET_NUM];
 };
 
 struct sDevLogin {
-    char permit[USER_NUM][3];
-    char token[USER_NUM][NAME_SIZE];
-    char user[USER_NUM][NAME_SIZE];
-    char pwd[USER_NUM][NAME_SIZE];
+    char permit[3];
+    char token[NAME_SIZE];
+    char user[NAME_SIZE];
+    char pwd[NAME_SIZE];
 };
 
 /**
@@ -248,9 +270,9 @@ struct sDevLogin {
  */
 struct sDataPacket
 {
-    struct sNetAddr net; //设备IP
+    struct sNetAddr net[NET_NUM]; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
-    struct sDevLogin login;
+    struct sDevLogin login[USER_NUM];
 };
 
 

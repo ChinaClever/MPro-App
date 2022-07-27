@@ -12,12 +12,12 @@ Set_Login::Set_Login()
 
 QString Set_Login::loginUsrPwd(int type, int id)
 {
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[id]);
     char *ptr = nullptr; switch (type) {
-    case 1: ptr = it->user[id]; break;
-    case 2: ptr = it->pwd[id]; break;
-    case 3: ptr = it->token[id]; break;
-    case 4: ptr = it->permit[id]; break;
+    case 1: ptr = it->user; break;
+    case 2: ptr = it->pwd; break;
+    case 3: ptr = it->token; break;
+    case 4: ptr = it->permit; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -29,13 +29,13 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
 {
     QString key; bool ret = true;
     QString prefix = "login"; char *ptr=nullptr;
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[id]);
 
     switch (type) {
-    case 1: key = "user"; ptr = it->user[id]; break;
-    case 2: key = "pwd"; ptr = it->pwd[id]; break;
-    case 3: key = "token"; ptr = it->token[id]; break;
-    case 4: key = "permit"; ptr = it->permit[id]; break;
+    case 1: key = "user"; ptr = it->user; break;
+    case 2: key = "pwd"; ptr = it->pwd; break;
+    case 3: key = "token"; ptr = it->token; break;
+    case 4: key = "permit"; ptr = it->permit; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
