@@ -20,6 +20,10 @@ IPC_WebClient *IPC_WebClient::bulid(QObject *parent)
     return sington;
 }
 
+bool IPC_WebClient::login(const QString &usr, const QString &pwd)
+{
+    return multipleStrings(1, usr, pwd);
+}
 
 bool IPC_WebClient::upload(const QString &fn, const QString &md5)
 {

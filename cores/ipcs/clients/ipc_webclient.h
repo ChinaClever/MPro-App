@@ -18,6 +18,7 @@ public:
 
     int getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
     bool setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
+    bool login(const QString &usr, const QString &pwd);
 
 protected:
     bool multipleStrings(uchar fc, const QString &key, const QString &value);

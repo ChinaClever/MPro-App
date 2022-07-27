@@ -112,19 +112,19 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
     addUutInfo(addr, name, it->uut);
     addDevInfo(addr, name, it->info);
 
-    int size = it->line.size; // if(!size) size = LINE_NUM;
+    int size = it->info.lineNum; // if(!size) size = LINE_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "1." +QString::number(i+1);
         addObjData(addr, oid, name+"line", it->line, i);
     }
 
-    size = it->loop.size;  // if(!size) size = LOOP_NUM;
+    size = it->info.loopNum;  // if(!size) size = LOOP_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "2." +QString::number(i+1);
         addObjData(addr, oid, name+"loop", it->loop, i);
     }
 
-    size = it->info.outputNum; //it->output.size; // if(!size) size = OUTPUT_NUM;
+    size = it->info.outputNum; //it->output.size;  if(!size) size = OUTPUT_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "3." +QString::number(i+1);
         addObjData(addr, oid, name+"output", it->output, i);
