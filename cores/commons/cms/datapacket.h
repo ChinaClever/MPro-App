@@ -157,13 +157,13 @@ struct sDevNums
 {
     uint slaveNum;  // 副机数量
     uint lineNum; //设备单三相
-    uint opNum;   //　执行板数量
+    uint boardNum;   //　执行板数量
     uint loopNum; // 回路数量
     uint outputNum;   //　输出位数量
-    uchar ops[DEV_NUM]; //　每块执行板的输出位数量
+    uchar boards[DEV_NUM]; //　每块执行板的输出位数量
     uchar loopEnds[LOOP_NUM]; //
     uchar loopStarts[LOOP_NUM];
-    uchar opSpecs[LOOP_NUM];  // 各执行板的规格
+    uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
 };

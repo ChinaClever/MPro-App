@@ -14,7 +14,7 @@ void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
 {
     sDevData *dev = cm::masterDev();
     for(int i=0; i<3; ++i) {
-        int size = dev->cfg.nums.ops[i];
+        int size = dev->cfg.nums.boards[i];
         cmd[k++] = size ? size:8;   // 三块执行板各个输出位个数
     }
 

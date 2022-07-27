@@ -33,7 +33,7 @@ void Agent_Get::addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev)
     addOidValue(addr, id++, oid, prefix+"loop", dev.loopNum, w);
     addOidValue(addr, id++, oid, prefix+"output", dev.outputNum, w);
     addOidValue(addr, id++, oid, prefix+"slave", dev.slaveNum, w);
-    addOidValue(addr, id++, oid, prefix+"board", dev.opNum, w);
+    addOidValue(addr, id++, oid, prefix+"board", dev.boardNum, w);
     addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
 }
 

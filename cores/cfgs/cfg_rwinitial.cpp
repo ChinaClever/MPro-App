@@ -27,7 +27,7 @@ bool Cfg_RwInitial::initialParam()
 
 void Cfg_RwInitial::initDevInfo(sDevNums &it)
 {
-    it.opNum = 3;
+    it.boardNum = 3;
     it.lineNum = LINE_NUM;
     it.loopNum = LOOP_NUM / 2;
     it.outputNum = OUTPUT_NUM / 2;

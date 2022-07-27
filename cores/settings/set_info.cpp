@@ -25,7 +25,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 4: ret = it->vers.version; break;
     case 5: ret = it->param.buzzerSw; break;
 //    case 6: ret = it->hz; break;
-    case 7: ret = it->nums.opNum; break;
+    case 7: ret = it->nums.boardNum; break;
     case 8: ret = it->nums.groupEn; break;
 
     default: qDebug() << Q_FUNC_INFO << type; break;
@@ -43,7 +43,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 2: it->nums.slaveNum = value; break;
     case 3: it->param.modbusAddr = value; break;
     case 5: it->param.buzzerSw = value; break;
-    case 7: it->nums.opNum = value; break;
+    case 7: it->nums.boardNum = value; break;
     case 8: it->nums.groupEn = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
@@ -114,7 +114,7 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     case 6: key = "devName";  ptr = it->devName; break;
     case 7: key = "sn";  ptr = it->sn; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    }
+    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) qstrcpy(ptr, str);
     Cfg_Obj *cfg = Cfg_Obj::bulid();

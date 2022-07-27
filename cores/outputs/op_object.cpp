@@ -17,8 +17,8 @@ void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev;
     sOpIt *it = mOpData; uchar k = 0;
-    dev->cfg.nums.ops[addr] = it->size; addr -= 1;
-    for(int i=0; i<addr; ++i) k += dev->cfg.nums.ops[i];
+    dev->cfg.nums.boards[addr] = it->size; addr -= 1;
+    for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
 
     for(int i=0; i<it->size; ++i) {
         dev->output.vol.value[k+i] = it->vol[i];
@@ -34,7 +34,7 @@ void OP_Object::fillData(uchar addr)
 
     dev->offLine = 3;
     dev->rtu.hzs[addr] = it->hz;
-    dev->cfg.nums.ops[addr] = it->size;
+    dev->cfg.nums.boards[addr] = it->size;
     dev->cfg.vers.opVers[addr] = it->version;
     dev->rtu.chipStates[addr] = it->chipStatus;
     for(int i=0; i<4; ++i) dev->rtu.offLines[i] = it->ens[i];
