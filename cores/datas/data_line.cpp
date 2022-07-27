@@ -12,9 +12,9 @@ Data_Line::Data_Line()
 
 void Data_Line::lineWork()
 {
-    int size = mDev->info.lineNum;
+    int size = mDev->cfg.nums.lineNum;
     if(size == 0) size = 1;
-    int num = mDev->info.loopNum / size;
+    int num = mDev->cfg.nums.loopNum / size;
     for(int i=0; i<size; ++i) {
         int start = i * num;
         int end = (i+1) * num;
@@ -24,7 +24,7 @@ void Data_Line::lineWork()
 
 void Data_Line::inletNum()
 {
-    int size = mDev->info.lineNum;
+    int size = mDev->cfg.nums.lineNum;
     sObjData *obj = &(mDev->line); obj->relay.size = 0;
     obj->size = obj->vol.size = obj->cur.size = obj->pow.size = size;
 }
@@ -51,8 +51,8 @@ void Data_Line::tgWork()
 
 void Data_Line::calHz()
 {
-    for(uint i=0; i<mDev->info.loopNum; ++i) {
-        uchar hz = mDev->info.hzs[i];
-        if(hz) {mDev->hz = mDev->info.hz = hz; break;}
+    for(uint i=0; i<mDev->cfg.nums.loopNum; ++i) {
+        uchar hz = mDev->rtu.hzs[i];
+        if(hz) {mDev->hz = hz; break;}
     }
 }

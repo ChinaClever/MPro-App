@@ -8,8 +8,8 @@
 
 Set_Alarm::Set_Alarm()
 {
-}
 
+}
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
 {

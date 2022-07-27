@@ -15,6 +15,7 @@ HEADERS += \
 
 SOURCES += \
         app_run.cpp \
+        app_shm.cpp \
         app_usb.cpp \
         main.cpp \
         start_app.cpp

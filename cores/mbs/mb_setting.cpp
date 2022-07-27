@@ -19,28 +19,28 @@ void Mb_Setting::mbSetUpdate()
 void Mb_Setting::upSetData()
 {
     vshort vs;
-    vs << mDevData->info.modbusAddr;
-    vs << mDevData->info.buzzerSw;
-    vs << mDevData->info.drySw;
+    vs << mDevData->cfg.param.modbusAddr;
+    vs << mDevData->cfg.param.buzzerSw;
+    vs << mDevData->cfg.param.drySw;
     setRegs(MbReg_Settings, vs);
 }
 
 void Mb_Setting::addrSet(ushort &v)
 {
-    mDevData->info.modbusAddr = v;
+    mDevData->cfg.param.modbusAddr = v;
     setAddress(v);
     qDebug() << Q_FUNC_INFO << "modbus set addr OK" << v;
 }
 
 void Mb_Setting::buzzerSw(ushort &v)
 {
-    mDevData->info.buzzerSw = v;
+    mDevData->cfg.param.buzzerSw = v;
     qDebug() << Q_FUNC_INFO << "modbus set Buzzer switch OK" << v;
 }
 
 void Mb_Setting::drySw(ushort &v)
 {
-    mDevData->info.drySw = v;
+    mDevData->cfg.param.drySw = v;
     qDebug() << Q_FUNC_INFO << "modbus set dry switch OK" << v;
 }
 

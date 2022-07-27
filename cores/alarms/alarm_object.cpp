@@ -51,6 +51,7 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     switch (index.type) {
     case DType::Line: obj = &(dev->line); break;
     case DType::Loop: obj = &(dev->loop); break;
+    case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }

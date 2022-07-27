@@ -1,6 +1,6 @@
 #ifndef DATAPACKET_H
 #define DATAPACKET_H
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
 #include "cthread.h"
 #else
 #include <stdio.h>
@@ -14,6 +14,7 @@ typedef unsigned short ushort;
 typedef unsigned int uint;
 #endif
 
+#define NET_NUM 2
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
@@ -22,6 +23,7 @@ typedef unsigned int uint;
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
+#define GROUP_NUM 8
 #define PACK_ARRAY_SIZE   OUTPUT_NUM
 
 // 倍率定义
@@ -39,7 +41,7 @@ typedef unsigned int uint;
  */
 struct sAlarmUnit
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sAlarmUnit() {size=0;}
 #endif
     uchar size;
@@ -72,7 +74,7 @@ struct sRelayUnit
  */
 struct sObjData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sObjData() {size=0;}
 #endif
     uchar size;
@@ -102,13 +104,10 @@ struct sObjData
  */
 struct sEnvData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sEnvData() {size=0;}
 #endif
     uchar size;
-    uchar type_index;//1:温度 2:湿度 3:门禁 4:门磁 5:水浸 6:烟雾
-
-    char name[SENOR_NUM][NAME_SIZE];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -144,38 +143,51 @@ struct sTgObjData
 
 
 /**
- * RTU传输统计结构体
+ * RTU执行板结构体
  */
-struct sRtuCount
+struct sRtuBoard
 {
-    uchar offLines[4];
+    uchar hzs[DEV_NUM];  // 电压频率
+    uchar offLines[DEV_NUM];
+    uchar chipStates[DEV_NUM];    
+    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
-
-struct sDevInfo {
-    uint devSpec; // 设备规格 A\B\C\D
-    uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-
-    uint version;
+struct sDevNums
+{
     uint slaveNum;  // 副机数量
-    uchar modbusAddr; // 通讯地址
-    uchar buzzerSw; // 蜂鸣器开关
-    uchar drySw; // 报警干接点开关
-
-    uint hz;
     uint lineNum; //设备单三相
-    uint opNum;   //　执行板数量
+    uint boardNum;   //　执行板数量
     uint loopNum; // 回路数量
     uint outputNum;   //　输出位数量
-    uchar ops[DEV_NUM]; //　每块执行板的输出位数量
-    uchar loopEnds[LOOP_NUM];
+    uchar boards[DEV_NUM]; //　每块执行板的输出位数量
+    uchar loopEnds[LOOP_NUM]; //
     uchar loopStarts[LOOP_NUM];
-    uchar opSpecs[LOOP_NUM];
+    uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
+    uchar group[GROUP_NUM][OUTPUT_NUM];
+    uint groupEn; // 组开关使能
+};
 
-    uchar hzs[DEV_NUM];  // 电压频率
+struct sVersions
+{
+    uint core;
+    char coreVer[NAME_SIZE];
+    char coreCompileTime[NAME_SIZE];
+
+    uint web;
+    char webVer[NAME_SIZE];
+    char webCompileTime[NAME_SIZE];
+
+    uint lcd;
+    char lcdVer[NAME_SIZE];
+    char lcdCompileTime[NAME_SIZE];
+
+    uint start;
+    char startVer[NAME_SIZE];
+    char startCompileTime[NAME_SIZE];
+
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
-    uchar chipStates[DEV_NUM];
-    uchar reserve[20];
+    uint version;
 };
 
 struct sUutInfo {
@@ -185,7 +197,24 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
+    char qrcode[2*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
+};
+
+struct sParameter {
+    uint devSpec; // 设备规格 A\B\C\D
+    uchar modbusAddr; // 通讯地址
+    uchar buzzerSw; // 蜂鸣器开关
+    uchar drySw; // 报警干接点开关
+    uint hz;
+    uchar reserve[20];
+};
+
+struct sDevCfg {
+    struct sUutInfo uut;
+    struct sDevNums nums;
+    struct sVersions vers;
+    struct sParameter param;
 };
 
 /**
@@ -193,7 +222,7 @@ struct sUutInfo {
  */
 struct sDevData
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sDevData() {id=0; offLine=0; alarm=0; }
 #endif
 
@@ -203,39 +232,42 @@ struct sDevData
 
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
+    struct sObjData group; //组数据
     struct sObjData output; //位数据
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
-    struct sRtuCount rtuCount; // 传输情况
-
-    struct sDevInfo info;
-    struct sUutInfo uut;
+    struct sRtuBoard rtu; // 执行板
+    struct sDevCfg cfg;
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
-    uchar hz; // 电压频率
-    ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    uint hz; // 电压频率
 };
 
 
 struct sNetAddr
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sNetAddr() {mode=0;}
 #endif
     uchar mode;
+    char mac[NAME_SIZE];
     char ip[NAME_SIZE];
     char mask[NAME_SIZE];
     char gw[NAME_SIZE];
     char dns[NAME_SIZE];
-    char mac[NAME_SIZE];
+
+    char ipv6[NAME_SIZE];
+    char gwv6[NAME_SIZE];
+    char dnsv6[NAME_SIZE];
+    uint maskv6[NET_NUM];
 };
 
 struct sDevLogin {
-    char permit[USER_NUM][3];
-    char token[USER_NUM][NAME_SIZE];
-    char user[USER_NUM][NAME_SIZE];
-    char pwd[USER_NUM][NAME_SIZE];
+    char permit[3];
+    char token[NAME_SIZE];
+    char user[NAME_SIZE];
+    char pwd[NAME_SIZE];
 };
 
 /**
@@ -243,13 +275,13 @@ struct sDevLogin {
  */
 struct sDataPacket
 {
-    struct sNetAddr net; //设备IP
+    struct sNetAddr net[NET_NUM]; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
-    struct sDevLogin login;
+    struct sDevLogin login[USER_NUM];
 };
 
 
-enum DType{Tg, Line, Loop, Output, Env=6, Sensor};
+enum DType{Tg, Line, Loop, Output, Group, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, UpTime=4, ResTime, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
@@ -257,12 +289,12 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
 struct sDataItem
 {
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sDataItem():soi(0),addr(0),rw(0),value(0){}
 #endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
-    uchar type; // 1 相数据  2 回路数据 ３　输出位数据  6 环境 7 传感器
+    uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
     uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态  11 多开关控制
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
@@ -271,10 +303,11 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
+            EGrouping=21,EGroupName, EQRcode};
 
 struct sNumStrItem{
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
     sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
 #endif
     uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
@@ -289,14 +322,22 @@ struct sNumStrItem{
     char str[NAME_SIZE];
 };
 
-#ifndef LCD_AWTK
+#ifndef SUPPORT_C
 struct sRelay
 {
-    enum State{Off, On, Reset};
     enum Type{Breaker, Relay};
     enum Mode{Standard, EnOffALarm};
     enum Alarm{NoAlarm, OffALarm};
+    enum State{Off, On, Reset};
 };
+
+struct sMultipleStrings
+{
+    sMultipleStrings():fc(0){}
+    char str[2][NAME_SIZE];
+    uchar fc; // 1 登陆  2 升级
+};
+
 #endif
 
 #endif // DATAPACKET_H

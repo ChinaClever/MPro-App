@@ -2,28 +2,6 @@
 #define IPC_OBJCLIENT_H
 
 #include "domain_socketcli.h"
-enum eLogs{
-    eUserLog,
-    eAlarmLog,
-    eOpLog,
-    eSysLog,
-    eEleLog,
-};
-
-enum eLogFc {
-    eLog_cnt=1,
-    eLog_read,
-    eLog_page,
-    eLog_clear,
-};
-
-struct sLogFcIt {
-    sLogFcIt() {type=fc=0; id=0;noe=30;}
-    uchar type;
-    uchar fc;
-    uchar noe;
-    uint id;
-};
 
 class IPC_ObjClient : public QObject
 {

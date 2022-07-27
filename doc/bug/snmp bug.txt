@@ -15,6 +15,9 @@ Reason: notWritable (That object does not support modification)
 Failed object: SNMPv2-SMI::enterprises.30966.11.0.1.1.3
 
 
+snmpset -v2c -c private  192.168.1.99 1.3.6.1.4.1.30966.11.0.1.1.2.3 i 2760
+
+
 
 3.副机数量是在线数量，还是可以级联的数量
 SNMPv2-SMI::enterprises.30966.11.0.0.1.4 = INTEGER: 8

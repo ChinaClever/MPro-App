@@ -67,13 +67,16 @@ void Cascade_Unserialize::unDevSize(uchar size, sObjData &data)
 
 void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
 {
-    data->info = obj->info; data->uut = obj->uut;
+    data->cfg = obj->cfg; //data->uut = obj->uut;
     uchar size = data->line.size = obj->lineSize; unDevSize(size, data->line);
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
     data->line.relay.size = 0;
 
     size = data->loop.size = obj->loopSize; unDevSize(size, data->loop);
     for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);    
+
+    size = data->group.size = obj->groupSize; unDevSize(size, data->group);
+    for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
 
     size = data->output.size = obj->outputSize; unDevSize(size, data->output);
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
@@ -83,12 +86,11 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     for(int i=0; i< size; ++i) unEnvData(i, data->env, obj->env[i]);
     data->env.hum.size = data->env.tem.size = size;
 
-    data->rtuCount = obj->rtuCount;
+    data->rtu = obj->rtu;
     data->tg = obj->tg;
     data->lps = obj->lps;
     data->dc = obj->dc;
     data->hz = obj->hz;
-    data->br = obj->br;
 }
 
 bool Cascade_Unserialize::unSequence(uchar addr)

@@ -40,6 +40,14 @@ QString Integr_JsonRecv::getString(const QJsonObject &object, const QString &key
     return str;
 }
 
+QString Integr_JsonRecv::getString(const QByteArray &msg, const QString &key)
+{
+    QJsonObject object; QString res;
+    bool ret = checkInput(msg, object);
+    if(ret) res = getString(object, key);
+    return res;
+}
+
 double Integr_JsonRecv::getData(const QJsonObject &object, const QString &key)
 {
     double ret = -1;
@@ -49,6 +57,14 @@ double Integr_JsonRecv::getData(const QJsonObject &object, const QString &key)
     }
 
     return ret;
+}
+
+double Integr_JsonRecv::getData(const QByteArray &msg, const QString &key)
+{
+    QJsonObject object; double res= -1;
+    bool ret = checkInput(msg, object);
+    if(ret) res = getData(object, key);
+    return res;
 }
 
 QJsonObject Integr_JsonRecv::getObject(const QJsonObject &object, const QString &key)
@@ -61,6 +77,14 @@ QJsonObject Integr_JsonRecv::getObject(const QJsonObject &object, const QString 
         }
     }
     return obj;
+}
+
+QJsonObject Integr_JsonRecv::getObject(const QByteArray &msg, const QString &key)
+{
+    QJsonObject object;
+    bool ret = checkInput(msg, object);
+    if(ret) object = getObject(object, key);
+    return object;
 }
 
 QJsonArray Integr_JsonRecv::getArray(const QJsonObject &object, const QString &key)
@@ -121,7 +145,7 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
 
 bool Integr_JsonRecv::setNumStrItem(const QJsonObject &object)
 {
-    QString key = "sNumStrItem";
+    QString key = "setNumStrItem";
     bool ret = true; sNumStrItem it;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
@@ -150,16 +174,24 @@ bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
     return ret;
 }
 
-bool Integr_JsonRecv::recv(const QByteArray &msg)
+bool Integr_JsonRecv::checkInput(const QByteArray &msg, QJsonObject &obj)
 {
     QJsonParseError jsonerror; bool ret = false;
     QJsonDocument doc = QJsonDocument::fromJson(msg, &jsonerror);
     if (!doc.isNull() && jsonerror.error == QJsonParseError::NoError) {
         if(doc.isObject()) {
-            QJsonObject object = doc.object();
-            ret = analyticalData(object);
+            obj = doc.object();
+            ret = true;
         }
     }
+    return ret;
+}
+
+bool Integr_JsonRecv::recv(const QByteArray &msg)
+{
+    QJsonObject object;
+    bool ret = checkInput(msg, object);
+    if(ret) ret = analyticalData(object);
 
     return ret;
 }

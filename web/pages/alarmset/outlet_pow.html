@@ -89,7 +89,7 @@
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
 			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
 			}
 			return tbody;
 		}
@@ -145,7 +145,7 @@
 			else{
 				var ms = document.getElementById("sel");
 				ms.style.display = "none";
-				read = 1;
+				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
 				var iptname = document.getElementsByTagName("input");

@@ -28,7 +28,7 @@ Set_Ssdp *Set_Ssdp::bulid(QObject *parent)
 bool Set_Ssdp::setNumStr(sNumStrItem &it)
 {
     QString room; if(it.soi == 2) {
-        room = cm::masterDev()->uut.room;
+        room = cm::masterDev()->cfg.uut.room;
         if(room.isEmpty()) return false;
     } it.soi = 1;
 
@@ -39,7 +39,7 @@ bool Set_Ssdp::setNumStr(sNumStrItem &it)
 bool Set_Ssdp::setting(sDataItem &it)
 {
     QString room; if(it.soi == 2) {
-        room = cm::masterDev()->uut.room;
+        room = cm::masterDev()->cfg.uut.room;
         if(room.isEmpty()) return false;
     } it.soi = 1;
 
@@ -50,7 +50,7 @@ bool Set_Ssdp::setting(sDataItem &it)
 void Set_Ssdp::recvSlot(uchar fc, const QString &room, const QByteArray&rcv)
 {
     if(room.size()) {
-        QString res = cm::masterDev()->uut.room;
+        QString res = cm::masterDev()->cfg.uut.room;
         if(res != room) return ;
     }
 

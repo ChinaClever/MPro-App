@@ -19,7 +19,11 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-    Shm::initShm(); Cfg_ReadWrite::bulid();
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    Shm::initShm();
+#endif
+
+    Cfg_ReadWrite::bulid();
     QTimer::singleShot(50,this,SLOT(initFunSlot()));
     QTimer::singleShot(150,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
@@ -54,7 +58,7 @@ void App_Start::startThreadSlot()
     Agent_Core::bulid(this);
 #endif
 
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
     QThreadPool *pool = QThreadPool::globalInstance();
@@ -62,3 +66,9 @@ void App_Start::startThreadSlot()
     pool->start(Data_Core::bulid());
 }
 
+void App_Start::compileTime()
+{
+    sVersions *vers = &(cm::masterDev()->cfg.vers);
+    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
+}

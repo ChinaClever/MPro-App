@@ -144,25 +144,25 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        tbody += '<p class="title"><span>R&nbsp;e&nbsp;g&nbsp;i&nbsp;s&nbsp;t&nbsp;e&nbsp;r&nbsp;</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="User Name" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Password"></p>';
-        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Confirm Password"></p>';
-        tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="Identify Info"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "REGISTER" onclick="register1()"></input></p>';
+        tbody += '<p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="用户名" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="密码"></p>';
+        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
+        tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button" value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<br/><p class="title"><span>S&nbsp;i&nbsp;g&nbsp;n&nbsp;I&nbsp;n&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;o&nbsp;r&nbsp;m</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="User Name" onblur = "validataForm(this)"></p>';
-        tbody += '<p><input id ="psd" type="password" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="Password"></p>';
-        tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">identify</a></span></div><p></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "SIGN IN" onclick="sign_in()"></p></input>';
+        tbody += '<br/><p class="title"><span>登陆页</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)"></p>';
+        tbody += '<p><input id ="psd" type="password" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></p>';
+        tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button" value = "登陆" onclick="sign_in()"></p></input>';
       }else if(Reg === 'submite'){
-        tbody += '<p class="title"><span>R&nbsp;e&nbsp;t&nbsp;r&nbsp;i&nbsp;e&nbsp;v&nbsp;e&nbsp;</span></p><p class="error" id = "Errinfo"></p>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="User Name"></p>';
-        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="NeW Password"></p>';
-        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="Confirm Password"></p>';
+        tbody += '<p class="title"><span>重置密码</span></p><p class="error" id = "Errinfo"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="用户名"></p>';
+        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="新密码"></p>';
+        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "SUBMITE" onclick="submite1()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button" value = "提交" onclick="submite1()"></input></p>';
       }
       return tbody;
     }

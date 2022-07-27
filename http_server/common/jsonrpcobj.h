@@ -8,6 +8,7 @@
 class JsonRpcObj
 {
 public:
+    static void compileTime();
     static double getNumber(mg_str &r, int id);
     static QVector<double> getNumbers(mg_str &r, int num);
     static QString getString(mg_str &r, int id);

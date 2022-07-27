@@ -5,7 +5,7 @@
  */
 #include "ipc_logclient.h"
 
-IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_EchoClient{parent}
+IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_ObjClient{parent}
 {
 
 }

@@ -34,9 +34,9 @@ QVariant Domain_SocketCli::trans(const QVariant &var, int msec)
 {
     m_recv.clear();
     int ret = send(var);
-    if(ret > 0) {
+    usleep(10); if(ret > 0) {
         for(int i=0; i<msec; ++i) {
-            if(m_recv.size()) break; else cm::mdelay(1);
+            if(m_recv.size()) break; else cm::mdelay(1); //
             //if(i > 2)  qDebug() << "cli _1" << QTime::currentTime().toString("mm:ss zzz") << msec;
         }
     }
@@ -71,15 +71,13 @@ void Domain_SocketCli::workDown()
     static char buf[IPC_BUFFER_SIZE] = {0};
     static struct sockaddr_un cliaddr; socklen_t len = sizeof(cliaddr);
     int rtn = recvfrom(m_sockfd, buf, IPC_BUFFER_SIZE, 0, (struct sockaddr *)&cliaddr, &len);
-    if(rtn > 0) {
-        m_recv.append(buf, rtn);
-    }
+    if(rtn > 0) m_recv.append(buf, rtn);
 }
 
 void Domain_SocketCli::run()
 {
     while(isRun) {
         workDown();
-        //msleep(1);
+        //usleep(1);
     }
 }

@@ -29,11 +29,14 @@ void Set_Core::writeAlarm()
 bool Set_Core::setString(sNumStrItem &it)
 {
     bool ret = false; switch (it.fc) {
+    case SFnCode::EGrouping: ret = groupingSet(it); break;
+    case SFnCode::EGroupName: ret = groupNameSet(it); break;
     case SFnCode::OutputName: ret = outputNameSet(it); break;
     case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
     case SFnCode::EPush: ret = pushSet(it.id, it.str, it.txType); break;
     case SFnCode::ESnmp: ret = snmpSet(it.id, it.str, it.txType); break;
     case SFnCode::EDevLogin: ret = loginSet(it.id, it.str, it.txType); break;
+    case SFnCode::EQRcode: ret = qrcodeGenerator(it.str); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -47,7 +50,10 @@ QString Set_Core::getString(sNumStrItem &it)
     case SFnCode::ESnmp: str = snmpCfg(it.id); break;
     case SFnCode::EPush: str = pushCfg(it.id).toString(); break;
     case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
+    case SFnCode::EGrouping: str = grouping(it.addr, it.id); break;
+    case SFnCode::EGroupName: str = groupName(it.addr, it.id); break;
     case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
+    case SFnCode::EQRcode: str = qrcodeStr(it.addr); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -89,7 +95,7 @@ bool Set_Core::setNumStr(sNumStrItem &it)
             ret = Set_Ssdp::bulid()->setNumStr(it);
         } else if(it.addr  || it.soi) {
             if(it.soi) it.addr = 0xFF;
-            int num = cm::masterDev()->info.slaveNum;
+            int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSetNumStr(it);
             if(it.soi) {it.addr = it.soi = 0; setNumStr(it);}
         } else {
@@ -116,7 +122,7 @@ bool Set_Core::setting(sDataItem &it)
             ret = Set_Ssdp::bulid()->setting(it);
         } else if(it.addr || it.soi) {
             if(it.soi) it.addr = 0xFF;
-            int num = cm::masterDev()->info.slaveNum;
+            int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
             if(it.soi) {it.addr = it.soi = 0; setting(it);}
         } else if(it.topic == DTopic::Relay) {
@@ -132,4 +138,5 @@ bool Set_Core::setting(sDataItem &it)
 
     return ret;
 }
+
 

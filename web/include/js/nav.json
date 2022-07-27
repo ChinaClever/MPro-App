@@ -70,24 +70,24 @@
     "base": "pages/integrate/",
     "subNav": [
       {
-        "name": "Modbus服务",
-        "url": "modbus.html"
+        "name": "主动推送",
+        "url": "push.html"
+      },
+      {
+        "name": "RPC集成",
+        "url": "rpc.html"
+      },
+      {
+        "name": "HTTP集成",
+        "url": "http.html"
       },
       {
         "name": "SNMP服务",
         "url": "snmp.html"
-      },
+      },      
       {
-        "name": "RPC服务",
-        "url": "rpc.html"
-      },
-      {
-        "name": "推送服务",
-        "url": "push.html"
-      },
-      {
-        "name": "远程反控",
-        "url": "control.html"
+        "name": "Modbus协议",
+        "url": "modbus.html"
       }
     ]
   },

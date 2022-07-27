@@ -8,8 +8,10 @@
 
 sRpcCfg Rpc_Service::rpcCfg;
 Rpc_Service::Rpc_Service(QObject *parent)
-    : JsonRpcObj{parent}
+    : QObject{parent}
 {
+    mXml = new Rpc_Xml(this);
+    mJson = new Rpc_Json(this);
     QTimer::singleShot(550,this,SLOT(initFunSlot()));
 }
 
@@ -22,25 +24,34 @@ Rpc_Service *Rpc_Service::bulid(QObject *parent)
     return sington;
 }
 
-bool Rpc_Service::startRpc(int en)
+bool Rpc_Service::startJsonRpc(int en)
 {
-    SocketType socket_type;
-    rpcCfg.en = en; switch (en) {
-    case 1: socket_type = SocketType::tcp; break;
-    case 2: socket_type = SocketType::websocket; break;
-    default: close(); return true;
-    }
-    return startServer({new Rpc_Core(DTxType::TxRpc)}, rpcCfg.port, socket_type);
+    sRpcIt *ptr = &rpcCfg.json; ptr->en = en;
+    return mJson->startRpc(ptr->en, ptr->port);
 }
 
-bool Rpc_Service::setPort(int port)
+bool Rpc_Service::setJsonPort(int port)
 {
-    rpcCfg.port = port;
-    return startRpc(rpcCfg.en);
+    sRpcIt *ptr = &rpcCfg.json;
+    ptr->port = port;
+    return startJsonRpc(ptr->en);
+}
+
+bool Rpc_Service::startXmlRpc(int en)
+{
+    sRpcIt *ptr = &rpcCfg.xml; ptr->en = en;
+    return mXml->startXmlRpc(ptr->en, ptr->port);
+}
+
+bool Rpc_Service::setXmlPort(int port)
+{
+    sRpcIt *ptr = &rpcCfg.xml;
+    ptr->port = port;
+    return startXmlRpc(ptr->en);
 }
 
 void Rpc_Service::initFunSlot()
 {
-    startRpc(rpcCfg.en);
-    startLocalServer({new Rpc_Core(DTxType::TxSsh)});
+    mJson->startRpc(rpcCfg.json.en, rpcCfg.json.port);
+    mXml->startXmlRpc(rpcCfg.xml.en, rpcCfg.xml.port);
 }

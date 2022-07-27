@@ -181,3 +181,13 @@ p{
     border: none;
     background: #fff
 }
+.top-box{
+    height: 40px;
+    color:#fff;
+    background:#2b333e;
+}
+.top-box button{
+    width:5%;
+    height: 30px;
+    line-height: 16px;
+}

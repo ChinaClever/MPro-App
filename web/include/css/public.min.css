@@ -680,7 +680,7 @@ select,
 select:active {
     border:#ccc solid 1px;
     height: 24px;
-    width: 200px;
+    width: 25%;
     line-height: 10px;
     background-color: #f3f3f3;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(90%, #ececec), to(#f3f3f3));

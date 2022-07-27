@@ -21,13 +21,13 @@ bool Cfg_RwInitial::initialData()
 bool Cfg_RwInitial::initialParam()
 {
     sDevData *dev = cm::masterDev();
-    initDevInfo(dev->info);
+    initDevInfo(dev->cfg.nums);
     return true;
 }
 
-void Cfg_RwInitial::initDevInfo(sDevInfo &it)
+void Cfg_RwInitial::initDevInfo(sDevNums &it)
 {
-    it.opNum = 3;
+    it.boardNum = 3;
     it.lineNum = LINE_NUM;
     it.loopNum = LOOP_NUM / 2;
     it.outputNum = OUTPUT_NUM / 2;
@@ -62,7 +62,7 @@ void Cfg_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
     setAlarmUnit(it.cur, size, curRated);
     setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
-    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR/COM_RATE_VOL);
+    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR);
 }
 
 void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)
@@ -99,6 +99,7 @@ void Cfg_RwInitial::initDevData(sDevData *dev)
     initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
     initObjData(dev->output, OUTPUT_NUM, 10*COM_RATE_CUR);
     initRelayUnit(dev->output.relay, OUTPUT_NUM);
+    initRelayUnit(dev->group.relay, GROUP_NUM);
     initTgObjData(dev->tg);
     initEnvData(dev->env);
 }

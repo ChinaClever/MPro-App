@@ -5,9 +5,11 @@
 
 class Integr_JsonBuild
 {
-public:
     Integr_JsonBuild();
+public:
+    static Integr_JsonBuild *bulid();
     QByteArray getJson(uchar addr);
+    QJsonObject getJsonObject(uchar addr);
     bool saveJson(const QString &name, QJsonObject &json);
 
 private:
@@ -18,7 +20,7 @@ private:
     void envData(const sEnvData &it, const QString &key, QJsonObject &json);
     void tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json);
     void tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json);
-    void devInfo(const sDevInfo &it, const QString &key, QJsonObject &json);
+    void devInfo(const sDevCfg &it, const QString &key, QJsonObject &json);
     void uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json);
     void devData(const sDevData *it, const QString &key, QJsonObject &json);
     void netAddr(const sNetAddr &it, const QString &key, QJsonObject &json);

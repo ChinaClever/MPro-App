@@ -23,14 +23,14 @@
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">相设置</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
 								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
-									<option value="1">级联组设置</option><option value="2">本机
+									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
+									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">相电压设置</span>
 							</div>
 						</div>
 					</div>
-					<div class="grid-col grid-col-7">房设置</option><option value="3">全部设置</option></select></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
+					<div class="grid-col grid-col-7">
 						<table class="table table-striped vol_table"></table>
 					</div>
 					<div class="grid-col grid-col-7">
@@ -204,7 +204,7 @@
 			else{
 				var ms = document.getElementById("sel");
 				ms.style.display = "none";
-				read = 1;
+				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
 				var iptname = document.getElementsByTagName("input");

@@ -51,14 +51,14 @@ void Cfg_ReadParam::login()
 {
     QString prefix = "login";
     QString key; char *ptr=nullptr;
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[0]);
 
     for(int i=1; i<4; ++i) {
         switch (i) {
-        case 1: key = "user";  ptr = it->user[0]; break;
-        case 2: key = "pwd";  ptr = it->pwd[0]; break;
-        case 3: key = "token";  ptr = it->token[0]; break;
-        case 4: key = "permit";  ptr = it->permit[0]; break;
+        case 1: key = "user";  ptr = it->user; break;
+        case 2: key = "pwd";  ptr = it->pwd; break;
+        case 3: key = "token";  ptr = it->token; break;
+        case 4: key = "permit";  ptr = it->permit; break;
         }
         QString res = mCfg->readCfg(key, "", prefix).toString();
         qstrcpy(ptr, res.toLatin1().data());
@@ -92,10 +92,12 @@ void Cfg_ReadParam::rpc()
     QString prefix = "rpc"; QString key;
     sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
 
-    for(int i=1; i<3; ++i) {
+    for(int i=1; i<6; ++i) {
         switch (i) {
-        case 1: key = "enRpc";  ptr = &cfg->en; value = 0; break;
-        case 2: key = "port";  ptr = &cfg->port; value = 6002; break;
+        case 1: key = "jsonRpcEn";  ptr = &cfg->json.en; value = 0; break;
+        case 2: key = "jsonRpcPort";  ptr = &cfg->json.port; value = 6002; break;
+        case 4: key = "xmlRpcEn";  ptr = &cfg->xml.en; value = 0; break;
+        case 5: key = "xmlRpcPort";  ptr = &cfg->xml.port; value = 6082; break;
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
@@ -119,12 +121,12 @@ void Cfg_ReadParam::push()
         case 6: key = "udp2Port"; ptr = &cfg->udp[1].port; value = 1125; break;
         case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
-        case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
+        case 9: key = "sec"; ptr = &cfg->sec; value = 3; break;
 
         case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 12: key = "httpUrl"; str = &cfg->http.url; break;
         case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 14: key = "httpTls"; ptr = &cfg->http.enTls; value = 0; break;
+        case 14: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
         case 15: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }
@@ -141,7 +143,7 @@ void Cfg_ReadParam::readUut()
 {
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
-    sUutInfo *it = &(cm::masterDev()->uut);
+    sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     for(int i=1; i<8; ++i) {
         switch (i) {
@@ -161,11 +163,23 @@ void Cfg_ReadParam::readUut()
 
     ///////////=============
     for(int i=0; i<8; ++i) {
-        sUutInfo *it = &(cm::devData(i)->uut);
+        sUutInfo *it = &(cm::devData(i)->cfg.uut);
         sprintf(it->devName, "devName_%d", i);
     }
-    cm::masterDev()->info.slaveNum = 8;   ///////////=============
+    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
 
+}
+
+void Cfg_ReadParam::groupName()
+{
+    QString prefix = "GroupName";
+    sDevData *dev = cm::masterDev();
+    for(int i=0; i<GROUP_NUM; ++i) {
+        QString key = QString::number(i+1);
+        QString v = "Group" + key;
+        QString res = mCfg->readCfg(key, v, prefix).toString();
+        qstrcpy(dev->group.name[i], res.toLatin1().data());
+    }
 }
 
 void Cfg_ReadParam::outputName()

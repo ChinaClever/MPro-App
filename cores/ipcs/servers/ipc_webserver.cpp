@@ -35,6 +35,10 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
         sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
         if(unit.rw) Set_Core::bulid()->setNumStr(unit);
         else res = Set_Core::bulid()->getNumStr(unit);
+    } else if(3 == fc) {
+        sMultipleStrings unit = cm::toStruct<sMultipleStrings>(array);
+
+
     } else if(6 == fc) {
         sLogFcIt it = cm::toStruct<sLogFcIt>(array);
         res = Log_Core::bulid()->log_readFun(it);

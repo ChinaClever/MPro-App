@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>integrate</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -21,106 +21,160 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">分组设置</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_2">SNMP设置</span>
 							</div>
 						</div>
 					</div>
-					<div class="grid-col grid-col-7">
-						<table class="table table-striped"></table>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left rtu_mode"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left tcp_mode"></table>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		var output_name = new Array();
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-		read_data();
+		read_snmp_data();
+		var mode_set = new Array("禁用","启用");
+		var snmp_name = new Array("addr1","addr2","enable","usr","psd","parity");
+		var snmp_data = new Array();
 		function read_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+			for(var j = 1;j<7;j++){
+					snmp_data[j] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
+				}
+		}
+		$('.rtu_mode').html(buildTableV1_2());
+		$('.tcp_mode').html(buildTableV3());
+		setTimeout(function(){
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			var lab = 0,btn1 = 0,setbtn =0;
+			btn1 = document.getElementById(snmp_name[2]);
+			setbtn =  document.getElementById('save2');
+			for(var i = 0; i < 2;i++){
+				lab = document.getElementById(snmp_name[i]);
+				lab.value = snmp_data[i + 1];
+				
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			for(var i = 3; i < snmp_name.length;i++){
+				lab = document.getElementById(snmp_name[i]);
+				lab.value = snmp_data[i + 1];
+				if(snmp_data[3] == '1'){
+					lab.disabled = false;
+					setbtn.disabled = false;
+					btn1[1].selected = true;
+				}
+				else{
+					lab.disabled = true;
+					setbtn.disabled = true;
+					btn1[0].selected = true;
+				}
 			}
 		}
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
-		function buildSel(rows)
-		{
-			var tbody = '';
-			for(var i = 0;i<rows;i++)
-			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
-			}
-			return tbody;
-		}
-		function cked(ckd)
-		{
-			var stat;
-			var type1 = ckd.id.substr(0,1);
-			var addr = parseInt(ckd.id.slice(1))+1;
-			if(type1 === 'e' && (addr !== output_num + 1)){
-				if(ckd.checked == true){
-					stat = 1;
+		function SetData(btn){
+			if(confirm("请确认是否开启此功能。")){
+				let mds_data = 0, setbtn = 0 ,lab = 0;
+				if(btn.value == mode_set[0])
+				{
+					btn.value = mode_set[1];
+					mds_data = 1;
 				}else{
-					stat = 0;
+					btn.value = mode_set[0];
+					mds_data = 0;
 				}
-				//rpc.call('pduSetData',[0,3,1,8,addr,stat]);
-			}
-			else if(type1 === 'f' && (addr !== output_num + 1)){
-				if(ckd.checked == true){
-					stat = 1;
-				}else{
-					stat = 0;
+				setbtn =  document.getElementById('save2');
+				for(var i = 3; i < (snmp_name.length);i++){
+					lab = document.getElementById(snmp_name[i]);
+					if(mds_data == 1){
+						lab.disabled = false;
+						setbtn.disabled = false;
+					}
+					else{
+						lab.disabled = true;
+						setbtn.disabled = true;
+					}
 				}
-				//rpc.call('pduSetData',[0,3,1,2,addr,stat]);
-			}
+				rpc.call('pduSetString',[0,snmp,3,0,0,mds_data]);
+				flash_html();
+			}else{}
 		}
-		function buildTable(rows) {
-			var thead = '',
-				tbody = '';
-
-			for (var i = 0; i < rows; i++) {
-				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="30%">单元名称</td>\
-					<td width ="8%">组别1</td>\
-					<td width ="8%">组别2</td>\
-					<td width ="8%">组别3</td>\
-					<td width ="8%">组别4</td>\
-					<td width ="8%">组别5</td>\
-					<td width ="8%">组别6</td>\
-					<td width ="8%">组别7</td>\
-					<td width ="8%">组别8</td>';
+		function flash_html(){
+			read_snmp_data();
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},800);
+		}
+		function rtuSet(){
+			var sel =0;
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 0 ;i < 2 ;i++){
+					sel = document.getElementById(snmp_name[i]).value;
+					if(sel != snmp_data[i+1]){
+						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+					}
 				}
-				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "c'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "d'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "g'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "h'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "i'+ i + '" </input></td>';
-				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "j'+ i + '" </input></td>';
-				tbody += '</tr>';
-			}
-
+				flash_html();
+			}else{}
+		}
+		function tcpSet(){
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 3 ;i < snmp_name.length ;i++){
+					sel = document.getElementById(snmp_name[i]).value;
+					if(sel != snmp_data[i+1]){
+						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+					}
+				}
+				flash_html();
+			}else{}
+		}
+		function buildTableV1_2() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%">SNMP(v1/v2c)代理设置</td>\
+			<td width ="75%"></td></tr>';
+			tbody += '<tr><td>Get community：</td><td>public</td></tr>';
+			tbody += '<tr><td>Set community：</td><td>private</td></tr>';
+			tbody += '<tr><td>Trap1 ip：</td>';
+			tbody += '<td><input id = "addr1" style ="width:24.5%" type = "text"placeholder="255.255.255.255"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td>Trap2 ip：</td>';
+			tbody += '<td><input id = "addr2" style ="width:24.5%" type = "text" placeholder="255.255.255.255"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td><input id = "save1" type = "button" style ="width:40%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-
-		
+		function buildTableV3() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%">SNMP(v3)代理设置</td>\
+				<td width ="75%"></td></tr>';
+			tbody += '<tr><td>SNMPv3启用：</td>';
+			tbody += '<td><select id ="enable" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>帐号：</td>';
+			tbody += '<td><input id = "usr" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td>密码：</td>';
+			tbody += '<td><input id = "psd" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td>密钥：</td>';
+			tbody += '<td><input id = "parity" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id = "save2" style ="width:40%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+		}
     </script>
 </body>
 </html>

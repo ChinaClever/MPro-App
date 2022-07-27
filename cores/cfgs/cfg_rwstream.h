@@ -48,6 +48,9 @@ struct _sDevData
     uchar loopSize;
     _sObjData loop[LOOP_NUM]; // 回路数据
 
+    uchar groupSize;
+    _sObjData group[LOOP_NUM]; // 回路数据
+
     uchar outputSize;
     _sObjData output[OUTPUT_NUM]; //位数据
 

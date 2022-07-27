@@ -17,6 +17,9 @@ protected:
 
     int devInfoCfg(int addr, int type);
     bool setInfoCfg(int addr, int type, int value);
+
+    QString qrcodeStr(int addr);
+    bool qrcodeGenerator(const QString& msg);
 };
 
 #endif // SET_INFO_H

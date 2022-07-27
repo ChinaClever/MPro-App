@@ -7,13 +7,15 @@
 #include "sshrpcclient.h"
 #include <iostream>
 
+namespace Ssh{
 void usage()
 {
     using namespace std;
     cout << "*******************************************************" <<endl;
     cout << "* usage: of pdu_cmd" <<endl;
-    cout << "*    pduMetaData     addr type topic sub id" <<endl;
-    cout << "*    pduSetData      addr type topic sub id value" <<endl;
+    cout << "*    pduMetaData     addr type  topic sub id" <<endl;
+    cout << "*    pduSetData      addr type  topic sub id value" <<endl;
+    cout << "*    pduRelaysCtrl   addr start num on" <<endl;
     cout << "*    pduGetString    addr fc id" <<endl;
     cout << "*    pduSetString    addr fc id str" <<endl;
     cout << "*    pduDevCfg       addr fc type" <<endl;
@@ -121,7 +123,17 @@ void pduLogFun(const QStringList &ls)
     } else qCritical() << "pduLogFun Parameter error";
 }
 
-
+void pduRelaysCtrl(const QStringList &ls)
+{
+    SshRpcClient *rpc = SshRpcClient::bulid();
+    int k = 0; if(ls.size() == 3) {
+        uchar addr = ls.at(k++).toInt();
+        uchar start = ls.at(k++).toInt();
+        uchar num = ls.at(k++).toInt();
+        uchar on = ls.at(k++).toInt();
+        qDebug() << rpc->pduRelaysCtrl(addr, start, num, on);
+    } else qCritical() << "pduRelaysCtrl Parameter error";
+}
 
 bool workDown()
 {
@@ -133,6 +145,7 @@ bool workDown()
         else if(fc == "pduSetData") pduSetData(cmds);
         else if(fc == "pduGetString") pduGetString(cmds);
         else if(fc == "pduSetString") pduSetString(cmds);
+        else if(fc == "pduRelaysCtrl") pduRelaysCtrl(cmds);
         else if(fc == "pduDevCfg") pduDevCfg(cmds);
         else if(fc == "pduSetCfg") pduSetCfg(cmds);
         else if(fc == "pduLogFun") pduLogFun(cmds);
@@ -141,14 +154,15 @@ bool workDown()
     }
     return ret;
 }
+}
 
 int main(int argc, char *argv[])
 {
-    bool ret = true; usage();
+    bool ret = true; Ssh::usage();
     SshRpcClient *rpc = SshRpcClient::bulid();
 
     do {
-        ret = workDown();
+        ret = Ssh::workDown();
     } while(ret);
     rpc->close();
 

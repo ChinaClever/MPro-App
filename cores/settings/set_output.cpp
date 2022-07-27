@@ -6,6 +6,7 @@
 #include "set_output.h"
 #include "op_core.h"
 #include "cascade_core.h"
+#include "data_core.h"
 
 Set_Output::Set_Output()
 {
@@ -18,7 +19,8 @@ void Set_Output::relayOpLog(const sDataItem &it)
     if(it.id) str = QObject::tr("第%１ ").arg(it.id);
     switch (it.subtopic) {
     case DSub::Value:
-        str += QObject::tr("输出位继电器 ");
+        if(it.type == DType::Group) str += QObject::tr("组开关 ");
+        else str += QObject::tr("输出位继电器 ");
         if(it.value) str += QObject::tr("闭合"); else str += QObject::tr("断开");
         break;
     case DSub::Rated:
@@ -60,21 +62,55 @@ bool Set_Output::outputsCtrl(sDataItem &unit)
     return ret;
 }
 
+bool Set_Output::groupCtrl(sDataItem &unit)
+{
+    QList<int> ids;
+    bool ret = true;  int id = unit.id; if(id) {
+        id--; ids = Data_Core::bulid()->outletByGroup(id);
+    } else {
+        for(int i=0; i<GROUP_NUM; ++i)
+            ids << Data_Core::bulid()->outletByGroup(id);
+    }
+
+    sRelayUnit *it = &(cm::masterDev()->group.relay);
+    if(it->en[id] || unit.txType == DTxType::TxWeb) {
+        OP_Core::bulid()->relaysCtrl(ids, unit.value);
+    } else ret = false;
+
+    return ret;
+}
+
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
     if(unit.addr) {
         ret = Cascade_Core::bulid()->masterSeting(unit);
     } else if(unit.rw) {
+        if(unit.type == DType::Group) groupCtrl(unit); else {
         switch (unit.subtopic) {
         case DSub::Value:  ret = outputCtrl(unit); break;
         case DSub::Relays: ret = outputsCtrl(unit); break;
-        case DSub::UpTime:  OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+        case DSub::UpTime: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
         default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
-        } relayOpLog(unit);
+        } } relayOpLog(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
 
     return ret;
+}
+
+
+QString Set_Output::grouping(int addr, int id)
+{
+    QString res;
+    QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
+    foreach(auto &i, ids) res += QString::number(i) +": ";
+    return res;
+}
+
+QString Set_Output::groupName(int addr, int id)
+{
+    sObjData *dev = &(cm::devData(addr)->group);
+    return dev->name[id];
 }
 
 QString Set_Output::outputName(int addr, int id)
@@ -99,21 +135,49 @@ bool Set_Output::outputNameSet(sNumStrItem &it)
 {
     bool ret = true;
     if(it.id) {
-        writeOpName(it.id, it.str);
+        writeOpName(0, it.id, it.str);
     } else {
         sObjData *obj = &(cm::masterDev()->output);
-        for(int i=0; i<obj->size; ++i) writeOpName(i+1, it.str);
+        for(int i=0; i<obj->size; ++i) writeOpName(0, i+1, it.str);
     } opNameLog(it);
     return ret;
 }
 
-void Set_Output::writeOpName(int id, const QString &name)
+bool Set_Output::groupNameSet(sNumStrItem &it)
+{
+    bool ret = true;
+    if(it.id) {
+        writeOpName(1, it.id, it.str);
+    } else {
+        sObjData *obj = &(cm::masterDev()->group);
+        for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, it.str);
+    } opNameLog(it);
+    return ret;
+}
+
+bool Set_Output::groupingSet(sNumStrItem &it)
+{
+    QStringList strs = QString(it.str).split("; ");
+    sDevData *dev = cm::devData(it.addr);
+    uchar *ptr = dev->cfg.nums.group[it.id];
+    memset(ptr, 0, OUTPUT_NUM);
+    foreach(auto &str, strs) {
+        int id = str.toInt(); ptr[id] = 1;
+    } bool ret = false;
+    if(strs.size()) ret = Cfg_ReadWrite::bulid()->writeParams();
+    return ret;
+}
+
+void Set_Output::writeOpName(int fc, int id, const QString &name)
 {
     QString prefix = "OutputName";
+    if(fc) prefix = "GroupName";
+
     QString key = QString::number(id);
     Cfg_Obj *cfg = Cfg_Obj::bulid();
     cfg->writeCfg(key, name, prefix);
 
     sObjData *it = &(cm::masterDev()->output);
+    if(fc) it = &(cm::masterDev()->group);
     qstrcpy((char *)it->name[id-1], name.toLatin1().data());
 }
