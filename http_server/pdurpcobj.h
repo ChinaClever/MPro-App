@@ -1,6 +1,6 @@
 #ifndef PDURPCOBJ_H
 #define PDURPCOBJ_H
-#include "jsonrpcobj.h"
+#include "webrpcobj.h"
 
 class PduRpcObj
 {
@@ -20,6 +20,7 @@ protected:
     static char *responRpcString(const QVector<double> &its, const QString &value);
 
 protected:
+    static WebRpcObj *mObj;
     static IPC_WebClient *mWebIpc;
 };
 

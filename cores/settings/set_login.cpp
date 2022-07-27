@@ -10,6 +10,7 @@ Set_Login::Set_Login()
 
 }
 
+
 QString Set_Login::loginUsrPwd(int type, int id)
 {
     sDevLogin *it = &(cm::dataPacket()->login[id]);
@@ -36,8 +37,9 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     case 2: key = "pwd"; ptr = it->pwd; break;
     case 3: key = "token"; ptr = it->token; break;
     case 4: key = "permit"; ptr = it->permit; break;
+    case 11: ret = loginCheck(str); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    }
+    } if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) {
         qstrcpy(ptr, str);
@@ -50,5 +52,16 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     }
     //Cfg_ReadWrite::bulid()->writeSettings();
 
+    return ret;
+}
+
+
+bool Set_Login::loginCheck(const QString &str)
+{
+    bool ret = false;
+    QStringList ls = str.split("; ");
+    sDevLogin *it = &(cm::dataPacket()->login[0]);
+    QString usr = it->user, pwd = it->pwd;
+    if((ls.first() == usr) && (ls.last() == pwd)) ret = true;
     return ret;
 }

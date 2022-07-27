@@ -20,7 +20,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
-    login();
+    //login();
     modbus();
     readUut();
     outputName();

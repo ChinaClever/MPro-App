@@ -20,16 +20,6 @@ IPC_WebClient *IPC_WebClient::bulid(QObject *parent)
     return sington;
 }
 
-bool IPC_WebClient::login(const QString &usr, const QString &pwd)
-{
-    return multipleStrings(1, usr, pwd);
-}
-
-bool IPC_WebClient::upload(const QString &fn, const QString &md5)
-{
-    return multipleStrings(2, fn, md5);
-}
-
 bool IPC_WebClient::msgSend(int fc, const QByteArray &msg)
 {
     QVariantList lv{fc, msg};
@@ -42,15 +32,6 @@ bool IPC_WebClient::setNumStr(const sNumStrItem &unit)
 {
     QByteArray array = cm::toByteArray(unit);
     return msgSend(2, array);
-}
-
-bool IPC_WebClient::multipleStrings(uchar fc, const QString &key, const QString &value)
-{
-    sMultipleStrings it; it.fc = fc;
-    qstrcpy(it.str[0], key.toLatin1().data());
-    qstrcpy(it.str[1], value.toLatin1().data());
-    QByteArray array = cm::toByteArray(it);
-    return msgSend(3, array);
 }
 
 bool IPC_WebClient::setString(uint addr, uchar fc, uchar id, const QString &str)
