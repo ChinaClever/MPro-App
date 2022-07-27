@@ -183,14 +183,14 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
 
-//    obj.insert("pdu_hz", it.hz/r);
+    obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
     obj.insert("loop_num", it.nums.loopNum/r);
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
 
     QJsonArray ops;
-    for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nuboardsops[i]);
+    for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
     obj.insert("ops_num", ops);
 
     QJsonArray vs;
