@@ -1,0 +1,45 @@
+1.节点多出
+
+SNMPv2-SMI::enterprises.30966.11.0.0.0.7 = "" 
+
+2.电压上下限值无法设置
+SNMPv2-SMI::enterprises.30966.11.0.1.1.2.2 = INTEGER: 2200
+SNMPv2-SMI::enterprises.30966.11.0.1.1.2.3 = INTEGER: 2640
+SNMPv2-SMI::enterprises.30966.11.0.1.1.2.4 = INTEGER: 2640
+SNMPv2-SMI::enterprises.30966.11.0.1.1.2.5 = INTEGER: 1760
+SNMPv2-SMI::enterprises.30966.11.0.1.1.2.6 = INTEGER: 1760
+
+snmpset -v2c -c private 192.168.1.99 1.3.6.1.4.1.30966.11.0.1.1.3 i 2760
+Error in packet.
+Reason: notWritable (That object does not support modification)
+Failed object: SNMPv2-SMI::enterprises.30966.11.0.1.1.3
+
+
+
+3.副机数量是在线数量，还是可以级联的数量
+SNMPv2-SMI::enterprises.30966.11.0.0.1.4 = INTEGER: 8
+
+
+4.SNMPv2-SMI::enterprises.30966.11.0.0.1.5 = INTEGER: 0
+软件版本号用整形还是字符串
+
+5.中间缺少输出位和其他温湿度阈值等
+SNMPv2-SMI::enterprises.30966.11.0.2.3.5 = INTEGER: 0
+SNMPv2-SMI::enterprises.30966.11.0.2.3.6 = INTEGER: 0        回路数据
+
+SNMPv2-SMI::enterprises.30966.11.0.7.1 = INTEGER: 0          门禁1和门禁2 烟雾和水浸
+SNMPv2-SMI::enterprises.30966.11.0.7.2 = INTEGER: 0
+SNMPv2-SMI::enterprises.30966.11.0.7.3 = INTEGER: 0
+SNMPv2-SMI::enterprises.30966.11.0.7.4 = INTEGER: 0
+
+6.snmptrap地址设置? 
+
+7.测试时，电压为0V， 应该处于告警状态，相电压告警状态，回路电压告警状态和输出位电压的告警状态都不对；
+
+8.协议文档里面应该标明状态值代表的意义，以及是否可以读写。
+
+
+
+
+
+
