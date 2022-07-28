@@ -47,8 +47,22 @@
 		var select_name = new Array("udp1En","udp1Addr","udp1Port","udp2En","udp2Addr","udp2Port","delay","mode","port");
 		var push_data = new Array();
 		function read_data(){
+			var i = 0;
 			for(var j = 1;j<10;j++){
-				push_data[j] = sessionStorage.getItem(type_name[18]+ push_info[j]);
+				if(j == 7){
+					i = 9;
+				}else if(j == 8){
+					i = 7;
+				}else if(j == 9){
+					i = 8;
+				}else{
+					i = j;
+				}
+				if(j == 1||j==4||j==7){
+					push_data[j] = parseInt(sessionStorage.getItem(type_name[18]+ push_info[i]));
+				}else{
+					push_data[j] = sessionStorage.getItem(type_name[18]+ push_info[i]);
+				}
 			}
 		}
 		$('.push').html(buildTablePush());
@@ -58,57 +72,94 @@
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0,setbtn =0;
+			var lab = 0,btn1 = 0,btn2 = 0,btn3 = 0,setbtn =0;
 			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[7]);
+			btn2 = document.getElementById(select_name[3]);
+			btn3 = document.getElementById(select_name[7]);
 			setbtn =  document.getElementById('save1');
 			for(var i = 1; i < (select_name.length-2);i++){
 				lab = document.getElementById(select_name[i]);
-				if((parseInt(push_data[1]) == 1 && i < 3)||(parseInt(push_data[4]) == 1 && i > 3&& i < 6)|| i == 3){
-					lab.disabled = false;
-					btn1.value = mode_set[1];
+				if(i < 3){
+					if(push_data[1] == 0){
+						lab.disabled = true;
+						btn1[push_data[1]].selected = true;
+						}else{
+						lab.disabled = false;
+						btn1[push_data[1]].selected = true;
+					}
+				}else if(i > 3 && i < 7){
+					if(push_data[4] == 0){
+						lab.disabled = true;
+						btn2[push_data[4]].selected = true;
+					}
+					else{
+						lab.disabled = false;
+						btn2[push_data[4]].selected = true;
+					}
 				}
-				else{
-					lab.disabled = true;
-					btn1.value = mode_set[0];
-				}
-				if(i == 6 && parseInt(push_data[1]) && parseInt(push_data[4]))
+				if( push_data[1] == 0  && push_data[4] == 0)
 				{
-					setbtn.disabled = false;
-					lab.disabled = false;
-				}else{
-					lab.disabled = true;
 					setbtn.disabled = true;
+				}else{
+					setbtn.disabled = false;
 				}
 				lab.value = push_data[i + 1];
 			}
 			lab = document.getElementById(select_name[8]);
 			setbtn =  document.getElementById('save2');
 			lab.value = push_data[9];
-			if(push_data[8] == 1){
-				btn2.value = mode_set[1];
-				lab.disabled = false;
-				setbtn.disabled = false;
+			if(push_data[8] == 0){
+				btn3[push_data[8]].selected = true;
+				lab.disabled = true;
+				setbtn.disabled = true;
 			}else{
-				btn2.value = mode_set[0];
+				btn3[push_data[8]].selected = true;
 				lab.disabled = true;
 				setbtn.disabled = true;
 			}
 		}
 		function SetData(btn){
-			let mds_data = 0, setbtn = 0 ,lab = 0;
-			if(btn.value == mode_set[0])
-			{
-				btn.value = mode_set[1];
-				mds_data = 1;
-			}else{
-				btn.value = mode_set[0];
-				mds_data = 0;
-			}
-			if(btn.id =="rtu"){
-				setbtn =  document.getElementById('save1');
-				for(var i = 1; i < (select_name.length-2);i++){
-					lab = document.getElementById(select_name[i]);
+			let mds_data = 0, setbtn = 0 ,lab = 0,sel = 0;
+			mds_data = parseInt(btn.value);
+			setbtn =  document.getElementById('save1');
+			if(confirm("请确认是否开启此功能。")){
+				if(btn.id =="udp1En"){
+					for(var i = 1; i < 3;i++){
+						lab = document.getElementById(select_name[i]);
+						if(mds_data == 0){
+							lab.disabled = true;
+						}
+						else{
+							lab.disabled = false;
+						}
+					}
+					sel = parseInt(document.getElementById(select_name[3]).value);
+					if(mds_data == 0 && sel == 0){
+						setbtn.disabled = true;
+					}else{
+						setbtn.disabled = false;
+					}
+					rpc.call('pduSetCfg',[0,push,1,0,0,mds_data]);
+				}else if(btn.id =="udp2En"){
+					for(var i = 4; i < 7;i++){
+						lab = document.getElementById(select_name[i]);
+						if(mds_data == 0){
+							lab.disabled = true;
+						}
+						else{
+							lab.disabled = false;
+						}
+					}
+					sel = parseInt(document.getElementById(select_name[0]).value);
+					if(mds_data == 0 && sel == 0){
+						setbtn.disabled = true;
+					}else{
+						setbtn.disabled = false;
+					}
+					rpc.call('pduSetCfg',[0,push,4,0,0,mds_data]);
+				}else{
+					setbtn =  document.getElementById('save2');
+					lab = document.getElementById(select_name[7]);
 					if(mds_data == 1){
 						lab.disabled = false;
 						setbtn.disabled = false;
@@ -117,44 +168,48 @@
 						lab.disabled = true;
 						setbtn.disabled = true;
 					}
+					rpc.call('pduSetCfg',[0,push,7,0,0,mds_data]);
 				}
-				 rpc.call('pduSetCfg',[0,modbus,1,0,0,mds_data]);
-			}else{
-				setbtn =  document.getElementById('save2');
-				lab = document.getElementById(select_name[7]);
-				if(mds_data == 1){
-					lab.disabled = false;
-					setbtn.disabled = false;
-				}
-				else{
-					lab.disabled = true;
-					setbtn.disabled = true;
-				}
-				rpc.call('pduSetCfg',[0,modbus,11,0,0,mds_data]);
-			}
-			flash_html();
+				flash_html();
+			}else{}
 		}
 		function flash_html(){
-			read_modbus_data();
+			read_push_data();
 			setTimeout(function(){
 				read_data();
 				showdata();
 			},800);
 		}
 		function rtuSet(){
-			var sel =0;
-			for(var i = 1 ;i<(select_name.length -2);i++){
-				sel = parseInt(document.getElementById(select_name[i]).value);
-				if(sel != modbus_data[i+1]){
-					rpc.call('pduSetCfg',[0,modbus,(i+1),0,0,sel]);
+			var sel = 0,sel1 = 0,data = 0;
+			sel  = parseInt(document.getElementById(select_name[0]).value);
+			sel1  = parseInt(document.getElementById(select_name[3]).value);
+			if(sel != 0){
+				for(var i = 1 ;i<(select_name.length -2);i++){
+					data = parseInt(document.getElementById(select_name[i]).value);
+					if(data != push_data[i+1]){
+						rpc.call('pduSetCfg',[0,push,(i+1),0,0,data]);
+					}
+				}
+			}
+			if(sel1 != 0){
+				for(var i = 4 ;i<(select_name.length -2);i++){
+					data = parseInt(document.getElementById(select_name[i]).value);
+					if(data != push_data[i+1]){
+						if(i == 6){
+							rpc.call('pduSetCfg',[0,push,9,0,0,data]);
+						}else{
+							rpc.call('pduSetCfg',[0,push,(i+1),0,0,data]);
+						}
+					}
 				}
 			}
 			flash_html();
 		}
 		function tcpSet(){
 			var sel = parseInt(document.getElementById(select_name[select_name.length -1]).value);
-			if(sel != modbus_data[12]){
-				rpc.call('pduSetCfg',[0,modbus,12,0,0,sel]);
+			if(sel != push_data[9]){
+				rpc.call('pduSetCfg',[0,push,8,0,0,sel]);
 			}
 			flash_html();
 		}
@@ -184,7 +239,7 @@
 			tbody += '<td><input id = "udp2Port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td>时间间隔：</td>';
 			tbody += '<td><input id = "delay" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td><input id = "save1" style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
+			tbody += '<tr><td><input id = "save1" style ="width:60%" type = "button" value = "保存" onclick = "rtuSet()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 			

@@ -58,6 +58,15 @@
 		},500);
 		function showdata(){
 			var lab = 0,btn1 = 0,setbtn =0;
+			if(snmp_data[1] == null || snmp_data[2] == null || snmp_data[3] == null || snmp_data[4] == null || snmp_data[5] == null ||snmp_data[6] == null){
+				for(var i = 0; i < snmp_name.length;i++){
+					if(snmp_data[i + 1] != null ){
+						lab = document.getElementById(snmp_name[i]);
+						lab.value = snmp_data[i + 1];
+					}
+				}
+				return ;
+			}
 			btn1 = document.getElementById(snmp_name[2]);
 			setbtn =  document.getElementById('save2');
 			for(var i = 0; i < 2;i++){
@@ -68,39 +77,32 @@
 			for(var i = 3; i < snmp_name.length;i++){
 				lab = document.getElementById(snmp_name[i]);
 				lab.value = snmp_data[i + 1];
-				if(snmp_data[3] == '1'){
-					lab.disabled = false;
-					setbtn.disabled = false;
-					btn1[1].selected = true;
-				}
-				else{
+				if(parseInt(snmp_data[3]) == 0){
 					lab.disabled = true;
 					setbtn.disabled = true;
-					btn1[0].selected = true;
+					btn1[parseInt(snmp_data[3])].selected = true;
+				}
+				else{
+					lab.disabled = false;
+					setbtn.disabled = false;
+					btn1[parseInt(snmp_data[3])].selected = true;
 				}
 			}
 		}
 		function SetData(btn){
+			let mds_data = 0, setbtn = 0 ,lab = 0;
+			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否开启此功能。")){
-				let mds_data = 0, setbtn = 0 ,lab = 0;
-				if(btn.value == mode_set[0])
-				{
-					btn.value = mode_set[1];
-					mds_data = 1;
-				}else{
-					btn.value = mode_set[0];
-					mds_data = 0;
-				}
 				setbtn =  document.getElementById('save2');
 				for(var i = 3; i < (snmp_name.length);i++){
 					lab = document.getElementById(snmp_name[i]);
-					if(mds_data == 1){
-						lab.disabled = false;
-						setbtn.disabled = false;
-					}
-					else{
+					if(mds_data == 0){
 						lab.disabled = true;
 						setbtn.disabled = true;
+					}
+					else{
+						lab.disabled = false;
+						setbtn.disabled = false;
 					}
 				}
 				rpc.call('pduSetString',[0,snmp,3,0,0,mds_data]);

@@ -26,7 +26,10 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left rpc_mode"></table>
+						<table class="table table-border-none text-left json_rpc"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left xml_rpc"></table>
 					</div>
 				</div>
 			</div>
@@ -40,32 +43,46 @@
     <script>
 		read_rpc_data();
 		var mode_name = new Array("禁用","TCP","WebSocket");
-		var data_id  = new Array("mode","rpc_port");
+		var mode_name1 = new Array("禁用","HTTP");
+		var data_id  = new Array("json_mode","json_port","xml_mode","xml_port");
 		var rpc_data = new Array();
 		function read_data(){
-			rpc_data[1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[1]));
-			rpc_data[2] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[2]));
+			for(let i = 0;i < data_id.length;i++){
+				rpc_data[i+1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[i + 1]));
+			}
 		}
-		$('.rpc_mode').html(buildTableRpc());
+		$('.json_rpc').html(buildTableRpc());
+		$('.xml_rpc').html(buildTableRpc_());
 		setTimeout(function(){
 			read_data();
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,sel = 0,btn =0;
-			btn = document.getElementById("save");
-			sel = document.getElementById(data_id[0]);
-			sel[rpc_data[1]].selected = true;
+			var lab = 0,lab1 = 0,sel1 = 0,sel2 = 0,btn1 =0,btn2 = 0;
+			btn1 = document.getElementById("save1");
+			btn2 = document.getElementById("save2");
+			sel1 = document.getElementById(data_id[0]);
+			sel2 = document.getElementById(data_id[2]);
 			lab = document.getElementById(data_id[1]);
+			lab1 = document.getElementById(data_id[3]);
+			sel1[rpc_data[1]].selected = true;
+			sel2[rpc_data[3]].selected = true;
 			lab.value = rpc_data[2];
+			lab1.value = rpc_data[4];
 			if(rpc_data[1] == 0){
 				lab.disabled =true;
-				btn.disabled =true;
+				btn1.disabled =true;
 			}else{
 				lab.disabled =fasle;
-				btn.disabled =fasle;
+				btn1.disabled =fasle;
 			}
-			
+			if(rpc_data[3] == 0){
+				lab1.disabled =true;
+				btn2.disabled =true;
+			}else{
+				lab1.disabled =fasle;
+				btn2.disabled =fasle;
+			}
 		}
 		function flash_html(){
 			read_rpc_data();
@@ -86,17 +103,35 @@
 		}
 		function buildTableRpc() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">RPC集成设置</td>\
-				<td width ="85%"></td></tr>';
-			tbody += '<tr><td>RPC模式选择</td>';
-			tbody += '<td><select id ="mode">';
+			thead = '<tr><td width ="25%">JSON-RPC设置</td>\
+				<td width ="75%"></td></tr>';
+			tbody += '<tr><td>JSON-RPC模式选择：</td>';
+			tbody += '<td><select id ="json_mode">';
 			for(var i = 0; i<mode_name.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>RPC端口号：</td>';
-			tbody += '<td><input id = "rpc_port" value = "502" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "save" style ="width:60%" type = "button" value = "保存" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td>JSON-RPC端口号：</td>';
+			tbody += '<td><input id = "json_port" value = "502" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id = "save1" style ="width:60%" type = "button" value = "保存" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableRpc_() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%">XML-RPC集成设置</td>\
+				<td width ="75%"></td></tr>';
+			tbody += '<tr><td>XML-RPC模式选择：</td>';
+			tbody += '<td><select id ="xml_mode">';
+			for(var i = 0; i<mode_name1.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_name1[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>XML-RPC端口号：</td>';
+			tbody += '<td><input id = "xml_port" value = "502" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
