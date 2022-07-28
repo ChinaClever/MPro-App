@@ -58,9 +58,9 @@
 		},500);
 		function showdata(){
 			var lab = 0,btn1 = 0,setbtn =0;
-			if(snmp_data[1] == null || snmp_data[2] == null || snmp_data[3] == null || snmp_data[4] == null || snmp_data[5] == null ||snmp_data[6] == null){
+			if(snmp_data[1] == '' || snmp_data[2] == '' || snmp_data[3] == '' || snmp_data[4] == '' || snmp_data[5] == '' ||snmp_data[6] == ''){
 				for(var i = 0; i < snmp_name.length;i++){
-					if(snmp_data[i + 1] != null ){
+					if(snmp_data[i + 1] != '' ){
 						lab = document.getElementById(snmp_name[i]);
 						lab.value = snmp_data[i + 1];
 					}
