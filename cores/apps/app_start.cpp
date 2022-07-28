@@ -66,3 +66,9 @@ void App_Start::startThreadSlot()
     pool->start(Data_Core::bulid());
 }
 
+void App_Start::compileTime()
+{
+    sVersions *vers = &(cm::masterDev()->cfg.vers);
+    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
+}

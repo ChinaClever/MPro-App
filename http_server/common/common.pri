@@ -10,7 +10,7 @@ include($$CM_PATH/cthread/cthread.pri)
 include($$CM_PATH/../ipcs/clients/clients.pri)
 
 HEADERS += \
-    $$PWD/jsonrpcobj.h
+    $$PWD/webrpcobj.h
 
 SOURCES += \
-    $$PWD/jsonrpcobj.cpp
+    $$PWD/webrpcobj.cpp

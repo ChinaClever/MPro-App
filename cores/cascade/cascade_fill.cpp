@@ -59,7 +59,7 @@ void Cascade_Fill::upEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
 
 void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
 {
-    obj->id = addr; obj->info = data->info; obj->uut = data->uut;
+    obj->id = addr; obj->cfg = data->cfg; //obj->uut = data->uut;
     uchar size = obj->lineSize = data->line.size;
     for(int i=0; i< size; ++i) upObjData(i, data->line, obj->line[i]);
 
@@ -75,12 +75,11 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     size = obj->envSize = data->env.size;
     for(int i=0; i< size; ++i) upEnvData(i, data->env, obj->env[i]);
 
-    obj->rtuCount = data->rtuCount;
+    obj->rtu = data->rtu;
     obj->tg = data->tg;
     obj->lps = data->lps;
     obj->dc = data->dc;
     obj->hz = data->hz;
-    obj->br = data->br;
 }
 
 void Cascade_Fill::fillData(uchar addr)

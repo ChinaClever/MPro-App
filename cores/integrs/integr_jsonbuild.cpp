@@ -34,7 +34,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
 QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 {
     sDevData *dev = cm::devData(addr);  QJsonObject json;
-    if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
+    if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         json.insert("company", "CLEVER");
         json.insert("version", JSON_VERSION);
@@ -175,26 +175,26 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
     json.insert("smoke", smoke);
 }
 
-void Integr_JsonBuild::devInfo(const sDevInfo &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
     obj.insert("pdu_type", "MPDU-Pro");
-    obj.insert("pdu_ver", it.version/r);
-    obj.insert("line_num", it.lineNum/r);
-    obj.insert("pdu_spec", it.devSpec/r);
+    obj.insert("pdu_ver", it.vers.version/r);
+    obj.insert("line_num", it.nums.lineNum/r);
+    obj.insert("pdu_spec", it.param.devSpec/r);
 
-    obj.insert("pdu_hz", it.hz/r);
-    obj.insert("op_num", it.opNum/r);
-    obj.insert("loop_num", it.loopNum/r);
-    obj.insert("slave_num", it.slaveNum/r);
-    obj.insert("output_num", it.outputNum/r);
+    obj.insert("pdu_hz", it.param.hz/r);
+    obj.insert("op_num", it.nums.boardNum/r);
+    obj.insert("loop_num", it.nums.loopNum/r);
+    obj.insert("slave_num", it.nums.slaveNum/r);
+    obj.insert("output_num", it.nums.outputNum/r);
 
     QJsonArray ops;
-    for(uint i=0; i<it.opNum; ++i) ops.append(it.ops[i]);
+    for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
     obj.insert("ops_num", ops);
 
     QJsonArray vs;
-    for(uint i=0; i<it.opNum; ++i) ops.append(it.opVers[i]);
+    for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.vers.opVers[i]);
     obj.insert("op_vers", vs);
 
     json.insert(key, QJsonValue(obj));
@@ -220,8 +220,8 @@ void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObje
     obj.insert("id", it->id);
     obj.insert("alarm", it->alarm?true:false);
 
-    devInfo(it->info, "pdu_info", obj);
-    uutInfo(it->uut, "uut_info", obj);
+    devInfo(it->cfg, "pdu_info", obj);
+    uutInfo(it->cfg.uut, "uut_info", obj);
 
     ObjData(it->line, "line_item_list", obj);
     ObjData(it->loop, "loop_item_list", obj);
@@ -230,7 +230,7 @@ void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObje
 
     tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
-    obj.insert("hz", it->hz);
+    obj.insert("hz", (int)it->hz);
     json.insert(key, QJsonValue(obj));
 }
 

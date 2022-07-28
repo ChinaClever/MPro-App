@@ -42,93 +42,75 @@
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		read_snmp_data();
-		var mode_set = new Array("关闭","开启");
-		var snmp_name = new Array("ip1","ip2","enable","usr","psd","parity");
+		var mode_set = new Array("禁用","启用");
+		var snmp_name = new Array("addr1","addr2","enable","usr","psd","parity");
 		var snmp_data = new Array();
 		function read_data(){
 			for(var j = 1;j<7;j++){
-					snmp_data[j] = parseInt(sessionStorage.getItem(type_name[16]+ snmp_info[j]));
+					snmp_data[j] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
 				}
 		}
 		$('.rtu_mode').html(buildTableV1_2());
 		$('.tcp_mode').html(buildTableV3());
 		setTimeout(function(){
-			// read_data();
-			// showdata();
+			read_data();
+			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0,setbtn =0;
-			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[6]);
-			setbtn =  document.getElementById('save1');
-			for(var i = 1; i < (select_name.length-2);i++){
-				lab = document.getElementById(select_name[i]);
-				if(modbus_data[1] == 1){
-					lab.disabled = false;
-					setbtn.disabled = false;
-					btn1.value = mode_set[1];
+			var lab = 0,btn1 = 0,setbtn =0;
+			if(snmp_data[1] == '' || snmp_data[2] == '' || snmp_data[3] == '' || snmp_data[4] == '' || snmp_data[5] == '' ||snmp_data[6] == ''){
+				for(var i = 0; i < snmp_name.length;i++){
+					if(snmp_data[i + 1] != '' ){
+						lab = document.getElementById(snmp_name[i]);
+						lab.value = snmp_data[i + 1];
+					}
 				}
-				else{
+				return ;
+			}
+			btn1 = document.getElementById(snmp_name[2]);
+			setbtn =  document.getElementById('save2');
+			for(var i = 0; i < 2;i++){
+				lab = document.getElementById(snmp_name[i]);
+				lab.value = snmp_data[i + 1];
+				
+			}
+			for(var i = 3; i < snmp_name.length;i++){
+				lab = document.getElementById(snmp_name[i]);
+				lab.value = snmp_data[i + 1];
+				if(parseInt(snmp_data[3]) == 0){
 					lab.disabled = true;
 					setbtn.disabled = true;
-					btn1.value = mode_set[0];
+					btn1[parseInt(snmp_data[3])].selected = true;
 				}
-				lab.value = modbus_data[i + 1];
-			}
-			lab = document.getElementById(select_name[7]);
-			setbtn =  document.getElementById('save2');
-			lab.value = modbus_data[12];
-			if(modbus_data[11] == 1){
-				btn2.value = mode_set[1];
-				lab.disabled = false;
-				setbtn.disabled = false;
-			}else{
-				btn2.value = mode_set[0];
-				lab.disabled = true;
-				setbtn.disabled = true;
+				else{
+					lab.disabled = false;
+					setbtn.disabled = false;
+					btn1[parseInt(snmp_data[3])].selected = true;
+				}
 			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
-			if(btn.value == mode_set[0])
-			{
-				btn.value = mode_set[1];
-				mds_data = 1;
-			}else{
-				btn.value = mode_set[0];
-				mds_data = 0;
-			}
-			if(btn.id =="rtu"){
-				setbtn =  document.getElementById('save1');
-				for(var i = 1; i < (select_name.length-2);i++){
-					lab = document.getElementById(select_name[i]);
-					if(mds_data == 1){
-						lab.disabled = false;
-						setbtn.disabled = false;
-					}
-					else{
+			mds_data = parseInt(btn.value);
+			if(confirm("请确认是否开启此功能。")){
+				setbtn =  document.getElementById('save2');
+				for(var i = 3; i < (snmp_name.length);i++){
+					lab = document.getElementById(snmp_name[i]);
+					if(mds_data == 0){
 						lab.disabled = true;
 						setbtn.disabled = true;
 					}
+					else{
+						lab.disabled = false;
+						setbtn.disabled = false;
+					}
 				}
-				 rpc.call('pduSetCfg',[0,modbus,1,0,0,mds_data]);
-			}else{
-				setbtn =  document.getElementById('save2');
-				lab = document.getElementById(select_name[7]);
-				if(mds_data == 1){
-					lab.disabled = false;
-					setbtn.disabled = false;
-				}
-				else{
-					lab.disabled = true;
-					setbtn.disabled = true;
-				}
-				rpc.call('pduSetCfg',[0,modbus,11,0,0,mds_data]);
-			}
-			flash_html();
+				rpc.call('pduSetString',[0,snmp,3,0,0,mds_data]);
+				flash_html();
+			}else{}
 		}
 		function flash_html(){
-			read_modbus_data();
+			read_snmp_data();
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -136,52 +118,61 @@
 		}
 		function rtuSet(){
 			var sel =0;
-			for(var i = 1 ;i<(select_name.length -2);i++){
-				sel = parseInt(document.getElementById(select_name[i]).value);
-				if(sel != modbus_data[i+1]){
-					rpc.call('pduSetCfg',[0,modbus,(i+1),0,0,sel]);
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 0 ;i < 2 ;i++){
+					sel = document.getElementById(snmp_name[i]).value;
+					if(sel != snmp_data[i+1]){
+						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+					}
 				}
-			}
-			flash_html();
+				flash_html();
+			}else{}
 		}
 		function tcpSet(){
-			var sel = parseInt(document.getElementById(select_name[select_name.length -1]).value);
-			if(sel != modbus_data[12]){
-				rpc.call('pduSetCfg',[0,modbus,12,0,0,sel]);
-			}
-			flash_html();
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 3 ;i < snmp_name.length ;i++){
+					sel = document.getElementById(snmp_name[i]).value;
+					if(sel != snmp_data[i+1]){
+						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+					}
+				}
+				flash_html();
+			}else{}
 		}
 		function buildTableV1_2() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">SNMP(v1/v2c)代理设置</td>\
-			<td width ="85%"></td></tr>';
+			thead = '<tr><td width ="25%">SNMP(v1/v2c)代理设置</td>\
+			<td width ="75%"></td></tr>';
 			tbody += '<tr><td>Get community：</td><td>public</td></tr>';
 			tbody += '<tr><td>Set community：</td><td>private</td></tr>';
 			tbody += '<tr><td>Trap1 ip：</td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text"placeholder="255.255.255.255"></input>';
+			tbody += '<td><input id = "addr1" style ="width:24.5%" type = "text"placeholder="255.255.255.255"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td>Trap2 ip：</td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" placeholder="255.255.255.255"></input>';
+			tbody += '<td><input id = "addr2" style ="width:24.5%" type = "text" placeholder="255.255.255.255"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id = "save1" type = "button" style ="width:60%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
+			tbody += '<tr><td><input id = "save1" type = "button" style ="width:40%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function buildTableV3() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">SNMP(v3)代理设置</td>\
-				<td width ="85%"></td></tr>';
-			tbody += '<tr><td>ModbusTcp是否开启：</td>';
-			tbody += '<td><input id = "tcp" type = "button" style ="width:10%" value = "开启" onclick = "SetData(this)"></input></td></tr>';
+			thead = '<tr><td width ="25%">SNMP(v3)代理设置</td>\
+				<td width ="75%"></td></tr>';
+			tbody += '<tr><td>SNMPv3启用：</td>';
+			tbody += '<td><select id ="enable" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
 			tbody += '<tr><td>帐号：</td>';
-			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<td><input id = "usr" value = "" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td>密码：</td>';
-			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<td><input id = "psd" value = "" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td>密钥：</td>';
-			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<td><input id = "parity" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id = "save2" style ="width:40%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';

@@ -38,9 +38,9 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
 
     in << toByteArray(ptr->tg);
-    in << toByteArray(ptr->rtuCount);
-    in << toByteArray(ptr->info);
-    in << toByteArray(ptr->uut);
+    in << toByteArray(ptr->rtu);
+    in << toByteArray(ptr->cfg);
+    //in << toByteArray(ptr->uut);
     in << ptr->lps;
 
     return in;
@@ -68,9 +68,9 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     for(int i=0; i<size; ++i) {out >> v; ptr->env[i] = toStruct<c_sEnvData>(v);}
 
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
-    out >> v; ptr->rtuCount = toStruct<sRtuCount>(v);
-    out >> v; ptr->info = toStruct<sDevInfo>(v);
-    out >> v; ptr->uut = toStruct<sUutInfo>(v);
+    out >> v; ptr->rtu = toStruct<sRtuBoard>(v);
+    out >> v; ptr->cfg = toStruct<sDevCfg>(v);
+    //out >> v; ptr->uut = toStruct<sUutInfo>(v);
     out >> ptr->lps;
 
     return out;

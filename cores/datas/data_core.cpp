@@ -29,7 +29,7 @@ void Data_Core::upAlarm()
 void Data_Core::outletNums()
 {
     sObjData *obj = &(mDev->output); int size = 0; obj->vol.size =0;
-    for(uint i=0; i<mDev->info.opNum; ++i) size += mDev->info.ops[i];
+    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];
     obj->size = obj->cur.size = obj->pow.size = obj->relay.size = size;
 }
 
