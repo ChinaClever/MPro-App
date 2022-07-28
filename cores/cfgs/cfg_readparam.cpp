@@ -20,7 +20,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
-    login();
+    //login();
     modbus();
     readUut();
     outputName();
@@ -133,7 +133,7 @@ void Cfg_ReadParam::push()
 
         if(key.size()) {
             if(ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
-            else *str = mCfg->readCfg(key, value, prefix).toString();
+            else *str = mCfg->readCfg(key, "", prefix).toString();
             ptr = nullptr;
         }
     }

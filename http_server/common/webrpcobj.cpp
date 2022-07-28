@@ -1,6 +1,11 @@
-#include "jsonrpcobj.h"
+#include "webrpcobj.h"
 
-QString JsonRpcObj::getString(mg_str &r, int id)
+WebRpcObj::WebRpcObj()
+{
+    compileTime();
+}
+
+QString WebRpcObj::getString(mg_str &r, int id)
 {
     QString res;
     char buffer[10] = {0};
@@ -10,15 +15,15 @@ QString JsonRpcObj::getString(mg_str &r, int id)
     return res;
 }
 
-double JsonRpcObj::getNumber(mg_str &r, int id)
+double WebRpcObj::getNumber(mg_str &r, int id)
 {
     double res=0; char buffer[10] = {0};  sprintf(buffer , "$[%d]" , id);
     bool ret = mg_json_get_num(r, buffer, &res);
-    if(!ret) qDebug() << "Error: JsonRpcObj Get Number" << ret;
+    if(!ret) qDebug() << "Error: JsonRpc Get Number" << ret;
     return res;
 }
 
-QVector<double> JsonRpcObj::getNumbers(mg_str &r, int num)
+QVector<double> WebRpcObj::getNumbers(mg_str &r, int num)
 {
     QVector<double> res;
     for(int i=0; i<num; ++i) {
@@ -28,7 +33,8 @@ QVector<double> JsonRpcObj::getNumbers(mg_str &r, int num)
     return res;
 }
 
-void JsonRpcObj::compileTime()
+
+void WebRpcObj::compileTime()
 {
     sVersions *vers = &(cm::masterDev()->cfg.vers);
     QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");

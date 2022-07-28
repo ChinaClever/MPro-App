@@ -69,64 +69,59 @@
 			setbtn =  document.getElementById('save1');
 			for(var i = 1; i < (select_name.length-2);i++){
 				lab = document.getElementById(select_name[i]);
-				if(modbus_data[1] == 1){
-					lab.disabled = false;
-					setbtn.disabled = false;
-					btn1[1].selected = true;
-				}
-				else{
+				if(modbus_data[1] == 0){
 					lab.disabled = true;
 					setbtn.disabled = true;
-					btn1[0].selected = true;
+					btn1[modbus_data[1]].selected = true;
+				}
+				else{
+					lab.disabled = false;
+					setbtn.disabled = false;
+					btn1[modbus_data[1]].selected = true;
 				}
 				lab.value = modbus_data[i + 1];
 			}
 			lab = document.getElementById(select_name[7]);
 			setbtn =  document.getElementById('save2');
 			lab.value = modbus_data[12];
-			if(modbus_data[11] == 1){
-				lab.disabled = false;
-				setbtn.disabled = false;
-				btn2[1].selected = true;
-			}else{
+			if(modbus_data[11] == 0){
 				lab.disabled = true;
 				setbtn.disabled = true;
-				btn2[0].selected = true;
+				btn2[modbus_data[11]].selected = true;
+			}else{
+				lab.disabled = false;
+				setbtn.disabled = false;
+				btn2[modbus_data[11]].selected = true;
 			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
+			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否开启此功能。")){
-				if(btn.value == '1')
-				{
-					mds_data = 1;
-				}else{
-					mds_data = 0;
-				}
 				if(btn.id =="rtu"){
 					setbtn =  document.getElementById('save1');
 					for(var i = 1; i < (select_name.length-2);i++){
 						lab = document.getElementById(select_name[i]);
-						if(mds_data == 1){
-							lab.disabled = false;
-							setbtn.disabled = false;
-						}
-						else{
+						if(mds_data == 0){
 							lab.disabled = true;
 							setbtn.disabled = true;
+						}
+						else{
+							lab.disabled = false;
+							setbtn.disabled = false;
 						}
 					}
 					rpc.call('pduSetCfg',[0,modbus,1,0,0,mds_data]);
 				}else{
 					setbtn =  document.getElementById('save2');
 					lab = document.getElementById(select_name[7]);
-					if(mds_data == 1){
-						lab.disabled = false;
-						setbtn.disabled = false;
-					}
-					else{
+					if(mds_data == 0){
 						lab.disabled = true;
 						setbtn.disabled = true;
+					}
+					else{
+						lab.disabled = false;
+						setbtn.disabled = false;
 					}
 					rpc.call('pduSetCfg',[0,modbus,11,0,0,mds_data]);
 				}

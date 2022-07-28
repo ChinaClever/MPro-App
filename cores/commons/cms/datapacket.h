@@ -319,7 +319,7 @@ struct sNumStrItem{
     uchar sub;
     uchar rw; // 0 读  1 写
     uint value;
-    char str[NAME_SIZE];
+    char str[2*NAME_SIZE];
 };
 
 #ifndef SUPPORT_C
@@ -330,14 +330,6 @@ struct sRelay
     enum Alarm{NoAlarm, OffALarm};
     enum State{Off, On, Reset};
 };
-
-struct sMultipleStrings
-{
-    sMultipleStrings():fc(0){}
-    char str[2][NAME_SIZE];
-    uchar fc; // 1 登陆  2 升级
-};
-
 #endif
 
 #endif // DATAPACKET_H

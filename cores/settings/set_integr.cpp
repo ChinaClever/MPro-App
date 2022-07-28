@@ -160,6 +160,8 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 15: res = cfg->http.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
+
+    qDebug() << Q_FUNC_INFO << fc << res << res.toInt();
     return res;
 }
 
