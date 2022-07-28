@@ -12,6 +12,7 @@ public:
 private slots:
     void initTrapSlot();
     void alarmSlot(const sDataItem &index, uchar value);
+    void timeoutDone();
 
 private:
     void sendTrap(const QString &ip, const QString &dstOid,
@@ -19,6 +20,7 @@ private:
 
 private:
     QSNMPOid  mModuleOid;
+    QTimer *timer;
 };
 
 #endif // AGENT_TRAP_H

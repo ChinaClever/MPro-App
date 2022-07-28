@@ -8,6 +8,9 @@ public:
     Set_Login();
     QString loginUsrPwd(int type, int id=0);
     bool loginSet(uchar type, char *str, uchar txType, int id=0);
+
+private:
+    bool loginCheck(const QString &str);
 };
 
 #endif // SET_LOGIN_H

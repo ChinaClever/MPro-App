@@ -95,7 +95,7 @@ bool Set_Core::setNumStr(sNumStrItem &it)
             ret = Set_Ssdp::bulid()->setNumStr(it);
         } else if(it.addr  || it.soi) {
             if(it.soi) it.addr = 0xFF;
-            int num = cm::masterDev()->info.slaveNum;
+            int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSetNumStr(it);
             if(it.soi) {it.addr = it.soi = 0; setNumStr(it);}
         } else {
@@ -122,7 +122,7 @@ bool Set_Core::setting(sDataItem &it)
             ret = Set_Ssdp::bulid()->setting(it);
         } else if(it.addr || it.soi) {
             if(it.soi) it.addr = 0xFF;
-            int num = cm::masterDev()->info.slaveNum;
+            int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
             if(it.soi) {it.addr = it.soi = 0; setting(it);}
         } else if(it.topic == DTopic::Relay) {

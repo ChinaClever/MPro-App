@@ -13,7 +13,7 @@ Data_Group::Data_Group() : Data_Line{}
 void Data_Group::setGroupSize()
 {
     int size = 0;
-    if(mDev->info.groupEn) size = GROUP_NUM;
+    if(mDev->cfg.nums.groupEn) size = GROUP_NUM;
     sObjData *obj = &(mDev->group); obj->vol.size = size;  ///////====   0
     obj->size = obj->relay.size = obj->cur.size = obj->pow.size = size;
     //for(int i=0; i<obj->size; ++i) obj->relay.mode[i] = sRelay::NoAlarm;
@@ -23,8 +23,8 @@ QList<int> Data_Group::outletByGroup(int id, int addr)
 {
     QList<int> res;
     sDevData *dev = cm::devData(addr);
-    if(dev->info.groupEn) {
-        uchar *ptr = dev->info.group[id];
+    if(dev->cfg.nums.groupEn) {
+        uchar *ptr = dev->cfg.nums.group[id];
         for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
     } else disGroupAlarm(id);
 

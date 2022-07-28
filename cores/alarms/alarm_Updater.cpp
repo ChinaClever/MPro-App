@@ -177,7 +177,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
     bool ret = false;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
-    if(dev->offLine) {
+    if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;
     }
@@ -186,6 +186,6 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 
 void Alarm_Updater::run()
 {
-    int num = cm::masterDev()->info.slaveNum;
+    int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
 }

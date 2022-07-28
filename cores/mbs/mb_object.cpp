@@ -30,11 +30,11 @@ void Mb_Object::upDevInfo()
     vs << mDevData->tg.cur.rated; // 额定电流
     vs << 50; // 额定频率
 
-    vs << mDevData->info.outputNum;
+    vs << mDevData->cfg.nums.outputNum;
     vs << 1 << 1 << 1;
     setRegs(MbReg_Rateds, vs);
 
-    setReg(MbReg_PhaseNum, mDevData->info.lineNum);
+    setReg(MbReg_PhaseNum, mDevData->cfg.nums.lineNum);
     setReg(MbReg_Classify, 2);
     setReg(MbReg_Classify+1, 0xFF);
 }

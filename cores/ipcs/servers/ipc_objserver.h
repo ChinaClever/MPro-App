@@ -1,7 +1,7 @@
 #ifndef IPC_OBJSERVER_H
 #define IPC_OBJSERVER_H
 #include "set_core.h"
-#include "ipc_objclient.h"
+#include "ipc_webclient.h"
 
 class IPC_ObjServer : public Domain_SocketServ
 {

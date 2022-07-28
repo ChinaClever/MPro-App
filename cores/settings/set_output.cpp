@@ -159,7 +159,7 @@ bool Set_Output::groupingSet(sNumStrItem &it)
 {
     QStringList strs = QString(it.str).split("; ");
     sDevData *dev = cm::devData(it.addr);
-    uchar *ptr = dev->info.group[it.id];
+    uchar *ptr = dev->cfg.nums.group[it.id];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
         int id = str.toInt(); ptr[id] = 1;

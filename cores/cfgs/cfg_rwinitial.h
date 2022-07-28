@@ -10,7 +10,7 @@ public:
     bool initialData();
     bool initialParam();
 private:
-    void initDevInfo(sDevInfo &it);
+    void initDevInfo(sDevNums &it);
     void setAlarmUnit(sAlarmUnit &it, uchar size, uint rated);
     void initObjData(sObjData &it, uchar size, uint curRated);
 

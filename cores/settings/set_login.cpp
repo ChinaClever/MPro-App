@@ -10,14 +10,15 @@ Set_Login::Set_Login()
 
 }
 
+
 QString Set_Login::loginUsrPwd(int type, int id)
 {
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[id]);
     char *ptr = nullptr; switch (type) {
-    case 1: ptr = it->user[id]; break;
-    case 2: ptr = it->pwd[id]; break;
-    case 3: ptr = it->token[id]; break;
-    case 4: ptr = it->permit[id]; break;
+    case 1: ptr = it->user; break;
+    case 2: ptr = it->pwd; break;
+    case 3: ptr = it->token; break;
+    case 4: ptr = it->permit; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -29,15 +30,16 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
 {
     QString key; bool ret = true;
     QString prefix = "login"; char *ptr=nullptr;
-    sDevLogin *it = &(cm::dataPacket()->login);
+    sDevLogin *it = &(cm::dataPacket()->login[id]);
 
     switch (type) {
-    case 1: key = "user"; ptr = it->user[id]; break;
-    case 2: key = "pwd"; ptr = it->pwd[id]; break;
-    case 3: key = "token"; ptr = it->token[id]; break;
-    case 4: key = "permit"; ptr = it->permit[id]; break;
+    case 1: key = "user"; ptr = it->user; break;
+    case 2: key = "pwd"; ptr = it->pwd; break;
+    case 3: key = "token"; ptr = it->token; break;
+    case 4: key = "permit"; ptr = it->permit; break;
+    case 11: ret = loginCheck(str); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    }
+    } if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) {
         qstrcpy(ptr, str);
@@ -50,5 +52,17 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     }
     //Cfg_ReadWrite::bulid()->writeSettings();
 
+    return ret;
+}
+
+
+bool Set_Login::loginCheck(const QString &str)
+{
+    QStringList ls = str.split("; ");
+    bool ret = false; if(ls.size() == 2) {
+        sDevLogin *it = &(cm::dataPacket()->login[0]);
+        QString usr = it->user, pwd = it->pwd;
+        if((ls.first() == usr) && (ls.last() == pwd)) ret = true;
+    }
     return ret;
 }

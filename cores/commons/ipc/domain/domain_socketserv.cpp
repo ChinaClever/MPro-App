@@ -57,6 +57,6 @@ void Domain_SocketServ::run()
 {
     while(isRun) {
         workDown();
-        usleep(1);
+        //usleep(1);
     }
 }
