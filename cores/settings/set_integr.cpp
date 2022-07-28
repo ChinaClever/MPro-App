@@ -113,6 +113,7 @@ int Set_Integr::rpcCfg(uchar fc)
     case 5: res = cfg->xml.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
+
     return res;
 }
 
@@ -161,7 +162,6 @@ QVariant Set_Integr::pushCfg(uchar fc)
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    qDebug() << Q_FUNC_INFO << fc << res << res.toInt();
     return res;
 }
 

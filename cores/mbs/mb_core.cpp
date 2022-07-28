@@ -18,14 +18,14 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
     static Mb_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
-        sington->connectTcp(1); /////====
+        //sington->connectTcp(1); /////====
     }
     return sington;
 }
 
 void Mb_Core::initFun()
 {
-//    connectTcp(mCfg->enTcp); /////====
+    connectTcp(mCfg->enTcp);
     connectRtu(mCfg->enRtu);
 }
 
