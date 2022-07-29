@@ -90,18 +90,16 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 16:
-        sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ snmp_info[num], JSON.parse(evt.data).result[5]);
       break;
       case 17:
         sessionStorage.setItem(type_name[type]+ rpc_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 18:
-        if(num){
+        if(topic == 0){
           sessionStorage.setItem(type_name[type]+ push_info[num], JSON.parse(evt.data).result[5]);
-          console.log (type_name[type]+push_info[num]+ JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
-          console.log (type_name[type]+push_info[topic]+ JSON.parse(evt.data).result[5]);
         }
       break;
       case 51:
@@ -323,11 +321,13 @@ function read_modbus_data(){
 function read_rpc_data(){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(5)){
+    if(j >= parseInt(6)){
       clearInterval(time1);
     }
-    if(j <= 4 ){
-      rpc.call('pduReadCfg',[0,rpc_cfg,j,0,0]);
+    if(j <= 5 ){
+      if(j != 3){
+       rpc.call('pduReadCfg',[0,rpc_cfg,j,0,0]);
+      }
     }
     j++;
   },1);
@@ -368,7 +368,7 @@ function read_http_data(){
   rpc.call('pduReadString',[0,push,0,0,12]);
   let j = 11;
   var time1 = setInterval(function(){
-    if(j >= parseInt(10)){
+    if(j >= parseInt(16)){
       clearInterval(time1);
     }
     if(j <= 15 && (j!= 12)){
