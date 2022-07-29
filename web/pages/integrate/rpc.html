@@ -21,7 +21,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">rpc集成</span>
+								<span id="lang_2">RPC集成</span>
 							</div>
 						</div>
 					</div>
@@ -44,11 +44,13 @@
 		read_rpc_data();
 		var mode_name = new Array("禁用","TCP","WebSocket");
 		var mode_name1 = new Array("禁用","HTTP");
-		var data_id  = new Array("json_mode","json_port","xml_mode","xml_port");
+		var data_id  = new Array("json_mode","json_port","","xml_mode","xml_port");
 		var rpc_data = new Array();
 		function read_data(){
 			for(let i = 0;i < data_id.length;i++){
-				rpc_data[i+1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[i + 1]));
+				if( i != 2){
+					rpc_data[i+1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[i + 1]));
+				}
 			}
 		}
 		$('.json_rpc').html(buildTableRpc());
@@ -62,13 +64,13 @@
 			btn1 = document.getElementById("save1");
 			btn2 = document.getElementById("save2");
 			sel1 = document.getElementById(data_id[0]);
-			sel2 = document.getElementById(data_id[2]);
+			sel2 = document.getElementById(data_id[3]);
 			lab = document.getElementById(data_id[1]);
-			lab1 = document.getElementById(data_id[3]);
+			lab1 = document.getElementById(data_id[4]);
 			sel1[rpc_data[1]].selected = true;
-			sel2[rpc_data[3]].selected = true;
+			sel2[rpc_data[4]].selected = true;
 			lab.value = rpc_data[2];
-			lab1.value = rpc_data[4];
+			lab1.value = rpc_data[5];
 			if(rpc_data[1] == 0){
 				lab.disabled =true;
 				btn1.disabled =true;
@@ -76,7 +78,7 @@
 				lab.disabled =fasle;
 				btn1.disabled =fasle;
 			}
-			if(rpc_data[3] == 0){
+			if(rpc_data[4] == 0){
 				lab1.disabled =true;
 				btn2.disabled =true;
 			}else{
@@ -91,29 +93,69 @@
 				showdata();
 			},800);
 		}
-		function Set(){
-			var lab = 0;
-			for(var i = 0; i < (data_id.length);i++){
-				lab = parseInt(document.getElementById(data_id[i]).value);
-				if(lab != rpc_data[i+1]){
-					rpc.call('pduSetCfg',[0,rpc_cfg,i,0,0,lab]);
+		function SetData(btn){
+			let mds_data = 0, setbtn = 0 ,lab = 0;
+			mds_data = parseInt(btn.value);
+			if(confirm("请确认是否开启此功能。")){
+				if(btn.id =="json_mode"){
+					setbtn =  document.getElementById('save1');
+					lab = document.getElementById(data_id[1]);
+					if(mds_data == 0){
+						lab.disabled = true;
+						setbtn.disabled = true;
+					}
+					else{
+						lab.disabled = false;
+						setbtn.disabled = false;
+					}
+					rpc.call('pduSetCfg',[0,rpc_cfg,1,0,0,mds_data]);
+				}else{
+					setbtn =  document.getElementById('save2');
+					lab = document.getElementById(data_id[4]);
+					if(mds_data == 1){
+						lab.disabled = false;
+						setbtn.disabled = false;
+					}
+					else{
+						lab.disabled = true;
+						setbtn.disabled = true;
+					}
+					rpc.call('pduSetCfg',[0,rpc_cfg,4,0,0,mds_data]);
 				}
-			}
-			flash_html();
+				flash_html();
+			}else{}
+		}
+
+		function Set(btn){
+			var lab = 0;
+			if(confirm("请确认是否保存此次修改？")){
+				if(btn.id =="save1"){
+					lab = parseInt(document.getElementById(data_id[1]).value);
+					if(lab != rpc_data[2]){
+						rpc.call('pduSetCfg',[0,rpc_cfg,2,0,0,lab]);
+					}
+				}else{
+					lab = parseInt(document.getElementById(data_id[4]).value);
+					if(lab != rpc_data[5]){
+						rpc.call('pduSetCfg',[0,rpc_cfg,5,0,0,lab]);
+					}
+				}
+				flash_html();
+			}else{}
 		}
 		function buildTableRpc() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%">JSON-RPC设置</td>\
 				<td width ="75%"></td></tr>';
 			tbody += '<tr><td>JSON-RPC模式选择：</td>';
-			tbody += '<td><select id ="json_mode">';
+			tbody += '<td><select id ="json_mode" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_name.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td>JSON-RPC端口号：</td>';
 			tbody += '<td><input id = "json_port" value = "502" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "save1" style ="width:60%" type = "button" value = "保存" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "save1" style ="width:60%" type = "button" value = "保存" onclick = "Set(this)"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
@@ -124,14 +166,14 @@
 			thead = '<tr><td width ="25%">XML-RPC集成设置</td>\
 				<td width ="75%"></td></tr>';
 			tbody += '<tr><td>XML-RPC模式选择：</td>';
-			tbody += '<td><select id ="xml_mode">';
+			tbody += '<td><select id ="xml_mode" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_name1.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_name1[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td>XML-RPC端口号：</td>';
 			tbody += '<td><input id = "xml_port" value = "502" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "Set(this)"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
