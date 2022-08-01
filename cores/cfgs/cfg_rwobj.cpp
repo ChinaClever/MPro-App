@@ -45,7 +45,7 @@ bool Cfg_RwObj::readParam(const QString &fn)
 {
     bool ret = false; QFile file(Cfg_Obj::pathOfCfg(fn));
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
-        QByteArray array = mFile->readAll();
+        QByteArray array = file.readAll();
         if(array.size()) {
             QByteArray nums, param, uut;
             QDataStream out(&array, QIODevice::ReadOnly);

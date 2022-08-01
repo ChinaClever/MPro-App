@@ -23,9 +23,9 @@ App_Start::App_Start(QObject *parent)
     Shm::initShm();
 #endif
 
-    Cfg_ReadWrite::bulid();
-    QTimer::singleShot(50,this,SLOT(initFunSlot()));
-    QTimer::singleShot(150,this,SLOT(startThreadSlot()));
+    Cfg_ReadWrite::bulid(); compileTime();
+    QTimer::singleShot(5,this,SLOT(initFunSlot()));
+    QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
