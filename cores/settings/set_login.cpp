@@ -26,7 +26,7 @@ QString Set_Login::loginUsrPwd(int type, int id)
 }
 
 
-bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
+bool Set_Login::loginSet(uchar type, char *str, int id)
 {
     QString key; bool ret = true;
     QString prefix = "login"; char *ptr=nullptr;
@@ -39,18 +39,17 @@ bool Set_Login::loginSet(uchar type, char *str, uchar txType, int id)
     case 4: key = "permit"; ptr = it->permit; break;
     case 11: ret = loginCheck(str); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    } if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
+    } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) {
         qstrcpy(ptr, str);
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, QString(ptr), prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
+        sOpItem db; db.op_src = QObject::tr("登陆信息"); //opSrc(txType);
         db.content = QObject::tr("%1 修改为 %2").arg(key, str);
         Log_Core::bulid()->append(db);
     }
-    //Cfg_ReadWrite::bulid()->writeSettings();
 
     return ret;
 }
@@ -62,7 +61,12 @@ bool Set_Login::loginCheck(const QString &str)
     bool ret = false; if(ls.size() == 2) {
         sDevLogin *it = &(cm::dataPacket()->login[0]);
         QString usr = it->user, pwd = it->pwd;
-        if((ls.first() == usr) && (ls.last() == pwd)) ret = true;
+        if((ls.first() == usr) && (ls.last() == pwd)) {
+            ret = true;
+            sOpItem db; db.op_src = QObject::tr("用户登陆"); //opSrc(txType);
+            db.content = QObject::tr("登陆登陆为 %1").arg(str);
+            Log_Core::bulid()->append(db);
+        }
     }
     return ret;
 }

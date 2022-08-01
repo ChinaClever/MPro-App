@@ -32,11 +32,10 @@ bool Set_Core::setString(sCfgItem &it)
     case SFnCode::EGrouping: ret = groupingSet(it); break;
     case SFnCode::EGroupName: ret = groupNameSet(it); break;
     case SFnCode::OutputName: ret = outputNameSet(it); break;
-    case SFnCode::Uuts: ret = setUut(it.id, it.str, it.txType); break;
-    case SFnCode::EPush: ret = pushSet(it.id, it.str, it.txType); break;
-    case SFnCode::ESnmp: ret = snmpSet(it.id, it.str, it.txType); break;
-    case SFnCode::EDevLogin: ret = loginSet(it.id, it.str, it.txType); break;
-    case SFnCode::EQRcode: ret = qrcodeGenerator(it.str); break;
+    case SFnCode::Uuts: ret = setUut(it.id, it.str); break;
+    case SFnCode::EPush: ret = pushSet(it.id, it.str); break;
+    case SFnCode::ESnmp: ret = snmpSet(it.id, it.str); break;
+    case SFnCode::EDevLogin: ret = loginSet(it.id, it.str); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -53,7 +52,6 @@ QString Set_Core::getString(sCfgItem &it)
     case SFnCode::EGrouping: str = grouping(it.addr, it.id); break;
     case SFnCode::EGroupName: str = groupName(it.addr, it.id); break;
     case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
-    case SFnCode::EQRcode: str = qrcodeStr(it.addr); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
@@ -63,11 +61,11 @@ QString Set_Core::getString(sCfgItem &it)
 bool Set_Core::setNumber(sCfgItem &it)
 {
     bool ret = false; switch (it.fc) {
-    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
-    case SFnCode::EModbus: ret = modbusSet(it.id, it.value, it.txType); break;
-    case SFnCode::EPush: ret = pushSet(it.id, it.value, it.txType); break;
-    case SFnCode::ERpc: ret = rpcSet(it.id, it.value, it.txType); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
+    case SFnCode::EModbus: ret = modbusSet(it.id, it.value); break;
+    case SFnCode::EPush: ret = pushSet(it.id, it.value); break;
+    case SFnCode::ERpc: ret = rpcSet(it.id, it.value); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     } if(ret) writeAlarm();
 

@@ -30,7 +30,7 @@ int Rpc_Method::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return mIt.value;
 }
 
-bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi)
+bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
     sDataItem it; it.addr = addr; it.type = type; //it.soi = soi;
     it.topic = topic; it.subtopic = sub; it.id = id;
@@ -74,7 +74,7 @@ QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int cnt)
     return Log_Core::bulid()->log_readFun(it);
 }
 
-bool Rpc_Method::pduDevNameSet(int addr, const QString &value)
+bool Rpc_Method::pduDevNameSet(const QString &value, int addr)
 {
      return pduSetString(addr, SFnCode::Uuts, 6, value);
 }
@@ -89,14 +89,14 @@ QString Rpc_Method::pduDevSnGet(int addr)
     return pduGetString(addr, SFnCode::Uuts, 7);
 }
 
-bool Rpc_Method::pduDevSnSet(int addr, const QString &value)
+bool Rpc_Method::pduDevSnSet(const QString &value, int addr)
 {
     return pduSetString(addr, SFnCode::Uuts, 7, value);
 }
 
 bool Rpc_Method::pduQRcodeGenerator(const QString &value, int addr)
 {
-    return pduSetString(addr, SFnCode::EQRcode, 0, value);
+    return pduSetString(addr, SFnCode::Uuts, 8, value);
 }
 
 QString Rpc_Method::pduOutputNameGet(int addr, int id)

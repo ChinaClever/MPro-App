@@ -20,7 +20,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
-    //login();
+    login();
     modbus();
     readUut();
     outputName();
@@ -162,11 +162,11 @@ void Cfg_ReadParam::readUut()
 
 
     ///////////=============
-    for(int i=0; i<8; ++i) {
-        sUutInfo *it = &(cm::devData(i)->cfg.uut);
-        sprintf(it->devName, "devName_%d", i);
-    }
-    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
+//    for(int i=0; i<8; ++i) {
+//        sUutInfo *it = &(cm::devData(i)->cfg.uut);
+//        sprintf(it->devName, "devName_%d", i);
+//    }
+//    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
 
 }
 
