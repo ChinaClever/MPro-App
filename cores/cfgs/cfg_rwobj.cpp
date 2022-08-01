@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "cfg_rwobj.h"
+#include "log_core.h"
 
 Cfg_RwObj::Cfg_RwObj(QObject *parent) : QObject{parent}
 {
@@ -54,8 +55,13 @@ bool Cfg_RwObj::readParam(const QString &fn)
                 cfg->nums = cm::toStruct<sDevNums>(nums);
                 cfg->param = cm::toStruct<sParameter>(nums);
                 cfg->uut = cm::toStruct<sUutInfo>(nums); ret = true;
-            } else qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
+            } else {
+                sSysItem it; it.module = tr("配置参数");
+                it.content = tr("设备配置参数读取异常");
+                Log_Core::bulid(this)->append(it);
+                qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
                              << mFile->errorString() << Q_FUNC_INFO;
+            }
         }
     }file.close();
 
@@ -83,8 +89,13 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
         QByteArray array = mFile->readAll();
         if(array.size()) {
             ret = deDataStream(array); if(ret) unSequence();
-            else qCritical() << "Error: read alarm" << Cfg_Obj::pathOfCfg(fn)
+            else {
+                sSysItem it; it.module = tr("配置参数");
+                it.content = tr("设备报警数据读取异常");
+                Log_Core::bulid(this)->append(it);
+                qCritical() << "Error: read alarm" << Cfg_Obj::pathOfCfg(fn)
                                  << mFile->errorString() << Q_FUNC_INFO;
+            }
         }  mFile->close();
     }
 

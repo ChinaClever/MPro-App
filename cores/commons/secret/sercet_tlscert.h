@@ -1,13 +1,13 @@
-#ifndef CERTINFO_H
-#define CERTINFO_H
+#ifndef SERCET_TLSCERT_H
+#define SERCET_TLSCERT_H
 #include <QtCore>
 #include <QSslCertificate>
 #include <QSslKey>
 
-class CertInfo
+class Sercret_TlsCert
 {
 public:
-    CertInfo(const QString &fn, QSsl::EncodingFormat format = QSsl::Pem);
+    Sercret_TlsCert(const QString &fn, QSsl::EncodingFormat format = QSsl::Pem);
 
     bool isSelfSigned();
     QSslKey publicKey();
@@ -22,4 +22,4 @@ private:
     QSslCertificate *mCert;
 };
 
-#endif // CERTINFO_H
+#endif // SERCET_TLSCERT_H

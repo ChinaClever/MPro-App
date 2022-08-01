@@ -203,6 +203,7 @@ struct sUutInfo {
 
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
+    uchar language; // 0 中文 1 英文
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关

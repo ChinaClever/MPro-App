@@ -3,9 +3,9 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "certinfo.h"
+#include "sercet_tlscert.h"
 
-CertInfo::CertInfo(const QString &fn, QSsl::EncodingFormat format)
+Sercret_TlsCert::Sercret_TlsCert(const QString &fn, QSsl::EncodingFormat format)
 {
     QFile crtFile(fn);
     if(crtFile.open(QIODevice::ReadOnly)) {
@@ -14,7 +14,7 @@ CertInfo::CertInfo(const QString &fn, QSsl::EncodingFormat format)
 }
 
 // 返回此证书的加密摘要。
-QByteArray CertInfo::digest()
+QByteArray Sercret_TlsCert::digest()
 {
      QByteArray res;
     if(!mCert->isNull())
@@ -23,7 +23,7 @@ QByteArray CertInfo::digest()
 }
 
 // 证书是否是自签名的。颁发者和主题相同则证书被认为是自签名的。
-bool CertInfo::isSelfSigned()
+bool Sercret_TlsCert::isSelfSigned()
 {
     bool res=false;
     if(!mCert->isNull())
@@ -32,7 +32,7 @@ bool CertInfo::isSelfSigned()
 }
 
 // 返回证书主题的公钥。
-QSslKey CertInfo::publicKey()
+QSslKey Sercret_TlsCert::publicKey()
 {
     QSslKey res;
     if(!mCert->isNull())
@@ -41,7 +41,7 @@ QSslKey CertInfo::publicKey()
 }
 
 // 以十六进制格式返回证书的序列号字符串。
-QByteArray CertInfo::serialNumber()
+QByteArray Sercret_TlsCert::serialNumber()
 {
     QByteArray res;
     if(!mCert->isNull())
@@ -49,7 +49,7 @@ QByteArray CertInfo::serialNumber()
     return res;
 }
 
-QByteArray CertInfo::version()
+QByteArray Sercret_TlsCert::version()
 {
     QByteArray res;
     if(!mCert->isNull())
@@ -57,7 +57,7 @@ QByteArray CertInfo::version()
     return res;
 }
 
-QString CertInfo::toText()
+QString Sercret_TlsCert::toText()
 {
     QString res;
     if(!mCert->isNull())
@@ -65,7 +65,7 @@ QString CertInfo::toText()
     return res;
 }
 
-QStringList CertInfo::subjectInfo(QSslCertificate::SubjectInfo info)
+QStringList Sercret_TlsCert::subjectInfo(QSslCertificate::SubjectInfo info)
 {
     QStringList res;
     if(!mCert->isNull())
@@ -73,7 +73,7 @@ QStringList CertInfo::subjectInfo(QSslCertificate::SubjectInfo info)
     return res;
 }
 
-QStringList CertInfo::issuerInfo(QSslCertificate::SubjectInfo info)
+QStringList Sercret_TlsCert::issuerInfo(QSslCertificate::SubjectInfo info)
 {
     QStringList res;
     if(!mCert->isNull())

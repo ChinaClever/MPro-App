@@ -8,6 +8,7 @@ enum eLogs{
     eOpLog,
     eSysLog,
     eEleLog,
+    eOtaLog,
 };
 
 enum eLogFc {

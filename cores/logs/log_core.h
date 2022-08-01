@@ -13,6 +13,7 @@ public:
     void append(const sSysItem &it) {mSysIts<<it; run();}
     void append(const sUserItem &it) {mUserIts<<it; run();}
     void append(const sAlarmItem &it) {mAlarmIts<<it; run();}
+    void append(const sOtaItem &it) {mOtaIts<<it; run();}
     void append(const sEleItem &it) {mEleIts<<it; run();}
 
 private slots:
@@ -39,6 +40,9 @@ private:
 
     Db_Ele *mEle;
     QList<sEleItem> mEleIts;
+
+    Db_Ota *mOta;
+    QList<sOtaItem> mOtaIts;
 };
 
 #endif // LOG_CORE_H

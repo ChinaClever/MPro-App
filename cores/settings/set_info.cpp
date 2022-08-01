@@ -24,7 +24,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 3: ret = it->param.modbusAddr; break;
     case 4: ret = it->vers.version; break;
     case 5: ret = it->param.buzzerSw; break;
-        //    case 6: ret = it->hz; break;
+    case 6: ret = it->param.hz; break;
     case 7: ret = it->nums.boardNum; break;
     case 8: ret = it->nums.groupEn; break;
 

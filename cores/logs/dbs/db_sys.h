@@ -1,6 +1,6 @@
 #ifndef DB_SYS_H
 #define DB_SYS_H
-#include "db_op.h"
+#include "db_ota.h"
 
 struct sSysItem : public Db_ObjItem{
     QString module, content;
@@ -11,7 +11,7 @@ class Db_Sys : public Db_Obj<sSysItem>
     Db_Sys();
 public:
     static Db_Sys* bulid();
-    QString tableName(){return "sys";}
+    QString tableName() {return "sys";}
 
 protected:
     QJsonArray itemJson(const sSysItem &it);

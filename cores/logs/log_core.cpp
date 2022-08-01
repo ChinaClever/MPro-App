@@ -19,13 +19,20 @@ Log_Core::Log_Core(QObject *parent)
 Log_Core *Log_Core::bulid(QObject *parent)
 {
     static Log_Core *sington = nullptr;
-    if(!sington) sington = new Log_Core(parent);
+    if(!sington) {
+        sington = new Log_Core(parent);
+        sSysItem it;
+        it.module = "system";
+        it.content = "Software startup";
+        sington->append(it);
+    }
     return sington;
 }
 
 void Log_Core::initFunSlot()
 {
     mOp = Db_Op::bulid();
+    mOta = Db_Ota::bulid();
     mSys = Db_Sys::bulid();
     mUser = Db_User::bulid();    
     mAlarm = Db_Alarm::bulid();
@@ -40,6 +47,7 @@ void Log_Core::saveLogSlot()
 {
     Db_Tran t;
     while(mOpIts.size()) mOp->insertItem(mOpIts.takeFirst());
+    while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mEleIts.size()) mEle->insertItem(mEleIts.takeFirst());
     while(mSysIts.size()) mSys->insertItem(mSysIts.takeFirst());
     while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
