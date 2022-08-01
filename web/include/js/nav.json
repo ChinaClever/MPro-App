@@ -78,8 +78,8 @@
         "url": "rpc.html"
       },
       {
-        "name": "HTTP集成",
-        "url": "http.html"
+        "name": "REST集成",
+        "url": "rest.html"
       },
       {
         "name": "SNMP服务",
