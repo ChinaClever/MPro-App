@@ -66,11 +66,11 @@ bool Rpc_Method::pduSetCfg(uchar addr, uchar fc, uchar type, int value)
     return Set_Core::bulid()->setCfg(it);
 }
 
-QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int noe)
+QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int cnt)
 {
     sLogFcIt it;
     it.type = type; it.fc = fc;
-    it.noe = noe; it.id = id;
+    it.cnt = cnt; it.id = id;
     return Log_Core::bulid()->log_readFun(it);
 }
 

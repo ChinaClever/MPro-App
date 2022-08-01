@@ -20,7 +20,7 @@ void usage()
     cout << "*    pduSetString    addr fc id str" <<endl;
     cout << "*    pduDevCfg       addr fc type" <<endl;
     cout << "*    pduSetCfg       addr fc type value" <<endl;
-    cout << "*    pduLogFun       type fc id noe" <<endl;
+    cout << "*    pduLogFun       type fc id cnt" <<endl;
     cout << "*******************************************************" <<endl;
 }
 
@@ -117,9 +117,9 @@ void pduLogFun(const QStringList &ls)
     int k = 0; if(ls.size() == 3) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        uchar id = ls.at(k++).toInt();
-        uchar noe = ls.at(k++).toInt();
-        qDebug() << rpc->pduLogFun(type, fc, id, noe);
+        uint id = ls.at(k++).toInt();
+        uint cnt = ls.at(k++).toInt();
+        qDebug() << rpc->pduLogFun(type, fc, id, cnt);
     } else qCritical() << "pduLogFun Parameter error";
 }
 

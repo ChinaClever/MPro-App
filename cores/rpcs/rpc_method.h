@@ -21,7 +21,7 @@ public slots:
 
     Q_INVOKABLE int pduDevCfg(uchar addr, uchar fc, uchar type);
     Q_INVOKABLE bool pduSetCfg(uchar addr, uchar fc, uchar type, int value);
-    Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
+    Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id, int cnt=30);
 
     Q_INVOKABLE uint pduRelayStatus(int addr, int id);
     Q_INVOKABLE bool pduRelayCtrl(int addr, int id, uchar on);
