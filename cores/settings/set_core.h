@@ -9,14 +9,14 @@ public:
     static Set_Core *bulid();
     void writeAlarm();
     bool setting(sDataItem &it);
-    bool setNumStr(sNumStrItem &it);
-    QString getNumStr(sNumStrItem &it);
+    bool setCfg(sCfgItem &it);
+    QString getCfg(sCfgItem &it);
 
 private:
-    bool setNumber(sNumStrItem &it);
-    int getNumber(sNumStrItem &it);
-    bool setString(sNumStrItem &it);
-    QString getString(sNumStrItem &it);
+    bool setNumber(sCfgItem &it);
+    int getNumber(sCfgItem &it);
+    bool setString(sCfgItem &it);
+    QString getString(sCfgItem &it);
 };
 
 #endif // SET_CORE_H

@@ -32,7 +32,7 @@ int Rpc_Method::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uch
 
 bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi)
 {
-    sDataItem it; it.addr = addr; it.type = type; it.soi = soi;
+    sDataItem it; it.addr = addr; it.type = type; //it.soi = soi;
     it.topic = topic; it.subtopic = sub; it.id = id;
     it.value = value; it.rw = 1; it.txType = mTxType;
     return Set_Core::bulid()->setting(it);
@@ -40,30 +40,30 @@ bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uch
 
 QString Rpc_Method::pduGetString(uchar addr, uchar fc, uchar id)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id;
+    sCfgItem it; it.addr = addr; it.fc = fc; it.id = id;
     if((SFnCode::OutputName == fc) && id) it.id --;
-    return Set_Core::bulid()->getNumStr(it);
+    return Set_Core::bulid()->getCfg(it);
 }
 
-bool Rpc_Method::pduSetString(uchar addr, uchar fc, uchar id, const QString &str, uchar soi)
+bool Rpc_Method::pduSetString(uchar addr, uchar fc, uchar id, const QString &str)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1; it.soi = soi;
+    sCfgItem it; it.addr = addr; it.fc = fc; it.id = id; it.rw = 1; //it.soi = soi;
     qstrcpy((char *)it.str, str.toLatin1().data()); it.txType = mTxType;
-    return Set_Core::bulid()->setNumStr(it);
+    return Set_Core::bulid()->setCfg(it);
 }
 
 int Rpc_Method::pduDevCfg(uchar addr, uchar fc, uchar type)
 {
-    sNumStrItem it; it.addr = addr;
+    sCfgItem it; it.addr = addr;
     it.fc = fc; it.id = type; it.isDigit = 1;
-    return Set_Core::bulid()->getNumStr(it).toInt();
+    return Set_Core::bulid()->getCfg(it).toInt();
 }
 
-bool Rpc_Method::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi)
+bool Rpc_Method::pduSetCfg(uchar addr, uchar fc, uchar type, int value)
 {
-    sNumStrItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
-    it.value = value; it.isDigit = 1; it.txType = mTxType; it.soi = soi;
-    return Set_Core::bulid()->setNumStr(it);
+    sCfgItem it; it.addr = addr; it.fc = fc; it.id = type; it.rw = 1;
+    it.value = value; it.isDigit = 1; it.txType = mTxType; //it.soi = soi;
+    return Set_Core::bulid()->setCfg(it);
 }
 
 QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int noe)

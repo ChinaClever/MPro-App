@@ -10,12 +10,10 @@ class Set_Ssdp : public QObject
     explicit Set_Ssdp(QObject *parent = nullptr);
 public:
     static Set_Ssdp *bulid(QObject *parent = nullptr);
-    bool setNumStr(sNumStrItem &it);
-    bool setting(sDataItem &it);
 
 private slots:
     void recvSlot(uchar fc, const QString &room, const QByteArray &rcv);
-    void recvNumStrSlot(const sNumStrItem &it);
+    void recvNumStrSlot(const sCfgItem &it);
     void recvSetSlot(const sDataItem &it);
 
 private:

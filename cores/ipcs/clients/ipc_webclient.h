@@ -20,9 +20,9 @@ public:
 
 private:
     bool getValue(sDataItem &unit);
-    QString getNumStr(sNumStrItem &unit);
+    QString getNumStr(sCfgItem &unit);
     bool setting(const sDataItem &unit);
-    bool setNumStr(const sNumStrItem &unit);
+    bool setNumStr(const sCfgItem &unit);
     bool msgSend(int fc, const QByteArray &msg);
 };
 

@@ -26,7 +26,7 @@ void Set_Core::writeAlarm()
     Cfg_ReadWrite::bulid()->writeAlarms();
 }
 
-bool Set_Core::setString(sNumStrItem &it)
+bool Set_Core::setString(sCfgItem &it)
 {
     bool ret = false; switch (it.fc) {
     case SFnCode::EGrouping: ret = groupingSet(it); break;
@@ -43,7 +43,7 @@ bool Set_Core::setString(sNumStrItem &it)
     return ret;
 }
 
-QString Set_Core::getString(sNumStrItem &it)
+QString Set_Core::getString(sCfgItem &it)
 {
     QString str; switch (it.fc) {
     case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
@@ -60,7 +60,7 @@ QString Set_Core::getString(sNumStrItem &it)
     return str;
 }
 
-bool Set_Core::setNumber(sNumStrItem &it)
+bool Set_Core::setNumber(sCfgItem &it)
 {
     bool ret = false; switch (it.fc) {
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
@@ -74,7 +74,7 @@ bool Set_Core::setNumber(sNumStrItem &it)
     return ret;
 }
 
-int Set_Core::getNumber(sNumStrItem &it)
+int Set_Core::getNumber(sCfgItem &it)
 {
     int ret = 0; switch (it.fc) {
     case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
@@ -88,16 +88,12 @@ int Set_Core::getNumber(sNumStrItem &it)
     return ret;
 }
 
-bool Set_Core::setNumStr(sNumStrItem &it)
+bool Set_Core::setCfg(sCfgItem &it)
 {    
     bool ret = false; if(it.rw) {
-        if(it.soi > 1) {
-            ret = Set_Ssdp::bulid()->setNumStr(it);
-        } else if(it.addr  || it.soi) {
-            if(it.soi) it.addr = 0xFF;
+        if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSetNumStr(it);
-            if(it.soi) {it.addr = it.soi = 0; setNumStr(it);}
         } else {
             if(it.isDigit) ret = setNumber(it);
             else ret = setString(it);
@@ -106,7 +102,7 @@ bool Set_Core::setNumStr(sNumStrItem &it)
     return ret;
 }
 
-QString Set_Core::getNumStr(sNumStrItem &it)
+QString Set_Core::getCfg(sCfgItem &it)
 {
     QString str; if(!it.rw) {
         if(it.isDigit) str = QString::number(getNumber(it));
@@ -118,13 +114,9 @@ QString Set_Core::getNumStr(sNumStrItem &it)
 bool Set_Core::setting(sDataItem &it)
 {
     bool ret = true; if(it.rw) {
-        if(it.soi > 1) {
-            ret = Set_Ssdp::bulid()->setting(it);
-        } else if(it.addr || it.soi) {
-            if(it.soi) it.addr = 0xFF;
+         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-            if(it.soi) {it.addr = it.soi = 0; setting(it);}
         } else if(it.topic == DTopic::Relay) {
             ret = relaySet(it);
         } else {

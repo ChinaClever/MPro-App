@@ -28,10 +28,17 @@ FORMS += \
     mainwindow.ui \
     navbarwid.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
 RESOURCES += \
     images/image.qrc
+
+
+contains(TARGET_ARCH, x86_64) {
+    # Default rules for deployment.
+    qnx: target.path = /tmp/$${TARGET}/bin
+    else: unix:!android: target.path = /opt/$${TARGET}/bin
+    !isEmpty(target.path): INSTALLS += target
+} else {
+    target.path = /usr/data/clever/app
+    INSTALLS = target
+}
+

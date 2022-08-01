@@ -11,7 +11,7 @@ public:
 
     void masterReadDevs();
     bool masterSeting(const sDataItem &unit);
-    bool masterSetNumStr(const sNumStrItem &it);
+    bool masterSetNumStr(const sCfgItem &it);
 
 private:
     bool masterRead(uchar addr);

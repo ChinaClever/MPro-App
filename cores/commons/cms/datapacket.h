@@ -290,9 +290,9 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 struct sDataItem
 {
 #ifndef SUPPORT_C
-    sDataItem():soi(0),addr(0),rw(0),value(0){}
+    sDataItem():addr(0),rw(0),value(0){}
 #endif
-    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
+    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
@@ -306,11 +306,11 @@ struct sDataItem
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
             EGrouping=21,EGroupName, EQRcode};
 
-struct sNumStrItem{
+struct sCfgItem{
 #ifndef SUPPORT_C
-    sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
+    sCfgItem():addr(0),isDigit(0),sub(0),rw(0),value(0){}
 #endif
-    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
+    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar isDigit; // 0 字符串 1 数字

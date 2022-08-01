@@ -68,7 +68,7 @@ bool Integr_HttpServer::setNumStrItem(const QByteArray &body)
     QJsonObject object;
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     bool ret = it->checkInput(body, object);
-    if(ret) ret = it->setNumStrItem(object);
+    if(ret) ret = it->setCfgItem(object);
     if(ret) replyHttp("ok", 200);
     else replyHttp("error", 222);
     return ret;

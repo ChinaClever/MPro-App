@@ -119,7 +119,7 @@ QString Set_Output::outputName(int addr, int id)
     return dev->name[id];
 }
 
-void Set_Output::opNameLog(const sNumStrItem &it)
+void Set_Output::opNameLog(const sCfgItem &it)
 {
     QString str = QObject::tr("全部");
     if(it.id) str = QObject::tr("第%１").arg(it.id);
@@ -131,7 +131,7 @@ void Set_Output::opNameLog(const sNumStrItem &it)
     Log_Core::bulid()->append(db);
 }
 
-bool Set_Output::outputNameSet(sNumStrItem &it)
+bool Set_Output::outputNameSet(sCfgItem &it)
 {
     bool ret = true;
     if(it.id) {
@@ -143,7 +143,7 @@ bool Set_Output::outputNameSet(sNumStrItem &it)
     return ret;
 }
 
-bool Set_Output::groupNameSet(sNumStrItem &it)
+bool Set_Output::groupNameSet(sCfgItem &it)
 {
     bool ret = true;
     if(it.id) {
@@ -155,7 +155,7 @@ bool Set_Output::groupNameSet(sNumStrItem &it)
     return ret;
 }
 
-bool Set_Output::groupingSet(sNumStrItem &it)
+bool Set_Output::groupingSet(sCfgItem &it)
 {
     QStringList strs = QString(it.str).split("; ");
     sDevData *dev = cm::devData(it.addr);

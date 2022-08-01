@@ -17,11 +17,10 @@ public slots:
                                 uint value, uchar soi=0);
 
     Q_INVOKABLE QString pduGetString(uchar addr, uchar fc, uchar id);
-    Q_INVOKABLE bool pduSetString(uchar addr, uchar fc, uchar id,
-                                  const QString &str, uchar soi=0);
+    Q_INVOKABLE bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str);
 
     Q_INVOKABLE int pduDevCfg(uchar addr, uchar fc, uchar type);
-    Q_INVOKABLE bool pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi=0);
+    Q_INVOKABLE bool pduSetCfg(uchar addr, uchar fc, uchar type, int value);
     Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
 
     Q_INVOKABLE uint pduRelayStatus(int addr, int id);

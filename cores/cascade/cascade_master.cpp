@@ -63,7 +63,7 @@ bool Cascade_Master::masterSeting(const sDataItem &unit)
 }
 
 
-bool Cascade_Master::masterSetNumStr(const sNumStrItem &it)
+bool Cascade_Master::masterSetNumStr(const sCfgItem &it)
 {
     uchar fc = fc_setNumStr; if(isOta) return isOta;
     QByteArray array = cm::toByteArray(it);

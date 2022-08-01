@@ -17,7 +17,8 @@ HEADERS += \
     $$PWD/sercret_aes.h \
     $$PWD/qtsecret_global.h \
     $$PWD/sercret_rsa.h \
-    $$PWD/sercret_smx.h
+    $$PWD/sercret_smx.h \
+    $$PWD/certinfo.h
 
 SOURCES += \
     $$PWD/AES/qaesencryption.cpp \
@@ -33,5 +34,7 @@ SOURCES += \
     $$PWD/sercret_aes.cpp \
 #    $$PWD/sercret_example.cpp \
     $$PWD/sercret_rsa.cpp \
-    $$PWD/sercret_smx.cpp
+    $$PWD/sercret_smx.cpp \
+    $$PWD/certinfo.cpp
+
 }
