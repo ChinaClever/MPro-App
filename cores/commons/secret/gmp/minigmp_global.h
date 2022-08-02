@@ -11,7 +11,7 @@
 #ifdef _WIN32
 #  define MINIGMPSHARED_EXPORT __declspec(dllexport)
 #elif (linux) || defined (__linux__) || defined (__APPLE__)
-#  define MINIGMPSHARED_EXPORT __attribute__((visibility("default")))
+#  define MINIGMPSHARED_EXPORT //__attribute__((visibility("default")))
 #else
 #  define MINIGMPSHARED_EXPORT
 #endif

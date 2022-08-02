@@ -5,42 +5,33 @@
  */
 #include "sercret_rsa.h"
 
+sRsaIt Sercret_Rsa::rsaCfg;
 Sercret_Rsa::Sercret_Rsa()
 {
 
 }
 
-
-Sercret_Rsa *Sercret_Rsa::bulid()
+QByteArray Sercret_Rsa::rsa_sign(const QByteArray &rawData)
 {
-    static Sercret_Rsa* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new Sercret_Rsa();
-    }
-    return sington;
+    return QRSAEncryption::signMessage(rawData, rsaCfg.privKey, rsaCfg.rsa);
 }
 
-QByteArray Sercret_Rsa::rsa_sign(QByteArray rawData, const QByteArray &privKey, QRSAEncryption::Rsa rsa)
+bool Sercret_Rsa::rsa_checkSign(const QByteArray &rawData)
 {
-    return QRSAEncryption::signMessage(rawData, privKey, rsa);
+    return QRSAEncryption::checkSignMessage(rawData, rsaCfg.pubKey, rsaCfg.rsa);
 }
 
-bool Sercret_Rsa::rsa_checkSign(const QByteArray &rawData, const QByteArray &pubKey, QRSAEncryption::Rsa rsa)
+QByteArray Sercret_Rsa::rsa_encode(const QByteArray &rawData)
 {
-    return QRSAEncryption::checkSignMessage(rawData, pubKey, rsa);
+    return  QRSAEncryption::encode(rawData, rsaCfg.pubKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
 }
 
-QByteArray Sercret_Rsa::rsa_encode(const QByteArray &rawData, const QByteArray &pubKey, QRSAEncryption::Rsa rsa)
+QByteArray Sercret_Rsa::rsa_decode(const QByteArray &rawData)
 {
-    return  QRSAEncryption::encode(rawData, pubKey, rsa);
+    return QRSAEncryption::decode(rawData, rsaCfg.privKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
 }
 
-QByteArray Sercret_Rsa::rsa_decode(const QByteArray &rawData, const QByteArray &privKey, QRSAEncryption::Rsa rsa)
+bool Sercret_Rsa::rsa_generatePairKey()
 {
-    return QRSAEncryption::decode(rawData, privKey, rsa);
-}
-
-bool Sercret_Rsa::generatePairKey(QByteArray &pubKey, QByteArray &privKey, const QByteArray& genesis, QRSAEncryption::Rsa rsa)
-{
-    return QRSAEncryption::generatePairKey(pubKey, privKey, genesis, rsa);
+    return QRSAEncryption::generatePairKey(rsaCfg.pubKey, rsaCfg.privKey, rsaCfg.genesis, rsaCfg.rsa);
 }

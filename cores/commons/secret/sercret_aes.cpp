@@ -5,26 +5,18 @@
  */
 #include "sercret_aes.h"
 
+sAesIt Sercret_Aes::aesCfg;
 Sercret_Aes::Sercret_Aes()
 {
 }
 
-Sercret_Aes *Sercret_Aes::bulid()
+QByteArray Sercret_Aes::aes_crypt(const QByteArray &rawText)
 {
-    static Sercret_Aes* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new Sercret_Aes();
-    }
-    return sington;
+    return QAESEncryption::Crypt(aesCfg.level, aesCfg.mode, rawText, aesCfg.key, aesCfg.iv, aesCfg.padding);
 }
 
-QByteArray Sercret_Aes::aes_crypt(const QByteArray &rawText, const sAesIt &it)
+QByteArray Sercret_Aes::aes_decrypt(const QByteArray &rawText)
 {
-    return QAESEncryption::Crypt(it.level, it.mode, rawText, it.key, it.iv, it.padding);
-}
-
-QByteArray Sercret_Aes::aes_decrypt(const QByteArray &rawText, const sAesIt &it)
-{
-    QByteArray decode = QAESEncryption::Decrypt(it.level, it.mode, rawText, it.key, it.iv, it.padding);
+    QByteArray decode = QAESEncryption::Decrypt(aesCfg.level, aesCfg.mode, rawText, aesCfg.key, aesCfg.iv, aesCfg.padding);
     return QAESEncryption::RemovePadding(decode);
 }

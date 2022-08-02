@@ -95,11 +95,7 @@
     "name": "安全加密",
     "icon": "collection_fill",
     "base": "pages/sercet/",
-    "subNav": [
-      {
-        "name": "系统安全",
-        "url": "system.html"
-      },
+    "subNav": [      
       {
         "name": "数据加密",
         "url": "data.html"
@@ -109,12 +105,12 @@
         "url": "tlscert.html"
       },
       {
-        "name": "WEB安全",
-        "url": "web.html"
-      },      
+        "name": "网络安全",
+        "url": "net.html"
+      },
       {
-        "name": "Modbus协议",
-        "url": "modbus.html"
+        "name": "系统安全",
+        "url": "system.html"
       }
     ]
   },
