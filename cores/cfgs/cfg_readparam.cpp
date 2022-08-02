@@ -20,7 +20,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
-    //login();
+    login();
     modbus();
     readUut();
     outputName();
@@ -121,7 +121,7 @@ void Cfg_ReadParam::push()
         case 6: key = "udp2Port"; ptr = &cfg->udp[1].port; value = 1125; break;
         case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
-        case 9: key = "sec"; ptr = &cfg->sec; value = 3; break;
+        case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
 
         case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 12: key = "httpUrl"; str = &cfg->http.url; break;
@@ -133,7 +133,7 @@ void Cfg_ReadParam::push()
 
         if(key.size()) {
             if(ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
-            else *str = mCfg->readCfg(key, value, prefix).toString();
+            else *str = mCfg->readCfg(key, "", prefix).toString();
             ptr = nullptr;
         }
     }
@@ -162,11 +162,11 @@ void Cfg_ReadParam::readUut()
 
 
     ///////////=============
-    for(int i=0; i<8; ++i) {
-        sUutInfo *it = &(cm::devData(i)->cfg.uut);
-        sprintf(it->devName, "devName_%d", i);
-    }
-    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
+//    for(int i=0; i<8; ++i) {
+//        sUutInfo *it = &(cm::devData(i)->cfg.uut);
+//        sprintf(it->devName, "devName_%d", i);
+//    }
+//    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
 
 }
 

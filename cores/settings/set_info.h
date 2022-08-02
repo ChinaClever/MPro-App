@@ -10,7 +10,7 @@ public:
 
 protected:
     QString getUut(int addr, uchar fc);
-    bool setUut(uchar fc, char *str, uchar txType);
+    bool setUut(uchar fc, char *str);
 
     int devCfgNum(int addr, int type);
     bool setCfgNum(int addr, int type, int value);
@@ -18,7 +18,7 @@ protected:
     int devInfoCfg(int addr, int type);
     bool setInfoCfg(int addr, int type, int value);
 
-    QString qrcodeStr(int addr);
+private:
     bool qrcodeGenerator(const QString& msg);
 };
 

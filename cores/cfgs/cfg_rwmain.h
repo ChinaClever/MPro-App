@@ -9,7 +9,7 @@ class Cfg_RwMain : public Cfg_ReadParam
     explicit Cfg_RwMain(QObject *parent = nullptr);
 public:
     static Cfg_RwMain *bulid(QObject *parent = nullptr);
-    bool readParamDefault() {return readParam(CFG_PARAM_DN);}
+    bool readParamDefault() {return readParam(CFG_PARAM_DF);}
     bool readAlarmDefault() {return readAlarm(CFG_ALARM_DF);}
     void writeAlarmDefault();
 

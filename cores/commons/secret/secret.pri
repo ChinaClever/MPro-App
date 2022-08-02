@@ -14,6 +14,7 @@ HEADERS += \
     $$PWD/gmp/bigint.h \
     $$PWD/gmp/mini-gmp.h \
     $$PWD/gmp/minigmp_global.h \
+    $$PWD/sercet_tlscert.h \
     $$PWD/sercret_aes.h \
     $$PWD/qtsecret_global.h \
     $$PWD/sercret_rsa.h \
@@ -30,8 +31,10 @@ SOURCES += \
     $$PWD/SMX/stringutil.cpp \
     $$PWD/gmp/bigint.cpp \
     $$PWD/gmp/mini-gmp.c \
+    $$PWD/sercet_tlscert.cpp \
     $$PWD/sercret_aes.cpp \
 #    $$PWD/sercret_example.cpp \
     $$PWD/sercret_rsa.cpp \
     $$PWD/sercret_smx.cpp
+
 }

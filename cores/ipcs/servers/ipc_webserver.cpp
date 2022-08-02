@@ -32,9 +32,9 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
             if(ret) res = QString::number(unit.value);
         }
     } else if(2 == fc) {
-        sNumStrItem unit = cm::toStruct<sNumStrItem>(array);
-        if(unit.rw) Set_Core::bulid()->setNumStr(unit);
-        else res = Set_Core::bulid()->getNumStr(unit);
+        sCfgItem unit = cm::toStruct<sCfgItem>(array);
+        if(unit.rw) Set_Core::bulid()->setCfg(unit);
+        else res = Set_Core::bulid()->getCfg(unit);
     }  else if(6 == fc) {
         sLogFcIt it = cm::toStruct<sLogFcIt>(array);
         res = Log_Core::bulid()->log_readFun(it);

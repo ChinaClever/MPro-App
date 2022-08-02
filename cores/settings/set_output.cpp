@@ -34,7 +34,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
     sOpItem db;
     db.content = str;
-    db.op_src = opSrc(it.txType);
+    db.op_src =  QObject::tr("继电器设置");//opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 
@@ -87,12 +87,12 @@ bool Set_Output::relaySet(sDataItem &unit)
         ret = Cascade_Core::bulid()->masterSeting(unit);
     } else if(unit.rw) {
         if(unit.type == DType::Group) groupCtrl(unit); else {
-        switch (unit.subtopic) {
-        case DSub::Value:  ret = outputCtrl(unit); break;
-        case DSub::Relays: ret = outputsCtrl(unit); break;
-        case DSub::UpTime: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-        default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
-        } } relayOpLog(unit);
+            switch (unit.subtopic) {
+            case DSub::Value:  ret = outputCtrl(unit); break;
+            case DSub::Relays: ret = outputsCtrl(unit); break;
+            case DSub::UpTime: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+            default: ret = upIndexValue(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
+            } } relayOpLog(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
 
     return ret;
@@ -119,19 +119,22 @@ QString Set_Output::outputName(int addr, int id)
     return dev->name[id];
 }
 
-void Set_Output::opNameLog(const sNumStrItem &it)
-{
-    QString str = QObject::tr("全部");
+void Set_Output::opNameLog(const sCfgItem &it)
+{    
+    QString str = QObject::tr("全部"); QString op;
     if(it.id) str = QObject::tr("第%１").arg(it.id);
-    str += QObject::tr("输出位名称修改为:%2").arg(it.str);
+    str += QObject::tr("名称修改为:%1").arg(it.str);
+
+    if(it.fc == SFnCode::EGroupName) op = QObject::tr("组名称");
+    else op += QObject::tr("输出位名称");
 
     sOpItem db;
     db.content = str;
-    db.op_src = opSrc(it.txType);
+    db.op_src = op; //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 
-bool Set_Output::outputNameSet(sNumStrItem &it)
+bool Set_Output::outputNameSet(sCfgItem &it)
 {
     bool ret = true;
     if(it.id) {
@@ -143,7 +146,7 @@ bool Set_Output::outputNameSet(sNumStrItem &it)
     return ret;
 }
 
-bool Set_Output::groupNameSet(sNumStrItem &it)
+bool Set_Output::groupNameSet(sCfgItem &it)
 {
     bool ret = true;
     if(it.id) {
@@ -155,7 +158,7 @@ bool Set_Output::groupNameSet(sNumStrItem &it)
     return ret;
 }
 
-bool Set_Output::groupingSet(sNumStrItem &it)
+bool Set_Output::groupingSet(sCfgItem &it)
 {
     QStringList strs = QString(it.str).split("; ");
     sDevData *dev = cm::devData(it.addr);

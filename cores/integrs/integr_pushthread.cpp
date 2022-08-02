@@ -41,7 +41,7 @@ void Integr_PushThread::udpPush(const QByteArray &array)
     }
 
     ///////////==============
-    QHostAddress host("192.168.1.102");
+    //QHostAddress host("192.168.1.102");
     //mUdp->writeDatagram(array, host, 8766);
 }
 

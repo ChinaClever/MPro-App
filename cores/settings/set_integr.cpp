@@ -32,7 +32,7 @@ int Set_Integr::modbusCfg(uchar fc)
     return res;
 }
 
-bool Set_Integr::modbusSet(uchar fc, int value, uchar txType)
+bool Set_Integr::modbusSet(uchar fc, int value)
 {
     Mb_Core *mb = Mb_Core::bulid();
     QString prefix = "modbus";  QString key;
@@ -52,9 +52,9 @@ bool Set_Integr::modbusSet(uchar fc, int value, uchar txType)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
-        Log_Core::bulid()->append(db);
+        //sOpItem db; db.op_src = opSrc(txType);
+        //db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
+        //Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -77,7 +77,7 @@ QString Set_Integr::snmpCfg(uchar fc)
 
 }
 
-bool Set_Integr::snmpSet(uchar fc, const QString &value, uchar txType)
+bool Set_Integr::snmpSet(uchar fc, const QString &value)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
@@ -95,9 +95,9 @@ bool Set_Integr::snmpSet(uchar fc, const QString &value, uchar txType)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
-        Log_Core::bulid()->append(db);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -113,10 +113,11 @@ int Set_Integr::rpcCfg(uchar fc)
     case 5: res = cfg->xml.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
+
     return res;
 }
 
-bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
+bool Set_Integr::rpcSet(uchar fc, int value)
 {
     Rpc_Service *obj = Rpc_Service::bulid();
     QString prefix = "rpc";  QString key;
@@ -132,9 +133,9 @@ bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
-        Log_Core::bulid()->append(db);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -160,11 +161,12 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 15: res = cfg->http.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
+
     return res;
 }
 
 
-bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
+bool Set_Integr::pushSet(uchar fc, const QVariant &value)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
     Integr_Core *obj = Integr_Core::bulid();
@@ -191,10 +193,9 @@ bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
-
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
-        Log_Core::bulid()->append(db);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;

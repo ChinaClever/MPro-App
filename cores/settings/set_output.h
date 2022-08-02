@@ -10,20 +10,20 @@ public:
 
 protected:
     bool relaySet(sDataItem &unit);
-    bool outputNameSet(sNumStrItem &it);
+    bool outputNameSet(sCfgItem &it);
     QString outputName(int addr, int id);
 
-    bool groupNameSet(sNumStrItem &it);
+    bool groupNameSet(sCfgItem &it);
     QString groupName(int addr, int id);
 
-    bool groupingSet(sNumStrItem &it);
+    bool groupingSet(sCfgItem &it);
     QString grouping(int addr, int id);
 
 private:
     bool groupCtrl(sDataItem &unit);
     bool outputCtrl(sDataItem &unit);
     bool outputsCtrl(sDataItem &unit);
-    void opNameLog(const sNumStrItem &it);
+    void opNameLog(const sCfgItem &it);
     void relayOpLog(const sDataItem &it);
     void writeOpName(int fc, int id, const QString &name);
 };

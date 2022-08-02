@@ -14,7 +14,7 @@ public:
 private:
     Sql_Statement *getSql(int type);
     QString log_readOnce(int type, int id);
-    QString log_readPage(int type, int page, int cnt);
+    QString log_readPage(int type, int id, int cnt);
 };
 
 #endif // LOG_READ_H
