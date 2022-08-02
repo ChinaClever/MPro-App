@@ -21,7 +21,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">HTTP集成</span>
+								<span id="lang_2">REST集成</span>
 							</div>
 						</div>
 					</div>
@@ -43,7 +43,7 @@
     <script>
 		read_http_data();
 		var mode_set = new Array("禁用","POST","PUT");
-		var mode_set1 = new Array("禁用","HTTP","HTTPS");
+		var mode_set1 = new Array("禁用","启用","加密");
 		var select_name = new Array("push","addr","delay","encrypt","port");
 		var http_data = new Array();
 		function read_data(){
@@ -180,7 +180,7 @@
 		}
 		function buildTableRecv() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">HTTP接收设置</td>\
+			thead = '<tr><td width ="15%">REST API设置</td>\
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td>启用加密：</td>';
 			tbody += '<td><select id ="encrypt" onchange ="SetData(this)">';

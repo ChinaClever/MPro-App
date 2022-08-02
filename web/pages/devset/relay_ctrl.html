@@ -274,13 +274,12 @@
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				 tbody += '<td><button id = "i'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
+				tbody += '<td><button id = "i'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
 				tbody += '</tr>';
 			}
-
+			
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
