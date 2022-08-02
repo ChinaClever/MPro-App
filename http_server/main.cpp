@@ -80,13 +80,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     } else if (ev == MG_EV_ACCEPT && fn_data != NULL) {
 //        struct mg_tls_opts opts = {
 //            //.ca = "ca.pem",         // Uncomment to enable two-way SSL
-//            .cert = "client.crt",     // Certificate PEM file
-//                    .certkey = "client.key",  // This pem contains both cert and key
+//            .cert = "client-cert.cer",     // Certificate PEM file
+//            .certkey = "client-key.key",  // This pem contains both cert and key
 //        };
         struct mg_tls_opts opts;
-        opts.ca = "ca.pem";
-        opts.cert = "client.crt";
-        opts.certkey = "client.key";
+//        opts.ca = "ca.pem";
+        memset(&opts , 0 , sizeof(opts));
+        #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+        opts.cert = "client-cert.cer";
+        opts.certkey = "client-key.key";
+        #else
+        opts.cert = "/usr/data/clever/ca/client-cert.cer";
+        opts.certkey = "/usr/data/clever/ca/client-key.key";
+        #endif
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
 
