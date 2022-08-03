@@ -8,15 +8,15 @@
 #include <string>
 
 // C++封装的国密SM4加解密, 支持ECB和CBC模式, PKCS7Padding补全
-class sm4 {
+class SimpleSm4 {
 public:
     enum Type{
         ECB,
         CBC
     };
 public:
-    explicit sm4();
-    ~sm4();
+    explicit SimpleSm4();
+    ~SimpleSm4();
     void setKey(const std::string &k);
     void setIv(const std::string &i);
     void setType(Type t = Type::ECB);

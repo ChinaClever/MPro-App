@@ -1,6 +1,8 @@
 unix {
 INCLUDEPATH += $$PWD
 
+include(SMx/SMx.pri)
+
 
 HEADERS += \
     $$PWD/AES/qaesencryption.h \
@@ -11,6 +13,7 @@ HEADERS += \
 #    $$PWD/SMX/sm3_hash.h \
 #    $$PWD/SMX/sm4.h \
 #    $$PWD/SMX/stringutil.h \
+    $$PWD/SMx/simplesm4.h \
     $$PWD/gmp/bigint.h \
     $$PWD/gmp/mini-gmp.h \
     $$PWD/gmp/minigmp_global.h \
@@ -19,7 +22,6 @@ HEADERS += \
     $$PWD/qtsecret_global.h \
 #    $$PWD/sercret_smx.h \
     $$PWD/sercret_rsa.h \
-    $$PWD/SM/sm4.h \
     $$PWD/sercret_sm.h
 
 
@@ -32,6 +34,7 @@ SOURCES += \
 #    $$PWD/SMX/sm3_hash.cpp \
 #    $$PWD/SMX/sm4.cpp \
 #    $$PWD/SMX/stringutil.cpp \
+    $$PWD/SMx/simplesm4.cpp \
     $$PWD/gmp/bigint.cpp \
     $$PWD/gmp/mini-gmp.c \
     $$PWD/sercet_tlscert.cpp \
@@ -39,7 +42,6 @@ SOURCES += \
 #    $$PWD/sercret_example.cpp \
 #    $$PWD/sercret_smx.cpp \
     $$PWD/sercret_rsa.cpp \
-    $$PWD/SM/sm4.cpp \
     $$PWD/sercret_sm.cpp
 
 }

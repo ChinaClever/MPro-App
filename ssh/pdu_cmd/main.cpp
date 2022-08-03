@@ -114,7 +114,7 @@ void pduSetCfg(const QStringList &ls)
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 3) {
+    int k = 0; if(ls.size() == 4) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         uint id = ls.at(k++).toInt();
@@ -158,8 +158,10 @@ bool workDown()
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication a(argc, argv);
+    QObject *p = a.parent();
+    SshRpcClient *rpc = SshRpcClient::bulid(p);
     bool ret = true; Ssh::usage();
-    SshRpcClient *rpc = SshRpcClient::bulid();
 
     do {
         ret = Ssh::workDown();

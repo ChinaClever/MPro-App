@@ -9,7 +9,8 @@ Rpc_Json::Rpc_Json(QObject *parent)
     : JsonRpcObj{parent}
 {
      mMethod = Rpc_Method::bulid(this);
-     startLocalServer({mMethod});
+     bool ret = startLocalServer({mMethod});
+     if(!ret) qDebug() << "RPC Local Server Start err";
 }
 
 bool Rpc_Json::startRpc(int en, int port)

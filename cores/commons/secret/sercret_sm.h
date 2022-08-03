@@ -1,12 +1,12 @@
 #ifndef SERCRET_SM_H
 #define SERCRET_SM_H
-#include "SM/sm4.h"
+#include "SMx/simplesm4.h"
 #include "sercret_rsa.h"
 
 // 支持ECB和CBC模式, PKCS7Padding补全
 struct sSm4It {
-    sSm4It(): type(sm4::CBC){}
-    sm4::Type type; // 支持ECB和CBC模式
+    sSm4It(): type(SimpleSm4::CBC){}
+    SimpleSm4::Type type; // 支持ECB和CBC模式
     QByteArray key; // KEY密钥 16字节
     QByteArray iv; // 偏移量   //ECB模式同上, 只是不需要设置IV
 };

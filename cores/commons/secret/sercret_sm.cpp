@@ -13,7 +13,7 @@ Sercret_SM::Sercret_SM()
 
 QByteArray Sercret_SM::sm4_encrypt(const QByteArray &txt)
 {
-    sm4 s;
+    SimpleSm4 s;
     s.setType(sm4Cfg.type);
     s.setKey(sm4Cfg.key.toStdString());
     s.setIv(sm4Cfg.iv.toStdString());
@@ -22,7 +22,7 @@ QByteArray Sercret_SM::sm4_encrypt(const QByteArray &txt)
 
 QByteArray Sercret_SM::sm4_decrypt(const QByteArray &txt)
 {
-    sm4 s;
+    SimpleSm4 s;
     s.setType(sm4Cfg.type);
     s.setKey(sm4Cfg.key.toStdString());
     s.setIv(sm4Cfg.iv.toStdString());

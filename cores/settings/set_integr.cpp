@@ -66,7 +66,7 @@ QString Set_Integr::snmpCfg(uchar fc)
     QString res; switch (fc) {
     case 1: res = cfg->trap1; break;
     case 2: res = cfg->trap2; break;
-    case 3: res = cfg->enV3; break;
+    case 3: res = QString::number(cfg->enV3); break;
     case 4: res = cfg->usr; break;
     case 5: res = cfg->pwd; break;
     case 6: res = cfg->key; break;

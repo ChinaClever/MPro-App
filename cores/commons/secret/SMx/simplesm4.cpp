@@ -2,7 +2,7 @@
 // Created by LiuCheng on 2021/1/29.
 //
 
-#include "sm4.h"
+#include "simplesm4.h"
 #include <cstring>
 
 #ifdef __cplusplus
@@ -307,27 +307,27 @@ void sm4_crypt_cbc( sm4_context *ctx,
 }
 #endif
 
-sm4::sm4() {
+SimpleSm4::SimpleSm4() {
 
 }
 
-sm4::~sm4() {
+SimpleSm4::~SimpleSm4() {
 
 }
 
-void sm4::setKey(const std::string &k) {
+void SimpleSm4::setKey(const std::string &k) {
     key = k;
 }
 
-void sm4::setIv(const std::string &i) {
+void SimpleSm4::setIv(const std::string &i) {
     iv = i;
 }
 
-void sm4::setType(sm4::Type t) {
+void SimpleSm4::setType(SimpleSm4::Type t) {
     type = t;
 }
 
-std::string sm4::encrypt(const std::string &data) {
+std::string SimpleSm4::encrypt(const std::string &data) {
     if (key.size() != 16 || iv.size() != 16 || data.empty())
         return std::string();
 
@@ -362,7 +362,7 @@ std::string sm4::encrypt(const std::string &data) {
     return ret;
 }
 
-std::string sm4::decrypt(const std::string &data) {
+std::string SimpleSm4::decrypt(const std::string &data) {
     if (key.size() != 16 || iv.size() != 16 || data.size() < 16)
         return std::string();
 

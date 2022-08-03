@@ -8,7 +8,8 @@
 SshRpcClient::SshRpcClient(QObject *parent)
     : JsonRpcObj{parent}
 {
-    startClient("127.0.0.1", 5124);
+    bool ret = startClient("127.0.0.1", 9224);
+    if(!ret) qDebug() << "SSH Client connected err";
 }
 
 SshRpcClient *SshRpcClient::bulid(QObject *parent)

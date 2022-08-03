@@ -82,7 +82,7 @@ QString Log_Read::log_readFun(const sLogFcIt &it)
     Sql_Statement *sql = getSql(it.type);
     switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
-    case eLogFc::eLog_cnt: res = sql->counts(); break;
+    case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
     case eLogFc::eLog_read: res = log_readPage(it.type, it.id, it.cnt); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
