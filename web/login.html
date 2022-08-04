@@ -33,7 +33,9 @@
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr == user_name && psd == password){
-        window.open('index.html','_self');
+       setTimeout(function (){
+          window.open('index.html','_self');
+       },1000);
       }
       else{
         alert("用户名或密码输入有误，请重新输入！");
@@ -180,7 +182,7 @@
         read_output_data(0);
         read_sensor_data(0);
       },500);
-    },500);
+    },1500);
 
   </script>
 
