@@ -207,7 +207,10 @@ struct sParameter {
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
-    uint hz;
+    uint runTime; // 最近开关运行时间 分钟为单位
+    uint uptime; // 持续运行时间 单位小时
+    uint hz; // 产品实时频繁
+
     uchar reserve[20];
 };
 
@@ -230,7 +233,6 @@ struct sDevData
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
     uchar offLine; //离线标志 > 0在线
-
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
     struct sObjData group; //组数据
