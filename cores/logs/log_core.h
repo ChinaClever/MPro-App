@@ -10,11 +10,12 @@ class Log_Core : public Log_Read
 public:
     static Log_Core *bulid(QObject *parent = nullptr);
     void append(const sOpItem &it) {mOpIts<<it; run();}
+    void append(const sOtaItem &it) {mOtaIts<<it; run();}
+    void append(const sEleItem &it) {mEleIts<<it; run();}
     void append(const sSysItem &it) {mSysIts<<it; run();}
     void append(const sUserItem &it) {mUserIts<<it; run();}
     void append(const sAlarmItem &it) {mAlarmIts<<it; run();}
-    void append(const sOtaItem &it) {mOtaIts<<it; run();}
-    void append(const sEleItem &it) {mEleIts<<it; run();}
+    void append(const sHardwareItem &it) {mHardwareIts<<it; run();}
 
 private slots:
     void run();
@@ -43,6 +44,9 @@ private:
 
     Db_Ota *mOta;
     QList<sOtaItem> mOtaIts;
+
+    Db_Hardware *mHardware;
+    QList<sHardwareItem> mHardwareIts;
 };
 
 #endif // LOG_CORE_H
