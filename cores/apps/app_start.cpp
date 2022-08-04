@@ -60,7 +60,7 @@ void App_Start::startThreadSlot()
 
     Data_Core::bulid();
     Mb_Core::bulid(this);
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
 }
