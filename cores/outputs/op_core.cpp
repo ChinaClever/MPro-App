@@ -14,9 +14,7 @@ OP_Core::OP_Core(QObject *parent)
 OP_Core *OP_Core::bulid(QObject *parent)
 {
     static OP_Core* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new OP_Core(parent);
-    }
+    if(sington == nullptr) sington = new OP_Core(parent);
     return sington;
 }
 

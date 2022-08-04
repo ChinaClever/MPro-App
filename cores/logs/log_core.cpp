@@ -41,7 +41,7 @@ void Log_Core::initFunSlot()
 
 void Log_Core::run()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot())); }
+    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot()));}
 }
 
 void Log_Core::saveLogSlot()
@@ -54,7 +54,6 @@ void Log_Core::saveLogSlot()
     while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
     while(mHardwareIts.size()) mHardware->insertItem(mHardwareIts.takeFirst());
-
     isRun = false;
 }
 

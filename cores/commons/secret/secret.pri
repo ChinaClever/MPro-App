@@ -46,3 +46,9 @@ SOURCES += \
 
 }
 
+HEADERS += \
+    $$PWD/sercret_core.h
+
+SOURCES += \
+    $$PWD/sercret_core.cpp
+

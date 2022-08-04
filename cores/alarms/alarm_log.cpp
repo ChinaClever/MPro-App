@@ -127,14 +127,14 @@ QString Alarm_Log::alarmSensor(uchar value)
 void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
     sAlarmItem it; it.addr = tr("本机");
-    if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
+    if(index.addr) it.addr = tr("副机%1").arg(index.addr);
     if(value) it.state = tr("告警"); else it.state = tr("恢复正常");
-    if(index.type) it.module = tr("第%１ ").arg(index.id+1);
+    if(index.type) it.module = tr("第%１").arg(index.id+1);
     it.module += alarmType(index);
 
     if(index.topic == DTopic::Relay) {
         it.content = alarmRelay(value);
-    } if(index.type == DType::Sensor) {
+    }else if(index.type == DType::Sensor) {
         it.content = alarmSensor(value);
     }else {
         it.module += alarmStatus(value, it.state);
@@ -142,4 +142,5 @@ void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
     }
 
     Log_Core::bulid()->append(it);
+    //qDebug() << it.module << it.content;
 }

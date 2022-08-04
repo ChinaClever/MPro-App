@@ -46,7 +46,7 @@ void App_Start::initFunSlot()
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);
     Set_Ssdp::bulid(this);
-    //Cascade_Core::bulid();
+    Cascade_Core::bulid();
     Integr_Core::bulid();
     Set_Core::bulid();
     OP_Core::bulid();
@@ -58,12 +58,11 @@ void App_Start::startThreadSlot()
     Agent_Core::bulid(this);
 #endif
 
-    //OP_Core::bulid(this)->startFun();
+    Data_Core::bulid();
+    Mb_Core::bulid(this);
+    OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
-    QThreadPool *pool = QThreadPool::globalInstance();
-    pool->start(Mb_Core::bulid(this));
-    pool->start(Data_Core::bulid());
 }
 
 void App_Start::compileTime()

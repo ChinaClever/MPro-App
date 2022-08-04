@@ -14,7 +14,10 @@ Data_Core::Data_Core()
 Data_Core *Data_Core::bulid()
 {
     static Data_Core* sington = nullptr;
-    if(sington == nullptr) sington = new Data_Core();
+    if(sington == nullptr) {
+        sington = new Data_Core();
+        QtConcurrent::run(sington,&Data_Core::run);
+    }
     return sington;
 }
 
