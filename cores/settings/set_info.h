@@ -10,7 +10,7 @@ public:
 
 protected:
     QString getUut(int addr, uchar fc);
-    bool setUut(uchar fc, char *str);
+    bool setUut(uchar fc, const QVariant &v);
 
     int devCfgNum(int addr, int type);
     bool setCfgNum(int addr, int type, int value);

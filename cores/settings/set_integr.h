@@ -11,13 +11,13 @@ protected:
     bool modbusSet(uchar fc, int value);
 
     QString snmpCfg(uchar fc);
-    bool snmpSet(uchar fc, const QString &value);
+    bool snmpSet(uchar fc, const QVariant &v);
 
     int rpcCfg(uchar fc);
     bool rpcSet(uchar fc, int value);
 
     QVariant pushCfg(uchar fc);
-    bool pushSet(uchar fc, const QVariant &value);
+    bool pushSet(uchar fc, const QVariant &v);
 
 private:
     int toBaud(int value);

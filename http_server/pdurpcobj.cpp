@@ -41,7 +41,7 @@ char* PduRpcObj::responRpcString(const QVector<double> &its, const QString &valu
 char* PduRpcObj::pduReadString(mg_str &r)
 {
     QVector<double> its = mObj->getNumbers(r, 5);
-    QString value = mWebIpc->getString((uchar)its.at(0), (uchar)its.at(1),
+    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1),
                                        (uchar)its.at(4));
     return responRpcString(its, value);
 }
@@ -51,21 +51,21 @@ char* PduRpcObj::pduSetString(mg_str &r)
     bool ret = false;
     QVector<double> its = mObj->getNumbers(r, 5);
     QString str = mObj->getString(r, 5);
-    if(str.size()) ret = mWebIpc->setString((uint)its.at(0), (uchar)its.at(1), (uchar)its.at(4), str);
+    if(str.size()) ret = mWebIpc->setCfg((uint)its.at(0), (uchar)its.at(1), (uchar)its.at(4), str);
     return responRpcData(its, ret?1:0);
 }
 
 char* PduRpcObj::pduReadCfg(mg_str &r)
 {
     QVector<double> its = mObj->getNumbers(r, 5);
-    double value = mWebIpc->getDevCfg((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2));
+    double value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2)).toDouble();
     return responRpcData(its, value);
 }
 
 char* PduRpcObj::pduSetCfg(mg_str &r)
 {
     QVector<double> its = mObj->getNumbers(r, 6);
-    bool ret = mWebIpc->setDevCfg((uint)its.at(0), (uchar)its.at(1),
+    bool ret = mWebIpc->setCfg((uint)its.at(0), (uchar)its.at(1),
                                   (uchar)its.at(2), (uint)its.at(5));
     return responRpcData(its, ret?1:0);
 }

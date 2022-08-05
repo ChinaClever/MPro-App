@@ -31,11 +31,16 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
             bool ret = Set_Core::bulid()->upIndexValue(unit);
             if(ret) res = QString::number(unit.value);
         }
-    } else if(2 == fc) {
+    } else if(5 == fc) {
         sCfgItem unit = cm::toStruct<sCfgItem>(array);
-        if(unit.rw) Set_Core::bulid()->setCfg(unit);
-        else res = Set_Core::bulid()->getCfg(unit);
-    }  else if(6 == fc) {
+        res = Set_Core::bulid()->getCfg(unit);
+    } else if(6 == fc) {
+        QByteArray msg(array), rcv; QVariant value;
+        QDataStream out(&msg, QIODevice::ReadOnly);
+        out >> rcv >> value;
+        sCfgItem it = cm::toStruct<sCfgItem>(rcv);
+        Set_Core::bulid()->setCfg(it, value);
+    }else if(11 == fc) {
         sLogFcIt it = cm::toStruct<sLogFcIt>(array);
         res = Log_Core::bulid()->log_readFun(it);
     }

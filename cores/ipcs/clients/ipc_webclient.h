@@ -9,20 +9,15 @@ class IPC_WebClient : public IPC_LogClient
     explicit IPC_WebClient(QObject *parent = nullptr);
 public:
     static IPC_WebClient *bulid(QObject *parent = nullptr);
-    QString getString(uchar addr, uchar fc, uchar id);
-    bool setString(uint addr, uchar fc, uchar id, const QString &str);
-
-    int getDevCfg(uchar addr, uchar fc, uchar type);
-    bool setDevCfg(uint addr, uchar fc, uchar type, int value);
+    QString getCfg(uchar addr, uchar fc, uchar id);
+    bool setCfg(uint addr, uchar fc, uchar type, const QVariant &value);
 
     int getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
     bool setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
 
 private:
     bool getValue(sDataItem &unit);
-    QString getNumStr(sCfgItem &unit);
     bool setting(const sDataItem &unit);
-    bool setNumStr(const sCfgItem &unit);
     bool msgSend(int fc, const QByteArray &msg);
 };
 

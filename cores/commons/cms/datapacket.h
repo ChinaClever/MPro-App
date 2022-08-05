@@ -149,7 +149,7 @@ struct sRtuBoard
 {
     uchar hzs[DEV_NUM];  // 电压频率
     uchar offLines[DEV_NUM];
-    uchar chipStates[DEV_NUM];    
+    uchar chipStates[DEV_NUM];
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
@@ -240,7 +240,7 @@ struct sDevData
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
-    struct sDevCfg cfg;
+    struct sDevCfg cfg; // 配置数据
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -307,25 +307,25 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-            EGrouping=21,EGroupName};
+             EGrouping=21,EGroupName};
 
-struct sCfgItem{
+struct sCfgItem {
 #ifndef SUPPORT_C
-    sCfgItem():addr(0),isDigit(0),sub(0),rw(0),value(0){}
+    sCfgItem():addr(0),sub(0){}
 #endif
-    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
-    uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uchar isDigit; // 0 字符串 1 数字
+    uchar addr; // 地址
     uchar fc; // 10 输出位  11 UUT信息
-    uchar id; // 功能id　0 表示统一设置
+    uchar type; // 功能id　0 表示统一设置
     uchar sub;
-    uchar rw; // 0 读  1 写
-    uint value;
-    char str[2*NAME_SIZE];
 };
 
 #ifndef SUPPORT_C
+struct sCfgUnit {
+    sCfgItem it;
+    QVariant v;
+};
+
 struct sRelay
 {
     enum Type{Breaker, Relay};

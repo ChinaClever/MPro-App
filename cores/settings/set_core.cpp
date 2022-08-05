@@ -26,93 +26,64 @@ void Set_Core::writeAlarm()
     Cfg_ReadWrite::bulid()->writeAlarms();
 }
 
-bool Set_Core::setString(sCfgItem &it)
+
+QVariant Set_Core::getCfg(sCfgItem &it)
+{
+    QVariant res; switch (it.fc) {
+    case SFnCode::Uuts: res = getUut(it.addr, it.type); break;
+    case SFnCode::ESnmp: res = snmpCfg(it.type); break;
+    case SFnCode::EPush: res = pushCfg(it.type); break;
+    case SFnCode::EDevLogin: res = loginUsrPwd(it.type); break;
+    case SFnCode::EGrouping: res = grouping(it.addr, it.type); break;
+    case SFnCode::EGroupName: res = groupName(it.addr, it.type); break;
+    case SFnCode::OutputName: res = outputName(it.addr, it.type); break;
+    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.type); break;
+    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.type);  break;
+    case SFnCode::EModbus: res = modbusCfg(it.type); break;
+    case SFnCode::ERpc: res = rpcCfg(it.type); break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+
+    return res;
+}
+
+bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
     bool ret = false; switch (it.fc) {
-    case SFnCode::EGrouping: ret = groupingSet(it); break;
-    case SFnCode::EGroupName: ret = groupNameSet(it); break;
-    case SFnCode::OutputName: ret = outputNameSet(it); break;
-    case SFnCode::Uuts: ret = setUut(it.id, it.str); break;
-    case SFnCode::EPush: ret = pushSet(it.id, it.str); break;
-    case SFnCode::ESnmp: ret = snmpSet(it.id, it.str); break;
-    case SFnCode::EDevLogin: ret = loginSet(it.id, it.str); break;
+    case SFnCode::EGrouping: ret = groupingSet(it, v); break;
+    case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
+    case SFnCode::OutputName: ret = outputNameSet(it, v); break;
+    case SFnCode::Uuts: ret = setUut(it.type, v); break;
+    case SFnCode::EPush: ret = pushSet(it.type, v); break;
+    case SFnCode::ESnmp: ret = snmpSet(it.type, v); break;
+    case SFnCode::ERpc: ret = rpcSet(it.type, v.toInt()); break;
+    case SFnCode::EDevLogin: ret = loginSet(it.type, v); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.type, v.toInt()); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.type, v.toInt()); break;
+    case SFnCode::EModbus: ret = modbusSet(it.type, v.toInt()); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
 
     return ret;
 }
 
-QString Set_Core::getString(sCfgItem &it)
-{
-    QString str; switch (it.fc) {
-    case SFnCode::Uuts: str = getUut(it.addr, it.id); break;
-    case SFnCode::ESnmp: str = snmpCfg(it.id); break;
-    case SFnCode::EPush: str = pushCfg(it.id).toString(); break;
-    case SFnCode::EDevLogin: str = loginUsrPwd(it.id); break;
-    case SFnCode::EGrouping: str = grouping(it.addr, it.id); break;
-    case SFnCode::EGroupName: str = groupName(it.addr, it.id); break;
-    case SFnCode::OutputName: str = outputName(it.addr, it.id); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    }
 
-    return str;
-}
-
-bool Set_Core::setNumber(sCfgItem &it)
-{
-    bool ret = false; switch (it.fc) {
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.id, it.value); break;
-    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.id, it.value); break;
-    case SFnCode::EModbus: ret = modbusSet(it.id, it.value); break;
-    case SFnCode::EPush: ret = pushSet(it.id, it.value); break;
-    case SFnCode::ERpc: ret = rpcSet(it.id, it.value); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    } if(ret) writeAlarm();
-
-    return ret;
-}
-
-int Set_Core::getNumber(sCfgItem &it)
-{
-    int ret = 0; switch (it.fc) {
-    case SFnCode::ECfgNum: ret = devCfgNum(it.addr, it.id); break;
-    case SFnCode::EDevInfo: ret = devInfoCfg(it.addr, it.id);  break;
-    case SFnCode::EPush: ret = pushCfg(it.id).toInt(); break;
-    case SFnCode::EModbus: ret = modbusCfg(it.id); break;
-    case SFnCode::ERpc: ret = rpcCfg(it.id); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    }
-
-    return ret;
-}
-
-bool Set_Core::setCfg(sCfgItem &it)
+bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {    
-    bool ret = false; if(it.rw) {
-        if(it.addr) {
-            int num = cm::masterDev()->cfg.nums.slaveNum;
-            if(num) ret = Cascade_Core::bulid()->masterSetNumStr(it);
-        } else {
-            if(it.isDigit) ret = setNumber(it);
-            else ret = setString(it);
-        }
+    bool ret = false;
+    if(it.addr) {
+        int num = cm::masterDev()->cfg.nums.slaveNum;
+        if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
+    } else {
+        ret = setParam(it, v);
     }
     return ret;
-}
-
-QString Set_Core::getCfg(sCfgItem &it)
-{
-    QString str; if(!it.rw) {
-        if(it.isDigit) str = QString::number(getNumber(it));
-        else str = getString(it);
-    } else qDebug() << Q_FUNC_INFO;
-    return str;
 }
 
 bool Set_Core::setting(sDataItem &it)
 {
     bool ret = true; if(it.rw) {
-         if(it.addr) {
+        if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
         } else if(it.topic == DTopic::Relay) {

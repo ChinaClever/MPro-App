@@ -10,9 +10,9 @@ sRpcCfg Rpc_Service::rpcCfg;
 Rpc_Service::Rpc_Service(QObject *parent)
     : QObject{parent}
 {
-    //mXml = new Rpc_Xml(this);
+    mXml = new Rpc_Xml(this);
     mJson = new Rpc_Json(this);
-    //QTimer::singleShot(550,this,SLOT(initFunSlot()));
+    QTimer::singleShot(550,this,SLOT(initFunSlot()));
 }
 
 Rpc_Service *Rpc_Service::bulid(QObject *parent)

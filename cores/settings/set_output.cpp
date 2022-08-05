@@ -29,6 +29,9 @@ void Set_Output::relayOpLog(const sDataItem &it)
         else {str += QObject::tr("默认");} break;
     case DSub::UpTime: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
     case DSub::ResTime: str += QObject::tr("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
+    case DSub::Relays: {
+        int start = it.type-1; int end = start + it.id; str = QObject::tr("第%１至%2 ").arg(start, end);
+        if(it.value) str += QObject::tr("闭合"); else str += QObject::tr("断开"); break;}
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -115,15 +118,16 @@ QString Set_Output::groupName(int addr, int id)
 
 QString Set_Output::outputName(int addr, int id)
 {
+    if(id) id--;
     sObjData *dev = &(cm::devData(addr)->output);
     return dev->name[id];
 }
 
-void Set_Output::opNameLog(const sCfgItem &it)
+void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 {    
     QString str = QObject::tr("全部"); QString op;
-    if(it.id) str = QObject::tr("第%１").arg(it.id);
-    str += QObject::tr("名称修改为:%1").arg(it.str);
+    if(it.type) str = QObject::tr("第%１").arg(it.type);
+    str += QObject::tr("名称修改为:%1").arg(v.toString());
 
     if(it.fc == SFnCode::EGroupName) op = QObject::tr("组名称");
     else op += QObject::tr("输出位名称");
@@ -134,35 +138,35 @@ void Set_Output::opNameLog(const sCfgItem &it)
     Log_Core::bulid()->append(db);
 }
 
-bool Set_Output::outputNameSet(sCfgItem &it)
+bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true;
-    if(it.id) {
-        writeOpName(0, it.id, it.str);
+    if(it.type) {
+        writeOpName(0, it.type, v);
     } else {
         sObjData *obj = &(cm::masterDev()->output);
-        for(int i=0; i<obj->size; ++i) writeOpName(0, i+1, it.str);
-    } opNameLog(it);
+        for(int i=0; i<obj->size; ++i) writeOpName(0, i+1, v);
+    } opNameLog(it, v);
     return ret;
 }
 
-bool Set_Output::groupNameSet(sCfgItem &it)
+bool Set_Output::groupNameSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true;
-    if(it.id) {
-        writeOpName(1, it.id, it.str);
+    if(it.type) {
+        writeOpName(1, it.type, v);
     } else {
         sObjData *obj = &(cm::masterDev()->group);
-        for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, it.str);
-    } opNameLog(it);
+        for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, v);
+    } opNameLog(it, v);
     return ret;
 }
 
-bool Set_Output::groupingSet(sCfgItem &it)
+bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
-    QStringList strs = QString(it.str).split("; ");
+    QStringList strs = v.toString().split("; ");
     sDevData *dev = cm::devData(it.addr);
-    uchar *ptr = dev->cfg.nums.group[it.id];
+    uchar *ptr = dev->cfg.nums.group[it.type];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
         int id = str.toInt(); ptr[id] = 1;
@@ -171,7 +175,7 @@ bool Set_Output::groupingSet(sCfgItem &it)
     return ret;
 }
 
-void Set_Output::writeOpName(int fc, int id, const QString &name)
+void Set_Output::writeOpName(int fc, int id, const QVariant &name)
 {
     QString prefix = "OutputName";
     if(fc) prefix = "GroupName";
@@ -182,5 +186,5 @@ void Set_Output::writeOpName(int fc, int id, const QString &name)
 
     sObjData *it = &(cm::masterDev()->output);
     if(fc) it = &(cm::masterDev()->group);
-    qstrcpy((char *)it->name[id-1], name.toLatin1().data());
+    qstrcpy((char *)it->name[id-1], name.toByteArray().data());
 }

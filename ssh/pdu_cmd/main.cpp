@@ -16,10 +16,8 @@ void usage()
     cout << "*    pduMetaData     addr type  topic sub id" <<endl;
     cout << "*    pduSetData      addr type  topic sub id value" <<endl;
     cout << "*    pduRelaysCtrl   addr start num on" <<endl;
-    cout << "*    pduGetString    addr fc id" <<endl;
-    cout << "*    pduSetString    addr fc id str" <<endl;
-    cout << "*    pduDevCfg       addr fc type" <<endl;
-    cout << "*    pduSetCfg       addr fc type value" <<endl;
+    cout << "*    pduSetParam     addr fc type value" <<endl;
+    cout << "*    pduGetParam     addr fc type" <<endl;
     cout << "*    pduLogFun       type fc id cnt" <<endl;
     cout << "*******************************************************" <<endl;
 }
@@ -63,52 +61,29 @@ void pduSetData(const QStringList &ls)
     } else qCritical() << "pduSetData Parameter error";
 }
 
-void pduGetString(const QStringList &ls)
-{
-    SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 3) {
-        uchar addr = ls.at(k++).toInt();
-        uchar fc = ls.at(k++).toInt();
-        uchar id = ls.at(k++).toInt();
-        qDebug() << rpc->pduGetString(addr, fc, id);
-    } else qCritical() << "pduGetString Parameter error";
-}
 
-void pduSetString(const QStringList &ls)
-{
-    SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 4) {
-        uchar addr = ls.at(k++).toInt();
-        uchar fc = ls.at(k++).toInt();
-        uchar id = ls.at(k++).toInt();
-        QString str = ls.at(k++);
-        qDebug() << rpc->pduSetString(addr, fc, id, str);
-    } else qCritical() << "pduSetString Parameter error";
-}
-
-
-void pduDevCfg(const QStringList &ls)
+void pduGetParam(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
     int k = 0; if(ls.size() == 3) {
         uchar addr = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         uchar type = ls.at(k++).toInt();
-        qDebug() << rpc->pduDevCfg(addr, fc, type);
-    } else qCritical() << "pduDevCfg Parameter error";
+        qDebug() << rpc->pduGetParam(addr, fc, type);
+    } else qCritical() << "pduGetParam Parameter error";
 }
 
 
-void pduSetCfg(const QStringList &ls)
+void pduSetParam(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
     int k = 0; if(ls.size() == 4) {
         uchar addr = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        uchar id = ls.at(k++).toInt();
-        int value = ls.at(k++).toInt();
-        qDebug() << rpc->pduSetCfg(addr, fc, id, value);
-    } else qCritical() << "pduSetCfg Parameter error";
+        uchar type = ls.at(k++).toInt();
+        QString value = ls.at(k++);
+        qDebug() << rpc->pduSetParam(addr, fc, type, value);
+    } else qCritical() << "pduSetParam Parameter error";
 }
 
 void pduLogFun(const QStringList &ls)
@@ -126,7 +101,7 @@ void pduLogFun(const QStringList &ls)
 void pduRelaysCtrl(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 3) {
+    int k = 0; if(ls.size() == 4) {
         uchar addr = ls.at(k++).toInt();
         uchar start = ls.at(k++).toInt();
         uchar num = ls.at(k++).toInt();
@@ -143,11 +118,9 @@ bool workDown()
         QString fc = cmds.takeFirst();
         if(fc == "pduMetaData") pduMetaData(cmds);
         else if(fc == "pduSetData") pduSetData(cmds);
-        else if(fc == "pduGetString") pduGetString(cmds);
-        else if(fc == "pduSetString") pduSetString(cmds);
+        else if(fc == "pduGetParam") pduGetParam(cmds);
+        else if(fc == "pduSetParam") pduSetParam(cmds);
         else if(fc == "pduRelaysCtrl") pduRelaysCtrl(cmds);
-        else if(fc == "pduDevCfg") pduDevCfg(cmds);
-        else if(fc == "pduSetCfg") pduSetCfg(cmds);
         else if(fc == "pduLogFun") pduLogFun(cmds);
         else if(fc == "quit") ret = false;
         else usage();

@@ -16,7 +16,7 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
     static Cascade_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new Cascade_Core(parent);
-        QTimer::singleShot(1,sington,SLOT(initFunSlot()));
+        QTimer::singleShot(1,sington,SLOT(initThreadSlot()));
     }
     return sington;
 }

@@ -41,11 +41,10 @@ bool Agent_Set::uutSet(const QVariant &value)
     if(it->id == 0) {
         sCfgItem item;
         item.addr = it->addr;
-        item.id = it->type;
+        item.type = it->type;
         item.fc = SFnCode::Uuts;
-        item.txType = DTxType::TxSnmp; item.rw = 1;
-        qstrcpy((char *)item.str, value.toByteArray().data());
-        ret = Set_Core::bulid()->setCfg(item);
+        item.txType = DTxType::TxSnmp;
+        ret = Set_Core::bulid()->setCfg(item, value);
     }
     return ret;
 }
@@ -131,12 +130,11 @@ bool Agent_Set::relayCtrl(const QVariant &value)
 
 bool Agent_Set::setOutputName(const QVariant &value)
 {
-    QString name = value.toString();
-    sCfgItem item; item.txType = DTxType::TxSnmp;
-    item.fc = SFnCode::OutputName; item.rw = 1;
-    item.addr = mIndex.addr; item.id = mIndex.id;
-    qstrcpy((char *)item.str, name.toLatin1().data());
-    return Set_Core::bulid()->setCfg(item);
+    sCfgItem item;
+    item.txType = DTxType::TxSnmp;
+    item.fc = SFnCode::OutputName;
+    item.addr = mIndex.addr; item.type = mIndex.id;
+    return Set_Core::bulid()->setCfg(item, value);
 }
 
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)
