@@ -86,7 +86,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
         if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
         //mSnmp->sendTrap(oid);
 
-        sendTrap("192.168.1.102", doid, toString(oid), msg);
+        sendTrap("192.168.1.196", doid, toString(oid), msg);
     }
 }
 
