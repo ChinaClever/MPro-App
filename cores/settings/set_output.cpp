@@ -126,10 +126,10 @@ QString Set_Output::outputName(int addr, int id)
 void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 {    
     QString str = QObject::tr("全部"); QString op;
-    if(it.type) str = QObject::tr("第%１").arg(it.type);
+    if(it.fc) str = QObject::tr("第%１").arg(it.fc);
     str += QObject::tr("名称修改为:%1").arg(v.toString());
 
-    if(it.fc == SFnCode::EGroupName) op = QObject::tr("组名称");
+    if(it.type == SFnCode::EGroupName) op = QObject::tr("组名称");
     else op += QObject::tr("输出位名称");
 
     sOpItem db;
@@ -141,8 +141,8 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true;
-    if(it.type) {
-        writeOpName(0, it.type, v);
+    if(it.fc) {
+        writeOpName(0, it.fc, v);
     } else {
         sObjData *obj = &(cm::masterDev()->output);
         for(int i=0; i<obj->size; ++i) writeOpName(0, i+1, v);
@@ -153,8 +153,8 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 bool Set_Output::groupNameSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true;
-    if(it.type) {
-        writeOpName(1, it.type, v);
+    if(it.fc) {
+        writeOpName(1, it.fc, v);
     } else {
         sObjData *obj = &(cm::masterDev()->group);
         for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, v);
@@ -166,7 +166,7 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     QStringList strs = v.toString().split("; ");
     sDevData *dev = cm::devData(it.addr);
-    uchar *ptr = dev->cfg.nums.group[it.type];
+    uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
         int id = str.toInt(); ptr[id] = 1;

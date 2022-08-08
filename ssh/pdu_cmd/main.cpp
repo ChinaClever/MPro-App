@@ -16,8 +16,8 @@ void usage()
     cout << "*    pduMetaData     addr type  topic sub id" <<endl;
     cout << "*    pduSetData      addr type  topic sub id value" <<endl;
     cout << "*    pduRelaysCtrl   addr start num on" <<endl;
-    cout << "*    pduSetParam     addr fc type value" <<endl;
-    cout << "*    pduGetParam     addr fc type" <<endl;
+    cout << "*    pduSetParam     addr type  fc  value" <<endl;
+    cout << "*    pduGetParam     addr type  fc " <<endl;
     cout << "*    pduLogFun       type fc id cnt" <<endl;
     cout << "*******************************************************" <<endl;
 }
@@ -67,9 +67,9 @@ void pduGetParam(const QStringList &ls)
     SshRpcClient *rpc = SshRpcClient::bulid();
     int k = 0; if(ls.size() == 3) {
         uchar addr = ls.at(k++).toInt();
-        uchar fc = ls.at(k++).toInt();
         uchar type = ls.at(k++).toInt();
-        qDebug() << rpc->pduGetParam(addr, fc, type);
+        uchar fc = ls.at(k++).toInt();
+        qDebug() << rpc->pduGetParam(addr, type, fc);
     } else qCritical() << "pduGetParam Parameter error";
 }
 
@@ -79,10 +79,10 @@ void pduSetParam(const QStringList &ls)
     SshRpcClient *rpc = SshRpcClient::bulid();
     int k = 0; if(ls.size() == 4) {
         uchar addr = ls.at(k++).toInt();
-        uchar fc = ls.at(k++).toInt();
         uchar type = ls.at(k++).toInt();
+        uchar fc = ls.at(k++).toInt();
         QString value = ls.at(k++);
-        qDebug() << rpc->pduSetParam(addr, fc, type, value);
+        qDebug() << rpc->pduSetParam(addr, type, fc, value);
     } else qCritical() << "pduSetParam Parameter error";
 }
 

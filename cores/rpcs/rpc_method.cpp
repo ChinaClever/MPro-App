@@ -38,16 +38,16 @@ bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduSetParam(uchar addr, uchar fc, uchar type, const QVariant &value)
+bool Rpc_Method::pduSetParam(uchar addr, uchar type, uchar fc, const QVariant &value)
 {
-    sCfgItem it; it.addr = addr; it.fc = fc;
-    it.txType = mTxType; it.type = type;
+    sCfgItem it; it.addr = addr; it.type = type;
+    it.txType = mTxType; it.fc = fc;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Rpc_Method::pduGetParam(uchar addr, uchar fc, uchar type)
+QString Rpc_Method::pduGetParam(uchar addr, uchar type, uchar fc)
 {
-    sCfgItem it; it.addr = addr; it.fc = fc; it.type = type;
+    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 

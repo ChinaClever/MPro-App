@@ -29,19 +29,19 @@ void Set_Core::writeAlarm()
 
 QVariant Set_Core::getCfg(sCfgItem &it)
 {
-    QVariant res; switch (it.fc) {
-    case SFnCode::Uuts: res = getUut(it.addr, it.type); break;
-    case SFnCode::ESnmp: res = snmpCfg(it.type); break;
-    case SFnCode::EPush: res = pushCfg(it.type); break;
-    case SFnCode::EDevLogin: res = loginUsrPwd(it.type); break;
-    case SFnCode::EGrouping: res = grouping(it.addr, it.type); break;
-    case SFnCode::EGroupName: res = groupName(it.addr, it.type); break;
-    case SFnCode::OutputName: res = outputName(it.addr, it.type); break;
-    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.type); break;
-    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.type);  break;
-    case SFnCode::EModbus: res = modbusCfg(it.type); break;
-    case SFnCode::ERpc: res = rpcCfg(it.type); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    QVariant res; switch (it.type) {
+    case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
+    case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
+    case SFnCode::EPush: res = pushCfg(it.fc); break;
+    case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
+    case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
+    case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
+    case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
+    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
+    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc);  break;
+    case SFnCode::EModbus: res = modbusCfg(it.fc); break;
+    case SFnCode::ERpc: res = rpcCfg(it.fc); break;
+    default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 
     return res;
@@ -49,19 +49,19 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 
 bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
-    bool ret = false; switch (it.fc) {
+    bool ret = false; switch (it.type) {
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
-    case SFnCode::Uuts: ret = setUut(it.type, v); break;
-    case SFnCode::EPush: ret = pushSet(it.type, v); break;
-    case SFnCode::ESnmp: ret = snmpSet(it.type, v); break;
-    case SFnCode::ERpc: ret = rpcSet(it.type, v.toInt()); break;
-    case SFnCode::EDevLogin: ret = loginSet(it.type, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.type, v.toInt()); break;
-    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.type, v.toInt()); break;
-    case SFnCode::EModbus: ret = modbusSet(it.type, v.toInt()); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    case SFnCode::Uuts: ret = setUut(it.fc, v); break;
+    case SFnCode::EPush: ret = pushSet(it.fc, v); break;
+    case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
+    case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
+    case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
+    default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 
     return ret;

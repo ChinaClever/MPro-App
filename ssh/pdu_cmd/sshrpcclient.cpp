@@ -48,10 +48,10 @@ bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-QVariant SshRpcClient::pduGetParam(uchar addr, uchar fc, uchar type)
+QVariant SshRpcClient::pduGetParam(uchar addr, uchar type, uchar fc)
 {
     QVariant ret;
-    auto result = rpc_client->call("pduGetParam", addr, fc, type);
+    auto result = rpc_client->call("pduGetParam", addr, type, fc);
     if (result->isSuccess()) {
         ret = result->result();
     } else {
@@ -61,10 +61,10 @@ QVariant SshRpcClient::pduGetParam(uchar addr, uchar fc, uchar type)
     return ret;
 }
 
-bool SshRpcClient::pduSetParam(uchar addr, uchar fc, uchar type, const QVariant &value)
+bool SshRpcClient::pduSetParam(uchar addr, uchar type, uchar fc,  const QVariant &value)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetParam", addr, fc, type, value);
+    auto result = rpc_client->call("pduSetParam", addr, type, fc, value);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {

@@ -315,8 +315,8 @@ struct sCfgItem {
 #endif
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar addr; // 地址
-    uchar fc; // 10 输出位  11 UUT信息
-    uchar type; // 功能id　0 表示统一设置
+    uchar type; // 10 输出位  11 UUT信息
+    uchar fc; // 功能码　0 表示统一设置
     uchar sub;
 };
 
