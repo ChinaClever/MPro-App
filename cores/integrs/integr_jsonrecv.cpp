@@ -122,6 +122,21 @@ bool Integr_JsonRecv::versionNumber(const QJsonObject &object)
     return ret;
 }
 
+bool Integr_JsonRecv::getDecimal(sDataItem &it)
+{
+    bool ret = true;
+    double res = 1;
+    switch (it.topic) {
+    case DTopic::Vol: res = COM_RATE_VOL; break;
+    case DTopic::Cur: res = COM_RATE_CUR; break;
+    case DTopic::Pow: res = COM_RATE_POW; break;
+    case DTopic::Tem: res = COM_RATE_TEM; break;
+    case DTopic::Hum: res = COM_RATE_HUM; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    } it.value *= res;
+
+    return ret;
+}
 
 bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
 {
@@ -135,7 +150,7 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
         res = getData(obj, "value"); if(res >= 0) it.value = res;
-        it.rw = 1; it.txType = DTxType::TxJson;
+        it.rw = 1; it.txType = DTxType::TxJson; getDecimal(it);
         emit recvSetSig(it);
     } else ret = false;
 
@@ -149,8 +164,8 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
         double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
-        res = getData(obj, "fc"); if(res >= 0) it.type = res;
-        res = getData(obj, "id"); if(res >= 0) it.fc = res;
+        res = getData(obj, "type"); if(res >= 0) it.type = res;
+        res = getData(obj, "fc"); if(res >= 0) it.fc = res;
         res = getData(obj, "sub"); if(res >= 0) it.sub = res;
         QVariant value = getValue(obj, "value");
         it.txType = DTxType::TxJson;
