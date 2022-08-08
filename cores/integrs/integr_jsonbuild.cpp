@@ -71,34 +71,34 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
     json.insert("uut_info", QJsonValue(obj));
 }
 
-void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key,
+                                 QJsonObject &json,  double r)
 {
-    if(!it.size) return;
-    QJsonObject obj; double r = 10.0;
-    obj.insert("value", it.value[id]/r);
-    obj.insert("rated", it.rated[id]/r);
+    if(it.size) { QJsonObject obj;
+        obj.insert("value", it.value[id]/r);
+        obj.insert("rated", it.rated[id]/r);
+        obj.insert("alarm_min", it.min[id]/r);
+        obj.insert("alarm_max", it.max[id]/r);
 
-    obj.insert("alarm_min", it.min[id]/r);
-    obj.insert("alarm_max", it.max[id]/r);
-
-    obj.insert("warn_min", it.crMin[id]/r);
-    obj.insert("warn_max", it.crMax[id]/r);
-    obj.insert("alarm_status", it.alarm[id]?true:false);
-    obj.insert("alarm_enable", it.en[id]?true:false);
-
-    json.insert(key, QJsonValue(obj));
+        obj.insert("warn_min", it.crMin[id]/r);
+        obj.insert("warn_max", it.crMax[id]/r);
+        obj.insert("alarm_status", it.alarm[id]?true:false);
+        obj.insert("alarm_enable", it.en[id]?true:false);
+        json.insert(key, QJsonValue(obj));
+    }
 }
 
 void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
-    if(!it.size) return;
-    QJsonObject obj; double r = 1;
-    obj.insert("state", it.sw[id]/r);
-    obj.insert("mode", it.mode[id]/r);
-    obj.insert("alarm", it.alarm[id]?true:false);
-    obj.insert("delay", it.delay[id]/r);
-    obj.insert("resTime", it.resTime[id]/r);
-    json.insert(key, QJsonValue(obj));
+    if(it.size) {
+        QJsonObject obj; double r = 1;
+        obj.insert("state", it.sw[id]/r);
+        obj.insert("mode", it.mode[id]/r);
+        obj.insert("alarm", it.alarm[id]?true:false);
+        obj.insert("delay", it.delay[id]/r);
+        obj.insert("resTime", it.resTime[id]/r);
+        json.insert(key, QJsonValue(obj));
+    }
 }
 
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
@@ -106,26 +106,25 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     QJsonArray array;
     for(int id=0; id<it.size; ++id) {
         QJsonObject obj;
-        alarmUnit(id, it.vol, "vol", obj);
-        alarmUnit(id, it.cur, "cur", obj);
-        alarmUnit(id, it.pow, "pow", obj);
+        alarmUnit(id, it.vol, "vol", obj, COM_RATE_VOL);
+        alarmUnit(id, it.cur, "cur", obj, COM_RATE_CUR);
+        alarmUnit(id, it.pow, "pow", obj, COM_RATE_POW);
         relayUnit(id, it.relay, "relay", obj);
 
-        double r = 10.0;
         obj.insert("id", id+1);
-        obj.insert("pf", it.pf[id]/r);
-        obj.insert("ele", it.ele[id]/r);
-        obj.insert("apparent_pow", it.artPow[id]/r);
-        obj.insert("active_pow", it.reactivePow[id]/r);
+        obj.insert("pf", it.pf[id]/COM_RATE_PF);
+        obj.insert("ele", it.ele[id]/COM_RATE_ELE);
+        obj.insert("apparent_pow", it.artPow[id]/COM_RATE_POW);
+        obj.insert("active_pow", it.reactivePow[id]/COM_RATE_POW);
         if(strlen(it.name[id])) obj.insert("name", it.name[id]);
         array.append(obj);
     }
     json.insert(key, QJsonValue(array));
 }
 
-void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json, double r)
 {
-    QJsonObject obj; double r = 1;
+    QJsonObject obj;
     obj.insert("value", it.value/r);
     obj.insert("rated", it.rated/r);
     obj.insert("alarm_min", it.min/r);
@@ -139,14 +138,14 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
 
 void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj; double r = 1;
-    tgUnit(it.vol, "vol", obj);
-    tgUnit(it.cur, "cur", obj);
-    tgUnit(it.pow, "pow", obj);
+    QJsonObject obj;
+    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
+    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
+    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
 
-    obj.insert("ele", it.ele/r);
-    obj.insert("pf", it.pf/r);
-    obj.insert("art", it.artPow/r);
+    obj.insert("ele", it.ele/COM_RATE_ELE);
+    obj.insert("pf", it.pf/COM_RATE_PF);
+    obj.insert("art", it.artPow/COM_RATE_POW);
     json.insert(key, QJsonValue(obj));
 }
 
@@ -156,8 +155,8 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
     for(int i=0; i< it.size; ++i) {
         QJsonObject obj;
         obj.insert("id", i+1);
-        alarmUnit(i, it.tem, "tem", obj);
-        alarmUnit(i, it.hum, "hum", obj);
+        alarmUnit(i, it.tem, "tem", obj, COM_RATE_TEM);
+        alarmUnit(i, it.hum, "hum", obj, COM_RATE_HUM);
         array.append(obj);
     }
     json.insert(key, QJsonValue(array));

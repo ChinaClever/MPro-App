@@ -24,9 +24,10 @@ Integr_PushThread::~Integr_PushThread()
 
 void Integr_PushThread::startSlot()
 {
-    if(!isRun) {
-        mThread->init(this, SLOT(run()));
-         mThread->start();
+    if(!isRun) {        
+        QtConcurrent::run(this, &Integr_PushThread::run);
+//        mThread->init(this, SLOT(run()));
+//        mThread->start();
     }
 }
 
