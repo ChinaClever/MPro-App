@@ -43,9 +43,15 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
                               "message", (int) frame.len, frame.ptr);
     } else if (strcmp(method, "pduReadData") == 0) {
         result = PduRpcObj::pduReadData(params);
-    } else if (strcmp(method, "pduSetData") == 0) {
+    } else if (strcmp(method, "pduSetData") == 0) {        
         result = PduRpcObj::pduSetData(params);
-    } else if (strcmp(method, "pduReadString") == 0) {
+    } else if (strcmp(method, "pduReadParam") == 0) {
+        result = PduRpcObj::pduReadParam(params);
+    }else if (strcmp(method, "pduSetParam") == 0) {
+        result = PduRpcObj::pduSetParam(params);
+    }
+
+    else if (strcmp(method, "pduReadString") == 0) {
         result = PduRpcObj::pduReadString(params);
     }else if (strcmp(method, "pduSetString") == 0) {
         result = PduRpcObj::pduSetString(params);
@@ -53,7 +59,10 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
         result = PduRpcObj::pduReadCfg(params);
     }else if (strcmp(method, "pduSetCfg") == 0) {
         result = PduRpcObj::pduSetCfg(params);
-    }else if (strcmp(method, "pduLogFun") == 0) {
+    }
+
+
+    else if (strcmp(method, "pduLogFun") == 0) {
         result = PduRpcObj::pduLogFun(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
