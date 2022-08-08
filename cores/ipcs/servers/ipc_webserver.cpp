@@ -26,14 +26,14 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
     QVariant res;
     if(1 == fc) {
         sDataItem unit = cm::toStruct<sDataItem>(array);
-        if(unit.rw) Set_Core::bulid()->setting(unit);
+        if(unit.rw) res = Set_Core::bulid()->setting(unit);
         else {
             bool ret = Set_Core::bulid()->upIndexValue(unit);
             if(ret) res = QString::number(unit.value);
         }
     } else if(2 == fc) {
         sCfgItem unit = cm::toStruct<sCfgItem>(array);
-        if(unit.rw) Set_Core::bulid()->setCfg(unit);
+        if(unit.rw) res = Set_Core::bulid()->setCfg(unit);
         else res = Set_Core::bulid()->getCfg(unit);
     }  else if(6 == fc) {
         sLogFcIt it = cm::toStruct<sLogFcIt>(array);

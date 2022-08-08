@@ -22,8 +22,8 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">回路设置</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
-								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
-									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
+								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">回路电压设置</span>
@@ -31,7 +31,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped vol_table"></table>
+						<table class="table table-striped vol_table text-center"></table>
 					</div>
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped cur_table"></table>
+						<table class="table table-striped cur_table text-center"></table>
 					</div>
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
@@ -53,7 +53,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped pow_table"></table>
+						<table class="table table-striped pow_table text-center"></table>
 					</div>
 				</div>
 			</div>
@@ -189,8 +189,8 @@
 		function readonlyset(ros){
 			if(read === 1){
 				read = 0;
-				var ms = document.getElementById("sel");
-				ms.style.display = "";
+				// var ms = document.getElementById("sel");
+				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = "设置模式";
 				var iptname = document.getElementsByTagName("input");
@@ -200,8 +200,8 @@
 				}
 			}
 			else{
-				var ms = document.getElementById("sel");
-				ms.style.display = "none";
+				// var ms = document.getElementById("sel");
+				// ms.style.display = "none";
 				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
@@ -232,7 +232,7 @@
 		{
 			var stat = 0,number1 = 0,type = 0;
 			var opt_val = parseInt(document.getElementById("opt_").value);
-			var addr_ = addr + opt_val * 256;
+			var addr_ = addr + 0 * 256;
 			var number = parseInt(ckd.id.slice(1))+1;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
@@ -284,8 +284,8 @@
 		{
 
 		// var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
-			var opt_val = parseInt(document.getElementById("opt_").value);
-			var addr_ = addr + opt_val * 256;
+			// var opt_val = parseInt(document.getElementById("opt_").value);
+			var addr_ = addr + 0 * 256;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{

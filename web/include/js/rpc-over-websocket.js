@@ -1,5 +1,6 @@
 // JSON-RPC over Websocket implementation
 var JSONRPC_TIMEOUT_MS = 1000;
+let verfity = 0;
 let ws,pending = {};
 let rpcid = 0;
 let value_now = 0, val = 0;
@@ -13,7 +14,7 @@ let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcma
 let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
 let cfg_name = new Array("Offline","Serial","SlaveNum","ModbusAddr","Version","Buz","Freq","BoardNum");
 let uut_name = new Array("","IdcName","RoomName","ModuleName","CabinetName","LoopName","DevName");
-let user_info = new Array("","UserName","Password","Identify");
+let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
 let snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
@@ -84,6 +85,10 @@ var jsonrpc = function()
         sessionStorage.setItem(cfg_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 14:
+        if(num  == 11)
+        {
+          verfity = 1;
+        }
         sessionStorage.setItem(user_info[num] , JSON.parse(evt.data).result[5]);
       break;
       case 15:

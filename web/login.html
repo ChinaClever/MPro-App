@@ -32,15 +32,23 @@
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
-      if(usr == user_name && psd == password){
-       setTimeout(function (){
-          window.open('index.html','_self');
-       },1000);
+      let userPsd = usr + "; " + psd;
+      rpc.call('pduSetString',[0,user,0,0,11,userPsd]);
+        let time2 = setInterval(function(){
+          if(verfity == 1)
+          {
+            verfity = 0;
+            let ver = parseInt(sessionStorage.getItem(user_info[11]));
+            if(ver  == 1){
+              window.open('index.html','_self');
+            }else{
+              alert("用户名或密码输入有误，请重新输入！");
+            }
+            window.clearInterval(time2);
+          }
+        },500);
+          
       }
-      else{
-        alert("用户名或密码输入有误，请重新输入！");
-      }
-    }
     function submite(){
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){

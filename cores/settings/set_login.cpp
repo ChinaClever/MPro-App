@@ -68,5 +68,6 @@ bool Set_Login::loginCheck(const QString &str)
             Log_Core::bulid()->append(db);
         }
     }
+
     return ret;
 }
