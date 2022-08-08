@@ -63,10 +63,11 @@ bool Cascade_Master::masterSeting(const sDataItem &unit)
 }
 
 
-bool Cascade_Master::masterSetNumStr(const sCfgItem &it)
+bool Cascade_Master::masterSetCfg(const sCfgItem &it, const QVariant &v)
 {
-    uchar fc = fc_setNumStr; if(isOta) return isOta;
-    QByteArray array = cm::toByteArray(it);
+    uchar fc = fc_setCfg; if(isOta) return isOta;
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << cm::toByteArray(it) << v;
     return writeData(fc, it.addr, array);
 }
 

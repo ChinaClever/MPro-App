@@ -36,11 +36,12 @@ void Log_Core::initFunSlot()
     mSys = Db_Sys::bulid();
     mUser = Db_User::bulid();    
     mAlarm = Db_Alarm::bulid();
+    mHardware = Db_Hardware::bulid();
 }
 
 void Log_Core::run()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot())); }
+    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot()));}
 }
 
 void Log_Core::saveLogSlot()
@@ -52,7 +53,7 @@ void Log_Core::saveLogSlot()
     while(mSysIts.size()) mSys->insertItem(mSysIts.takeFirst());
     while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-
+    while(mHardwareIts.size()) mHardware->insertItem(mHardwareIts.takeFirst());
     isRun = false;
 }
 

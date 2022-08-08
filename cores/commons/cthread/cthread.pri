@@ -1,5 +1,7 @@
 INCLUDEPATH += $$PWD
 
+QT += concurrent
+
 HEADERS += \
     $$PWD/cthread.h
 

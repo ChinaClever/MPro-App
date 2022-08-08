@@ -28,19 +28,13 @@ bool IPC_WebClient::msgSend(int fc, const QByteArray &msg)
     return ret;
 }
 
-bool IPC_WebClient::setNumStr(const sCfgItem &unit)
+bool IPC_WebClient::setCfg(uint addr, uchar fc, uchar type, const QVariant &value)
 {
-    QByteArray array = cm::toByteArray(unit);
-    return msgSend(2, array);
-}
-
-bool IPC_WebClient::setString(uint addr, uchar fc, uchar id, const QString &str)
-{
-    sCfgItem it; it.txType = DTxType::TxWeb;
-    it.addr = (0xFF & addr); //it.soi = addr >> 8;
-    it.fc = fc; it.id = id; it.rw = 1; it.isDigit = 0;
-    qstrcpy((char *)it.str, str.toLatin1().data());
-    return this->setNumStr(it);
+    sCfgItem it; it.txType = DTxType::TxWeb; it.type = fc;
+    it.addr = (0xFF & addr); it.fc = type; // it.value = value;
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << cm::toByteArray(it) << value;
+    return msgSend(6, array);
 }
 
 bool IPC_WebClient::setting(const sDataItem &unit)
@@ -57,35 +51,11 @@ bool IPC_WebClient::getValue(sDataItem &unit)
     return ret;
 }
 
-QString IPC_WebClient::getNumStr(sCfgItem &unit)
+QString IPC_WebClient::getCfg(uchar addr, uchar fc, uchar id)
 {
-    QByteArray array = cm::toByteArray(unit);
-    QString res = readSocket(QVariantList {2, array}).toString();
-    return res;
-}
-
-QString IPC_WebClient::getString(uchar addr, uchar fc, uchar id)
-{
-    sCfgItem it; it.addr = addr; it.fc = fc; it.id = id;
-    if((SFnCode::OutputName == fc) && id) it.id --;
-    it.isDigit = 0; it.str[0] = 0;
-    return getNumStr(it);
-}
-
-int IPC_WebClient::getDevCfg(uchar addr, uchar fc, uchar type)
-{
-    sCfgItem it; it.addr = addr;
-    it.fc = fc; it.id = type; it.isDigit = 1;
-    return getNumStr(it).toInt();
-}
-
-bool IPC_WebClient::setDevCfg(uint addr, uchar fc, uchar type, int value)
-{
-    sCfgItem it; it.txType = DTxType::TxWeb;
-    it.addr = (0xFF & addr); //it.soi = addr >> 8;
-    it.fc = fc; it.id = type; it.rw = 1;
-    it.value = value; it.isDigit = 1;
-    return this->setNumStr(it);
+    sCfgItem it; it.addr = addr; it.type = fc; it.fc = id;
+    QByteArray array = cm::toByteArray(it);
+    return readSocket(QVariantList {5, array}).toString();
 }
 
 bool IPC_WebClient::setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value)

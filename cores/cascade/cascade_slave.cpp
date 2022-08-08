@@ -24,11 +24,13 @@ bool Cascade_Slave::replySet(QByteArray &rcv)
     return set->setting(unit);
 }
 
-bool Cascade_Slave::replyNumStr(QByteArray &rcv)
+bool Cascade_Slave::replyCfg(QByteArray &rcv)
 {
-    sCfgItem unit = cm::toStruct<sCfgItem>(rcv);
-    unit.addr = 0; Set_Core *set = Set_Core::bulid();
-    return set->setCfg(unit);
+    QByteArray msg(rcv), array; QVariant value;
+    QDataStream out(&msg, QIODevice::ReadOnly);
+    out >> array >> value;
+    sCfgItem unit = cm::toStruct<sCfgItem>(array);
+    return Set_Core::bulid()->setCfg(unit, value);
 }
 
 
@@ -39,7 +41,7 @@ bool Cascade_Slave::workDown(c_sFrame &it)
         switch (it.fc) {
         case fc_readDev: ret = replyDevData(it.fc); break;
         case fc_setting: ret = replySet(it.data); break;
-        case fc_setNumStr: ret = replyNumStr(it.data); break;
+        case fc_setCfg: ret = replyCfg(it.data); break;
 
         case fc_otaStart: ret = otaReplyStart(it.data); break;
         case fc_otaEnd: ret = otaReplyFinish(it.data); break;

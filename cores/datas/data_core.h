@@ -8,9 +8,9 @@ class Data_Core : public Data_Group
 public:
     static Data_Core *bulid();
     ~Data_Core(){isRun = false;}
+    void run();
 
-protected:
-    void run() override;
+private:
     void upAlarm();
     void outletNums();
 

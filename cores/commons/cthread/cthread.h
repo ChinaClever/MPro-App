@@ -1,6 +1,7 @@
 #ifndef CTHREAD_H
 #define CTHREAD_H
 #include <QThread>
+#include <QtConcurrent>
 
 class CThread : public QObject
 {

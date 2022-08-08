@@ -5,7 +5,6 @@
  */
 #include <QCoreApplication>
 #include "app_start.h"
-#include <QSslSocket>
 
 int main(int argc, char *argv[])
 {

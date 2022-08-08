@@ -8,7 +8,8 @@
 SshRpcClient::SshRpcClient(QObject *parent)
     : JsonRpcObj{parent}
 {
-    startClient("127.0.0.1", 5124);
+    bool ret = startClient("127.0.0.1", 9224);
+    if(!ret) qDebug() << "SSH Client connected err";
 }
 
 SshRpcClient *SshRpcClient::bulid(QObject *parent)
@@ -34,10 +35,10 @@ int SshRpcClient::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value, uchar soi)
+bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value, soi);
+    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {
@@ -47,24 +48,12 @@ bool SshRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-QString SshRpcClient::pduGetString(uchar addr, uchar fc, uchar id)
+QVariant SshRpcClient::pduGetParam(uchar addr, uchar type, uchar fc)
 {
-    QString str;
-    auto result = rpc_client->call("pduGetString", addr, fc, id);
+    QVariant ret;
+    auto result = rpc_client->call("pduGetParam", addr, type, fc);
     if (result->isSuccess()) {
-        str = result->result().toString();
-    } else {
-        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
-    }
-    return str;
-}
-
-bool SshRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &str, uchar soi)
-{
-    bool ret = false;
-    auto result = rpc_client->call("pduSetString", addr, fc, id, str, soi);
-    if (result->isSuccess()) {
-        ret = result->result().toBool();
+        ret = result->result();
     } else {
         qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
     }
@@ -72,23 +61,10 @@ bool SshRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &s
     return ret;
 }
 
-int SshRpcClient::pduDevCfg(uchar addr, uchar fc, uchar type)
-{
-    int ret = -1;
-    auto result = rpc_client->call("pduDevCfg", addr, fc, type);
-    if (result->isSuccess()) {
-        ret = result->result().toInt();
-    } else {
-        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
-    }
-
-    return ret;
-}
-
-bool SshRpcClient::pduSetCfg(uchar addr, uchar fc, uchar type, int value, uchar soi)
+bool SshRpcClient::pduSetParam(uchar addr, uchar type, uchar fc,  const QVariant &value)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetCfg", addr, fc, type, value, soi);
+    auto result = rpc_client->call("pduSetParam", addr, type, fc, value);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {

@@ -28,7 +28,7 @@ public:
     QString sm3_2(const QByteArray &pubKey, const QByteArray &user);
     QString sm3_3(const QByteArray &hash1, const QByteArray &hash2);
 
-    // 非对称加密
+    // 对称加密
     QString sm4_crypt(const QByteArray &raw, const QByteArray &Key);
     QString sm4_decrypt(const QByteArray &raw, const QByteArray &Key);
 

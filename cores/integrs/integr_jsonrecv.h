@@ -12,7 +12,7 @@ public:
 
 signals:
     void recvSetSig(const sDataItem &it);
-    void recvCfgSig(const sCfgItem &it);
+    void recvCfgSig(const sCfgItem &it, const QVariant &v);
 
 public:
     bool checkInput(const QByteArray &msg, QJsonObject &obj);

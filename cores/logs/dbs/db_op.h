@@ -1,6 +1,6 @@
 #ifndef DB_OP_H
 #define DB_OP_H
-#include "db_ele.h"
+#include "db_hardware.h"
 
 struct sOpItem : public Db_ObjItem{
     QString op_src, content;

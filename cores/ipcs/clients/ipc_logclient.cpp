@@ -12,7 +12,7 @@ IPC_LogClient::IPC_LogClient(QObject *parent) : IPC_ObjClient{parent}
 
 bool IPC_LogClient::log_msgSend(const sLogFcIt &msg)
 {
-    QVariantList lv{6, cm::toByteArray(msg)};
+    QVariantList lv{11, cm::toByteArray(msg)};
     bool ret = inputCheck(lv);
     if(ret) ret = sendSocket(lv);
     return ret;

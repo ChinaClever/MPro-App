@@ -99,12 +99,13 @@ QString Set_Info::getUut(int addr, uchar fc)
     return ptr;
 }
 
-bool Set_Info::setUut(uchar fc, char *str)
+bool Set_Info::setUut(uchar fc, const QVariant &v)
 {
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
+    char *str = v.toByteArray().data();
 
     switch (fc) {
     case 1: key = "idc";  ptr = it->idc; break;
@@ -121,7 +122,6 @@ bool Set_Info::setUut(uchar fc, char *str)
     if(ptr) qstrcpy(ptr, str);
     Cfg_Obj *cfg = Cfg_Obj::bulid();
     cfg->writeCfg(key, QString(ptr), prefix);
-
     // sOpItem db; db.op_src = "uut"; //opSrc(txType);
     // db.content = QObject::tr("%1 修改为 %2").arg(key, str);
     // Log_Core::bulid()->append(db);

@@ -11,6 +11,12 @@ JsonRpcObj::JsonRpcObj(QObject *parent)
 
 }
 
+JsonRpcObj::~JsonRpcObj()
+{
+    if(rpc_local) rpc_local->close();
+    close();
+}
+
 void JsonRpcObj::enableNotification(bool allow)
 {
     if(rpc_client) rpc_client->enableReceiveNotification(allow);
@@ -65,8 +71,8 @@ bool JsonRpcObj::startServer(const QObjectList& services, int port, SocketType s
 
 bool JsonRpcObj::startLocalServer(const QObjectList &services)
 {
-    rpc_server = new jcon::JsonRpcTcpServer(this);
-    rpc_server->enableSendNotification(true);
-    rpc_server->registerServices(services);
-    return rpc_server->listen(QHostAddress::LocalHost, 5124);
+    rpc_local = new jcon::JsonRpcTcpServer(this);
+    rpc_local->enableSendNotification(true);
+    rpc_local->registerServices(services);
+    return rpc_local->listen(QHostAddress::LocalHost, 9224);
 }

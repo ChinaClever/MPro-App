@@ -148,26 +148,13 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     bool ret = true; sCfgItem it;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
-        //double res = getData(obj, "soi"); if(res >= 0) it.soi = res;
         double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
-        //res = getData(obj, "isDigit"); if(res >= 0) it.isDigit = res;
-        res = getData(obj, "fc"); if(res >= 0) it.fc = res;
-        res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "subtopic"); if(res >= 0) it.sub = res;
-
-        QJsonValue value = getValue(obj, "value");
-        if(value.isString()) {
-            it.isDigit = 0;
-            QString str = value.toString();
-            qstrcpy(it.str, str.toLatin1().data());
-        } else {
-            it.isDigit = 1;
-            res = getData(obj, "value");
-            if(res >= 0) it.value = res;
-        }
-        //if(it.isDigit) {res = getData(obj, "value"); if(res >= 0) it.value = res;}
-        //else {QString str = getString(obj, "str"); qstrcpy(it.str, str.toLatin1().data());}
-        it.rw = 1; it.txType = DTxType::TxJson; emit recvCfgSig(it);
+        res = getData(obj, "fc"); if(res >= 0) it.type = res;
+        res = getData(obj, "id"); if(res >= 0) it.fc = res;
+        res = getData(obj, "sub"); if(res >= 0) it.sub = res;
+        QVariant value = getValue(obj, "value");
+        it.txType = DTxType::TxJson;
+        emit recvCfgSig(it, value);
     } else ret = false;
 
     return ret;

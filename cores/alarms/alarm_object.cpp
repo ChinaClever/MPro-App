@@ -65,7 +65,7 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index, sObjData *obj)
     case DTopic::Vol: unit = &(obj->vol); break;
     case DTopic::Cur: unit = &(obj->cur); break;
     case DTopic::Pow: unit = &(obj->pow); break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: qDebug() << Q_FUNC_INFO << index.topic; break;
     }
     return unit;
 }
