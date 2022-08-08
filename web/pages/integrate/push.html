@@ -186,7 +186,11 @@
 			sel1  = parseInt(document.getElementById(select_name[3]).value);
 			if(sel != 0){
 				for(var i = 1 ;i<(select_name.length -2);i++){
-					data = parseInt(document.getElementById(select_name[i]).value);
+					if(i == 1){
+						data = (document.getElementById(select_name[i]).value);
+					}else{
+						data = parseInt(document.getElementById(select_name[i]).value);
+					}
 					if(data != push_data[i+1]){
 						rpc.call('pduSetCfg',[0,push,(i+1),0,0,data]);
 					}
@@ -194,7 +198,11 @@
 			}
 			if(sel1 != 0){
 				for(var i = 4 ;i<(select_name.length -2);i++){
-					data = parseInt(document.getElementById(select_name[i]).value);
+					if(i == 4){
+						data = (document.getElementById(select_name[i]).value);
+					}else{
+						data = parseInt(document.getElementById(select_name[i]).value);
+					}
 					if(data != push_data[i+1]){
 						if(i == 6){
 							rpc.call('pduSetCfg',[0,push,9,0,0,data]);
