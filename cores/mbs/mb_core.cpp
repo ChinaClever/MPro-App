@@ -19,6 +19,7 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
         //sington->connectTcp(1); /////====
+        QtConcurrent::run(sington,&Mb_Core::run);
     }
     return sington;
 }

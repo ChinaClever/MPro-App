@@ -22,8 +22,8 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">相设置</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
-								<span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
-									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span>
+								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">相电压设置</span>
@@ -31,7 +31,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped vol_table"></table>
+						<table class="table table-striped vol_table text-center"></table>
 					</div>
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped cur_table"></table>
+						<table class="table table-striped cur_table text-center"></table>
 					</div>
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
@@ -53,7 +53,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped pow_table"></table>
+						<table class="table table-striped pow_table text-center"></table>
 					</div>
 				</div>
 			</div>
@@ -112,10 +112,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][18] == 1 || phase_info[i][18] == 8){
-					cs.bgColor = 'red';
-				}else if(phase_info[i][18] == 2 || phase_info[i][18] == 4){
+				if(phase_info[i][18] == 2 || phase_info[i][18] == 4){
 					cs.bgColor = 'yellow';
+				}else if(phase_info[i][18] == 1 || phase_info[i][18] == 8){
+					cs.bgColor = 'red';
 				}
 				else{
 					cs.bgColor = '';
@@ -137,10 +137,10 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][10] == 1 || phase_info[i][10] == 8){
-					cs.bgColor = 'red';
-				}else if(phase_info[i][10] == 2 || phase_info[i][10] == 4){
+				if(phase_info[i][10] == 2 || phase_info[i][10] == 4){
 					cs.bgColor = 'yellow';
+				}else if(phase_info[i][10] == 1 || phase_info[i][10] == 8){
+					cs.bgColor = 'red';
 				}
 				else{
 					cs.bgColor = '';
@@ -162,11 +162,11 @@
 				else{
 					ss.checked = false;
 				}
-				if(phase_info[i][2] == 1 || phase_info[i][2] == 8){
-					cs.bgColor = 'red';
-				}
-				else if(phase_info[i][2] == 2 || phase_info[i][2] == 4){
+				if(phase_info[i][2] == 2 || phase_info[i][2] == 4){
 					cs.bgColor = 'yellow';
+				}
+				else if(phase_info[i][2] == 1 || phase_info[i][2] == 8){
+					cs.bgColor = 'red';
 				}
 				else{
 					cs.bgColor = '';
@@ -191,8 +191,8 @@
 		function readonlyset(ros){
 			if(read === 0){
 				read = 1;
-				var ms = document.getElementById("sel");
-				ms.style.display = "";
+				// var ms = document.getElementById("sel");
+				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = "设置模式";
 				var iptname = document.getElementsByTagName("input");
@@ -202,8 +202,8 @@
 				}
 			}
 			else{
-				var ms = document.getElementById("sel");
-				ms.style.display = "none";
+				// var ms = document.getElementById("sel");
+				// ms.style.display = "none";
 				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = "阅读模式";
@@ -234,7 +234,7 @@
 		{
 			var stat = 0,number1 = 0,type = 0;
 			var opt_val = parseInt(document.getElementById("opt_").value);
-			var addr_ = addr + opt_val * 256;
+			var addr_ = addr + 0 * 256;
 			var number = parseInt(ckd.id.slice(1))+1;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
@@ -286,8 +286,8 @@
 		{
 
 		// var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
-			var opt_val = parseInt(document.getElementById("opt_").value);
-			var addr_ = addr + opt_val * 256;
+			// var opt_val = parseInt(document.getElementById("opt_").value);
+			var addr_ = addr + 0 * 256;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
@@ -325,6 +325,7 @@
 			else
 			{
 				
+				
 			}
 		}
 		function buildTablePow(rows) {
@@ -346,10 +347,10 @@
 					tbody += '<td id = "b'+ i + '">'+ parseFloat(phase_info[i + 1][16]) +'</td>';
 					tbody += '<td><input  name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'">' + parseFloat(phase_info[i + 1][17])+'</td>';
-					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ parseFloat(phase_info[i + 1][20])  +'"></input></td>';
-					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(phase_info[i + 1][21])  +'"></input></td>';
-					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(phase_info[i + 1][22]) +'"></input></td>';
-					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(phase_info[i + 1][19])  +'"></input></td>';
+					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ parseFloat(phase_info[i + 1][20])  +'"></input></td>';
+					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(phase_info[i + 1][21])  +'"></input></td>';
+					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(phase_info[i + 1][22]) +'"></input></td>';
+					tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(phase_info[i + 1][19])  +'"></input></td>';
 					tbody += '</tr>';
 					if(i === rows - 1){
 						i++;
@@ -358,10 +359,10 @@
 						tbody += '<td id = "b'+ i + '"></td>';
 						tbody += '<td><input name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 						tbody += '<td id = "d'+ i +'"></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"value="2816"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"value="3520"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "g'+ i + '"value="2816"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>13860){value=13860};if(value<0)value=0" class = "input" id = "h'+ i + '"value="3520"></input></td>';
 						tbody += '</tr>';
 					}
 				}
@@ -387,10 +388,10 @@
 				tbody += '<td id = "b'+ i + '">'+ (parseFloat(phase_info[i + 1][8])/100).toFixed(2) +'</td>';
 				tbody += '<td><input  name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 				tbody += '<td id = "d'+ i +'">' + (parseFloat(phase_info[i + 1][9])/100).toFixed(2)+'</td>';
-				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(phase_info[i + 1][12])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(phase_info[i + 1][13])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(phase_info[i + 1][14])/100).toFixed(2)  +'"></input></td>';
-				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(phase_info[i + 1][11])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(phase_info[i + 1][12])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(phase_info[i + 1][13])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(phase_info[i + 1][14])/100).toFixed(2)  +'"></input></td>';
+				tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(phase_info[i + 1][11])/100).toFixed(2)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -399,10 +400,10 @@
 					tbody += '<td id = "b'+ i + '"></td>';
 					tbody += '<td><input name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'"></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="12.80"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="16.00"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "g'+ i + '"value="12.80"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "h'+ i + '"value="16.00"></input></td>';
 					tbody += '</tr>';
 				}
 			}

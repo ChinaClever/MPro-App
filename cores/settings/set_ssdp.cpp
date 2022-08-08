@@ -15,7 +15,7 @@ Set_Ssdp::Set_Ssdp(QObject *parent)
 
     Integr_JsonRecv *j = Integr_JsonRecv::bulid(this);
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
-    connect(j, &Integr_JsonRecv::recvNumStrSig, this, &Set_Ssdp::recvNumStrSlot);
+    connect(j, &Integr_JsonRecv::recvCfgSig, this, &Set_Ssdp::recvCfgSlot);
 }
 
 Set_Ssdp *Set_Ssdp::bulid(QObject *parent)
@@ -25,26 +25,17 @@ Set_Ssdp *Set_Ssdp::bulid(QObject *parent)
     return sington;
 }
 
-bool Set_Ssdp::setNumStr(sNumStrItem &it)
+bool Set_Ssdp::setting(sDataItem &it, const QString &room)
 {
-    QString room; if(it.soi == 2) {
-        room = cm::masterDev()->cfg.uut.room;
-        if(room.isEmpty()) return false;
-    } it.soi = 1;
-
-    QByteArray array = cm::toByteArray(it);
-    return mSsdp->send(2, room, array);
-}
-
-bool Set_Ssdp::setting(sDataItem &it)
-{
-    QString room; if(it.soi == 2) {
-        room = cm::masterDev()->cfg.uut.room;
-        if(room.isEmpty()) return false;
-    } it.soi = 1;
-
     QByteArray array = cm::toByteArray(it);
     return mSsdp->send(1, room, array);
+}
+
+bool Set_Ssdp::setCfg(sCfgItem &it, const QVariant &v, const QString &room)
+{
+    QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
+    in << cm::toByteArray(it) << v;
+    return mSsdp->send(2, room, array);
 }
 
 void Set_Ssdp::recvSlot(uchar fc, const QString &room, const QByteArray&rcv)
@@ -58,15 +49,18 @@ void Set_Ssdp::recvSlot(uchar fc, const QString &room, const QByteArray&rcv)
         sDataItem unit = cm::toStruct<sDataItem>(rcv);
         Set_Core::bulid()->setting(unit);
     } else if(fc == 2) {
-        sNumStrItem unit = cm::toStruct<sNumStrItem>(rcv);
-        Set_Core::bulid()->setNumStr(unit);
+        QByteArray msg(rcv), array; QVariant value;
+        QDataStream out(&msg, QIODevice::ReadOnly);
+        out >> array >> value;
+        sCfgItem unit = cm::toStruct<sCfgItem>(array);
+        Set_Core::bulid()->setCfg(unit, value);
     } else qDebug() << Q_FUNC_INFO << fc;
 }
 
-void Set_Ssdp::recvNumStrSlot(const sNumStrItem &it)
+void Set_Ssdp::recvCfgSlot(const sCfgItem &it, const QVariant &v)
 {
-    sNumStrItem unit = it;
-    Set_Core::bulid()->setNumStr(unit);
+    sCfgItem unit = it;
+    Set_Core::bulid()->setCfg(unit, v);
 }
 
 void Set_Ssdp::recvSetSlot(const sDataItem &it)

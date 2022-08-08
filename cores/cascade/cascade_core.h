@@ -16,6 +16,7 @@ public:
 public slots:
     void run();
     void initFunSlot();
+    void initThreadSlot(){mThread->init(this, SLOT(run()));}
 
 private:
     bool isRun=false;

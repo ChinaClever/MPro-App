@@ -7,16 +7,13 @@ class Set_Core : public Set_Integr
     Set_Core();
 public:
     static Set_Core *bulid();
-    void writeAlarm();
+    QVariant getCfg(sCfgItem &it);
     bool setting(sDataItem &it);
-    bool setNumStr(sNumStrItem &it);
-    QString getNumStr(sNumStrItem &it);
+    bool setCfg(sCfgItem &it, const QVariant &v);
+    void writeAlarm();
 
 private:
-    bool setNumber(sNumStrItem &it);
-    int getNumber(sNumStrItem &it);
-    bool setString(sNumStrItem &it);
-    QString getString(sNumStrItem &it);
+    bool setParam(sCfgItem &it, const QVariant &v);
 };
 
 #endif // SET_CORE_H

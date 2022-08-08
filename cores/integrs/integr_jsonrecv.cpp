@@ -129,8 +129,7 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     bool ret = true; sDataItem it;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
-        double res = getData(obj, "soi"); if(res >= 0) it.soi = res;
-        res = getData(obj, "addr"); if(res >= 0) it.addr = res;
+        double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
         res = getData(obj, "type"); if(res >= 0) it.type = res;
         res = getData(obj, "topic"); if(res >= 0) it.topic = res;
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
@@ -143,21 +142,19 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     return ret;
 }
 
-bool Integr_JsonRecv::setNumStrItem(const QJsonObject &object)
+bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
 {
-    QString key = "setNumStrItem";
-    bool ret = true; sNumStrItem it;
+    QString key = "setCfgItem";
+    bool ret = true; sCfgItem it;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
-        double res = getData(obj, "soi"); if(res >= 0) it.soi = res;
-        res = getData(obj, "addr"); if(res >= 0) it.addr = res;
-        res = getData(obj, "isDigit"); if(res >= 0) it.isDigit = res;
-        res = getData(obj, "fc"); if(res >= 0) it.fc = res;
-        res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "subtopic"); if(res >= 0) it.sub = res;
-        if(it.isDigit) {res = getData(obj, "value"); if(res >= 0) it.value = res;}
-        else {QString str = getString(obj, "str"); qstrcpy(it.str, str.toLatin1().data());}
-        it.rw = 1; it.txType = DTxType::TxJson; emit recvNumStrSig(it);
+        double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
+        res = getData(obj, "fc"); if(res >= 0) it.type = res;
+        res = getData(obj, "id"); if(res >= 0) it.fc = res;
+        res = getData(obj, "sub"); if(res >= 0) it.sub = res;
+        QVariant value = getValue(obj, "value");
+        it.txType = DTxType::TxJson;
+        emit recvCfgSig(it, value);
     } else ret = false;
 
     return ret;
@@ -168,7 +165,7 @@ bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
     bool ret = versionNumber(object);
     if(ret) {
         setDataItem(object);
-        setNumStrItem(object);
+        setCfgItem(object);
     }
 
     return ret;

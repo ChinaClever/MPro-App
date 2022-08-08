@@ -67,45 +67,40 @@ QString Alarm_Log::alarmStatus(uchar value, QString &state)
 
 QString Alarm_Log::alarmContent(const sDataItem &index)
 {
-    QString str;
     double rate = 1;
     int id = index.id;
+    QString str, suffix;
 
     switch (index.topic) {
-    case DTopic::Vol: rate = COM_RATE_VOL; break;
-    case DTopic::Cur: rate = COM_RATE_CUR; break;
-    case DTopic::Pow: rate = COM_RATE_POW; break;
-    case DTopic::Tem: rate = COM_RATE_TEM; break;
-    case DTopic::Hum: rate = COM_RATE_HUM; break;
+    case DTopic::Vol: rate = COM_RATE_VOL; suffix = "V"; break;
+    case DTopic::Cur: rate = COM_RATE_CUR; suffix = "A"; break;
+    case DTopic::Pow: rate = COM_RATE_POW; suffix = "KW"; break;
+    case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C"; break;
+    case DTopic::Hum: rate = COM_RATE_HUM; suffix = "%";break;
     }
 
     Alarm_Object obj;
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-            //            if(index.type == DType::Env) {
-            //                str  = tr("当前值=%1　告警最小值=%2 告警最大值=%3")
-            //                        .arg(unit->value[id]/rate)
-            //                        .arg(unit->min[id] / rate)
-            //                        .arg(unit->max[id] / rate);
-            //            } else {
-            str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
+            str  = tr("当前值=%1%6　告警最小值=%2%6 预警最小值=%3%6 预警最大值=%4%6 告警最大值=%5%6")
                     .arg(unit->value[id]/rate)
                     .arg(unit->min[id] / rate)
                     .arg(unit->crMin[id] / rate)
                     .arg(unit->crMax[id] / rate)
-                    .arg(unit->max[id] / rate);
-            //            }
+                    .arg(unit->max[id] / rate)
+                    .arg(suffix);
         } else qDebug() << Q_FUNC_INFO;
     } else {
         sTgUnit *unit = obj.getTgAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值=%1　告警最小值=%2 预警最小值=%3 预警最大值=%4 告警最大值=%5")
+            str  = tr("当前值=%1%6　告警最小值=%2%6 预警最小值=%3%6 预警最大值=%4%6 告警最大值=%5%6")
                     .arg(unit->value/rate)
                     .arg(unit->min / rate)
                     .arg(unit->crMin / rate)
                     .arg(unit->crMax / rate)
-                    .arg(unit->max / rate);
+                    .arg(unit->max / rate)
+                    .arg(suffix);
         } else qDebug() << Q_FUNC_INFO;
     }
     return str;
@@ -132,14 +127,14 @@ QString Alarm_Log::alarmSensor(uchar value)
 void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
     sAlarmItem it; it.addr = tr("本机");
-    if(index.addr) it.addr = tr("副机 %1").arg(index.addr);
+    if(index.addr) it.addr = tr("副机%1").arg(index.addr);
     if(value) it.state = tr("告警"); else it.state = tr("恢复正常");
-    if(index.type) it.module = tr("第%１ ").arg(index.id+1);
+    if(index.type) it.module = tr("第%１").arg(index.id+1);
     it.module += alarmType(index);
 
     if(index.topic == DTopic::Relay) {
         it.content = alarmRelay(value);
-    } if(index.type == DType::Sensor) {
+    }else if(index.type == DType::Sensor) {
         it.content = alarmSensor(value);
     }else {
         it.module += alarmStatus(value, it.state);
@@ -147,4 +142,5 @@ void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
     }
 
     Log_Core::bulid()->append(it);
+    //qDebug() << it.module << it.content;
 }

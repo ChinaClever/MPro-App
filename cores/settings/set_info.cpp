@@ -24,7 +24,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 3: ret = it->param.modbusAddr; break;
     case 4: ret = it->vers.version; break;
     case 5: ret = it->param.buzzerSw; break;
-//    case 6: ret = it->hz; break;
+    case 6: ret = it->param.hz; break;
     case 7: ret = it->nums.boardNum; break;
     case 8: ret = it->nums.groupEn; break;
 
@@ -92,18 +92,20 @@ QString Set_Info::getUut(int addr, uchar fc)
     case 5: ptr = it->road; break;
     case 6: ptr = it->devName; break;
     case 7: ptr = it->sn; break;
+    case 8: ptr = it->qrcode; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
     return ptr;
 }
 
-bool Set_Info::setUut(uchar fc, char *str, uchar txType)
+bool Set_Info::setUut(uchar fc, const QVariant &v)
 {
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
+    char *str = v.toByteArray().data();
 
     switch (fc) {
     case 1: key = "idc";  ptr = it->idc; break;
@@ -113,24 +115,18 @@ bool Set_Info::setUut(uchar fc, char *str, uchar txType)
     case 5: key = "road";  ptr = it->road; break;
     case 6: key = "devName";  ptr = it->devName; break;
     case 7: key = "sn";  ptr = it->sn; break;
+    case 8: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) qstrcpy(ptr, str);
     Cfg_Obj *cfg = Cfg_Obj::bulid();
     cfg->writeCfg(key, QString(ptr), prefix);
-
-    sOpItem db; db.op_src = opSrc(txType);
-    db.content = QObject::tr("%1 修改为 %2").arg(key, str);
-    Log_Core::bulid()->append(db);
+    // sOpItem db; db.op_src = "uut"; //opSrc(txType);
+    // db.content = QObject::tr("%1 修改为 %2").arg(key, str);
+    // Log_Core::bulid()->append(db);
 
     return ret;
-}
-
-QString Set_Info::qrcodeStr(int addr)
-{
-    char *ptr = cm::devData(addr)->cfg.uut.qrcode;
-    return ptr;
 }
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
@@ -143,7 +139,6 @@ bool Set_Info::qrcodeGenerator(const QString& msg)
         qstrcpy(ptr, msg.toLatin1().data());
         system(qr.toLatin1().data());
     } else ptr[0] = 0;
-    Cfg_ReadWrite::bulid()->writeParams();
 
     return true;
 }

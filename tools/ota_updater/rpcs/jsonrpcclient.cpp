@@ -62,6 +62,20 @@ bool JsonRpcClient::pduSetString(uchar addr, uchar fc, uchar id, const QString &
 }
 
 
+QString JsonRpcClient::pduLogFun(uchar type, uchar fc, int id, int cnt)
+{
+    QString ret;
+    auto result = rpc_client->call("pduLogFun", type, fc, id, cnt);
+    if (result->isSuccess()) {
+        ret = result->result().toString();
+        qDebug() << "result of pduLogFun RPC call:" << result->result();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
+
 void JsonRpcClient::invokeStringMethodSync()
 {
     qsrand(std::time(nullptr));

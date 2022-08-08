@@ -78,8 +78,8 @@
         "url": "rpc.html"
       },
       {
-        "name": "HTTP集成",
-        "url": "http.html"
+        "name": "REST集成",
+        "url": "rest.html"
       },
       {
         "name": "SNMP服务",
@@ -88,6 +88,29 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
+      }
+    ]
+  },
+  {
+    "name": "安全加密",
+    "icon": "collection_fill",
+    "base": "pages/sercet/",
+    "subNav": [      
+      {
+        "name": "数据加密",
+        "url": "data.html"
+      },
+      {
+        "name": "TLS证书",
+        "url": "tlscert.html"
+      },
+      {
+        "name": "网络安全",
+        "url": "net.html"
+      },
+      {
+        "name": "系统安全",
+        "url": "system.html"
       }
     ]
   },

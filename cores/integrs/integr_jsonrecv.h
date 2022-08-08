@@ -12,7 +12,7 @@ public:
 
 signals:
     void recvSetSig(const sDataItem &it);
-    void recvNumStrSig(const sNumStrItem &it);
+    void recvCfgSig(const sCfgItem &it, const QVariant &v);
 
 public:
     bool checkInput(const QByteArray &msg, QJsonObject &obj);
@@ -31,7 +31,7 @@ public:
     bool versionNumber(const QJsonObject &object);
 
     bool setDataItem(const QJsonObject &object);
-    bool setNumStrItem(const QJsonObject &object);
+    bool setCfgItem(const QJsonObject &object);
     bool analyticalData(const QJsonObject &object);
 };
 

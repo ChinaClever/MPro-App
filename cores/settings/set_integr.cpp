@@ -32,7 +32,7 @@ int Set_Integr::modbusCfg(uchar fc)
     return res;
 }
 
-bool Set_Integr::modbusSet(uchar fc, int value, uchar txType)
+bool Set_Integr::modbusSet(uchar fc, int value)
 {
     Mb_Core *mb = Mb_Core::bulid();
     QString prefix = "modbus";  QString key;
@@ -52,9 +52,9 @@ bool Set_Integr::modbusSet(uchar fc, int value, uchar txType)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
-        Log_Core::bulid()->append(db);
+        //sOpItem db; db.op_src = opSrc(txType);
+        //db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
+        //Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -66,7 +66,7 @@ QString Set_Integr::snmpCfg(uchar fc)
     QString res; switch (fc) {
     case 1: res = cfg->trap1; break;
     case 2: res = cfg->trap2; break;
-    case 3: res = cfg->enV3; break;
+    case 3: res = QString::number(cfg->enV3); break;
     case 4: res = cfg->usr; break;
     case 5: res = cfg->pwd; break;
     case 6: res = cfg->key; break;
@@ -77,27 +77,27 @@ QString Set_Integr::snmpCfg(uchar fc)
 
 }
 
-bool Set_Integr::snmpSet(uchar fc, const QString &value, uchar txType)
+bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "trap1"; cfg->trap1 = value; break;
-    case 2: key = "trap2"; cfg->trap2 = value; break;
-    case 3: key = "enV3"; cfg->enV3 = value.toInt(); break;
-    case 4: key = "usr"; cfg->usr = value; break;
-    case 5: key = "pwd"; cfg->pwd = value; break;
-    case 6: key = "key"; cfg->key = value; break;
+    case 1: key = "trap1"; cfg->trap1 = v.toString(); break;
+    case 2: key = "trap2"; cfg->trap2 = v.toString(); break;
+    case 3: key = "enV3"; cfg->enV3 = v.toInt(); break;
+    case 4: key = "usr"; cfg->usr = v.toString(); break;
+    case 5: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 6: key = "key"; cfg->key = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
-        cfg->writeCfg(key, value, prefix);
+        cfg->writeCfg(key, v, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
-        Log_Core::bulid()->append(db);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -117,7 +117,7 @@ int Set_Integr::rpcCfg(uchar fc)
     return res;
 }
 
-bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
+bool Set_Integr::rpcSet(uchar fc, int value)
 {
     Rpc_Service *obj = Rpc_Service::bulid();
     QString prefix = "rpc";  QString key;
@@ -133,9 +133,9 @@ bool Set_Integr::rpcSet(uchar fc, int value, uchar txType)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
 
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
-        Log_Core::bulid()->append(db);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -166,37 +166,36 @@ QVariant Set_Integr::pushCfg(uchar fc)
 }
 
 
-bool Set_Integr::pushSet(uchar fc, QVariant value, uchar txType)
+bool Set_Integr::pushSet(uchar fc, const QVariant &v)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
     Integr_Core *obj = Integr_Core::bulid();
     QString prefix = "push";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "udpEn"; cfg->udp[0].en = value.toInt(); break;
-    case 2: key = "ddpHost"; cfg->udp[0].host = value.toString(); break;
-    case 3: key = "udpPort"; cfg->udp[0].port = value.toInt(); break;
-    case 4: key = "udp2En"; cfg->udp[1].en = value.toInt(); break;
-    case 5: key = "ddp2Host"; cfg->udp[1].host = value.toString(); break;
-    case 6: key = "udp2Port"; cfg->udp[1].port = value.toInt(); break;
-    case 7: key = "recvEn"; obj->startRecv(value.toInt()); break;
-    case 8: key = "recvPort"; obj->setRecvPort(value.toInt()); break;
-    case 9: key = "sec"; cfg->sec = value.toInt(); break;
+    case 1: key = "udpEn"; cfg->udp[0].en = v.toInt(); break;
+    case 2: key = "ddpHost"; cfg->udp[0].host = v.toString(); break;
+    case 3: key = "udpPort"; cfg->udp[0].port = v.toInt(); break;
+    case 4: key = "udp2En"; cfg->udp[1].en = v.toInt(); break;
+    case 5: key = "ddp2Host"; cfg->udp[1].host = v.toString(); break;
+    case 6: key = "udp2Port"; cfg->udp[1].port = v.toInt(); break;
+    case 7: key = "recvEn"; obj->startRecv(v.toInt()); break;
+    case 8: key = "recvPort"; obj->setRecvPort(v.toInt()); break;
+    case 9: key = "sec"; cfg->sec = v.toInt(); break;
 
-    case 11: key = "httpEn"; cfg->http.en = value.toInt(); break;
-    case 12: key = "httpUrl"; cfg->http.url = value.toString(); ; break;
-    case 13: key = "httpTimeout"; cfg->http.timeout = value.toInt(); break;
-    case 14: key = "enServ"; cfg->http.enServ = value.toInt(); break;
-    case 15: key = "httpPort"; cfg->http.port = value.toInt(); break;
+    case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
+    case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
+    case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;
+    case 14: key = "enServ"; cfg->http.enServ = v.toInt(); break;
+    case 15: key = "httpPort"; cfg->http.port = v.toInt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
-        cfg->writeCfg(key, value, prefix);
-
-        sOpItem db; db.op_src = opSrc(txType);
-        db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
-        Log_Core::bulid()->append(db);
+        cfg->writeCfg(key, v, prefix);
+        // sOpItem db; db.op_src = opSrc(txType);
+        // db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;

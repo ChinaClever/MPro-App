@@ -186,7 +186,11 @@
 			sel1  = parseInt(document.getElementById(select_name[3]).value);
 			if(sel != 0){
 				for(var i = 1 ;i<(select_name.length -2);i++){
-					data = parseInt(document.getElementById(select_name[i]).value);
+					if(i == 1){
+						data = (document.getElementById(select_name[i]).value);
+					}else{
+						data = parseInt(document.getElementById(select_name[i]).value);
+					}
 					if(data != push_data[i+1]){
 						rpc.call('pduSetCfg',[0,push,(i+1),0,0,data]);
 					}
@@ -194,7 +198,11 @@
 			}
 			if(sel1 != 0){
 				for(var i = 4 ;i<(select_name.length -2);i++){
-					data = parseInt(document.getElementById(select_name[i]).value);
+					if(i == 4){
+						data = (document.getElementById(select_name[i]).value);
+					}else{
+						data = parseInt(document.getElementById(select_name[i]).value);
+					}
 					if(data != push_data[i+1]){
 						if(i == 6){
 							rpc.call('pduSetCfg',[0,push,9,0,0,data]);
@@ -217,25 +225,25 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%">主动推送服务</td>\
 			<td width ="85%"></td>/tr>';
-			tbody += '<tr><td>启用UDP1：</td>';
+			tbody += '<tr><td>启用推送1：</td>';
 			tbody += '<td><select id ="udp1En" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>UDP1地址：</td>';
+			tbody += '<tr><td>推送1地址：</td>';
 			tbody += '<td><input id = "udp1Addr" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input></td></tr>';
-			tbody += '<tr><td>UDP1端口号：</td>';
+			tbody += '<tr><td>推送1端口号：</td>';
 			tbody += '<td><input id = "udp1Port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td>启用UDP2：</td>';
+			tbody += '<tr><td>启用推送2：</td>';
 			tbody += '<td><select id ="udp2En" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>UDP2地址：</td>';
+			tbody += '<tr><td>推送2地址：</td>';
 			tbody += '<td><input id = "udp2Addr" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input></td></tr>';
-			tbody += '<tr><td>UDP2端口号：</td>';
+			tbody += '<tr><td>推送2端口号：</td>';
 			tbody += '<td><input id = "udp2Port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td>时间间隔：</td>';
 			tbody += '<td><input id = "delay" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';

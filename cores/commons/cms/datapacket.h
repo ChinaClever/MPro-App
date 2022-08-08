@@ -149,7 +149,7 @@ struct sRtuBoard
 {
     uchar hzs[DEV_NUM];  // 电压频率
     uchar offLines[DEV_NUM];
-    uchar chipStates[DEV_NUM];    
+    uchar chipStates[DEV_NUM];
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
 };
 
@@ -203,10 +203,14 @@ struct sUutInfo {
 
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
+    uchar language; // 0 中文 1 英文
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
-    uint hz;
+    uint runTime; // 最近开关运行时间 分钟为单位
+    uint uptime; // 持续运行时间 单位小时
+    uint hz; // 产品实时频繁
+
     uchar reserve[20];
 };
 
@@ -229,7 +233,6 @@ struct sDevData
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
     uchar offLine; //离线标志 > 0在线
-
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
     struct sObjData group; //组数据
@@ -237,7 +240,7 @@ struct sDevData
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
-    struct sDevCfg cfg;
+    struct sDevCfg cfg; // 配置数据
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -290,9 +293,9 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 struct sDataItem
 {
 #ifndef SUPPORT_C
-    sDataItem():soi(0),addr(0),rw(0),value(0){}
+    sDataItem():addr(0),rw(0),value(0){}
 #endif
-    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
+    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
@@ -304,25 +307,25 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-            EGrouping=21,EGroupName, EQRcode};
+             EGrouping=21,EGroupName};
 
-struct sNumStrItem{
+struct sCfgItem {
 #ifndef SUPPORT_C
-    sNumStrItem():soi(0),addr(0),isDigit(0),sub(0),rw(0),value(0){}
+    sCfgItem():addr(0),sub(0){}
 #endif
-    uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
-    uchar addr; // 地址
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uchar isDigit; // 0 字符串 1 数字
-    uchar fc; // 10 输出位  11 UUT信息
-    uchar id; // 功能id　0 表示统一设置
+    uchar addr; // 地址
+    uchar type; // 10 输出位  11 UUT信息
+    uchar fc; // 功能码　0 表示统一设置
     uchar sub;
-    uchar rw; // 0 读  1 写
-    uint value;
-    char str[2*NAME_SIZE];
 };
 
 #ifndef SUPPORT_C
+struct sCfgUnit {
+    sCfgItem it;
+    QVariant v;
+};
+
 struct sRelay
 {
     enum Type{Breaker, Relay};

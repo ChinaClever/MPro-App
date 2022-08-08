@@ -7,7 +7,7 @@
 #define CFG_ALARM_FN    "cfg_alarm.ini"
 #define CFG_ALARM_DF    "cfg_alarm.df"
 #define CFG_PARAM_FN    "cfg_param.ini"
-#define CFG_PARAM_DN    "cfg_param.df"
+#define CFG_PARAM_DF    "cfg_param.df"
 
 
 class Cfg_RwObj : public QObject

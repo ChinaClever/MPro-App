@@ -8,21 +8,23 @@ enum eLogs{
     eOpLog,
     eSysLog,
     eEleLog,
+    eOtaLog,
+    eHardwareLog,
 };
 
 enum eLogFc {
     eLog_cnt=1,
     eLog_read,
-    eLog_page,
     eLog_clear,
+    eLog_readOnce,
 };
 
 struct sLogFcIt {
-    sLogFcIt() {type=fc=0; id=0;noe=30;}
+    sLogFcIt() {type=fc=0; id=0;cnt=30;}
     uchar type;
     uchar fc;
-    uchar noe;
     uint id;
+    uint cnt;
 };
 
 class IPC_LogClient : public IPC_ObjClient
@@ -30,7 +32,7 @@ class IPC_LogClient : public IPC_ObjClient
     Q_OBJECT
 public:
     explicit IPC_LogClient(QObject *parent = nullptr);
-    QVariant log_fun(uchar type, uchar fc, uint id, uchar noe);
+    QVariant log_fun(uchar type, uchar fc, uint id, uint cnt);
 
 private:
     QString log_get(const sLogFcIt &unit);

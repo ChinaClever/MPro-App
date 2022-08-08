@@ -4,20 +4,20 @@
 
 struct sAesIt {
     sAesIt():level(QAESEncryption::AES_256), mode(QAESEncryption::CBC), padding(QAESEncryption::ISO){}
-    QAESEncryption::Aes level;
-    QAESEncryption::Mode mode;
-    QAESEncryption::Padding padding;
-    QByteArray key;
-    QByteArray iv;
+    QAESEncryption::Aes level; // AES密钥长度 加密级别
+    QAESEncryption::Mode mode; // AES加密模式 操作模式
+    QAESEncryption::Padding padding; // 填充方法
+    QByteArray key; // KEY密钥
+    QByteArray iv; // 偏移量
 };
 
 class Sercret_Aes
 {
 public:
     Sercret_Aes();
-    static Sercret_Aes *bulid();
-    QByteArray aes_crypt(const QByteArray &rawText, const sAesIt &it);
-    QByteArray aes_decrypt(const QByteArray &rawText, const sAesIt &it);
+    static sAesIt aesCfg;
+    QByteArray aes_crypt(const QByteArray &rawText);
+    QByteArray aes_decrypt(const QByteArray &rawText);
 };
 
 #endif // SERCRET_AES_H

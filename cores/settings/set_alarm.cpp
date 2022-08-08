@@ -40,28 +40,28 @@ QString Set_Alarm::opSrc(uchar txType)
 
 QString Set_Alarm::opContent(const sDataItem &index)
 {
-    QString str;
     double rate = 1;
+    QString str, suffix;
 
     switch (index.topic) {
-    case DTopic::Vol: rate = COM_RATE_VOL; break;
-    case DTopic::Cur: rate = COM_RATE_CUR; break;
-    case DTopic::Pow: rate = COM_RATE_POW; break;
-    case DTopic::Tem: rate = COM_RATE_TEM; break;
-    case DTopic::Hum: rate = COM_RATE_HUM; break;
+    case DTopic::Vol: rate = COM_RATE_VOL; suffix = "V"; break;
+    case DTopic::Cur: rate = COM_RATE_CUR; suffix = "A"; break;
+    case DTopic::Pow: rate = COM_RATE_POW; suffix = "KW"; break;
+    case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C"; break;
+    case DTopic::Hum: rate = COM_RATE_HUM; suffix = "%";break;
     }
 
     switch (index.subtopic) {
     case DSub::Rated: str = QObject::tr("额定值"); break;
     case DSub::VMax: str = QObject::tr("报警最大值"); break;
-    case DSub::VMin: str = QObject::tr("报警最大值"); break;
+    case DSub::VMin: str = QObject::tr("报警最小值"); break;
     case DSub::VCrMax: str = QObject::tr("预警最大值"); break;
-    case DSub::VCrMin: str = QObject::tr("预警最大值"); break;
+    case DSub::VCrMin: str = QObject::tr("预警最小值"); break;
     case DSub::EnAlarm: str = QObject::tr("报警开关"); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    str += QObject::tr("修改为:%1").arg(index.value/rate);
+    str += QObject::tr("修改为:%1 ％2").arg(index.value/rate).arg(suffix);
     return str;
 }
 
@@ -74,6 +74,6 @@ void Set_Alarm::oplog(const sDataItem &it)
 
     sOpItem db;
     db.content = content;
-    db.op_src = opSrc(it.txType);
+    db.op_src = QObject::tr("告警设置"); //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }

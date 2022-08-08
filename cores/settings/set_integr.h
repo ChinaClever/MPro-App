@@ -8,16 +8,16 @@ public:
     Set_Integr();
 protected:
     int modbusCfg(uchar fc);
-    bool modbusSet(uchar fc, int value, uchar txType);
+    bool modbusSet(uchar fc, int value);
 
     QString snmpCfg(uchar fc);
-    bool snmpSet(uchar fc, const QString &value, uchar txType);
+    bool snmpSet(uchar fc, const QVariant &v);
 
     int rpcCfg(uchar fc);
-    bool rpcSet(uchar fc, int value, uchar txType);
+    bool rpcSet(uchar fc, int value);
 
     QVariant pushCfg(uchar fc);
-    bool pushSet(uchar fc, QVariant value, uchar txType);
+    bool pushSet(uchar fc, const QVariant &v);
 
 private:
     int toBaud(int value);

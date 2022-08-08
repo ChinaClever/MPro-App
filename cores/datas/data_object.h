@@ -3,7 +3,7 @@
 
 #include "op_core.h"
 
-class Data_Object : public QRunnable
+class Data_Object
 {
 public:
     explicit Data_Object();

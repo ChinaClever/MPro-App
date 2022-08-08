@@ -14,6 +14,7 @@ public:
 
     QString pduGetString(uchar addr, uchar fc, uchar id);
     bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str);
+    QString pduLogFun(uchar type, uchar fc, int id, int cnt);
 
 
     void invokeStringMethodSync();
