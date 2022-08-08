@@ -47,7 +47,7 @@ char *PduRpcObj::pduReadParam(mg_str &r)
 
 char *PduRpcObj::pduSetParam(mg_str &r)
 {
-    QVector<double> its = mObj->getNumbers(r, 6);
+    QVector<double> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5);
     if(value.toString().isEmpty()) value = mObj->getNumber(r, 5);
     bool ret = mWebIpc->setCfg((uint)its.at(0), (uchar)its.at(1), (uchar)its.at(2), value);

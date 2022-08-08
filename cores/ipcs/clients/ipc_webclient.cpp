@@ -67,7 +67,6 @@ bool IPC_WebClient::setting(uint addr, uchar type, uchar topic, uchar sub, uchar
     //qDebug()<<addr<<":"<<type<<":"<<topic<<":"<<sub<<":"<<id<<":"<<value;
     return this->setting(it);
 }
-
 int IPC_WebClient::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
 {
     sDataItem it; it.addr = addr; it.type = type; if(id) id--;
@@ -77,3 +76,4 @@ int IPC_WebClient::getValue(uchar addr, uchar type, uchar topic, uchar sub, ucha
 
     return res;
 }
+

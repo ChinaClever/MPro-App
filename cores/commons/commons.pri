@@ -20,6 +20,7 @@ include(serial/serial.pri)
 include(modbus/modbus.pri)
 include(cthread/cthread.pri)
 include(network/network.pri)
+include(mongoose/mongoose.pri)
 include(websocket/websocket.pri)
 
 

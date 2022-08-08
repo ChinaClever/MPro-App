@@ -41,7 +41,7 @@ void Integr_PushThread::udpPush(const QByteArray &array)
     }
 }
 
-void Integr_PushThread::httpPost(const QByteArray &array)
+void Integr_PushThread::httpPush(const QByteArray &array)
 {
     switch (mCfg->http.en) {
     case 1: Http::post(mCfg->http.url, array, mCfg->http.timeout); break;
@@ -56,7 +56,7 @@ void Integr_PushThread::workDown()
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
             QByteArray res = mJson->getJson(i);
-            if(mCfg->http.url.size()) httpPost(res);
+            if(mCfg->http.url.size()) httpPush(res);
             udpPush(res);
         } delay();
     }
