@@ -40,6 +40,7 @@
             verfity = 0;
             let ver = parseInt(sessionStorage.getItem(user_info[11]));
             if(ver  == 1){
+              sessionStorage.setItem(user_info[11],0);
               window.open('index.html','_self');
             }else{
               alert("用户名或密码输入有误，请重新输入！");

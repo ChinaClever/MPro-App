@@ -76,7 +76,7 @@ var jsonrpc = function()
         sessionStorage.setItem("Output_name"+ addr +'_'+num,JSON.parse(evt.data).result[5]); 
       break;
       case 11:
-        sessionStorage.setItem(uut_name[num]+ addr ,JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem(uut_name[topic]+ addr ,JSON.parse(evt.data).result[5]); 
       break;
       case 12:
         sessionStorage.setItem(type_info[topic - 1]+ "Num" + addr ,JSON.parse(evt.data).result[5]);
@@ -85,7 +85,7 @@ var jsonrpc = function()
         sessionStorage.setItem(cfg_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 14:
-        if(num  == 11)
+        if(topic  == 11)
         {
           verfity = 1;
         }
