@@ -108,7 +108,7 @@
 						lab.disabled = false;
 						setbtn.disabled = false;
 					}
-					rpc.call('pduSetCfg',[0,rpc_cfg,1,0,0,mds_data]);
+					rpc.call('pduSetParam',[0,rpc_cfg,1,0,0,mds_data]);
 				}else{
 					setbtn =  document.getElementById('save2');
 					lab = document.getElementById(data_id[4]);
@@ -120,7 +120,7 @@
 						lab.disabled = true;
 						setbtn.disabled = true;
 					}
-					rpc.call('pduSetCfg',[0,rpc_cfg,4,0,0,mds_data]);
+					rpc.call('pduSetParam',[0,rpc_cfg,4,0,0,mds_data]);
 				}
 				flash_html();
 			}else{}
@@ -132,12 +132,12 @@
 				if(btn.id =="save1"){
 					lab = parseInt(document.getElementById(data_id[1]).value);
 					if(lab != rpc_data[2]){
-						rpc.call('pduSetCfg',[0,rpc_cfg,2,0,0,lab]);
+						rpc.call('pduSetParam',[0,rpc_cfg,2,0,0,lab]);
 					}
 				}else{
 					lab = parseInt(document.getElementById(data_id[4]).value);
 					if(lab != rpc_data[5]){
-						rpc.call('pduSetCfg',[0,rpc_cfg,5,0,0,lab]);
+						rpc.call('pduSetParam',[0,rpc_cfg,5,0,0,lab]);
 					}
 				}
 				flash_html();

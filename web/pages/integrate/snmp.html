@@ -105,7 +105,7 @@
 						setbtn.disabled = false;
 					}
 				}
-				rpc.call('pduSetString',[0,snmp,3,0,0,mds_data]);
+				rpc.call('pduSetParam',[0,snmp,3,0,0,mds_data]);
 				flash_html();
 			}else{}
 		}
@@ -122,7 +122,7 @@
 				for(var i = 0 ;i < 2 ;i++){
 					sel = document.getElementById(snmp_name[i]).value;
 					if(sel != snmp_data[i+1]){
-						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+						rpc.call('pduSetParam',[0,snmp,(i+1),0,0,sel]);
 					}
 				}
 				flash_html();
@@ -133,7 +133,7 @@
 				for(var i = 3 ;i < snmp_name.length ;i++){
 					sel = document.getElementById(snmp_name[i]).value;
 					if(sel != snmp_data[i+1]){
-						rpc.call('pduSetString',[0,snmp,(i+1),0,0,sel]);
+						rpc.call('pduSetParam',[0,snmp,(i+1),0,0,sel]);
 					}
 				}
 				flash_html();

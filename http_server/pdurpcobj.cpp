@@ -38,9 +38,8 @@ char* PduRpcObj::responRpcString(const QVector<double> &its, const QString &valu
 
 char *PduRpcObj::pduReadParam(mg_str &r)
 {
-    QVector<double> its = mObj->getNumbers(r, 5);
-    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1),
-                                       (uchar)its.at(4));
+    QVector<double> its = mObj->getNumbers(r, 5);    
+    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2));
     return responRpcString(its, value);
 }
 
