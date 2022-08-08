@@ -99,8 +99,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
         opts.cert = "client-cert.cer";
         opts.certkey = "client-key.key";
         #else
-        opts.cert = "/usr/data/clever/ca/client-cert.cer";
-        opts.certkey = "/usr/data/clever/ca/client-key.key";
+        opts.cert = "/usr/data/clever/cert/client-cert.cer";
+        opts.certkey = "/usr/data/clever/cert/client-key.key";
         #endif
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
