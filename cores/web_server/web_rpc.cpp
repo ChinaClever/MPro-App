@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
 #include "web_rpc.h"
 
 Web_Obj *Web_Rpc::mObj = nullptr;
