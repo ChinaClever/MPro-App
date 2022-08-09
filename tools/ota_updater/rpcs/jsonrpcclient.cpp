@@ -78,7 +78,7 @@ QString JsonRpcClient::pduLogFun(uchar type, uchar fc, int id, int cnt)
 
 void JsonRpcClient::invokeStringMethodSync()
 {
-    qsrand(std::time(nullptr)); //////////===========
+    //qsrand(std::time(nullptr)); //////////===========
 
     auto result = rpc_client->call("printMessage", "hello, world");
 

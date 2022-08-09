@@ -65,10 +65,11 @@ void Integr_PushThread::workDown()
 
 void Integr_PushThread::delay()
 {
+    int t = QRandomGenerator::global()->bounded(10);
     int sec = mCfg->sec; if(!sec) sec = 3;
     for(int i=0; i<sec*100; i+=100) {
         if(isRun) cm::mdelay(100); else break;
-    } int t = QRandomGenerator::global()->bounded(100); cm::mdelay(t);
+    } cm::mdelay(t);
 }
 
 void Integr_PushThread::run()
@@ -76,7 +77,7 @@ void Integr_PushThread::run()
     if(isRun) return;
     else isRun = true;
     while (isRun) {
-        delay();
-        workDown();
+        int t = QRandomGenerator::global()->bounded(100);
+        delay(); workDown(); cm::mdelay(t);
     }
 }
