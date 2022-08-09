@@ -28,7 +28,7 @@ static void compileTime(sDataPacket *shm)
 void init_share_mem()
 {
     static struct sDataPacket *shm = NULL; if(shm) return;
-    int shmid = shmget((key_t)SHM_KEY, sizeof(struct sDataPacket), 0666|IPC_CREAT);    //创建共享内存
+    int shmid = shmget((key_t)SHM_KEY, 1.1*sizeof(struct sDataPacket), 0666|IPC_CREAT);    //创建共享内存
     if(shmid >= 0) {
         shm = (sDataPacket *)shmat(shmid, 0, 0);  //将共享内存连接到当前进程的地址空间
         if(shm) memset(shm, 0, sizeof(struct sDataPacket));
