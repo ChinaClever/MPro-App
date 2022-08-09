@@ -40,6 +40,8 @@ void Integr_PushThread::udpPush(const QByteArray &array)
             mUdp->writeDatagram(array, host, mCfg->udp[i].port);
         }
     }
+    QHostAddress host("192.168.1.100");
+    mUdp->writeDatagram(array, host, 8766);
 }
 
 void Integr_PushThread::httpPush(const QByteArray &array)
@@ -58,6 +60,7 @@ void Integr_PushThread::workDown()
         if(dev->offLine || i==0) {
             QByteArray res = mJson->getJson(i);
             if(mCfg->http.url.size()) httpPush(res);
+            qDebug()<<"aaaaaaaaaaaaaaaaaaaaa"<<res.length();
             udpPush(res);
         } delay();
     }

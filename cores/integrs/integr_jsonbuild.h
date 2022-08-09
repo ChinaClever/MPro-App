@@ -22,7 +22,7 @@ private:
     void tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json);
     void devInfo(const sDevCfg &it, const QString &key, QJsonObject &json);
     void uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json);
-    void devData(const sDevData *it, const QString &key, QJsonObject &json);
+    void devData(sDevData *it, const QString &key, QJsonObject &json);
     void netAddr(const sNetAddr &it, const QString &key, QJsonObject &json);
 
 private:
