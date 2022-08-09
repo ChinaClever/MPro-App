@@ -25,7 +25,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
     QJsonObject json = getJsonObject(addr);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
-        array = doc.toJson(QJsonDocument::Indented);
+        array = doc.toJson(QJsonDocument::Compact);
     }
 
     return array;
@@ -115,7 +115,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
         obj.insert("pf", it.pf[id]/COM_RATE_PF);
         obj.insert("ele", it.ele[id]/COM_RATE_ELE);
         obj.insert("apparent_pow", it.artPow[id]/COM_RATE_POW);
-        obj.insert("active_pow", it.reactivePow[id]/COM_RATE_POW);
+        obj.insert("reactive_pow", it.reactivePow[id]/COM_RATE_POW);
         if(strlen(it.name[id])) obj.insert("name", it.name[id]);
         array.append(obj);
     }
@@ -145,7 +145,8 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
     obj.insert("ele", it.ele/COM_RATE_ELE);
     obj.insert("pf", it.pf/COM_RATE_PF);
-    obj.insert("art", it.artPow/COM_RATE_POW);
+    obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
+    obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
     json.insert(key, QJsonValue(obj));
 }
 
@@ -213,7 +214,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     json.insert(key, QJsonValue(obj));
 }
 
-void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
 {
     QJsonObject obj;
     obj.insert("id", it->id);
@@ -222,9 +223,14 @@ void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObje
     devInfo(it->cfg, "pdu_info", obj);
     uutInfo(it->cfg.uut, "uut_info", obj);
 
+    it->line.size = 3;//////////////////////////////////////////
     ObjData(it->line, "line_item_list", obj);
+    it->loop.size = 6;/////////////////////////////////////////
     ObjData(it->loop, "loop_item_list", obj);
+    it->group.size = 8;////////////////////////////////////////
     ObjData(it->group, "group_item_list", obj);
+
+    it->output.size = 48;/////////////////////////////////////
     ObjData(it->output, "output_item_list", obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
