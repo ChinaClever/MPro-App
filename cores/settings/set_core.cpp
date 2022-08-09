@@ -37,8 +37,9 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
     case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
+    case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
+    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
-    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc);  break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;

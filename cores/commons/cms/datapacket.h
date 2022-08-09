@@ -174,13 +174,13 @@ struct sVersions
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
 
-    uint lcd;
-    char lcdVer[NAME_SIZE];
-    char lcdCompileTime[NAME_SIZE];
-
     uint start;
     char startVer[NAME_SIZE];
     char startCompileTime[NAME_SIZE];
+
+    uint lcd;
+    char lcdVer[NAME_SIZE];
+    char lcdCompileTime[NAME_SIZE];
 
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uint version;
@@ -193,7 +193,7 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
-    char qrcode[2*NAME_SIZE]; // 二维码
+    char qrcode[4*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
 };
 
@@ -204,7 +204,7 @@ struct sParameter {
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uint runTime; // 最近开关运行时间 分钟为单位
-    uint uptime; // 持续运行时间 单位小时
+    uint totalTime; // 持续运行时间 单位小时
     uint hz; // 产品实时频繁
 
     uchar reserve[20];
@@ -303,7 +303,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-             EGrouping=21,EGroupName};
+             EGrouping=21, EGroupName, EVersion};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
