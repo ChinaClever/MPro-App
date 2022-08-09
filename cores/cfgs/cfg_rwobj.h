@@ -4,9 +4,9 @@
 #include "cfg_obj.h"
 #include "cfg_rwstream.h"
 
-#define CFG_ALARM_FN    "cfg_alarm.ini"
+#define CFG_ALARM_FN    "cfg_alarm.bin"
 #define CFG_ALARM_DF    "cfg_alarm.df"
-#define CFG_PARAM_FN    "cfg_param.ini"
+#define CFG_PARAM_FN    "cfg_param.bin"
 #define CFG_PARAM_DF    "cfg_param.df"
 
 
