@@ -1,9 +1,9 @@
 #ifndef IPC_WEBCLIENT_H
 #define IPC_WEBCLIENT_H
 
-#include "ipc_logclient.h"
+#include "ipc_objclient.h"
 
-class IPC_WebClient : public IPC_LogClient
+class IPC_WebClient : public IPC_ObjClient
 {
     Q_OBJECT
     explicit IPC_WebClient(QObject *parent = nullptr);
