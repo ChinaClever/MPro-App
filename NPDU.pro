@@ -4,7 +4,7 @@ unix {
 SUBDIRS += \
     cores \
     ssh/pdu_cmd \
-    http_server \
+#    http_server \
     starts/start_up
 }
 

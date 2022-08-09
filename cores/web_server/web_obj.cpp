@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
 #include "web_obj.h"
 
 Web_Obj::Web_Obj()
@@ -32,7 +37,6 @@ QVector<double> Web_Obj::getNumbers(mg_str &r, int num)
     }
     return res;
 }
-
 
 int Web_Obj::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
 {

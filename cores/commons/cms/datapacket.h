@@ -174,10 +174,6 @@ struct sVersions
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
 
-    uint web;
-    char webVer[NAME_SIZE];
-    char webCompileTime[NAME_SIZE];
-
     uint lcd;
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
@@ -298,7 +294,7 @@ struct sDataItem
     //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
-    uchar topic; // 1 开关  2 电压  3 电流  4 功率  6温度 7湿度
+    uchar topic; // 1 开关  2 电压  3 电流  4 功率  11温度 12湿度
     uchar subtopic;  // 0 Size 1 当前值 2 额定值 3 报警状态  11 多开关控制
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar id; // 0 表示统一设置

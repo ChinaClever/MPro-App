@@ -11,8 +11,7 @@ static const char *s_listen_on = "ws://0.0.0.0:80";
 static const char *s_web_root = "/usr/data/clever/web";
 static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 #endif
-FILE* fp = NULL;
-int state = 0;
+
 
 static void process_json_reply(struct mg_connection *c, const struct mg_str &frame, char *result)
 {
@@ -24,7 +23,8 @@ static void process_json_reply(struct mg_connection *c, const struct mg_str &fra
     free(result);
 }
 
-static void process_json_message(struct mg_connection *c, struct mg_str frame) {
+static void process_json_message(struct mg_connection *c, struct mg_str frame)
+{
     struct mg_str params = mg_str(""), id = mg_str("");
     int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
     char *response = nullptr, *result = nullptr;
@@ -43,28 +43,15 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
                               "message", (int) frame.len, frame.ptr);
     } else if (strcmp(method, "pduReadData") == 0) {
         result = PduRpcObj::pduReadData(params);
-    } else if (strcmp(method, "pduSetData") == 0) {        
+    } else if (strcmp(method, "pduSetData") == 0) {
         result = PduRpcObj::pduSetData(params);
     } else if (strcmp(method, "pduReadParam") == 0) {
         result = PduRpcObj::pduReadParam(params);
-    }else if (strcmp(method, "pduSetParam") == 0) {
+    } else if (strcmp(method, "pduSetParam") == 0) {
         result = PduRpcObj::pduSetParam(params);
-    }
-
-    else if (strcmp(method, "pduReadString") == 0) {
-        result = PduRpcObj::pduReadString(params);
-    }else if (strcmp(method, "pduSetString") == 0) {
-        result = PduRpcObj::pduSetString(params);
-    }else if (strcmp(method, "pduReadCfg") == 0) {
-        result = PduRpcObj::pduReadCfg(params);
-    }else if (strcmp(method, "pduSetCfg") == 0) {
-        result = PduRpcObj::pduSetCfg(params);
-    }
-
-
-    else if (strcmp(method, "pduLogFun") == 0) {
+    } else if (strcmp(method, "pduLogFun") == 0) {
         result = PduRpcObj::pduLogFun(params);
-    }else {
+    } else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
                               "error", "code", -32601, "message", "Method not found");
     }
@@ -80,28 +67,25 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame) {
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
 //   any other URI serves static files from s_web_root
-static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
+static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
+{
+    static FILE* fp = nullptr; static int state = 0;
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     if (ev == MG_EV_OPEN) {
         // c->is_hexdumping = 1;
     } else if (ev == MG_EV_WS_OPEN) {
         c->label[0] = 'W';  // Mark this connection as an established WS client
     } else if (ev == MG_EV_ACCEPT && fn_data != NULL) {
-//        struct mg_tls_opts opts = {
-//            //.ca = "ca.pem",         // Uncomment to enable two-way SSL
-//            .cert = "client-cert.cer",     // Certificate PEM file
-//            .certkey = "client-key.key",  // This pem contains both cert and key
-//        };
         struct mg_tls_opts opts;
-//        opts.ca = "ca.pem";
+        // opts.ca = "ca.pem";
         memset(&opts , 0 , sizeof(opts));
-        #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
         opts.cert = "client-cert.cer";
         opts.certkey = "client-key.key";
-        #else
+#else
         opts.cert = "/usr/data/clever/cert/client-cert.cer";
         opts.certkey = "/usr/data/clever/cert/client-key.key";
-        #endif
+#endif
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
 
@@ -127,8 +111,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
                 fp = fopen(file_path , "w+b");
             }
             fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
-            fclose(fp);//
-            fp = NULL;//
+            fclose(fp); fp = NULL;
             mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
         }else {
             // Serve static files
@@ -176,9 +159,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     (void) fn_data;
 }
 
-int http_main(void) {
+static int http_main(void)
+{
     struct mg_mgr mgr;   // Event manager
-
     mg_mgr_init(&mgr);  // Init event manager
     PduRpcObj::rpc_export();
 
@@ -186,6 +169,7 @@ int http_main(void) {
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
     for (;;) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
+
     mg_mgr_free(&mgr);                            // Deallocate event manager
     return 0;
 }
@@ -195,8 +179,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     IPC_WebClient::bulid(p);
-    //qDebug() << cc->opName(0,2);
-
     std::thread th(http_main);
     th.detach();
 

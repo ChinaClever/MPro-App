@@ -38,12 +38,10 @@ char* PduRpcObj::responRpcString(const QVector<double> &its, const QString &valu
 
 char *PduRpcObj::pduReadParam(mg_str &r)
 {
-    QVector<double> its = mObj->getNumbers(r, 5);
-    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1),
-                                       (uchar)its.at(4));
+    QVector<double> its = mObj->getNumbers(r, 5);    
+    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2));
     return responRpcString(its, value);
 }
-
 
 char *PduRpcObj::pduSetParam(mg_str &r)
 {
@@ -60,53 +58,5 @@ char* PduRpcObj::pduLogFun(mg_str &r)
     QString value = mWebIpc->log_fun((uchar)its.at(2), (uchar)its.at(3),
                                      (uint)its.at(0), (uchar)its.at(4)).toString();
     return responRpcString(its, value);
-}
-
-
-
-
-
-char* PduRpcObj::pduReadString(mg_str &r)
-{
-    QVector<double> its = mObj->getNumbers(r, 5);
-    QString value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1),
-                                       (uchar)its.at(4));
-    return responRpcString(its, value);
-}
-
-char* PduRpcObj::pduSetString(mg_str &r)
-{
-    bool ret = false;
-    QVector<double> its = mObj->getNumbers(r, 5);
-    QString str = mObj->getString(r, 5);
-    qDebug()  << "CCCCCCCCCCCCC" << str;
-
-    if(str.size()) ret = mWebIpc->setCfg((uint)its.at(0), (uchar)its.at(1), (uchar)its.at(4), str);
-    return responRpcData(its, ret?1:0);
-}
-
-char* PduRpcObj::pduReadCfg(mg_str &r)
-{
-    QVector<double> its = mObj->getNumbers(r, 5);
-    double value = mWebIpc->getCfg((uchar)its.at(0), (uchar)its.at(1), (uchar)its.at(2)).toDouble();
-    return responRpcData(its, value);
-}
-
-char* PduRpcObj::pduSetCfg(mg_str &r)
-{
-    QVector<double> its = mObj->getNumbers(r, 5);
-    QVariant value = mObj->getString(r, 5);
-     qDebug()  << "AAAAAAAAAAA" << value;
-    if(value.toString().isEmpty()) {
-        value = mObj->getNumber(r, 5);
-         qDebug()  << "BBBBBBBBBB" << value;
-    }
-
-
-
-
-    bool ret = mWebIpc->setCfg((uint)its.at(0), (uchar)its.at(1),
-                                  (uchar)its.at(2), value);
-    return responRpcData(its, ret?1:0);
 }
 

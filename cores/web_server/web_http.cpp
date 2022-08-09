@@ -1,22 +1,37 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
 #include "web_http.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+static const char *s_listen_on = "ws://0.0.0.0:8000";
+static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
+static const char *s_listen_on = "ws://0.0.0.0:80";
+static const char *s_https_addr = "wss://0.0.0.0:443";  // HTTPS port
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
 
-Web_Http::Web_Http()
-{   
 
+Web_Http::Web_Http()
+{
+    QtConcurrent::run(this,&Web_Http::run);
 }
 
+Web_Http::~Web_Http()
+{
+    isRun = false;
+}
 
 void Web_Http::process_json_reply(mg_connection *c, const mg_str &frame, char *result)
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
     if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
     //MG_INFO(("[%.*s] -> [%s]", (int) frame.len, frame.ptr, response));
+
     free(response);
     free(result);
 }
@@ -24,14 +39,14 @@ void Web_Http::process_json_reply(mg_connection *c, const mg_str &frame, char *r
 void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
 {
     struct mg_str params = mg_str(""), id = mg_str("");
-    int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
     char *response = nullptr, *result = nullptr;
+    int params_len = 0, id_len = 0;
 
     // Parse websocket message, which should be a JSON-RPC frame like this:
     // { "id": 3, "method": "sum", "params": [1,2] }
     char *method = mg_json_get_str(frame, "$.method");
-    id_off = mg_json_get(frame, "$.id", &id_len);
-    params_off = mg_json_get(frame, "$.params", &params_len);
+    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
+    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
     params = mg_str_n(frame.ptr + params_off, params_len);
     id = mg_str_n(frame.ptr + id_off, id_len);
 
@@ -47,7 +62,7 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         result = pduReadParam(params);
     }else if (strcmp(method, "pduSetParam") == 0) {
         result = pduSetParam(params);
-    }else if (strcmp(method, "pduLogFun") == 0) {
+    } else if (strcmp(method, "pduLogFun") == 0) {
         result = pduLogFun(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
@@ -122,6 +137,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
         MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
 
+
         if(state == 0){
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
@@ -156,3 +172,17 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
     }
     (void) fn_data;
 }
+
+
+void Web_Http::run()
+{
+    struct mg_mgr mgr;   // Event manager
+    mg_mgr_init(&mgr);  // Init event manager
+
+    printf("Starting WS listener on %s/websocket\n", s_listen_on);
+    mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
+    mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
+    while(isRun) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
+    mg_mgr_free(&mgr);
+}
+

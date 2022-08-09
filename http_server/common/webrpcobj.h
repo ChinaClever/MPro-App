@@ -12,9 +12,6 @@ public:
     double getNumber(mg_str &r, int id);
     QVector<double> getNumbers(mg_str &r, int num);
     QString getString(mg_str &r, int id);
-
-private:
-     void compileTime();
 };
 
 #endif // WEBRPCOBJ_H

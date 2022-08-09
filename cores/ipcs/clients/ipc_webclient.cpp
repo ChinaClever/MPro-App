@@ -6,7 +6,7 @@
 #include "ipc_webclient.h"
 
 IPC_WebClient::IPC_WebClient(QObject *parent)
-    : IPC_LogClient{parent}
+    : IPC_ObjClient{parent}
 {
 
 }

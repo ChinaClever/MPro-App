@@ -59,7 +59,7 @@ void App_Start::startThreadSlot()
     Agent_Core::bulid(this);
 #endif
 
-    //Web_Core::bulid();
+    Web_Core::bulid();
     Data_Core::bulid();
     Mb_Core::bulid(this);
     //OP_Core::bulid(this)->startFun();

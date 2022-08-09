@@ -8,7 +8,6 @@ class IPC_ObjClient : public QObject
     Q_OBJECT
 public:
     explicit IPC_ObjClient(QObject *parent = nullptr);
-    sDataPacket *dataPacket();
 
 protected:
     bool sendSocket(const QVariantList &v);

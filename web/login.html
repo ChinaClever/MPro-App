@@ -33,13 +33,14 @@
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       let userPsd = usr + "; " + psd;
-      rpc.call('pduSetString',[0,user,0,0,11,userPsd]);
+      rpc.call('pduSetParam',[0,user,11,0,0,userPsd]);
         let time2 = setInterval(function(){
           if(verfity == 1)
           {
             verfity = 0;
             let ver = parseInt(sessionStorage.getItem(user_info[11]));
             if(ver  == 1){
+              sessionStorage.setItem(user_info[11],0);
               window.open('index.html','_self');
             }else{
               alert("用户名或密码输入有误，请重新输入！");
@@ -72,7 +73,7 @@
         alert("输入有误请重新输入！");
       }
       else{
-        rpc.call('pduSetString',[0,user,0,0,2,psd]);
+        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
         setTimeout(function(){
           read_user_info();
           var div= document.getElementsByClassName('center_form');
@@ -92,9 +93,9 @@
         alert("输入有误请重新输入！");
       }
       else{
-        rpc.call('pduSetString',[0,user,0,0,1,usr]);
-        rpc.call('pduSetString',[0,user,0,0,2,psd]);
-        rpc.call('pduSetString',[0,user,0,0,3,ient]);
+        rpc.call('pduSetParam',[0,user,1,0,0,usr]);
+        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
+        rpc.call('pduSetParam',[0,user,3,0,0,ient]);
         setTimeout(function(){
           read_user_info();
           var div= document.getElementsByClassName('center_form');

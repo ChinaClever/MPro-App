@@ -435,9 +435,7 @@ extern int SockSet(SOCKET hSock, int Type, int Prop, void *pbuf, int size);
 #include <mach/mach_time.h>
 #endif
 
-#if !defined(MG_ENABLE_EPOLL) && defined(__linux__)
-#define MG_ENABLE_EPOLL 1
-#elif !defined(MG_ENABLE_POLL)
+#if !defined(MG_ENABLE_POLL) && (defined(__linux__) || defined(__APPLE__))
 #define MG_ENABLE_POLL 1
 #endif
 
@@ -459,15 +457,11 @@ extern int SockSet(SOCKET hSock, int Type, int Prop, void *pbuf, int size);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#if defined(MG_ENABLE_EPOLL) && MG_ENABLE_EPOLL
-#include <sys/epoll.h>
-#elif defined(MG_ENABLE_POLL) && MG_ENABLE_POLL
+#if defined(MG_ENABLE_POLL) && MG_ENABLE_POLL
 #include <poll.h>
 #else
 #include <sys/select.h>
 #endif
-
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -477,10 +471,6 @@ extern int SockSet(SOCKET hSock, int Type, int Prop, void *pbuf, int size);
 
 #ifndef MG_ENABLE_DIRLIST
 #define MG_ENABLE_DIRLIST 1
-#endif
-
-#ifndef MG_PATH_MAX
-#define MG_PATH_MAX FILENAME_MAX
 #endif
 
 #endif
@@ -548,11 +538,9 @@ typedef enum { false = 0, true = 1 } bool;
 
 typedef int socklen_t;
 #define MG_DIRSEP '\\'
-
-#ifndef MG_PATH_MAX
-#define MG_PATH_MAX FILENAME_MAX
+#ifndef PATH_MAX
+#define PATH_MAX MAX_PATH
 #endif
-
 #ifndef EINPROGRESS
 #define EINPROGRESS WSAEINPROGRESS
 #endif
@@ -621,10 +609,6 @@ int sscanf(const char *, const char *, ...);
 
 #ifndef MG_ENABLE_POLL
 #define MG_ENABLE_POLL 0
-#endif
-
-#ifndef MG_ENABLE_EPOLL
-#define MG_ENABLE_EPOLL 0
 #endif
 
 #ifndef MG_ENABLE_FATFS
@@ -722,23 +706,6 @@ int sscanf(const char *, const char *, ...);
 #endif
 #endif
 
-#if MG_ENABLE_EPOLL
-#define MG_EPOLL_ADD(c)                                                    \
-  do {                                                                     \
-    struct epoll_event ev = {EPOLLIN | EPOLLERR | EPOLLHUP, {c}};          \
-    epoll_ctl(c->mgr->epoll_fd, EPOLL_CTL_ADD, (int) (size_t) c->fd, &ev); \
-  } while (0)
-#define MG_EPOLL_MOD(c, wr)                                                \
-  do {                                                                     \
-    struct epoll_event ev = {EPOLLIN | EPOLLERR | EPOLLHUP, {c}};          \
-    if (wr) ev.events |= EPOLLOUT;                                         \
-    epoll_ctl(c->mgr->epoll_fd, EPOLL_CTL_MOD, (int) (size_t) c->fd, &ev); \
-  } while (0)
-#else
-#define MG_EPOLL_ADD(c)
-#define MG_EPOLL_MOD(c, wr)
-#endif
-
 
 
 
@@ -777,20 +744,15 @@ unsigned long mg_unhexn(const char *s, size_t len);
 int mg_check_ip_acl(struct mg_str acl, uint32_t remote_ip);
 int64_t mg_to64(struct mg_str str);
 uint64_t mg_tou64(struct mg_str str);
-char *mg_remove_double_dots(char *s);
-
-
-
-
-
-typedef void (*mg_pfn_t)(char, void *);                  // Custom putchar
-typedef size_t (*mg_pm_t)(mg_pfn_t, void *, va_list *);  // %M printer
-void mg_pfn_realloc(char ch, void *param);  // Print to malloced str
-void mg_pfn_iobuf(char ch, void *param);    // Print to iobuf
-
 size_t mg_lld(char *buf, int64_t val, bool is_signed, bool is_hex);
 double mg_atod(const char *buf, int len, int *numlen);
 size_t mg_dtoa(char *buf, size_t len, double d, int width);
+char *mg_remove_double_dots(char *s);
+
+typedef void (*mg_pc_t)(char, void *);                  // Custom putchar
+typedef size_t (*mg_pm_t)(mg_pc_t, void *, va_list *);  // %M printer
+void mg_putchar_realloc(char ch, void *param);          // Print to malloced str
+void mg_putchar_iobuf(char ch, void *param);            // Print to iobuf
 
 size_t mg_vrprintf(void (*)(char, void *), void *, const char *fmt, va_list *);
 size_t mg_rprintf(void (*fn)(char, void *), void *, const char *fmt, ...);
@@ -808,7 +770,7 @@ char *mg_vmprintf(const char *fmt, va_list ap);
 enum { MG_LL_NONE, MG_LL_ERROR, MG_LL_INFO, MG_LL_DEBUG, MG_LL_VERBOSE };
 void mg_log(const char *fmt, ...);
 bool mg_log_prefix(int ll, const char *file, int line, const char *fname);
-void mg_log_set(int log_level);
+void mg_log_set(const char *spec);
 void mg_hexdump(const void *buf, size_t len);
 void mg_log_set_fn(void (*logfunc)(unsigned char ch));
 
@@ -833,7 +795,6 @@ void mg_log_set_fn(void (*logfunc)(unsigned char ch));
 
 
 struct mg_timer {
-  unsigned long id;         // Timer ID
   uint64_t period_ms;       // Timer period in milliseconds
   uint64_t prev_ms;         // Timestamp of a previous poll
   uint64_t expire;          // Expiration timestamp in milliseconds
@@ -946,13 +907,12 @@ struct mg_iobuf {
   unsigned char *buf;  // Pointer to stored data
   size_t size;         // Total size available
   size_t len;          // Current number of bytes
-  size_t align;        // Alignment during allocation
 };
 
-int mg_iobuf_init(struct mg_iobuf *, size_t, size_t);
+int mg_iobuf_init(struct mg_iobuf *, size_t);
 int mg_iobuf_resize(struct mg_iobuf *, size_t);
 void mg_iobuf_free(struct mg_iobuf *);
-size_t mg_iobuf_add(struct mg_iobuf *, size_t, const void *, size_t);
+size_t mg_iobuf_add(struct mg_iobuf *, size_t, const void *, size_t, size_t);
 size_t mg_iobuf_del(struct mg_iobuf *, size_t ofs, size_t len);
 
 int mg_base64_update(unsigned char p, char *to, int len);
@@ -1041,14 +1001,12 @@ struct mg_mgr {
   int dnstimeout;               // DNS resolve timeout in milliseconds
   bool use_dns6;                // Use DNS6 server by default, see #1532
   unsigned long nextid;         // Next connection ID
-  unsigned long timerid;        // Next timer ID
   void *userdata;               // Arbitrary user data pointer
   uint16_t mqtt_id;             // MQTT IDs for pub/sub
   void *active_dns_requests;    // DNS requests in progress
   struct mg_timer *timers;      // Active timers
-  int epoll_fd;                 // Used when MG_EPOLL_ENABLE=1
-  void *priv;                   // Used by the MIP stack
-  size_t extraconnsize;         // Used by the MIP stack
+  void *priv;                   // Used by the experimental stack
+  size_t extraconnsize;         // Used by the experimental stack
 #if MG_ARCH == MG_ARCH_FREERTOS_TCP
   SocketSet_t ss;  // NOTE(lsm): referenced from socket struct
 #endif
@@ -1083,7 +1041,6 @@ struct mg_connection {
   unsigned is_draining : 1;    // Send remaining data, then close and free
   unsigned is_closing : 1;     // Close and free the connection immediately
   unsigned is_full : 1;        // Stop reads, until cleared
-  unsigned is_resp : 1;        // Response is still being generated
   unsigned is_readable : 1;    // Connection is ready to read
   unsigned is_writable : 1;    // Connection is ready to write
 };
@@ -1386,7 +1343,7 @@ size_t mg_dns_parse_rr(const uint8_t *buf, size_t len, size_t ofs,
 
 // Error return values - negative. Successful returns are >= 0
 enum { MG_JSON_TOO_DEEP = -1, MG_JSON_INVALID = -2, MG_JSON_NOT_FOUND = -3 };
-int mg_json_get(struct mg_str json, const char *path, int *toklen);
+int mg_json_get(const char *buf, int len, const char *path, int *toklen);
 
 bool mg_json_get_num(struct mg_str json, const char *path, double *v);
 bool mg_json_get_bool(struct mg_str json, const char *path, bool *v);
@@ -1394,39 +1351,6 @@ long mg_json_get_long(struct mg_str json, const char *path, long dflt);
 char *mg_json_get_str(struct mg_str json, const char *path);
 char *mg_json_get_hex(struct mg_str json, const char *path, int *len);
 char *mg_json_get_b64(struct mg_str json, const char *path, int *len);
-
-
-
-
-// JSON-RPC request descriptor
-struct mg_rpc_req {
-  struct mg_rpc **head;  // RPC handlers list head
-  struct mg_rpc *rpc;    // RPC handler being called
-  mg_pfn_t pfn;          // Response printing function
-  void *pfn_data;        // Response printing function data
-  void *req_data;        // Arbitrary request data
-  struct mg_str frame;   // Request, e.g. {"id":1,"method":"add","params":[1,2]}
-};
-
-// JSON-RPC method handler
-struct mg_rpc {
-  struct mg_rpc *next;              // Next in list
-  struct mg_str method;             // Method pattern
-  void (*fn)(struct mg_rpc_req *);  // Handler function
-  void *fn_data;                    // Handler function argument
-};
-
-void mg_rpc_add(struct mg_rpc **head, struct mg_str method_pattern,
-                void (*handler)(struct mg_rpc_req *), void *handler_data);
-void mg_rpc_del(struct mg_rpc **head, void (*handler)(struct mg_rpc_req *));
-void mg_rpc_process(struct mg_rpc_req *);
-
-// Helper functions to print result or error frame
-void mg_rpc_ok(struct mg_rpc_req *, const char *fmt, ...);
-void mg_rpc_vok(struct mg_rpc_req *, const char *fmt, va_list *ap);
-void mg_rpc_err(struct mg_rpc_req *, int code, const char *fmt, ...);
-void mg_rpc_verr(struct mg_rpc_req *, int code, const char *fmt, va_list *);
-void mg_rpc_list(struct mg_rpc_req *r);
 
 
 

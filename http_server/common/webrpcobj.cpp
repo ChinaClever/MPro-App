@@ -2,7 +2,6 @@
 
 WebRpcObj::WebRpcObj()
 {
-    compileTime();
 }
 
 QString WebRpcObj::getString(mg_str &r, int id)
@@ -34,9 +33,3 @@ QVector<double> WebRpcObj::getNumbers(mg_str &r, int num)
 }
 
 
-void WebRpcObj::compileTime()
-{
-    sVersions *vers = &(cm::masterDev()->cfg.vers);
-    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(vers->webCompileTime, str.toLatin1().data());
-}
