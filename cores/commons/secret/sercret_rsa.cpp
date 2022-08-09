@@ -23,12 +23,18 @@ bool Sercret_Rsa::rsa_checkSign(const QByteArray &rawData)
 
 QByteArray Sercret_Rsa::rsa_encode(const QByteArray &rawData)
 {
-    return  QRSAEncryption::encode(rawData, rsaCfg.pubKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
+    QByteArray res; if(rsaCfg.pubKey.size()) {
+        res = QRSAEncryption::encode(rawData, rsaCfg.pubKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
+    }
+    return res;
 }
 
 QByteArray Sercret_Rsa::rsa_decode(const QByteArray &rawData)
 {
-    return QRSAEncryption::decode(rawData, rsaCfg.privKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
+    QByteArray res; if(rsaCfg.privKey.size()) {
+        res = QRSAEncryption::decode(rawData, rsaCfg.privKey, rsaCfg.rsa, rsaCfg.blockSizeMode);
+    }
+    return res;
 }
 
 bool Sercret_Rsa::rsa_generatePairKey()

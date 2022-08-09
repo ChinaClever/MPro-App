@@ -12,11 +12,19 @@ Sercret_Aes::Sercret_Aes()
 
 QByteArray Sercret_Aes::aes_crypt(const QByteArray &rawText)
 {
-    return QAESEncryption::Crypt(aesCfg.level, aesCfg.mode, rawText, aesCfg.key, aesCfg.iv, aesCfg.padding);
+    QByteArray res; if(aesCfg.key.size()) {
+        res = QAESEncryption::Crypt(aesCfg.level, aesCfg.mode, rawText,
+                                    aesCfg.key, aesCfg.iv, aesCfg.padding);
+    }
+    return res;
 }
 
 QByteArray Sercret_Aes::aes_decrypt(const QByteArray &rawText)
 {
-    QByteArray decode = QAESEncryption::Decrypt(aesCfg.level, aesCfg.mode, rawText, aesCfg.key, aesCfg.iv, aesCfg.padding);
-    return QAESEncryption::RemovePadding(decode);
+    QByteArray res; if(aesCfg.key.size()) {
+        QByteArray decode = QAESEncryption::Decrypt(aesCfg.level, aesCfg.mode, rawText,
+                                                    aesCfg.key, aesCfg.iv, aesCfg.padding);
+        res = QAESEncryption::RemovePadding(decode);
+    }
+    return res;
 }

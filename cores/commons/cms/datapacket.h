@@ -303,7 +303,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-             EGrouping=21, EGroupName, EVersion};
+             EGrouping=21, EGroupName, EVersion, ESercret};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
