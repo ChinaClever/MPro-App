@@ -3,14 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "app_start.h"
-#include "cascade_core.h"
+#include "web_server/web_core.h"
 #include "ipc_coreserver.h"
+#include "cascade_core.h"
 #include "rpc_service.h"
 #include "ssdp_server.h"
 #include "integr_core.h"
 #include "agent_core.h"
 #include "data_core.h"
+#include "app_start.h"
 #include "log_core.h"
 #include "set_ssdp.h"
 #include "mb_core.h"
@@ -58,9 +59,10 @@ void App_Start::startThreadSlot()
     Agent_Core::bulid(this);
 #endif
 
+    Web_Core::bulid();
     Data_Core::bulid();
     Mb_Core::bulid(this);
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     //Cascade_Core::bulid(this)->startFun();
 
 }

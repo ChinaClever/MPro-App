@@ -23,6 +23,7 @@ include(commons/commons.pri)
 include(integrs/integrs.pri)
 include(settings/settings.pri)
 include(updaters/updaters.pri)
+include(web_server/web_server.pri)
 
 SOURCES += \
         main.cpp

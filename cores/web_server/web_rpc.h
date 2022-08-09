@@ -1,25 +1,25 @@
-#ifndef PDURPCOBJ_H
-#define PDURPCOBJ_H
-#include "webrpcobj.h"
+#ifndef WEB_RPC_H
+#define WEB_RPC_H
+#include "web_obj.h"
 
-class PduRpcObj
+class Web_Rpc
 {
 public:
-    static void rpc_export();
+    Web_Rpc();
+
+protected:
     static char *pduReadData(mg_str &mg_r);
     static char *pduSetData(mg_str &r);
-
     static char *pduReadParam(mg_str &r);
     static char *pduSetParam(mg_str &r);
     static char *pduLogFun(mg_str &r);
 
-protected:
+private:
     static char *responRpcData(const QVector<double> &its, double value);
     static char *responRpcString(const QVector<double> &its, const QString &value);
 
-protected:
-    static WebRpcObj *mObj;
-    static IPC_WebClient *mWebIpc;
+private:
+    static Web_Obj *mObj;
 };
 
-#endif // PDURPCOBJ_H
+#endif // WEB_RPC_H

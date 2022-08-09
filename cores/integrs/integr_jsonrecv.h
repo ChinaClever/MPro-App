@@ -23,10 +23,10 @@ public:
 
     QString getString(const QJsonObject &object, const QString &key);
     QString getString(const QByteArray &msg, const QString &key);
-
     double getData(const QJsonObject &object, const QString &key);
     double getData(const QByteArray &msg, const QString &key);
 
+    bool getDecimal(sDataItem &it);
     bool company(const QJsonObject &object);
     bool versionNumber(const QJsonObject &object);
 

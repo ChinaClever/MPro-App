@@ -45,7 +45,7 @@ private:
     void delay();
     void workDown();
     void udpPush(const QByteArray &array);
-    void httpPost(const QByteArray &array);
+    void httpPush(const QByteArray &array);
 
 private:
     bool isRun = false;

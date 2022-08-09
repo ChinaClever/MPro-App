@@ -25,8 +25,9 @@ Integr_PushThread::~Integr_PushThread()
 void Integr_PushThread::startSlot()
 {
     if(!isRun) {
+        // QtConcurrent::run(this, &Integr_PushThread::run);
         mThread->init(this, SLOT(run()));
-         mThread->start();
+        mThread->start();
     }
 }
 
@@ -41,12 +42,13 @@ void Integr_PushThread::udpPush(const QByteArray &array)
     }
 }
 
-void Integr_PushThread::httpPost(const QByteArray &array)
+void Integr_PushThread::httpPush(const QByteArray &array)
 {
+    if(mCfg->http.url.isEmpty()) return ;
     switch (mCfg->http.en) {
     case 1: Http::post(mCfg->http.url, array, mCfg->http.timeout); break;
     case 2: Http::put(mCfg->http.url, array, mCfg->http.timeout); break;
-    default: break;
+    default: qDebug() << Q_FUNC_INFO; break;
     }
 }
 
@@ -56,9 +58,8 @@ void Integr_PushThread::workDown()
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
             QByteArray res = mJson->getJson(i);
-            if(mCfg->http.url.size()) httpPost(res);
-            udpPush(res);
-        } delay();
+            udpPush(res); httpPush(res);
+        } if(isRun) delay();
     }
 }
 

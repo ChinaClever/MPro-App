@@ -1,6 +1,9 @@
-#include <QCoreApplication>
-#include <thread>
-#include "pdurpcobj.h"
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
+#include "web_http.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
 static const char *s_listen_on = "ws://0.0.0.0:8000";
@@ -8,12 +11,22 @@ static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
 static const char *s_listen_on = "ws://0.0.0.0:80";
+static const char *s_https_addr = "wss://0.0.0.0:443";  // HTTPS port
 static const char *s_web_root = "/usr/data/clever/web";
-static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 #endif
 
 
-static void process_json_reply(struct mg_connection *c, const struct mg_str &frame, char *result)
+Web_Http::Web_Http()
+{
+    QtConcurrent::run(this,&Web_Http::run);
+}
+
+Web_Http::~Web_Http()
+{
+    isRun = false;
+}
+
+void Web_Http::process_json_reply(mg_connection *c, const mg_str &frame, char *result)
 {
     char *response = mg_mprintf("{%Q:%.*s, %Q:%s}", "id", (int)frame.len, frame.ptr, "result", result);
     if(response) mg_ws_printf(c, WEBSOCKET_OP_TEXT, "%s", response);
@@ -23,17 +36,17 @@ static void process_json_reply(struct mg_connection *c, const struct mg_str &fra
     free(result);
 }
 
-static void process_json_message(struct mg_connection *c, struct mg_str frame)
+void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
 {
     struct mg_str params = mg_str(""), id = mg_str("");
-    int params_off = 0, params_len = 0, id_off = 0, id_len = 0;
     char *response = nullptr, *result = nullptr;
+    int params_len = 0, id_len = 0;
 
     // Parse websocket message, which should be a JSON-RPC frame like this:
     // { "id": 3, "method": "sum", "params": [1,2] }
     char *method = mg_json_get_str(frame, "$.method");
-    id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
-    params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
+    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
+    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
     params = mg_str_n(frame.ptr + params_off, params_len);
     id = mg_str_n(frame.ptr + id_off, id_len);
 
@@ -42,16 +55,16 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame)
         response = mg_mprintf("{%Q:{%Q:%d,%Q:%.*Q}", "error", "code", -32700,
                               "message", (int) frame.len, frame.ptr);
     } else if (strcmp(method, "pduReadData") == 0) {
-        result = PduRpcObj::pduReadData(params);
+        result = pduReadData(params);
     } else if (strcmp(method, "pduSetData") == 0) {
-        result = PduRpcObj::pduSetData(params);
+        result = pduSetData(params);
     } else if (strcmp(method, "pduReadParam") == 0) {
-        result = PduRpcObj::pduReadParam(params);
-    } else if (strcmp(method, "pduSetParam") == 0) {
-        result = PduRpcObj::pduSetParam(params);
+        result = pduReadParam(params);
+    }else if (strcmp(method, "pduSetParam") == 0) {
+        result = pduSetParam(params);
     } else if (strcmp(method, "pduLogFun") == 0) {
-        result = PduRpcObj::pduLogFun(params);
-    } else {
+        result = pduLogFun(params);
+    }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
                               "error", "code", -32601, "message", "Method not found");
     }
@@ -67,7 +80,7 @@ static void process_json_message(struct mg_connection *c, struct mg_str frame)
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
 //   any other URI serves static files from s_web_root
-static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
+void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
 {
     static FILE* fp = nullptr; static int state = 0;
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
@@ -111,7 +124,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
                 fp = fopen(file_path , "w+b");
             }
             fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
-            fclose(fp); fp = NULL;
+            fclose(fp);//
+            fp = NULL;//
             mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
         }else {
             // Serve static files
@@ -159,28 +173,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
     (void) fn_data;
 }
 
-static int http_main(void)
+
+void Web_Http::run()
 {
     struct mg_mgr mgr;   // Event manager
     mg_mgr_init(&mgr);  // Init event manager
-    PduRpcObj::rpc_export();
 
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
-    for (;;) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
-
-    mg_mgr_free(&mgr);                            // Deallocate event manager
-    return 0;
+    while(isRun) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
+    mg_mgr_free(&mgr);
 }
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
-    QObject *p = a.parent();
-    IPC_WebClient::bulid(p);
-    std::thread th(http_main);
-    th.detach();
-
-    return a.exec();
-}
