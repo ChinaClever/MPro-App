@@ -2,10 +2,19 @@
 #define SERCRET_CORE_H
 #include "sercret_sm.h"
 
-class Sercret_Core
+struct sSercretIt {
+    sSercretIt(): type(0){}
+    int type; // 加密模式
+};
+
+class Sercret_Core : public Sercret_SM
 {
-public:
     Sercret_Core();
+public:
+    static Sercret_Core *bulid();
+    static sSercretIt cfg;
+    QByteArray encode(const QByteArray &raw);
+    QByteArray decrypt(const QByteArray &raw);
 };
 
 #endif // SERCRET_CORE_H

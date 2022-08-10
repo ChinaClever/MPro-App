@@ -143,9 +143,9 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
 
-        //if((index.type == DType::Output) && (index.topic == DTopic::Cur) ) {
+        // if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
         //    qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
-        //}
+        // }
     }
 
     return ret;
@@ -271,7 +271,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
     return ret;
 }
 
-bool Alarm_Object::upIndexValue(sDataItem &index)
+bool Alarm_Object::upMetaData(sDataItem &index)
 {
     bool  ret = false;
     switch (index.type) {

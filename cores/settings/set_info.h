@@ -17,6 +17,7 @@ protected:
 
     int devInfoCfg(int addr, int type);
     bool setInfoCfg(int addr, int type, int value);
+    QVariant softwareVersion(int addr, int type);
 
 private:
     bool qrcodeGenerator(const QString& msg);

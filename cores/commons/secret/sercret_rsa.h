@@ -20,6 +20,7 @@ public:
     bool rsa_generatePairKey();
     QByteArray rsa_sign(const QByteArray &rawData);
     bool rsa_checkSign(const QByteArray &rawData);
+
     QByteArray rsa_encode(const QByteArray &rawData);
     QByteArray rsa_decode(const QByteArray &rawData);
 };

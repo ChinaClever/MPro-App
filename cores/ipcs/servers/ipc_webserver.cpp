@@ -28,7 +28,7 @@ QVariant IPC_WebServer::ipc_recv_msg(int fc, const QByteArray &array)
         sDataItem unit = cm::toStruct<sDataItem>(array);
         if(unit.rw) Set_Core::bulid()->setting(unit);
         else {
-            bool ret = Set_Core::bulid()->upIndexValue(unit);
+            bool ret = Set_Core::bulid()->upMetaData(unit);
             if(ret) res = QString::number(unit.value);
         }
     } else if(5 == fc) {

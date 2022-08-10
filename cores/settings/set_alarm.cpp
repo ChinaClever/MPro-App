@@ -15,7 +15,7 @@ bool Set_Alarm::setAlarm(sDataItem &unit)
 {
     bool ret = false;
     if(unit.rw) {
-        ret = upIndexValue(unit);
+        ret = upMetaData(unit);
         if(ret) oplog(unit);
     }
     return ret;

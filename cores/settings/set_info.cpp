@@ -11,6 +11,28 @@ Set_Info::Set_Info()
 
 }
 
+QVariant Set_Info::softwareVersion(int addr, int type)
+{
+    sDevData *dev = cm::devData(addr);
+    sVersions *it = &(dev->cfg.vers);
+    QVariant res;
+
+    switch (type) {
+    case 1: res = it->coreVer; break;
+    case 2: res = it->coreCompileTime; break;
+    case 3: res = it->startVer; break;
+    case 4: res = it->startCompileTime; break;
+    case 5: res = it->lcdVer; break;
+    case 6: res = it->lcdCompileTime; break;
+    case 11: res = it->opVers[0]; break;
+    case 12: res = it->opVers[1]; break;
+    case 13: res = it->opVers[2]; break;
+    case 14: res = it->opVers[3]; break;
+    default: qDebug() << Q_FUNC_INFO << type; break;
+    }
+    return res;
+}
+
 int Set_Info::devInfoCfg(int addr, int type)
 {
     sDevData *dev = cm::devData(addr);
@@ -27,7 +49,8 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 6: ret = it->param.hz; break;
     case 7: ret = it->nums.boardNum; break;
     case 8: ret = it->nums.groupEn; break;
-
+    case 9: ret = it->param.runTime; break;
+    case 10: ret = it->param.totalTime; break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
