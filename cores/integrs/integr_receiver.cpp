@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_receiver.h"
+#include "sercret_core.h"
 
 Integr_Receiver::Integr_Receiver(QObject *parent)
     : Integr_PushThread{parent}
@@ -12,7 +13,7 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
     mWs = new WS_Server(this);
     mWss = new WS_Server(this);
     mTcp = new Net_TcpServer(this); initRecvFun();
-    connect(mUdp, &Net_Udp::recvSig, this, &Integr_Receiver::recvSlot);
+    connect(mUdp, &Net_Udp::recvSig, this, &Integr_Receiver::recvUdpSlot);
     connect(mTcp, &Net_TcpServer::recvSig, this, &Integr_Receiver::recvSlot);
     connect(mWs, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
     connect(mWss, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
@@ -56,4 +57,12 @@ void Integr_Receiver::setRecvPort(int port)
 void Integr_Receiver::recvSlot(const QByteArray &array)
 {
     Integr_JsonRecv::bulid(this)->recv(array);
+}
+
+void Integr_Receiver::recvUdpSlot(const QByteArray &array)
+{
+    QByteArray res = array;
+    if(Sercret_Core::cfg.type) {
+        res = Sercret_Core::bulid()->decrypt(array);
+    } recvSlot(res);
 }

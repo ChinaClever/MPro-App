@@ -15,8 +15,9 @@ public:
     void setRecvPort(int port);
     void startRecv(int en);
 
-private slots:   
+private slots:
     void recvSlot(const QByteArray &array);
+    void recvUdpSlot(const QByteArray &array);
 
 private:
     void initRecvFun();

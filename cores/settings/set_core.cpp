@@ -30,7 +30,6 @@ void Set_Core::writeAlarm()
 QVariant Set_Core::getCfg(sCfgItem &it)
 {
     QVariant res; switch (it.type) {
-    case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
@@ -40,7 +39,9 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
+    case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
+    case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
@@ -62,6 +63,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
+
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 

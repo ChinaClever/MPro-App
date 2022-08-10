@@ -1,8 +1,8 @@
 #ifndef SET_INTEGR_H
 #define SET_INTEGR_H
-#include "set_output.h"
+#include "set_sercret.h"
 
-class Set_Integr : public Set_Output
+class Set_Integr : public Set_Sercret
 {
 public:
     Set_Integr();

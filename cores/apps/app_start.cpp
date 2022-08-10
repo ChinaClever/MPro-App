@@ -6,6 +6,7 @@
 #include "web_server/web_core.h"
 #include "ipc_coreserver.h"
 #include "cascade_core.h"
+#include "sercret_core.h"
 #include "rpc_service.h"
 #include "ssdp_server.h"
 #include "integr_core.h"
@@ -27,6 +28,19 @@ App_Start::App_Start(QObject *parent)
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
+
+//    Sercret_Core::bulid()->rsa_generatePairKey();
+
+//    QString pub =Sercret_Core::rsaCfg.pubKey;
+//    QByteArray pri =Sercret_Core::rsaCfg.privKey;
+
+//    QSslKey key;
+
+//     qDebug() << Sercret_Core::rsaCfg.pubKey.toBase64();
+
+//    qDebug() << QString(Sercret_Core::rsaCfg.pubKey.toHex()) ;
+//    qDebug() << QString(Sercret_Core::rsaCfg.privKey.toHex()) ;
+
 }
 
 App_Start *App_Start::bulid(QObject *parent)

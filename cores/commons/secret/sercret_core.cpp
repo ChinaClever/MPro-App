@@ -11,6 +11,15 @@ Sercret_Core::Sercret_Core()
 
 }
 
+Sercret_Core *Sercret_Core::bulid()
+{
+    static Sercret_Core* sington = NULL;
+    if(sington == NULL) {
+        sington = new Sercret_Core();
+    }
+    return sington;
+}
+
 QByteArray Sercret_Core::encode(const QByteArray &raw)
 {
     QByteArray res;

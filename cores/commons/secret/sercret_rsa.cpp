@@ -39,5 +39,5 @@ QByteArray Sercret_Rsa::rsa_decode(const QByteArray &rawData)
 
 bool Sercret_Rsa::rsa_generatePairKey()
 {
-    return QRSAEncryption::generatePairKey(rsaCfg.pubKey, rsaCfg.privKey, rsaCfg.genesis, rsaCfg.rsa);
+    return QRSAEncryption::generatePairKey(rsaCfg.pubKey, rsaCfg.privKey, /*rsaCfg.genesis,*/ rsaCfg.rsa);
 }

@@ -10,6 +10,7 @@ HEADERS += \
     $$PWD/set_integr.h \
     $$PWD/set_login.h \
     $$PWD/set_output.h \
+    $$PWD/set_sercret.h \
     $$PWD/set_ssdp.h
 
 SOURCES += \
@@ -19,4 +20,5 @@ SOURCES += \
     $$PWD/set_integr.cpp \
     $$PWD/set_login.cpp \
     $$PWD/set_output.cpp \
+    $$PWD/set_sercret.cpp \
     $$PWD/set_ssdp.cpp
