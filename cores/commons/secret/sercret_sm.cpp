@@ -17,9 +17,9 @@ QByteArray Sercret_SM::sm4_encrypt(const QByteArray &txt)
     if(sm4Cfg.key.size()) {
         SimpleSm4 s;
         s.setType(sm4Cfg.type);
-        s.setKey(sm4Cfg.key.toStdString());
-        s.setIv(sm4Cfg.iv.toStdString());
-        res = QByteArray::fromStdString(s.encrypt(txt.toStdString()));
+        s.setKey(sm4Cfg.key);
+        s.setIv(sm4Cfg.iv);
+        res =s.encrypt(txt);
     }
     return res;
 }
@@ -30,9 +30,9 @@ QByteArray Sercret_SM::sm4_decrypt(const QByteArray &txt)
     if(sm4Cfg.key.size()) {
         SimpleSm4 s;
         s.setType(sm4Cfg.type);
-        s.setKey(sm4Cfg.key.toStdString());
-        s.setIv(sm4Cfg.iv.toStdString());
-        res = QByteArray::fromStdString(s.decrypt(txt.toStdString()));
+        s.setKey(sm4Cfg.key);
+        s.setIv(sm4Cfg.iv);
+        res = s.decrypt(txt);
     }
     return res;
 }
