@@ -4,13 +4,35 @@
  *      Author: Lzy
  */
 #include "sercet_tlscert.h"
+#include "file.h"
 
-Sercret_TlsCert::Sercret_TlsCert(const QString &fn, QSsl::EncodingFormat format)
+Sercret_TlsCert::Sercret_TlsCert()
 {
-    QFile crtFile(fn);
+    QFile crtFile(File::certFile());
     if(crtFile.open(QIODevice::ReadOnly)) {
-         mCert = new QSslCertificate(&crtFile, format);
+         mCert = new QSslCertificate(&crtFile, QSsl::Pem);
     } crtFile.close();
+}
+
+
+Sercret_TlsCert *Sercret_TlsCert::bulid()
+{
+    static Sercret_TlsCert* sington = nullptr;
+    if(sington == nullptr) {
+        sington = new Sercret_TlsCert();
+    }
+    return sington;
+}
+
+QSslKey Sercret_TlsCert::privKey()
+{
+    QFile keyFile(File::keyFile());
+    if(keyFile.open(QIODevice::ReadOnly)) {
+        QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
+        keyFile.close();        
+        return sslKey;
+    }
+    return QSslKey();
 }
 
 // 返回此证书的加密摘要。

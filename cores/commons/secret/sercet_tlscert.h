@@ -6,9 +6,11 @@
 
 class Sercret_TlsCert
 {
+    Sercret_TlsCert();
 public:
-    Sercret_TlsCert(const QString &fn, QSsl::EncodingFormat format = QSsl::Pem);
+    static Sercret_TlsCert *bulid();
 
+    QSslKey privKey();
     bool isSelfSigned();
     QSslKey publicKey();
     QByteArray serialNumber();

@@ -29,17 +29,9 @@ App_Start::App_Start(QObject *parent)
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 
-//    Sercret_Core::bulid()->rsa_generatePairKey();
 
-//    QString pub =Sercret_Core::rsaCfg.pubKey;
-//    QByteArray pri =Sercret_Core::rsaCfg.privKey;
-
-//    QSslKey key;
-
-//     qDebug() << Sercret_Core::rsaCfg.pubKey.toBase64();
-
-//    qDebug() << QString(Sercret_Core::rsaCfg.pubKey.toHex()) ;
-//    qDebug() << QString(Sercret_Core::rsaCfg.privKey.toHex()) ;
+    Sercret_Core *s = Sercret_Core::bulid();
+    //s->rsa_test();
 
 }
 

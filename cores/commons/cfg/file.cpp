@@ -76,7 +76,7 @@ QString File::keyFile()
 {
     QString fn;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    fn = "key.pem";
+    fn = "cert/key.pem";
 #else
     QString key = "/usr/data/clever/cert/client-key.pem";
     QString cert = "/usr/data/clever/cert/client-cert.pem";
@@ -90,7 +90,7 @@ QString File::certFile()
 {
     QString fn;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    fn = "cert.pem";
+    fn = "cert/cert.pem";
 #else
     QString key = "/usr/data/clever/cert/client-key.pem";
     QString cert = "/usr/data/clever/cert/client-cert.pem";
