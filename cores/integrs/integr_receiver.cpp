@@ -17,6 +17,12 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
     connect(mTcp, &Net_TcpServer::recvSig, this, &Integr_Receiver::recvSlot);
     connect(mWs, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
     connect(mWss, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
+    QtConcurrent::run(this,&Integr_Receiver::workDown);
+}
+
+Integr_Receiver::~Integr_Receiver()
+{
+    isRun = false;
 }
 
 void Integr_Receiver::initRecvFun()
@@ -61,8 +67,18 @@ void Integr_Receiver::recvSlot(const QByteArray &array)
 
 void Integr_Receiver::recvUdpSlot(const QByteArray &array)
 {
-    QByteArray res = array;
     if(Sercret_Core::cfg.type) {
-        res = Sercret_Core::bulid()->decrypt(array);
-    } recvSlot(res);
+        mList << array;
+    } else recvSlot(array);
+}
+
+void Integr_Receiver::workDown()
+{
+    while(isRun) {
+        if (mList.size()) {
+            QByteArray array = mList.takeFirst();
+            QByteArray res = Sercret_Core::bulid()->decrypt(array);
+            if(res.size()) recvSlot(res);
+        } else cm::mdelay(1);
+    }
 }

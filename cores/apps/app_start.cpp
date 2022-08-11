@@ -30,8 +30,9 @@ App_Start::App_Start(QObject *parent)
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 
 
-    Sercret_Core *s = Sercret_Core::bulid();
-    //s->rsa_test();
+//    Sercret_Core *s = Sercret_Core::bulid();
+//    s->rsa_test();
+//    s->sm4_test();
 
 }
 

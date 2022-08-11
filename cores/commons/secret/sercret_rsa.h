@@ -1,6 +1,6 @@
 #ifndef SERCRET_RSA_H
 #define SERCRET_RSA_H
-#include "RSA/qrsaencryption.h"
+//#include "RSA/qrsaencryption.h"
 #include "sercet_tlscert.h"
 #include "sercret_aes.h"
 

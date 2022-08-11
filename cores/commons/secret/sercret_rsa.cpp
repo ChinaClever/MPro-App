@@ -8,7 +8,6 @@
 #include <openssl/ssl.h>
 #include <openssl/rsa.h>
 
-
 sRsaIt Sercret_Rsa::rsaCfg;
 Sercret_Rsa::Sercret_Rsa()
 {
@@ -20,10 +19,10 @@ Sercret_Rsa::Sercret_Rsa()
 
 void Sercret_Rsa::rsa_test()
 {
-    QByteArray str = "123456luozhiyong";
+    QByteArray str = "123456";
     QByteArray res = rsa_encode(str);
     QByteArray rtn = rsa_decode(res);
-    qDebug() << (str == rtn ? true : false) << rtn;
+    qDebug() << (str == rtn ? true : false) << rtn << res.size();
     qDebug() << res.toBase64();
 }
 
@@ -136,3 +135,79 @@ QByteArray Sercret_Rsa::rsaPriDecrypt(const QByteArray &cipher_text, const QByte
     RSA_free(rsa);
     return decrypt_text;
 }
+
+/**
+
+
+-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAw02XT3+YuP4KJqxf+Fvr
+JtNC2bCrM8Ksi3+dFcwIfNUeyfxIWy1r6E8sJq8eYK5h5BqHGUaLdbTwGwfw9JV+
+MGNZeCDSh8TGRAUi9GT6m3GGIpWJ09PBnLItH2F18BXQxV/ZqIyXbJatz3eoFtVs
+cHRVYfgCWHgVl9nYN5pD4UT5ZdfylS6DfvqvhF23HHw8tNSGUZ0AHIsuF1+S8QDT
+t0OPkY0jZyFGNUEeTR7TPzDTRPj2S3NzsuZ5Q3ZIJD00E5b9kse4dS+o4uw9v0fz
+BJ5TUafQjY6oMBE7ITko8Zef55vmezU8/TLzR1qmk4zbs+xdqJDvx+gd1Z8FuOAx
+lnJS3mPmSBUH27czRSNJaHRwWZHUrvb3cUzEqTTOuCueCEKNgl/io9UVmWdYYdYi
+LtyG/CdzF/8HoEpMUN5RfPPGSZOglss8d9TnsjxcM8HM3Q+cV84aP+bgtcoM4g+C
+i916rcyIdZVBz8HIxPlhaVnTa6be1HT8e/DzupbbRJhM/Yv+9bSOQ5pVKcrrfQpt
+1A9ghTqJ1uYY/GCtBgd/JpSvHJSjArcFYsdeC2Q/fY+Pss66Gc3pILqjpLoKpJSc
+wxeiIr1f0on8pZBvTymt4zLoD2jXWbuuzWMJ/ISF2RQ0He9wQsQl52umrdQ1rD+w
+r2nGRigCbHY6ZK128btSpJ0CAwEAAQ==
+-----END PUBLIC KEY-----
+
+
+
+
+
+-----BEGIN RSA PRIVATE KEY-----
+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
+-----END RSA PRIVATE KEY-----
+
+*/

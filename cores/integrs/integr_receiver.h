@@ -12,10 +12,12 @@ public:
     bool initWsServer(int port) {return mWs->initServer(port);}
     bool tcpListen(int port) {return mTcp->listen(port);}
     bool udpBind(int port) {return mUdp->bind(port);}
-    void setRecvPort(int port);
+    void setRecvPort(int port);    
     void startRecv(int en);
+    ~Integr_Receiver();
 
 private slots:
+    void workDown();
     void recvSlot(const QByteArray &array);
     void recvUdpSlot(const QByteArray &array);
 
@@ -28,6 +30,8 @@ private:
     WS_Server *mWs;
     WS_Server *mWss;
     Net_TcpServer *mTcp;
+    QByteArrayList mList;
+    bool isRun=true;
 };
 
 #endif // INTEGR_RECEIVER_H
