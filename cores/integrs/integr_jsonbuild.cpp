@@ -93,10 +93,10 @@ void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &ke
     if(it.size) {
         QJsonObject obj; double r = 1;
         obj.insert("state", it.sw[id]/r);
-        obj.insert("mode", it.mode[id]/r);
+        obj.insert("mode", it.offAlarm[id]/r);
         obj.insert("alarm", it.alarm[id]?true:false);
-        obj.insert("delay", it.delay[id]/r);
-        obj.insert("resTime", it.resTime[id]/r);
+        obj.insert("delay", it.powerUpDelay[id]/r);
+        obj.insert("resTime", it.resetDelay[id]/r);
         json.insert(key, QJsonValue(obj));
     }
 }

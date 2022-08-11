@@ -26,9 +26,9 @@ void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
-    it.state = unit.mode[id];
-    it.delay = unit.delay[id];
-    it.resTime = unit.resTime[id];
+    it.state = unit.offAlarm[id];
+    it.delay = unit.powerUpDelay[id];
+    it.resTime = unit.resetDelay[id];
 }
 
 void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)

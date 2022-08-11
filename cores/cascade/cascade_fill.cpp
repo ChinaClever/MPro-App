@@ -27,8 +27,8 @@ void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     it.sw = unit.sw[id];
     it.en = unit.en[id];
-    it.state = unit.mode[id];
-    it.delay = unit.delay[id];
+    it.state = unit.offAlarm[id];
+    it.delay = unit.powerUpDelay[id];
 }
 
 void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)

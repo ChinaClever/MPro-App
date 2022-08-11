@@ -62,10 +62,13 @@ struct sRelayUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
-    uint mode[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
+    uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE]; // 报警状态
-    uint delay[PACK_ARRAY_SIZE]; // 上电延时
-    uint resTime[PACK_ARRAY_SIZE]; // 复位延时
+    uint powerUpDelay[PACK_ARRAY_SIZE]; // 上电延时
+    uint resetDelay[PACK_ARRAY_SIZE]; // 复位延时
+    uint overrunOff[PACK_ARRAY_SIZE]; // 超限断电
+    uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
+    char timings[PACK_ARRAY_SIZE][NAME_SIZE];
 };
 
 

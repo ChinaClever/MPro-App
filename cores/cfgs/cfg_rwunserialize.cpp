@@ -24,9 +24,9 @@ void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &
 void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     unit.en[id] = it.en;
-    unit.mode[id] = it.state;
-    unit.delay[id] = it.delay;
-    unit.resTime[id] = it.resTime;
+    unit.offAlarm[id] = it.state;
+    unit.powerUpDelay[id] = it.delay;
+    unit.resetDelay[id] = it.resTime;
 }
 
 void Cfg_RwUnserialize::unObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
