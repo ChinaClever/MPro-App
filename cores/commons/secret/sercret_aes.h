@@ -16,6 +16,9 @@ class Sercret_Aes
 public:
     Sercret_Aes();
     static sAesIt aesCfg;
+    void aes_setMode(int id);
+    void aes_setLevel(int id);
+    void aes_setPadding(int id);
     QByteArray aes_crypt(const QByteArray &rawText);
     QByteArray aes_decrypt(const QByteArray &rawText);
 };

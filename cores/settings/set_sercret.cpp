@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_sercret.h"
 #include "sercret_core.h"
 
@@ -8,20 +13,50 @@ Set_Sercret::Set_Sercret()
 
 QVariant Set_Sercret::getSercret(uchar fc)
 {
-    Sercret_Core * s = Sercret_Core::bulid();
+    Sercret_Core *it = Sercret_Core::bulid();
     QVariant res; switch (fc) {
-    case 1: res = s->cfg.type; break;
+    case 1: res = it->cfg.type; break;
 
-    case 11: res = s->aesCfg.mode; break;
-    case 12: res = s->aesCfg.padding; break;
-    case 13: res = s->aesCfg.level; break;
-    case 14: res = s->aesCfg.key; break;
-    case 15: res = s->aesCfg.iv; break;
+    case 11: res = it->aesCfg.mode; break;
+    case 12: res = it->aesCfg.padding; break;
+    case 13: res = it->aesCfg.level; break;
+    case 14: res = it->aesCfg.key; break;
+    case 15: res = it->aesCfg.iv; break;
 
-    case 21: res = s->rsaCfg.pubKey; break;
+    case 21: res = it->rsaCfg.length; break;
+    case 22: res = it->rsaCfg.padding; break;
+    case 23: res = it->rsaCfg.pubKey; break;
+    case 24: res = it->rsaCfg.privKey; break;
 
-
+    case 31: res = it->sm4Cfg.type; break;
+    case 32: res = it->sm4Cfg.padding; break;
+    case 33: res = it->sm4Cfg.key; break;
+    case 34: res = it->sm4Cfg.iv; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
     return res;
+}
+
+
+bool Set_Sercret::setSercret(uchar fc, const QVariant &v)
+{
+    bool ret = true;
+    QString prefix = "sercret"; QString key;
+    Sercret_Core *it = Sercret_Core::bulid();
+
+    switch (fc) {
+    case 1: key = "en";  it->cfg.type = v.toInt(); break;
+    case 11: key = "aes_mode";  it->aes_setMode(v.toInt()); break;
+    case 12: key = "aes_padding";  it->aes_setPadding(v.toInt());  break;
+    case 13: key = "aes_level";  it->aes_setLevel(v.toInt());  break;
+    case 14: key = "aes_key";  it->aesCfg.key = v.toByteArray(); break;
+    case 15: key = "aes_iv";  it->aesCfg.iv = v.toByteArray(); break;
+    case 33: key = "sm4_key"; it->sm4Cfg.key = v.toByteArray(); break;
+    case 34: key = "sm4_iv"; it->sm4Cfg.iv = v.toByteArray(); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    Cfg_Obj *cfg = Cfg_Obj::bulid();
+    cfg->writeCfg(key, v, prefix);
+    return ret;
 }

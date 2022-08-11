@@ -29,6 +29,13 @@ static void *share_mem_get(uint size)
     return shm;
 }
 
+void Shm::delShm()
+{
+    key_t key = ftok("/tmp", SHM_KEY);
+    uint size = sizeof(sDataPacket);
+    int shmid = shmget(key, size, 0666|IPC_CREAT);
+    if(shmid >= 0) shmctl(shmid, IPC_RMID, 0);
+}
 
 void Shm::initShm()
 {

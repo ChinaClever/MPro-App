@@ -8,6 +8,7 @@
 #include "mb_core.h"
 #include "rpc_service.h"
 #include "integr_core.h"
+#include "sercret_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -22,7 +23,8 @@ void Cfg_ReadParam::readCfgParams()
     snmp();
     login();
     modbus();
-    readUut();
+    sercret();
+    groupName();
     outputName();
 }
 
@@ -104,6 +106,32 @@ void Cfg_ReadParam::rpc()
     }
 }
 
+void Cfg_ReadParam::sercret()
+{
+    QByteArray *arr = nullptr;
+    QString prefix = "sercret"; QString key;
+    Sercret_Core *it = Sercret_Core::bulid();
+
+    for(int i=1; i<36; ++i) {
+        switch (i) {
+        case 1: key = "en"; it->cfg.type = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 11: key = "aes_mode"; it->aes_setMode(mCfg->readCfg(key, 1, prefix).toInt()); break;
+        case 12: key = "aes_padding"; it->aes_setPadding(mCfg->readCfg(key, 2, prefix).toInt()); break;
+        case 13: key = "aes_level"; it->aes_setLevel(mCfg->readCfg(key, 2, prefix).toInt()); break;
+        case 14: key = "aes_key"; arr = &it->aesCfg.key; break;
+        case 15: key = "aes_iv"; arr = &it->aesCfg.iv; break;
+        case 33: key = "sm4_key"; arr = &it->sm4Cfg.key;break;
+        case 34: key = "sm4_iv"; arr = &it->sm4Cfg.iv; break;
+        default: key.clear(); break;
+        }
+
+        if(key.size()) {
+            if(arr) *arr = mCfg->readCfg(key, "", prefix).toByteArray();
+            arr = nullptr;
+        }
+    }
+}
+
 void Cfg_ReadParam::push()
 {
     QString *str = nullptr;
@@ -137,37 +165,6 @@ void Cfg_ReadParam::push()
             ptr = nullptr;
         }
     }
-}
-
-void Cfg_ReadParam::readUut()
-{
-    QString prefix = "uut";
-    QString key; char *ptr=nullptr;
-    sUutInfo *it = &(cm::masterDev()->cfg.uut);
-
-    for(int i=1; i<8; ++i) {
-        switch (i) {
-        case 1: key = "idc";  ptr = it->idc; break;
-        case 2: key = "room";  ptr = it->room; break;
-        case 3: key = "module";  ptr = it->module; break;
-        case 4: key = "cab";  ptr = it->cab; break;
-        case 5: key = "road";  ptr = it->road; break;
-        case 6: key = "devName";  ptr = it->devName; break;
-        case 7: key = "sn";  ptr = it->sn; break;
-        }
-
-        QString res = mCfg->readCfg(key, "", prefix).toString();
-        qstrcpy(ptr, res.toLatin1().data());
-    }
-
-
-    ///////////=============
-//    for(int i=0; i<8; ++i) {
-//        sUutInfo *it = &(cm::devData(i)->cfg.uut);
-//        sprintf(it->devName, "devName_%d", i);
-//    }
-//    cm::masterDev()->cfg.nums.slaveNum = 8;   ///////////=============
-
 }
 
 void Cfg_ReadParam::groupName()

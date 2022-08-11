@@ -21,19 +21,20 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
 #endif
     Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
+}
 
-
-//    Sercret_Core *s = Sercret_Core::bulid();
-//    s->rsa_test();
-//    s->sm4_test();
-
+App_Start::~App_Start()
+{
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    Shm::delShm();
+#endif
 }
 
 App_Start *App_Start::bulid(QObject *parent)

@@ -28,3 +28,31 @@ QByteArray Sercret_Aes::aes_decrypt(const QByteArray &rawText)
     }
     return res;
 }
+
+void Sercret_Aes::aes_setMode(int id)
+{
+    switch(id){
+    case 0: aesCfg.mode = QAESEncryption::Mode::ECB;
+    case 1: aesCfg.mode = QAESEncryption::Mode::CBC;
+    case 2: aesCfg.mode = QAESEncryption::Mode::CFB;
+    case 3: aesCfg.mode = QAESEncryption::Mode::OFB;
+    }
+}
+
+void Sercret_Aes::aes_setPadding(int id)
+{
+    switch(id){
+    case 0: aesCfg.padding = QAESEncryption::Padding::ZERO;
+    case 1: aesCfg.padding = QAESEncryption::Padding::PKCS7;
+    case 2: aesCfg.padding = QAESEncryption::Padding::ISO;
+    }
+}
+
+void Sercret_Aes::aes_setLevel(int id)
+{
+    switch(id){
+    case 0: aesCfg.level = QAESEncryption::Aes::AES_128;
+    case 1: aesCfg.level = QAESEncryption::Aes::AES_192;
+    case 2: aesCfg.level = QAESEncryption::Aes::AES_256;
+    }
+}
