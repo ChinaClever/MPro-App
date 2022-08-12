@@ -37,6 +37,11 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
+    case SFnCode::ETimingOn: res = outputTiming(it.addr, it.fc, 0); break;
+    case SFnCode::ETimingOff: res = outputTiming(it.addr, it.fc, 1); break;
+    case SFnCode::EGroupTimingOn: res = groupTiming(it.addr, it.fc, 0); break;
+    case SFnCode::EGroupTimingOff: res = groupTiming(it.addr, it.fc, 1); break;
+
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
@@ -55,6 +60,11 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
+    case SFnCode::ETimingOn: ret = setOutputTiming(it.addr, it.fc, 0, v); break;
+    case SFnCode::ETimingOff: ret = setOutputTiming(it.addr, it.fc, 1, v); break;
+    case SFnCode::EGroupTimingOn: ret = setGroupTiming(it.addr, it.fc, 0, v); break;
+    case SFnCode::EGroupTimingOff: ret = setGroupTiming(it.addr, it.fc, 1, v); break;
+
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;

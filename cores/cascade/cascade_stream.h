@@ -48,7 +48,6 @@ struct _sDevData
 
     uchar id;  // 设备号
     sDevCfg cfg;
-    //sUutInfo uut;
 
     uchar lineSize;
     _sObjData line[LINE_NUM]; // 相数据

@@ -27,8 +27,10 @@ void Set_Output::relayOpLog(const sDataItem &it)
         str += QObject::tr("输出位继电器模式切换 ");
         if(sRelay::OffALarm == it.value) str += QObject::tr("断开报警模式");
         else {str += QObject::tr("默认");} break;
-    case DSub::UpTime: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
-    case DSub::ResTime: str += QObject::tr("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
+    case DSub::UpDelay: str += QObject::tr("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
+    case DSub::ResetDelay: str += QObject::tr("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
+    case DSub::OverrunOff: str += QObject::tr("输出位超限断电，修改为 %1s").arg(it.value); break;
+    case DSub::TimingEn: str += QObject::tr("输出位定时功能，修改为 %1s").arg(it.value); break;
     case DSub::Relays: {
         int start = it.type-1; int end = start + it.id; str = QObject::tr("第%１至%2 ").arg(start, end);
         if(it.value) str += QObject::tr("闭合"); else str += QObject::tr("断开"); break;}
@@ -93,7 +95,7 @@ bool Set_Output::relaySet(sDataItem &unit)
             switch (unit.subtopic) {
             case DSub::Value:  ret = outputCtrl(unit); break;
             case DSub::Relays: ret = outputsCtrl(unit); break;
-            case DSub::UpTime: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+            case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
             default: ret = upMetaData(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
             } } relayOpLog(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
@@ -111,16 +113,33 @@ QString Set_Output::grouping(int addr, int id)
 }
 
 QString Set_Output::groupName(int addr, int id)
-{
-    sObjData *dev = &(cm::devData(addr)->group);
+{    
+    sObjData *dev = &(cm::devData(addr)->group); if(id) id--;
     return dev->name[id];
 }
 
 QString Set_Output::outputName(int addr, int id)
-{
-    if(id) id--;
-    sObjData *dev = &(cm::devData(addr)->output);
+{    
+    sObjData *dev = &(cm::devData(addr)->output); if(id) id--;
     return dev->name[id];
+}
+
+QString Set_Output::outputTiming(int addr, int id, int onOff)
+{
+    char *ptr = nullptr; if(id) id--;
+    sRelayUnit *it = &(cm::devData(addr)->output.relay);
+    if(onOff) ptr = it->timingOff[id];
+    else ptr = it->timingOn[id];
+    return ptr;
+}
+
+QString Set_Output::groupTiming(int addr, int id, int onOff)
+{
+    char *ptr = nullptr; if(id) id--;
+    sRelayUnit *it = &(cm::devData(addr)->group.relay);
+    if(onOff) ptr = it->timingOff[id];
+    else ptr = it->timingOn[id];
+    return ptr;
 }
 
 void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
@@ -172,6 +191,44 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
         int id = str.toInt(); ptr[id] = 1;
     } bool ret = false;
     if(strs.size()) ret = Cfg_ReadWrite::bulid()->writeParams();
+    return ret;
+}
+
+bool Set_Output::setTiming(int g, int addr, int id, int onOff, const QVariant &v)
+{
+    char *ptr = nullptr; bool ret = true;
+    sRelayUnit *it = &(cm::devData(addr)->output.relay);
+    if(g) it = &(cm::devData(addr)->group.relay);
+    if(onOff) ptr = it->timingOff[id];
+    else ptr = it->timingOn[id];
+    qstrcpy(ptr, v.toByteArray().data());
+    if(ptr) Cfg_ReadWrite::bulid()->writeAlarms(); else ret = false;
+    return ret;
+}
+
+bool Set_Output::setOutputTiming(int addr, int id, int onOff, const QVariant &v)
+{
+    bool ret = true; if(id) {
+        ret = setTiming(0, addr, id, onOff, v);
+    } else {
+        sRelayUnit *it = &(cm::devData(addr)->output.relay);
+        for(int i=0; i<it->size; ++i)
+            ret = setTiming(0, addr, i, onOff, v);
+    }
+
+    return ret;
+}
+
+bool Set_Output::setGroupTiming(int addr, int id, int onOff, const QVariant &v)
+{
+    bool ret = true; if(id) {
+        ret = setTiming(1, addr, id, onOff, v);
+    } else {
+        sRelayUnit *it = &(cm::devData(addr)->group.relay);
+        for(int i=0; i<it->size; ++i)
+            ret = setTiming(1, addr, i, onOff, v);
+    }
+
     return ret;
 }
 

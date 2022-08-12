@@ -18,9 +18,13 @@ struct _sAlarmIt
 struct _sRelayIt
 {
     uchar en;
-    uchar state;
-    uchar delay;
-    uchar resTime;
+    uchar offAlarm;
+    uchar powerUpDelay;
+    uchar resetDelay;
+    uchar overrunOff;
+    uchar timingEn;
+    char timingOn[NAME_SIZE];
+    char timingOff[NAME_SIZE];
 };
 
 struct _sObjData {
