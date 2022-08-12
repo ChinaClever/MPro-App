@@ -281,7 +281,7 @@ blockquote {
 }
 
 .page-cont {
-    max-width: 1170px;
+    max-width: 90%;
     padding: 10px 15px;
     margin: 0 auto;
     -webkit-box-sizing: border-box;

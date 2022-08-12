@@ -11,22 +11,6 @@
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../doc-lib/doc.css">
-		<style>
-			.panel-default{
-            border: none;
-            border-radius: 0px;
-            margin-bottom: 0px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-			}
-			.panel-default > .panel-heading{
-				color: #222;
-				font-size:13px;
-				background-color: #fff;
-				border-color: #e6e6e6;
-				padding: 10px 12px;
-			}
-		</style>
 	</head>
 <body>
 	<div class="page-cont">
@@ -38,12 +22,21 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_2">电能清零</span>
-								<!-- <span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span> -->
 							</div>
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped"></table>
+					</div>
+					<div>
+						<br/>
+						<span style = "float:right;"><span></span><input><span>
+							<input type ="button" id  = "jump" value="前往"  onclick="setData()">
+							<input type ="button" id  = "last" value="上一页"  onclick="setData()">
+							<input type ="button" id  = "next" value="下一页"  onclick="setData()">
+							<input type ="button" id  = "del" value="删除日志"  onclick="setData()">
+							<input type ="button" id  = "export" value="导出" onclick="setData()">
+						</span>
 					</div>
 				</div>
 			</div>
@@ -55,20 +48,15 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		let energe_val = new Array();
-		let output_name = new Array();
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		let dev_name =new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		let log_info = new Array();
 		read_data();
 		function read_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
+			for(var i = 0 ;i < 20;i++)
 			{
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+				log_info[i]= new Array();
+				for(let j = 0;i < 4;j++){
+					log_info[i][j] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+				}
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));
@@ -114,54 +102,22 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">单元名称</td>\
-					<td width ="12%">电能消耗(kWh)</td>\
-					<td width ="44%"></td>\
-					<td width ="8%">重置清零</td>';
+					<td width ="26%">时间</td>\
+					<td width ="12%">用户名称</td>\
+					<td width ="12%">操作类型</td>\
+					<td width ="40%">详细描述</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]/10).toFixed(1) +'</td>';
-				tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
+				tbody += '<td id = "a'+ i + '">' + log_info[i][0] + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ log_info[i][1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ log_info[i][2] +'</td>';
+				tbody += '<td id = "d'+ i + '">'+ log_info[i][3] +'</td>';
 				tbody += '</tr>';
-				if(i === rows - 1){
-					i++;
-					tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
-					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td id = "d'+ i + '"></td>';
-					tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
-					tbody += '</tr>';
-				}
 			}
 
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0;
-		function putdata(){
-			for(let i = 0;i < output_num;i++){
-				state_ = document.getElementById('c' + i);
-				parseFloat(energe_val[i + 1]/10).toFixed(1)
-			}
-		}
-		function read_energe_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				rpc.call('pduReadData',[addr,output,energe_,1,i]);
-			}
-		}
-		setInterval(function(){
-			read_energe_data();
-			setTimeout(function(){
-				read_data();
-				putdata();
-			},800);
-		},2000);
-		
     </script>
 </body>
 </html>
