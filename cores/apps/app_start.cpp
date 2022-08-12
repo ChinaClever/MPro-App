@@ -18,6 +18,9 @@
 #include "mb_core.h"
 #include "op_core.h"
 
+#include "mqtt_client.h"
+
+
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
@@ -28,6 +31,8 @@ App_Start::App_Start(QObject *parent)
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
+
+    Mqtt_Client *c = new Mqtt_Client(this);
 }
 
 App_Start::~App_Start()
