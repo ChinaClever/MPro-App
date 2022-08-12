@@ -34,7 +34,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
 QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 {
     sDevData *dev = cm::devData(addr);  QJsonObject json;
-    if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
+    //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
         json.insert("version", JSON_VERSION);
@@ -74,7 +74,9 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
 void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key,
                                  QJsonObject &json,  double r)
 {
-    if(it.size) { QJsonObject obj;
+    //if(it.size)
+    {
+        QJsonObject obj;
         obj.insert("value", it.value[id]/r);
         obj.insert("rated", it.rated[id]/r);
         obj.insert("alarm_min", it.min[id]/r);
@@ -189,6 +191,13 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
 
+    obj.insert("core_ver", it.vers.coreVer);
+    obj.insert("core_compile_time", it.vers.coreCompileTime);
+    obj.insert("lcd_ver", it.vers.lcdVer);
+    obj.insert("lcd_compile_time", it.vers.lcdCompileTime);
+    obj.insert("start_ver", it.vers.startVer);
+    obj.insert("start_compile_time", it.vers.startCompileTime);
+
     QJsonArray ops;
     for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
     obj.insert("ops_num", ops);
@@ -211,6 +220,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     obj.insert("road", it.road);
     obj.insert("name", it.devName);
     obj.insert("sn", it.sn);
+    obj.insert("qrcode", it.qrcode);
     json.insert(key, QJsonValue(obj));
 }
 
@@ -235,7 +245,6 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 
     tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
-    obj.insert("hz", (int)it->hz);
     json.insert(key, QJsonValue(obj));
 }
 
