@@ -47,6 +47,7 @@ void Integr_PushThread::httpPush(const QByteArray &array)
 {
     if(mCfg->http.url.isEmpty()) return ;
     switch (mCfg->http.en) {
+    case 0: break;
     case 1: Http::post(mCfg->http.url, array, mCfg->http.timeout); break;
     case 2: Http::put(mCfg->http.url, array, mCfg->http.timeout); break;
     default: qDebug() << Q_FUNC_INFO; break;
