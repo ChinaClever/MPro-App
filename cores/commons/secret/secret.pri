@@ -1,12 +1,12 @@
 unix {
 INCLUDEPATH += $$PWD
 
-include(SMX/SMX.pri)
+#include(SMX/SMX.pri)
 
 
 HEADERS += \
     $$PWD/AES/qaesencryption.h \
-    $$PWD/SMX/simplesm4.h \
+    $$PWD/SMX/sm4.h \
     $$PWD/sercet_tlscert.h \
     $$PWD/sercret_aes.h \
     $$PWD/qtsecret_global.h \
@@ -16,7 +16,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/AES/qaesencryption.cpp \
-    $$PWD/SMX/simplesm4.cpp \
+    $$PWD/SMX/sm4.cpp \
     $$PWD/sercet_tlscert.cpp \
     $$PWD/sercret_aes.cpp \
     $$PWD/sercret_rsa.cpp \

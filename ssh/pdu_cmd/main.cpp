@@ -94,7 +94,7 @@ void pduLogFun(const QStringList &ls)
         uchar fc = ls.at(k++).toInt();
         uint id = ls.at(k++).toInt();
         uint cnt = ls.at(k++).toInt();
-        qDebug() << rpc->pduLogFun(type, fc, id, cnt);
+        std::cout << rpc->pduLogFun(type, fc, id, cnt).toStdString();
     } else qCritical() << "pduLogFun Parameter error";
 }
 
