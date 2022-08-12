@@ -71,3 +71,31 @@ uint File::Size(const QString &fn)
     }
     return size;
 }
+
+QString File::keyFile()
+{
+    QString fn;
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    fn = "certs/key.pem";
+#else
+    QString key = "/usr/data/clever/certs/client-key.pem";
+    QString cert = "/usr/data/clever/certs/client-cert.pem";
+    if(QFile::exists(key) && QFile::exists(cert)) fn = key;
+    else fn = "etc/ssl/certs/key.pem";
+#endif
+    return fn;
+}
+
+QString File::certFile()
+{
+    QString fn;
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    fn = "certs/cert.pem";
+#else
+    QString key = "/usr/data/clever/certs/client-key.pem";
+    QString cert = "/usr/data/clever/certs/client-cert.pem";
+    if(QFile::exists(key) && QFile::exists(cert)) fn = cert;
+    else fn = "/etc/ssl/certs/cert.pem";
+#endif
+    return fn;
+}

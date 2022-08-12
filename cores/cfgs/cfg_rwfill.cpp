@@ -26,9 +26,13 @@ void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
-    it.state = unit.mode[id];
-    it.delay = unit.delay[id];
-    it.resTime = unit.resTime[id];
+    it.offAlarm = unit.offAlarm[id];
+    it.powerUpDelay = unit.powerUpDelay[id];
+    it.resetDelay = unit.resetDelay[id];
+    it.overrunOff = unit.overrunOff[id];
+    it.timingEn = unit.timingEn[id];
+    qstrcpy(it.timingOn, unit.timingOn[id]);
+    qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
 void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)

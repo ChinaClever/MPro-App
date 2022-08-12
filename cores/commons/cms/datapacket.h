@@ -62,10 +62,14 @@ struct sRelayUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
-    uint mode[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
+    uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE]; // 报警状态
-    uint delay[PACK_ARRAY_SIZE]; // 上电延时
-    uint resTime[PACK_ARRAY_SIZE]; // 复位延时
+    uint powerUpDelay[PACK_ARRAY_SIZE]; // 上电延时
+    uint resetDelay[PACK_ARRAY_SIZE]; // 复位延时
+    uint overrunOff[PACK_ARRAY_SIZE]; // 超限断电
+    uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
+    char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
+    char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
 };
 
 
@@ -282,7 +286,8 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Group, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, UpTime=4, ResTime, Relays=11};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
+          UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
@@ -303,7 +308,8 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-             EGrouping=21, EGroupName, EVersion};
+             ETimingOn=20, ETimingOff, EGrouping, EGroupName, EGroupTimingOn, EGroupTimingOff,
+             EVersion=30, ESercret};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

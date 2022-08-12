@@ -27,8 +27,12 @@ void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &
 {
     unit.sw[id] = it.sw;
     unit.en[id] = it.en;
-    unit.mode[id] = it.state;
-    unit.delay[id] = it.delay;
+    unit.offAlarm[id] = it.offAlarm;
+    unit.powerUpDelay[id] = it.powerUpDelay;
+    unit.overrunOff[id] = it.overrunOff;
+    unit.timingEn[id] = it.timingEn;
+    qstrcpy(unit.timingOn[id], it.timingOn);
+    qstrcpy(unit.timingOff[id], it.timingOff);
 }
 
 void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)

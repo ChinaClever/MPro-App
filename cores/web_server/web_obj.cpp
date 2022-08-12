@@ -42,7 +42,7 @@ int Web_Obj::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
 {
     sDataItem it; it.addr = addr; it.type = type; if(id) id--;
     it.topic = topic; it.subtopic = sub; it.id = id;
-    bool ret = Set_Core::bulid()->upIndexValue(it);
+    bool ret = Set_Core::bulid()->upMetaData(it);
     int res = -1; if(ret) res = it.value;
     return res;
 }

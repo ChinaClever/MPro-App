@@ -6,6 +6,7 @@
 #include "web_server/web_core.h"
 #include "ipc_coreserver.h"
 #include "cascade_core.h"
+#include "sercret_core.h"
 #include "rpc_service.h"
 #include "ssdp_server.h"
 #include "integr_core.h"
@@ -20,13 +21,20 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
 #endif
     Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
+}
+
+App_Start::~App_Start()
+{
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    Shm::delShm();
+#endif
 }
 
 App_Start *App_Start::bulid(QObject *parent)

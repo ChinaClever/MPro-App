@@ -143,9 +143,9 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
 
-        //if((index.type == DType::Output) && (index.topic == DTopic::Cur) ) {
+        // if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
         //    qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
-        //}
+        // }
     }
 
     return ret;
@@ -186,10 +186,12 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         switch (index.subtopic) {
         case DSub::Size: index.value = unit->size; break;
         case DSub::Value: ptr = unit->sw; break;
-        case DSub::Rated: ptr = unit->mode; break;
+        case DSub::Rated: ptr = unit->offAlarm; break;
         case DSub::Alarm: ptr = unit->alarm; break;
-        case DSub::UpTime: ptr = unit->delay; break;
-        case DSub::ResTime: ptr = unit->resTime; break;
+        case DSub::UpDelay: ptr = unit->powerUpDelay; break;
+        case DSub::ResetDelay: ptr = unit->resetDelay; break;
+        case DSub::OverrunOff: ptr = unit->overrunOff; break;
+        case DSub::TimingEn: ptr = unit->timingEn; break;
         case DSub::EnAlarm: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
@@ -271,7 +273,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
     return ret;
 }
 
-bool Alarm_Object::upIndexValue(sDataItem &index)
+bool Alarm_Object::upMetaData(sDataItem &index)
 {
     bool  ret = false;
     switch (index.type) {

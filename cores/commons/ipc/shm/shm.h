@@ -7,6 +7,7 @@ class Shm
 public:
     static void *sharedMemory();
     static void initShm();
+    static void delShm();
 };
 
 #endif // SHM_H

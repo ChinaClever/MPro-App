@@ -315,11 +315,11 @@ SimpleSm4::~SimpleSm4() {
 
 }
 
-void SimpleSm4::setKey(const std::string &k) {
+void SimpleSm4::setKey(const QByteArray &k) {
     key = k;
 }
 
-void SimpleSm4::setIv(const std::string &i) {
+void SimpleSm4::setIv(const QByteArray &i) {
     iv = i;
 }
 
@@ -327,9 +327,9 @@ void SimpleSm4::setType(SimpleSm4::Type t) {
     type = t;
 }
 
-std::string SimpleSm4::encrypt(const std::string &data) {
-    if (key.size() != 16 || iv.size() != 16 || data.empty())
-        return std::string();
+QByteArray SimpleSm4::encrypt(const QByteArray &data) {
+    if (key.size() != 16 || iv.size() != 16 || data.isEmpty())
+        return QByteArray();
 
     unsigned char _key[16] = {0};
     memcpy(_key, key.data(), 16);
@@ -357,14 +357,14 @@ std::string SimpleSm4::encrypt(const std::string &data) {
         sm4_crypt_cbc(&ctx, 1, length, _iv, input, output);
     }
 
-    std::string ret;
-    ret.assign((const char *) output, length);
+    QByteArray ret;
+    ret.append((const char *) output, length);
     return ret;
 }
 
-std::string SimpleSm4::decrypt(const std::string &data) {
+QByteArray SimpleSm4::decrypt(const QByteArray &data) {
     if (key.size() != 16 || iv.size() != 16 || data.size() < 16)
-        return std::string();
+        return QByteArray();
 
     int length = data.size();
 
@@ -389,11 +389,10 @@ std::string SimpleSm4::decrypt(const std::string &data) {
     }
 
     length = length - (int) output[length - 1];
-    if (length < 0)
-        return std::string();
+    if (length < 0) return QByteArray();
 
-    std::string ret;
-    ret.assign((const char *) output, length);
+    QByteArray ret;
+    ret.append((const char *) output, length);
     return ret;
 }
 

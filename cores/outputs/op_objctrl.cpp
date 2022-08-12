@@ -17,7 +17,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
         sRelayUnit *unit = &(mDev->output.relay);
-        int t = unit->delay[id-1];  mList << id; if(!t) t = 5;
+        int t = unit->powerUpDelay[id-1];  mList << id; if(!t) t = 5;
         QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
 }
@@ -142,7 +142,7 @@ void OP_ObjCtrl::setClearEle(int id)
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.powerUpDelay;
     for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
     funDelay(cmd);
 }
@@ -150,7 +150,7 @@ void OP_ObjCtrl::setAllDelay(uchar sec)
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.delay;
+    uint *cmd = dev->output.relay.powerUpDelay;
     cmd[id-1] = sec;
     funDelay(cmd);
 }

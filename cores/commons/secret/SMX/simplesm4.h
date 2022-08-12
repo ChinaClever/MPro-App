@@ -5,7 +5,7 @@
 #ifndef LIB_SM4_H
 #define LIB_SM4_H
 
-#include <string>
+#include <QtCore>
 
 // C++封装的国密SM4加解密, 支持ECB和CBC模式, PKCS7Padding补全
 class SimpleSm4 {
@@ -17,16 +17,16 @@ public:
 public:
     explicit SimpleSm4();
     ~SimpleSm4();
-    void setKey(const std::string &k);
-    void setIv(const std::string &i);
+    void setKey(const QByteArray &k);
+    void setIv(const QByteArray &i);
     void setType(Type t = Type::ECB);
 
-    std::string encrypt(const std::string& data);
-    std::string decrypt(const std::string& data);
+    QByteArray encrypt(const QByteArray &data);
+    QByteArray decrypt(const QByteArray &data);
 
 private:
-    std::string key;
-    std::string iv;
+    QByteArray key;
+    QByteArray iv;
     Type type;
 };
 

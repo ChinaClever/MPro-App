@@ -26,7 +26,7 @@ int Rpc_Method::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uch
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0;
-    Set_Core::bulid()->upIndexValue(mIt);
+    Set_Core::bulid()->upMetaData(mIt);
     return mIt.value;
 }
 

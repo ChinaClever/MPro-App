@@ -108,6 +108,6 @@ void Cfg_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
-        it.resTime[i] = 5;
+        it.resetDelay[i] = 5;
     }
 }
