@@ -51,8 +51,8 @@ void Data_Line::tgWork()
 
 void Data_Line::calHz()
 {
-    for(uint i=0; i<mDev->cfg.nums.loopNum; ++i) {
+    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) {
         uchar hz = mDev->rtu.hzs[i];
-        if(hz) {mDev->hz = mDev->cfg.param.hz = hz; break;}
+        if(hz) {mDev->hz = mDev->cfg.param.hz = hz;break;}
     }
 }

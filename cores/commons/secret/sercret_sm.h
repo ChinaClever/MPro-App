@@ -1,6 +1,6 @@
 #ifndef SERCRET_SM_H
 #define SERCRET_SM_H
-#include "SMX/simplesm4.h"
+#include "SMX/sm4.h"
 #include "sercret_rsa.h"
 
 // 支持ECB和CBC模式, PKCS7Padding补全

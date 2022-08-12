@@ -32,27 +32,27 @@ QByteArray Sercret_Aes::aes_decrypt(const QByteArray &rawText)
 void Sercret_Aes::aes_setMode(int id)
 {
     switch(id){
-    case 0: aesCfg.mode = QAESEncryption::Mode::ECB;
-    case 1: aesCfg.mode = QAESEncryption::Mode::CBC;
-    case 2: aesCfg.mode = QAESEncryption::Mode::CFB;
-    case 3: aesCfg.mode = QAESEncryption::Mode::OFB;
+    case 0: aesCfg.mode = QAESEncryption::Mode::ECB; break;
+    case 1: aesCfg.mode = QAESEncryption::Mode::CBC; break;
+    case 2: aesCfg.mode = QAESEncryption::Mode::CFB; break;
+    case 3: aesCfg.mode = QAESEncryption::Mode::OFB; break;
     }
 }
 
 void Sercret_Aes::aes_setPadding(int id)
 {
     switch(id){
-    case 0: aesCfg.padding = QAESEncryption::Padding::ZERO;
-    case 1: aesCfg.padding = QAESEncryption::Padding::PKCS7;
-    case 2: aesCfg.padding = QAESEncryption::Padding::ISO;
+    case 0: aesCfg.padding = QAESEncryption::Padding::ZERO; break;
+    case 1: aesCfg.padding = QAESEncryption::Padding::PKCS7; break;
+    case 2: aesCfg.padding = QAESEncryption::Padding::ISO; break;
     }
 }
 
 void Sercret_Aes::aes_setLevel(int id)
 {
     switch(id){
-    case 0: aesCfg.level = QAESEncryption::Aes::AES_128;
-    case 1: aesCfg.level = QAESEncryption::Aes::AES_192;
-    case 2: aesCfg.level = QAESEncryption::Aes::AES_256;
+    case 0: aesCfg.level = QAESEncryption::Aes::AES_128; break;
+    case 1: aesCfg.level = QAESEncryption::Aes::AES_192; break;
+    case 2: aesCfg.level = QAESEncryption::Aes::AES_256; break;
     }
 }
