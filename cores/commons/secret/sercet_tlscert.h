@@ -16,10 +16,15 @@ public:
     QByteArray serialNumber();
     QByteArray version();
     QString toText();
-    QStringList issuerInfo(QSslCertificate::SubjectInfo info);
-    QStringList subjectInfo(QSslCertificate::SubjectInfo info);
+    QString issuerInfo(int id);
+    QString subjectInfo(int id);
     QByteArray digest();
 
+    QString effectiveDate();
+    QString expiryDate();
+
+private:
+    QSslCertificate::SubjectInfo toSubjectInfo(int id);
 private:
     QSslCertificate *mCert;
 };

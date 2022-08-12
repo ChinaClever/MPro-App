@@ -10,6 +10,8 @@ public:
     QVariant getSercret(uchar fc);
     bool setSercret(uchar fc, const QVariant &v);
 
+    QVariant getTlsCert(uchar fc);
+    bool setTlsCert(uchar fc, const QVariant &v);
 };
 
 #endif // SET_SERCRET_H
