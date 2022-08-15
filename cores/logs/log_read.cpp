@@ -14,7 +14,7 @@ Log_Read::Log_Read(QObject *parent)
 template <typename T, typename U>
 static QString log_read_page(U *db, int id, int cnt)
 {
-    QVector<T> its;if(id)id--;
+    QVector<T> its;
     int minId = db->minId();
     if(minId >= 0) {
         int min = id + minId;
