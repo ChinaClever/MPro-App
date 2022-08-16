@@ -71,58 +71,68 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
     json.insert("uut_info", QJsonValue(obj));
 }
 
-void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key,
-                                 QJsonObject &json,  double r)
+void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,
+                                   const QString &key, QJsonObject &json, double r)
 {
-    //if(it.size)
-    {
-        QJsonObject obj;
-        obj.insert("value", it.value[id]/r);
-        obj.insert("rated", it.rated[id]/r);
-        obj.insert("alarm_min", it.min[id]/r);
-        obj.insert("alarm_max", it.max[id]/r);
-
-        obj.insert("warn_min", it.crMin[id]/r);
-        obj.insert("warn_max", it.crMax[id]/r);
-        obj.insert("alarm_status", it.alarm[id]?true:false);
-        obj.insert("alarm_enable", it.en[id]?true:false);
-        json.insert(key, QJsonValue(obj));
-    }
+    QJsonArray array;
+    for(int i=0; i<size; ++i) array.append(ptr[i]/r);
+    if(array.size()) json.insert(key, QJsonValue(array));
 }
 
-void Integr_JsonBuild::relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
 {
-    if(it.size) {
-        QJsonObject obj; double r = 1;
-        obj.insert("state", it.sw[id]/r);
-        obj.insert("mode", it.offAlarm[id]/r);
-        obj.insert("alarm", it.alarm[id]?true:false);
-        obj.insert("delay", it.powerUpDelay[id]/r);
-        obj.insert("resTime", it.resetDelay[id]/r);
-        json.insert(key, QJsonValue(obj));
-    }
+    int size = it.size;
+    arrayAppend(it.value, size, key+"_value", json, r);
+    arrayAppend(it.en, size, key+"_alarm_enable", json, r);
+    //arrayAppend(it.rated, size, key+"_rated", json, r);
+    arrayAppend(it.min, size, key+"_alarm_min", json, r);
+    arrayAppend(it.max, size, key+"_alarm_max", json, r);
+    arrayAppend(it.crMin, size, key+"_warn_min", json, r);
+    arrayAppend(it.crMax, size, key+"_warn_max", json, r);
+    arrayAppend(it.alarm, size, key+"_alarm_status", json, r);
+}
+
+void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json)
+{
+    QJsonArray array;
+    for(int i=0; i<size; ++i) {
+        if(strlen(ptr[i])) array.append(ptr[i]);
+    } if(array.size()) json.insert(key, array);
+}
+
+void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
+{
+    int size = it.size;
+    arrayAppend(it.sw, size, key+"_state", json);
+    arrayAppend(it.alarm, size, key+"_alarm", json);
+    arrayAppend(it.offAlarm, size, key+"_offAlarm", json);
+    arrayAppend(it.resetDelay, size, key+"_resetDelay", json);
+    arrayAppend(it.powerUpDelay, size, key+"_powerUpDelay", json);
+    arrayAppend(it.overrunOff, size, key+"_overrunOff", json);
+    arrayAppend(it.timingEn, size, key+"_timingEn", json);
+    strListAppend(it.timingOn, size, key+"_timingOn", json);
+    strListAppend(it.timingOff, size, key+"_timingOff", json);
 }
 
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
 {
-    QJsonArray array;
-    for(int id=0; id<it.size; ++id) {
-        QJsonObject obj;
-        alarmUnit(id, it.vol, "vol", obj, COM_RATE_VOL);
-        alarmUnit(id, it.cur, "cur", obj, COM_RATE_CUR);
-        alarmUnit(id, it.pow, "pow", obj, COM_RATE_POW);
-        relayUnit(id, it.relay, "relay", obj);
+    QJsonObject obj;
+    alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
+    alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
+    alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
+    relayUnit(it.relay, "relay", obj);
 
-        obj.insert("id", id+1);
-        obj.insert("pf", it.pf[id]/COM_RATE_PF);
-        obj.insert("ele", it.ele[id]/COM_RATE_ELE);
-        obj.insert("apparent_pow", it.artPow[id]/COM_RATE_POW);
-        obj.insert("reactive_pow", it.reactivePow[id]/COM_RATE_POW);
-        if(strlen(it.name[id])) obj.insert("name", it.name[id]);
-        array.append(obj);
-    }
-    json.insert(key, QJsonValue(array));
+    int size = it.size;
+    arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
+    arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
+    arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_PF);
+    arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_ELE);
+    strListAppend(it.name, size, "name", obj);
+    json.insert(key, obj);
 }
+
+
+
 
 void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json, double r)
 {
@@ -154,27 +164,13 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
-    QJsonArray array; double r = 1;
-    for(int i=0; i< it.size; ++i) {
-        QJsonObject obj;
-        obj.insert("id", i+1);
-        alarmUnit(i, it.tem, "tem", obj, COM_RATE_TEM);
-        alarmUnit(i, it.hum, "hum", obj, COM_RATE_HUM);
-        array.append(obj);
-    }
-    json.insert(key, QJsonValue(array));
-
-    QJsonArray door;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.door[i]/r);
-    json.insert("door", door);
-
-    QJsonArray water;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.water[i]/r);
-    json.insert("water", water);
-
-    QJsonArray smoke;
-    for(int i=0; i<SENOR_NUM; ++i) door.append(it.smoke[i]/r);
-    json.insert("smoke", smoke);
+    QJsonObject obj;
+    alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+    alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+    arrayAppend(it.door, 2, "door", obj);
+    arrayAppend(it.water, 1, "water", obj);
+    arrayAppend(it.smoke, 1, "smoke", obj);
+    json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
@@ -192,10 +188,13 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("output_num", it.nums.outputNum/r);
 
     obj.insert("core_ver", it.vers.coreVer);
+    obj.insert("core_md5", it.vers.coreMd5);
     obj.insert("core_compile_time", it.vers.coreCompileTime);
     obj.insert("lcd_ver", it.vers.lcdVer);
+    obj.insert("lcd_md5", it.vers.lcdMd5);
     obj.insert("lcd_compile_time", it.vers.lcdCompileTime);
     obj.insert("start_ver", it.vers.startVer);
+    obj.insert("start_md5", it.vers.startMd5);
     obj.insert("start_compile_time", it.vers.startCompileTime);
 
     QJsonArray ops;
