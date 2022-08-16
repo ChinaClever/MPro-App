@@ -36,7 +36,6 @@ QString Log_Read::log_readOnce(int type, int id)
 {
     QVariant v; switch (type) {
     case eLogs::eOpLog: v = log_read_once<sOpItem>(Db_Op::bulid(), id); break;
-    case eLogs::eOtaLog: v = log_read_once<sOtaItem>(Db_Ota::bulid(), id); break;
     case eLogs::eSysLog: v = log_read_once<sSysItem>(Db_Sys::bulid(), id); break;
     case eLogs::eEleLog: v = log_read_once<sEleItem>(Db_Ele::bulid(), id); break;
     case eLogs::eUserLog: v = log_read_once<sUserItem>(Db_User::bulid(), id); break;
@@ -55,7 +54,6 @@ QString Log_Read::log_readPage(int type, int id, int cnt)
     case eLogs::eOpLog: v = log_read_page<sOpItem>(Db_Op::bulid(), id, cnt); break;
     case eLogs::eSysLog: v = log_read_page<sSysItem>(Db_Sys::bulid(), id, cnt); break;
     case eLogs::eEleLog: v = log_read_page<sEleItem>(Db_Ele::bulid(), id, cnt); break;
-    case eLogs::eOtaLog: v = log_read_page<sOtaItem>(Db_Ota::bulid(), id, cnt); break;
     case eLogs::eUserLog: v = log_read_page<sUserItem>(Db_User::bulid(), id, cnt); break;
     case eLogs::eAlarmLog: v = log_read_page<sAlarmItem>(Db_Alarm::bulid(), id, cnt); break;
     case eLogs::eHardwareLog: v = log_read_page<sHardwareItem>(Db_Hardware::bulid(), id, cnt); break;
@@ -70,7 +68,6 @@ Sql_Statement *Log_Read::getSql(int type)
     Sql_Statement *sql = nullptr;
     switch (type) {
     case eLogs::eOpLog: sql = Db_Op::bulid(); break;
-    case eLogs::eOtaLog: sql = Db_Ota::bulid(); break;
     case eLogs::eSysLog: sql = Db_Sys::bulid(); break;
     case eLogs::eEleLog: sql = Db_Ele::bulid(); break;
     case eLogs::eUserLog: sql = Db_User::bulid(); break;
