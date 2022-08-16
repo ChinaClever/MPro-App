@@ -12,6 +12,7 @@ Mqtt_Client::Mqtt_Client(QObject *parent)
     : QObject{parent}
 {
     connectToHost();
+    connect(this, &Mqtt_Client::publish, this, &Mqtt_Client::onPublish);
 }
 
 Mqtt_Client *Mqtt_Client::bulid(QObject *parent)
@@ -85,14 +86,13 @@ void Mqtt_Client::onConnected()
     m_client->subscribe(topic, cfg.qos);
 }
 
-bool Mqtt_Client::publish(const QByteArray &payload)
+void Mqtt_Client::onPublish(const QByteArray &payload)
 {
-    bool ret = false; if(cfg.isConnected) {
+    if(cfg.isConnected) {
         QString topic = "pduMetaData/"+ cfg.clientId;
         QMQTT::Message message(m_number++, topic, payload, cfg.qos);
-        ret = m_client->publish(message);
+        m_client->publish(message);
     }
-    return ret;
 }
 
 void Mqtt_Client::onReceived(const QMQTT::Message& message)

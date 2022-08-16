@@ -23,16 +23,17 @@ class Mqtt_Client : public QObject
     explicit Mqtt_Client(QObject *parent = nullptr);
 public:
     static Mqtt_Client *bulid(QObject *parent = nullptr);
-    bool publish(const QByteArray &payload);
     bool set(uchar fc, const QVariant &v);
     static sMqttCfg cfg;
     ~Mqtt_Client();
 
 signals:
+    void publish(const QByteArray &payload);
     void received(const QByteArray &payload);
 
 private slots:
     void onConnected();
+    void onPublish(const QByteArray &payload);
     void onDisconnected(){cfg.isConnected = false;}
     void onReceived(const QMQTT::Message& message);
     void onError(const QMQTT::ClientError error) {qDebug() << Q_FUNC_INFO << error;}
