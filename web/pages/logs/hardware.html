@@ -21,7 +21,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">操作日志</span>
+								<span id="lang_2">硬件故障记录</span>
 							</div>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
-		read_log_data(2,1,0,0);
+		read_log_data(5,1,0,0);
 		function read_data(){
 			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
 			for(var i = 0 ;i < show_num;i++)
@@ -69,7 +69,7 @@
 			}else{
 				show_num = log_num;
 			}
-			read_log_data(2,2,0,show_num);
+			read_log_data(5,2,0,show_num);
 		},300);
 		setTimeout(function(){
 			read_data();
@@ -103,17 +103,11 @@
 			var retVal = confirm("请确认是否导出此表单！");
 			if(retVal == true)
 			{
-				let str = "序号,时间,用户名称,操作类型,详细描述\n";
+				let str = "序号,时间,故障类型,详细描述\n";
 				for(let i = 0;i < show_num;i++){
 					str+=(i+1)+',';
-					for(let j = 0;j < 4;j++){
-						if(j == 1){
-							str+= user_name +',';
-						}else if(j>1){
-							str+=log_data[i][j-1]+',';
-						}else{
-							str+=log_data[i][j]+',';
-						}
+					for(let j = 0;j < 3;j++){
+						str+=log_data[i][j]+',';
 					}
 					str += '\n';
 				}
@@ -123,7 +117,7 @@
 				const link = document.createElement("a");
 				link.href = uri;
 				// 对下载的文件命名
-				link.download =  "op_log_"+ page_num +".csv";
+				link.download =  "hw_log_"+ page_num +".csv";
 				link.click();
 			}else{}
     	}
@@ -143,14 +137,14 @@
 						}else{
 							show_num = 20;
 						}
-						read_log_data(2,2,(page_num-1) * 20,show_num);
+						read_log_data(5,2,(page_num-1) * 20,show_num);
 						flash_html(btn);
 					}
 				}else if(btn.id == "last"){ 
 					if((page_num - 1) > 0){
 						page_num -= 1;
 						show_num = 20;
-						read_log_data(2,2,(page_num-1) * 20,show_num);
+						read_log_data(5,2,(page_num-1) * 20,show_num);
 						flash_html(btn);
 					}else{
 
@@ -163,10 +157,10 @@
 						}else{
 							show_num = 20;
 						}
-						read_log_data(2,2,(page_num-1) * 20,show_num);
+						read_log_data(5,2,(page_num-1) * 20,show_num);
 						flash_html(btn);
 					}else{
-						//read_log_data(2,3,0,0);
+						//read_log_data(5,3,0,0);
 						flash_html(btn);
 					}
 				}else{
@@ -180,17 +174,15 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">时间</td>\
-					<td width ="12%">用户名称</td>\
-					<td width ="12%">操作类型</td>\
-					<td width ="40%">详细描述</td>';
+					thead = '<tr><td width ="10%">序号</td>\
+					<td width ="20%">时间</td>\
+					<td width ="20%">故障类型</td>\
+					<td width ="50%">详细描述</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ log_data[i][0] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ user_name +'</td>';
-				tbody += '<td id = "d'+ i + '">'+ log_data[i][1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ log_data[i][1] +'</td>';
 				tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
 				tbody += '</tr>';
 			}

@@ -218,6 +218,14 @@
         "url": "sys_log.html"
       },
       {
+        "name": "电能记录",
+        "url": "ele_log.html"
+      },
+      {
+        "name": "硬件故障",
+        "url": "hardware.html"
+      },
+      {
         "name": "历史数据",
         "url": "customize.html"
       }
