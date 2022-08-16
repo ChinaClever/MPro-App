@@ -3,7 +3,7 @@
 #include "qmqtt/qmqtt.h"
 
 struct sMqttCfg {
-    sMqttCfg():type(1), url("127.0.0.1"), port(1883),path("/mqtt"),
+    sMqttCfg():type(1), url("127.0.0.1"), port(1883), path("/mqtt"),
         clientId("clientId"), isConnected(false), keepAlive(60), qos(0){}
 
     int type; // 1 mqtt 2 mqtts 3 ws 4 wss
@@ -22,9 +22,9 @@ class Mqtt_Client : public QObject
     Q_OBJECT
 public:
     explicit Mqtt_Client(QObject *parent = nullptr);
+    bool publish(const QByteArray &payload);
     static sMqttCfg cfg;
     ~Mqtt_Client();
-    bool publish(const QByteArray &payload);
 
 signals:
     void received(const QByteArray &payload);
@@ -42,7 +42,7 @@ private:
 
 private:
     quint16 m_number=0;
-    QMQTT::Client *m_client;
+    QMQTT::Client *m_client=nullptr;
 };
 
 #endif // MQTT_CLIENT_H
