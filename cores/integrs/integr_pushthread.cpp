@@ -57,7 +57,7 @@ void Integr_PushThread::httpPush(const QByteArray &array)
 void Integr_PushThread::mqttPush(const QByteArray &array)
 {
     if(Mqtt_Client::cfg.isConnected) {
-        Mqtt_Client::bulid()->publish(array);
+        emit Mqtt_Client::bulid()->publish(array);
     }
 }
 

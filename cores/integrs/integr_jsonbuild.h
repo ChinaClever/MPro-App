@@ -14,8 +14,11 @@ public:
 
 private:
     void uutInfo(const sUutInfo &it, QJsonObject &json);
-    void alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
-    void relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json);
+    void strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json);
+    void arrayAppend(const uint *ptr, int size, const QString &key, QJsonObject &json, double r=1);
+
+    void alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
+    void relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
     void ObjData(const sObjData &it, const QString &key, QJsonObject &json);
     void envData(const sEnvData &it, const QString &key, QJsonObject &json);
     void tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json, double r);
