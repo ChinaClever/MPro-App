@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>logs</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -21,7 +21,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">电能清零</span>
+								<span id="lang_2">告警日志</span>
 							</div>
 						</div>
 					</div>
@@ -30,12 +30,12 @@
 					</div>
 					<div>
 						<br/>
-						<span style = "float:right;"><span></span><input><span>
-							<input type ="button" id  = "jump" value="前往"  onclick="setData()">
-							<input type ="button" id  = "last" value="上一页"  onclick="setData()">
-							<input type ="button" id  = "next" value="下一页"  onclick="setData()">
-							<input type ="button" id  = "del" value="删除日志"  onclick="setData()">
-							<input type ="button" id  = "export" value="导出" onclick="setData()">
+						<span style = "float:right; margin: 5px;"><span style = "margin: 5px;" >日志大小：</span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;">页<input style = "width:5%">/页<span id  ="page_num"></span></span><span>
+							<input type ="button" style = "width:11%" id  = "jump" value="前往"  onclick="setData()">
+							<input type ="button" style = "width:11%" id  = "last" value="上一页"  onclick="setData()">
+							<input type ="button" style = "width:11%" id  = "next" value="下一页"  onclick="setData()">
+							<input type ="button" style = "width:11%" id  = "del" value="删除日志"  onclick="setData()">
+							<input type ="button" style = "width:11%" id  = "export" value="导出" onclick="setData()">
 						</span>
 					</div>
 				</div>
@@ -48,19 +48,33 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		let log_info = new Array();
-		read_data();
+		let log_data = new Array();
+		let log_num = 0;
+		let show_num = 0;
+		read_log_data(0,log,1,1,0);
 		function read_data(){
+			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
 			for(var i = 0 ;i < 20;i++)
 			{
-				log_info[i]= new Array();
-				for(let j = 0;i < 4;j++){
-					log_info[i][j] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
-				}
+				// log_data[i]= new Array();
+				// for(let j = 0;i < 4;j++){
+				// 	log_data[i][j] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+				// }
 			}
 		}
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		setTimeout(function(){
+			log_num = parseInt(sessionStorage.getItem(log_info[1]));
+			if(log_num > 20){
+				show_num = 20;
+			}else{
+				show_num = log_num;
+			}
+			read_log_data(1,log,1,1,show_num);
+		},300);
+		setTimeout(function(){
+			read_data();
+			$('.table-striped').html(buildTable(show_num));
+		},600);
 		function flash_html(par)
 		{
 			read_energe_data();
@@ -70,6 +84,9 @@
 				$('.table-striped').html(buildTable(output_num));
 				showdata();
 			},800);
+		}
+		function showdata(){
+			
 		}
 		function btn_click(btn){
 			let num = parseInt(btn.id.slice(1))+1;
