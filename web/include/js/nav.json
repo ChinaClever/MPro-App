@@ -78,6 +78,10 @@
         "url": "rpc.html"
       },
       {
+        "name": "MQTT集成",
+        "url": "mqtt.html"
+      },
+      {
         "name": "REST集成",
         "url": "rest.html"
       },
