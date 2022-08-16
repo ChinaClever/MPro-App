@@ -1,8 +1,9 @@
 #ifndef SERCET_TLSCERT_H
 #define SERCET_TLSCERT_H
 #include <QtCore>
-#include <QSslCertificate>
 #include <QSslKey>
+#include <QSslCertificate>
+#include <QSslConfiguration>
 
 class Sercret_TlsCert
 {
@@ -22,6 +23,7 @@ public:
 
     QString effectiveDate();
     QString expiryDate();
+    QSslConfiguration sslConfiguration();
 
 private:
     QSslCertificate::SubjectInfo toSubjectInfo(int id);

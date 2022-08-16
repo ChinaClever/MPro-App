@@ -35,6 +35,25 @@ QSslKey Sercret_TlsCert::privKey()
     return QSslKey();
 }
 
+
+QSslConfiguration Sercret_TlsCert::sslConfiguration()
+{
+    QSslConfiguration ssl;
+    QFile certFile(File::certFile());
+    QFile keyFile(File::keyFile());
+
+    bool ret = keyFile.open(QIODevice::ReadOnly);
+    if(ret) ret = certFile.open(QIODevice::ReadOnly);
+    if(ret) {
+        QSslCertificate certificate(&certFile, QSsl::Pem);
+        QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
+        ssl.setPeerVerifyMode(QSslSocket::VerifyNone);
+        ssl.setLocalCertificate(certificate);
+        ssl.setPrivateKey(sslKey);
+    }
+    return ssl;
+}
+
 QString Sercret_TlsCert::effectiveDate()
 {
     QString res;

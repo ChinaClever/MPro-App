@@ -19,12 +19,12 @@ typedef unsigned int uint;
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
-#define NAME_SIZE 32
+#define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   52
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+4)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
@@ -175,14 +175,17 @@ struct sDevNums
 struct sVersions
 {
     uint core;
+    char coreMd5[NAME_SIZE];
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
 
     uint start;
+    char startMd5[NAME_SIZE];
     char startVer[NAME_SIZE];
     char startCompileTime[NAME_SIZE];
 
     uint lcd;
+    char lcdMd5[NAME_SIZE];
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
 
@@ -197,7 +200,7 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
-    char qrcode[4*NAME_SIZE]; // 二维码
+    char qrcode[3*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
 };
 
