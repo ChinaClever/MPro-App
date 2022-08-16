@@ -32,6 +32,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     QVariant res; switch (it.type) {
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
+    case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
     case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
     case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
@@ -69,6 +70,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
+    case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;

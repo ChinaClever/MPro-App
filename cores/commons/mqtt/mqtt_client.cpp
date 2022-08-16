@@ -1,14 +1,26 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "mqtt_client.h"
 #include "sercet_tlscert.h"
+#include "commons.h"
 
 sMqttCfg Mqtt_Client::cfg;
 Mqtt_Client::Mqtt_Client(QObject *parent)
     : QObject{parent}
 {
-//    connectToHost();
+    connectToHost();
+}
 
-//    _timer.start(1000);
-//    connect(&_timer, &QTimer::timeout, this, &Mqtt_Client::onTimeout);
+Mqtt_Client *Mqtt_Client::bulid(QObject *parent)
+{
+    static Mqtt_Client* sington = nullptr;
+    if(sington == nullptr) {
+        sington = new Mqtt_Client(parent);
+    }
+    return sington;
 }
 
 Mqtt_Client::~Mqtt_Client()
@@ -19,6 +31,11 @@ Mqtt_Client::~Mqtt_Client()
 bool Mqtt_Client::createMqtt()
 {
     bool ret = true;
+    if(m_client) {
+        m_client->disconnectFromHost();
+        delete m_client; m_client=nullptr;
+    }
+
     if(1 == cfg.type) {
         QHostAddress host(cfg.url);
         m_client = new QMQTT::Client(host, cfg.port, this);
@@ -35,11 +52,10 @@ bool Mqtt_Client::createMqtt()
         QSslConfiguration ssl = Sercret_TlsCert::bulid()->sslConfiguration();
         m_client = new QMQTT::Client(url, "", QWebSocketProtocol::VersionLatest, ssl, false, this);
     } else {
-        ret = false; if(m_client) m_client->disconnectFromHost();
+        ret = false;
     }
 
     if(ret) {
-        connect(m_client, &QMQTT::Client::subscribed, this, &Mqtt_Client::onSubscribed);
         connect(m_client, &QMQTT::Client::error, this, &Mqtt_Client::onError);
         connect(m_client, &QMQTT::Client::received, this, &Mqtt_Client::onReceived);
         connect(m_client, &QMQTT::Client::connected, this, &Mqtt_Client::onConnected);
@@ -58,7 +74,6 @@ void Mqtt_Client::connectToHost()
         m_client->setCleanSession(true);
         m_client->setUsername(cfg.usr);
         m_client->setPassword(cfg.pwd);
-        m_client->setVersion(QMQTT::MQTTVersion::V3_1_1);
         m_client->connectToHost();
     }
 }
@@ -66,38 +81,43 @@ void Mqtt_Client::connectToHost()
 void Mqtt_Client::onConnected()
 {
     cfg.isConnected = true;
-    QString topic = "pduSetting/" + cfg.clientId;
+    QString topic = "pduSetting/#";// + cfg.clientId;
     m_client->subscribe(topic, cfg.qos);
-
-    m_client->subscribe("testtopic/#", cfg.qos);
-
-}
-
-void Mqtt_Client::onSubscribed(const QString& topic)
-{
-    qDebug() << "subscribed " << topic ;
 }
 
 bool Mqtt_Client::publish(const QByteArray &payload)
 {
-    bool ret = false;
-    if(cfg.isConnected) {
+    bool ret = false; if(cfg.isConnected) {
         QString topic = "pduMetaData/"+ cfg.clientId;
-        QMQTT::Message message(_number++, topic, payload, cfg.qos);
+        QMQTT::Message message(m_number++, topic, payload, cfg.qos);
         ret = m_client->publish(message);
-
-        qDebug() << "a" << (quint16)ret;
-        QString topic2 = "pduSetting/"+ cfg.clientId;
-        QMQTT::Message message2(_number++, topic2, payload, cfg.qos);
-        ret = m_client->publish(message2);
-        qDebug() << "b" << (quint16)ret;
-
     }
     return ret;
 }
 
 void Mqtt_Client::onReceived(const QMQTT::Message& message)
 {
-    emit received(message.payload());
-    qDebug() <<message.topic() << message.payload();
+    QString room = cm::masterDev()->cfg.uut.room;
+    QString topic = message.topic().remove("pduSetting/");
+    if((topic == cfg.clientId) || (topic == room) || topic == "all") {
+        emit received(message.payload());
+    }
+    qDebug() << "publish received: \""<< message.topic() << message.payload();
+}
+
+bool Mqtt_Client::set(uchar fc, const QVariant &v)
+{
+    bool ret = true; switch (fc) {
+    case 1: cfg.type = v.toInt(); connectToHost(); break;
+    case 2: cfg.url = v.toString(); if(m_client)m_client->setHostName(cfg.url); break;
+    case 3: cfg.port = v.toInt(); if(m_client)m_client->setPort(cfg.port); break;
+    case 4: cfg.path = v.toString(); connectToHost(); break;
+    case 5: cfg.clientId = v.toString(); if(m_client)m_client->setClientId(cfg.clientId); break;
+    case 6: cfg.usr = v.toByteArray();  if(m_client)m_client->setUsername(cfg.usr); break;
+    case 7: cfg.pwd = v.toByteArray();  if(m_client)m_client->setPassword(cfg.pwd); break;
+    case 8: cfg.keepAlive = v.toInt();  if(m_client)m_client->setKeepAlive(cfg.keepAlive); break;
+    case 9: cfg.qos = v.toInt(); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc << v; break;
+    }
+    return ret;
 }

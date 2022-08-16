@@ -9,6 +9,7 @@
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "sercret_core.h"
+#include "mqtt_client.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -21,6 +22,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
+    mqtt();
     login();
     modbus();
     sercret();
@@ -46,6 +48,26 @@ void Cfg_ReadParam::snmp()
 
         if(ptr) *ptr = mCfg->readCfg(key, "", prefix).toString();
         else cfg->enV3 = mCfg->readCfg(key, "", prefix).toInt();
+    }
+}
+
+void Cfg_ReadParam::mqtt()
+{
+    QString prefix = "mqtt"; QString key;
+    sMqttCfg *cfg = &(Mqtt_Client::cfg);
+    for(int i=1; i<10; ++i) {
+        switch (i) {
+        case 1: key = "type"; cfg->type = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "url"; cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->type = mCfg->readCfg(key, 1883, prefix).toInt(); break;
+        case 4: key = "path"; cfg->path = mCfg->readCfg(key, "/mqtt", prefix).toString(); break;
+        case 5: key = "clientId"; cfg->clientId = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 6: key = "usr"; cfg->usr = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 7: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 8: key = "keepAlive"; cfg->keepAlive = mCfg->readCfg(key, 60, prefix).toInt();break;
+        case 9: key = "qos"; cfg->qos = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
     }
 }
 

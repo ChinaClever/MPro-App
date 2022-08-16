@@ -32,7 +32,7 @@ App_Start::App_Start(QObject *parent)
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 
-    Mqtt_Client *c = new Mqtt_Client(this);
+    //Mqtt_Client *c = new Mqtt_Client(this);
 }
 
 App_Start::~App_Start()
