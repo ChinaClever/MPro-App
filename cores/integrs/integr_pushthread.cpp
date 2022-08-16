@@ -54,13 +54,20 @@ void Integr_PushThread::httpPush(const QByteArray &array)
     }
 }
 
+void Integr_PushThread::mqttPush(const QByteArray &array)
+{
+    if(Mqtt_Client::cfg.isConnected) {
+        Mqtt_Client::bulid()->publish(array);
+    }
+}
+
 void Integr_PushThread::workDown()
 {
     for(int i=0; i<DEV_NUM; ++i) {
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
             QByteArray res = mJson->getJson(i);
-            udpPush(res); httpPush(res);
+            udpPush(res); mqttPush(res); httpPush(res);
         } if(isRun) delay();
     }
 }

@@ -14,6 +14,14 @@ Mqtt_Client::Mqtt_Client(QObject *parent)
     connectToHost();
 }
 
+Mqtt_Client *Mqtt_Client::bulid(QObject *parent)
+{
+    static Mqtt_Client* sington = nullptr;
+    if(sington == nullptr) {
+        sington = new Mqtt_Client(parent);
+    }
+    return sington;
+}
 
 Mqtt_Client::~Mqtt_Client()
 {
@@ -23,6 +31,11 @@ Mqtt_Client::~Mqtt_Client()
 bool Mqtt_Client::createMqtt()
 {
     bool ret = true;
+    if(m_client) {
+        m_client->disconnectFromHost();
+        delete m_client; m_client=nullptr;
+    }
+
     if(1 == cfg.type) {
         QHostAddress host(cfg.url);
         m_client = new QMQTT::Client(host, cfg.port, this);
@@ -39,7 +52,7 @@ bool Mqtt_Client::createMqtt()
         QSslConfiguration ssl = Sercret_TlsCert::bulid()->sslConfiguration();
         m_client = new QMQTT::Client(url, "", QWebSocketProtocol::VersionLatest, ssl, false, this);
     } else {
-        ret = false; if(m_client) m_client->disconnectFromHost();
+        ret = false;
     }
 
     if(ret) {
@@ -74,8 +87,7 @@ void Mqtt_Client::onConnected()
 
 bool Mqtt_Client::publish(const QByteArray &payload)
 {
-    bool ret = false;
-    if(cfg.isConnected) {
+    bool ret = false; if(cfg.isConnected) {
         QString topic = "pduMetaData/"+ cfg.clientId;
         QMQTT::Message message(m_number++, topic, payload, cfg.qos);
         ret = m_client->publish(message);
@@ -91,4 +103,21 @@ void Mqtt_Client::onReceived(const QMQTT::Message& message)
         emit received(message.payload());
     }
     qDebug() << "publish received: \""<< message.topic() << message.payload();
+}
+
+bool Mqtt_Client::set(uchar fc, const QVariant &v)
+{
+    bool ret = true; switch (fc) {
+    case 1: cfg.type = v.toInt(); connectToHost(); break;
+    case 2: cfg.url = v.toString(); if(m_client)m_client->setHostName(cfg.url); break;
+    case 3: cfg.port = v.toInt(); if(m_client)m_client->setPort(cfg.port); break;
+    case 4: cfg.path = v.toString(); connectToHost(); break;
+    case 5: cfg.clientId = v.toString(); if(m_client)m_client->setClientId(cfg.clientId); break;
+    case 6: cfg.usr = v.toByteArray();  if(m_client)m_client->setUsername(cfg.usr); break;
+    case 7: cfg.pwd = v.toByteArray();  if(m_client)m_client->setPassword(cfg.pwd); break;
+    case 8: cfg.keepAlive = v.toInt();  if(m_client)m_client->setKeepAlive(cfg.keepAlive); break;
+    case 9: cfg.qos = v.toInt(); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc << v; break;
+    }
+    return ret;
 }

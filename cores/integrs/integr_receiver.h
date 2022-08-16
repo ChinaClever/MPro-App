@@ -30,6 +30,7 @@ private:
     WS_Server *mWs;
     WS_Server *mWss;
     Net_TcpServer *mTcp;
+    Mqtt_Client *mMqtt;
     QByteArrayList mList;
     bool isRun=true;
 };

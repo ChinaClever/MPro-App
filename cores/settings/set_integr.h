@@ -19,6 +19,9 @@ protected:
     QVariant pushCfg(uchar fc);
     bool pushSet(uchar fc, const QVariant &v);
 
+    QVariant mqttCfg(uchar fc);
+    bool mqttSet(uchar fc, const QVariant &v);
+
 private:
     int toBaud(int value);
     int baudTo(int value);

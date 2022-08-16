@@ -13,6 +13,7 @@ private:
     void rpc();
     void push();
     void snmp();
+    void mqtt();
     void login();
     void modbus();
     void sercret();

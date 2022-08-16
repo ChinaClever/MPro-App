@@ -310,7 +310,7 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,
              ETimingOn=20, ETimingOff, EGrouping, EGroupName, EGroupTimingOn, EGroupTimingOff,
              EVersion=30, ESercret, ETlsCert};
 

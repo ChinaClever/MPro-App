@@ -20,9 +20,11 @@ struct sMqttCfg {
 class Mqtt_Client : public QObject
 {
     Q_OBJECT
-public:
     explicit Mqtt_Client(QObject *parent = nullptr);
+public:
+    static Mqtt_Client *bulid(QObject *parent = nullptr);
     bool publish(const QByteArray &payload);
+    bool set(uchar fc, const QVariant &v);
     static sMqttCfg cfg;
     ~Mqtt_Client();
 
