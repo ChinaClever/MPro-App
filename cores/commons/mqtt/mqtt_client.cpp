@@ -88,7 +88,7 @@ void Mqtt_Client::onConnected()
 
 void Mqtt_Client::onPublish(const QByteArray &payload)
 {
-    if(cfg.isConnected) {
+    if(cfg.isConnected && cfg.clientId.size()) {
         QString topic = "pduMetaData/"+ cfg.clientId;
         QMQTT::Message message(m_number++, topic, payload, cfg.qos);
         m_client->publish(message);
@@ -102,7 +102,7 @@ void Mqtt_Client::onReceived(const QMQTT::Message& message)
     if((topic == cfg.clientId) || (topic == room) || topic == "all") {
         emit received(message.payload());
     }
-    qDebug() << "publish received: \""<< message.topic() << message.payload();
+    //qDebug() << "publish received: \""<< message.topic() << message.payload();
 }
 
 bool Mqtt_Client::set(uchar fc, const QVariant &v)
