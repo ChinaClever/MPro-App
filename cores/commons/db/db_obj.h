@@ -56,7 +56,7 @@ public:
         }
         json.insert("logs", logs);
         QJsonDocument doc; doc.setObject(json);
-        return doc.toJson(QJsonDocument::Indented);
+        return doc.toJson(QJsonDocument::Compact);
     }
 
     QByteArray toOnceJson(const T &it, int minId) {

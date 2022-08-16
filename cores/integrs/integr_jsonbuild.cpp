@@ -61,16 +61,6 @@ bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
     return ret;
 }
 
-
-void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
-{
-    QJsonObject obj;
-    obj.insert("room", it.room);
-    obj.insert("cabinet", it.cab);
-    obj.insert("road", it.road);
-    json.insert("uut_info", QJsonValue(obj));
-}
-
 void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,
                                    const QString &key, QJsonObject &json, double r)
 {
@@ -84,7 +74,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
     int size = it.size;
     arrayAppend(it.value, size, key+"_value", json, r);
     arrayAppend(it.en, size, key+"_alarm_enable", json, r);
-    //arrayAppend(it.rated, size, key+"_rated", json, r);
+    arrayAppend(it.rated, size, key+"_rated", json, r);
     arrayAppend(it.min, size, key+"_alarm_min", json, r);
     arrayAppend(it.max, size, key+"_alarm_max", json, r);
     arrayAppend(it.crMin, size, key+"_warn_min", json, r);
@@ -114,15 +104,15 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     strListAppend(it.timingOff, size, key+"_timingOff", json);
 }
 
-void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, bool breaker)
 {
-    QJsonObject obj;
+    QJsonObject obj;  int size = it.size;
     alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
     alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
-    relayUnit(it.relay, "relay", obj);
+    if(0 == breaker) relayUnit(it.relay, "relay", obj);
+    else arrayAppend(it.relay.sw, size, "breaker", obj);
 
-    int size = it.size;
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_PF);
@@ -173,11 +163,30 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
     json.insert(key, obj);
 }
 
+void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
+{
+    QJsonObject obj;
+    obj.insert("core_ver", it.coreVer);
+    obj.insert("core_md5", it.coreMd5);
+    obj.insert("core_compile_time", it.coreCompileTime);
+    obj.insert("lcd_ver", it.lcdVer);
+    obj.insert("lcd_md5", it.lcdMd5);
+    obj.insert("lcd_compile_time", it.lcdCompileTime);
+    obj.insert("start_ver", it.startVer);
+    obj.insert("start_md5", it.startMd5);
+    obj.insert("start_compile_time", it.startCompileTime);
+    obj.insert("pdu_ver", it.version/1.0);
+
+    QJsonArray vs;
+    for(uint i=0; i<5; ++i) vs.append(it.opVers[i]);
+    obj.insert("op_vers", vs);
+    json.insert(key, obj);
+}
+
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
     obj.insert("pdu_type", "MPDU-Pro");
-    obj.insert("pdu_ver", it.vers.version/r);
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
 
@@ -187,25 +196,10 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
 
-    obj.insert("core_ver", it.vers.coreVer);
-    obj.insert("core_md5", it.vers.coreMd5);
-    obj.insert("core_compile_time", it.vers.coreCompileTime);
-    obj.insert("lcd_ver", it.vers.lcdVer);
-    obj.insert("lcd_md5", it.vers.lcdMd5);
-    obj.insert("lcd_compile_time", it.vers.lcdCompileTime);
-    obj.insert("start_ver", it.vers.startVer);
-    obj.insert("start_md5", it.vers.startMd5);
-    obj.insert("start_compile_time", it.vers.startCompileTime);
-
     QJsonArray ops;
     for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
     obj.insert("ops_num", ops);
-
-    QJsonArray vs;
-    for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.vers.opVers[i]);
-    obj.insert("op_vers", vs);
-
-    json.insert(key, QJsonValue(obj));
+    json.insert(key, obj);
 }
 
 
@@ -220,7 +214,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     obj.insert("name", it.devName);
     obj.insert("sn", it.sn);
     obj.insert("qrcode", it.qrcode);
-    json.insert(key, QJsonValue(obj));
+    json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
@@ -231,20 +225,21 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 
     devInfo(it->cfg, "pdu_info", obj);
     uutInfo(it->cfg.uut, "uut_info", obj);
+    verInfo(it->cfg.vers, "version", obj);
 
     it->line.size = 3;//////////////////////////////////////////
     ObjData(it->line, "line_item_list", obj);
     it->loop.size = 6;/////////////////////////////////////////
-    ObjData(it->loop, "loop_item_list", obj);
+    ObjData(it->loop, "loop_item_list", obj, 1);
     it->group.size = 8;////////////////////////////////////////
     ObjData(it->group, "group_item_list", obj);
 
     it->output.size = 48;/////////////////////////////////////
     ObjData(it->output, "output_item_list", obj);
 
-    tgObjData(it->tg, "pdu_tg_data", obj);
+    //tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
-    json.insert(key, QJsonValue(obj));
+    json.insert(key, obj);
 }
 
 void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
@@ -256,5 +251,5 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
     obj.insert("mac", it.mac);
-    json.insert(key, QJsonValue(obj));
+    json.insert(key, obj);
 }
