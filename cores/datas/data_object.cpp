@@ -70,7 +70,7 @@ uint Data_Object::calPf(int id, sObjData &obj)
     uint pow = obj.pow.value[id];
     uint art = obj.artPow[id];
     if(pow && art) {
-        ret = (pow * 100.0) / art;
+        ret = (pow * COM_RATE_PF) / art;
         if(ret > 99) ret = 99;
     }
 

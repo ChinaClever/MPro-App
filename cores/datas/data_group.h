@@ -15,6 +15,8 @@ protected:
 private:
     void setGroupSize();
     void disGroupAlarm(int id);
+    void groupOverrunOff();
+    void groupTiming();
 };
 
 #endif // DATA_GROUP_H

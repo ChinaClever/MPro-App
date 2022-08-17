@@ -54,7 +54,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
         cfg->writeCfg(key, value, prefix);
 
         //sOpItem db; db.op_src = opSrc(txType);
-        //db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
+        //db.content = QStringLiteral("Modbus %1参数修改为%2").arg(key).arg(value);
         //Log_Core::bulid()->append(db);
     }
 
@@ -97,7 +97,7 @@ bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
         cfg->writeCfg(key, v, prefix);
 
         // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
+        // db.content = QStringLiteral("snmp %1参数修改为%2").arg(key, value);
         // Log_Core::bulid()->append(db);
     }
 
@@ -135,7 +135,7 @@ bool Set_Integr::rpcSet(uchar fc, int value)
         cfg->writeCfg(key, value, prefix);
 
         // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
+        // db.content = QStringLiteral("rpc %1参数修改为%2").arg(key).arg(value);
         // Log_Core::bulid()->append(db);
     }
 
@@ -243,7 +243,7 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, v, prefix);
         // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
+        // db.content = QStringLiteral("push %1参数修改为%2").arg(key, value.toString());
         // Log_Core::bulid()->append(db);
     }
 
