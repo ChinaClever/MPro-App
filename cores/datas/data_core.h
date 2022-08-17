@@ -12,7 +12,6 @@ public:
 
 private:
     void upAlarm();
-    void outletNums();
 
 private:
     bool isRun=true;

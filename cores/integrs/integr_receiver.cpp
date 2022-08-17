@@ -11,7 +11,7 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
 {
     mUdp = new Net_Udp(this);
     mWs = new WS_Server(this);
-    mWss = new WS_Server(this);
+    mWss = new WS_Server(parent);
     mTcp = new Net_TcpServer(this);
     mMqtt = Mqtt_Client::bulid(parent); initRecvFun();
     connect(mUdp, &Net_Udp::recvSig, this, &Integr_Receiver::recvUdpSlot);

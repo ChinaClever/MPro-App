@@ -62,10 +62,10 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
-    case SFnCode::ETimingOn: ret = setOutputTiming(it.addr, it.fc, 0, v); break;
-    case SFnCode::ETimingOff: ret = setOutputTiming(it.addr, it.fc, 1, v); break;
-    case SFnCode::EGroupTimingOn: ret = setGroupTiming(it.addr, it.fc, 0, v); break;
-    case SFnCode::EGroupTimingOff: ret = setGroupTiming(it.addr, it.fc, 1, v); break;
+    case SFnCode::ETimingOn: ret = setOutputTiming(it.fc, 0, v); break;
+    case SFnCode::ETimingOff: ret = setOutputTiming(it.fc, 1, v); break;
+    case SFnCode::EGroupTimingOn: ret = setGroupTiming(it.fc, 0, v); break;
+    case SFnCode::EGroupTimingOff: ret = setGroupTiming(it.fc, 1, v); break;
 
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
@@ -77,7 +77,6 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 

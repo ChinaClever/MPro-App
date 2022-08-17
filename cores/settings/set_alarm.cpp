@@ -52,28 +52,28 @@ QString Set_Alarm::opContent(const sDataItem &index)
     }
 
     switch (index.subtopic) {
-    case DSub::Rated: str = QObject::tr("额定值"); break;
-    case DSub::VMax: str = QObject::tr("报警最大值"); break;
-    case DSub::VMin: str = QObject::tr("报警最小值"); break;
-    case DSub::VCrMax: str = QObject::tr("预警最大值"); break;
-    case DSub::VCrMin: str = QObject::tr("预警最小值"); break;
-    case DSub::EnAlarm: str = QObject::tr("报警开关"); break;
+    case DSub::Rated: str = QStringLiteral("额定值"); break;
+    case DSub::VMax: str = QStringLiteral("报警最大值"); break;
+    case DSub::VMin: str = QStringLiteral("报警最小值"); break;
+    case DSub::VCrMax: str = QStringLiteral("预警最大值"); break;
+    case DSub::VCrMin: str = QStringLiteral("预警最小值"); break;
+    case DSub::EnAlarm: str = QStringLiteral("报警开关"); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    str += QObject::tr("修改为:%1 ％2").arg(index.value/rate).arg(suffix);
+    str += QStringLiteral("修改为:%1 ％2").arg(index.value/rate).arg(suffix);
     return str;
 }
 
 void Set_Alarm::oplog(const sDataItem &it)
 {
-    QString content = QObject::tr("全部");
-    if(it.id) content = QObject::tr("第%１ ").arg(it.id);
+    QString content = QStringLiteral("全部");
+    if(it.id) content = QStringLiteral("第%１ ").arg(it.id);
     content += Alarm_Log::bulid()->alarmType(it);
     content += opContent(it);
 
     sOpItem db;
     db.content = content;
-    db.op_src = QObject::tr("告警设置"); //opSrc(it.txType);
+    db.op_src = QStringLiteral("告警设置"); //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }

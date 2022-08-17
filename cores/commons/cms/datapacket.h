@@ -212,6 +212,7 @@ struct sParameter {
     uchar drySw; // 报警干接点开关
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
+    uint restartTimes; // 重启次数
     uint hz; // 产品实时频繁
 
     uchar reserve[20];
