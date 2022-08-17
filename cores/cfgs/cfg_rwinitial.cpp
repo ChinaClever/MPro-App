@@ -89,8 +89,8 @@ void Cfg_RwInitial::initTgObjData(sTgObjData &it)
 void Cfg_RwInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
-    setAlarmUnit(it.tem, size, 60);
-    setAlarmUnit(it.hum, size, 99);
+    setAlarmUnit(it.tem, size, 60*COM_RATE_TEM);
+    setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
 }
 
 void Cfg_RwInitial::initDevData(sDevData *dev)
