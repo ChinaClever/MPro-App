@@ -194,11 +194,11 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
     return ret;
 }
 
-bool Set_Output::setTiming(int g, int addr, int id, int onOff, const QVariant &v)
+bool Set_Output::setTiming(int g, int id, int onOff, const QVariant &v)
 {
     char *ptr = nullptr; bool ret = true;
-    sRelayUnit *it = &(cm::devData(addr)->output.relay);
-    if(g) it = &(cm::devData(addr)->group.relay);
+    sRelayUnit *it = &(cm::masterDev()->output.relay);
+    if(g) it = &(cm::masterDev()->group.relay);
     if(onOff) ptr = it->timingOff[id];
     else ptr = it->timingOn[id];
     qstrcpy(ptr, v.toByteArray().data());
@@ -206,27 +206,27 @@ bool Set_Output::setTiming(int g, int addr, int id, int onOff, const QVariant &v
     return ret;
 }
 
-bool Set_Output::setOutputTiming(int addr, int id, int onOff, const QVariant &v)
+bool Set_Output::setOutputTiming(int id, int onOff, const QVariant &v)
 {
     bool ret = true; if(id) {
-        ret = setTiming(0, addr, id-1, onOff, v);
+        ret = setTiming(0,  id-1, onOff, v);
     } else {
-        sRelayUnit *it = &(cm::devData(addr)->output.relay);
+        sRelayUnit *it = &(cm::masterDev()->output.relay);
         for(int i=0; i<it->size; ++i)
-            ret = setTiming(0, addr, i, onOff, v);
+            ret = setTiming(0, i, onOff, v);
     }
 
     return ret;
 }
 
-bool Set_Output::setGroupTiming(int addr, int id, int onOff, const QVariant &v)
+bool Set_Output::setGroupTiming(int id, int onOff, const QVariant &v)
 {
     bool ret = true; if(id) {
-        ret = setTiming(1, addr, id-1, onOff, v);
+        ret = setTiming(1, id-1, onOff, v);
     } else {
-        sRelayUnit *it = &(cm::devData(addr)->group.relay);
+        sRelayUnit *it = &(cm::masterDev()->group.relay);
         for(int i=0; i<it->size; ++i)
-            ret = setTiming(1, addr, i, onOff, v);
+            ret = setTiming(1, i, onOff, v);
     }
 
     return ret;
