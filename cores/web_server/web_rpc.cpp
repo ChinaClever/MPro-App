@@ -39,7 +39,7 @@ char* Web_Rpc::responRpcString(const QVector<uint> &its, const QString &value)
 char *Web_Rpc::pduReadParam(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
-    QString value = mObj->getCfg(its.at(0), its.at(1), its.at(2), its.at(3));
+    QString value = mObj->getCfg(its.at(1), its.at(2), its.at(0), its.at(3));
     return responRpcString(its, value);
 }
 
@@ -48,7 +48,7 @@ char *Web_Rpc::pduSetParam(mg_str &r)
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5);
     if(value.toString().isEmpty()) value = mObj->getNumber(r, 5);
-    bool ret = mObj->setCfg(its.at(0), its.at(1), value, its.at(2), its.at(3));
+    bool ret = mObj->setCfg(its.at(1), its.at(2), value, its.at(0),its.at(3));
     return responRpcData(its, ret?1:0);
 }
 
