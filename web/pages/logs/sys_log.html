@@ -53,23 +53,36 @@
 		let show_num = 0;
 		read_log_data(3,1,0,0);
 		function read_data(){
+			let stat = 0;
 			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
+			if(show_num < 20){
+				stat = 0;
+			}else{
+				stat = log_num - (page_num)*20 -1 ;
+			}
 			for(var i = 0 ;i < show_num;i++)
 			{
 				log_data[i]= new Array();
 				for(let j = 0;j < 3;j++){
-					log_data[i][j] = log_str.logs[(page_num -1)*20 + i][j];
+					if(show_num < 20){
+						log_data[i][j] = log_str.logs[stat+ (show_num - i - 1)][j];
+					}else{
+						log_data[i][j] = log_str.logs[stat+ (show_num - i)][j];
+					}
 				}
 			}
 		}
 		setTimeout(function(){
+			let stat = 0;
 			log_num = parseInt(sessionStorage.getItem(log_info[1]));
 			if(log_num > 20){
 				show_num = 20;
+				stat = (log_num-20);
 			}else{
 				show_num = log_num;
+				stat= 0;
 			}
-			read_log_data(3,2,0,show_num);
+			read_log_data(3,2,stat,show_num);
 		},300);
 		setTimeout(function(){
 			read_data();
@@ -140,17 +153,19 @@
 						page_num = p;
 						if(page_num * 20 > log_num){
 							show_num = log_num - ((page_num - 1) * 20);
+							stat = 0;
 						}else{
 							show_num = 20;
+							stat = (log_num-(page_num * 20));
 						}
-						read_log_data(3,2,(page_num-1) * 20,show_num);
+						read_log_data(3,2,stat,show_num);
 						flash_html(btn);
 					}
 				}else if(btn.id == "last"){ 
 					if((page_num - 1) > 0){
 						page_num -= 1;
 						show_num = 20;
-						read_log_data(3,2,(page_num-1) * 20,show_num);
+						read_log_data(3,2,(log_num-(page_num * 20)),show_num);
 						flash_html(btn);
 					}else{
 
@@ -160,10 +175,12 @@
 						page_num += 1;
 						if(page_num * 20 > log_num){
 							show_num = log_num - ((page_num - 1) * 20);
+							stat = 0;
 						}else{
 							show_num = 20;
+							stat = (log_num-(page_num * 20));
 						}
-						read_log_data(3,2,(page_num-1) * 20,show_num);
+						read_log_data(3,2,stat,show_num);
 						flash_html(btn);
 					}else{
 						//read_log_data(3,3,0,0);
