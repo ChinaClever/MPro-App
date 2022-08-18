@@ -57,7 +57,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 
 bool Cascade_Master::masterSeting(const sDataItem &unit)
 {
-    uchar fc = fc_setting; if(isOta) return isOta;
+    uchar fc = fc_setting; if(isOta || getAddress()) return isOta;
     QByteArray array = cm::toByteArray(unit);
     return writeData(fc, unit.addr, array);
 }
@@ -65,9 +65,9 @@ bool Cascade_Master::masterSeting(const sDataItem &unit)
 
 bool Cascade_Master::masterSetCfg(const sCfgItem &it, const QVariant &v)
 {
-    uchar fc = fc_setCfg; if(isOta) return isOta;
+    uchar fc = fc_setCfg; if(isOta || getAddress()) return isOta;
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << cm::toByteArray(it) << v;
-    return writeData(fc, it.id, array);
+    return writeData(fc, it.addr, array);
 }
 

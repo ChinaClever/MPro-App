@@ -5,7 +5,7 @@
  */
 #include "set_core.h"
 #include "cascade_core.h"
-#include "set_ssdp.h"
+#include "log_core.h"
 
 Set_Core::Set_Core()
 {
@@ -34,23 +34,21 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
-    case SFnCode::EDualName: res = dualName(it.id, it.fc); break;
-    case SFnCode::EGrouping: res = grouping(it.id, it.fc); break;
-    case SFnCode::EGroupName: res = groupName(it.id, it.fc); break;
-    case SFnCode::OutputName: res = outputName(it.id, it.fc); break;
-    case SFnCode::EVersion: res = softwareVersion(it.id, it.fc); break;
-    case SFnCode::ETimingOn: res = outputTiming(it.id, it.fc, 0); break;
-    case SFnCode::ETimingOff: res = outputTiming(it.id, it.fc, 1); break;
-    case SFnCode::EGroupTimingOn: res = groupTiming(it.id, it.fc, 0); break;
-    case SFnCode::EGroupTimingOff: res = groupTiming(it.id, it.fc, 1); break;
 
-    case SFnCode::EDevInfo: res = devInfoCfg(it.id, it.fc); break;
-    case SFnCode::ECfgNum: res = devCfgNum(it.id, it.fc); break;
+    case SFnCode::EOutput: case SFnCode::EGroup:
+    case SFnCode::EDual: res = outputCfg(it); break;
+    case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
+    case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
+    case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
+
+    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
+    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
-    case SFnCode::Uuts: res = getUut(it.id, it.fc); break;
+    case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
+    case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 
@@ -60,14 +58,10 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
     bool ret = false; switch (it.type) {
-    case SFnCode::EDualName: ret = dualNameSet(it, v); break;
+    case SFnCode::EOutput: case SFnCode::EGroup:
+    case SFnCode::EDual: ret = outputSet(it, v); break;
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
-    case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
-    case SFnCode::ETimingOn: ret = setOutputTiming(it.fc, 0, v); break;
-    case SFnCode::ETimingOff: ret = setOutputTiming(it.fc, 1, v); break;
-    case SFnCode::EGroupTimingOn: ret = setGroupTiming(it.fc, 0, v); break;
-    case SFnCode::EGroupTimingOff: ret = setGroupTiming(it.fc, 1, v); break;
 
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
@@ -76,8 +70,8 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.id, it.fc, v.toInt()); break;
-    case SFnCode::ECfgNum: ret = setCfgNum(it.id, it.fc, v.toInt()); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
@@ -89,7 +83,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {    
     bool ret = false;
-    if(it.id) {
+    if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
     } else {

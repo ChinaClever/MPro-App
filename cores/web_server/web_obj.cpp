@@ -56,16 +56,16 @@ bool Web_Obj::setting(uint addr, uint type, uint topic, uint sub, uint id, uint 
     return Set_Core::bulid()->setting(it);
 }
 
-bool Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint id, uint sub)
+bool Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint addr, uint sub)
 {
     sCfgItem it; it.txType = DTxType::TxWeb; it.sub = sub;
-    it.id = (0xFF & id); it.fc = fc; it.type = type;
+    it.addr = (0xFF & addr); it.fc = fc; it.type = type;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Web_Obj::getCfg(uint type, uint fc, uint id, uint sub)
+QString Web_Obj::getCfg(uint type, uint fc, uint addr, uint sub)
 {
-    sCfgItem it; it.id = id; it.type = type; it.fc = fc; it.sub = sub;
+    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.sub = sub;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 

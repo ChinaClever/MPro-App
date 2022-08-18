@@ -40,7 +40,7 @@ bool Agent_Set::uutSet(const QVariant &value)
     sIndex *it = &mIndex;
     if(it->id == 0) {
         sCfgItem item;
-        item.id = it->addr;
+        item.addr = it->addr;
         item.fc = it->type;
         item.type = SFnCode::Uuts;
         item.txType = DTxType::TxSnmp;
@@ -133,7 +133,7 @@ bool Agent_Set::setOutputName(const QVariant &value)
     sCfgItem item;
     item.txType = DTxType::TxSnmp;
     item.type = SFnCode::OutputName;
-    item.id = mIndex.addr; item.fc = mIndex.id;
+    item.addr = mIndex.addr; item.fc = mIndex.id;
     return Set_Core::bulid()->setCfg(item, value);
 }
 

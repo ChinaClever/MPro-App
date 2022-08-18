@@ -208,6 +208,8 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
+    uchar rtuMode;  // 0 正常模式 1 RTU状态
+    uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
@@ -313,18 +315,17 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,
-             ETimingOn=20, ETimingOff, EGrouping, EGroupName, EGroupTimingOn, EGroupTimingOff, EDualName,
-             EVersion=30, ESercret, ETlsCert};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
-    sCfgItem():id(0),sub(0){}
+    sCfgItem():addr(0),sub(0){}
 #endif
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
+    uchar addr; // 地址
     uchar type; // 10 输出位  11 UUT信息
     uchar fc; // 功能码　0 表示统一设置
-    uchar id; // 地址
     uchar sub;
 };
 

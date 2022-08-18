@@ -14,10 +14,10 @@ void usage()
     cout << "*******************************************************" <<endl;
     cout << "* usage: of pdu_cmd" <<endl;
     cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
-    cout << "*    pduMetaData     addr  type   topic  sub  id" <<endl;
-    cout << "*    pduSetData      addr  type   topic  sub  id  value" <<endl;
-    cout << "*    pduSetParam     type  fc     value  [id] [sub]" <<endl;
-    cout << "*    pduGetParam     type  fc     [id]   [sub]" <<endl;
+    cout << "*    pduMetaData     addr  type   topic  sub    id" <<endl;
+    cout << "*    pduSetData      addr  type   topic  sub    addr  value" <<endl;
+    cout << "*    pduSetParam     type  fc     value  [addr] [sub]" <<endl;
+    cout << "*    pduGetParam     type  fc     [addr] [sub]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
     cout << "*******************************************************" <<endl;
 }
@@ -68,9 +68,9 @@ void pduGetParam(const QStringList &ls)
     int k = 0; if(ls.size() > 1) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
+        uchar addr = 0; if(ls.size() > 2) addr = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
-        qDebug() << rpc->pduGetParam(type, fc, id, sub);
+        qDebug() << rpc->pduGetParam(type, fc, addr, sub);
     } else qCritical() << "pduGetParam Parameter error";
 }
 
@@ -82,9 +82,9 @@ void pduSetParam(const QStringList &ls)
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         QString value = ls.at(k++);
-        uchar id = 0; if(ls.size() > 3) id = ls.at(k++).toInt();
+        uchar addr = 0; if(ls.size() > 3) addr = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 4) sub = ls.at(k++).toInt();
-        qDebug() << rpc->pduSetParam(type, fc, value, id, sub);
+        qDebug() << rpc->pduSetParam(type, fc, value, addr, sub);
     } else qCritical() << "pduSetParam Parameter error";
 }
 

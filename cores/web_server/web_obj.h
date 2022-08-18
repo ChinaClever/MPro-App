@@ -12,8 +12,8 @@ public:
     QString getString(mg_str &r, int id);
     QVector<uint> getNumbers(mg_str &r, int num);
 
-    QString getCfg(uint type, uint fc, uint id, uint sub);
-    bool setCfg(uint type, uint fc, const QVariant &value, uint id, uint sub);
+    QString getCfg(uint type, uint fc, uint addr, uint sub);
+    bool setCfg(uint type, uint fc, const QVariant &value, uint addr, uint sub);
     bool setting(uint addr, uint type, uint topic, uint sub, uint id, uint value);
     int getValue(uint addr, uint type, uint topic, uint sub, uint id);
     QVariant log_fun(uint type, uint fc, uint id, uint cnt);

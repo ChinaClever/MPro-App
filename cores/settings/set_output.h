@@ -10,20 +10,11 @@ public:
 
 protected:
     bool relaySet(sDataItem &unit);
-    bool outputNameSet(sCfgItem &it, const QVariant &v);
     QString outputName(int addr, int id);
+    bool outputNameSet(sCfgItem &it, const QVariant &v);
 
-    QString groupTiming(int addr, int id, int onOff);
-    QString outputTiming(int addr, int id, int onOff);
-    bool setGroupTiming(int id, int onOff, const QVariant &v);
-    bool setOutputTiming(int id, int onOff, const QVariant &v);
-
-    QString dualName(int addr, int id);
-    bool dualNameSet(sCfgItem &it, const QVariant &v);
-
-    QString groupName(int addr, int id);
-    bool groupNameSet(sCfgItem &it, const QVariant &v);
-
+    QString outputCfg(sCfgItem &it);
+    bool outputSet(sCfgItem &it, const QVariant &v);
     QString grouping(int addr, int id);
     bool groupingSet(sCfgItem &it, const QVariant &v);
 
@@ -33,8 +24,9 @@ private:
     bool outputsCtrl(sDataItem &unit);
     void relayOpLog(const sDataItem &it);
     void opNameLog(const sCfgItem &it, const QVariant &v);
-    void writeOpName(int fc, int id, const QVariant &name);
-    bool setTiming(int g, int id, int onOff, const QVariant &v);
+
+
+    bool outputSetById(sCfgItem &it, const QVariant &v);
 };
 
 #endif // SET_OUTPUT_H

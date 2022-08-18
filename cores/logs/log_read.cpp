@@ -92,3 +92,10 @@ QString Log_Read::log_readFun(const sLogFcIt &it)
     }
     return res;
 }
+
+QString Log_Read::logFun(const sCfgItem &cfg)
+{
+    sLogFcIt it; it.type = cfg.fc; it.fc = cfg.addr;
+    it.id = cfg.sub; it.cnt = 20;
+    return log_readFun(it);
+}

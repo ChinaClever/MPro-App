@@ -25,13 +25,15 @@ char* Web_Rpc::pduSetData(mg_str &r)
     return responRpcData(its, ret?1:0);
 }
 
-char* Web_Rpc::responRpcData(const QVector<uint> &its, double value)
+char* Web_Rpc::responRpcData(const QVector<uint> &ls, double value)
 {
-    return mg_mprintf("[%g,%g,%g,%g,%g,%g]", its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value);
+    QVector<double> its; foreach(auto &i, ls) its << i;
+    return mg_mprintf("[%g,%g,%g,%g,%g,%g]", its.at(0), its.at(1), its.at(2),its.at(3), its.at(4), value);
 }
 
-char* Web_Rpc::responRpcString(const QVector<uint> &its, const QString &value)
+char* Web_Rpc::responRpcString(const QVector<uint> &ls, const QString &value)
 {
+    QVector<double> its; foreach(auto &i, ls) its << i;
     return mg_mprintf("[%g,%g,%g,%g,%g,%Q]" , its.at(0), its.at(1), its.at(2),
                       its.at(3), its.at(4), value.toStdString().c_str());
 }
