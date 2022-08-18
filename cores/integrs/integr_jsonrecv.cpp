@@ -163,7 +163,7 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     bool ret = true; sCfgItem it;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
-        double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
+        double res = getData(obj, "addr"); if(res >= 0) it.id = res;
         res = getData(obj, "type"); if(res >= 0) it.type = res;
         res = getData(obj, "fc"); if(res >= 0) it.fc = res;
         res = getData(obj, "sub"); if(res >= 0) it.sub = res;

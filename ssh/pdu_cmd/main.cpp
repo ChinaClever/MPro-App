@@ -13,12 +13,12 @@ void usage()
     using namespace std;
     cout << "*******************************************************" <<endl;
     cout << "* usage: of pdu_cmd" <<endl;
-    cout << "*    pduMetaData     addr type  topic sub id" <<endl;
-    cout << "*    pduSetData      addr type  topic sub id value" <<endl;
-    cout << "*    pduRelaysCtrl   addr start num on" <<endl;
-    cout << "*    pduSetParam     addr type  fc  value" <<endl;
-    cout << "*    pduGetParam     addr type  fc " <<endl;
-    cout << "*    pduLogFun       type fc id cnt" <<endl;
+    cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
+    cout << "*    pduMetaData     addr  type   topic  sub  id" <<endl;
+    cout << "*    pduSetData      addr  type   topic  sub  id  value" <<endl;
+    cout << "*    pduSetParam     type  fc     value  [id] [sub]" <<endl;
+    cout << "*    pduGetParam     type  fc     [id]   [sub]" <<endl;
+    cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
     cout << "*******************************************************" <<endl;
 }
 
@@ -65,11 +65,12 @@ void pduSetData(const QStringList &ls)
 void pduGetParam(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 3) {
-        uchar addr = ls.at(k++).toInt();
+    int k = 0; if(ls.size() > 1) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        qDebug() << rpc->pduGetParam(addr, type, fc);
+        uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
+        uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
+        qDebug() << rpc->pduGetParam(type, fc, id, sub);
     } else qCritical() << "pduGetParam Parameter error";
 }
 
@@ -77,12 +78,13 @@ void pduGetParam(const QStringList &ls)
 void pduSetParam(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 4) {
-        uchar addr = ls.at(k++).toInt();
+    int k = 0; if(ls.size() > 2) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         QString value = ls.at(k++);
-        qDebug() << rpc->pduSetParam(addr, type, fc, value);
+        uchar id = 0; if(ls.size() > 3) id = ls.at(k++).toInt();
+        uchar sub = 0; if(ls.size() > 4) sub = ls.at(k++).toInt();
+        qDebug() << rpc->pduSetParam(type, fc, value, id, sub);
     } else qCritical() << "pduSetParam Parameter error";
 }
 
@@ -92,9 +94,9 @@ void pduLogFun(const QStringList &ls)
     int k = 0; if(ls.size() == 4) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        uint id = ls.at(k++).toInt();
-        uint cnt = ls.at(k++).toInt();
-        std::cout << rpc->pduLogFun(type, fc, id, cnt).toStdString() << std::endl;
+        uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
+        uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
+        std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
     } else qCritical() << "pduLogFun Parameter error";
 }
 

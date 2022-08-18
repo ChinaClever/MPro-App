@@ -68,6 +68,6 @@ bool Cascade_Master::masterSetCfg(const sCfgItem &it, const QVariant &v)
     uchar fc = fc_setCfg; if(isOta) return isOta;
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << cm::toByteArray(it) << v;
-    return writeData(fc, it.addr, array);
+    return writeData(fc, it.id, array);
 }
 

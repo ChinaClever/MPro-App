@@ -20,25 +20,25 @@ QString Web_Obj::getString(mg_str &r, int id)
     return res;
 }
 
-double Web_Obj::getNumber(mg_str &r, int id)
+uint Web_Obj::getNumber(mg_str &r, int id)
 {
-    double res=0; char buffer[10] = {0};  sprintf(buffer , "$[%d]" , id);
+    uint num =0; double res=0; char buffer[10] = {0};  sprintf(buffer , "$[%d]" , id);
     bool ret = mg_json_get_num(r, buffer, &res);
-    if(!ret) qDebug() << "Error: JsonRpc Get Number" << ret;
-    return res;
+    if(ret) num = res; else qDebug() << "Error: JsonRpc Get Number" << ret;
+    return num;
 }
 
-QVector<double> Web_Obj::getNumbers(mg_str &r, int num)
+QVector<uint> Web_Obj::getNumbers(mg_str &r, int num)
 {
-    QVector<double> res;
+    QVector<uint> res;
     for(int i=0; i<num; ++i) {
-        double ret = getNumber(r, i);
+        uint ret = getNumber(r, i);
         res.append(ret);
     }
     return res;
 }
 
-int Web_Obj::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
+int Web_Obj::getValue(uint addr, uint type, uint topic, uint sub, uint id)
 {
     sDataItem it; it.addr = addr; it.type = type; if(id) id--;
     it.topic = topic; it.subtopic = sub; it.id = id;
@@ -47,7 +47,7 @@ int Web_Obj::getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id)
     return res;
 }
 
-bool Web_Obj::setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool Web_Obj::setting(uint addr, uint type, uint topic, uint sub, uint id, uint value)
 {
     sDataItem it;
     it.addr = (0xFF & addr); it.type = type;
@@ -56,20 +56,20 @@ bool Web_Obj::setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, u
     return Set_Core::bulid()->setting(it);
 }
 
-bool Web_Obj::setCfg(uint addr, uchar fc, uchar type, const QVariant &value)
+bool Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint id, uint sub)
 {
-    sCfgItem it; it.txType = DTxType::TxWeb;
-    it.addr = (0xFF & addr); it.fc = type; it.type = fc;
+    sCfgItem it; it.txType = DTxType::TxWeb; it.sub = sub;
+    it.id = (0xFF & id); it.fc = fc; it.type = type;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Web_Obj::getCfg(uchar addr, uchar fc, uchar id)
+QString Web_Obj::getCfg(uint type, uint fc, uint id, uint sub)
 {
-    sCfgItem it; it.addr = addr; it.type = fc; it.fc = id;
+    sCfgItem it; it.id = id; it.type = type; it.fc = fc; it.sub = sub;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 
-QVariant Web_Obj::log_fun(uchar type, uchar fc, uint id, uint cnt)
+QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
 {
      sLogFcIt it;
      it.type = type; it.fc = fc;

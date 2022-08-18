@@ -31,7 +31,7 @@ bool IPC_WebClient::msgSend(int fc, const QByteArray &msg)
 bool IPC_WebClient::setCfg(uint addr, uchar fc, uchar type, const QVariant &value)
 {
     sCfgItem it; it.txType = DTxType::TxWeb; it.type = fc;
-    it.addr = (0xFF & addr); it.fc = type; // it.value = value;
+    it.id = (0xFF & addr); it.fc = type; // it.value = value;
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << cm::toByteArray(it) << value;
     return msgSend(6, array);
@@ -53,7 +53,7 @@ bool IPC_WebClient::getValue(sDataItem &unit)
 
 QString IPC_WebClient::getCfg(uchar addr, uchar fc, uchar id)
 {
-    sCfgItem it; it.addr = addr; it.type = fc; it.fc = id;
+    sCfgItem it; it.id = addr; it.type = fc; it.fc = id;
     QByteArray array = cm::toByteArray(it);
     return readSocket(QVariantList {5, array}).toString();
 }

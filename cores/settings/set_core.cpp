@@ -34,22 +34,22 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
-    case SFnCode::EDualName: res = dualName(it.addr, it.fc); break;
-    case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
-    case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
-    case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
-    case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
-    case SFnCode::ETimingOn: res = outputTiming(it.addr, it.fc, 0); break;
-    case SFnCode::ETimingOff: res = outputTiming(it.addr, it.fc, 1); break;
-    case SFnCode::EGroupTimingOn: res = groupTiming(it.addr, it.fc, 0); break;
-    case SFnCode::EGroupTimingOff: res = groupTiming(it.addr, it.fc, 1); break;
+    case SFnCode::EDualName: res = dualName(it.id, it.fc); break;
+    case SFnCode::EGrouping: res = grouping(it.id, it.fc); break;
+    case SFnCode::EGroupName: res = groupName(it.id, it.fc); break;
+    case SFnCode::OutputName: res = outputName(it.id, it.fc); break;
+    case SFnCode::EVersion: res = softwareVersion(it.id, it.fc); break;
+    case SFnCode::ETimingOn: res = outputTiming(it.id, it.fc, 0); break;
+    case SFnCode::ETimingOff: res = outputTiming(it.id, it.fc, 1); break;
+    case SFnCode::EGroupTimingOn: res = groupTiming(it.id, it.fc, 0); break;
+    case SFnCode::EGroupTimingOff: res = groupTiming(it.id, it.fc, 1); break;
 
-    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
-    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
+    case SFnCode::EDevInfo: res = devInfoCfg(it.id, it.fc); break;
+    case SFnCode::ECfgNum: res = devCfgNum(it.id, it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
-    case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
+    case SFnCode::Uuts: res = getUut(it.id, it.fc); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
@@ -76,8 +76,8 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
-    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.id, it.fc, v.toInt()); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it.id, it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
@@ -89,7 +89,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {    
     bool ret = false;
-    if(it.addr) {
+    if(it.id) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
     } else {

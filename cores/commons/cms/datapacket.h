@@ -319,12 +319,12 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, 
 
 struct sCfgItem {
 #ifndef SUPPORT_C
-    sCfgItem():addr(0),sub(0){}
+    sCfgItem():id(0),sub(0){}
 #endif
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
-    uchar addr; // 地址
     uchar type; // 10 输出位  11 UUT信息
     uchar fc; // 功能码　0 表示统一设置
+    uchar id; // 地址
     uchar sub;
 };
 

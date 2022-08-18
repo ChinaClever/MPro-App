@@ -202,7 +202,7 @@ bool Set_Output::dualNameSet(sCfgItem &it, const QVariant &v)
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     QStringList strs = v.toString().split("; ");
-    sDevData *dev = cm::devData(it.addr);
+    sDevData *dev = cm::devData(it.id);
     uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
