@@ -33,7 +33,8 @@ void Data_Core::run()
 {
     while(isRun) {
         outletWork();
-        cm::mdelay(600);tgWork();
+        cm::mdelay(500);tgWork();
+        dualWork(); cm::mdelay(100);
         groupWork(); cm::mdelay(100);
         loopWork(); cm::mdelay(100);
         lineWork(); cm::mdelay(100);

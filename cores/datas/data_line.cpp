@@ -44,7 +44,7 @@ void Data_Line::tgWork()
     tg->ele = summation(obj->ele, 0, size);
 
     if(tg->artPow) {
-        tg->pf = tg->pow.value * 100.0 / tg->artPow;
+        tg->pf = (tg->pow.value*COM_RATE_PF)/tg->artPow;
         if(tg->pf > 99) tg->pf = 99;
     } else tg->pf = 0;
 }

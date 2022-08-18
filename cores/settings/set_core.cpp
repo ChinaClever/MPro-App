@@ -34,6 +34,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
+    case SFnCode::EDualName: res = dualName(it.addr, it.fc); break;
     case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
     case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
@@ -59,6 +60,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
     bool ret = false; switch (it.type) {
+    case SFnCode::EDualName: ret = dualNameSet(it, v); break;
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;

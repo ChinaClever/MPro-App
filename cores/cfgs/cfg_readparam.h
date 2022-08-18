@@ -17,6 +17,7 @@ private:
     void login();
     void modbus();
     void sercret();
+    void dualName();
     void groupName();
     void outputName();
 

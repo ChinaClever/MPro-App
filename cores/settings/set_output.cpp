@@ -118,6 +118,12 @@ QString Set_Output::groupName(int addr, int id)
     return dev->name[id];
 }
 
+QString Set_Output::dualName(int addr, int id)
+{
+    sObjData *dev = &(cm::devData(addr)->dual); if(id) id--;
+    return dev->name[id];
+}
+
 QString Set_Output::outputName(int addr, int id)
 {    
     sObjData *dev = &(cm::devData(addr)->output); if(id) id--;
@@ -181,6 +187,18 @@ bool Set_Output::groupNameSet(sCfgItem &it, const QVariant &v)
     return ret;
 }
 
+bool Set_Output::dualNameSet(sCfgItem &it, const QVariant &v)
+{
+    bool ret = true;
+    if(it.fc) {
+        writeOpName(2, it.fc, v);
+    } else {
+        sObjData *obj = &(cm::masterDev()->dual);
+        for(int i=0; i<obj->size; ++i) writeOpName(2, i+1, v);
+    } opNameLog(it, v);
+    return ret;
+}
+
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     QStringList strs = v.toString().split("; ");
@@ -234,14 +252,20 @@ bool Set_Output::setGroupTiming(int id, int onOff, const QVariant &v)
 
 void Set_Output::writeOpName(int fc, int id, const QVariant &name)
 {
-    QString prefix = "OutputName";
-    if(fc) prefix = "GroupName";
+    sObjData *it = nullptr;
+    QString prefix;
 
-    QString key = QString::number(id);
-    Cfg_Obj *cfg = Cfg_Obj::bulid();
-    cfg->writeCfg(key, name, prefix);
+    switch (fc) {
+    case 0: prefix = "OutputName"; it = &(cm::masterDev()->output); break;
+    case 1: prefix = "GroupName"; it = &(cm::masterDev()->group); break;
+    case 2: prefix = "DualName"; it = &(cm::masterDev()->dual); break;
+    default: qDebug() << Q_FUNC_INFO; break;
+    }
 
-    sObjData *it = &(cm::masterDev()->output);
-    if(fc) it = &(cm::masterDev()->group);
-    qstrcpy((char *)it->name[id-1], name.toByteArray().data());
+    if(it) {
+        QString key = QString::number(id);
+        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        cfg->writeCfg(key, name, prefix);
+        qstrcpy((char *)it->name[id-1], name.toByteArray().data());
+    }
 }

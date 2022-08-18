@@ -18,11 +18,14 @@ protected:
     bool setGroupTiming(int id, int onOff, const QVariant &v);
     bool setOutputTiming(int id, int onOff, const QVariant &v);
 
-    bool groupNameSet(sCfgItem &it, const QVariant &v);
-    QString groupName(int addr, int id);
+    QString dualName(int addr, int id);
+    bool dualNameSet(sCfgItem &it, const QVariant &v);
 
-    bool groupingSet(sCfgItem &it, const QVariant &v);
+    QString groupName(int addr, int id);
+    bool groupNameSet(sCfgItem &it, const QVariant &v);
+
     QString grouping(int addr, int id);
+    bool groupingSet(sCfgItem &it, const QVariant &v);
 
 private:
     bool groupCtrl(sDataItem &unit);

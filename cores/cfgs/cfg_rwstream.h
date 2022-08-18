@@ -55,6 +55,9 @@ struct _sDevData
     uchar groupSize;
     _sObjData group[LOOP_NUM]; // 回路数据
 
+    uchar dualSize;
+    _sObjData dual[OUTPUT_NUM]; //双电源数据
+
     uchar outputSize;
     _sObjData output[OUTPUT_NUM]; //位数据
 

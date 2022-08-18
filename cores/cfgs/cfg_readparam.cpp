@@ -189,6 +189,18 @@ void Cfg_ReadParam::push()
     }
 }
 
+void Cfg_ReadParam::dualName()
+{
+    QString prefix = "DualName";
+    sDevData *dev = cm::masterDev();
+    for(int i=0; i<OUTPUT_NUM; ++i) {
+        QString key = QString::number(i+1);
+        QString v = "Server" + key;
+        QString res = mCfg->readCfg(key, v, prefix).toString();
+        qstrcpy(dev->dual.name[i], res.toLatin1().data());
+    }
+}
+
 void Cfg_ReadParam::groupName()
 {
     QString prefix = "GroupName";

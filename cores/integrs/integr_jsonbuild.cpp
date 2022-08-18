@@ -141,12 +141,14 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
 void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
-    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
-    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
+//    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
+//    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
+//    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
 
-    obj.insert("ele", it.ele/COM_RATE_ELE);
     obj.insert("pf", it.pf/COM_RATE_PF);
+    obj.insert("ele", it.ele/COM_RATE_ELE);
+    obj.insert("cur", it.cur.value/COM_RATE_CUR);
+    obj.insert("pow", it.pow.value/COM_RATE_POW);
     obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
     obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
     json.insert(key, QJsonValue(obj));
@@ -227,17 +229,27 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     uutInfo(it->cfg.uut, "uut_info", obj);
     verInfo(it->cfg.vers, "version", obj);
 
-    it->line.size = 3;//////////////////////////////////////////
+    it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////////////////////////////////////
     ObjData(it->line, "line_item_list", obj);
+
     it->loop.size = 6;/////////////////////////////////////////
+    it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
+
     ObjData(it->loop, "loop_item_list", obj, 1);
+
     it->group.size = 8;////////////////////////////////////////
+    it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
     ObjData(it->group, "group_item_list", obj);
 
+    it->dual.size = 48;/////////////////////////////////////
+    it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
+    ObjData(it->dual, "dual_item_list", obj);
+
     it->output.size = 48;/////////////////////////////////////
+    it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
     ObjData(it->output, "output_item_list", obj);
 
-    //tgObjData(it->tg, "pdu_tg_data", obj);
+    tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }
