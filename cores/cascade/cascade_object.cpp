@@ -68,7 +68,9 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
 QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr; it.len=0;
-    QByteArray array = frameToArray(it); array = transmit(array);
+    QByteArray array = frameToArray(it);
+    array = transmit(qCompress(array));
+    if(array.size()) array = qUncompress(array);
     return arrayToFrames(array);
 }
 
@@ -77,7 +79,7 @@ bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    return writeSerial(array);
+    return writeSerial(qCompress(array));
 }
 
 QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
@@ -85,7 +87,8 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    array = transmit(array, 2500);
+    array = transmit(qCompress(array), 2500);
+    if(array.size()) array = qUncompress(array);
     return replyData(array, addr, fc);
 }
 

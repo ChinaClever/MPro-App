@@ -15,10 +15,12 @@ bool Data_Relay::relayOverrunOff(const sObjData &obj, int id)
 {
     bool ret = false;
     const sRelayUnit *it = &obj.relay;
-    if((id < it->size) && it->overrunOff[id]) {
-        if(obj.cur.value[id] > obj.cur.max[id]) {
-            if(obj.pow.en[id] || obj.cur.en[id])
-                ret = true;
+    if((obj.cur.value[id] < COM_MAX_CUR) && (obj.pow.value[id] < COM_MAX_POW)) {
+        if((id < it->size) && it->overrunOff[id]) {
+            if(obj.cur.value[id] > obj.cur.max[id]) {
+                if(obj.pow.en[id] || obj.cur.en[id])
+                    ret = true;
+            }
         }
     }
 

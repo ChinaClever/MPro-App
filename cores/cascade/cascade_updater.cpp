@@ -13,11 +13,10 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
 {
-    bool ret = false; int max = 4*1024; int i=0, pro=0;
+    bool ret = false; int max = 40*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
-        ret = otaSendInit(addr, it);
-        if(ret) {setBaudRate(QSerialPort::Baud115200); cm::mdelay(100);}
+        ret = otaSendInit(addr, it); cm::mdelay(5);
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
@@ -30,7 +29,7 @@ bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
                 mDtls->throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
             }
         } mFile->close(); ret = otaSendFinish(addr, ret?1:0); isOta = false;
-    } setBaudRate(QSerialPort::Baud38400); cm::mdelay(100);
+    } cm::mdelay(100);
 
     return ret;
 }
@@ -42,7 +41,7 @@ void Cascade_Updater::ota_updates()
         sDevData *dev = cm::masterDev();
         uint size = dev->cfg.nums.slaveNum;
         for(uint i=0; i<size; ++i) {
-            ota_update(i+1, mIt);
+            if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
         } mIt.file.clear();
     }
 }
@@ -80,7 +79,6 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
     mFile->close(); mFile->setFileName(fn);
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) mSize = 0; else qDebug() << Q_FUNC_INFO << fn;
-    if(ret) setBaudRate(QSerialPort::Baud115200);
     return ret;
 }
 
@@ -111,7 +109,6 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     QString str = "Receive Packet "; mFile->close();
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
-    if(ret) setBaudRate(QSerialPort::Baud38400);
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
 }
 
