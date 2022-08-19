@@ -147,8 +147,8 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
     obj.insert("pf", it.pf/COM_RATE_PF);
     obj.insert("ele", it.ele/COM_RATE_ELE);
-    obj.insert("cur", it.cur.value/COM_RATE_CUR);
-    obj.insert("pow", it.pow.value/COM_RATE_POW);
+    obj.insert("cur_value", it.cur.value/COM_RATE_CUR);
+    obj.insert("pow_value", it.pow.value/COM_RATE_POW);
     obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
     obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
     json.insert(key, QJsonValue(obj));
