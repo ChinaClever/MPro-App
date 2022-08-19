@@ -26,13 +26,18 @@ public:
     double getData(const QJsonObject &object, const QString &key);
     double getData(const QByteArray &msg, const QString &key);
 
-    bool getDecimal(sDataItem &it);
     bool company(const QJsonObject &object);
     bool versionNumber(const QJsonObject &object);
 
-    bool setDataItem(const QJsonObject &object);
+    int  getDataItem(const QJsonObject &object);
+    bool setDataItem(const QJsonObject &object);    
     bool setCfgItem(const QJsonObject &object);
+    QVariant getCfgItem(const QJsonObject &object);
     bool analyticalData(const QJsonObject &object);
+
+private:
+    double getDecimal(const sDataItem &it);
+    bool dataItem(const QString key, const QJsonObject &object, sDataItem &it);
 };
 
 #endif // INTEGR_JSONRECV_H
