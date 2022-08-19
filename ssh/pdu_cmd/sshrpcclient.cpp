@@ -21,11 +21,23 @@ SshRpcClient *SshRpcClient::bulid(QObject *parent)
     return sington;
 }
 
+QString SshRpcClient::pduMetaData(uchar addr)
+{
+    QString ret;
+    auto result = rpc_client->call("pduMetaData", addr);
+    if (result->isSuccess()) {
+        ret = result->result().toString();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
 
-int SshRpcClient::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+    return ret;
+}
+
+int SshRpcClient::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     int ret = -1;
-    auto result = rpc_client->call("pduMetaData", addr, type, topic, sub, id);
+    auto result = rpc_client->call("pduGetData", addr, type, topic, sub, id);
     if (result->isSuccess()) {
         ret = result->result().toInt();
     } else {

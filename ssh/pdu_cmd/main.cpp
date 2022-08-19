@@ -14,11 +14,12 @@ void usage()
     cout << "*******************************************************" <<endl;
     cout << "* usage: of pdu_cmd" <<endl;
     cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
-    cout << "*    pduMetaData     addr  type   topic  sub    id" <<endl;
+    cout << "*    pduGetData      addr  type   topic  sub    id" <<endl;
     cout << "*    pduSetData      addr  type   topic  sub    addr  value" <<endl;
     cout << "*    pduSetParam     type  fc     value  [addr] [sub]" <<endl;
     cout << "*    pduGetParam     type  fc     [addr] [sub]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
+    cout << "*    pduMetaData     [addr]  " <<endl;
     cout << "*******************************************************" <<endl;
 }
 
@@ -34,7 +35,7 @@ QStringList cinGetLine()
     return res;
 }
 
-void pduMetaData(const QStringList &ls)
+void pduGetData(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
     int k = 0; if(ls.size() == 5) {
@@ -43,8 +44,8 @@ void pduMetaData(const QStringList &ls)
         uchar topic = ls.at(k++).toInt();
         uchar sub = ls.at(k++).toInt();
         uchar id = ls.at(k++).toInt();
-        qDebug() << rpc->pduMetaData(addr, type, topic, sub, id);
-    } else qCritical() << "pduMetaData Parameter error";
+        qDebug() << rpc->pduGetData(addr, type, topic, sub, id);
+    } else qCritical() << "pduGetData Parameter error";
 }
 
 void pduSetData(const QStringList &ls)
@@ -88,6 +89,13 @@ void pduSetParam(const QStringList &ls)
     } else qCritical() << "pduSetParam Parameter error";
 }
 
+void pduMetaData(const QStringList &ls)
+{
+     SshRpcClient *rpc = SshRpcClient::bulid();
+     uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
+     qDebug() << rpc->pduMetaData(addr);
+}
+
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
@@ -119,6 +127,7 @@ bool workDown()
     if(cmds.size()) {
         QString fc = cmds.takeFirst();
         if(fc == "pduMetaData") pduMetaData(cmds);
+        else if(fc == "pduGetData") pduGetData(cmds);
         else if(fc == "pduSetData") pduSetData(cmds);
         else if(fc == "pduGetParam") pduGetParam(cmds);
         else if(fc == "pduSetParam") pduSetParam(cmds);

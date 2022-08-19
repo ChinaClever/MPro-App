@@ -12,6 +12,7 @@ public:
     QString getString(mg_str &r, int id);
     QVector<uint> getNumbers(mg_str &r, int num);
 
+    QString metaData(uint addr);
     QString getCfg(uint type, uint fc, uint addr, uint sub);
     bool setCfg(uint type, uint fc, const QVariant &value, uint addr, uint sub);
     bool setting(uint addr, uint type, uint topic, uint sub, uint id, uint value);

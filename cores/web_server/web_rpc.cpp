@@ -18,6 +18,13 @@ char* Web_Rpc::pduReadData(mg_str &r)
     return responRpcData(its, value);
 }
 
+char *Web_Rpc::pduMetaData(mg_str &r)
+{
+    QVector<uint> its = mObj->getNumbers(r, 5);
+    QString value = mObj->metaData(its.at(0));
+    return responRpcString(its, value);
+}
+
 char* Web_Rpc::pduSetData(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 6);

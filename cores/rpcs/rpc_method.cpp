@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "rpc_method.h"
+#include "integr_core.h"
 
 Rpc_Method::Rpc_Method(QObject *parent)
     : QObject{parent}
@@ -20,7 +21,12 @@ Rpc_Method *Rpc_Method::bulid(QObject *parent)
     return sington;
 }
 
-int Rpc_Method::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+QString Rpc_Method::pduMetaData(uchar addr)
+{
+    return Integr_JsonBuild::bulid()->getJson(addr);
+}
+
+int Rpc_Method::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;

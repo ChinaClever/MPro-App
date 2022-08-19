@@ -48,6 +48,7 @@ bool Set_Output::outputCtrl(sDataItem &unit)
 {
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if(it->en[id] || unit.txType == DTxType::TxWeb) {
         OP_Core::bulid()->relayCtrl(unit.id, unit.value);
     } else ret = false;
@@ -55,11 +56,11 @@ bool Set_Output::outputCtrl(sDataItem &unit)
     return ret;
 }
 
-
 bool Set_Output::outputsCtrl(sDataItem &unit)
 {
-    bool ret = false; int start = unit.type-1; int end = start + unit.id;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
+    bool ret = false; int start = unit.type-1; int end = start + unit.id;
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if(it->en[i] || unit.txType == DTxType::TxWeb) ret = true;
         else {ret = false; break;}
