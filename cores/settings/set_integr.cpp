@@ -8,6 +8,7 @@
 #include "agent_core.h"
 #include "rpc_service.h"
 #include "integr_core.h"
+#include "mqtt_client.h"
 
 Set_Integr::Set_Integr()
 {
@@ -51,10 +52,6 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
-
-        //sOpItem db; db.op_src = opSrc(txType);
-        //db.content = QObject::tr("Modbus %1参数修改为%2").arg(key).arg(value);
-        //Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -94,10 +91,6 @@ bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, v, prefix);
-
-        // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("snmp %1参数修改为%2").arg(key, value);
-        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -132,14 +125,58 @@ bool Set_Integr::rpcSet(uchar fc, int value)
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, value, prefix);
-
-        // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("rpc %1参数修改为%2").arg(key).arg(value);
-        // Log_Core::bulid()->append(db);
     }
 
     return ret;
 }
+
+QVariant Set_Integr::mqttCfg(uchar fc)
+{
+    sMqttCfg *cfg = &(Mqtt_Client::cfg);
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->type; break;
+    case 2: res = cfg->url; break;
+    case 3: res = cfg->port; break;
+    case 4: res = cfg->path; break;
+    case 5: res = cfg->clientId; break;
+    case 6: res = cfg->usr; break;
+    case 7: res = cfg->pwd; break;
+    case 8: res = cfg->keepAlive; break;
+    case 9: res = cfg->qos; break;
+    case 10: res = cfg->isConnected; break;
+    default: qDebug() << Q_FUNC_INFO << fc; break;
+    }
+    return res;
+}
+
+bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
+{
+    Mqtt_Client *obj = Mqtt_Client::bulid();
+    QString prefix = "mqtt";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "type"; break;
+    case 2: key = "url"; break;
+    case 3: key = "port"; break;
+    case 4: key = "path"; break;
+    case 5: key = "clientId"; break;
+    case 6: key = "usr"; break;
+    case 7: key = "pwd"; break;
+    case 8: key = "keepAlive"; break;
+    case 9: key = "qos"; break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    }
+
+    if(ret) {
+        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        cfg->writeCfg(key, v, prefix);
+        obj->set(fc, v);
+    }
+
+    return ret;
+}
+
+
+
 
 QVariant Set_Integr::pushCfg(uchar fc)
 {
@@ -193,9 +230,6 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
     if(ret) {
         Cfg_Obj *cfg = Cfg_Obj::bulid();
         cfg->writeCfg(key, v, prefix);
-        // sOpItem db; db.op_src = opSrc(txType);
-        // db.content = QObject::tr("push %1参数修改为%2").arg(key, value.toString());
-        // Log_Core::bulid()->append(db);
     }
 
     return ret;

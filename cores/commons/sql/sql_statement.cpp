@@ -29,14 +29,14 @@ bool Sql_Statement::throwError(const QSqlError &err)
     bool ret = false;
     if(err.isValid()) {     //发生错误时isValid()返回true
         switch (err.type()) {
-        case QSqlError::NoError: str = QObject::tr("无错误"); ret = true; break;
-        case QSqlError::UnknownError: str = QObject::tr("未知错误"); break;
-        case QSqlError::ConnectionError: str = QObject::tr("连接错误");break;
-        case QSqlError::StatementError: str = QObject::tr("SQL语句错误"); break;
-        case QSqlError::TransactionError: str = QObject::tr("事务错误"); break;
+        case QSqlError::NoError: str = QStringLiteral("无错误"); ret = true; break;
+        case QSqlError::UnknownError: str = QStringLiteral("未知错误"); break;
+        case QSqlError::ConnectionError: str = QStringLiteral("连接错误");break;
+        case QSqlError::StatementError: str = QStringLiteral("SQL语句错误"); break;
+        case QSqlError::TransactionError: str = QStringLiteral("事务错误"); break;
         }
     }
-    if(!ret) qCritical() << "Sql_Error: " << QObject::tr("数据库名：")
+    if(!ret) qCritical() << "Sql_Error: " << QStringLiteral("数据库名：")
                          << tableName() << str << err.text();
     return ret;
 }

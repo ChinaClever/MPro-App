@@ -8,15 +8,15 @@ class Web_Obj
 {
 public:
     Web_Obj();
-    double getNumber(mg_str &r, int id);
+    uint getNumber(mg_str &r, int id);
     QString getString(mg_str &r, int id);
-    QVector<double> getNumbers(mg_str &r, int num);
+    QVector<uint> getNumbers(mg_str &r, int num);
 
-    QString getCfg(uchar addr, uchar fc, uchar id);
-    bool setCfg(uint addr, uchar fc, uchar type, const QVariant &value);
-    int getValue(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
-    bool setting(uint addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
-    QVariant log_fun(uchar type, uchar fc, uint id, uint cnt);
+    QString getCfg(uint type, uint fc, uint addr, uint sub);
+    bool setCfg(uint type, uint fc, const QVariant &value, uint addr, uint sub);
+    bool setting(uint addr, uint type, uint topic, uint sub, uint id, uint value);
+    int getValue(uint addr, uint type, uint topic, uint sub, uint id);
+    QVariant log_fun(uint type, uint fc, uint id, uint cnt);
 };
 
 #endif // WEB_OBJ_H

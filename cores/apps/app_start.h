@@ -9,6 +9,7 @@ class App_Start : public QObject
     explicit App_Start(QObject *parent = nullptr);
 public:
     static App_Start *bulid(QObject *parent = nullptr);
+    ~App_Start();
 
 private:
     void compileTime();

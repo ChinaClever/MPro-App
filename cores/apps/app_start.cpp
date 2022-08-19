@@ -21,26 +21,20 @@
 App_Start::App_Start(QObject *parent)
     : QObject{parent}
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
 #endif
     Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
+}
 
-//    Sercret_Core::bulid()->rsa_generatePairKey();
-
-//    QString pub =Sercret_Core::rsaCfg.pubKey;
-//    QByteArray pri =Sercret_Core::rsaCfg.privKey;
-
-//    QSslKey key;
-
-//     qDebug() << Sercret_Core::rsaCfg.pubKey.toBase64();
-
-//    qDebug() << QString(Sercret_Core::rsaCfg.pubKey.toHex()) ;
-//    qDebug() << QString(Sercret_Core::rsaCfg.privKey.toHex()) ;
-
+App_Start::~App_Start()
+{
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    Shm::delShm();
+#endif
 }
 
 App_Start *App_Start::bulid(QObject *parent)

@@ -41,15 +41,24 @@ void Integr_PushThread::udpPush(const QByteArray &array)
     }
     QHostAddress host("192.168.1.100");
     mUdp->writeDatagram(array, host, 8766);
+    //qDebug() << "AAAAAAAAAAA" << array.size();
 }
 
 void Integr_PushThread::httpPush(const QByteArray &array)
 {
     if(mCfg->http.url.isEmpty()) return ;
     switch (mCfg->http.en) {
+    case 0: break;
     case 1: Http::post(mCfg->http.url, array, mCfg->http.timeout); break;
     case 2: Http::put(mCfg->http.url, array, mCfg->http.timeout); break;
     default: qDebug() << Q_FUNC_INFO; break;
+    }
+}
+
+void Integr_PushThread::mqttPush(const QByteArray &array)
+{
+    if(Mqtt_Client::cfg.isConnected) {
+        emit Mqtt_Client::bulid()->publish(array);
     }
 }
 
@@ -59,7 +68,7 @@ void Integr_PushThread::workDown()
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
             QByteArray res = mJson->getJson(i);
-            udpPush(res); httpPush(res);
+            udpPush(res); mqttPush(res); httpPush(res);
         } if(isRun) delay();
     }
 }

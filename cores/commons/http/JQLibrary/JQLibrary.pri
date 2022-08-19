@@ -205,6 +205,6 @@ contains( QT, webenginewidgets ) : exists( $$PWD/src/JQWebEngine.cpp ) {
 }
 
 
-RESOURCES += \
-    $$PWD/key/key.qrc
+#RESOURCES += \
+#    $$PWD/key/key.qrc
 

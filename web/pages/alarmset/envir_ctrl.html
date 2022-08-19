@@ -32,7 +32,7 @@
 	<div class="page-cont">
 		<div class="section">
 			<div class="section-cont">
-				<div class="grid-row">
+				<div class="grid-row">离线
 					<div class="grid-col grid-col-7">
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
@@ -92,7 +92,7 @@
 				else{
 					for(var j = 0; j<head.length;j++){
 						type_num = 6;
-					data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i/2)+1));
+					data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
 					}
 				}
 			}
@@ -261,10 +261,10 @@
 					tbody += '<td id = "b'+ i + '">'+ parseFloat(data[i][0]) +'</td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'">' + parseFloat(data[i][1])+'</td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ parseFloat(data[i][4]).toFixed(1)  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(data[i][5]).toFixed(1)  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(data[i][6]).toFixed(1) +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(data[i][3]).toFixed(1)  +'"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(data[i][4])/10).toFixed(1)  +'"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(data[i][5])/10).toFixed(1)  +'"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(data[i][6])/10).toFixed(1) +'"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(data[i][3])/10).toFixed(1)  +'"></input></td>';
 					tbody += '</tr>';
 				}
 				return '<thead>' + thead + '</thead>'

@@ -5,28 +5,12 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>logs</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../doc-lib/doc.css">
-		<style>
-			.panel-default{
-            border: none;
-            border-radius: 0px;
-            margin-bottom: 0px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-			}
-			.panel-default > .panel-heading{
-				color: #222;
-				font-size:13px;
-				background-color: #fff;
-				border-color: #e6e6e6;
-				padding: 10px 12px;
-			}
-		</style>
 	</head>
 <body>
 	<div class="page-cont">
@@ -37,13 +21,22 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">电能清零</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_2">告警日志</span>
 							</div>
 						</div>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-striped"></table>
+						<table class="table table-striped text-center"></table>
+					</div>
+					<div>
+						<br/>
+						<span style = "float:right;"><span style = "margin: 5px;" >日志大小：</span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;">页<input id = "page" style = "width:3%;text-align: center;" value="0">/页<span id  ="page_num"></span></span><span>
+							<input type ="button" style = "width:11%" id  = "jump" value="前往"  onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "last" value="上一页"  onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "next" value="下一页"  onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "del" value="删除日志"  onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "export" value="导出" onclick="saveArrayDataToExcel()">
+						</span>
 					</div>
 				</div>
 			</div>
@@ -55,57 +48,142 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		let energe_val = new Array();
-		let output_name = new Array();
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		let dev_name =new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-		read_data();
+		let log_data = new Array();
+		let log_num = 0,page_num = 1,page_size = 0;
+		let show_num = 0;
+		read_log_data(1,1,0,0);
 		function read_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+			let stat = 0;
+			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
+			if(show_num < 20){
+				stat = 0;
+			}else{
+				stat = log_num - (page_num)*20 -1 ;
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			for(var i = 0 ;i <show_num ;i++)
+			{
+				log_data[i]= new Array();
+				for(let j = 0;j < 5;j++){
+					if(show_num < 20){
+						log_data[i][j] = log_str.logs[stat+ (show_num - i - 1)][j];
+					}else{
+						log_data[i][j] = log_str.logs[stat+ (show_num - i)][j];
+					}
+				}
 			}
 		}
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		setTimeout(function(){
+			let stat = 0;
+			log_num = parseInt(sessionStorage.getItem(log_info[1]));
+			if(log_num > 20){
+				show_num = 20;
+				stat = (log_num-20);
+			}else{
+				show_num = log_num;
+				stat= 0;
+			}
+			read_log_data(1,2,stat,show_num);
+		},300);
+		setTimeout(function(){
+			read_data();
+			$('.table-striped').html(buildTable(show_num));
+			showdata();
+		},600);
 		function flash_html(par)
 		{
-			read_energe_data();
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
+				par.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
-				$('.table-striped').html(buildTable(output_num));
+				$('.table-striped').html(buildTable(show_num));
 				showdata();
 			},800);
 		}
-		function btn_click(btn){
-			let num = parseInt(btn.id.slice(1))+1;
-			let stat = 0;
-			var retVal = confirm("您已更改表单，请确认提交！");
+		function showdata(){
+			if(log_num % 20 == 0){
+				page_size = parseInt(log_num/20);
+			}else{
+				page_size = parseInt(log_num/20) + 1;
+			}
+			let size = document.getElementById("log_size");
+			let p = document.getElementById("page");
+			let p_n = document.getElementById("page_num");
+			size.innerHTML = log_num+"条";
+			p.value = page_num;
+			p_n.innerHTML = page_size;
+
+		}
+		function saveArrayDataToExcel() {
+			var retVal = confirm("请确认是否导出此表单");
 			if(retVal == true)
 			{
-				if(num !== output_num + 1){
-					rpc.call('pduSetData',[addr,output,energe_,1,num,stat]);
+				let str = "序号,时间,主副机地址,告警类型,问题描述,详细信息\n";
+				for(let i = show_num;i > 0;i--){
+					str+=(i+1)+',';
+					for(let j = 0;j < 5;j++){
+						str+=log_data[i][j]+',';
+					}
+					str += '\n';
 				}
-				else{
-					rpc.call('pduSetData',[addr,output,energe_,1,0,stat]);
-				}
-				flash_html(par);
+				// encodeURIComponent解决中文乱码
+				const uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+				// 通过创建a标签实现
+				const link = document.createElement("a");
+				link.href = uri;
+				// 对下载的文件命名
+				link.download =  "alarm_log_"+ page_num +".csv";
+				link.click();
 			}else{}
-		}
-		function buildSel(rows)
-		{
-			var tbody = '';
-			for(var i = 0;i<rows;i++)
+    	}
+		function setData(btn){
+			let stat = 0;
+			var retVal = confirm("请确认是否执行此操作！");
+			if(retVal == true)
 			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+'slave'+i+'</option>';
-			}
-			return tbody;
+				if(btn.id == "jump"){
+					let p = parseInt(document.getElementById("page").value);
+					if(p == page_num || p > page_size){
+
+					}else{
+						page_num = p;
+						if(page_num * 20 > log_num){
+							show_num = log_num - ((page_num -1)  * 20);
+							stat = 0;
+						}else{
+							show_num = 20;
+							stat = (log_num-(page_num * 20));
+						}
+						read_log_data(1,2,stat,show_num);
+						flash_html(btn);
+					}
+				}else if(btn.id == "last"){ 
+					if((page_num - 1) > 0){
+						page_num -= 1;
+						show_num = 20;
+						read_log_data(1,2,(log_num-(page_num * 20)),show_num);
+						flash_html(btn);
+					}else{
+
+					}
+				}else if(btn.id == "next"){
+					if((page_num + 1) <= page_size){
+						page_num += 1;
+						if(page_num * 20 > log_num){
+							show_num = log_num - ((page_num - 1) * 20);
+							stat = 0;
+						}else{
+							show_num = 20;
+							stat = (log_num-(page_num * 20));
+						}
+						read_log_data(1,2,stat,show_num);
+						flash_html(btn);
+					}else{
+						//read_log_data(1,3,0,0);
+						flash_html(btn);
+					}
+				}else{
+
+				}
+			}else{}
 		}
 		function buildTable(rows) {
 			var thead = '',
@@ -113,55 +191,26 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">单元名称</td>\
-					<td width ="12%">电能消耗(kWh)</td>\
-					<td width ="44%"></td>\
-					<td width ="8%">重置清零</td>';
+					thead = '<tr><td width ="5%">序号</td>\
+					<td width ="15%">时间</td>\
+					<td width ="8%">主副机地址</td>\
+					<td width ="10%">告警类型</td>\
+					<td width ="17%">问题描述</td>\
+					<td width ="45%">详细信息</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]/10).toFixed(1) +'</td>';
-				tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
+				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ log_data[i][0] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ log_data[i][1] +'</td>';
+				tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
+				tbody += '<td id = "e'+ i + '">'+ log_data[i][3] +'</td>';
+				tbody += '<td id = "f'+ i + '">'+ log_data[i][4] +'</td>';
 				tbody += '</tr>';
-				if(i === rows - 1){
-					i++;
-					tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
-					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td id = "d'+ i + '"></td>';
-					tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + '计量清零' + '</button></td>';
-					tbody += '</tr>';
-				}
 			}
 
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0;
-		function putdata(){
-			for(let i = 0;i < output_num;i++){
-				state_ = document.getElementById('c' + i);
-				parseFloat(energe_val[i + 1]/10).toFixed(1)
-			}
-		}
-		function read_energe_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				rpc.call('pduReadData',[addr,output,energe_,1,i]);
-			}
-		}
-		setInterval(function(){
-			read_energe_data();
-			setTimeout(function(){
-				read_data();
-				putdata();
-			},800);
-		},2000);
-		
     </script>
 </body>
 </html>

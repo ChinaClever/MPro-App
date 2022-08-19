@@ -11,12 +11,20 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
 {
     mUdp = new Net_Udp(this);
     mWs = new WS_Server(this);
-    mWss = new WS_Server(this);
-    mTcp = new Net_TcpServer(this); initRecvFun();
+    mWss = new WS_Server(parent);
+    mTcp = new Net_TcpServer(this);
+    mMqtt = Mqtt_Client::bulid(parent); initRecvFun();
     connect(mUdp, &Net_Udp::recvSig, this, &Integr_Receiver::recvUdpSlot);
     connect(mTcp, &Net_TcpServer::recvSig, this, &Integr_Receiver::recvSlot);
+    connect(mMqtt, &Mqtt_Client::received, this, &Integr_Receiver::recvSlot);
     connect(mWs, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
     connect(mWss, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
+    QtConcurrent::run(this,&Integr_Receiver::workDown);
+}
+
+Integr_Receiver::~Integr_Receiver()
+{
+    isRun = false;
 }
 
 void Integr_Receiver::initRecvFun()
@@ -61,8 +69,18 @@ void Integr_Receiver::recvSlot(const QByteArray &array)
 
 void Integr_Receiver::recvUdpSlot(const QByteArray &array)
 {
-    QByteArray res = array;
     if(Sercret_Core::cfg.type) {
-        res = Sercret_Core::bulid()->decrypt(array);
-    } recvSlot(res);
+        mList << array;
+    } else recvSlot(array);
+}
+
+void Integr_Receiver::workDown()
+{
+    while(isRun) {
+        if (mList.size()) {
+            QByteArray array = mList.takeFirst();
+            QByteArray res = Sercret_Core::bulid()->decrypt(array);
+            if(res.size()) recvSlot(res);
+        } else cm::mdelay(1);
+    }
 }

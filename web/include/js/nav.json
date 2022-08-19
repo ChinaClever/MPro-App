@@ -78,6 +78,10 @@
         "url": "rpc.html"
       },
       {
+        "name": "MQTT集成",
+        "url": "mqtt.html"
+      },
+      {
         "name": "REST集成",
         "url": "rest.html"
       },
@@ -216,6 +220,14 @@
       {
         "name": "系统日志",
         "url": "sys_log.html"
+      },
+      {
+        "name": "电能记录",
+        "url": "ele_log.html"
+      },
+      {
+        "name": "硬件故障",
+        "url": "hardware.html"
       },
       {
         "name": "历史数据",

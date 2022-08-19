@@ -5,7 +5,7 @@
  */
 #include "set_core.h"
 #include "cascade_core.h"
-#include "set_ssdp.h"
+#include "log_core.h"
 
 Set_Core::Set_Core()
 {
@@ -32,17 +32,23 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     QVariant res; switch (it.type) {
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
+    case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
+
+    case SFnCode::EOutput: case SFnCode::EGroup:
+    case SFnCode::EDual: res = outputCfg(it); break;
     case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
-    case SFnCode::EGroupName: res = groupName(it.addr, it.fc); break;
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
+
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
+    case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
+    case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 
@@ -52,18 +58,21 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
     bool ret = false; switch (it.type) {
+    case SFnCode::EOutput: case SFnCode::EGroup:
+    case SFnCode::EDual: ret = outputSet(it, v); break;
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
-    case SFnCode::EGroupName: ret = groupNameSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
+
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
+    case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
+    case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 

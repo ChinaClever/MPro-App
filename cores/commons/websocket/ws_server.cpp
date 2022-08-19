@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "ws_server.h"
-
+#include "sercet_tlscert.h"
 
 WS_Server::WS_Server(QObject *parent) : WS_Object{parent}
 {
@@ -13,9 +13,7 @@ WS_Server::WS_Server(QObject *parent) : WS_Object{parent}
 
 bool WS_Server::initServer(QWebSocketServer::SslMode secureMode, int port)
 {
-    m_pWebSocketServer = new QWebSocketServer(QStringLiteral("WebSocket Server"), secureMode, this);
-    connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &WS_Server::onNewConnection);
-    connect(m_pWebSocketServer, &QWebSocketServer::sslErrors, this, &WS_Server::onSslErrors);
+    m_pWebSocketServer = new QWebSocketServer(QStringLiteral("WebSocket Server %1").arg(secureMode), secureMode, this);
     connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WS_Server::closed);
     if(QWebSocketServer::SecureMode == secureMode) sslCfg(m_pWebSocketServer);
     return listen(port);
@@ -23,30 +21,18 @@ bool WS_Server::initServer(QWebSocketServer::SslMode secureMode, int port)
 
 void WS_Server::sslCfg(QWebSocketServer *socket)
 {
-    QSslConfiguration sslConfiguration;
-    QFile certFile(QStringLiteral("ssl/cert.pem"));
-    QFile keyFile(QStringLiteral("ssl/key.pem"));
-    if(!certFile.exists()) certFile.setFileName(":/server.crt");
-    if(!keyFile.exists()) keyFile.setFileName(":/server.key");
-
-    bool ret = keyFile.open(QIODevice::ReadOnly);
-    if(ret) ret = certFile.open(QIODevice::ReadOnly);
-    if(ret) {
-        QSslCertificate certificate(&certFile, QSsl::Pem);
-        QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
-        sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
-        sslConfiguration.setLocalCertificate(certificate);
-        sslConfiguration.setPrivateKey(sslKey);
-        sslConfiguration.setProtocol(QSsl::AnyProtocol);
-        socket->setSslConfiguration(sslConfiguration);
-    } else qDebug() <<"Error ssl cfg" << Q_FUNC_INFO;
-    certFile.close(); keyFile.close();
+    QSslConfiguration ssl = Sercret_TlsCert::bulid()->sslConfiguration();
+    socket->setSslConfiguration(ssl);
 }
 
 bool WS_Server::listen(int port)
 {
     bool ret = m_pWebSocketServer->listen(QHostAddress::Any, port);
-    if (!ret) qDebug() << "Error: websocket server listening on port" << port;
+    if(ret) {
+        connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &WS_Server::onNewConnection);
+        if(QWebSocketServer::SecureMode ==m_pWebSocketServer->secureMode())
+            connect(m_pWebSocketServer, &QWebSocketServer::sslErrors, this, &WS_Server::onSslErrors);
+    } else qDebug() << "Error: websocket server listening on port" << port;
     return ret;
 }
 

@@ -27,8 +27,12 @@ void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     it.sw = unit.sw[id];
     it.en = unit.en[id];
-    it.state = unit.mode[id];
-    it.delay = unit.delay[id];
+    it.offAlarm = unit.offAlarm[id];
+    it.powerUpDelay = unit.powerUpDelay[id];
+    it.overrunOff = unit.overrunOff[id];
+    it.timingEn = unit.timingEn[id];
+    qstrcpy(it.timingOn, unit.timingOn[id]);
+    qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
 void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
@@ -68,6 +72,9 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
 
     size = obj->groupSize = data->group.size;
     for(int i=0; i< size; ++i) upObjData(i, data->group, obj->group[i]);
+
+    size = obj->dualSize = data->dual.size;
+    for(int i=0; i< size; ++i) upObjData(i, data->dual, obj->dual[i]);
 
     size = obj->outputSize = data->output.size;
     for(int i=0; i< size; ++i) upObjData(i, data->output, obj->output[i]);

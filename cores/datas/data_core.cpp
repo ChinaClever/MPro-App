@@ -29,18 +29,12 @@ void Data_Core::upAlarm()
     }
 }
 
-void Data_Core::outletNums()
-{
-    sObjData *obj = &(mDev->output); int size = 0; obj->vol.size =0;
-    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];
-    obj->size = obj->cur.size = obj->pow.size = obj->relay.size = size;
-}
-
 void Data_Core::run()
 {
     while(isRun) {
-        outletNums();
-        cm::mdelay(1100);tgWork();
+        outletWork();
+        cm::mdelay(500);tgWork();
+        dualWork(); cm::mdelay(100);
         groupWork(); cm::mdelay(100);
         loopWork(); cm::mdelay(100);
         lineWork(); cm::mdelay(100);

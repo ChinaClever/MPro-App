@@ -13,13 +13,15 @@ public:
     bool saveJson(const QString &name, QJsonObject &json);
 
 private:
-    void uutInfo(const sUutInfo &it, QJsonObject &json);
-    void alarmUnit(int id, const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
-    void relayUnit(int id, const sRelayUnit &it, const QString &key, QJsonObject &json);
-    void ObjData(const sObjData &it, const QString &key, QJsonObject &json);
+    void strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json);
+    void arrayAppend(const uint *ptr, int size, const QString &key, QJsonObject &json, double r=1);
+    void alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
+    void relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
+    void ObjData(const sObjData &it, const QString &key, QJsonObject &json, bool breaker=0);
     void envData(const sEnvData &it, const QString &key, QJsonObject &json);
     void tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json, double r);
     void tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json);
+    void verInfo(const sVersions &it, const QString &key, QJsonObject &json);
     void devInfo(const sDevCfg &it, const QString &key, QJsonObject &json);
     void uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json);
     void devData(const sDevData *it, const QString &key, QJsonObject &json);

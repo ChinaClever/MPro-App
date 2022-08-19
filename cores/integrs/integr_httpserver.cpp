@@ -113,7 +113,7 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
 
 void Integr_HttpServer::initHttpServer(int port)
 {
-    static JQHttpServer::TcpServerManage tcpServerManage(1); // 设置最大处理线程数，默认2个
+    static JQHttpServer::TcpServerManage tcpServerManage(2); // 设置最大处理线程数，默认2个
     tcpServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ));
     const auto listenSucceed = tcpServerManage.listen(QHostAddress::Any, port);
     qDebug() << "HTTP server listen:" << port << listenSucceed;
@@ -122,7 +122,7 @@ void Integr_HttpServer::initHttpServer(int port)
 void Integr_HttpServer::initHttpsServer(int port)
 {
 #ifndef QT_NO_SSL
-    static JQHttpServer::SslServerManage sslServerManage(1); // 设置最大处理线程数，默认2个
+    static JQHttpServer::SslServerManage sslServerManage(2); // 设置最大处理线程数，默认2个
     sslServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
     const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,":/server.crt", ":/server.key" );
     qDebug() << "HTTPS server listen:" << port << listenSucceed;

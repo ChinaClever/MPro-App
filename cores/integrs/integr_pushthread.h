@@ -1,6 +1,6 @@
 #ifndef INTEGR_PUSHTHREAD_H
 #define INTEGR_PUSHTHREAD_H
-
+#include "mqtt_client.h"
 #include "net_tcpserver.h"
 #include "integr_jsonrecv.h"
 #define INTEGR_UDP_SIZE  2
@@ -46,13 +46,14 @@ private:
     void workDown();
     void udpPush(const QByteArray &array);
     void httpPush(const QByteArray &array);
+    void mqttPush(const QByteArray &array);
 
 private:
     bool isRun = false;
     Net_Udp *mUdp = nullptr;
     Integr_JsonBuild *mJson;
     CThread *mThread = nullptr;
-    sPushCfg *mCfg = &pushCfg;
+    sPushCfg *mCfg = &pushCfg;    
 };
 
 #endif // INTEGR_PUSHTHREAD_H

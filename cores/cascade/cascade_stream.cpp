@@ -31,6 +31,9 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->groupSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->group[i]);
 
+    size = ptr->dualSize; in << size;
+    for(int i=0; i<size; ++i) in << toByteArray(ptr->dual[i]);
+
     size = ptr->outputSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
@@ -40,7 +43,6 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     in << toByteArray(ptr->tg);
     in << toByteArray(ptr->rtu);
     in << toByteArray(ptr->cfg);
-    //in << toByteArray(ptr->uut);
     in << ptr->lps;
 
     return in;
@@ -61,6 +63,9 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     out >> size; ptr->groupSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->group[i] = toStruct<c_sObjData>(v);}
 
+    out >> size; ptr->dualSize = size;
+    for(int i=0; i<size; ++i) {out >> v; ptr->dual[i] = toStruct<c_sObjData>(v);}
+
     out >> size; ptr->outputSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->output[i] = toStruct<c_sObjData>(v);}
 
@@ -70,7 +75,6 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
     out >> v; ptr->rtu = toStruct<sRtuBoard>(v);
     out >> v; ptr->cfg = toStruct<sDevCfg>(v);
-    //out >> v; ptr->uut = toStruct<sUutInfo>(v);
     out >> ptr->lps;
 
     return out;

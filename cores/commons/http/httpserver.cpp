@@ -5,6 +5,7 @@
  */
 #include "httpserver.h"
 #include <QJsonObject>
+#include "file.h"
 
 HttpServer::HttpServer(QObject *parent)
     : QObject{parent}
@@ -42,7 +43,10 @@ void HttpServer::initHttpsServer(int port)
 #ifndef QT_NO_SSL
     static JQHttpServer::SslServerManage sslServerManage(1); // 设置最大处理线程数，默认2个
     sslServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
-    const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,":/server.crt", ":/server.key" );
+    const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,
+                                                       File::certFile(), File::keyFile()
+                                                       // ":/server.crt", ":/server.key"
+                                                       );
     qDebug() << "HTTPS server listen:" << port << listenSucceed;
 
     // 这是我在一个实际项目中用的配置（用认证的证书，访问时带绿色小锁），其中涉及到隐私的细节已经被替换，但是任然能够看出整体用法

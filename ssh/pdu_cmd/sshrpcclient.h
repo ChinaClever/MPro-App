@@ -11,10 +11,10 @@ public:
     int pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
     bool pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value);
 
-    QVariant pduGetParam(uchar addr, uchar fc, uchar type);
-    bool pduSetParam(uchar addr, uchar fc, uchar type, const QVariant &value);
+    QVariant pduGetParam(uchar type, uchar fc, uchar addr=0, uchar sub=0);
+    bool pduSetParam(uchar type, uchar fc, const QVariant &value, uchar addr=0, uchar sub=0);
     bool pduRelaysCtrl(int addr, int start, int num, uchar on);
-    QString pduLogFun(uchar type, uchar fc, int id, int noe=30);
+    QString pduLogFun(uchar type, uchar fc, int id, int cnt=30);
 };
 
 #endif // SSHRPCCLIENT_H

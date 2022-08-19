@@ -1,6 +1,6 @@
 #INCLUDEPATH += $$PWD
 
-LIBS += -lgmssl
+#LIBS += -lgmssl
 
 HEADERS += \
     $$PWD/sm4.h

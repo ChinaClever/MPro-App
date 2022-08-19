@@ -1,23 +1,32 @@
 #ifndef SERCET_TLSCERT_H
 #define SERCET_TLSCERT_H
 #include <QtCore>
-#include <QSslCertificate>
 #include <QSslKey>
+#include <QSslCertificate>
+#include <QSslConfiguration>
 
 class Sercret_TlsCert
 {
+    Sercret_TlsCert();
 public:
-    Sercret_TlsCert(const QString &fn, QSsl::EncodingFormat format = QSsl::Pem);
+    static Sercret_TlsCert *bulid();
 
+    QSslKey privKey();
     bool isSelfSigned();
     QSslKey publicKey();
     QByteArray serialNumber();
     QByteArray version();
     QString toText();
-    QStringList issuerInfo(QSslCertificate::SubjectInfo info);
-    QStringList subjectInfo(QSslCertificate::SubjectInfo info);
+    QString issuerInfo(int id);
+    QString subjectInfo(int id);
     QByteArray digest();
 
+    QString effectiveDate();
+    QString expiryDate();
+    QSslConfiguration sslConfiguration();
+
+private:
+    QSslCertificate::SubjectInfo toSubjectInfo(int id);
 private:
     QSslCertificate *mCert;
 };

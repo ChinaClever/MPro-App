@@ -1,8 +1,8 @@
 #ifndef DATA_CORE_H
 #define DATA_CORE_H
-#include "data_group.h"
+#include "data_dual.h"
 
-class Data_Core : public Data_Group
+class Data_Core : public Data_Dual
 {
     explicit Data_Core();
 public:
@@ -12,7 +12,6 @@ public:
 
 private:
     void upAlarm();
-    void outletNums();
 
 private:
     bool isRun=true;

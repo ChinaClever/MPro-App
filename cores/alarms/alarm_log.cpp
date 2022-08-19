@@ -31,6 +31,7 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     case DType::Line: str += tr("相"); break;
     case DType::Loop: str += tr("回路"); break;
     case DType::Group: str += tr("组"); break;
+    case DType::Dual: str += tr("双电源"); break;
     case DType::Output: str += tr("输出位"); break;
     case DType::Env: str += tr("环境"); break;
     case DType::Sensor: str += tr("传感器"); break;

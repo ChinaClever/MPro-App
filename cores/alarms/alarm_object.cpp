@@ -53,6 +53,7 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     case DType::Loop: obj = &(dev->loop); break;
     case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
+    case DType::Dual: obj = &(dev->dual); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
     return obj;
@@ -186,10 +187,12 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         switch (index.subtopic) {
         case DSub::Size: index.value = unit->size; break;
         case DSub::Value: ptr = unit->sw; break;
-        case DSub::Rated: ptr = unit->mode; break;
+        case DSub::Rated: ptr = unit->offAlarm; break;
         case DSub::Alarm: ptr = unit->alarm; break;
-        case DSub::UpTime: ptr = unit->delay; break;
-        case DSub::ResTime: ptr = unit->resTime; break;
+        case DSub::UpDelay: ptr = unit->powerUpDelay; break;
+        case DSub::ResetDelay: ptr = unit->resetDelay; break;
+        case DSub::OverrunOff: ptr = unit->overrunOff; break;
+        case DSub::TimingEn: ptr = unit->timingEn; break;
         case DSub::EnAlarm: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }

@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "log_core.h"
+#include "commons.h"
 
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
@@ -21,9 +22,12 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
+        int cnt = cm::masterDev()->cfg.param.restartTimes++;
+
         sSysItem it;
         it.module = "system";
-        it.content = "Software startup";
+        it.content = "Software startup ";
+        it.content += QString::number(cnt);
         sington->append(it);
     }
     return sington;

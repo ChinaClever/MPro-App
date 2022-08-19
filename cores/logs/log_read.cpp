@@ -14,11 +14,11 @@ Log_Read::Log_Read(QObject *parent)
 template <typename T, typename U>
 static QString log_read_page(U *db, int id, int cnt)
 {
-    QVector<T> its;
+    QVector<T> its; //if(id)id--;
     int minId = db->minId();
     if(minId >= 0) {
         int min = id + minId;
-        int max = min + cnt;
+        int max = min + cnt - 1;
         its = db->selectBetween(min, max);
     } else its = db->selectAll();
     return db->toPageJson(its, minId);
@@ -91,4 +91,11 @@ QString Log_Read::log_readFun(const sLogFcIt &it)
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
     return res;
+}
+
+QString Log_Read::logFun(const sCfgItem &cfg)
+{
+    sLogFcIt it; it.type = cfg.fc; it.fc = cfg.addr;
+    it.id = cfg.sub; it.cnt = 20;
+    return log_readFun(it);
 }

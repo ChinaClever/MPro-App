@@ -26,7 +26,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
     for(int i=0; i<it.size; ++i) {
         uchar alarm = 0;
         uchar value = it.sw[i];
-        uchar state = it.mode[i];
+        uchar state = it.offAlarm[i];
         if(state == sRelay::EnOffALarm) {
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
         } else alarm = sRelay::NoAlarm; index.id = i;
@@ -159,6 +159,9 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
     index.type = DType::Group;
     ret |= upObjData(index, it->group);
+
+    index.type = DType::Dual;
+    ret |= upObjData(index, it->dual);
 
     index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);

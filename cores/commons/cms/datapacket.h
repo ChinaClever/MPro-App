@@ -19,12 +19,12 @@ typedef unsigned int uint;
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
 #define SENOR_NUM 4
-#define NAME_SIZE 32
+#define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   OUTPUT_NUM
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+4)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
@@ -62,10 +62,14 @@ struct sRelayUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
-    uint mode[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
+    uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE]; // 报警状态
-    uint delay[PACK_ARRAY_SIZE]; // 上电延时
-    uint resTime[PACK_ARRAY_SIZE]; // 复位延时
+    uint powerUpDelay[PACK_ARRAY_SIZE]; // 上电延时
+    uint resetDelay[PACK_ARRAY_SIZE]; // 复位延时
+    uint overrunOff[PACK_ARRAY_SIZE]; // 超限断电
+    uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
+    char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
+    char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
 };
 
 
@@ -166,19 +170,23 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
+    uchar dualPowerEn; //双电源模式
 };
 
 struct sVersions
 {
     uint core;
+    char coreMd5[NAME_SIZE];
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
 
     uint start;
+    char startMd5[NAME_SIZE];
     char startVer[NAME_SIZE];
     char startCompileTime[NAME_SIZE];
 
     uint lcd;
+    char lcdMd5[NAME_SIZE];
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
 
@@ -193,18 +201,21 @@ struct sUutInfo {
     char cab[NAME_SIZE];
     char road[NAME_SIZE];
     char devName[NAME_SIZE]; // 设备名称
-    char qrcode[4*NAME_SIZE]; // 二维码
+    char qrcode[3*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
 };
 
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
+    uchar rtuMode;  // 0 正常模式 1 RTU状态
+    uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
+    uint restartTimes; // 重启次数    
     uint hz; // 产品实时频繁
 
     uchar reserve[20];
@@ -233,6 +244,7 @@ struct sDevData
     struct sObjData loop; // 回路数据
     struct sObjData group; //组数据
     struct sObjData output; //位数据
+    struct sObjData dual; //双电源
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
@@ -280,9 +292,10 @@ struct sDataPacket
 };
 
 
-enum DType{Tg, Line, Loop, Output, Group, Env=6, Sensor};
+enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, UpTime=4, ResTime, Relays=11};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
+          UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 
@@ -302,8 +315,8 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush,
-             EGrouping=21, EGroupName, EVersion, ESercret};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
