@@ -26,6 +26,7 @@ void Cfg_ReadParam::readCfgParams()
     login();
     modbus();
     sercret();
+    dualName();
     groupName();
     outputName();
 }
