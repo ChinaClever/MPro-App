@@ -20,7 +20,7 @@ char* Web_Rpc::pduReadData(mg_str &r)
 
 char *Web_Rpc::pduMetaData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 1);
     QString value = mObj->metaData(its.at(0));
     return responRpcString(its, value);
 }
@@ -36,6 +36,7 @@ char* Web_Rpc::responRpcData(const QVector<uint> &ls, double value)
 {
     QVector<double> its; foreach(auto &i, ls) its << i;
     return mg_mprintf("[%g,%g,%g,%g,%g,%g]", its.at(0), its.at(1), its.at(2),its.at(3), its.at(4), value);
+
 }
 
 char* Web_Rpc::responRpcString(const QVector<uint> &ls, const QString &value)
