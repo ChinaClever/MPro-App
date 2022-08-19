@@ -74,7 +74,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, QJsonObject &json)
 void Integr_JsonBuild::alarmUnit(int id, const sAlarmUnit &it, const QString &key,
                                  QJsonObject &json,  double r)
 {
-    //if(it.size)
+    if(it.size)
     {
         QJsonObject obj;
         obj.insert("value", it.value[id]/r);
@@ -224,7 +224,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     json.insert(key, QJsonValue(obj));
 }
 
-void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
+void Integr_JsonBuild::devData(const sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
     obj.insert("id", it->id);
@@ -233,14 +233,10 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     devInfo(it->cfg, "pdu_info", obj);
     uutInfo(it->cfg.uut, "uut_info", obj);
 
-    it->line.size = 3;//////////////////////////////////////////
     ObjData(it->line, "line_item_list", obj);
-    it->loop.size = 6;/////////////////////////////////////////
     ObjData(it->loop, "loop_item_list", obj);
-    it->group.size = 8;////////////////////////////////////////
     ObjData(it->group, "group_item_list", obj);
 
-    it->output.size = 48;/////////////////////////////////////
     ObjData(it->output, "output_item_list", obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
