@@ -29,7 +29,7 @@ public:
     bool company(const QJsonObject &object);
     bool versionNumber(const QJsonObject &object);
 
-    int  getDataItem(const QJsonObject &object);
+    double getDataItem(const QJsonObject &object);
     bool setDataItem(const QJsonObject &object);    
     bool setCfgItem(const QJsonObject &object);
     QVariant getCfgItem(const QJsonObject &object);
@@ -37,6 +37,7 @@ public:
 
 private:
     double getDecimal(const sDataItem &it);
+    bool cfgItem(const QString key, const QJsonObject &object, sCfgItem &it);
     bool dataItem(const QString key, const QJsonObject &object, sDataItem &it);
 };
 

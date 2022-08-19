@@ -93,7 +93,7 @@ void pduMetaData(const QStringList &ls)
 {
      SshRpcClient *rpc = SshRpcClient::bulid();
      uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
-     qDebug() << rpc->pduMetaData(addr);
+     std::cout << rpc->pduMetaData(addr).toStdString() << std::endl;
 }
 
 void pduLogFun(const QStringList &ls)
