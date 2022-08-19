@@ -7,10 +7,17 @@
 
 Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 {
-    setAddress(0);
+    setAddress();
     mCData = new c_sDevData;
     mDataStream = new c_DataStream(mCData);
     memset((void *)mCData, 0, sizeof(c_sDevData));
+}
+
+void Cascade_Object::setAddress()
+{
+    sParameter *p = &(cm::masterDev()->cfg.param);
+    uchar addr = 0; if(!p->rtuMode) addr = p->cascadeAddr;
+    mSelfAddr = addr;
 }
 
 QByteArray Cascade_Object::frameToArray(const c_sFrame &it)

@@ -28,6 +28,7 @@ void Rpc_Xml::addMethods()
 {
     Rpc_Method *rpc = Rpc_Method::bulid(this);
     mXml->addMethod("pduLogFun", rpc, "pduLogFun");
+    mXml->addMethod("pduGetData", rpc, "pduGetData");
     mXml->addMethod("pduSetData", rpc, "pduSetData");
     mXml->addMethod("pduMetaData", rpc, "pduMetaData");
     mXml->addMethod("pduSetParam", rpc, "pduSetParam");

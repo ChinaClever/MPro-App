@@ -8,15 +8,16 @@ public:
     Web_Rpc();
 
 protected:
-    static char *pduReadData(mg_str &mg_r);
+    static char *pduMetaData(mg_str &mg_r);
+    static char *pduReadData(mg_str &r);
     static char *pduSetData(mg_str &r);
     static char *pduReadParam(mg_str &r);
     static char *pduSetParam(mg_str &r);
     static char *pduLogFun(mg_str &r);
 
 private:
-    static char *responRpcData(const QVector<double> &its, double value);
-    static char *responRpcString(const QVector<double> &its, const QString &value);
+    static char *responRpcData(const QVector<uint> &ls, double value);
+    static char *responRpcString(const QVector<uint> &ls, const QString &value);
 
 private:
     static Web_Obj *mObj;

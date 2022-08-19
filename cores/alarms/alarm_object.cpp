@@ -53,6 +53,7 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     case DType::Loop: obj = &(dev->loop); break;
     case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
+    case DType::Dual: obj = &(dev->dual); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
     return obj;

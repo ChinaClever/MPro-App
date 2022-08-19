@@ -54,6 +54,8 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         // Invalid frame. Return error and include this frame as error message
         response = mg_mprintf("{%Q:{%Q:%d,%Q:%.*Q}", "error", "code", -32700,
                               "message", (int) frame.len, frame.ptr);
+    } else if (strcmp(method, "pduMetaData") == 0) {
+        result = pduMetaData(params);
     } else if (strcmp(method, "pduReadData") == 0) {
         result = pduReadData(params);
     } else if (strcmp(method, "pduSetData") == 0) {

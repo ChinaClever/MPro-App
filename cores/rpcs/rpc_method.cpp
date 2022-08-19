@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "rpc_method.h"
+#include "integr_core.h"
 
 Rpc_Method::Rpc_Method(QObject *parent)
     : QObject{parent}
@@ -20,7 +21,12 @@ Rpc_Method *Rpc_Method::bulid(QObject *parent)
     return sington;
 }
 
-int Rpc_Method::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+QString Rpc_Method::pduMetaData(uchar addr)
+{
+    return Integr_JsonBuild::bulid()->getJson(addr);
+}
+
+int Rpc_Method::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
@@ -38,16 +44,16 @@ bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduSetParam(uchar addr, uchar type, uchar fc, const QVariant &value)
+bool Rpc_Method::pduSetParam(uchar type, uchar fc, const QVariant &value, uchar addr, uchar sub)
 {
     sCfgItem it; it.addr = addr; it.type = type;
-    it.txType = mTxType; it.fc = fc;
+    it.txType = mTxType; it.fc = fc; it.sub = sub;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Rpc_Method::pduGetParam(uchar addr, uchar type, uchar fc)
+QString Rpc_Method::pduGetParam(uchar type, uchar fc, uchar addr, uchar sub)
 {
-    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc;
+    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.sub = sub;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 

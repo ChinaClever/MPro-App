@@ -29,7 +29,7 @@ bool Cascade_Slave::replyCfg(QByteArray &rcv)
     QByteArray msg(rcv), array; QVariant value;
     QDataStream out(&msg, QIODevice::ReadOnly);
     out >> array >> value;
-    sCfgItem unit = cm::toStruct<sCfgItem>(array);
+    sCfgItem unit = cm::toStruct<sCfgItem>(array); unit.addr = 0;
     return Set_Core::bulid()->setCfg(unit, value);
 }
 

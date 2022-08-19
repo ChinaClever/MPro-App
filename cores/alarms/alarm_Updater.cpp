@@ -160,6 +160,9 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     index.type = DType::Group;
     ret |= upObjData(index, it->group);
 
+    index.type = DType::Dual;
+    ret |= upObjData(index, it->dual);
+
     index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);
 

@@ -44,6 +44,7 @@ public slots:
 private:
     void delay();
     void workDown();
+    bool checkPush();
     void udpPush(const QByteArray &array);
     void httpPush(const QByteArray &array);
     void mqttPush(const QByteArray &array);

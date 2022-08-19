@@ -41,6 +41,7 @@ void Integr_PushThread::udpPush(const QByteArray &array)
     }
     QHostAddress host("192.168.1.100");
     mUdp->writeDatagram(array, host, 8766);
+    //qDebug() << "AAAAAAAAAAA" << array.size();
 }
 
 void Integr_PushThread::httpPush(const QByteArray &array)
@@ -81,12 +82,23 @@ void Integr_PushThread::delay()
     } cm::mdelay(t);
 }
 
+bool Integr_PushThread::checkPush()
+{
+    bool ret = false;
+    ret |= Mqtt_Client::cfg.isConnected;
+    ret |= mCfg->udp[0].en;
+    ret |= mCfg->udp[1].en;
+    ret |= mCfg->http.en;
+
+    return ret;
+}
+
 void Integr_PushThread::run()
 {
     if(isRun) return;
     else isRun = true;
     while (isRun) {
         int t = QRandomGenerator::global()->bounded(100);
-        delay(); workDown(); cm::mdelay(t);
+        cm::mdelay(t);delay(); if(checkPush()) workDown();
     }
 }

@@ -31,7 +31,6 @@ void Cfg_RwInitial::initDevInfo(sDevNums &it)
     it.lineNum = LINE_NUM;
     it.loopNum = LOOP_NUM / 2;
     it.outputNum = OUTPUT_NUM / 2;
-
     for(uint i=0; i<it.loopNum; ++i) {
         it.loopEnds[i] = 8*(i+1);
         it.loopStarts[i] = 8*i;
@@ -60,9 +59,9 @@ void Cfg_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 
 void Cfg_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
-    setAlarmUnit(it.cur, size, curRated);
+    setAlarmUnit(it.pow, size, 220*curRated);
     setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
-    setAlarmUnit(it.pow, size, 220*curRated/COM_RATE_CUR);
+    setAlarmUnit(it.cur, size, curRated*COM_RATE_CUR);
 }
 
 void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)
@@ -74,8 +73,8 @@ void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)
 
 void Cfg_RwInitial::setTgUnit(sTgUnit &it, uint rated)
 {
-    it.rated = rated;
     it.max = rated;
+    it.rated = rated;
     it.crMax = rated * 0.8;
 }
 
@@ -89,17 +88,20 @@ void Cfg_RwInitial::initTgObjData(sTgObjData &it)
 void Cfg_RwInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
-    setAlarmUnit(it.tem, size, 60);
-    setAlarmUnit(it.hum, size, 99);
+    setAlarmUnit(it.tem, size, 60*COM_RATE_TEM);
+    setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
 }
 
 void Cfg_RwInitial::initDevData(sDevData *dev)
 {
-    initObjData(dev->line, LINE_NUM, 32*COM_RATE_CUR);
-    initObjData(dev->loop, LOOP_NUM, 16*COM_RATE_CUR);
-    initObjData(dev->output, OUTPUT_NUM, 10*COM_RATE_CUR);
-    initRelayUnit(dev->output.relay, OUTPUT_NUM);
+    initObjData(dev->line, LINE_NUM, 32);
+    initObjData(dev->loop, LOOP_NUM, 16);
+    initObjData(dev->dual, OUTPUT_NUM, 10);
+    initObjData(dev->group, GROUP_NUM, 10);
+    initObjData(dev->output, OUTPUT_NUM, 10);
+    initRelayUnit(dev->dual.relay, OUTPUT_NUM);
     initRelayUnit(dev->group.relay, GROUP_NUM);
+    initRelayUnit(dev->output.relay, OUTPUT_NUM);
     initTgObjData(dev->tg);
     initEnvData(dev->env);
 }

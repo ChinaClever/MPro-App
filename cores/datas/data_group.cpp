@@ -14,9 +14,10 @@ void Data_Group::setGroupSize()
 {
     int size = 0;
     if(mDev->cfg.nums.groupEn) size = GROUP_NUM;
-    sObjData *obj = &(mDev->group); obj->vol.size = size;  ///////====   0
-    obj->size = obj->relay.size = obj->cur.size = obj->pow.size = size;
-    //for(int i=0; i<obj->size; ++i) obj->relay.mode[i] = sRelay::NoAlarm;
+    sObjData *obj = &(mDev->group); obj->vol.size = 0;
+    obj->size = obj->cur.size = obj->pow.size = size;
+    if(size & mDev->output.relay.size) size = GROUP_NUM; else size = 0;
+    obj->relay.size = size;
 }
 
 QList<int> Data_Group::outletByGroup(int id, int addr)

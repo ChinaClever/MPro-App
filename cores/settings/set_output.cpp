@@ -20,6 +20,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
     switch (it.subtopic) {
     case DSub::Value:
         if(it.type == DType::Group) str += QStringLiteral("组开关 ");
+        else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
         else str += QStringLiteral("输出位继电器 ");
         if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
         break;
@@ -47,6 +48,7 @@ bool Set_Output::outputCtrl(sDataItem &unit)
 {
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if(it->en[id] || unit.txType == DTxType::TxWeb) {
         OP_Core::bulid()->relayCtrl(unit.id, unit.value);
     } else ret = false;
@@ -56,8 +58,9 @@ bool Set_Output::outputCtrl(sDataItem &unit)
 
 bool Set_Output::outputsCtrl(sDataItem &unit)
 {
-    bool ret = false; int start = unit.type-1; int end = start + unit.id;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
+    bool ret = false; int start = unit.type-1; int end = start + unit.id;
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if(it->en[i] || unit.txType == DTxType::TxWeb) ret = true;
         else {ret = false; break;}
@@ -88,19 +91,42 @@ bool Set_Output::groupCtrl(sDataItem &unit)
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
-    if(unit.addr) {
-        ret = Cascade_Core::bulid()->masterSeting(unit);
-    } else if(unit.rw) {
-        if(unit.type == DType::Group) groupCtrl(unit); else {
+    if(unit.rw) {
+        if(unit.type == DType::Group) groupCtrl(unit);
+        else {
             switch (unit.subtopic) {
             case DSub::Value:  ret = outputCtrl(unit); break;
             case DSub::Relays: ret = outputsCtrl(unit); break;
             case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
             default: ret = upMetaData(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
             } } relayOpLog(unit);
+    } else if(unit.type == DType::Dual) {
+        unit.addr = 1; ret = Cascade_Core::bulid()->masterSeting(unit);
     } else {ret = false; qDebug() << Q_FUNC_INFO;}
 
     return ret;
+}
+
+QString Set_Output::outputCfg(sCfgItem &it)
+{
+    sDevData *dev = cm::devData(it.addr);
+    QString res; int id = it.sub; if(id) id--;
+    sObjData *obj = nullptr;
+
+    switch (it.type) {
+    case SFnCode::EOutput: obj = &(dev->output); break;
+    case SFnCode::EGroup: obj = &(dev->group); break;
+    case SFnCode::EDual: obj = &(dev->dual); break;
+    default: qDebug() << Q_FUNC_INFO << it.type; return res;
+    }
+
+    switch (it.fc) {
+    case 1: res = obj->name[id]; break;
+    case 2: res = obj->relay.timingOn[id]; break;
+    case 3: res = obj->relay.timingOff[id]; break;
+    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+    return res;
 }
 
 
@@ -112,34 +138,12 @@ QString Set_Output::grouping(int addr, int id)
     return res;
 }
 
-QString Set_Output::groupName(int addr, int id)
-{    
-    sObjData *dev = &(cm::devData(addr)->group); if(id) id--;
-    return dev->name[id];
-}
 
 QString Set_Output::outputName(int addr, int id)
 {    
-    sObjData *dev = &(cm::devData(addr)->output); if(id) id--;
-    return dev->name[id];
-}
-
-QString Set_Output::outputTiming(int addr, int id, int onOff)
-{
-    char *ptr = nullptr; if(id) id--;
-    sRelayUnit *it = &(cm::devData(addr)->output.relay);
-    if(onOff) ptr = it->timingOff[id];
-    else ptr = it->timingOn[id];
-    return ptr;
-}
-
-QString Set_Output::groupTiming(int addr, int id, int onOff)
-{
-    char *ptr = nullptr; if(id) id--;
-    sRelayUnit *it = &(cm::devData(addr)->group.relay);
-    if(onOff) ptr = it->timingOff[id];
-    else ptr = it->timingOn[id];
-    return ptr;
+    sCfgItem it; it.fc = 1; it.addr = addr;
+    it.type = SFnCode::EOutput; it.sub = id;
+    return outputCfg(it);
 }
 
 void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
@@ -148,8 +152,12 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     if(it.fc) str = QStringLiteral("第%１").arg(it.fc);
     str += QStringLiteral("名称修改为:%1").arg(v.toString());
 
-    if(it.type == SFnCode::EGroupName) op = QStringLiteral("组名称");
-    else op += QStringLiteral("输出位名称");
+    switch (it.type) {
+    case SFnCode::EOutput: op += QStringLiteral("输出位名称"); break;
+    case SFnCode::EGroup: op += QStringLiteral("组名称"); break;
+    case SFnCode::EDual: op += QStringLiteral("机架名称"); break;
+    default: qDebug() << Q_FUNC_INFO; break;
+    }
 
     sOpItem db;
     db.content = str;
@@ -159,26 +167,9 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 
 bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 {
-    bool ret = true;
-    if(it.fc) {
-        writeOpName(0, it.fc, v);
-    } else {
-        sObjData *obj = &(cm::masterDev()->output);
-        for(int i=0; i<obj->size; ++i) writeOpName(0, i+1, v);
-    } opNameLog(it, v);
-    return ret;
-}
-
-bool Set_Output::groupNameSet(sCfgItem &it, const QVariant &v)
-{
-    bool ret = true;
-    if(it.fc) {
-        writeOpName(1, it.fc, v);
-    } else {
-        sObjData *obj = &(cm::masterDev()->group);
-        for(int i=0; i<obj->size; ++i) writeOpName(1, i+1, v);
-    } opNameLog(it, v);
-    return ret;
+    it.type = SFnCode::EOutput;
+    it.sub = it.fc; it.fc = 1;
+    return outputSet(it, v);
 }
 
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
@@ -194,54 +185,62 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
     return ret;
 }
 
-bool Set_Output::setTiming(int g, int id, int onOff, const QVariant &v)
+bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 {
-    char *ptr = nullptr; bool ret = true;
-    sRelayUnit *it = &(cm::masterDev()->output.relay);
-    if(g) it = &(cm::masterDev()->group.relay);
-    if(onOff) ptr = it->timingOff[id];
-    else ptr = it->timingOn[id];
-    qstrcpy(ptr, v.toByteArray().data());
-    if(ptr) Cfg_ReadWrite::bulid()->writeAlarms(); else ret = false;
-    return ret;
+    QString prefix; bool res=true; int id = it.sub;
+    sObjData *obj = nullptr; char *ptr = nullptr;
+    sDevData *dev = cm::devData(it.addr);
+
+    switch (it.type) {
+    case SFnCode::EOutput: obj = &(dev->output); prefix = "OutputName"; break;
+    case SFnCode::EGroup: obj = &(dev->group); prefix = "GroupName"; break;
+    case SFnCode::EDual: obj = &(dev->dual); prefix = "DualName"; break;
+    default: res = false; qDebug() << Q_FUNC_INFO << it.type; return res;
+    }
+
+    switch (it.fc) {
+    case 1: ptr = obj->name[id]; break;
+    case 2: ptr = obj->relay.timingOn[id]; break;
+    case 3: ptr = obj->relay.timingOff[id]; break;
+    default: res = false; qDebug() << Q_FUNC_INFO << it.fc; break;
+    }
+
+    if(ptr){
+        qstrcpy(ptr, v.toByteArray().data());
+        if(it.fc == 1) {
+            QString key = QString::number(id);
+            Cfg_Obj *cfg = Cfg_Obj::bulid();
+            cfg->writeCfg(key, v, prefix);
+        }
+    }
+    return res;
 }
 
-bool Set_Output::setOutputTiming(int id, int onOff, const QVariant &v)
+bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
 {
-    bool ret = true; if(id) {
-        ret = setTiming(0,  id-1, onOff, v);
+    int id = it.sub;
+    bool ret = false; if(it.sub){
+        it.sub--; ret = outputSetById(it, v);
     } else {
-        sRelayUnit *it = &(cm::masterDev()->output.relay);
-        for(int i=0; i<it->size; ++i)
-            ret = setTiming(0, i, onOff, v);
+        sObjData *obj = nullptr;
+        sDevData *dev = cm::devData(it.addr);
+        switch (it.type) {
+        case SFnCode::EOutput: obj = &(dev->output); break;
+        case SFnCode::EGroup: obj = &(dev->group); break;
+        case SFnCode::EDual: obj = &(dev->dual); break;
+        default: qDebug() << Q_FUNC_INFO << it.type; return ret;
+        }
+        for(int i=0; i<obj->size; ++i) {
+            it.sub = i; ret = outputSetById(it, v);
+        }
+    }
+
+    if(it.fc == 1){it.sub = id; opNameLog(it, v); }
+    else Cfg_ReadWrite::bulid()->writeAlarms();
+    if(it.type == DType::Dual) {
+        it.addr = 1; ret = Cascade_Core::bulid()->masterSetCfg(it, v);
     }
 
     return ret;
 }
 
-bool Set_Output::setGroupTiming(int id, int onOff, const QVariant &v)
-{
-    bool ret = true; if(id) {
-        ret = setTiming(1, id-1, onOff, v);
-    } else {
-        sRelayUnit *it = &(cm::masterDev()->group.relay);
-        for(int i=0; i<it->size; ++i)
-            ret = setTiming(1, i, onOff, v);
-    }
-
-    return ret;
-}
-
-void Set_Output::writeOpName(int fc, int id, const QVariant &name)
-{
-    QString prefix = "OutputName";
-    if(fc) prefix = "GroupName";
-
-    QString key = QString::number(id);
-    Cfg_Obj *cfg = Cfg_Obj::bulid();
-    cfg->writeCfg(key, name, prefix);
-
-    sObjData *it = &(cm::masterDev()->output);
-    if(fc) it = &(cm::masterDev()->group);
-    qstrcpy((char *)it->name[id-1], name.toByteArray().data());
-}

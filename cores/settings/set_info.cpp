@@ -28,6 +28,8 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
     case 14: res = it->opVers[3]; break;
+    case 15: res = it->opVers[4]; break;
+    case 16: res = it->opVers[5]; break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return res;
@@ -51,6 +53,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 8: ret = it->nums.groupEn; break;
     case 9: ret = it->param.runTime; break;
     case 10: ret = it->param.totalTime; break;
+    case 11: ret = it->nums.dualPowerEn; break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
@@ -68,6 +71,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 5: it->param.buzzerSw = value; break;
     case 7: it->nums.boardNum = value; break;
     case 8: it->nums.groupEn = value; break;
+    case 11: it->nums.dualPowerEn = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 

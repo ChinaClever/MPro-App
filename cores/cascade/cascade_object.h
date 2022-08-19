@@ -13,9 +13,6 @@ public:
           fc_otaStart=0x7B, fc_otaPack=0x7C, fc_otaEnd=0x7D,
           fc_mask=0xff};
 
-    uchar getAddress() {return mSelfAddr;}
-    void setAddress(int addr){mSelfAddr=addr;}
-
 protected:
     QVector<c_sFrame> readData(uchar fc, uchar addr);
     QVector<c_sFrame> replyData(QByteArray &rcv, uchar addr=0, uchar fc=0);
@@ -23,6 +20,7 @@ protected:
     QByteArray tranData(uchar fc, uchar addr, const QByteArray &value);
     bool writeData(uchar fc, uchar addr, const QByteArray &value);
 
+    uchar getAddress() {return mSelfAddr;}
     c_sDevData *deDataStream(QByteArray &array);
     c_sDevData *getDev() {return mCData;}
     QByteArray toDataStream();
@@ -35,6 +33,7 @@ private:
     void deDataStream(QByteArray &array, c_sDevData *dev);
     QByteArray toDataStream(c_sDevData *data);
     bool crcCheck(const QByteArray &array);
+    void setAddress();
 
 private:
     uchar mSelfAddr;

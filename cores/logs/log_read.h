@@ -2,6 +2,7 @@
 #define LOG_READ_H
 
 #include "db_alarm.h"
+#include "datapacket.h"
 
 enum eLogs{
     eUserLog,
@@ -35,6 +36,7 @@ class Log_Read : public QObject
 public:
     explicit Log_Read(QObject *parent = nullptr);
     QString log_readFun(const sLogFcIt &it);
+    QString logFun(const sCfgItem &cfg);
 
 private:
     Sql_Statement *getSql(int type);

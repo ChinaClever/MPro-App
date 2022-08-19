@@ -170,6 +170,7 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
+    uchar dualPowerEn; //双电源模式
 };
 
 struct sVersions
@@ -207,12 +208,14 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
+    uchar rtuMode;  // 0 正常模式 1 RTU状态
+    uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
-    uint restartTimes; // 重启次数
+    uint restartTimes; // 重启次数    
     uint hz; // 产品实时频繁
 
     uchar reserve[20];
@@ -241,6 +244,7 @@ struct sDevData
     struct sObjData loop; // 回路数据
     struct sObjData group; //组数据
     struct sObjData output; //位数据
+    struct sObjData dual; //双电源
     struct sTgObjData tg; // 回路数据
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
@@ -288,7 +292,7 @@ struct sDataPacket
 };
 
 
-enum DType{Tg, Line, Loop, Output, Group, Env=6, Sensor};
+enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
@@ -311,9 +315,8 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,
-             ETimingOn=20, ETimingOff, EGrouping, EGroupName, EGroupTimingOn, EGroupTimingOff,
-             EVersion=30, ESercret, ETlsCert};
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
