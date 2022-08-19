@@ -82,12 +82,23 @@ void Integr_PushThread::delay()
     } cm::mdelay(t);
 }
 
+bool Integr_PushThread::checkPush()
+{
+    bool ret = false;
+    ret |= Mqtt_Client::cfg.isConnected;
+    ret |= mCfg->udp[0].en;
+    ret |= mCfg->udp[1].en;
+    ret |= mCfg->http.en;
+
+    return ret;
+}
+
 void Integr_PushThread::run()
 {
     if(isRun) return;
     else isRun = true;
     while (isRun) {
         int t = QRandomGenerator::global()->bounded(100);
-        delay(); workDown(); cm::mdelay(t);
+        cm::mdelay(t);delay(); if(checkPush()) workDown();
     }
 }

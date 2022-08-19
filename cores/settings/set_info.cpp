@@ -28,6 +28,8 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
     case 14: res = it->opVers[3]; break;
+    case 15: res = it->opVers[4]; break;
+    case 16: res = it->opVers[5]; break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return res;

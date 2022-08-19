@@ -37,7 +37,12 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
+        json.insert("addr", addr);
+        devInfo(dev->cfg, "pdu_info", json);
+        uutInfo(dev->cfg.uut, "uut_info", json);
+        verInfo(dev->cfg.vers, "version", json);
         json.insert("version", JSON_VERSION);
+        json.insert("alarm", dev->alarm?true:false);
         devData(dev, "pdu_data", json);
         //saveJson("cc", json);
     } else {
@@ -222,13 +227,6 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
 {
     QJsonObject obj;
-    obj.insert("id", it->id);
-    obj.insert("alarm", it->alarm?true:false);
-
-    devInfo(it->cfg, "pdu_info", obj);
-    uutInfo(it->cfg.uut, "uut_info", obj);
-    verInfo(it->cfg.vers, "version", obj);
-
     it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////////////////////////////////////
     ObjData(it->line, "line_item_list", obj);
 

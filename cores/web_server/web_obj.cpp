@@ -4,6 +4,7 @@
  *      Author: Pmd
  */
 #include "web_obj.h"
+#include "integr_core.h"
 
 Web_Obj::Web_Obj()
 {
@@ -75,4 +76,9 @@ QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
      it.type = type; it.fc = fc;
      it.cnt = cnt; it.id = id;
      return Log_Core::bulid()->log_readFun(it);
+}
+
+QString Web_Obj::metaData(uint addr)
+{
+    return Integr_JsonBuild::bulid()->getJson(addr);
 }
