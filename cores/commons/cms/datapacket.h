@@ -231,6 +231,11 @@ struct sDevCfg {
     struct sParameter param;
 };
 
+struct sFaultCode {
+    uchar fault; // 是否在故障
+    uchar code[PACK_ARRAY_SIZE];
+};
+
 /**
  * 设备数据结构体：
  */
@@ -252,6 +257,7 @@ struct sDevData
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
+    struct sFaultCode dtc; // 故障码
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -299,8 +305,9 @@ enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
-enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_POW=4, DTC_ELE=8};
+enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
 struct sDataItem
 {

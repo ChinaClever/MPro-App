@@ -8,7 +8,7 @@ public:
     Alarm_Object();
 
     char alarmValue(const sDataItem &index);
-    char alarmValue(const sDataItem &index, AlarmStatus type);
+    char alarmValue(const sDataItem &index, AlarmCode type);
     char alarmValue(const sDataItem &index, sRelay::Alarm type);
 
     sTgUnit *getTgAlarmUnit(const sDataItem &index);

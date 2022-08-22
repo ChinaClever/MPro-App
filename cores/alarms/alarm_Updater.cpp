@@ -43,14 +43,14 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
     for(int i=0; i<it.size; ++i) {
         if(it.en[i]) {
             uint value = it.value[i];
-            index.id = i; uchar alarm = AlarmStatus::Ok;
-            if(value > it.max[i]) alarm = AlarmStatus::Max;
-            if(value > it.crMax[i]) alarm = AlarmStatus::CrMax;
-            if(value < it.crMin[i]) alarm = AlarmStatus::CrMin;
-            if(value < it.min[i]) alarm = AlarmStatus::Min;
+            index.id = i; uchar alarm = AlarmCode::Ok;
+            if(value > it.max[i]) alarm = AlarmCode::Max;
+            if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
+            if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
+            if(value < it.min[i]) alarm = AlarmCode::Min;
             if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
             it.alarm[i] = alarm; ret |= alarm;
-        } else it.alarm[i] = AlarmStatus::Ok;
+        } else it.alarm[i] = AlarmCode::Ok;
     }
 
     return ret;
@@ -78,11 +78,11 @@ uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
 {
     bool ret = false; if(it.en) {
         uint value = it.value; uchar alarm;
-        if(value > it.max) alarm = AlarmStatus::Max;
-        else if(value > it.crMax) alarm = AlarmStatus::CrMax;
-        else if(value < it.crMin) alarm = AlarmStatus::CrMin;
-        else if(value < it.min) alarm = AlarmStatus::Min;
-        else {alarm = AlarmStatus::Ok;} index.id = 0;
+        if(value > it.max) alarm = AlarmCode::Max;
+        else if(value > it.crMax) alarm = AlarmCode::CrMax;
+        else if(value < it.crMin) alarm = AlarmCode::CrMin;
+        else if(value < it.min) alarm = AlarmCode::Min;
+        else {alarm = AlarmCode::Ok;} index.id = 0;
         if(it.alarm != alarm) emit alarmSig(index, alarm);
         it.alarm = alarm; ret |= alarm;
     }
