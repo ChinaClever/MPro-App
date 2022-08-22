@@ -22,7 +22,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
-    //mqtt();
+    mqtt();
     login();
     modbus();
     sercret();
