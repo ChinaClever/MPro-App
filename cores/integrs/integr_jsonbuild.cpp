@@ -41,7 +41,6 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
         devInfo(dev->cfg, "pdu_info", json);
         uutInfo(dev->cfg.uut, "uut_info", json);
         verInfo(dev->cfg.vers, "version", json);
-        json.insert("version", JSON_VERSION);
         json.insert("alarm", dev->alarm?true:false);
         devData(dev, "pdu_data", json);
         //saveJson("cc", json);
