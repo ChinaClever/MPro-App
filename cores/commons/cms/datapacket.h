@@ -173,7 +173,6 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
-    uchar dualPowerEn; //双电源模式
 };
 
 struct sVersions
@@ -211,7 +210,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar rtuMode;  // 0 正常模式 1 RTU状态
+    uchar devMode; // 0：标准 1：级联 2：RTU 3：机柜双电源
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
