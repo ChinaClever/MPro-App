@@ -182,7 +182,7 @@ void Dtls_Service::decryptDatagram(QDtls *connection, const QByteArray &clientMe
     const QString peerInfo = peer_info(connection->peerAddress(), connection->peerPort());
     const QByteArray dgram = connection->decryptDatagram(&serverSocket, clientMessage);
     if (dgram.size()) {
-        emit datagramReceived(dgram);
+        emit datagramReceived(qUncompress(dgram));
         connection->writeDatagramEncrypted(&serverSocket, tr("to %1: ACK").arg(peerInfo).toLatin1());
     } else if (connection->dtlsError() == QDtlsError::NoError) {
         emit warningMessage(peerInfo + ": " + tr("0 byte dgram, could be a re-connect attempt?"));

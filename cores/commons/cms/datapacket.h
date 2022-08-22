@@ -35,6 +35,9 @@ typedef unsigned int uint;
 #define COM_RATE_TEM	10.0    // 温度
 #define COM_RATE_HUM	10.0    // 湿度
 
+#define COM_MAX_VOL     (600*COM_RATE_VOL)
+#define COM_MAX_CUR     (100*COM_RATE_CUR)
+#define COM_MAX_POW     (100*600)
 
 /**
  * 数据单元：包括当前值，阈值，临界值，告警状态等
@@ -228,6 +231,11 @@ struct sDevCfg {
     struct sParameter param;
 };
 
+struct sFaultCode {
+    uchar fault; // 是否在故障
+    uchar code[PACK_ARRAY_SIZE];
+};
+
 /**
  * 设备数据结构体：
  */
@@ -249,6 +257,7 @@ struct sDevData
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
+    struct sFaultCode dtc; // 故障码
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -296,8 +305,9 @@ enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
-enum AlarmStatus{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_POW=4, DTC_ELE=8};
+enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
 struct sDataItem
 {
@@ -316,7 +326,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81};
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

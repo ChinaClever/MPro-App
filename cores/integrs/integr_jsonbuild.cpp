@@ -99,13 +99,13 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     int size = it.size;
     arrayAppend(it.sw, size, key+"_state", json);
     arrayAppend(it.alarm, size, key+"_alarm", json);
-    arrayAppend(it.offAlarm, size, key+"_offAlarm", json);
-    arrayAppend(it.resetDelay, size, key+"_resetDelay", json);
-    arrayAppend(it.powerUpDelay, size, key+"_powerUpDelay", json);
-    arrayAppend(it.overrunOff, size, key+"_overrunOff", json);
-    arrayAppend(it.timingEn, size, key+"_timingEn", json);
-    strListAppend(it.timingOn, size, key+"_timingOn", json);
-    strListAppend(it.timingOff, size, key+"_timingOff", json);
+    arrayAppend(it.offAlarm, size, key+"_off_alarm", json);
+    arrayAppend(it.resetDelay, size, key+"_reset_delay", json);
+    arrayAppend(it.powerUpDelay, size, key+"_powerup_delay", json);
+    arrayAppend(it.overrunOff, size, key+"_overrun_off", json);
+    arrayAppend(it.timingEn, size, key+"_timing_en", json);
+    strListAppend(it.timingOn, size, key+"_timing_on", json);
+    strListAppend(it.timingOff, size, key+"_timing_off", json);
 }
 
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, bool breaker)

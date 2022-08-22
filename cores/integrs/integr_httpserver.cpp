@@ -43,7 +43,6 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
     return ret;
 }
 
-
 bool Integr_HttpServer::getDataItem(const QByteArray &body)
 {
     QJsonObject object;
@@ -68,7 +67,7 @@ bool Integr_HttpServer::download(const QByteArray &body)
         mSession->replyFile(file);
     } else {
         QString str = "error: file does not exist, ";
-        ret = replyHttp(str+file, 212);
+        ret = replyHttp(str+file, 214);
     }
     return ret;
 }
@@ -84,6 +83,19 @@ bool Integr_HttpServer::setDataItem(const QByteArray &body)
     return ret;
 }
 
+bool Integr_HttpServer::getCfgItem(const QByteArray &body)
+{
+    QJsonObject object;
+    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
+    bool ret = it->checkInput(body, object);
+    if(ret) {
+        QVariant res = it->getCfgItem(object);
+        replyValue(res.toJsonValue());
+    } else {
+        ret = replyHttp("error", 213);
+    }
+    return ret;
+}
 
 bool Integr_HttpServer::setCfgItem(const QByteArray &body)
 {
@@ -121,6 +133,8 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
 
     if(method.contains("GET")) {
         if(url.contains("pduMetaData")) pduMetaData(body);
+        else if(url.contains("getDataItem")) getDataItem(body);
+        else if(url.contains("getCfgItem")) getCfgItem(body);
         else if(url.contains("download")) download(body);
         else replyHttp(err, 213);
     } else if(method.contains("POST")) {

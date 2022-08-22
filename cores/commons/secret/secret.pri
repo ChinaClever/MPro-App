@@ -9,7 +9,6 @@ HEADERS += \
     $$PWD/SMX/sm4.h \
     $$PWD/sercet_tlscert.h \
     $$PWD/sercret_aes.h \
-    $$PWD/qtsecret_global.h \
     $$PWD/sercret_rsa.h \
     $$PWD/sercret_sm.h
 

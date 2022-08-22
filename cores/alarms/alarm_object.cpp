@@ -30,7 +30,7 @@ char Alarm_Object::alarmValue(const sDataItem &index)
     return alarm;
 }
 
-char Alarm_Object::alarmValue(const sDataItem &index, AlarmStatus type)
+char Alarm_Object::alarmValue(const sDataItem &index, AlarmCode type)
 {
     char alarm = alarmValue(index);
     alarm = (alarm&type) ? 1: 0;

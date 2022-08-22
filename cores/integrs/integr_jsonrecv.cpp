@@ -166,39 +166,53 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     return ret;
 }
 
-int Integr_JsonRecv::getDataItem(const QJsonObject &object)
+double Integr_JsonRecv::getDataItem(const QJsonObject &object)
 {
     QString key = "getDataItem"; sDataItem it;
     if (dataItem(key, object, it)) {
         Set_Core::bulid()->upMetaData(it);
-        it.value /= getDecimal(it);
     }
-    return it.value;
+
+    return it.value/getDecimal(it);
 }
 
-
-
-bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
+bool Integr_JsonRecv::cfgItem(const QString key, const QJsonObject &object, sCfgItem &it)
 {
-    QString key = "setCfgItem";
-    bool ret = true; sCfgItem it;
+    bool ret = true;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
         double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
         res = getData(obj, "type"); if(res >= 0) it.type = res;
         res = getData(obj, "fc"); if(res >= 0) it.fc = res;
         res = getData(obj, "sub"); if(res >= 0) it.sub = res;
-        QVariant value = getValue(obj, "value");
         it.txType = DTxType::TxJson;
+    }else ret = false;
+
+    return ret;
+}
+
+
+bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
+{
+    QString key = "setCfgItem"; sCfgItem it;
+    bool ret = cfgItem(key, object, it);
+    if (ret) {
+        QJsonObject obj = getObject(object, key);
+        QVariant value = getValue(obj, "value");
         emit recvCfgSig(it, value);
-    } else ret = false;
+    }
 
     return ret;
 }
 
 QVariant Integr_JsonRecv::getCfgItem(const QJsonObject &object)
 {
-
+    QString key = "setCfgItem";
+    QVariant res; sCfgItem it;
+    if(cfgItem(key, object, it)) {
+        res = Set_Core::bulid()->getCfg(it);
+    }
+    return res;
 }
 
 bool Integr_JsonRecv::analyticalData(const QJsonObject &object)

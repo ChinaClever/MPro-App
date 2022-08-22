@@ -41,17 +41,17 @@ void Mb_Alarm::upLineCrAlarm()
     index.topic = DTopic::Cur;
 
     vs << mDevData->alarm;
-    vs << alarmValue(index, AlarmStatus::CrMax);
-    vs << alarmValue(index, AlarmStatus::CrMin);
+    vs << alarmValue(index, AlarmCode::CrMax);
+    vs << alarmValue(index, AlarmCode::CrMin);
     vs << 0;
 
     index.type = DType::Line;
     for(int i=0; i<LINE_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::CrMax);
+        index.id = i; vs << alarmValue(index, AlarmCode::CrMax);
     }
 
     for(int i=0; i<LINE_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::CrMin);
+        index.id = i; vs << alarmValue(index, AlarmCode::CrMin);
     }
 
     setCoils(MbReg_Alarms, vs);
@@ -64,15 +64,15 @@ void Mb_Alarm::upEnvAlarm()
     index.topic = DTopic::Tem;
     for(int i=0; i<SENOR_NUM; ++i) {
         index.id = i;
-        vs << alarmValue(index, AlarmStatus::Max);
-        vs << alarmValue(index, AlarmStatus::Min);
+        vs << alarmValue(index, AlarmCode::Max);
+        vs << alarmValue(index, AlarmCode::Min);
     } setCoils(MbReg_Alarms+154, vs); vs.clear();
 
     index.topic = DTopic::Hum;
     for(int i=0; i<SENOR_NUM; ++i) {
         index.id = i;
-        vs << alarmValue(index, AlarmStatus::Max);
-        vs << alarmValue(index, AlarmStatus::Min);
+        vs << alarmValue(index, AlarmCode::Max);
+        vs << alarmValue(index, AlarmCode::Min);
     } setCoils(MbReg_Alarms+170, vs); vs.clear();
 
     for(int i=0; i<SENOR_NUM; ++i) vs << mDevData->env.door[i];
@@ -90,16 +90,16 @@ void Mb_Alarm::upCurMaxAlarm()
     sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Cur;
-    vs << alarmValue(index, AlarmStatus::Max);
+    vs << alarmValue(index, AlarmCode::Max);
 
     index.type = DType::Line;
     for(int i=0; i<LINE_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Max);
+        index.id = i; vs << alarmValue(index, AlarmCode::Max);
     }
 
     index.type = DType::Output;
     for(int i=0; i<OUTPUT_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Max);
+        index.id = i; vs << alarmValue(index, AlarmCode::Max);
     }
 
     setCoils(MbReg_Alarms+220, vs);
@@ -110,16 +110,16 @@ void Mb_Alarm::upLineVolAlarm()
     sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Vol;
-    vs << alarmValue(index, AlarmStatus::Max);
-    vs << alarmValue(index, AlarmStatus::Min);
+    vs << alarmValue(index, AlarmCode::Max);
+    vs << alarmValue(index, AlarmCode::Min);
 
     index.type = DType::Line;
     for(int i=0; i<LINE_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Max);
+        index.id = i; vs << alarmValue(index, AlarmCode::Max);
     }
 
     for(int i=0; i<LINE_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Min);
+        index.id = i; vs << alarmValue(index, AlarmCode::Min);
     }
 
     setCoils(MbReg_Alarms+272, vs);
@@ -130,16 +130,16 @@ void Mb_Alarm::upCurCrMaxAlarm()
     sDataItem index; vshort vs;
     index.type = DType::Tg;
     index.topic = DTopic::Cur;
-    vs << alarmValue(index, AlarmStatus::CrMax);
+    vs << alarmValue(index, AlarmCode::CrMax);
 
     index.type = DType::Line;
     for(int i=0; i<LINE_NUM; ++i) {
-        vs << alarmValue(index, AlarmStatus::CrMax);
+        vs << alarmValue(index, AlarmCode::CrMax);
     }
 
     index.type = DType::Output;
     for(int i=0; i<OUTPUT_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::CrMax);
+        index.id = i; vs << alarmValue(index, AlarmCode::CrMax);
     }
 
     setCoils(MbReg_Alarms+280, vs);
@@ -151,15 +151,15 @@ void Mb_Alarm::upLoopAlarm()
     index.type = DType::Loop;
     index.topic = DTopic::Cur;
     for(int i=0; i<LOOP_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Max);
+        index.id = i; vs << alarmValue(index, AlarmCode::Max);
     }
 
     for(int i=0; i<LOOP_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::CrMax);
+        index.id = i; vs << alarmValue(index, AlarmCode::CrMax);
     }
 
     for(int i=0; i<LOOP_NUM; ++i) {
-        index.id = i; vs << alarmValue(index, AlarmStatus::Min);
+        index.id = i; vs << alarmValue(index, AlarmCode::Min);
     }
 
     setCoils(MbReg_Alarms+332, vs);
@@ -173,8 +173,8 @@ void Mb_Alarm::upOutputCrAlarm()
 
     for(int i=0; i<OUTPUT_NUM; ++i) {
         index.id = i;
-        vs << alarmValue(index, AlarmStatus::CrMax);
-        vs << alarmValue(index, AlarmStatus::CrMin);
+        vs << alarmValue(index, AlarmCode::CrMax);
+        vs << alarmValue(index, AlarmCode::CrMin);
     }
 
     setCoils(MbReg_Alarms+10, vs);

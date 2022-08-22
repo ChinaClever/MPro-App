@@ -66,6 +66,7 @@ struct _sDevData
 
     uchar envSize;
     _sEnvData env[SENOR_NUM]; // 环境数据
+    sFaultCode dtc; // 故障码
     sRtuBoard rtu; // 传输情况
     sTgObjData tg; // 回路数据
 
