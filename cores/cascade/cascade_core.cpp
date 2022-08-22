@@ -48,6 +48,7 @@ void Cascade_Core::run()
         uchar addr = getAddress(); if(addr) {
             QByteArray rcv = readSerial();
             if(rcv.size() > 6) {
+                rcv = qUncompress(rcv);
                 QVector<c_sFrame> its = replyData(rcv);
                 for(auto &it: its) workDown(it);
             }

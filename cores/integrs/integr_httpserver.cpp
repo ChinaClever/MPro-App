@@ -22,6 +22,12 @@ bool Integr_HttpServer::replyHttp(const QString &msg, const int &httpStatusCode)
     return ret;
 }
 
+void Integr_HttpServer::replyValue(const QJsonValue &v)
+{
+    QJsonObject json;
+    json.insert("value", v);
+    mSession->replyJsonObject(json, 200);
+}
 
 bool Integr_HttpServer::pduMetaData(const QByteArray &body)
 {
@@ -37,6 +43,21 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
     return ret;
 }
 
+bool Integr_HttpServer::getDataItem(const QByteArray &body)
+{
+    QJsonObject object;
+    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
+    bool ret = it->checkInput(body, object);
+    if(ret) {
+        int res = it->getDataItem(object);
+        replyValue(res);
+    } else {
+        ret = replyHttp("error", 212);
+    }
+    return ret;
+}
+
+
 bool Integr_HttpServer::download(const QByteArray &body)
 {
     bool ret = true;
@@ -46,7 +67,7 @@ bool Integr_HttpServer::download(const QByteArray &body)
         mSession->replyFile(file);
     } else {
         QString str = "error: file does not exist, ";
-        ret = replyHttp(str+file, 212);
+        ret = replyHttp(str+file, 214);
     }
     return ret;
 }
@@ -62,8 +83,21 @@ bool Integr_HttpServer::setDataItem(const QByteArray &body)
     return ret;
 }
 
+bool Integr_HttpServer::getCfgItem(const QByteArray &body)
+{
+    QJsonObject object;
+    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
+    bool ret = it->checkInput(body, object);
+    if(ret) {
+        QVariant res = it->getCfgItem(object);
+        replyValue(res.toJsonValue());
+    } else {
+        ret = replyHttp("error", 213);
+    }
+    return ret;
+}
 
-bool Integr_HttpServer::setNumStrItem(const QByteArray &body)
+bool Integr_HttpServer::setCfgItem(const QByteArray &body)
 {
     QJsonObject object;
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
@@ -99,11 +133,13 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
 
     if(method.contains("GET")) {
         if(url.contains("pduMetaData")) pduMetaData(body);
+        else if(url.contains("getDataItem")) getDataItem(body);
+        else if(url.contains("getCfgItem")) getCfgItem(body);
         else if(url.contains("download")) download(body);
         else replyHttp(err, 213);
     } else if(method.contains("POST")) {
         if(url.contains("setDataItem")) setDataItem(body);
-        else if(url.contains("setNumStrItem")) setNumStrItem(body);
+        else if(url.contains("setCfgItem")) setCfgItem(body);
         else replyHttp(err, 223);
     } else if(method.contains("PUT")) {
         if(url.contains("execute")) execute(body);

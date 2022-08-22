@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_jsonrecv.h"
+#include "set_core.h"
 
 Integr_JsonRecv::Integr_JsonRecv(QObject *parent)
     : QObject{parent}
@@ -122,26 +123,23 @@ bool Integr_JsonRecv::versionNumber(const QJsonObject &object)
     return ret;
 }
 
-bool Integr_JsonRecv::getDecimal(sDataItem &it)
+double Integr_JsonRecv::getDecimal(const sDataItem &it)
 {
-    bool ret = true;
-    double res = 1;
-    switch (it.topic) {
+    double res = 1; switch (it.topic) {
     case DTopic::Vol: res = COM_RATE_VOL; break;
     case DTopic::Cur: res = COM_RATE_CUR; break;
     case DTopic::Pow: res = COM_RATE_POW; break;
     case DTopic::Tem: res = COM_RATE_TEM; break;
     case DTopic::Hum: res = COM_RATE_HUM; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    } it.value *= res;
+    default: qDebug() << Q_FUNC_INFO; break;
+    }
 
-    return ret;
+    return res;
 }
 
-bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
+bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDataItem &it)
 {
-    QString key = "setDataItem";
-    bool ret = true; sDataItem it;
+    bool ret = true;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
         double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
@@ -150,29 +148,71 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
         res = getData(obj, "value"); if(res >= 0) it.value = res;
-        it.rw = 1; it.txType = DTxType::TxJson; getDecimal(it);
+        it.txType = DTxType::TxJson;
+    } else ret = false;
+    return ret;
+}
+
+bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
+{
+    QString key = "setDataItem"; sDataItem it;
+    bool ret = dataItem(key, object, it);
+    if (ret) {
+        it.rw = 1;
+        it.value *= getDecimal(it);
         emit recvSetSig(it);
     } else ret = false;
 
     return ret;
 }
 
-bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
+double Integr_JsonRecv::getDataItem(const QJsonObject &object)
 {
-    QString key = "setCfgItem";
-    bool ret = true; sCfgItem it;
+    QString key = "getDataItem"; sDataItem it;
+    if (dataItem(key, object, it)) {
+        Set_Core::bulid()->upMetaData(it);
+    }
+
+    return it.value/getDecimal(it);
+}
+
+bool Integr_JsonRecv::cfgItem(const QString key, const QJsonObject &object, sCfgItem &it)
+{
+    bool ret = true;
     if (object.contains(key)) {
         QJsonObject obj = getObject(object, key);
         double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
         res = getData(obj, "type"); if(res >= 0) it.type = res;
         res = getData(obj, "fc"); if(res >= 0) it.fc = res;
         res = getData(obj, "sub"); if(res >= 0) it.sub = res;
-        QVariant value = getValue(obj, "value");
         it.txType = DTxType::TxJson;
-        emit recvCfgSig(it, value);
-    } else ret = false;
+    }else ret = false;
 
     return ret;
+}
+
+
+bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
+{
+    QString key = "setCfgItem"; sCfgItem it;
+    bool ret = cfgItem(key, object, it);
+    if (ret) {
+        QJsonObject obj = getObject(object, key);
+        QVariant value = getValue(obj, "value");
+        emit recvCfgSig(it, value);
+    }
+
+    return ret;
+}
+
+QVariant Integr_JsonRecv::getCfgItem(const QJsonObject &object)
+{
+    QString key = "setCfgItem";
+    QVariant res; sCfgItem it;
+    if(cfgItem(key, object, it)) {
+        res = Set_Core::bulid()->getCfg(it);
+    }
+    return res;
 }
 
 bool Integr_JsonRecv::analyticalData(const QJsonObject &object)

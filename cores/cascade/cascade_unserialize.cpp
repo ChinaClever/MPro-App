@@ -93,6 +93,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     for(int i=0; i< size; ++i) unEnvData(i, data->env, obj->env[i]);
     data->env.hum.size = data->env.tem.size = size;
 
+    data->dtc = obj->dtc;
     data->rtu = obj->rtu;
     data->tg = obj->tg;
     data->lps = obj->lps;

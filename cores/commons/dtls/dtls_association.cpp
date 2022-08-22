@@ -115,7 +115,7 @@ bool Dtls_Association::writeData(const QByteArray &array)
 {
     isRecved = false; cm::mdelay(1);
     if (waitForConnected()) {
-        const qint64 written = crypto.writeDatagramEncrypted(&socket, array);
+        const qint64 written = crypto.writeDatagramEncrypted(&socket, qCompress(array));
         if (written > 0) {
             for(int i=0; i<1000; ++i) if(isRecved) break; else cm::mdelay(1);
         } else emit errorMessage(tr("%1: failed to send a ping - %2")

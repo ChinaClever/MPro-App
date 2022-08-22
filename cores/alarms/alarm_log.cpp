@@ -57,11 +57,11 @@ QString Alarm_Log::alarmType(const sDataItem &index)
 QString Alarm_Log::alarmStatus(uchar value, QString &state)
 {
     QString str; switch (value) {
-    case AlarmStatus::Ok: state = str = tr("恢复正常"); break;
-    case AlarmStatus::Min: state = tr("告警"); str = tr("过低"); break;
-    case AlarmStatus::CrMin: state = tr("预警"); str = tr("过低"); break;
-    case AlarmStatus::CrMax: state = tr("预警"); str = tr("过高"); break;
-    case AlarmStatus::Max: state = tr("告警"); str = tr("过高"); break;
+    case AlarmCode::Ok: state = str = tr("恢复正常"); break;
+    case AlarmCode::Min: state = tr("告警"); str = tr("过低"); break;
+    case AlarmCode::CrMin: state = tr("预警"); str = tr("过低"); break;
+    case AlarmCode::CrMax: state = tr("预警"); str = tr("过高"); break;
+    case AlarmCode::Max: state = tr("告警"); str = tr("过高"); break;
     }
     return str;
 }

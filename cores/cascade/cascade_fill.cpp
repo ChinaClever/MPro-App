@@ -82,6 +82,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     size = obj->envSize = data->env.size;
     for(int i=0; i< size; ++i) upEnvData(i, data->env, obj->env[i]);
 
+    obj->dtc = data->dtc;
     obj->rtu = data->rtu;
     obj->tg = data->tg;
     obj->lps = data->lps;

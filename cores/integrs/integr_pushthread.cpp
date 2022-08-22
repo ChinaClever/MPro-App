@@ -99,6 +99,7 @@ void Integr_PushThread::run()
     else isRun = true;
     while (isRun) {
         int t = QRandomGenerator::global()->bounded(100);
-        cm::mdelay(t);delay(); if(checkPush()) workDown();
+        cm::mdelay(t);delay(); ///if(checkPush()) workDown();    ///////////============
+        workDown();
     }
 }

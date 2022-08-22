@@ -42,6 +42,7 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
 
     in << toByteArray(ptr->tg);
     in << toByteArray(ptr->rtu);
+    in << toByteArray(ptr->dtc);
     in << toByteArray(ptr->cfg);
     in << ptr->lps;
 
@@ -74,6 +75,7 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
 
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
     out >> v; ptr->rtu = toStruct<sRtuBoard>(v);
+    out >> v; ptr->dtc = toStruct<sFaultCode>(v);
     out >> v; ptr->cfg = toStruct<sDevCfg>(v);
     out >> ptr->lps;
 
