@@ -5,6 +5,7 @@
  */
 #include "web_server/web_core.h"
 #include "ipc_coreserver.h"
+#include "app_netaddr.h"
 #include "cascade_core.h"
 #include "sercret_core.h"
 #include "rpc_service.h"
@@ -49,6 +50,7 @@ App_Start *App_Start::bulid(QObject *parent)
 void App_Start::initFunSlot()
 {
     IPC_CoreServer::bulid(this);
+    App_NetAddr::bulid(this);
     Dtls_Recver::bulid(this);
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);

@@ -257,6 +257,6 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
-    obj.insert("mac", it.mac);
+//    obj.insert("mac", it.mac);
     json.insert(key, obj);
 }

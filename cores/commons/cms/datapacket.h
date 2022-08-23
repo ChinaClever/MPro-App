@@ -267,22 +267,27 @@ struct sDevData
 struct sNetAddr
 {
 #ifndef SUPPORT_C
-    sNetAddr() {mode=0;}
-#endif
-    uchar mode;
-    char mac[NAME_SIZE];
+    sNetAddr() {en = mode=0;}
+#endif    
+    uchar en, mode;
     char ip[NAME_SIZE];
-    char mask[NAME_SIZE];
     char gw[NAME_SIZE];
+    char mask[NAME_SIZE];
     char dns[NAME_SIZE];
-
-    char ipv6[NAME_SIZE];
-    char gwv6[NAME_SIZE];
-    char dnsv6[NAME_SIZE];
-    uint maskv6[NET_NUM];
+    char dns2[NAME_SIZE];
+    uint prefixLen;
 };
 
-struct sDevLogin {
+struct sNetInterface
+{
+    sNetAddr inet[NET_NUM];
+    sNetAddr inet6[NET_NUM];
+    char mac[NET_NUM][NAME_SIZE];
+    char name[NET_NUM][NAME_SIZE];
+};
+
+struct sDevLogin
+{
     char permit[3];
     char token[NAME_SIZE];
     char user[NAME_SIZE];
@@ -294,7 +299,7 @@ struct sDevLogin {
  */
 struct sDataPacket
 {
-    struct sNetAddr net[NET_NUM]; //设备IP
+    struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
     struct sDevLogin login[USER_NUM];
 };
@@ -325,7 +330,8 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111};
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
+             EINet=41};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

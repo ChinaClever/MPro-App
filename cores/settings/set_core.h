@@ -1,8 +1,8 @@
 #ifndef SET_CORE_H
 #define SET_CORE_H
-#include "set_integr.h"
+#include "set_netaddr.h"
 
-class Set_Core : public Set_Integr
+class Set_Core : public Set_NetAddr
 {
     Set_Core();
 public:
