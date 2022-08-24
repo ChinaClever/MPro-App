@@ -4,12 +4,12 @@
  *      Author: Lzy
  */
 #include "cfg_readparam.h"
-#include "agent_core.h"
-#include "mb_core.h"
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "sercret_core.h"
 #include "mqtt_client.h"
+#include "agent_core.h"
+#include "mb_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}

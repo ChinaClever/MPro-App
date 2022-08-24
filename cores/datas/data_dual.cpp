@@ -8,7 +8,7 @@ Data_Dual::Data_Dual()
 int Data_Dual::setDualSize()
 {
     int size = 0;
-    if(mDev->cfg.nums.dualPowerEn) {
+    if(mDev->cfg.param.devMode == 3) {
         size = mDev->cfg.nums.outputNum;
         mDev->cfg.nums.slaveNum = 1;
     }
@@ -27,6 +27,24 @@ void Data_Dual::dualWork()
     else disDualAlarm();
 }
 
+
+void Data_Dual::dualTiming()
+{
+    sObjData *obj = &(mDev->dual);
+    for(int i=0; i<obj->relay.size; ++i) {
+        int res = relayTiming(*obj, i);
+        if(res) {
+            OP_Core::bulid()->relayCtrl(i+1, res-1);
+            sOpItem db;
+            db.op_src = QStringLiteral("机架定时开关"); res--;
+            db.content = QStringLiteral("继电器%1").arg(i+1);
+            if(res) db.content += QStringLiteral("接通");
+            else db.content += QStringLiteral("断开");
+            Log_Core::bulid()->append(db);
+        }
+    }
+}
+
 void Data_Dual::dualData(int id)
 {
     sObjData *dest = &mDev->dual;
@@ -40,7 +58,7 @@ void Data_Dual::dualData(int id)
         dest->artPow[i] = src1->artPow[i] + src2->artPow[i];
         dest->ele[i] = src1->ele[i] + src2->ele[i];
         dest->pf[i] = calPf(i, *dest);
-    }
+    } dualTiming();
 }
 
 void Data_Dual::disDualAlarm()

@@ -173,7 +173,6 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
-    uchar dualPowerEn; //双电源模式
 };
 
 struct sVersions
@@ -211,7 +210,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar rtuMode;  // 0 正常模式 1 RTU状态
+    uchar devMode; // 0：标准 1：级联 2：RTU 3：机柜双电源
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -268,22 +267,27 @@ struct sDevData
 struct sNetAddr
 {
 #ifndef SUPPORT_C
-    sNetAddr() {mode=0;}
-#endif
-    uchar mode;
-    char mac[NAME_SIZE];
+    sNetAddr() {en = mode=0;}
+#endif    
+    uchar en, mode;
     char ip[NAME_SIZE];
-    char mask[NAME_SIZE];
     char gw[NAME_SIZE];
+    char mask[NAME_SIZE];
     char dns[NAME_SIZE];
-
-    char ipv6[NAME_SIZE];
-    char gwv6[NAME_SIZE];
-    char dnsv6[NAME_SIZE];
-    uint maskv6[NET_NUM];
+    char dns2[NAME_SIZE];
+    uint prefixLen;
 };
 
-struct sDevLogin {
+struct sNetInterface
+{
+    sNetAddr inet[NET_NUM];
+    sNetAddr inet6[NET_NUM];
+    char mac[NET_NUM][NAME_SIZE];
+    char name[NET_NUM][NAME_SIZE];
+};
+
+struct sDevLogin
+{
     char permit[3];
     char token[NAME_SIZE];
     char user[NAME_SIZE];
@@ -295,7 +299,7 @@ struct sDevLogin {
  */
 struct sDataPacket
 {
-    struct sNetAddr net[NET_NUM]; //设备IP
+    struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
     struct sDevLogin login[USER_NUM];
 };
@@ -326,7 +330,8 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111};
+             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
+             EINet=41};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

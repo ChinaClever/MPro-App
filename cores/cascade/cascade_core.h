@@ -19,6 +19,9 @@ public slots:
     void initThreadSlot(){mThread->init(this, SLOT(run()));}
 
 private:
+    void workFun();
+
+private:
     bool isRun=false;
     CThread *mThread;
 };
