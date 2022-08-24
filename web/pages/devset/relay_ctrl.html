@@ -9,8 +9,8 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
 		<style>
 			.panel-default{
             border: none;
@@ -53,8 +53,8 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
+	<script src="../../doc-lib/highlight.pack.js"></script>
+	<script src="../../doc-lib/doc.js"></script>
     <script>
 		var  read  = 0;
 		var Input_state = new Array("开","闭","复位");
@@ -168,7 +168,7 @@
 				rpc.call('pduReadData',[addr,output,switch_,4,i]);
 				rpc.call('pduReadData',[addr,output,switch_,5,i]);
 				rpc.call('pduReadData',[addr,output,switch_,8,i]);
-				rpc.call('pduReadString',[addr,bit,0,0,i]);
+				rpc.call('pduReadParam',[addr,bit,0,0,i]);
 			}
 		}
 		function flash_html(par)
@@ -232,7 +232,7 @@
 					}else{
 						num = 0;
 					}
-					rpc.call('pduSetString',[addr,bit,0,0,num,stat]);
+					rpc.call('pduSetParam',[addr,bit,0,0,num,stat]);
 				}
 				else if(type1 === 'd'){
 					stat = parseInt(ipt.value);

@@ -191,3 +191,98 @@ p{
     height: 30px;
     line-height: 16px;
 }
+.phase_table{
+	width:100%;
+	margin-top:10px;
+	font-size:12px;
+	border:0px solid;
+	border-color: #aaaaff;
+}
+.phase{
+	float:left; 
+	display:table-cell; 
+	width:26%; 
+	height:210px; 
+	border:0px solid;
+	border-color: #aaaaff;
+}
+.span_tit{
+	float:left; 
+	padding-left:20px;
+}
+.span_data{
+	float:left; 
+	padding-left:10px;
+}
+.span_unit{
+	float:left; 
+	padding-left:2px;
+}
+.phase_div{
+	float:left; 
+	display:table-cell;
+	width:22%;
+    height:210px;
+	border:0px solid;
+	border-color: #aaaaff;
+}
+.phase_div1{
+	border:0px solid;
+	border-color: #ffffff;
+	margin:10px;
+    height:250px;
+	background:#ffffff; 
+	text-align:center;
+}
+.phase_div2{
+	text-align:left;
+	padding-left:20px; 
+	padding-top:8px;
+	height:40px; 
+	border-bottom:#e1dfdf 2px solid; 
+}
+/*进度条*/
+.progress {
+    margin:10px;
+    padding: 1px;
+    width: 80%;
+    height: 13px;
+    background: #ebebeb;
+    border-radius: 15px;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+  }
+  
+  .progress-bar {
+    position: relative;
+  
+    height: 12px;
+    border-radius: 15px;
+    -webkit-transition: 0.5s linear;
+    -moz-transition: 0.5s linear;
+    -o-transition: 0.5s linear;
+    transition: 0.5s linear;
+    -webkit-transition-property: width, background-color;
+    -moz-transition-property: width, background-color;
+    -o-transition-property: width, background-color;
+    transition-property: width, background-color;
+    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .loop_div{
+    border:1px solid;
+    border-color: #ffffff;
+    margin:10px;
+    background:#ffffff;
+    text-align:center;
+  }
+  .loop_table{
+    width:100%;
+    font-size:12px;
+    border:0px solid;
+    border-color:#aaaaff;
+  }
+  .spacing{
+	text-align:left; 
+	padding-left:20px;
+}
