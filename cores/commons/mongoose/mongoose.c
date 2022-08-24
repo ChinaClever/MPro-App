@@ -1803,6 +1803,8 @@ static struct mg_str s_known_types[] = {
     MG_C_STR("webp"), MG_C_STR("image/webp"),
     MG_C_STR("zip"), MG_C_STR("application/zip"),
     MG_C_STR("3gp"), MG_C_STR("video/3gpp"),
+    MG_C_STR("pem"), MG_C_STR("application/x-x509"),
+    //MG_C_STR("crt"), MG_C_STR("application/x-x509-user-cert"),
     {0, 0},
 };
 // clang-format on
@@ -1860,7 +1862,6 @@ void mg_http_serve_file(struct mg_connection *c, struct mg_http_message *hm,
   struct mg_str *inm = NULL;
   struct mg_str mime = guess_content_type(mg_str(path), opts->mime_types);
   bool gzip = false;
-
   // If file does not exist, we try to open file PATH.gz - and if such
   // pre-compressed .gz file exists, serve it with the Content-Encoding: gzip
   // Note - we ignore Accept-Encoding, cause we don't have a choice
@@ -1922,6 +1923,7 @@ void mg_http_serve_file(struct mg_connection *c, struct mg_http_message *hm,
               status, mg_http_status_code_str(status), (int) mime.len, mime.ptr,
               etag, cl, gzip ? "Content-Encoding: gzip\r\n" : "", range,
               opts->extra_headers ? opts->extra_headers : "");
+
     if (mg_vcasecmp(&hm->method, "HEAD") == 0) {
       c->is_draining = 1;
       mg_fs_close(fd);
