@@ -38,12 +38,14 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
         json.insert("addr", addr);
+        devData(dev, "pdu_data", json);
         devInfo(dev->cfg, "pdu_info", json);
         uutInfo(dev->cfg.uut, "uut_info", json);
-        verInfo(dev->cfg.vers, "version", json);
-        json.insert("version", JSON_VERSION);
+        verInfo(dev->cfg.vers, "pdu_version", json);
         json.insert("alarm", dev->alarm?true:false);
-        devData(dev, "pdu_data", json);
+        QDateTime datetime = QDateTime::currentDateTime();
+        json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
+        json.insert("version", JSON_VERSION);
         //saveJson("cc", json);
     } else {
 
