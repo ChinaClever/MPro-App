@@ -101,7 +101,6 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         opts.certkey = keyFile;
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
-
         if (mg_http_match_uri(hm, "/websocket")) {
             // Upgrade to websocket. From now on, a connection is a full-duplex
             // Websocket connection, which will receive MG_EV_WS_MSG events.
@@ -127,7 +126,23 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             fclose(fp);//
             fp = NULL;//
             mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
-        }else {
+        } else if(mg_http_match_uri(hm, "/cert-client.pem")){
+            struct mg_http_serve_opts opts;
+
+            memset(&opts , 0 , sizeof(opts));
+            //opts.mime_types = "foo=a/b,pem=c/d";
+            opts.mime_types = "foo=a/b,txt=c/d";
+            mg_http_serve_file(c , hm , "/etc/ssl/certs/cert.pem" , &opts);
+            //mg_http_serve_file(c , hm , "/usr/data/clever/app/json_server_log.txt" , &opts);
+        }else if(mg_http_match_uri(hm, "/key-client.pem")){
+            struct mg_http_serve_opts opts;
+
+            memset(&opts , 0 , sizeof(opts));
+            //opts.mime_types = "foo=a/b,pem=c/d";
+            opts.mime_types = "foo=a/b,txt=c/d";
+            mg_http_serve_file(c , hm , "/etc/ssl/certs/key.pem" , &opts);
+        }
+        else {
             // Serve static files
             struct mg_http_serve_opts opts={.root_dir = s_web_root};
             mg_http_serve_dir(c, hm, &opts);
@@ -165,7 +180,8 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             MG_INFO(("Last chunk received, sending response"));
             mg_http_reply(c, 200, "", "ok (chunked)\n");
         }
-    }else if (ev == MG_EV_WS_MSG) {
+    }
+    else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
         process_json_message(c, wm->data);
