@@ -45,8 +45,10 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 7: qstrcpy(inet->dns2, v.toByteArray().data()); break;
     default: res = false; qDebug() << Q_FUNC_INFO; break;
     }
+
     if(res) {
         App_NetAddr::bulid()->setInterface();
+        Cfg_ReadWrite::bulid()->writeParams();
     }
 
     return res;
