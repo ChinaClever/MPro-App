@@ -31,8 +31,10 @@ bool Cfg_RwObj::writeParams()
     if(ret) {
         QByteArray array; ushort end = END_CRC;
         QDataStream in(&array, QIODevice::WriteOnly);
-        sDevCfg *cfg = &cm::masterDev()->cfg;
-        in << cm::toByteArray(cfg->nums)
+        sNetInterface *net = &(cm::dataPacket()->net);
+        sDevCfg *cfg = &(cm::masterDev()->cfg);
+        in << cm::toByteArray(*net)
+           << cm::toByteArray(cfg->nums)
            << cm::toByteArray(cfg->param)
            << cm::toByteArray(cfg->uut) << end;
         file.write(array);
@@ -47,20 +49,21 @@ bool Cfg_RwObj::readParam(const QString &fn)
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
         QByteArray array = file.readAll();
         if(array.size()) {
-            QByteArray nums, param, uut;
+            QByteArray nums, param, uut, net;
             QDataStream out(&array, QIODevice::ReadOnly);
-            ushort end; out >> nums >> param >> uut >> end;
+            ushort end; out >> net >> nums >> param >> uut >> end;
             if(end == END_CRC){
                 sDevCfg *cfg = &cm::masterDev()->cfg;
                 cfg->nums = cm::toStruct<sDevNums>(nums);
-                cfg->param = cm::toStruct<sParameter>(nums);
-                cfg->uut = cm::toStruct<sUutInfo>(nums); ret = true;
+                cfg->param = cm::toStruct<sParameter>(param);
+                cfg->uut = cm::toStruct<sUutInfo>(uut); ret = true;
+                cm::dataPacket()->net = cm::toStruct<sNetInterface>(net);
             } else {
                 sSysItem it; it.module = tr("配置参数");
                 it.content = tr("设备配置参数读取异常");
                 Log_Core::bulid(this)->append(it);
                 qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
-                             << mFile->errorString() << Q_FUNC_INFO;
+                            << mFile->errorString() << Q_FUNC_INFO;
             }
         }
     }file.close();
@@ -94,7 +97,7 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
                 it.content = tr("设备报警数据读取异常");
                 Log_Core::bulid(this)->append(it);
                 qCritical() << "Error: read alarm" << Cfg_Obj::pathOfCfg(fn)
-                                 << mFile->errorString() << Q_FUNC_INFO;
+                            << mFile->errorString() << Q_FUNC_INFO;
             }
         }  mFile->close();
     }

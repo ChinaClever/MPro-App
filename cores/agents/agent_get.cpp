@@ -152,11 +152,11 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         addObjData(addr, oid, name+"output", it->output, i);
     }
 
-    size = it->group.size; // if(!size) size = GROUP_NUM;
-    for(int i=0; i<size; ++i) {
-        QString oid = "4." +QString::number(i+1);
-        addObjData(addr, oid, name+"group", it->group, i);
-    }
+    //size = it->group.size; // if(!size) size = GROUP_NUM;
+    //for(int i=0; i<size; ++i) {
+    //    QString oid = "4." +QString::number(i+1);
+    //    addObjData(addr, oid, name+"group", it->group, i);
+    //}
 
     size = it->env.size; // if(!size) size = SENOR_NUM;
     for(int i=0; i<size; ++i) {

@@ -12,6 +12,7 @@ protected:
 
 private:
     void dualData(int id=1);
+    void dualTiming();
     int setDualSize();
     void disDualAlarm();
 };

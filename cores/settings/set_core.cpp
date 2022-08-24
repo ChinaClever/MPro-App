@@ -43,6 +43,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
+    case SFnCode::EINet: res = netAddrCfg(it.fc, it.sub); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
@@ -63,6 +64,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
 
+    case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
