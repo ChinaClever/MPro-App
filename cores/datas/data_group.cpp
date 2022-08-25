@@ -14,8 +14,9 @@ void Data_Group::setGroupSize()
 {
     int size = 0;
     if(mDev->cfg.nums.groupEn) size = GROUP_NUM;
-    sObjData *obj = &(mDev->group); obj->vol.size = 0;
-    obj->size = obj->cur.size = obj->pow.size = size;
+    sObjData *obj = &(mDev->group);
+    obj->vol.size = obj->cur.size =0;
+    obj->size =  obj->pow.size = size;
     if(size & mDev->output.relay.size) size = GROUP_NUM; else size = 0;
     obj->relay.size = size;
 }

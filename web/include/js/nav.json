@@ -48,10 +48,6 @@
         "url": "group_alarm.html"
       },
       {
-        "name": "机架电流",
-        "url": "dual_cur.html"
-      },
-      {
         "name": "机架功率",
         "url": "dual_pow.html"
       },      
