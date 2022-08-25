@@ -126,7 +126,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             fclose(fp);//
             fp = NULL;//
             mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
-        } else if(mg_http_match_uri(hm, "/cert-client.pem")){
+        } else if(mg_http_match_uri(hm, "/index.html/cert-client.pem")){
             struct mg_http_serve_opts opts;
 
             memset(&opts , 0 , sizeof(opts));
@@ -134,7 +134,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             opts.mime_types = "foo=a/b,txt=c/d";
             mg_http_serve_file(c , hm , "/etc/ssl/certs/cert.pem" , &opts);
             //mg_http_serve_file(c , hm , "/usr/data/clever/app/json_server_log.txt" , &opts);
-        }else if(mg_http_match_uri(hm, "/key-client.pem")){
+        }else if(mg_http_match_uri(hm, "/index.html/key-client.pem")){
             struct mg_http_serve_opts opts;
 
             memset(&opts , 0 , sizeof(opts));
