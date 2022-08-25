@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "data_dual.h"
 
 Data_Dual::Data_Dual()
