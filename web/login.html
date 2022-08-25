@@ -27,6 +27,8 @@
       if(user_name == '' && password ==''){
         register();
         }
+      document.getElementById('username').value = '';
+      document.getElementById('psd').value ='';
     },1000);
     function sign_in(){
       let usr = document.getElementById('username').value;
