@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Lzy
+ */
 #include "set_netaddr.h"
 #include "app_netaddr.h"
 
@@ -7,11 +12,10 @@ Set_NetAddr::Set_NetAddr()
 }
 
 QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
-{
-    int id = sub / 2; QVariant res;
+{    
     sNetInterface *net = &(cm::dataPacket()->net);
-    sNetAddr *inet = &net->inet[id];
-    if(sub%2) inet = &net->inet6[id];
+    sNetAddr *inet = &net->inet; QVariant res;
+    if(sub) inet = &net->inet6;
 
     switch (fc) {
     case 0: res = inet->en; break;
@@ -28,11 +32,10 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
 }
 
 bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
-{
-    int id = it.sub / 2; bool res = true;
+{    
     sNetInterface *net = &(cm::dataPacket()->net);
-    sNetAddr *inet = &net->inet[id];
-    if(it.sub%2) inet = &net->inet6[id];
+    sNetAddr *inet = &net->inet; bool res = true;
+    if(it.sub) inet = &net->inet6;
 
     switch (it.fc) {
     case 0: inet->en = v.toInt(); break;

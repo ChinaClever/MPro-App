@@ -14,7 +14,6 @@ typedef unsigned short ushort;
 typedef unsigned int uint;
 #endif
 
-#define NET_NUM 2
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
@@ -181,16 +180,19 @@ struct sVersions
     char coreMd5[NAME_SIZE];
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
+    char coreReleaseTime[NAME_SIZE];
 
     uint start;
     char startMd5[NAME_SIZE];
     char startVer[NAME_SIZE];
     char startCompileTime[NAME_SIZE];
+    char startReleaseTime[NAME_SIZE];
 
     uint lcd;
     char lcdMd5[NAME_SIZE];
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
+    char lcdReleaseTime[NAME_SIZE];
 
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uint version;
@@ -280,10 +282,10 @@ struct sNetAddr
 
 struct sNetInterface
 {
-    sNetAddr inet[NET_NUM];
-    sNetAddr inet6[NET_NUM];
-    char mac[NET_NUM][NAME_SIZE];
-    char name[NET_NUM][NAME_SIZE];
+    sNetAddr inet;
+    sNetAddr inet6;
+    char mac[NAME_SIZE];
+    char name[NAME_SIZE];
 };
 
 struct sDevLogin

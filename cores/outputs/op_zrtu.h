@@ -17,9 +17,14 @@ private:
     bool sendReadCmd(int addr, sOpIt *it);
     bool setEndisable(int addr, bool ret, uchar &v);
     bool recvPacket(const QByteArray &array, sOpIt *obj);
+    void hardwareLog(int addr, const QByteArray &cmd);
+
 
 protected:
     bool isRun=true;
+
+private:
+    QByteArray m_array[DEV_NUM];
 };
 
 #endif // OP_ZRTU_H

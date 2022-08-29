@@ -12,6 +12,7 @@ bool isIPaddress(const QString& ip);
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
 
+bool language();
 sDevData *masterDev();
 sDataPacket *dataPacket();
 sDevData *devData(uchar id);
@@ -25,12 +26,8 @@ template<typename T> T toStruct(const QByteArray &array) {
     T ret; memcpy(&ret, array.data(), sizeof(T)); return ret;
 }
 
+
+#define cout qDebug() << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
 }
-
-
-
-
-
-
 
 #endif // COMMONS_H

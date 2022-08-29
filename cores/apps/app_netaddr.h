@@ -18,7 +18,7 @@ private slots:
 
 private:
     void initFun();
-    void setIpV4(int id);
+    void setIpV4();
     void dhcp(const QString &n);
 
 private:
