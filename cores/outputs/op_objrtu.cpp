@@ -47,7 +47,7 @@ uchar *OP_ObjRtu::toOutputEle(uchar *ptr, int line, uint *value)
     return ptr;
 }
 
-uchar *OP_ObjRtu::toShort(uchar *ptr, int line, ushort *value)
+uchar *OP_ObjRtu::toShort(uchar *ptr, int line, uint *value)
 {
     for(int i=0; i<line; ++i) {
         value[i] =  (*ptr) * 256 + *(ptr+1);  ptr += 2;
@@ -56,7 +56,7 @@ uchar *OP_ObjRtu::toShort(uchar *ptr, int line, ushort *value)
     return ptr;
 }
 
-uchar *OP_ObjRtu::toChar(uchar *ptr, int line, uchar *value)
+uchar *OP_ObjRtu::toChar(uchar *ptr, int line, uint *value)
 {
     for(int i=0; i<line; ++i) {
         value[i] = *(ptr++); // 读取电压
