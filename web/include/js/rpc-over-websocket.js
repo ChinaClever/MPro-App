@@ -8,7 +8,7 @@ let user_name='user_name';
 let password = 'password';
 let identify = '';
 let type_info = new Array("Phase","Loop","Output");
-let type_name = new Array("","Phs","Loop","","","","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push");
+let type_name = new Array("Total","Phs","Loop","Group","Double","","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
@@ -45,6 +45,7 @@ var jsonrpc = function()
     switch(type)
     {
       case 0:
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 1:
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
@@ -61,10 +62,10 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 4:
-
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 5:
-
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 6:
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
@@ -140,7 +141,7 @@ var jsonrpc = function()
 var rpc = jsonrpc();
 var start  = 0;
 var hum_num = 2,num_num = 3,cfg_num = 8,uut_num = 6, sub_num = 8;
-var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,log = 81;
+var total = 0, phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
@@ -180,6 +181,18 @@ function read_uut_info(addr)
     }
     if(j <= uut_num){
       rpc.call('pduReadParam',[addr,uut,j,0,0]);
+    }
+    j++;
+  },1);
+}
+function read_total_data(addr){
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= 9){
+      clearInterval(time1);
+    }
+    if(j < 9){
+      rpc.call('pduReadData',[addr,total,j,1,1]);
     }
     j++;
   },1);
