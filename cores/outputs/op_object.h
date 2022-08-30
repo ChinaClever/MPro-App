@@ -34,8 +34,15 @@ public:
 
 protected:
     void fillData(uchar addr);
+
 private:
-    bool appendLog(int addr);
+    bool volFaultCheck(uchar k, uchar i);
+    bool curFaultCheck(uchar k, uchar i);
+    void powFaultCheck(uchar k, uchar i);
+    void eleFaultCheck(uchar k, uchar i);
+
+    void faultLog(int id, uint *cnt, uint value);
+    void faultCode(int id, bool f, uint *cnt, FaultCode code);
     bool dataFiltering(uint &dest, uint &src, uint max, uint min=0);
 
 protected:

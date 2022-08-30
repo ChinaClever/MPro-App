@@ -43,11 +43,12 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
             obj->vol[i] = getShort(ptr); ptr += 2;
         }
 
-        for(int i=0; i<op; ++i) {
-            obj->activePow[i] = obj->vol[i] * obj->cur[i] / 100.0;
-            obj->pow[i] = obj->activePow[i] * obj->pf[i] / 100.0;
-            obj->reactivePow[i] = obj->activePow[i] - obj->pow[i];
-        }
+        //for(int i=0; i<op; ++i) {
+        //    obj->activePow[i] = obj->vol[i] * obj->cur[i] / 100.0;
+        //    obj->pow[i] = obj->activePow[i] * obj->pf[i] / 100.0;
+        //    obj->reactivePow[i] = obj->activePow[i] - obj->pow[i];
+        //}
+
         ret = true;
     } else {
         cout << array.toHex();
@@ -59,7 +60,7 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
-        m_array[addr] = cmd; sHardwareItem it; it.module = tr("执行板");
+        m_array[addr] = cmd; sHardwareItem it; it.module = tr("执行板通讯");
         it.content = tr("数据读取失败, addr:%1 cmd:%2").arg(addr+1).arg(cm::byteArrayToHexStr(cmd));
         Log_Core::bulid(this)->append(it);
     }
@@ -72,7 +73,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
 
-    QByteArray recv = transmit(cmd, sizeof(cmd));
+    QByteArray recv = transmit(cmd, sizeof(cmd));    
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
@@ -81,7 +82,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size(); //
-        sSysItem it; it.module = tr("Output");
+        sSysItem it; it.module = tr("执行板通讯");
         it.content = tr("执行板 %1 数据读取错误: ").arg(addr);
         it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid(this)->append(it);
@@ -93,17 +94,27 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
 bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
-        if(v == 0) {
+        if(v == 1) {
             sSysItem it; it.module = tr("Output");
             it.content = tr("执行板 %1 连接正常").arg(addr);
             Log_Core::bulid(this)->append(it);
-        } v = 3;
-    } else if(v > 0){
-        if(--v == 0)  {
+        } v = 5;
+    } else if(v > 1){
+        if(--v == 1)  {
             sSysItem it; it.module = tr("Output");
             it.content = tr("执行板 %1 掉线").arg(addr);
             Log_Core::bulid(this)->append(it);
+
+            int size = sizeof(mOpData->vol);
+            memset(mOpData->vol, 0, size);
+            memset(mOpData->cur, 0, size);
+            memset(mOpData->pf, 0, size);
         }
+    }
+
+    if(mDev->cfg.param.runTime > 48*60) {
+        int t = QRandomGenerator::global()->bounded(500);
+        cm::mdelay(t);
     } cm::mdelay(360);
 
     return ret;
@@ -112,8 +123,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 bool OP_ZRtu::readData(int addr)
 {
     if(isOta) return false;
-    bool ret = sendReadCmd(addr, mOpData);
-    if(ret) fillData(addr); //qDebug() << Q_FUNC_INFO<< addr << ret;
+    bool ret = sendReadCmd(addr, mOpData); fillData(addr); //cout << addr << ret;
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 

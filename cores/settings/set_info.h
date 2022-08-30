@@ -12,8 +12,8 @@ protected:
     QString getUut(int addr, uchar fc);
     bool setUut(uchar fc, const QVariant &v);
 
-    int devCfgNum(int addr, int type);
-    bool setCfgNum(int addr, int type, int value);
+    int devCfgNum(const sCfgItem &it);
+    bool setCfgNum(const sCfgItem &it, int value);
 
     int devInfoCfg(int addr, int type);
     bool setInfoCfg(int addr, int type, int value);
