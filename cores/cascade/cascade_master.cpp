@@ -19,8 +19,7 @@ bool Cascade_Master::masterRead(uchar addr)
         if((it.fc == fc_readDev) && it.srcAddr){
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
-    }
-    //qDebug() << Q_FUNC_INFO << addr << ret;
+    } //qDebug() << Q_FUNC_INFO << addr << ret;
 
     return ret;
 }
@@ -28,17 +27,15 @@ bool Cascade_Master::masterRead(uchar addr)
 
 void Cascade_Master::masterReadDevs()
 {
-    using namespace cm;
+    using namespace cm; int t = 100;
     uint size = masterDev()->cfg.nums.slaveNum;
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(i, ret, devData(i+1)->offLine);
     }
 
-    if(masterDev()->cfg.param.runTime > 48*60) {
-        int t = QRandomGenerator::global()->bounded(500);
-        mdelay(t);
-    } mdelay(320);
+    if(masterDev()->cfg.param.runTime > 48*60) t = 500;
+    t = QRandomGenerator::global()->bounded(t); mdelay(320+t);
 }
 
 void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)

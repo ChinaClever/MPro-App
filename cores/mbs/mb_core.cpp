@@ -6,7 +6,7 @@
 #include "mb_core.h"
 
 sModbusSetting Mb_Core::modbusCfg;
-Mb_Core::Mb_Core(QObject *parent)
+Mb_Core::Mb_Core(QObject *parent) : QThread{parent}
 {
     mRtu = new Mb_Update(parent);
     mTcp = new Mb_Update(parent);
@@ -18,14 +18,16 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
     static Mb_Core* sington = nullptr;
     if(sington == nullptr) {
         sington = new Mb_Core(parent);
-        //sington->connectTcp(1); /////====
         QtConcurrent::run(sington,&Mb_Core::run);
+        QTimer::singleShot(1,sington,SLOT(initFunSlot()));
     }
     return sington;
 }
 
-void Mb_Core::initFun()
+void Mb_Core::initFunSlot()
 {
+    //mCfg->enTcp = 1;
+    //mCfg->port = 1502;
     connectTcp(mCfg->enTcp);
     connectRtu(mCfg->enRtu);
 }
@@ -78,13 +80,17 @@ bool Mb_Core::connectTcp(int en)
 
 bool Mb_Core::connectRtu(int en)
 {
-    mCfg->enRtu = en;
-    return connectModbus(mRtu, en, 0);
+    bool ret = false;
+    if(cm::masterDev()->cfg.param.devMode < 2) {
+        ret = connectModbus(mRtu, en, 0);
+        mCfg->enRtu = en;
+    }
+    return ret;
 }
 
 void Mb_Core::run()
 {
-    initFun();
+    cm::mdelay(20);
     bool ret = true;
     while (isRun) {
         ret = mRtu->isConnectedModbus();

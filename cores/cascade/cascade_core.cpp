@@ -25,6 +25,7 @@ void Cascade_Core::startFun()
 {    
     if(!isRun) {
         //QTimer::singleShot(1,this,SLOT(initFunSlot())); cm::mdelay(2);
+        mThread->init(this, SLOT(run()));
         isRun = true; mThread->start();
     }
 }
@@ -62,11 +63,9 @@ void Cascade_Core::workFun()
 void Cascade_Core::run()
 {
     while(isRun) {
-        cm::mdelay(1000);
         if(cm::masterDev()->cfg.param.devMode > 1) {
             if(isOpened()) workFun(); else QTimer::singleShot(1,this,SLOT(initFunSlot()));
-        } else {
-            if(isOpened()) closeSerial();
-        }
+        } else if(isOpened()) closeSerial();
+        else cm::mdelay(1);
     }
 }
