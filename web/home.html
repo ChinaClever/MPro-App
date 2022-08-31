@@ -80,7 +80,7 @@
 						<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
 					</div>
 					<script type="text/javascript">
-						var sel_name =new Array("功率","电压","电流");
+						var sel_name =new Array("功率","电流","电压");
 						var sample_num = 50;
 						var data_total = new Array(3);
 						var data_inlet1 = new Array(3);
@@ -90,6 +90,8 @@
 						let date  = new Date();
 						var time1 = 0;
 						var chart = 0;
+						var ctx = 0;
+						let total_name = "total_pow";
 						let Hou= 0, Minu = 0,Seco = 0;
 						Seco = date.getSeconds();
 						Minu = date.getMinutes();
@@ -128,8 +130,38 @@
 						{
 							document.getElementById("sel1").options.add( new Option(sel_name[i] ,i));
 						}
-						function change_mode(obj){
+						function create_new_chart(){
+							document.getElementById('chart').remove();
+							// for(var i = 0;i<ct.childElementCount;i++){
+							// 	ct.childNodes[i].remove();
+							// }
+							var e = document.createElement("canvas"); 
+							e.id = "chart";
+							e.style.display = "block";
+							e.style.width = "90%";
+							e.style.height = "410px";
+							document.getElementById('container').appendChild(e);
 
+							ctx = document.getElementById('chart').getContext('2d');
+							chart = new Chart(ctx, config);
+							time1 = setInterval(flash_chart, 3000);
+						}
+						function change_mode(obj){
+							if(obj.value == 0){
+								clearInterval(time1);
+								total_name = "total_pow";
+								chart = new Chart(ctx, config);
+								time1 = setInterval(flash_chart, 3000);
+							}else if(obj.value == 1){
+								clearInterval(time1);
+								total_name ="total_cur";
+								chart = new Chart(ctx, config);
+								time1 = setInterval(flash_chart, 3000);
+							}else{
+								clearInterval(time1);
+								total_name ="total_vol";
+								create_new_chart();
+							}
 						}
 						var config = {
 							type: 'line',
@@ -137,7 +169,7 @@
 								labels: dataLabels,
 								datasets: [
 									{
-										label: 'total_pow',
+										label: total_name,
 										data: data_total[1],
 										backgroundColor: 'rgb(255, 99, 132)',
 										borderColor: 'rgb(255, 99, 132)',
@@ -182,7 +214,6 @@
 							}
 						};
 				
-						var ctx = document.getElementById('chart').getContext('2d');
 						function flash_chart() {
 							if (config.data.datasets.length > 0) {
 								date  = new Date();
@@ -206,6 +237,7 @@
 								chart.update();
 							}
 						}
+						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
 						time1 = setInterval(flash_chart, 3000);
 						function getRandomNum(min, max) {
