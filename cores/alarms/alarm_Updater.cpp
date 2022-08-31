@@ -37,19 +37,26 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
     return ret;
 }
 
+bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
+{
+    bool ret = false;
+    uint value = it.value[i];
+    index.id = i; uchar alarm = AlarmCode::Ok;
+    if(value > it.max[i]) alarm = AlarmCode::Max;
+    if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
+    if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
+    if(value < it.min[i]) alarm = AlarmCode::Min;
+    if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
+    it.alarm[i] = alarm; ret |= alarm;
+    return ret;
+}
+
 bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
         if(it.en[i]) {
-            uint value = it.value[i];
-            index.id = i; uchar alarm = AlarmCode::Ok;
-            if(value > it.max[i]) alarm = AlarmCode::Max;
-            if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
-            if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
-            if(value < it.min[i]) alarm = AlarmCode::Min;
-            if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
-            it.alarm[i] = alarm; ret |= alarm;
+            ret |= upAlarmItem(index, i, it);
         } else it.alarm[i] = AlarmCode::Ok;
     }
 
@@ -109,10 +116,20 @@ bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
     index.topic = DTopic::Tem;
-    ret |= upAlarmUnit(index, it.tem);
+    //ret |= upAlarmUnit(index, it.tem);
+    for(int i=0; i<SENOR_NUM; ++i) {
+        if(it.tem.en[i] && it.isInsert[i]) {
+            ret |= upAlarmItem(index, i, it.tem);
+        } else it.tem.alarm[i] = AlarmCode::Ok;
+    }
 
     index.topic = DTopic::Hum;
-    ret |= upAlarmUnit(index, it.hum);
+    //ret |= upAlarmUnit(index, it.hum);
+    for(int i=0; i<SENOR_NUM; ++i) {
+        if(it.hum.en[i] && it.isInsert[i]) {
+            ret |= upAlarmItem(index, i, it.hum);
+        } else it.hum.alarm[i] = AlarmCode::Ok;
+    }
 
     return ret;
 }

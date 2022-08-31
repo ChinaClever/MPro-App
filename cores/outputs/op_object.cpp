@@ -50,7 +50,26 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
             it.content = tr("Output %1 fault ELE:%2Kwh, %3Kwh").arg(id+1)
                     .arg(mDev->output.ele[id]/COM_RATE_ELE).arg(value/COM_RATE_ELE);
         } else cout << dtc[id];
+        Log_Core::bulid(this)->append(it);
+    }
+}
 
+void OP_Object::recoveryLog(int id, uint *cnt)
+{
+    uint num = FAULT_NUM;
+    uint *dtc = mDev->dtc.code;
+    if(mDev->cfg.param.runTime < 48*60) num = 1;
+    if((cnt[id] > num) && dtc[id]) {
+        sHardwareItem it;
+        if(dtc[id] & FaultCode::DTC_VOL) {
+            it.module = tr("Vol recovery");
+            it.content = tr("Output %1 recovery VOL=%2V").arg(id+1)
+                    .arg(mDev->output.vol.value[id]/COM_RATE_VOL);
+        } else if(dtc[id] & FaultCode::DTC_CUR){
+            it.module = tr("Cur recovery");
+            it.content = tr("Output %1 recovery CUR=%2A").arg(id+1)
+                    .arg(mDev->output.vol.value[id]/COM_RATE_CUR);;
+        }  else {cout << dtc[id]; return ;}
         Log_Core::bulid(this)->append(it);
     }
 }
@@ -59,12 +78,13 @@ void OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
 {
     uint *dtc = mDev->dtc.code;
     if(f) {
+        recoveryLog(id, cnt);
+        cnt[id] = 0;
+        dtc[id] &= ~code;
+    } else {
         cnt[id] += 1;
         dtc[id] |= code;
         mDev->dtc.fault = 1;
-    } else {
-        cnt[id] = 0;
-        dtc[id] &= ~code;
     }
 }
 
@@ -126,7 +146,6 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *src = mOpData->ele;
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
-
     if(dest[id] && src[i]) {
         if(src[i] - dest[id] > 1) {
             ret = false;

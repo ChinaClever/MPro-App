@@ -41,6 +41,7 @@ private:
     void powFaultCheck(uchar k, uchar i);
     void eleFaultCheck(uchar k, uchar i);
 
+    void recoveryLog(int id, uint *cnt);
     void faultLog(int id, uint *cnt, uint value);
     void faultCode(int id, bool f, uint *cnt, FaultCode code);
     bool dataFiltering(uint &dest, uint &src, uint max, uint min=0);

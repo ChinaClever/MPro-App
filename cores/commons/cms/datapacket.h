@@ -115,6 +115,7 @@ struct sEnvData
     sEnvData() {size=0;}
 #endif
     uchar size;
+    uchar isInsert[SENOR_NUM];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
