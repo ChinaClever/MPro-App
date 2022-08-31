@@ -41,8 +41,8 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
-    case SFnCode::ECfgNum: res = devCfgNum(it.addr, it.fc); break;
     case SFnCode::EINet: res = netAddrCfg(it.fc, it.sub); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
@@ -73,7 +73,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
-    case SFnCode::ECfgNum: ret = setCfgNum(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;

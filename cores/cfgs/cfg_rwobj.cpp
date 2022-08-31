@@ -60,10 +60,10 @@ bool Cfg_RwObj::readParam(const QString &fn)
                 cm::dataPacket()->net = cm::toStruct<sNetInterface>(net);
             } else {
                 sSysItem it; it.module = tr("配置参数");
-                it.content = tr("设备配置参数读取异常");
+                it.content = tr("设备配置参数读取异常:");
+                it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
-                qCritical() << "Error: read param" << Cfg_Obj::pathOfCfg(fn)
-                            << mFile->errorString() << Q_FUNC_INFO;
+                cout << Cfg_Obj::pathOfCfg(fn);
             }
         }
     }file.close();
@@ -95,9 +95,9 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
             else {
                 sSysItem it; it.module = tr("配置参数");
                 it.content = tr("设备报警数据读取异常");
+                it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
-                qCritical() << "Error: read alarm" << Cfg_Obj::pathOfCfg(fn)
-                            << mFile->errorString() << Q_FUNC_INFO;
+                cout << Cfg_Obj::pathOfCfg(fn);
             }
         }  mFile->close();
     }

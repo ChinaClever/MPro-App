@@ -21,6 +21,7 @@ bool Cfg_RwInitial::initialData()
 bool Cfg_RwInitial::initialParam()
 {
     sDevData *dev = cm::masterDev();
+    dev->cfg.param.isBreaker = 1;
     initDevInfo(dev->cfg.nums);
     return true;
 }

@@ -44,7 +44,7 @@ QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
     if((array.size()>6) && crcCheck(array)) {
         while(!out.atEnd()) {
             c_sFrame it; bool ret = arrayToFrame(out, it);
-            if(ret) its << it; else qDebug() << "Error:" << Q_FUNC_INFO;
+            if(ret) its << it; else cout;
         }
     }
 

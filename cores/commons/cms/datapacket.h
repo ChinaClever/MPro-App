@@ -34,6 +34,7 @@ typedef unsigned int uint;
 #define COM_RATE_TEM	10.0    // 温度
 #define COM_RATE_HUM	10.0    // 湿度
 
+#define COM_MIN_VOL     (60*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
 #define COM_MAX_CUR     (100*COM_RATE_CUR)
 #define COM_MAX_POW     (100*600)
@@ -199,11 +200,8 @@ struct sVersions
 };
 
 struct sUutInfo {
-    char idc[NAME_SIZE];
     char room[NAME_SIZE];
-    char module[NAME_SIZE];
-    char cab[NAME_SIZE];
-    char road[NAME_SIZE];
+    char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[3*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
@@ -217,6 +215,7 @@ struct sParameter {
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
+    uchar isBreaker; // 0没有断路器 1有断路器
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
     uint restartTimes; // 重启次数    
@@ -233,8 +232,9 @@ struct sDevCfg {
 };
 
 struct sFaultCode {
-    uchar fault; // 是否在故障
-    uchar code[PACK_ARRAY_SIZE];
+    uint fault; // 是否在故障
+    uint cnt[4][PACK_ARRAY_SIZE];
+    uint code[PACK_ARRAY_SIZE];
 };
 
 /**
@@ -312,7 +312,7 @@ enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, D
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
-enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_POW=4, DTC_ELE=8};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 
 struct sDataItem

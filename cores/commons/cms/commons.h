@@ -27,6 +27,8 @@ template<typename T> T toStruct(const QByteArray &array) {
 }
 
 
+#define setbit(x,y) x|=(1<<y) //将X的第Y位置1
+#define clrbit(x,y) x&=~(1<<y) //将X的第Y位清0
 #define cout qDebug() << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
 }
 
