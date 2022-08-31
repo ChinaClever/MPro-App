@@ -155,7 +155,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
     //    addObjData(addr, oid, name+"group", it->group, i);
     //}
 
-    size = it->env.size; // if(!size) size = SENOR_NUM;
+    size = it->env.size; if(!size) size = SENOR_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "6." + QString::number(i+1);
         addEnvData(addr, oid, name+"env", it->env, i);

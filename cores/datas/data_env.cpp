@@ -16,8 +16,7 @@ void Data_Env::setEnvSize()
     int size = 0;
     for(int i=0; i<SENOR_NUM; ++i) {
         if(mDev->env.isInsert[i]) size = SENOR_NUM;
-    }
-    mDev->env.size = mDev->env.tem.size = mDev->env.hum.size = size;
+    } mDev->env.size = mDev->env.tem.size = mDev->env.hum.size = size;
 }
 
 void Data_Env::initData()
