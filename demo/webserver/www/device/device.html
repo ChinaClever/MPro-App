@@ -1,0 +1,374 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+	var flag;
+
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();
+						getdata();
+					}
+				});
+		});
+
+	function getdata()
+	{
+		$.ajax({
+				dataType:"text",
+				url:"/getdata",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("sb").value = parseInt(gv[0]);
+					document.getElementById("ms").value = parseInt(gv[1]);
+					document.getElementById("name").value = gv[2];
+					document.getElementById("addr").value = gv[3];
+					document.getElementById("rt").value = parseInt(gv[4]);
+					document.getElementById("bz").value = parseInt(gv[5]);
+				//	document.getElementById("bk").value = parseInt(gv[6]);
+					
+				}
+			});
+	}
+		
+	function getdevice()
+	{
+		var ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+		$.ajax({
+				dataType:"text",
+				url:"/getdevice?id1="+ms+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("ms").value = parseInt(gv[0]);
+					document.getElementById("name").value = gv[1];
+					document.getElementById("addr").value = gv[2];
+					document.getElementById("rt").value = parseInt(gv[3]);
+					document.getElementById("bz").value = parseInt(gv[4]);
+					document.getElementById("bk").value = parseInt(gv[5]);
+				//	document.getElementById("cmd").value = parseInt(gv[6]);
+				}
+			});
+	}
+
+	var str1  = ["Failed setting,please try again!", "设置未成功,请重新设置", "Les paramètres ne fonctionnent pas.", "Настройка не выполнена, повторите настройки", "La configuración no funcionó. Por favor, reconfigure.", "لم يكن الإعداد ناجحًا ، يرجى إعادة الضبط"];
+	var str2  = ["Successful setting!", "设置成功", "Mise en place réussie", "Настройка выполнена", "Configuración exitosa", "الإعداد الناجح"];
+	function setms()
+	{
+		var name =  document.getElementById("name").value;
+		var addr =  document.getElementById("addr").value;
+		var ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+		$.ajax({
+				dataType:"text",
+				url:"/setms?id1="+ms+"&id2="+name+"&id3="+addr+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{	
+					
+					if(sta=="flase")
+					{
+						
+						alert(str1[flag]);
+						return;
+					}
+					else 
+					{
+						
+						alert(str2[flag]);
+						return;
+					}
+				}
+			});
+	}
+	
+	function setmode()
+	{
+		var sb =  document.getElementById("sb").value;
+		$.ajax({
+				dataType:"text",
+				url:"/setmode?id1="+sb+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					
+					if(sta=="flase")
+					{
+						
+						alert(str1[flag]);
+						return;
+					}
+					else 
+					{
+						
+						alert(str2[flag]);
+						return;
+					}
+				}
+			});
+	}
+	
+	function setname()
+	{
+		var rt  =  document.getElementById("rt").value;
+		var bz  =  document.getElementById("bz").value;
+		var bk  =  document.getElementById("bk").value;
+		//var cmd  =  document.getElementById("cmd").value;
+		
+		$.ajax({
+				dataType:"text",
+				url:"/setname?id1="+rt+"&id2="+bz+"&id3="+bk+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					
+					if(sta=="flase")
+					{
+						
+						alert(str1[flag]);
+						return;
+					}
+					else 
+					{
+						
+						alert(str2[flag]);
+						return;
+					}
+				}
+			});
+	}
+	
+	function LangFun()
+	{
+		var lang_1  = ["PDU setting", "设备设置", "PDU Set", "Настройки устройства", "Configuración del dispositivo", "إعدادات الجهاز"];
+		var lang_2  = ["Daisy-chain setting:", "级联方式:", "Chaîne de chrysanthème", "Настройка цепочки", "Modo en cascada", "وضع تتالي"];
+		var lang_3  = ["TCP/IP", "TCP/IP", "TCP/IP", "TCP/IP", "TCP/IP", "TCP/IP"];
+		var lang_4  = ["Modbus RTU", "Modbus RTU", "Modbus RTU", "Modbus RTU", "Modbus RTU", "Modbus RTU"];
+		var lang_5  = ["M/S setting:", "主副机设定:", "M/S Set", "M/S Set", "M/S Set", "M/S Set"];
+		var lang_6  = ["Master unit", "主机", "Maître", "узел", "Servidor", "الكمبيوتر المضيف"];
+		var lang_7  = ["Slave unit 1", "副机 1", "Esclave1", "ведомый механизм1", "De máquina1", "الرقيق 1"];
+		var lang_8  = ["Slave unit 2", "副机 2", "Esclave2", "ведомый механизм2", "De máquina2", "الرقيق 2"];
+		var lang_9  = ["Slave unit 3", "副机 3", "Esclave3", "ведомый механизм3", "De máquina3", "الرقيق 3"];
+		var lang_10 = ["Slave unit 4", "副机 4", "Esclave4", "ведомый механизм4", "De máquina4", "الرقيق 4"];
+		var lang_11 = ["Slave unit 5", "副机 5", "Esclave5", "ведомый механизм5", "De máquina5", "الرقيق 5"];
+		var lang_12 = ["Slave unit 6", "副机 6", "Esclave6", "ведомый механизм6", "De máquina6", "الرقيق 6"];
+		var lang_13 = ["Slave unit 7", "副机 7", "Esclave7", "ведомый механизм7", "De máquina7", "الرقيق 7"];
+		var lang_14 = ["Slave unit 8", "副机 8", "Esclave8", "ведомый механизм8", "De máquina8", "الرقيق 8"];
+		var lang_15 = ["Slave unit 9", "副机 9", "Esclave9", "ведомый механизм9", "De máquina9", "الرقيق 9"];
+		var lang_16 = ["PDU name:", "设备名称:", "PDU Nom", "Название устройства", "Nombre del dispositivo", "اسم الجهاز"];
+		var lang_17 = ["PDU location:", "设备位置:", "PDU Position:", "место установки:", "Ubicación del dispositivo:", "موقع الجهاز:"];
+		var lang_18 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+		var lang_19 = ["LCD always-on mode:", "屏幕主题:", "LCD always-on mode", "LCD always-on mode", "LCD always-on mode", "LCD always-on mode"];
+		var lang_20 = ["Blue and white", "蓝白", "Bleu Et Blanc", "Blue and white", "Blue and white", "Blue and white"];
+		var lang_21 = ["Green white", "绿白", "Vert Et Blanc", "Green white", "Green white", "Green white"];
+		var lang_22 = ["Buzzer switch:", "蜂鸣器开关:", "Buzzer Conversion:", "выключатель зуммера:", "Interruptor de colmena:", "التبديل الجرس:"];
+		var lang_23 = ["Enable", "开启", "Activer", "Включено", "Abrir", "فتح"];
+		var lang_24 = ["Disable", "关闭", "Interdire", "Отключить", "Cerrar", "قريب"];
+		var lang_25 = ["Proactive breaker tripping protection:", "后插先拔保护:", "Active disjoncteur protection", "Proactive breaker tripping protection", "Active disjoncteur protection", "Active disjoncteur protection"];
+		var lang_26 = ["Enable", "禁用", "Enable", "Включено", "Desactivar", "تعطيل"];
+		var lang_27 = ["Disable", "启用", "Disable", "Отключить", "Activar", "مكن"];
+		var lang_28 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+		var lang_29 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+	//	var lang_30 = ["Switch control password", "开关控制口令", "Changer le mot de passe de contrôle", "Пароль управления переключателем", "Cambiar contraseña de control", "كلمة مرور التحكم في التبديل"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").innerHTML = lang_13[flag];
+		document.getElementById("lang_14").innerHTML = lang_14[flag];
+		document.getElementById("lang_15").innerHTML = lang_15[flag];
+		document.getElementById("lang_16").innerHTML = lang_16[flag];
+		document.getElementById("lang_17").innerHTML = lang_17[flag];
+		document.getElementById("lang_18").value = lang_18[flag];
+		document.getElementById("lang_19").innerHTML = lang_19[flag];
+		document.getElementById("lang_20").innerHTML = lang_20[flag];
+		document.getElementById("lang_21").innerHTML = lang_21[flag];
+		document.getElementById("lang_22").innerHTML = lang_22[flag];
+		document.getElementById("lang_23").innerHTML = lang_23[flag];
+		document.getElementById("lang_24").innerHTML = lang_24[flag];
+		document.getElementById("lang_25").innerHTML = lang_25[flag];
+		document.getElementById("lang_26").innerHTML = lang_26[flag];
+		document.getElementById("lang_27").innerHTML = lang_27[flag];
+		document.getElementById("lang_28").value = lang_28[flag];
+		document.getElementById("lang_29").value = lang_29[flag];
+		//document.getElementById("lang_30").innerHTML = lang_30[flag];
+		//document.getElementById("lang_31").innerHTML = lang_27[flag];
+		//document.getElementById("lang_32").innerHTML = lang_26[flag];
+	}
+	
+</script>
+</head>
+
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:85px; background:#ffffff; ">
+		<table width="100%" border="0" style="font-size:12px; margin-top:10px;" >
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td><select id="sb" style="width:200px">
+				<option value="0" id="lang_3"></option>
+				<option value="1" id="lang_4"></option>
+				</select></td>
+			</tr>	
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="setmode();" id="lang_29"></input></td>
+				<td></td>
+			</tr>
+		</table>
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:175px; background:#ffffff; ">
+		<table width="100%" border="0" style="font-size:12px; margin-top:10px;" >
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_5"></td>
+				<td><select id="ms" style="width:200px" onChange="getdevice();">
+					<option value="0" id="lang_6"></option>
+					<option value="1" id="lang_7"></option>
+					<option value="2" id="lang_8"></option>
+					<option value="3" id="lang_9"></option>
+					<option value="4" id="lang_10"></option>
+					<option value="5" id="lang_11"></option>
+					<option value="6" id="lang_12"></option>
+					<option value="7" id="lang_13"></option>
+					<option value="8" id="lang_14"></option>
+					<option value="9" id="lang_15"></option>
+					</select>
+				</td>
+			</tr>	
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_16"></td>
+				<td><input id="name" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_17"></td>
+				<td><input id="addr" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="setms();" id="lang_18"></input></td>
+				<td></td>
+			</tr>
+		</table>
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:145px; background:#ffffff;">
+		<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+		<tr style="display:none;">
+			<td width="10px"></td>
+			<td width="120" id="lang_19"></td>
+			<td><select id="rt" style="width:200px">
+				<option value="0" id="lang_20"></option>
+				<option value="1" id="lang_21"></option></select></td>
+		</tr>
+		<tr>
+			<td width="10px"></td>
+			<td width="120" id="lang_22"></td>
+			<td><select id="bz" style="width:200px">
+				<option value="0" id="lang_23"></option>
+				<option value="1" id="lang_24"></option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td width="10px"></td>
+			<td width="120" id="lang_25"></td>
+			<td><select id="bk" style="width:200px">
+				<option value="0" id="lang_26"></option>
+				<option value="1" id="lang_27"></option>
+				</select>
+			</td>
+		</tr>
+		<!--tr>
+			<td width="10px"></td>
+			<td width="120" id="lang_30"></td>
+			<td><select id="cmd" style="width:200px">
+				<option value="0" id="lang_31"></option>
+				<option value="1" id="lang_32"></option>
+				</select>
+			</td>
+		</tr-->
+		<tr>
+			<td width="10px"></td>
+			<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="setname();" id="lang_28"></input></td>
+			<td></td>
+		</tr>
+		</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,709 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+	var ty;
+	var flag;
+	var all=0;
+	var trline=new Array(50)
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();
+						getdata();
+						for(var i=0;i<10;i++)
+						{
+							if(gv[i*2+2])
+							{
+								document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+							}
+						}
+					}
+				});
+			
+		});
+
+	function change()
+	{
+		getdata();
+	}
+	
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+
+		$.ajax({
+			dataType:"text",
+			url:"/getoverload?id1="+ms,
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				ty = parseInt(gv[0]);
+				document.getElementById("opt").value = parseInt(gv[1]);
+				var k=0;
+				
+				if(ty%4==0)
+				{
+					for(i=0;i<50;i++)
+					{
+						if(parseInt(gv[6*i+2])>0)
+						{
+							trline[i] = "1";
+							document.getElementById("tr"+i).style.display='';
+							if(k%2!=0)
+								document.getElementById("tr"+i).style.background="#f0f0f0";
+							else
+								document.getElementById("tr"+i).style.background="#ffffff";
+								
+							document.getElementById("a"+i).innerHTML = gv[6*i+2];
+							document.getElementById("b"+i).innerHTML = gv[6*i+3];
+							document.getElementById("c"+i).innerHTML = gv[6*i+4];
+							document.getElementById("d"+i).innerHTML = gv[6*i+5];
+							document.getElementById("e"+i).innerHTML = gv[6*i+6];
+							
+							if(gv[6*i+7]==0)
+							{
+								document.getElementById("f"+i).checked = false;
+							}
+							else
+							{
+								document.getElementById("f"+i).checked = true;
+							}
+							k++;
+						}
+						else 
+						{
+							trline[i] = "0";
+							document.getElementById("tr"+i).style.display="none";
+						}
+					}
+					document.getElementById("tr50").style.display='';
+				}
+				else
+				{
+					for(i=0;i<51;i++)
+					{
+						document.getElementById("tr"+i).style.display="none";
+					}
+				}
+				
+			}
+		});
+	}
+	var ch1 = ["Please set the correct threshold value!", "请正确设置阈值!", "Définissez correctement le seuil!", "Пожалуйста, установите порог", "Por favor, establezca el umbral correctamente", "يرجى ضبط العتبة بشكل صحيح"];
+	var ch2 = ["No permission!", "无权限!", "Pas d'autorité", "нет прав", "Sin permiso", "يلا إذن"];
+	var ch3 = ["Incorrect setting!", "设置错误!", "Erreur de réglage!", "Ошибка настройки", "Error de configuración", "خطأ في الإعداد"];
+	function setdata()
+	{
+		var ms;
+		var opt;
+		var per="";
+		
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+		ms = "0";
+	
+		opt = document.getElementById("opt").value;
+		
+		for(i=0;i<50;i++)
+		{
+			if(trline[i]==1)
+			{
+				if(document.getElementById("f"+i).checked ==true)
+				{
+					per += 1;
+				}
+				else
+				{
+					per += 0;
+				}
+			}
+			else
+			{
+				per += 0;
+			}
+			
+		}
+		
+		$.ajax({
+				dataType:"text",
+				url:"/setoverload?id1="+ms+"&id2="+opt+"&id3="+per,
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(sta=="flase")
+					{
+						alert(ch2[flag]);
+					}
+					else if(sta=="err1")
+					{
+						alert(ch3[flag]);
+					}
+					else
+					{
+						$("#wc_0").show(100).delay(1000).hide(100); 
+					//	getdata();
+					}
+				}
+			});
+			
+	}
+	
+	function mov(obj)
+	{
+		obj.style.background="#f9fae8";
+	}
+	
+	function movout(obj)
+	{
+		var index=obj.id.replace("tr","");
+		if(parseInt(index)%2!=0)
+			obj.style.background="#f0f0f0";
+		else
+			obj.style.background="#ffffff";
+	}
+	
+	function mov_1(obj)
+	{
+		obj.style.cursor="pointer";
+		obj.style.color="#0000ff";
+	}
+	function movout_1(obj)
+	{
+		obj.style.color="#000000";
+	}
+	
+	function setunit()
+	{
+	//	alert(num);
+	//	var opt =  document.getElementById("opt").value;
+	
+		all++;
+		for(var i=0; i<50; i++)
+		{
+			if(trline[i]==1)
+			{
+				if(all%2==1)
+					document.getElementById("f"+i).checked = true;
+				else if(all%2==0)
+					document.getElementById("f"+i).checked = false;
+			}
+		}
+	}
+	
+	function LangFun()
+	{
+		var lang_1  = ["Proactive overload protection", "超限断电", "Proactive overload protection", "Proactive overload protection", "Proactive overload protection", "Proactive overload protection"];
+		var lang_2  = ["PDU selection:", "设备选择:", "PDU selection:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3  = ["No.", "序号", "No.", "порядковый номер", "Número", "الرقم التسلسلي"];
+		var lang_4  = ["Outlet name", "单元名称", "Numéro de série", "имя ячейки", "Nombre de unidad", "اسم الوحدة"];
+		var lang_5  = ["Output current(A)", "输出电流(A)", "Output Current(A)", "выходной ток(A)", "Corriente de salida(A)", "الانتاج الحالي"];
+		var lang_6  = ["Min", "最小值(A)", "Min(A)", "минимум(A)", "Valor mínimo(A)", "القيمة الدنيا(A)"];
+		var lang_7  = ["Max", "最大值(A)", "Max(A)", "максимум(A)", "Valor máximo(A)", "أقصى(A)"];
+		var lang_8  = ["Selected", "选取", "Choix", "выборка", "Seleccionar", "اختر(A)"];
+		var lang_9  = ["Proactive overlad protection", "超限断电：", "Proactive overlad protection", "перебой питания", "Proactive overlad protection", "Proactive overlad protection"];
+		var lang_10 = ["Disable", "不启用", "Interdire", "не включено", "No activo", "غير ممكّن"];
+		var lang_11 = ["Enable", "启用", "Activer", "Включено", "Activar", "مكن"];
+		var lang_12 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").value = lang_12[flag];
+	}
+	
+</script>
+</head>
+
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>			
+		</div>
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:100%; background:#ffffff;">	
+		<table width="100%" style="font-size:12px; text-align:center;">
+		<tr align="left" style="color:#000000;background:#e7e7e7; height:30px; text-align:center">
+			<td width="4%" ><b id="lang_3"></b></td>
+			<td width="20%"><b id="lang_4"></b></td>
+			<td width="15%"><b id="lang_5"></b></td>
+			<td width="15%"><b id="lang_6"></b></td>
+			<td width="15%"><b id="lang_7"></b></td>
+			<td width="31%" onClick="setunit();" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_8" style="margin-left:80%;"></b></td>
+		  </tr>
+		<tr id="tr0" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a0"></td>
+			<td id="b0"></td>
+			<td id="c0"></td>
+			<td id="d0"></td>
+			<td id="e0"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f0" ></input></td>
+		    </tr>
+		<tr id="tr1" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a1"></td>
+			<td id="b1"></td>
+			<td id="c1"></td>
+			<td id="d1"></td>
+			<td id="e1"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f1" ></input></td>
+		    </tr>
+		<tr id="tr2" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a2"></td>
+			<td id="b2"></td>
+			<td id="c2"></td>
+			<td id="d2"></td>
+			<td id="e2"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f2" ></input></td>
+		    </tr>
+		<tr id="tr3" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a3"></td>
+			<td id="b3"></td>
+			<td id="c3"></td>
+			<td id="d3"></td>
+			<td id="e3"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f3" ></input></td>
+		    </tr>
+		<tr id="tr4" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a4"></td>
+			<td id="b4"></td>
+			<td id="c4"></td>
+			<td id="d4"></td>
+			<td id="e4"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f4" ></input></td>
+		    </tr>
+		<tr id="tr5" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a5"></td>
+			<td id="b5"></td>
+			<td id="c5"></td>
+			<td id="d5"></td>
+			<td id="e5"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f5" ></input></td>
+		    </tr>
+		<tr id="tr6" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a6"></td>
+			<td id="b6"></td>
+			<td id="c6"></td>
+			<td id="d6"></td>
+			<td id="e6"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f6" ></input></td>
+		    </tr>
+		<tr id="tr7" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a7"></td>
+			<td id="b7"></td>
+			<td id="c7"></td>
+			<td id="d7"></td>
+			<td id="e7"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f7" ></input></td>
+		    </tr>
+		<tr id="tr8" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a8"></td>
+			<td id="b8"></td>
+			<td id="c8"></td>
+			<td id="d8"></td>
+			<td id="e8"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f8" ></input></td>
+		    </tr>
+		<tr id="tr9" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a9"></td>
+			<td id="b9"></td>
+			<td id="c9"></td>
+			<td id="d9"></td>
+			<td id="e9"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f9" ></input></td>
+		    </tr>
+		<tr id="tr10" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a10"></td>
+			<td id="b10"></td>
+			<td id="c10"></td>
+			<td id="d10"></td>
+			<td id="e10"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f10" ></input></td>
+		    </tr>
+		<tr id="tr11" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a11"></td>
+			<td id="b11"></td>
+			<td id="c11"></td>
+			<td id="d11"></td>
+			<td id="e11"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f11" ></input></td>
+		    </tr>
+		<tr id="tr12" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a12"></td>
+			<td id="b12"></td>
+			<td id="c12"></td>
+			<td id="d12"></td>
+			<td id="e12"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f12" ></input></td>
+		    </tr>
+		<tr id="tr13" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a13"></td>
+			<td id="b13"></td>
+			<td id="c13"></td>
+			<td id="d13"></td>
+			<td id="e13"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f13" ></input></td>
+		    </tr>
+		<tr id="tr14" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a14"></td>
+			<td id="b14"></td>
+			<td id="c14"></td>
+			<td id="d14"></td>
+			<td id="e14"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f14" ></input></td>
+		    </tr>
+		<tr id="tr15" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a15"></td>
+			<td id="b15"></td>
+			<td id="c15"></td>
+			<td id="d15"></td>
+			<td id="e15"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f15" ></input></td>
+		    </tr>
+		<tr id="tr16" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a16"></td>
+			<td id="b16"></td>
+			<td id="c16"></td>
+			<td id="d16"></td>
+			<td id="e16"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f16" ></input></td>
+		    </tr>
+		<tr id="tr17" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a17"></td>
+			<td id="b17"></td>
+			<td id="c17"></td>
+			<td id="d17"></td>
+			<td id="e17"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f17" ></input></td>
+		    </tr>
+		<tr id="tr18" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a18"></td>
+			<td id="b18"></td>
+			<td id="c18"></td>
+			<td id="d18"></td>
+			<td id="e18"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f18" ></input></td>
+		    </tr>
+		<tr id="tr19" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a19"></td>
+			<td id="b19"></td>
+			<td id="c19"></td>
+			<td id="d19"></td>
+			<td id="e19"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f19" ></input></td>
+		    </tr>
+		<tr id="tr20" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a20"></td>
+			<td id="b20"></td>
+			<td id="c20"></td>
+			<td id="d20"></td>
+			<td id="e20"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f20" ></input></td>
+		    </tr>
+		<tr id="tr21" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a21"></td>
+			<td id="b21"></td>
+			<td id="c21"></td>
+			<td id="d21"></td>
+			<td id="e21"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f21" ></input></td>
+		    </tr>
+		<tr id="tr22" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a22"></td>
+			<td id="b22"></td>
+			<td id="c22"></td>
+			<td id="d22"></td>
+			<td id="e22"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f22" ></input></td>
+		    </tr>
+		<tr id="tr23" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a23"></td>
+			<td id="b23"></td>
+			<td id="c23"></td>
+			<td id="d23"></td>
+			<td id="e23"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f23" ></input></td>
+		    </tr>
+		<tr id="tr24" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a24"></td>
+			<td id="b24"></td>
+			<td id="c24"></td>
+			<td id="d24"></td>
+			<td id="e24"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f24" ></input></td>
+		    </tr>
+		<tr id="tr25" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a25"></td>
+			<td id="b25"></td>
+			<td id="c25"></td>
+			<td id="d25"></td>
+			<td id="e25"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f25" ></input></td>
+		    </tr>
+		<tr id="tr26" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a26"></td>
+			<td id="b26"></td>
+			<td id="c26"></td>
+			<td id="d26"></td>
+			<td id="e26"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f26" ></input></td>
+		    </tr>
+		<tr id="tr27" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a27"></td>
+			<td id="b27"></td>
+			<td id="c27"></td>
+			<td id="d27"></td>
+			<td id="e27"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f27" ></input></td>
+		    </tr>
+		<tr id="tr28" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a28"></td>
+			<td id="b28"></td>
+			<td id="c28"></td>
+			<td id="d28"></td>
+			<td id="e28"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f28" ></input></td>
+		    </tr>
+		<tr id="tr29" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a29"></td>
+			<td id="b29"></td>
+			<td id="c29"></td>
+			<td id="d29"></td>
+			<td id="e29"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f29" ></input></td>
+		    </tr>
+		<tr id="tr30" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a30"></td>
+			<td id="b30"></td>
+			<td id="c30"></td>
+			<td id="d30"></td>
+			<td id="e30"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f30" ></input></td>
+		    </tr>
+		<tr id="tr31" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a31"></td>
+			<td id="b31"></td>
+			<td id="c31"></td>
+			<td id="d31"></td>
+			<td id="e31"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f31" ></input></td>
+		    </tr>
+		<tr id="tr32" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a32"></td>
+			<td id="b32"></td>
+			<td id="c32"></td>
+			<td id="d32"></td>
+			<td id="e32"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f32" ></input></td>
+		    </tr>
+		<tr id="tr33" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a33"></td>
+			<td id="b33"></td>
+			<td id="c33"></td>
+			<td id="d33"></td>
+			<td id="e33"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f33" ></input></td>
+		    </tr>
+		<tr id="tr34" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a34"></td>
+			<td id="b34"></td>
+			<td id="c34"></td>
+			<td id="d34"></td>
+			<td id="e34"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f34" ></input></td>
+		    </tr>
+		<tr id="tr35" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a35"></td>
+			<td id="b35"></td>
+			<td id="c35"></td>
+			<td id="d35"></td>
+			<td id="e35"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f35" ></input></td>
+		    </tr>
+		<tr id="tr36" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a36"></td>
+			<td id="b36"></td>
+			<td id="c36"></td>
+			<td id="d36"></td>
+			<td id="e36"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f36" ></input></td>
+		    </tr>
+		<tr id="tr37" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a37"></td>
+			<td id="b37"></td>
+			<td id="c37"></td>
+			<td id="d37"></td>
+			<td id="e37"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f37" ></input></td>
+		    </tr>
+		<tr id="tr38" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a38"></td>
+			<td id="b38"></td>
+			<td id="c38"></td>
+			<td id="d38"></td>
+			<td id="e38"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f38" ></input></td>
+		    </tr>
+		<tr id="tr39" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a39"></td>
+			<td id="b39"></td>
+			<td id="c39"></td>
+			<td id="d39"></td>
+			<td id="e39"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f39" ></input></td>
+		    </tr>
+		<tr id="tr40" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a40"></td>
+			<td id="b40"></td>
+			<td id="c40"></td>
+			<td id="d40"></td>
+			<td id="e40"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f40" ></input></td>
+		    </tr>
+		<tr id="tr41" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a41"></td>
+			<td id="b41"></td>
+			<td id="c41"></td>
+			<td id="d41"></td>
+			<td id="e41"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f41" ></input></td>
+		    </tr>
+		<tr id="tr42" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a42"></td>
+			<td id="b42"></td>
+			<td id="c42"></td>
+			<td id="d42"></td>
+			<td id="e42"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f42" ></input></td>
+		    </tr>
+		<tr id="tr43" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a43"></td>
+			<td id="b43"></td>
+			<td id="c43"></td>
+			<td id="d43"></td>
+			<td id="e43"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f43" ></input></td>
+		    </tr>
+		<tr id="tr44" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a44"></td>
+			<td id="b44"></td>
+			<td id="c44"></td>
+			<td id="d44"></td>
+			<td id="e44"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f44" ></input></td>
+		    </tr>
+		<tr id="tr45" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a45"></td>
+			<td id="b45"></td>
+			<td id="c45"></td>
+			<td id="d45"></td>
+			<td id="e45"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f45" ></input></td>
+		    </tr>
+		<tr id="tr46" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a46"></td>
+			<td id="b46"></td>
+			<td id="c46"></td>
+			<td id="d46"></td>
+			<td id="e46"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f46" ></input></td>
+		    </tr>
+		<tr id="tr47" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a47"></td>
+			<td id="b47"></td>
+			<td id="c47"></td>
+			<td id="d47"></td>
+			<td id="e47"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f47" ></input></td>
+		    </tr>
+		<tr id="tr48" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a48"></td>
+			<td id="b48"></td>
+			<td id="c48"></td>
+			<td id="d48"></td>
+			<td id="e48"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f48" ></input></td>
+		    </tr>
+		<tr id="tr49" onMouseOut="movout(this)" onMouseMove="mov(this)" >
+			<td id="a49"></td>
+			<td id="b49"></td>
+			<td id="c49"></td>
+			<td id="d49"></td>
+			<td id="e49"></td>
+			<td><input type="checkbox" style="margin-left:80%;"  id="f49" ></input></td>
+		    </tr>
+		<tr id="tr50" style="height:50px; white-space:nowrap;">
+			<td colspan = " 2 " style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="lang_9"></span>
+				<select id="opt" style="width:150px">
+				<option value="0" id="lang_10"></option>
+				<option value="1" id="lang_11"></option>
+				</select>
+			</td>
+			<td colspan = " 3 "></td>
+			
+			<td style="text-align:right;">
+					<input style="position:relative; height:21px; width:50px; margin-right:7%;"  type="button" onClick="setdata();" id="lang_12"></input>
+				</td>
+			</tr>
+		
+		  </table>
+		</div>
+    </div>        
+</div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+var flag;
+	$(document).ready(function () {
+			$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+	
+			$.ajax({
+				dataType:"text",
+				url:"/getradius",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					if(gv[0]=="0")
+					{document.getElementById("baseath").checked = true;}
+					else
+					{document.getElementById("baseath").checked = false;}
+					if(gv[0]=="2")
+					{
+						document.getElementById("radback").checked = true;
+					}
+					else
+					{
+						document.getElementById("radback").checked = false;
+					}
+					if(gv[0]=="1" || gv[0]=="2")
+					{
+						document.getElementById("radath").checked = true;
+						document.getElementById("radback").disabled = false;
+					}
+					else
+					{
+						document.getElementById("radath").checked = false;
+						document.getElementById("radback").disabled = true;
+					}
+					document.getElementById("server").value = gv[1];
+					document.getElementById("psd").value = gv[2];
+					document.getElementById("port1").value = gv[3];
+					document.getElementById("port2").value = gv[4];
+				}
+			});
+		});
+		
+
+	function saveradius()
+	{
+		var rad;
+		if(document.getElementById("baseath").checked == true)
+		{
+			rad=0;
+		}
+		else
+		{
+			if(document.getElementById("radback").checked == true)
+			{
+				rad = 2;
+			}
+			else
+			{
+				rad=1;
+			}
+		}
+		var server = document.getElementById("server").value;
+		var psd = document.getElementById("psd").value;
+		var port1 = document.getElementById("port1").value;
+		var port2 = document.getElementById("port2").value;
+		$.ajax({
+				dataType:"text",
+				url:"/setradius?id1="+rad+"&id2="+server+"&id3="+psd+"&id4="+port1+"&id5="+port2+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta=="flase")
+						{
+							alert("No permission!");
+						}
+						else if(sta=="err1")
+						{
+							alert("Incorrect setting!");
+						}
+						else
+						{
+							alert("Settings succeed, please restart the device!");
+						}
+					}
+					else
+					{
+						if(sta=="flase")
+						{
+							alert("不允许!");
+						}
+						else if(sta=="err1")
+						{
+							alert("设置错误!");
+						}
+						else
+						{
+							alert("设置成功，请重启设备!");
+						}
+					}
+				}
+			});
+	}
+	function check(checkvalue)
+	{
+		if(checkvalue==0)
+		{
+			document.getElementById("baseath").checked = true;
+			document.getElementById("radath").checked = false;
+			document.getElementById("radback").disabled = true;
+		}
+		else if(checkvalue == 1)
+		{
+			document.getElementById("baseath").checked = false;
+			document.getElementById("radath").checked = true;
+			document.getElementById("radback").disabled = false;
+		}
+		else
+		{
+			document.getElementById("baseath").checked = false;
+			document.getElementById("radath").checked = true;
+			document.getElementById("radback").disabled = false;
+		}
+	}
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["Radius service", "Radius服务", "Services radius", "служба Radius", "Servicio RADIUS", "دائرة نصف قطرها الخدمة"];
+		var lang_2  = ["Basic authentication settings", "基本认证设置", "Paramètres d 'authentification de base", "Основные настройки аутентификации", "Configuración básica", "إعدادات المصادقة الأساسية"];
+		var lang_3  = ["Basic settings:", "基本设置:", "Paramètres fondamentaux", "Основные настройки", "Configuración básica", "الإعدادات الأساسية"];
+		var lang_4  = ["Radius settings", "Radius设置", "Radius Authentification", "Настройка Radius", "Configuración de RADIUS", "إعدادات نصف القطر"];
+		var lang_5  = ["Radius authentication", "Radius认证:", "Radius Authentification", "идентификация Radius", "Certificación RADIUS", "RADIUS مصادقة"];
+		var lang_6  = ["Enable local authentication when the RADIUS server is not responding", "RADIUS服务器无响应时启用本地认证:", "RADIUS Activation de l 'authentification locale lorsque le serveur ne répond pas", "Сервер RADIUS не отвечает при включении локальной аутентификации", "Activar autenticación local si el servidor RADIUS no responde", "تمكين المصادقة المحلية عندما لا يستجيب خادم RADIUS"];
+		var lang_7  = ["Authentication Server:", "认证服务器:", "Serveur d 'authentification:", "Сервер аутентификации:", "Servidor de autenticación:", "خادم المصادقة:"];
+		var lang_8  = ["Public key:", "公钥:", "Clé publique:", "открытый ключ:", "Clave:", "المفتاح العام:"];
+		var lang_9  = ["Authentication port:", "认证端口:", "Port d 'authentification:", "порт аутентификации:", "Puerto de autenticación:", "ميناء المصادقة:"];
+		var lang_10 = ["Account port", "账号端口:", "Port de compte:", "порт счета:", "Puerto de cuenta:", "ميناء الحساب:"];
+		var lang_11 = ["Save", "保存", "Enregistrer", "Сохранить", "Guardar", "تخزين"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").value	 = lang_11[flag];
+	}
+</script>
+</head>
+<body >
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:70px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_3"></td>
+				<td ><input id="baseath" type="radio" onClick="check(0);"></input></td>
+			</tr>
+			</table>
+		</div>
+			
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:270px; background:#ffffff;">
+			<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_4"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_5"></td>
+				<td><input id="radath" type="radio" onClick="check(1);"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_6"></td>
+				<td><input id="radback" type="checkbox" ></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_7"></td>
+				<td><input id="server" type="text" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_8"></td>
+				<td><input id="psd" type="text" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_9"></td>
+				<td><input id="port1" type="text" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_10"></td>
+				<td><input id="port2" type="text" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="saveradius();" id="lang_11"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+

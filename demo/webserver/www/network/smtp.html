@@ -1,0 +1,264 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+var flag;
+	$(document).ready(function () {
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+	
+		$.ajax({
+				dataType:"text",
+				url:"/getsmtpinfo",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("user").value = gv[0];
+					document.getElementById("psd").value = gv[1];
+					document.getElementById("server").value = gv[2];
+					document.getElementById("port").value = gv[3];
+					if(gv[4]=="0\n")
+					{
+						document.getElementById("auth").value="0";
+					}
+					else
+					{
+						document.getElementById("auth").value="1";
+					}
+				}
+			});
+		});
+		
+	function savesmtp()
+	{
+		var user = document.getElementById("user").value;
+		var psd = document.getElementById("psd").value;
+		var server = document.getElementById("server").value;
+		var port = document.getElementById("port").value;
+		var auth = document.getElementById("auth").value;
+		$.ajax({
+				dataType:"text",
+				url:"/setsmtp?id1="+user+"&id2="+psd+"&id3="+server+"&id4="+port+"&id5="+auth+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta=="flase")
+						{
+							alert("No permission!");
+						}
+						else if(sta=="err1")
+						{
+							alert("Settings Error!");
+						}
+					}
+					else
+					{
+						if(sta=="flase")
+						{
+							alert("不允许!");
+						}
+						else if(sta=="err1")
+						{
+							alert("设置错误!");
+						}
+					}
+				}
+			});
+	}
+	function testsend()
+	{
+		var user = document.getElementById("user").value;
+		var psd = document.getElementById("psd").value;
+		var server = document.getElementById("server").value;
+		var port = document.getElementById("port").value;
+		var auth = document.getElementById("auth").value;
+		var sendto = document.getElementById("sendto").value;
+		$.ajax({
+				dataType:"text",
+				url:"/smtptest?id1="+user+"&id2="+psd+"&id3="+server+"&id4="+port+"&id5="+auth+"&id6="+sendto+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta=="flase")
+						{
+							alert("No permission!");
+						}
+						else if(sta=="err1")
+						{
+							alert("Settings Error!");
+						}
+					}
+					else
+					{
+						if(sta=="flase")
+						{
+							alert("不允许!");
+						}
+						else if(sta=="err1")
+						{
+							alert("设置错误!");
+						}
+					}
+				}
+			});
+	}
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["SMTP service", "SMTP服务", "SMTP Service", "служба SMTP", "Servicios SMTP", "خدمة SMTP"];
+		var lang_2  = ["SMTP Setting", "SMTP设置", "Paramètres SMTP", "Настройки SMTP", "Preferencias SMTP", "إعدادات SMTP"];
+		var lang_3  = ["SMTP account:", "SMTP账号:", "Compte SMTP", "номер счета SMTP", "Cuenta SMTP", "حساب SMTP"];
+		var lang_4  = ["Password:", "密码:", "Mot de passe:", "пароль:", "Contraseña:", "كلمة المرور:"];
+		var lang_5  = ["SMTP Server:", "SMTP服务器:", "Serveur SMTP:", "Сервер SMTP:", "Servidor SMTP:", "خادم SMTP:"];
+		var lang_6  = ["Port:", "端口:", "Port:", "порт:", "Puerto:", "ميناء:"];
+		var lang_7  = ["Authenticate Mode:", "认证方式:", "Procédé d 'authentification:", "режим аутентификации:", "Modo de autenticación:", "طريقة المصادقة:"];
+		var lang_8  = ["LOGIN", "LOGIN", "LOGIN", "LOGIN", "LOGIN", "LOGIN"];
+		var lang_9  = ["SSL", "SSL", "SSL", "SSL", "SSL", "SSL"];
+		var lang_10 = ["Save", "保存", "Enregistrer", "Сохранить", "Guardar", "تخزين"];
+		var lang_11 = ["SMTP Test", "SMTP设置测试", "Test de paramètres SMTP", "проверка настройки SMTP", "Instalación SMTP", "اختبار الإعداد SMTP"];
+		var lang_12 = ["Receiver Account:", "接收账号:", "Numéro de compte:", "приемный номер счета:", "Cuenta de recepción:", "تلقي الحساب:"];
+		var lang_13 = ["Test", "测试", "Test", "тест", "Test", "تلقي الحساب"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").value	 = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").value	 = lang_13[flag];
+	}
+</script>
+</head>
+<body >
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:220px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_3"></td>
+				<td><input id="user" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_4"></td>
+				<td><input id="psd" type="password" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_5"></td>
+				<td><input id="server" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_6"></td>
+				<td><input id="port" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_7"></td>
+				<td><select id="auth" style="width:200px">
+				<option value="0" id="lang_8"></option>
+				<option value="1" id="lang_9"></option> 
+				</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="savesmtp();" id="lang_10"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>
+
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:120px; background:#ffffff;">
+			<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_11"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_12"></td>
+				<td><input id="sendto" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="testsend();" id="lang_13"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+

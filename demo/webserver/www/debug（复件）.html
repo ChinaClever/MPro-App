@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Line Chart</title>
+	<script src="./chart.min.js"></script>
+	<script src="./utils.js"></script>
+	<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+</head>
+
+<body>
+	<div style="width:75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<br>
+	<br>
+	<button id="randomizeData">Randomize Data</button>
+	<button id="addDataset">Add Dataset</button>
+	<button id="removeDataset">Remove Dataset</button>
+	<button id="addData">Add Data</button>
+	<button id="removeData">Remove Data</button>
+	<script>
+		var time_label = new Array(6);
+		let date  = new Date();
+		let Hou= 0, Minu = 0,Seco = 0;
+		Seco = date.getSeconds();
+		Minu = date.getMinutes();
+		Hou = date.getHours();
+		for(let i = 0;i<6;i++){
+			Seco +=  3;
+			if(Seco > 59){
+				Seco -= 60;
+				Minu += 1;
+				if(Minu > 59){
+					Minu -=  60;
+					Hou += 1;
+				}
+				if(Hou > 23){
+					Hou =0;
+				}
+			}
+			time_label[i] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+		}
+		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var config = {
+			type: 'line',
+			data: {
+				labels: time_label,
+				datasets: [{
+					label: 'My First dataset',
+					backgroundColor: window.chartColors.red,
+					borderColor: window.chartColors.red,
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor()
+					],
+					fill: false,
+				}, {
+					label: 'My Second dataset',
+					fill: false,
+					backgroundColor: window.chartColors.blue,
+					borderColor: window.chartColors.blue,
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor()
+					],
+				}]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Chart.js Line Chart'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Pow/W'
+						}
+					}]
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+		};
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+
+			});
+
+			window.myLine.update();
+		});
+
+		var colorNames = Object.keys(window.chartColors);
+		document.getElementById('addDataset').addEventListener('click', function() {
+			var colorName = colorNames[config.data.datasets.length % colorNames.length];
+			var newColor = window.chartColors[colorName];
+			var newDataset = {
+				label: 'Dataset ' + config.data.datasets.length,
+				backgroundColor: newColor,
+				borderColor: newColor,
+				data: [],
+				fill: falselabels
+			};
+
+			for (var index = 0; index < config.data.labels.length; ++index) {
+				newDataset.data.push(randomScalingFactor());
+			}
+
+			config.data.datasets.push(newDataset);
+			window.myLine.update();
+		});
+
+		document.getElementById('addData').addEventListener('click', function() {
+			if (config.data.datasets.length > 0) {
+				var month = MONTHS[config.data.labels.length % MONTHS.length];
+				config.data.labels.push(month);
+
+				config.data.datasets.forEach(function(dataset) {
+					dataset.data.push(50);
+				});
+
+				window.myLine.update();
+			}
+		});
+
+		document.getElementById('removeDataset').addEventListener('click', function() {
+			config.data.datasets.splice(0, 1);
+			window.myLine.update();
+		});
+
+		document.getElementById('removeData').addEventListener('click', function() {
+			config.data.labels.splice(-1, 1); // remove the label first
+
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data.pop();
+			});
+
+			window.myLine.update();
+		});
+	</script>
+</body>
+
+</html>

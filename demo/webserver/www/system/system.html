@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+var flag;
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();	
+						getdata();
+					}
+				});
+		});
+	
+		
+	function getdata()
+	{
+		$.ajax({
+				dataType:"text",
+				url:"/getmac",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("mac").innerHTML = gv[0];
+				}
+			});
+	}
+		
+function LangFun()
+{
+	var lang_1  = ["System Information", "系统信息", "Système d 'information", "системная информация", "Información del sistema", "معلومات النظام"];
+	var lang_2  = ["System info ", "系统信息", "Système d 'information", "системная информация", "Información del sistema", "معلومات النظام"];
+	var lang_3  = ["Processor:", "处理器:", "Processeur", "процессор", "Procesador", "المعالج"];
+	var lang_4  = ["Processor frequency:", "处理器频率:", "Processeur de fréquences", "Частота процессора", "Frecuencia de procesador", "تردد المعالج"];
+	var lang_5  = ["Last update date:", "系统最后更新时间:", "Dernière mise à jour du système", "Последнее обновление системы", "Última actualización del sistema", "نظام وقت التحديث الماضي"];
+	var lang_8  = ["Docs and tools", "文件和工具", "Documentation et outils", "Документация и инструменты", "Documentación e instrumentos", "الملفات والأدوات"];
+	var lang_9  = ["Upgrade tools", "升级工具:", "Outil de mise à jour", "инструмент обновления", "Herramienta de actualización", "أداة الترقية"];
+	var lang_10 = ["System board upgrade tool", "主控板升级工具", "System board upgrade tool", "System board upgrade tool", "System board upgrade tool", "System board upgrade tool"];
+	var lang_10_1 = ["Socket board upgrade tool", "执行板升级工具", "Socket board upgrade tool", "Socket board upgrade tool", "System board upgrade tool", "System board upgrade tool"];
+	var lang_11 = ["MIB file", "MIB文件:", "MIB file", "MIB file", "MIB file", "MIB file"];
+	var lang_12 = ["ZPDU.mib", "ZPDU.mib", "ZPDU.mib", "ZPDU.mib", "ZPDU.mib", "MIB file"];
+	var lang_13 = ["Settings export", "导出设置:", "Paramètres d 'exportation", "Настройка экспорта", "Configuración de exportación", "إعدادات التصدير"];
+	var lang_14 = ["Settings file", "设置文件", "Fichier de configuration", "Файл настройки", "Establecer archivo", "وضع الملف"];
+	var lang_18 = ["MODBUS RTU description", "MODBUS RTU说明", "Manuel d 'utilisation", "Руководство пользователя", "Manual de uso", "User manual"];
+	var lang_19 = ["ZPDU MODBUS RTU description.pdf", "ZPDU MODBUS RTU说明.pdf", "Manuel d 'utilisation", "Руководство пользователя", "Manual de uso", "User manual"];
+	var lang_15 = ["Local upgrade", "本地升级", "Local Upgrade", "локальное обновление", "Actualización local", "الترقية المحلية"];
+	var lang_16 = ["Select a file", "选择文件", "Fichier de sélection", "Выбор файла", "Seleccionar archivo", "اختر الملف"];
+	var lang_17 = ["Upload", "上传", "Télécharger", "загрузка", "Subir", "تحميل"];
+	
+	document.getElementById("lang_1") .innerHTML = lang_1[flag];
+	document.getElementById("lang_2") .innerHTML = lang_2[flag];
+	document.getElementById("lang_3") .innerHTML = lang_3[flag];
+	document.getElementById("lang_4") .innerHTML = lang_4[flag];
+	document.getElementById("lang_5") .innerHTML = lang_5[flag];
+	document.getElementById("lang_8") .innerHTML = lang_8[flag];
+	document.getElementById("lang_9") .innerHTML = lang_9[flag];
+	document.getElementById("lang_10").innerHTML = lang_10[flag];
+	//document.getElementById("lang_10_1").innerHTML = lang_10_1[flag];
+	document.getElementById("lang_11").innerHTML = lang_11[flag];
+	document.getElementById("lang_12").innerHTML = lang_12[flag];
+	document.getElementById("lang_13").innerHTML = lang_13[flag];
+	document.getElementById("lang_14").innerHTML = lang_14[flag];
+	//document.getElementById("lang_18").innerHTML = lang_18[flag];
+	//document.getElementById("lang_19").innerHTML = lang_19[flag];
+
+	document.getElementById("lang_15").innerHTML = lang_15[flag];
+	document.getElementById("lang_16").innerHTML = lang_16[flag];
+	document.getElementById("lang_17").value 	 = lang_17[flag];
+}
+</script>
+</head>
+<body >
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:210px; background:#ffffff; ">		
+			<table width="100%"  style="font-size:12px; border:1px solid;border-color: #ffffff;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="22px" nowrap id="lang_3"></td>
+				<td>Cortex-A7</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" nowrap id="lang_4"></td>
+				<td>528MHz</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" nowrap>DDR2:</td>
+				<td>256MB</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" nowrap>NAND:</td>
+				<td>256MB</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" nowrap id="lang_5"></td>
+				<td>2021-06-02</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" nowrap>MAC:</td>
+				<td id="mac"></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:140px; background:#ffffff;">
+			<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_8"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td  width="120"  height="22px" nowrap id="lang_9"></td>
+				<td><u><b><a href="UpdateSystem v1.0.exe" id="lang_10"></a></b></u></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td  height="22px" nowrap id="lang_11"></td>
+				<td><u><b><a href="ZPDU.mib" id="lang_12"></a></b></u></td>
+			</tr>
+			<!--tr>
+				<td width="10px"></td>
+				<td  height="22px" nowrap id="lang_18"></td>
+				<td><u><b><a href="ZPDU MODBUS RTU说明.pdf" id="lang_19"></a></b></u></td>
+			</tr-->
+			<tr>
+				<td width="10px"></td>
+				<td height="22px" width="120" nowrap id="lang_13"></td>
+				<td><u><b><a href="/getsettings" id="lang_14"></a></b></u></td>
+			</tr>
+	    	</table>
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:90px; background:#ffffff;">
+			<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_15"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_16"></td>
+				<td>
+					<form  name="Upload" Method="Post" Enctype="multipart/form-data" Action="/upload">
+						<input style="width:200px; height:22px;display:inline;" id="bt1" type="file" name="FileName"></input>
+						<input style="width:60px; height:22px; margin-left:-3px;margin-top:1px;" type="Submit"  id="lang_17"></input>
+					</form>
+				</td> 
+			</tr>
+			</table>
+		 </div> 
+	</div>
+</div>
+</body>
+</html>
