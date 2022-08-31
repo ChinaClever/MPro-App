@@ -1,0 +1,341 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+var flag;
+	$(document).ready(function () {
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					 flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+	
+		$.ajax({
+				dataType:"text",
+				url:"/getsmtpinfo",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("user").value = gv[0];
+					document.getElementById("psd").value = gv[1];
+					document.getElementById("server").value = gv[2];
+					document.getElementById("port").value = gv[3];
+					if(gv[4]=="0\n")
+					{
+						document.getElementById("auth").value="0";
+					}
+					else
+					{
+						document.getElementById("auth").value="1";
+					}
+				}
+			});
+		});
+		
+	function savesmtp()
+	{
+		var user = document.getElementById("user").value;
+		var psd = document.getElementById("psd").value;
+		var server = document.getElementById("server").value;
+		var port = document.getElementById("port").value;
+		var auth = document.getElementById("auth").value;
+		$.ajax({
+				dataType:"text",
+				url:"/setsmtp?id1="+user+"&id2="+psd+"&id3="+server+"&id4="+port+"&id5="+auth+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta=="flase")
+						{
+							alert("No permission!");
+						}
+						else if(sta=="err1")
+						{
+							alert("Incorrect Settings!");
+						}
+					}
+					else
+					{
+						if(sta=="flase")
+						{
+							alert("不允许!");
+						}
+						else if(sta=="err1")
+						{
+							alert("设置错误!");
+						}
+					}
+				}
+			});
+	}
+	function testsend()
+	{
+		var user = document.getElementById("user").value;
+		var psd = document.getElementById("psd").value;
+		var server = document.getElementById("server").value;
+		var port = document.getElementById("port").value;
+		var auth = document.getElementById("auth").value;
+		var sendto = document.getElementById("sendto").value;
+		$.ajax({
+				dataType:"text",
+				url:"/smtptest?id1="+user+"&id2="+psd+"&id3="+server+"&id4="+port+"&id5="+auth+"&id6="+sendto+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta=="flase")
+						{
+							alert("No permission!");
+						}
+						else if(sta=="err1")
+						{
+							alert("Incorrect Settings!");
+						}
+					}
+					else
+					{
+						if(sta=="flase")
+						{
+							alert("不允许!");
+						}
+						else if(sta=="err1")
+						{
+							alert("设置错误!");
+						}
+					}
+				}
+			});
+	}
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["LDAP service", "LDAP服务", "Services LDAP", "служба LDAP", "Servicio PMA", "خدمة LDAP"];
+		var lang_2  = ["LDAP Setting", "LDAP设置", "Paramètres LDAP", "Настройки LDAP", "Preferencias PMA", "إعدادات LDAP"];
+		var lang_3  = ["LDAP setting:", "LDAP服务：", "Services LDAP", "служба LDAP", "Servicio PMA", "خدمة LDAP"];
+		var lang_4  = ["Disable", "不启用", "Désactiver", "не включено", "No activo", "غير ممكّن"];
+		var lang_5  = ["Enable", "启用", "Activer", "Включено", "Activar", "مكن"];
+		var lang_6  = ["LDAP server type", "LDAP服务器类型：", "Type de serveur LDAP", "Тип сервера LDAP", "Tipo de servidor", "نوع خادم LDAP"];
+		var lang_7  = ["Open LDAP", "OpenLDAP", "Open LDAP", "Open LDAP", "Open LDAP", "Open LDAP"];
+		var lang_8  = ["Microsoft Active Directory", "Microsoft Active Directory", "Microsoft Active Directory", "Microsoft Active Directory", "Microsoft Active Directory", "Microsoft Active Directory"];
+		var lang_9  = ["IP address/hostname:", "IP地址/主机名：", "IP address/hostname", "IP address/hostname", "IP address/hostname", "IP address/hostname"];
+		var lang_10 = ["Port", "端口：", "Port", "порт", "Puerto", "ميناء"];
+		var lang_11 = ["SASL：", "SASL：", "SASL", "SASL", "SASL", "SASL"];
+		var lang_12 = ["Authentication name:", "身份验证名称：", "Authentication name", "имя аутентификации", "Nombre de identificación", "اسم المصادقة"];
+		var lang_13 = ["Authentication domain", "身份验证域：", "Authentication domain", "Authentication domain", "Dominio de identificación", "مجال المصادقة"];
+		var lang_14 = ["Use binding voucher:", "使用绑定凭证：", "Use binding voucher", "Use binding voucher", "Uso de documentos", "استخدام بيانات الاعتماد ملزمة"];
+		var lang_15 = ["Binding DN:", "绑定DN：", "Binding DN:", "Binding DN:", "Binding DN", "ربط DN"];
+		var lang_16 = ["Bind password", "绑定密码：", "Bind password", "Bind password", "Combinación de contraseñas", ""];
+		var lang_17 = ["Confirm password", "确认密码：", "Confirm password", "подтвердить пароль", "Confirmar contraseña", "تأكيد كلمة المرور"];
+		var lang_18 = ["Search Base DN:", "搜索Base DN：", "Search Base DN:", "Search Base DN", "Search Base DN:", "Search Base DN:"];
+		var lang_19 = ["Login name attribute", "登录名称属性：", "Login name attribute", "Имя пользователя", "Propiedades del nombre", "اسم تسجيل الدخول السمة"];
+		var lang_20 = ["User input object class:", "用户输入对象类：", "User input object class:", "класс объектов, введённых пользователем", "Tipo de objeto", "فئة كائن إدخال المستخدم"];
+		var lang_21 = ["Save", "保存", "Save", "Save", "Save", "Save"];
+		var lang_22 = ["Test LDAP settings", "测试LDAP设置", "Test LDAP settings", "Test LDAP settings", "Test LDAP settings", "اختبار إعدادات LDAP"];
+		var lang_23 = ["Username", "用户名：", "Nom d 'utilisateur", "Имя пользователя", "Nombre de usuario", "اسم المستخدم"];
+		var lang_24 = ["Password", "密码：", "Mot de passe", "пароль", "Contraseña", "كلمة المرور"];
+		var lang_25 = ["Test", "测试", "Test", "тест", "Test", "اختبار"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").innerHTML = lang_13[flag];
+		document.getElementById("lang_14").innerHTML = lang_14[flag];
+		document.getElementById("lang_15").innerHTML = lang_15[flag];
+		document.getElementById("lang_16").innerHTML = lang_16[flag];
+		document.getElementById("lang_17").innerHTML = lang_17[flag];
+		document.getElementById("lang_18").innerHTML = lang_18[flag];
+		document.getElementById("lang_19").innerHTML = lang_19[flag];
+		document.getElementById("lang_20").innerHTML = lang_20[flag];
+		document.getElementById("lang_21").value	 = lang_21[flag];
+		document.getElementById("lang_22").innerHTML = lang_22[flag];
+		document.getElementById("lang_23").innerHTML = lang_23[flag];
+		document.getElementById("lang_24").innerHTML = lang_24[flag];
+		document.getElementById("lang_25").value	 = lang_25[flag];
+	}
+</script>
+</head>
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:480px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_3"></td>
+				<td><select id="en" style="width:200px">
+				<option value="0" id="lang_4"></option>
+				<option value="1" id="lang_5"></option> 
+				</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_6"></td>
+				<td><select id="ty" style="width:200px">
+				<option value="0" id="lang_7"></option>
+				<option value="1" id="lang_8"></option> 
+				</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_9"></td>
+				<td><input id="ip" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_10"></td>
+				<td><input id="port" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_11"></td>
+				<td><input id="sa" type="checkbox" ></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_12"></td>
+				<td><input id="na" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_13"></td>
+				<td><input id="ve" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" height="25px" id="lang_14"></td>
+				<td><input id="ch" type="checkbox" ></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_15"></td>
+				<td><input id="dn" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_16"></td>
+				<td><input id="ws" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_17"></td>
+				<td><input id="ss" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_18"></td>
+				<td><input id="ba" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_19"></td>
+				<td><input id="pr" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_20"></td>
+				<td><input id="ls" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="savesmtp();" id="lang_21"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>
+
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:150px; background:#ffffff;">
+			<table width="100%" border="0" style="font-size:12px; margin-top:10px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_22"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_23"></td>
+				<td><input id="name" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_24"></td>
+				<td><input id="pass" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="testsend();" id="lang_25"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+

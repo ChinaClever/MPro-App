@@ -1,0 +1,286 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					var flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+					
+		$.ajax({
+			dataType:"text",
+			url:"/getgroupinfo",
+			async:false,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				for(var i=1;i<11;i++)
+				{
+					if(gv[i])
+					{
+						document.getElementById("gp").options.add(new Option(gv[i],gv[i]));
+					}
+				}
+			}
+		});
+		loaddata();
+	});
+
+	function gpchange()
+	{
+		loaddata();
+	}
+	function loaddata()
+	{
+		var gp = document.getElementById("gp").value;
+		if(gp=="")
+			return;
+		$.ajax({
+				dataType:"text",
+				url:"/gpmainper1?id1="+gp,
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("gpname").value=gp;
+					for(i=0;i<4;i++)
+					{
+						if(gv[i]=="1")
+						{
+							document.getElementById("p"+i).checked = true;
+						}
+						else
+						{
+							document.getElementById("p"+i).checked = false;
+						}
+					}
+				}
+			});
+	}
+	function savegp(fg)
+	{
+		var per="";
+		var gp = document.getElementById("gpname").value;
+		for(i=0;i<4;i++)
+		{
+			if(document.getElementById("p"+i).checked ==true)
+			{
+				per += 1;
+			}
+			else
+			{
+				per += 0;
+			}
+		}
+		$.ajax({
+				dataType:"text",
+				url:"/savegp?id1="+gp+"&id2="+per,
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					if(fg==0)
+					{
+						if(sta =="err")
+						{
+							alert("Incorrect settings!");
+							return;
+						}
+						else if(sta =="flase")
+						{
+							alert("No permission!");
+							return;
+						}
+					}
+					else
+					{
+						if(sta =="err")
+						{
+							alert("配置错误!");
+							return;
+						}
+						else if(sta =="flase")
+						{
+							alert("不允许!");
+							return;
+						}
+					}
+				}
+			});
+		window.location.reload();
+	}
+	function deletegp(fg)
+	{
+		var gp = document.getElementById("gp").value;
+		$.ajax({
+					dataType:"text",
+					url:"/deletegp?id1="+gp,
+					async:false,
+					cache:false,
+					success:function(sta)
+					{
+						if(fg==0)
+						{
+							if(sta =="err")
+							{
+								alert("Settings succeed!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("No permission!");
+								return;
+							}
+						}	
+						else
+						{
+							if(sta =="err")
+							{
+								alert("设置成功!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("不允许!");
+								return;
+							}
+						}
+					}
+				});
+		document.getElementById("gp").value="";
+		for(i=0;i<4;i++)
+		{
+			document.getElementById("p"+i).checked =false;
+		}
+		window.location.reload();
+	}
+
+	function LangFun(flag)
+	{
+		var lang_1  = ["User group management", "用户组管理", "Gestion de groupe d 'utilisateurs", "Управление группами пользователей", "Grupo de usuarios", "إدارة مجموعة المستخدم"];
+		var lang_2  = ["User permission setting", "用户组权限设置", "Paramètres de droits de groupe d 'utilisateurs", "Настройки прав пользователей", "Preferencias del Grupo de usuarios", "إعدادات إذن مجموعة المستخدم"];
+		var lang_3  = ["Select user group:", "选择用户组:", "Sélection d 'un groupe d' utilisateurs", "Выбор группы пользователей", "Seleccionar Grupo de usuarios", "اختر مجموعة المستخدمين"];
+		var lang_4  = ["User group name", "用户组名称:", "Nom du Groupe d 'utilisateurs", "Имя группы пользователей", "Nombre del Grupo", "اسم مجموعة المستخدم"];
+		var lang_5  = ["User setting", "用户设置:", "Paramètres utilisateur", "Настройки пользователя", "Preferencias del usuario", "إعدادات المستخدم"];
+		var lang_6  = ["PDU setting", "设备设置:", "Équipement", "Настройки устройства", "Configuración del dispositivo", "إعدادات الجهاز"];
+		var lang_7  = ["Log management:", "日志管理:", "Gestion de journal", "ведение журнала", "Gestión de registros", "إدارة السجل"];
+		var lang_8  = ["Firmware upgrading", "系统升级:", "Mise à niveau du système", "модернизация системы", "Actualización del sistema", "ترقية النظام"];
+		var lang_9  = ["Delete", "删除", "Delete", "Удалить", "Eliminar", "حذف"];
+		var lang_10 = ["Save", "保存", "Enregistrer", "Сохранить", "Guardar", "تخزين"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .value 	 = lang_9[flag];
+		document.getElementById("lang_10").value 	 = lang_10[flag];
+	}
+</script>
+</head>
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:250px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_3"></td>
+				<td><select id="gp" style="width:200px;" onChange="gpchange();"></select></td>
+			  </tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_4"></td>
+				<td><input id="gpname" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_5"></td>
+				<td><input id="p0" type="checkbox"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_6"></td>
+				<td><input id="p1" type="checkbox"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_7"></td>
+				<td><input id="p2" type="checkbox"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_8"></td>
+				<td><input id="p3" type="checkbox"></input></td>
+			</tr>	
+			<tr>
+				<td width="10px"></td>
+				<td colspan="2">
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="deletegp();" id="lang_9"></input>
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="savegp();" id="lang_10"></input>
+				</td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+</html>

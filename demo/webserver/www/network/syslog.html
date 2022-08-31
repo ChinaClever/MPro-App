@@ -1,0 +1,183 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+	$(document).ready(function () {
+			$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					var flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+	
+			$.ajax({
+				dataType:"text",
+				url:"/getsyslog",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+						
+					document.getElementById("server").value=gv[0];
+					document.getElementById("level0").value=gv[1];
+					document.getElementById("level1").value=gv[2];
+					document.getElementById("level2").value=gv[3];
+					document.getElementById("level3").value=gv[4];
+					
+				}
+			});
+		});
+		
+	function savesyslog()
+	{
+		var server = document.getElementById("server").value;
+		var sys_pority0= document.getElementById("level0").value;
+		var sys_pority1= document.getElementById("level1").value;
+		var sys_pority2= document.getElementById("level2").value;
+		var sys_pority3= document.getElementById("level3").value;
+		$.ajax({
+				dataType:"text",
+				url:"/setsyslog?id1="+server+"&id2="+sys_pority0+"&id3="+sys_pority1+"&id4="+sys_pority2+"&id4="+sys_pority3,
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					 alert("Settings success, please restart the device!");
+				}
+			});
+	}
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["Syslog service", "Syslog服务", "Services syslog", "служба Syslog", "Servicios syslog", "خدمة سيسلوغ"];
+		var lang_2  = ["Syslog Setting", "Syslog设置", "Syslog", "Настройки Syslog", "Configuración syslog", "إعدادات سيسلوغ"];
+		var lang_3  = ["Server address:", "服务器地址:", "Adresse du serveur", "адрес сервера", "Dirección del servidor", "عنوان الخادم"];
+		var lang_4  = ["Sensor Detection:", "传感器检测:","Détection de capteur:","Обнаружение датчика:","Detección de sensores:","كشف الاستشعار:"];
+		var lang_5  = ["Device Settings:", "设备设置:","Paramètres de l'appareil:","Настройки устройства:","Configuraciones del dispositivo:","إعدادات الجهاز:"];
+		var lang_6  = ["User Adminstor:", "用户管理:","Gestion des utilisateurs:","Управление пользователями:","Gestión de usuarios:","إدارة المستخدم:"];
+		var lang_7  = ["Network Settings:", "网络设置:","Paramètres réseau:","Настройки сети:","Configuraciones de red:","إعدادات الشبكة:"];
+		var lang_8 = ["Save", "保存", "Enregistrer", "Сохранить", "Guardar", "تخزين"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .value	 = lang_8[flag];
+	}
+</script>
+</head>
+<body onload="LangFun(1)">
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:220px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_3" width="120" height="25px"></td>
+				<td><input id="server" type="text" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_4" width="120" height="25px"></td>
+				<td><select id="level0" style="width:200px;">
+						<option value="1">LOG_INFO</option>
+						<option value="2">LOG_ALERT</option>
+						<option value="3">LOG_NOTICE</option>
+						<option value="4">LOG_EMERG</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_5" width="120" height="25px"></td>
+				<td><select id="level1" style="width:200px;">
+						<option value="1">LOG_INFO</option>
+						<option value="2">LOG_ALERT</option>
+						<option value="3">LOG_NOTICE</option>
+						<option value="4">LOG_EMERG</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_6" width="120" height="25px"></td>
+				<td><select id="level2" style="width:200px;">
+						<option value="1">LOG_INFO</option>
+						<option value="2">LOG_ALERT</option>
+						<option value="3">LOG_NOTICE</option>
+						<option value="4">LOG_EMERG</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_7" width="120" height="25px"></td>
+				<td><select id="level3" style="width:200px;">
+						<option value="1">LOG_INFO</option>
+						<option value="2">LOG_ALERT</option>
+						<option value="3">LOG_NOTICE</option>
+						<option value="4">LOG_EMERG</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="savesyslog();" id="lang_8"></input></td>
+				<td></td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,1036 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+	var flag;
+	
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();
+						getdata();
+						for(var i=0;i<10;i++)
+						{
+							if(gv[i*2+2])
+							{
+								document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+							}
+						}
+					}
+				});
+		});
+	
+	function change()
+	{
+		getdata();
+	}
+
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+
+		$.ajax({
+			dataType:"text",
+			url:"/getgroup?id1="+ms,
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				//if(parseInt(gv[1])==2)
+				//{
+				//	document.getElementById("gp").value = parseInt(gv[1])-1;
+				//}
+				//else
+				//{
+				//	document.getElementById("gp").value = parseInt(gv[1]);
+				//}
+				
+				document.getElementById("gp").value = parseInt(gv[1])+2;
+				var k=0;
+				if(parseInt(gv[0])%4!=1)
+				{
+					for(i=0;i<42;i++)
+					{
+						if(parseInt(gv[2*i+2])>0)
+						{
+							document.getElementById("tr"+i).style.display='';
+							
+							if(k%2!=0)
+								document.getElementById("tr"+i).style.background="#f0f0f0";
+							else
+								document.getElementById("tr"+i).style.background="#ffffff";
+								
+							document.getElementById("n"+i).innerHTML = gv[2*i+2];
+							document.getElementById("p"+i).innerHTML = gv[2*i+3];
+						
+							
+							if(gv[i+86]=="1")
+							{
+								
+								document.getElementById("a"+i).checked = true;
+							}
+							else if (gv[i+86]=="0")
+							{
+								
+								document.getElementById("a"+i).checked = false;
+							}
+							
+							if(gv[i+86+42]=="1")
+							{
+								
+								document.getElementById("b"+i).checked = true;
+							}
+							else if (gv[i+86+42]=="0")
+							{
+								
+								document.getElementById("b"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*2]=="1")
+							{
+								
+								document.getElementById("c"+i).checked = true;
+							}
+							else if (gv[i+86+42*2]=="0")
+							{
+								
+								document.getElementById("c"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*3]=="1")
+							{
+								
+								document.getElementById("d"+i).checked = true;
+							}
+							else if (gv[i+86+42*3]=="0")
+							{
+								
+								document.getElementById("d"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*4]=="1")
+							{
+								
+								document.getElementById("e"+i).checked = true;
+							}
+							else if (gv[i+86+42*4]=="0")
+							{
+								
+								document.getElementById("e"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*5]=="1")
+							{
+								
+								document.getElementById("f"+i).checked = true;
+							}
+							else if (gv[i+86+42*5]=="0")
+							{
+								
+								document.getElementById("f"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*6]=="1")
+							{
+								
+								document.getElementById("g"+i).checked = true;
+							}
+							else if (gv[i+86+42*6]=="0")
+							{
+								
+								document.getElementById("g"+i).checked = false;
+							}
+							
+							if(gv[i+86+42*7]=="1")
+							{
+								
+								document.getElementById("h"+i).checked = true;
+							}
+							else if (gv[i+86+42*7]=="0")
+							{
+								
+								document.getElementById("h"+i).checked = false;
+							}
+							
+							k++;
+						}
+						else 
+						{
+							document.getElementById("tr"+i).style.display="none";
+						}
+					}
+					document.getElementById("tr42").style.display='';
+				}
+				else
+				{
+					for(i=0;i<43;i++)
+					{
+						document.getElementById("tr"+i).style.display="none";
+					}
+				}
+				
+				
+			}
+		});
+	}
+
+	function switchStr(b)
+	{
+		var ch;
+		switch(b)
+		{
+			case 0:
+				ch="a";break;
+			case 1:
+				ch="b";break;
+			case 2:
+				ch="c";break;
+			case 3:
+				ch="d";break;
+			case 4:
+				ch="e";break;
+			case 5:
+				ch="f";break;	
+			case 6:
+				ch="g";break;
+			case 7:
+				ch="h";break;
+		}
+		return ch;
+	}
+
+	function clearAlone(a)
+	{
+		document.getElementById("a"+a).checked = false;
+		document.getElementById("b"+a).checked = false;
+		document.getElementById("c"+a).checked = false;
+		document.getElementById("d"+a).checked = false;
+		document.getElementById("e"+a).checked = false;
+		document.getElementById("f"+a).checked = false;
+		document.getElementById("g"+a).checked = false;
+		document.getElementById("h"+a).checked = false;
+	}
+
+	function check(a, b)
+	{
+		var str;
+		str =switchStr(b)+a;
+		
+		if(document.getElementById(str).checked==true)
+		{
+			clearAlone(a);
+			document.getElementById(str).checked = true;
+		}
+		else if(document.getElementById(str).checked==false)
+		{
+			clearAlone(a);
+		}
+	}
+	var ch1 = ["Please set the correct threshold value!", "请正确设置阈值!", "Définissez correctement le seuil!", "Пожалуйста, установите порог", "Por favor, establezca el umbral correctamente", "يرجى ضبط العتبة بشكل صحيح"];
+	var ch2 = ["No permission!", "无权限!", "Pas d'autorité", "нет прав", "Sin permiso", "يلا إذن"];
+	var ch3 = ["Incorrect setting!", "设置错误!", "Erreur de réglage!", "Ошибка настройки", "Error de configuración", "خطأ في الإعداد"];
+	function savegp()
+	{
+		var per1="";
+		var per2="";
+		var per3="";
+		var per4="";
+		var per5="";
+		var per6="";
+		var per7="";
+		var per8="";
+
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+			
+		gp = document.getElementById("gp").value;
+
+		for(i=0;i<42;i++)
+		{
+			if(document.getElementById("a"+i).checked ==true)
+			{
+				per1 += 1;
+			}
+			else
+			{
+				per1 += 0;
+			}
+			
+			if(document.getElementById("b"+i).checked ==true)
+			{
+				per2 += 1;
+			}
+			else
+			{
+				per2 += 0;
+			}
+			
+			if(document.getElementById("c"+i).checked ==true)
+			{
+				per3 += 1;
+			}
+			else
+			{
+				per3 += 0;
+			}
+			
+			if(document.getElementById("d"+i).checked ==true)
+			{
+				per4 += 1;
+			}
+			else
+			{
+				per4 += 0;
+			}
+			
+			if(document.getElementById("e"+i).checked ==true)
+			{
+				per5 += 1;
+			}
+			else
+			{
+				per5 += 0;
+			}
+			
+			if(document.getElementById("f"+i).checked ==true)
+			{
+				per6 += 1;
+			}
+			else
+			{
+				per6 += 0;
+			}
+			
+			if(document.getElementById("g"+i).checked ==true)
+			{
+				per7 += 1;
+			}
+			else
+			{
+				per7 += 0;
+			}
+			
+			if(document.getElementById("h"+i).checked ==true)
+			{
+				per8 += 1;
+			}
+			else
+			{
+				per8 += 0;
+			}
+		}
+		
+		$.ajax({
+				dataType:"text",
+				url:"/setgroup?id1="+ms+"&id2="+gp+"&id3="+per1+"&id4="+per2+"&id5="+per3+"&id6="+per4+"&id7="+per5+"&id8="+per6+"&id9="+per7+"&id10="+per8,
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(sta=="flase")
+					{
+						alert(ch2[flag]);
+					}
+					else if(sta=="err1")
+					{
+						alert(ch3[flag]);
+					}
+					else
+					{
+						$("#wc_0").show(100).delay(1000).hide(100); 
+					//	getdata();
+					}
+				}
+			});
+	}
+	
+	function mov(obj)
+	{
+		obj.style.background="#ffffa0";
+	}
+	
+	function movout(obj)
+	{
+		var index=obj.id.replace("tr","");
+		if(parseInt(index)%2!=0)
+			obj.style.background="#f0f0f0";
+		else
+			obj.style.background="#ffffff";
+	}
+	
+	function LangFun()
+	{
+		var lang_1  = ["Outlet grouping setting", "分组设置", "Grouping setting", "Настройки группировки", "Configuración de grupo", "إعدادات التجميع"];
+		var lang_2  = ["PDU selection:", "设备选择:", "PDU Selection:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3  = ["No.", "序号", "Numéro de série", "порядковый номер", "Número", "الرقم التسلسلي"];
+		var lang_4  = ["Outlet name", "单元名称", "Nom", "имя ячейки", "Nombre de unidad", "اسم الوحدة"];
+		var lang_5  = ["Group1", "组别1", "Group1", "группа1", "Grupo 1", "المجموعة 1"];
+		var lang_6  = ["Group2", "组别2", "Group2", "группа2", "Grupo 2", "المجموعة 2"];
+		var lang_7  = ["Group3", "组别3", "Group3", "группа3", "Grupo 3", "المجموعة 3"];
+		var lang_8  = ["Group4", "组别4", "Group4", "группа4", "Grupo 4", "المجموعة 4"];
+		var lang_9  = ["Group5", "组别5", "Group5", "группа5", "Grupo 5", "المجموعة 5"];
+		var lang_10 = ["Group6", "组别6", "Group6", "группа6", "Grupo 6", "المجموعة 6"];
+		var lang_11 = ["Group7", "组别7", "Group7", "группа7", "Grupo 7", "المجموعة 7"];
+		var lang_12 = ["Group8", "组别8", "Group8", "группа8", "Grupo 8", "المجموعة 8"];
+		var lang_13 = ["Outlet grouping:", "分组功能:", "Outlet grouping", "групповая функция", "Funciones de grupo", "وظيفة التجميع"];
+		var lang_14 = ["Disable", "不启用", "Interdire", "не включено", "No activo", "غير ممكّن"];
+		var lang_15 = ["Enable", "启用", "Activer", "Включено", "Activar", "مكن"];
+		var lang_16 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").innerHTML = lang_13[flag];
+		document.getElementById("lang_14").innerHTML = lang_14[flag];
+		document.getElementById("lang_15").innerHTML = lang_15[flag];
+		document.getElementById("lang_16").value = lang_16[flag];
+	}
+
+</script>
+</head>
+
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>			
+		</div>
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:100%; background:#ffffff;">
+			<table width="100%" style="font-size:12px; text-align:center;">
+				<tr align="left" style="color:#000000;background:#e7e7e7; height:30px; text-align:center">
+					<td width="4%" align="center"><b id="lang_3"></b></td>
+					<td width="24%"><b id="lang_4"></b></td>
+					<td width="9%"><b id="lang_5"></b></td>
+					<td width="9%"><b id="lang_6"></b></td>
+					<td width="9%"><b id="lang_7"></b></td>
+					<td width="9%"><b id="lang_8"></b></td>
+					<td width="9%"><b id="lang_9"></b></td>
+					<td width="9%"><b id="lang_10"></b></td>   
+					<td width="9%"><b id="lang_11"></b></td>
+					<td width="9%"><b id="lang_12"></b></td>
+				</tr>
+				
+				<tr id="tr0" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<form name="box1">
+					<td id="n0" align="center"></td>
+					<td id="p0"></td>
+					<td><input id="a0" type="checkbox" onClick="check(0,0)"></input></td>
+					<td><input id="b0" type="checkbox" onClick="check(0,1)"></input></td>
+					<td><input id="c0" type="checkbox" onClick="check(0,2)"></input></td>
+					<td><input id="d0" type="checkbox" onClick="check(0,3)"></input></td>
+					<td><input id="e0" type="checkbox" onClick="check(0,4)"></input></td>
+					<td><input id="f0" type="checkbox" onClick="check(0,5)"></input></td>
+					<td><input id="g0" type="checkbox" onClick="check(0,6)"></input></td>
+					<td><input id="h0" type="checkbox" onClick="check(0,7)"></input></td>
+					</form>
+				</tr>
+				
+				<tr id="tr1" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<form name="box2">
+					<td id="n1" align="center"></td>
+					<td id="p1"></td>
+					<td><input id="a1" type="checkbox" onClick="check(1,0)"></input></td>
+					<td><input id="b1" type="checkbox" onClick="check(1,1)"></input></td>
+					<td><input id="c1" type="checkbox" onClick="check(1,2)"></input></td>
+					<td><input id="d1" type="checkbox" onClick="check(1,3)"></input></td>
+					<td><input id="e1" type="checkbox" onClick="check(1,4)"></input></td>
+					<td><input id="f1" type="checkbox" onClick="check(1,5)"></input></td>
+					<td><input id="g1" type="checkbox" onClick="check(1,6)"></input></td>
+					<td><input id="h1" type="checkbox" onClick="check(1,7)"></input></td>
+					</form>
+				</tr>
+				
+				<tr id="tr2" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n2" align="center"></td>
+					<td id="p2"></td>
+					<td><input id="a2" type="checkbox" onClick="check(2,0)"></input></td>
+					<td><input id="b2" type="checkbox" onClick="check(2,1)"></input></td>
+					<td><input id="c2" type="checkbox" onClick="check(2,2)"></input></td>
+					<td><input id="d2" type="checkbox" onClick="check(2,3)"></input></td>
+					<td><input id="e2" type="checkbox" onClick="check(2,4)"></input></td>
+					<td><input id="f2" type="checkbox" onClick="check(2,5)"></input></td>
+					<td><input id="g2" type="checkbox" onClick="check(2,6)"></input></td>
+					<td><input id="h2" type="checkbox" onClick="check(2,7)"></input></td>
+				</tr>
+				
+				<tr id="tr3" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n3" align="center"></td>
+					<td id="p3"></td>
+					<td><input id="a3" type="checkbox" onClick="check(3,0)"></input></td>
+					<td><input id="b3" type="checkbox" onClick="check(3,1)"></input></td>
+					<td><input id="c3" type="checkbox" onClick="check(3,2)"></input></td>
+					<td><input id="d3" type="checkbox" onClick="check(3,3)"></input></td>
+					<td><input id="e3" type="checkbox" onClick="check(3,4)"></input></td>
+					<td><input id="f3" type="checkbox" onClick="check(3,5)"></input></td>
+					<td><input id="g3" type="checkbox" onClick="check(3,6)"></input></td>
+					<td><input id="h3" type="checkbox" onClick="check(3,7)"></input></td>
+				</tr>
+				
+				<tr id="tr4" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n4" align="center"></td>
+					<td id="p4"></td>
+					<td><input id="a4" type="checkbox" onClick="check(4,0)"></input></td>
+					<td><input id="b4" type="checkbox" onClick="check(4,1)"></input></td>
+					<td><input id="c4" type="checkbox" onClick="check(4,2)"></input></td>
+					<td><input id="d4" type="checkbox" onClick="check(4,3)"></input></td>
+					<td><input id="e4" type="checkbox" onClick="check(4,4)"></input></td>
+					<td><input id="f4" type="checkbox" onClick="check(4,5)"></input></td>
+					<td><input id="g4" type="checkbox" onClick="check(4,6)"></input></td>
+					<td><input id="h4" type="checkbox" onClick="check(4,7)"></input></td>
+				</tr>
+				
+				<tr id="tr5" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n5" align="center"></td>
+					<td id="p5"></td>
+					<td><input id="a5" type="checkbox" onClick="check(5,0)"></input></td>
+					<td><input id="b5" type="checkbox" onClick="check(5,1)"></input></td>
+					<td><input id="c5" type="checkbox" onClick="check(5,2)"></input></td>
+					<td><input id="d5" type="checkbox" onClick="check(5,3)"></input></td>
+					<td><input id="e5" type="checkbox" onClick="check(5,4)"></input></td>
+					<td><input id="f5" type="checkbox" onClick="check(5,5)"></input></td>
+					<td><input id="g5" type="checkbox" onClick="check(5,6)"></input></td>
+					<td><input id="h5" type="checkbox" onClick="check(5,7)"></input></td>
+				</tr>
+				
+				<tr id="tr6" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n6" align="center"></td>
+					<td id="p6"></td>
+					<td><input id="a6" type="checkbox" onClick="check(6,0)"></input></td>
+					<td><input id="b6" type="checkbox" onClick="check(6,1)"></input></td>
+					<td><input id="c6" type="checkbox" onClick="check(6,2)"></input></td>
+					<td><input id="d6" type="checkbox" onClick="check(6,3)"></input></td>
+					<td><input id="e6" type="checkbox" onClick="check(6,4)"></input></td>
+					<td><input id="f6" type="checkbox" onClick="check(6,5)"></input></td>
+					<td><input id="g6" type="checkbox" onClick="check(6,6)"></input></td>
+					<td><input id="h6" type="checkbox" onClick="check(6,7)"></input></td>
+				</tr>
+				
+				<tr id="tr7" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n7" align="center"></td>
+					<td id="p7"></td>
+					<td><input id="a7" type="checkbox" onClick="check(7,0)"></input></td>
+					<td><input id="b7" type="checkbox" onClick="check(7,1)"></input></td>
+					<td><input id="c7" type="checkbox" onClick="check(7,2)"></input></td>
+					<td><input id="d7" type="checkbox" onClick="check(7,3)"></input></td>
+					<td><input id="e7" type="checkbox" onClick="check(7,4)"></input></td>
+					<td><input id="f7" type="checkbox" onClick="check(7,5)"></input></td>
+					<td><input id="g7" type="checkbox" onClick="check(7,6)"></input></td>
+					<td><input id="h7" type="checkbox" onClick="check(7,7)"></input></td>
+				</tr>
+				
+				<tr id="tr8" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n8" align="center"></td>
+					<td id="p8"></td>
+					<td><input id="a8" type="checkbox" onClick="check(8,0)"></input></td>
+					<td><input id="b8" type="checkbox" onClick="check(8,1)"></input></td>
+					<td><input id="c8" type="checkbox" onClick="check(8,2)"></input></td>
+					<td><input id="d8" type="checkbox" onClick="check(8,3)"></input></td>
+					<td><input id="e8" type="checkbox" onClick="check(8,4)"></input></td>
+					<td><input id="f8" type="checkbox" onClick="check(8,5)"></input></td>
+					<td><input id="g8" type="checkbox" onClick="check(8,6)"></input></td>
+					<td><input id="h8" type="checkbox" onClick="check(8,7)"></input></td>
+				</tr>
+				
+				<tr id="tr9" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n9" align="center"></td>
+					<td id="p9"></td>
+					<td><input id="a9" type="checkbox" onClick="check(9,0)"></input></td>
+					<td><input id="b9" type="checkbox" onClick="check(9,1)"></input></td>
+					<td><input id="c9" type="checkbox" onClick="check(9,2)"></input></td>
+					<td><input id="d9" type="checkbox" onClick="check(9,3)"></input></td>
+					<td><input id="e9" type="checkbox" onClick="check(9,4)"></input></td>
+					<td><input id="f9" type="checkbox" onClick="check(9,5)"></input></td>
+					<td><input id="g9" type="checkbox" onClick="check(9,6)"></input></td>
+					<td><input id="h9" type="checkbox" onClick="check(9,7)"></input></td>
+				</tr>
+				
+				<tr id="tr10" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n10" align="center"></td>
+					<td id="p10"></td>
+					<td><input id="a10" type="checkbox" onClick="check(10,0)"></input></td>
+					<td><input id="b10" type="checkbox" onClick="check(10,1)"></input></td>
+					<td><input id="c10" type="checkbox" onClick="check(10,2)"></input></td>
+					<td><input id="d10" type="checkbox" onClick="check(10,3)"></input></td>
+					<td><input id="e10" type="checkbox" onClick="check(10,4)"></input></td>
+					<td><input id="f10" type="checkbox" onClick="check(10,5)"></input></td>
+					<td><input id="g10" type="checkbox" onClick="check(10,6)"></input></td>
+					<td><input id="h10" type="checkbox" onClick="check(10,7)"></input></td>
+				</tr>
+				
+				<tr id="tr11" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n11" align="center"></td>
+					<td id="p11"></td>
+					<td><input id="a11" type="checkbox" onClick="check(11,0)"></input></td>
+					<td><input id="b11" type="checkbox" onClick="check(11,1)"></input></td>
+					<td><input id="c11" type="checkbox" onClick="check(11,2)"></input></td>
+					<td><input id="d11" type="checkbox" onClick="check(11,3)"></input></td>
+					<td><input id="e11" type="checkbox" onClick="check(11,4)"></input></td>
+					<td><input id="f11" type="checkbox" onClick="check(11,5)"></input></td>
+					<td><input id="g11" type="checkbox" onClick="check(11,6)"></input></td>
+					<td><input id="h11" type="checkbox" onClick="check(11,7)"></input></td>
+				</tr>
+				
+				<tr id="tr12" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n12" align="center"></td>
+					<td id="p12"></td>
+					<td><input id="a12" type="checkbox" onClick="check(12,0)"></input></td>
+					<td><input id="b12" type="checkbox" onClick="check(12,1)"></input></td>
+					<td><input id="c12" type="checkbox" onClick="check(12,2)"></input></td>
+					<td><input id="d12" type="checkbox" onClick="check(12,3)"></input></td>
+					<td><input id="e12" type="checkbox" onClick="check(12,4)"></input></td>
+					<td><input id="f12" type="checkbox" onClick="check(12,5)"></input></td>
+					<td><input id="g12" type="checkbox" onClick="check(12,6)"></input></td>
+					<td><input id="h12" type="checkbox" onClick="check(12,7)"></input></td>
+				</tr>
+				
+				<tr id="tr13" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n13" align="center"></td>
+					<td id="p13"></td>
+					<td><input id="a13" type="checkbox" onClick="check(13,0)"></input></td>
+					<td><input id="b13" type="checkbox" onClick="check(13,1)"></input></td>
+					<td><input id="c13" type="checkbox" onClick="check(13,2)"></input></td>
+					<td><input id="d13" type="checkbox" onClick="check(13,3)"></input></td>
+					<td><input id="e13" type="checkbox" onClick="check(13,4)"></input></td>
+					<td><input id="f13" type="checkbox" onClick="check(13,5)"></input></td>
+					<td><input id="g13" type="checkbox" onClick="check(13,6)"></input></td>
+					<td><input id="h13" type="checkbox" onClick="check(13,7)"></input></td>
+				</tr>
+				
+				<tr id="tr14" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n14" align="center"></td>
+					<td id="p14"></td>
+					<td><input id="a14" type="checkbox" onClick="check(14,0)"></input></td>
+					<td><input id="b14" type="checkbox" onClick="check(14,1)"></input></td>
+					<td><input id="c14" type="checkbox" onClick="check(14,2)"></input></td>
+					<td><input id="d14" type="checkbox" onClick="check(14,3)"></input></td>
+					<td><input id="e14" type="checkbox" onClick="check(14,4)"></input></td>
+					<td><input id="f14" type="checkbox" onClick="check(14,5)"></input></td>
+					<td><input id="g14" type="checkbox" onClick="check(14,6)"></input></td>
+					<td><input id="h14" type="checkbox" onClick="check(14,7)"></input></td>
+				</tr>
+				
+				<tr id="tr15" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n15" align="center"></td>
+					<td id="p15"></td>
+					<td><input id="a15" type="checkbox" onClick="check(15,0)"></input></td>
+					<td><input id="b15" type="checkbox" onClick="check(15,1)"></input></td>
+					<td><input id="c15" type="checkbox" onClick="check(15,2)"></input></td>
+					<td><input id="d15" type="checkbox" onClick="check(15,3)"></input></td>
+					<td><input id="e15" type="checkbox" onClick="check(15,4)"></input></td>
+					<td><input id="f15" type="checkbox" onClick="check(15,5)"></input></td>
+					<td><input id="g15" type="checkbox" onClick="check(15,6)"></input></td>
+					<td><input id="h15" type="checkbox" onClick="check(15,7)"></input></td>
+				</tr>
+				
+				<tr id="tr16" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n16" align="center"></td>
+					<td id="p16"></td>
+					<td><input id="a16" type="checkbox" onClick="check(16,0)"></input></td>
+					<td><input id="b16" type="checkbox" onClick="check(16,1)"></input></td>
+					<td><input id="c16" type="checkbox" onClick="check(16,2)"></input></td>
+					<td><input id="d16" type="checkbox" onClick="check(16,3)"></input></td>
+					<td><input id="e16" type="checkbox" onClick="check(16,4)"></input></td>
+					<td><input id="f16" type="checkbox" onClick="check(16,5)"></input></td>
+					<td><input id="g16" type="checkbox" onClick="check(16,6)"></input></td>
+					<td><input id="h16" type="checkbox" onClick="check(16,7)"></input></td>
+				</tr>
+				
+				<tr id="tr17" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n17" align="center"></td>
+					<td id="p17"></td>
+					<td><input id="a17" type="checkbox" onClick="check(17,0)"></input></td>
+					<td><input id="b17" type="checkbox" onClick="check(17,1)"></input></td>
+					<td><input id="c17" type="checkbox" onClick="check(17,2)"></input></td>
+					<td><input id="d17" type="checkbox" onClick="check(17,3)"></input></td>
+					<td><input id="e17" type="checkbox" onClick="check(17,4)"></input></td>
+					<td><input id="f17" type="checkbox" onClick="check(17,5)"></input></td>
+					<td><input id="g17" type="checkbox" onClick="check(17,6)"></input></td>
+					<td><input id="h17" type="checkbox" onClick="check(17,7)"></input></td>
+				</tr>
+				
+				<tr id="tr18" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n18" align="center"></td>
+					<td id="p18"></td>
+					<td><input id="a18" type="checkbox" onClick="check(18,0)"></input></td>
+					<td><input id="b18" type="checkbox" onClick="check(18,1)"></input></td>
+					<td><input id="c18" type="checkbox" onClick="check(18,2)"></input></td>
+					<td><input id="d18" type="checkbox" onClick="check(18,3)"></input></td>
+					<td><input id="e18" type="checkbox" onClick="check(18,4)"></input></td>
+					<td><input id="f18" type="checkbox" onClick="check(18,5)"></input></td>
+					<td><input id="g18" type="checkbox" onClick="check(18,6)"></input></td>
+					<td><input id="h18" type="checkbox" onClick="check(18,7)"></input></td>
+				</tr>
+				
+				<tr id="tr19" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n19" align="center"></td>
+					<td id="p19"></td>
+					<td><input id="a19" type="checkbox" onClick="check(19,0)"></input></td>
+					<td><input id="b19" type="checkbox" onClick="check(19,1)"></input></td>
+					<td><input id="c19" type="checkbox" onClick="check(19,2)"></input></td>
+					<td><input id="d19" type="checkbox" onClick="check(19,3)"></input></td>
+					<td><input id="e19" type="checkbox" onClick="check(19,4)"></input></td>
+					<td><input id="f19" type="checkbox" onClick="check(19,5)"></input></td>
+					<td><input id="g19" type="checkbox" onClick="check(19,6)"></input></td>
+					<td><input id="h19" type="checkbox" onClick="check(19,7)"></input></td>
+				</tr>
+				
+				<tr id="tr20" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n20" align="center"></td>
+					<td id="p20"></td>
+					<td><input id="a20" type="checkbox" onClick="check(20,0)"></input></td>
+					<td><input id="b20" type="checkbox" onClick="check(20,1)"></input></td>
+					<td><input id="c20" type="checkbox" onClick="check(20,2)"></input></td>
+					<td><input id="d20" type="checkbox" onClick="check(20,3)"></input></td>
+					<td><input id="e20" type="checkbox" onClick="check(20,4)"></input></td>
+					<td><input id="f20" type="checkbox" onClick="check(20,5)"></input></td>
+					<td><input id="g20" type="checkbox" onClick="check(20,6)"></input></td>
+					<td><input id="h20" type="checkbox" onClick="check(20,7)"></input></td>
+				</tr>
+				
+				<tr id="tr21" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n21" align="center"></td>
+					<td id="p21"></td>
+					<td><input id="a21" type="checkbox" onClick="check(21,0)"></input></td>
+					<td><input id="b21" type="checkbox" onClick="check(21,1)"></input></td>
+					<td><input id="c21" type="checkbox" onClick="check(21,2)"></input></td>
+					<td><input id="d21" type="checkbox" onClick="check(21,3)"></input></td>
+					<td><input id="e21" type="checkbox" onClick="check(21,4)"></input></td>
+					<td><input id="f21" type="checkbox" onClick="check(21,5)"></input></td>
+					<td><input id="g21" type="checkbox" onClick="check(21,6)"></input></td>
+					<td><input id="h21" type="checkbox" onClick="check(21,7)"></input></td>
+				</tr>
+				
+				<tr id="tr22" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n22" align="center"></td>
+					<td id="p22"></td>
+					<td><input id="a22" type="checkbox" onClick="check(22,0)"></input></td>
+					<td><input id="b22" type="checkbox" onClick="check(22,1)"></input></td>
+					<td><input id="c22" type="checkbox" onClick="check(22,2)"></input></td>
+					<td><input id="d22" type="checkbox" onClick="check(22,3)"></input></td>
+					<td><input id="e22" type="checkbox" onClick="check(22,4)"></input></td>
+					<td><input id="f22" type="checkbox" onClick="check(22,5)"></input></td>
+					<td><input id="g22" type="checkbox" onClick="check(22,6)"></input></td>
+					<td><input id="h22" type="checkbox" onClick="check(22,7)"></input></td>
+				</tr>
+				
+				<tr id="tr23" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n23" align="center"></td>
+					<td id="p23"></td>
+					<td><input id="a23" type="checkbox" onClick="check(23,0)"></input></td>
+					<td><input id="b23" type="checkbox" onClick="check(23,1)"></input></td>
+					<td><input id="c23" type="checkbox" onClick="check(23,2)"></input></td>
+					<td><input id="d23" type="checkbox" onClick="check(23,3)"></input></td>
+					<td><input id="e23" type="checkbox" onClick="check(23,4)"></input></td>
+					<td><input id="f23" type="checkbox" onClick="check(23,5)"></input></td>
+					<td><input id="g23" type="checkbox" onClick="check(23,6)"></input></td>
+					<td><input id="h23" type="checkbox" onClick="check(23,7)"></input></td>
+				</tr>
+				
+				<tr id="tr24" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n24" align="center"></td>
+					<td id="p24"></td>
+					<td><input id="a24" type="checkbox" onClick="check(24,0)"></input></td>
+					<td><input id="b24" type="checkbox" onClick="check(24,1)"></input></td>
+					<td><input id="c24" type="checkbox" onClick="check(24,2)"></input></td>
+					<td><input id="d24" type="checkbox" onClick="check(24,3)"></input></td>
+					<td><input id="e24" type="checkbox" onClick="check(24,4)"></input></td>
+					<td><input id="f24" type="checkbox" onClick="check(24,5)"></input></td>
+					<td><input id="g24" type="checkbox" onClick="check(24,6)"></input></td>
+					<td><input id="h24" type="checkbox" onClick="check(24,7)"></input></td>
+				</tr>
+				
+				<tr id="tr25" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n25" align="center"></td>
+					<td id="p25"></td>
+					<td><input id="a25" type="checkbox" onClick="check(25,0)"></input></td>
+					<td><input id="b25" type="checkbox" onClick="check(25,1)"></input></td>
+					<td><input id="c25" type="checkbox" onClick="check(25,2)"></input></td>
+					<td><input id="d25" type="checkbox" onClick="check(25,3)"></input></td>
+					<td><input id="e25" type="checkbox" onClick="check(25,4)"></input></td>
+					<td><input id="f25" type="checkbox" onClick="check(25,5)"></input></td>
+					<td><input id="g25" type="checkbox" onClick="check(25,6)"></input></td>
+					<td><input id="h25" type="checkbox" onClick="check(25,7)"></input></td>
+				</tr>
+				
+				<tr id="tr26" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n26" align="center"></td>
+					<td id="p26"></td>
+					<td><input id="a26" type="checkbox" onClick="check(26,0)"></input></td>
+					<td><input id="b26" type="checkbox" onClick="check(26,1)"></input></td>
+					<td><input id="c26" type="checkbox" onClick="check(26,2)"></input></td>
+					<td><input id="d26" type="checkbox" onClick="check(26,3)"></input></td>
+					<td><input id="e26" type="checkbox" onClick="check(26,4)"></input></td>
+					<td><input id="f26" type="checkbox" onClick="check(26,5)"></input></td>
+					<td><input id="g26" type="checkbox" onClick="check(26,6)"></input></td>
+					<td><input id="h26" type="checkbox" onClick="check(26,7)"></input></td>
+				</tr>
+				
+				<tr id="tr27" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n27" align="center"></td>
+					<td id="p27"></td>
+					<td><input id="a27" type="checkbox" onClick="check(27,0)"></input></td>
+					<td><input id="b27" type="checkbox" onClick="check(27,1)"></input></td>
+					<td><input id="c27" type="checkbox" onClick="check(27,2)"></input></td>
+					<td><input id="d27" type="checkbox" onClick="check(27,3)"></input></td>
+					<td><input id="e27" type="checkbox" onClick="check(27,4)"></input></td>
+					<td><input id="f27" type="checkbox" onClick="check(27,5)"></input></td>
+					<td><input id="g27" type="checkbox" onClick="check(27,6)"></input></td>
+					<td><input id="h27" type="checkbox" onClick="check(27,7)"></input></td>
+				</tr>
+				
+				<tr id="tr28" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n28" align="center"></td>
+					<td id="p28"></td>
+					<td><input id="a28" type="checkbox" onClick="check(28,0)"></input></td>
+					<td><input id="b28" type="checkbox" onClick="check(28,1)"></input></td>
+					<td><input id="c28" type="checkbox" onClick="check(28,2)"></input></td>
+					<td><input id="d28" type="checkbox" onClick="check(28,3)"></input></td>
+					<td><input id="e28" type="checkbox" onClick="check(28,4)"></input></td>
+					<td><input id="f28" type="checkbox" onClick="check(28,5)"></input></td>
+					<td><input id="g28" type="checkbox" onClick="check(28,6)"></input></td>
+					<td><input id="h28" type="checkbox" onClick="check(28,7)"></input></td>
+				</tr>
+				
+				<tr id="tr29" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n29" align="center"></td>
+					<td id="p29"></td>
+					<td><input id="a29" type="checkbox" onClick="check(29,0)"></input></td>
+					<td><input id="b29" type="checkbox" onClick="check(29,1)"></input></td>
+					<td><input id="c29" type="checkbox" onClick="check(29,2)"></input></td>
+					<td><input id="d29" type="checkbox" onClick="check(29,3)"></input></td>
+					<td><input id="e29" type="checkbox" onClick="check(29,4)"></input></td>
+					<td><input id="f29" type="checkbox" onClick="check(29,5)"></input></td>
+					<td><input id="g29" type="checkbox" onClick="check(29,6)"></input></td>
+					<td><input id="h29" type="checkbox" onClick="check(29,7)"></input></td>
+				</tr>
+				
+				<tr id="tr30" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n30" align="center"></td>
+					<td id="p30"></td>
+					<td><input id="a30" type="checkbox" onClick="check(30,0)"></input></td>
+					<td><input id="b30" type="checkbox" onClick="check(30,1)"></input></td>
+					<td><input id="c30" type="checkbox" onClick="check(30,2)"></input></td>
+					<td><input id="d30" type="checkbox" onClick="check(30,3)"></input></td>
+					<td><input id="e30" type="checkbox" onClick="check(30,4)"></input></td>
+					<td><input id="f30" type="checkbox" onClick="check(30,5)"></input></td>
+					<td><input id="g30" type="checkbox" onClick="check(30,6)"></input></td>
+					<td><input id="h30" type="checkbox" onClick="check(30,7)"></input></td>
+				</tr>
+				
+				<tr id="tr31" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n31" align="center"></td>
+					<td id="p31"></td>
+					<td><input id="a31" type="checkbox" onClick="check(31,0)"></input></td>
+					<td><input id="b31" type="checkbox" onClick="check(31,1)"></input></td>
+					<td><input id="c31" type="checkbox" onClick="check(31,2)"></input></td>
+					<td><input id="d31" type="checkbox" onClick="check(31,3)"></input></td>
+					<td><input id="e31" type="checkbox" onClick="check(31,4)"></input></td>
+					<td><input id="f31" type="checkbox" onClick="check(31,5)"></input></td>
+					<td><input id="g31" type="checkbox" onClick="check(31,6)"></input></td>
+					<td><input id="h31" type="checkbox" onClick="check(31,7)"></input></td>
+				</tr>
+				
+				<tr id="tr32" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n32" align="center"></td>
+					<td id="p32"></td>
+					<td><input id="a32" type="checkbox" onClick="check(32,0)"></input></td>
+					<td><input id="b32" type="checkbox" onClick="check(32,1)"></input></td>
+					<td><input id="c32" type="checkbox" onClick="check(32,2)"></input></td>
+					<td><input id="d32" type="checkbox" onClick="check(32,3)"></input></td>
+					<td><input id="e32" type="checkbox" onClick="check(32,4)"></input></td>
+					<td><input id="f32" type="checkbox" onClick="check(32,5)"></input></td>
+					<td><input id="g32" type="checkbox" onClick="check(32,6)"></input></td>
+					<td><input id="h32" type="checkbox" onClick="check(32,7)"></input></td>
+				</tr>
+				
+				<tr id="tr33" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n33" align="center"></td>
+					<td id="p33"></td>
+					<td><input id="a33" type="checkbox" onClick="check(33,0)"></input></td>
+					<td><input id="b33" type="checkbox" onClick="check(33,1)"></input></td>
+					<td><input id="c33" type="checkbox" onClick="check(33,2)"></input></td>
+					<td><input id="d33" type="checkbox" onClick="check(33,3)"></input></td>
+					<td><input id="e33" type="checkbox" onClick="check(33,4)"></input></td>
+					<td><input id="f33" type="checkbox" onClick="check(33,5)"></input></td>
+					<td><input id="g33" type="checkbox" onClick="check(33,6)"></input></td>
+					<td><input id="h33" type="checkbox" onClick="check(33,7)"></input></td>
+				</tr>
+				
+				<tr id="tr34" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n34" align="center"></td>
+					<td id="p34"></td>
+					<td><input id="a34" type="checkbox" onClick="check(34,0)"></input></td>
+					<td><input id="b34" type="checkbox" onClick="check(34,1)"></input></td>
+					<td><input id="c34" type="checkbox" onClick="check(34,2)"></input></td>
+					<td><input id="d34" type="checkbox" onClick="check(34,3)"></input></td>
+					<td><input id="e34" type="checkbox" onClick="check(34,4)"></input></td>
+					<td><input id="f34" type="checkbox" onClick="check(34,5)"></input></td>
+					<td><input id="g34" type="checkbox" onClick="check(34,6)"></input></td>
+					<td><input id="h34" type="checkbox" onClick="check(34,7)"></input></td>
+				</tr>
+				
+				<tr id="tr35" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n35" align="center"></td>
+					<td id="p35"></td>
+					<td><input id="a35" type="checkbox" onClick="check(35,0)"></input></td>
+					<td><input id="b35" type="checkbox" onClick="check(35,1)"></input></td>
+					<td><input id="c35" type="checkbox" onClick="check(35,2)"></input></td>
+					<td><input id="d35" type="checkbox" onClick="check(35,3)"></input></td>
+					<td><input id="e35" type="checkbox" onClick="check(35,4)"></input></td>
+					<td><input id="f35" type="checkbox" onClick="check(35,5)"></input></td>
+					<td><input id="g35" type="checkbox" onClick="check(35,6)"></input></td>
+					<td><input id="h35" type="checkbox" onClick="check(35,7)"></input></td>
+				</tr>
+				
+				<tr id="tr36" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n36" align="center"></td>
+					<td id="p36"></td>
+					<td><input id="a36" type="checkbox" onClick="check(36,0)"></input></td>
+					<td><input id="b36" type="checkbox" onClick="check(36,1)"></input></td>
+					<td><input id="c36" type="checkbox" onClick="check(36,2)"></input></td>
+					<td><input id="d36" type="checkbox" onClick="check(36,3)"></input></td>
+					<td><input id="e36" type="checkbox" onClick="check(36,4)"></input></td>
+					<td><input id="f36" type="checkbox" onClick="check(36,5)"></input></td>
+					<td><input id="g36" type="checkbox" onClick="check(36,6)"></input></td>
+					<td><input id="h36" type="checkbox" onClick="check(36,7)"></input></td>
+				</tr>
+				
+				<tr id="tr37" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n37" align="center"></td>
+					<td id="p37"></td>
+					<td><input id="a37" type="checkbox" onClick="check(37,0)"></input></td>
+					<td><input id="b37" type="checkbox" onClick="check(37,1)"></input></td>
+					<td><input id="c37" type="checkbox" onClick="check(37,2)"></input></td>
+					<td><input id="d37" type="checkbox" onClick="check(37,3)"></input></td>
+					<td><input id="e37" type="checkbox" onClick="check(37,4)"></input></td>
+					<td><input id="f37" type="checkbox" onClick="check(37,5)"></input></td>
+					<td><input id="g37" type="checkbox" onClick="check(37,6)"></input></td>
+					<td><input id="h37" type="checkbox" onClick="check(37,7)"></input></td>
+				</tr>
+				
+				<tr id="tr38" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n38" align="center"></td>
+					<td id="p38"></td>
+					<td><input id="a38" type="checkbox" onClick="check(38,0)"></input></td>
+					<td><input id="b38" type="checkbox" onClick="check(38,1)"></input></td>
+					<td><input id="c38" type="checkbox" onClick="check(38,2)"></input></td>
+					<td><input id="d38" type="checkbox" onClick="check(38,3)"></input></td>
+					<td><input id="e38" type="checkbox" onClick="check(38,4)"></input></td>
+					<td><input id="f38" type="checkbox" onClick="check(38,5)"></input></td>
+					<td><input id="g38" type="checkbox" onClick="check(38,6)"></input></td>
+					<td><input id="h38" type="checkbox" onClick="check(38,7)"></input></td>
+				</tr>
+				
+				<tr id="tr39" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n39" align="center"></td>
+					<td id="p39"></td>
+					<td><input id="a39" type="checkbox" onClick="check(39,0)"></input></td>
+					<td><input id="b39" type="checkbox" onClick="check(39,1)"></input></td>
+					<td><input id="c39" type="checkbox" onClick="check(39,2)"></input></td>
+					<td><input id="d39" type="checkbox" onClick="check(39,3)"></input></td>
+					<td><input id="e39" type="checkbox" onClick="check(39,4)"></input></td>
+					<td><input id="f39" type="checkbox" onClick="check(39,5)"></input></td>
+					<td><input id="g39" type="checkbox" onClick="check(39,6)"></input></td>
+					<td><input id="h39" type="checkbox" onClick="check(39,7)"></input></td>
+				</tr>
+				
+				<tr id="tr40" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n40" align="center"></td>
+					<td id="p40"></td>
+					<td><input id="a40" type="checkbox" onClick="check(40,0)"></input></td>
+					<td><input id="b40" type="checkbox" onClick="check(40,1)"></input></td>
+					<td><input id="c40" type="checkbox" onClick="check(40,2)"></input></td>
+					<td><input id="d40" type="checkbox" onClick="check(40,3)"></input></td>
+					<td><input id="e40" type="checkbox" onClick="check(40,4)"></input></td>
+					<td><input id="f40" type="checkbox" onClick="check(40,5)"></input></td>
+					<td><input id="g40" type="checkbox" onClick="check(40,6)"></input></td>
+					<td><input id="h40" type="checkbox" onClick="check(40,7)"></input></td>
+				</tr>
+				
+				<tr id="tr41" onMouseOut="movout(this);" onMouseMove="mov(this);" >
+					<td id="n41" align="center"></td>
+					<td id="p41"></td>
+					<td><input id="a41" type="checkbox" onClick="check(41,0)"></input></td>
+					<td><input id="b41" type="checkbox" onClick="check(41,1)"></input></td>
+					<td><input id="c41" type="checkbox" onClick="check(41,2)"></input></td>
+					<td><input id="d41" type="checkbox" onClick="check(41,3)"></input></td>
+					<td><input id="e41" type="checkbox" onClick="check(41,4)"></input></td>
+					<td><input id="f41" type="checkbox" onClick="check(41,5)"></input></td>
+					<td><input id="g41" type="checkbox" onClick="check(41,6)"></input></td>
+					<td><input id="h41" type="checkbox" onClick="check(41,7)"></input></td>
+				</tr>
+				
+				<tr id="tr42" style="height:50px; white-space:nowrap;">
+					<td colspan = " 2 " style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="lang_13"></span>
+						<select id="gp" style="width:150px">
+						<option value="2" id="lang_14"></option>
+						<option value="3" id="lang_15"></option>
+						</select>
+					</td>
+					<td colspan = " 7 "></td>
+					<td style="position:relative; left:50px;">
+						<input style="position:relative; height:21px;  right:50px;" type="button" onClick="savegp();" id="lang_16"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>
