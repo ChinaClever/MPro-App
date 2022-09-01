@@ -108,7 +108,7 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
 bool OP_Object::curFaultCheck(uchar k, uchar i)
 {
     int id = k + i;
-    uint *src = mOpData->vol;
+    uint *src = mOpData->cur;
     uint *cnt = mDev->dtc.cnt[1];
     uint *dest = mDev->output.cur.value;
     bool ret = dataFiltering(dest[id], src[i], COM_MAX_CUR);
@@ -127,8 +127,8 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
     sObjData *obj = &mDev->output;
     if(value < 100) {
         obj->pf[id] = value;
-        obj->artPow[id] = obj->vol.value[id] * obj->cur.value[id] / 100.0;
-        obj->pow.value[id] = obj->artPow[id] * obj->pf[id] / 100.0;
+        obj->artPow[id] = obj->vol.value[id] * obj->cur.value[id] / (COM_RATE_VOL*COM_RATE_CUR);
+        obj->pow.value[id] = obj->artPow[id] * obj->pf[id] / COM_RATE_PF;
         obj->reactivePow[id] = obj->artPow[id] - obj->pow.value[id];
     } else {
         cout << value/COM_RATE_PF;
@@ -163,6 +163,7 @@ void OP_Object::fillData(uchar addr)
     sOpIt *it = mOpData; mDev->dtc.fault = 0;
     dev->cfg.nums.boards[addr] = it->size; addr -= 1;
     for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
+
     for(int i=0; i<it->size; ++i) {
         volFaultCheck(k, i);
         curFaultCheck(k, i);
