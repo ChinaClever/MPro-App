@@ -200,6 +200,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
     if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;
+        dev->cfg.param.devStatus = dev->alarm + dev->dtc.fault;
     }
     return ret;
 }

@@ -47,12 +47,12 @@ int Set_Info::devInfoCfg(int addr, int type)
     switch (type) {
     case 0: ret = dev->offLine;  break;
     case 1: ret = it->param.devSpec; break;
-    case 2: ret = it->param.devMode; break;
-    case 3: ret = it->param.cascadeAddr; break;
-    case 4: ret = it->param.modbusAddr; break;
-    case 5: ret = it->param.buzzerSw; break;
+    case 2: ret = it->param.devStatus; break;
+    case 3: ret = it->param.devMode; break;
+    case 4: ret = it->param.cascadeAddr; break;
+    case 5: ret = it->param.modbusAddr; break;
     case 6: ret = it->param.hz; break;
-    case 7: ret = it->nums.boardNum; break;
+    case 7: ret = it->param.buzzerSw; break;
     case 8: ret = it->nums.groupEn; break;
     case 9: ret = it->param.runTime; break;
     case 10: ret = it->param.totalTime; break;
@@ -69,11 +69,10 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     sDevCfg *it = &(cm::devData(addr)->cfg);
     bool ret = true; switch (type) {
     case 1: it->param.devSpec = value; break;
-    case 2: it->param.devMode = value; break;
-    case 3: it->param.cascadeAddr = value; break;
-    case 4: it->param.modbusAddr = value; break;
-    case 5: it->param.buzzerSw = value; break;
-    case 7: it->nums.boardNum = value; break;
+    case 3: it->param.devMode = value; break;
+    case 4: it->param.cascadeAddr = value; break;
+    case 5: it->param.modbusAddr = value; break;
+    case 7: it->param.buzzerSw = value; break;
     case 8: it->nums.groupEn = value; break;
     case 11: it->param.isBreaker = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;

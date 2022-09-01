@@ -10,12 +10,12 @@ static const char *s_listen_on = "ws://0.0.0.0:8000";
 static const char *s_https_addr = "wss://0.0.0.0:8443";  // HTTPS port
 static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
-static const char *s_listen_on = "ws://0.0.0.0:80";
-static const char *s_https_addr = "wss://0.0.0.0:443";  // HTTPS port
+static const char *s_listen_on = "ws://0.0.0.0:";
+static const char *s_https_addr = "wss://0.0.0.0:";  // HTTPS port
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
 
-
+sWebCfg Web_Http::cfg;
 Web_Http::Web_Http()
 {
     QtConcurrent::run(this,&Web_Http::run);
@@ -195,9 +195,21 @@ void Web_Http::run()
     struct mg_mgr mgr;   // Event manager
     mg_mgr_init(&mgr);  // Init event manager
 
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
     mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
+#else
+    if(cfg.http_en) {
+        QString url = s_listen_on + QString::number(cfg.http_port);
+        mg_http_listen(&mgr, url.toStdString().c_str(), fn, NULL);
+    }
+
+    if(cfg.https_en) {
+        QString url = s_https_addr + QString::number(cfg.https_port);
+        mg_http_listen(&mgr, url.toStdString().c_str(), fn, (void *) 1);
+    }
+#endif
     while(isRun) mg_mgr_poll(&mgr, 1000);             // Infinite event loop
     mg_mgr_free(&mgr);
 }

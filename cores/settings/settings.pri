@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/set_netaddr.h \
     $$PWD/set_output.h \
     $$PWD/set_sercret.h \
+    $$PWD/set_service.h \
     $$PWD/set_ssdp.h
 
 SOURCES += \
@@ -23,4 +24,5 @@ SOURCES += \
     $$PWD/set_netaddr.cpp \
     $$PWD/set_output.cpp \
     $$PWD/set_sercret.cpp \
+    $$PWD/set_service.cpp \
     $$PWD/set_ssdp.cpp
