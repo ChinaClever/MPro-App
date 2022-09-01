@@ -10,6 +10,7 @@
 #include "mqtt_client.h"
 #include "agent_core.h"
 #include "mb_core.h"
+#include "web_server/web_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -19,6 +20,7 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    web();
     rpc();
     push();
     snmp();
@@ -49,6 +51,28 @@ void Cfg_ReadParam::snmp()
 
         if(ptr) *ptr = mCfg->readCfg(key, "", prefix).toString();
         else cfg->enV3 = mCfg->readCfg(key, "", prefix).toInt();
+    }
+}
+
+void Cfg_ReadParam::web()
+{
+    int *ptr = nullptr; int value = 0;
+    QString prefix = "web"; QString key;
+    sWebCfg *cfg = &Web_Core::cfg;
+
+    for(int i=1; i<6; ++i) {
+        switch (i) {
+        case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
+        case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
+        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
+        case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
+        case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
+        default: key.clear(); break;
+        }
+
+        if(key.size() && ptr) {
+            *ptr = mCfg->readCfg(key, value, prefix).toInt();
+        }
     }
 }
 
