@@ -33,11 +33,12 @@ void Data_Core::run()
 {
     while(isRun) {
         outletWork();
-        cm::mdelay(500);tgWork();
+        cm::mdelay(400);tgWork();
         dualWork(); cm::mdelay(100);
         groupWork(); cm::mdelay(100);
         loopWork(); cm::mdelay(100);
         lineWork(); cm::mdelay(100);
+        envWork(); cm::mdelay(100);
         upAlarm(); cm::mdelay(100);
     }
 }

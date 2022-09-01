@@ -1,8 +1,8 @@
 #ifndef DATA_DUAL_H
 #define DATA_DUAL_H
-#include "data_group.h"
+#include "data_env.h"
 
-class Data_Dual : public Data_Group
+class Data_Dual : public Data_Env
 {
 public:
     Data_Dual();

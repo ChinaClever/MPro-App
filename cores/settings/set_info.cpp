@@ -48,7 +48,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 0: ret = dev->offLine;  break;
     case 1: ret = it->param.devSpec; break;
     case 2: ret = it->param.devMode; break;
-    case 3: ret = it->nums.slaveNum; break;
+    case 3: ret = it->param.cascadeAddr; break;
     case 4: ret = it->param.modbusAddr; break;
     case 5: ret = it->param.buzzerSw; break;
     case 6: ret = it->param.hz; break;
@@ -70,7 +70,7 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     bool ret = true; switch (type) {
     case 1: it->param.devSpec = value; break;
     case 2: it->param.devMode = value; break;
-    case 3: it->nums.slaveNum = value; break;
+    case 3: it->param.cascadeAddr = value; break;
     case 4: it->param.modbusAddr = value; break;
     case 5: it->param.buzzerSw = value; break;
     case 7: it->nums.boardNum = value; break;

@@ -17,7 +17,7 @@ typedef unsigned int uint;
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
-#define SENOR_NUM 4
+#define SENOR_NUM 2
 #define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
@@ -115,6 +115,7 @@ struct sEnvData
     sEnvData() {size=0;}
 #endif
     uchar size;
+    uchar isInsert[SENOR_NUM];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -210,7 +211,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：RTU 3：机柜双电源
+    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -314,6 +315,7 @@ enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
+enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 
 struct sDataItem
 {

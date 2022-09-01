@@ -14,7 +14,7 @@ bool Modbus_SlaveTcp::connectModbusTcp(int port)
 {
     initModbusNet(port);
     bool ret = connectDevice();
-    qDebug() << "Modbus Tcp connect" << port << ret;
+    //qDebug() << "Modbus Tcp connect" << port << ret;
     return ret;
 }
 

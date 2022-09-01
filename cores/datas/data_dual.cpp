@@ -31,7 +31,7 @@ void Data_Dual::dualWork()
 {
     int size = setDualSize();
     if(size > 0) dualData();
-    else disDualAlarm();
+    //else disDualAlarm();
 }
 
 
