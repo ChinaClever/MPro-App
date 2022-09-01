@@ -130,39 +130,7 @@
 						{
 							document.getElementById("sel1").options.add( new Option(sel_name[i] ,i));
 						}
-						function create_new_chart(){
-							document.getElementById('chart').remove();
-							// for(var i = 0;i<ct.childElementCount;i++){
-							// 	ct.childNodes[i].remove();
-							// }
-							var e = document.createElement("canvas"); 
-							e.id = "chart";
-							e.style.display = "block";
-							e.style.width = "90%";
-							e.style.height = "410px";
-							document.getElementById('container').appendChild(e);
 
-							ctx = document.getElementById('chart').getContext('2d');
-							chart = new Chart(ctx, config);
-							time1 = setInterval(flash_chart, 3000);
-						}
-						function change_mode(obj){
-							if(obj.value == 0){
-								clearInterval(time1);
-								total_name = "total_pow";
-								chart = new Chart(ctx, config);
-								time1 = setInterval(flash_chart, 3000);
-							}else if(obj.value == 1){
-								clearInterval(time1);
-								total_name ="total_cur";
-								chart = new Chart(ctx, config);
-								time1 = setInterval(flash_chart, 3000);
-							}else{
-								clearInterval(time1);
-								total_name ="total_vol";
-								create_new_chart();
-							}
-						}
 						var config = {
 							type: 'line',
 							data: {
@@ -213,7 +181,45 @@
   							  	}
 							}
 						};
-				
+						function create_new_chart(){
+							document.getElementById('chart').remove();
+							var re = document.getElementsByClassName('chartjs-size-monitor');
+							re[0].remove();
+							// for(var i = 0;i<ct.childElementCount;i++){
+							// 	ct.childNodes[i].remove();
+							// }							
+							var e = document.createElement("canvas"); 
+							e.id = "chart";
+							e.style.display = "block";
+							e.style.width = "90%";
+							e.style.height = "410px";
+							document.getElementById('container').appendChild(e);
+
+							ctx = document.getElementById('chart').getContext('2d');
+							chart = new Chart(ctx, config);
+							time1 = setInterval(flash_chart, 3000);
+						}
+						function change_mode(obj){
+							if(obj.value == 0){
+								clearInterval(time1);
+								total_name = "total_pow";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}else if(obj.value == 1){
+								clearInterval(time1);
+								total_name ="total_cur";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}else{
+								clearInterval(time1);
+								total_name ="total_vol";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}
+						}
 						function flash_chart() {
 							if (config.data.datasets.length > 0) {
 								date  = new Date();
@@ -227,12 +233,14 @@
 								data_inlet1[1].push(getRandomNum(200, 300));
 								data_inlet2[1].push(getRandomNum(100, 150));
 								data_inlet3[1].push(getRandomNum(150, 200));
+								// total_name.push(total_name);
 				
 								dataLabels.shift();
 								data_total[1].shift();
 								data_inlet1[1].shift();
 								data_inlet2[1].shift();
 								data_inlet3[1].shift();
+								// total_name.shift();
 
 								chart.update();
 							}
