@@ -79,11 +79,10 @@ bool Mb_Core::connectTcp(int en)
 }
 
 bool Mb_Core::connectRtu(int en)
-{
-    bool ret = false;
-    if(cm::masterDev()->cfg.param.devMode < 2) {
-        ret = connectModbus(mRtu, en, 0);
-        mCfg->enRtu = en;
+{     
+    int res = cm::masterDev()->cfg.param.devMode;
+    bool ret = false; if(res == DevMode::DM_Rtu) {
+        mCfg->enRtu = en; ret = connectModbus(mRtu, en, 0);
     }
     return ret;
 }
@@ -91,8 +90,7 @@ bool Mb_Core::connectRtu(int en)
 void Mb_Core::run()
 {
     cm::mdelay(20);
-    bool ret = true;
-    while (isRun) {
+    bool ret = true; while (isRun) {
         ret = mRtu->isConnectedModbus();
         cm::mdelay(500); if(ret) mRtu->mbUpdates();
 
