@@ -142,6 +142,7 @@
 										backgroundColor: 'rgb(255, 99, 132)',
 										borderColor: 'rgb(255, 99, 132)',
 										fill: false,
+										borderWidth:2
 									},
 									{
 										label: 'inletA',
@@ -183,11 +184,7 @@
 						};
 						function create_new_chart(){
 							document.getElementById('chart').remove();
-							var re = document.getElementsByClassName('chartjs-size-monitor');
-							re[0].remove();
-							// for(var i = 0;i<ct.childElementCount;i++){
-							// 	ct.childNodes[i].remove();
-							// }							
+							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
 							var e = document.createElement("canvas"); 
 							e.id = "chart";
 							e.style.display = "block";
@@ -340,7 +337,7 @@
 			}
 			for(var i = 1 ;i < loop_num + 1;i++){
 				loop_info[i] =  new Array();
-				loop_info[i][0] = "C" + (i+1);
+				loop_info[i][0] = "C" + (i);
 				loop_info[i][1] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[1]+data_name[1]+addr+'_'+i));
 				loop_info[i][2] = (i * 8 + 1) +'-' + (i*8 +8);
 				loop_info[i][3] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[1]+addr+'_'+i));
@@ -429,6 +426,18 @@
 				}
 			}
 			for(var i =0;i<head.length;i++){
+				if(sensor_info[i] == 2|| sensor_info[i] == 4){
+					document.getElementById('dat'+(63+i)).bgColor = 'yellow';
+				}else if(sensor_info[i] == 1 || sensor_info[i] == 8){
+					document.getElementById('dat'+(63+i)).borderColor = 'red';
+				}
+				else if(sensor_info[i] == 65535){
+					document.getElementById('dat'+(63+i)).color = 'green';
+					sensor_info[i] = 0;
+				}
+				else{
+					document.getElementById('dat'+(63+i)).bgColor = '';
+				}
 				document.getElementById('dat'+(63+i)).innerHTML = Sensor_state[sensor_info[i]];
 			}
 			for(var i =0;i<5;i++){

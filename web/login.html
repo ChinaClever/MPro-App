@@ -182,15 +182,15 @@
     var time1 = setTimeout(function(){
       console.log("start");
       read_num_info(0);
-      // read_uut_info(0);
-      // read_cfg_info(0);
-      // read_dev_name();
+      read_uut_info(0);
+      read_cfg_info(0);
+      read_dev_name();
       setTimeout(function(){
         read_phase_data(0);
-        // read_output_name(0);
+        read_output_name(0);
         read_loop_data(0);
-        // read_output_data(0);
-        // read_sensor_data(0);
+        read_output_data(0);
+        read_sensor_data(0);
         read_total_data(0);
         read_ver_info();
       },500);
