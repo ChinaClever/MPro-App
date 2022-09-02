@@ -32,7 +32,7 @@ QString Set_Alarm::opSrc(uchar txType)
     case TxJson: str = "JSON"; break;
     case TxSsh: str = "SSH"; break;
     case TxWebocket: str = "WebSocket"; break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << txType; break;
     }
     return str;
 }
@@ -61,7 +61,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    str += QStringLiteral("修改为:%1 ％2").arg(index.value/rate).arg(suffix);
+    str += QStringLiteral("修改为:%1 %2").arg(index.value/rate).arg(suffix);
     return str;
 }
 
