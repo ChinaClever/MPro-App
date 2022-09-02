@@ -150,7 +150,7 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
     if(dest[id] && src[i]) {
-        if(src[i] - dest[id] > 1) {
+        if(src[i] - dest[id] > 2) {
             ret = false;
             faultLog(id, cnt, src[i]);
         } else cnt[id] = 0;
