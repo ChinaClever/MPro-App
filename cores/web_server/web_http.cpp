@@ -84,7 +84,7 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
 //   any other URI serves static files from s_web_root
 void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
 {
-    char keyFile[32]={0}, certFile[32]={0};
+    char keyFile[126]={0}, certFile[126]={0};
     static FILE* fp = nullptr; static int state = 0;
     qstrcpy(keyFile, File::keyFile().toLatin1().data());
     qstrcpy(certFile, File::certFile().toLatin1().data());

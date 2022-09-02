@@ -80,13 +80,13 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 {
     int size = it.size;
     arrayAppend(it.value, size, key+"_value", json, r);
-    arrayAppend(it.en, size, key+"_alarm_enable", json, r);
+    arrayAppend(it.en, size, key+"_alarm_enable", json);
     arrayAppend(it.rated, size, key+"_rated", json, r);
     arrayAppend(it.min, size, key+"_alarm_min", json, r);
     arrayAppend(it.max, size, key+"_alarm_max", json, r);
     arrayAppend(it.crMin, size, key+"_warn_min", json, r);
     arrayAppend(it.crMax, size, key+"_warn_max", json, r);
-    arrayAppend(it.alarm, size, key+"_alarm_status", json, r);
+    arrayAppend(it.alarm, size, key+"_alarm_status", json);
 }
 
 void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json)
@@ -111,14 +111,15 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     strListAppend(it.timingOff, size, key+"_timing_off", json);
 }
 
-void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, bool breaker)
+void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
 {
     QJsonObject obj;  int size = it.size;
     alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
     alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
-    if(0 == breaker) relayUnit(it.relay, "relay", obj);
-    else arrayAppend(it.relay.sw, size, "breaker", obj);
+
+    if(1 == relay) relayUnit(it.relay, "relay", obj);
+    else if(2 == relay) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
 
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
@@ -232,7 +233,7 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     it->loop.size = 6;/////////////////////////////////////////
     it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
 
-    ObjData(it->loop, "loop_item_list", obj, 1);
+    ObjData(it->loop, "loop_item_list", obj, 2);
 
     it->group.size = 8;////////////////////////////////////////
     it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
@@ -244,9 +245,11 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 
     it->output.size = 48;/////////////////////////////////////
     it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
-    ObjData(it->output, "output_item_list", obj);
+    ObjData(it->output, "output_item_list", obj, 1);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
+    it->env.tem.size = 2;/////////////////////////////////////
+    it->env.hum.size = 2;/////////////////////////////////////
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }
