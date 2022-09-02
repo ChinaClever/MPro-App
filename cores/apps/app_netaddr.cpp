@@ -9,8 +9,8 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : QObject{parent}
 {
-    //initFun();
-    //setInterface();
+    initFun();
+    setInterface();
 }
 
 
@@ -40,10 +40,10 @@ void App_NetAddr::setInterface()
 {
     if(!isRun) {
         isRun = true;
-        QTimer::singleShot(755,this,SLOT(updateInterface()));
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(555,this,SLOT(setInterfaceSlot()));
+        QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
 #endif
+        QTimer::singleShot(755,this,SLOT(updateInterface()));
     }
 }
 
@@ -83,7 +83,7 @@ void App_NetAddr::updateInterface()
     sNetInterface *net = &(cm::dataPacket()->net);
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
-        if(interface.name() == "lo") continue;
+        if(interface.name() != "eth0") continue;
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址
@@ -102,10 +102,12 @@ void App_NetAddr::updateInterface()
                     qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
                     net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
                     break;
+
                 default:
+                    cout << net->name << net->mac << hostIp.toString() << entry.netmask().toString();
                     break;
                 }
             }
-        }  break;
+        }
     }
 }
