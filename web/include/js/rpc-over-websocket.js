@@ -7,12 +7,12 @@ let value_now = 0, val = 0;
 let user_name='user_name';
 let password = 'password';
 let identify = '';
-let type_info = new Array("","Phase","Loop","Output","Board","Slave",);
+let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Group","Double","","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
-let cfg_name = new Array("Offline","Serial","DevMode","SlaveNum","ModbusAddr","Buz","Freq","","GroupSwEn","LastRunTime","RunTime");
+let cfg_name = new Array("Offline","Serial","DevState","DevMode","DevAddr","ModbusAddr","Freq","Buz","GroupSwEn","LastRunTime","RunTime","BreakerEn");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
@@ -303,7 +303,7 @@ function read_num_info(addr){
     if(j >= parseInt(num_num + 1)){
       clearInterval(time1);
     }
-    if(j <= num_num){
+    if((j < 7 || j > 10) && j <= num_num){
       rpc.call('pduReadParam',[addr,num,j,0,0]);
     }
     j++;

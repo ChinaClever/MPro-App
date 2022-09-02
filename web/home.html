@@ -271,6 +271,7 @@
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
     	var head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		var stat_ = new Array("断开","闭合");
+		var serial_ = new Array("A","B","C","D");
 		var Sensor_state = new Array("离线","开启","关闭");
 		var loop_unit = new Array("","","","A","A","V","kVA","kWh");
 		function delay(){
@@ -361,10 +362,10 @@
 			info = sensor_info[1];
 			sensor_info[1] = sensor_info[2];
 			sensor_info[2] = info;
-			system_info[0] = sessionStorage.getItem(cfg_name[0] + addr);
-			system_info[1] = "ida_loction";
+			system_info[0] = sessionStorage.getItem(cfg_name[2] + addr);
+			system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
 			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" min";
-			system_info[3] = "NPDU("+sessionStorage.getItem(cfg_name[1] + addr)+")";
+			system_info[3] = "NPDU("+serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))]+")";
 			system_info[4] = sessionStorage.getItem(ver_name[1] + addr);
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
