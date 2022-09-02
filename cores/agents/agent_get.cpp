@@ -15,11 +15,8 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     int id = 1; QString oid = "0.0.";
     QString prefix = oidPrefix + "uut_";
 
-    addOid(addr, id++, oid, prefix+"idc", it.idc);
     addOid(addr, id++, oid, prefix+"room", it.room);
-    addOid(addr, id++, oid, prefix+"modular", it.module);
-    addOid(addr, id++, oid, prefix+"cabinet", it.cab);
-    addOid(addr, id++, oid, prefix+"road", it.road);
+    addOid(addr, id++, oid, prefix+"location", it.location);
     addOid(addr, id++, oid, prefix+"name", it.devName);
     addOid(addr, id++, oid, prefix+"qrcode", it.qrcode);
     addOid(addr, id++, oid, prefix+"sn", it.sn);
@@ -158,7 +155,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
     //    addObjData(addr, oid, name+"group", it->group, i);
     //}
 
-    size = it->env.size; // if(!size) size = SENOR_NUM;
+    size = it->env.size; if(!size) size = SENOR_NUM;
     for(int i=0; i<size; ++i) {
         QString oid = "6." + QString::number(i+1);
         addEnvData(addr, oid, name+"env", it->env, i);

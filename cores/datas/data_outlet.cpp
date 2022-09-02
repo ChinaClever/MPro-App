@@ -15,6 +15,12 @@ void Data_Outlet::outletNums()
     sObjData *obj = &(mDev->output); int size = 0; obj->vol.size =0;
     for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];
     obj->size = obj->cur.size = obj->pow.size = obj->relay.size = size;
+
+    switch (mDev->cfg.param.devSpec) {
+    case 1: obj->size = obj->cur.size = obj->pow.size = obj->relay.size = 0;break;
+    case 2: obj->relay.size = 0; break;
+    case 3: obj->cur.size = obj->pow.size = 0; break;
+    }
 }
 
 

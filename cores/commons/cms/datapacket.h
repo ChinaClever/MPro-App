@@ -14,11 +14,10 @@ typedef unsigned short ushort;
 typedef unsigned int uint;
 #endif
 
-#define NET_NUM 2
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
-#define SENOR_NUM 4
+#define SENOR_NUM 2
 #define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
@@ -35,6 +34,7 @@ typedef unsigned int uint;
 #define COM_RATE_TEM	10.0    // 温度
 #define COM_RATE_HUM	10.0    // 湿度
 
+#define COM_MIN_VOL     (60*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
 #define COM_MAX_CUR     (100*COM_RATE_CUR)
 #define COM_MAX_POW     (100*600)
@@ -115,6 +115,7 @@ struct sEnvData
     sEnvData() {size=0;}
 #endif
     uchar size;
+    uchar isInsert[SENOR_NUM];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -181,27 +182,27 @@ struct sVersions
     char coreMd5[NAME_SIZE];
     char coreVer[NAME_SIZE];
     char coreCompileTime[NAME_SIZE];
+    char coreReleaseTime[NAME_SIZE];
 
     uint start;
     char startMd5[NAME_SIZE];
     char startVer[NAME_SIZE];
     char startCompileTime[NAME_SIZE];
+    char startReleaseTime[NAME_SIZE];
 
     uint lcd;
     char lcdMd5[NAME_SIZE];
     char lcdVer[NAME_SIZE];
     char lcdCompileTime[NAME_SIZE];
+    char lcdReleaseTime[NAME_SIZE];
 
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
     uint version;
 };
 
 struct sUutInfo {
-    char idc[NAME_SIZE];
     char room[NAME_SIZE];
-    char module[NAME_SIZE];
-    char cab[NAME_SIZE];
-    char road[NAME_SIZE];
+    char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[3*NAME_SIZE]; // 二维码
     char sn[NAME_SIZE];
@@ -210,11 +211,12 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：RTU 3：机柜双电源
+    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
+    uchar isBreaker; // 0没有断路器 1有断路器
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
     uint restartTimes; // 重启次数    
@@ -231,8 +233,9 @@ struct sDevCfg {
 };
 
 struct sFaultCode {
-    uchar fault; // 是否在故障
-    uchar code[PACK_ARRAY_SIZE];
+    uint fault; // 是否在故障
+    uint cnt[4][PACK_ARRAY_SIZE];
+    uint code[PACK_ARRAY_SIZE];
 };
 
 /**
@@ -245,7 +248,8 @@ struct sDevData
 #endif
 
     uchar id;  // 设备号
-    uchar alarm; // 工作状态 ==0 正常
+    uchar alarm; // 工作状态 ==0 正常    
+    uchar status; // 0：正常 1：告警 2：故障
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
@@ -280,10 +284,10 @@ struct sNetAddr
 
 struct sNetInterface
 {
-    sNetAddr inet[NET_NUM];
-    sNetAddr inet6[NET_NUM];
-    char mac[NET_NUM][NAME_SIZE];
-    char name[NET_NUM][NAME_SIZE];
+    sNetAddr inet;
+    sNetAddr inet6;
+    char mac[NAME_SIZE];
+    char name[NAME_SIZE];
 };
 
 struct sDevLogin
@@ -310,8 +314,9 @@ enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, D
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
-enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_POW=4, DTC_ELE=8};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
+enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 
 struct sDataItem
 {
@@ -331,7 +336,7 @@ struct sDataItem
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
              EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
-             EINet=41};
+             EINet=41, EWeb};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

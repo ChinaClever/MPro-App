@@ -1,0 +1,956 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+
+.box{
+	width:30%;
+	height:20px;
+}	
+</style>
+
+<style>
+html{overflow-x:hidden;}
+</style>
+
+<script>
+	var ty;
+	var flag;
+	var trline=new Array(50)
+	var all=0;
+	
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();
+						getdata();
+						for(var i=0;i<10;i++)
+						{
+							if(gv[i*2+2])
+							{
+								document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+							}
+						}
+					}
+				});
+		});
+		
+	function change()
+	{
+		getdata();
+	}
+	
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+			
+		$.ajax({
+			dataType:"text",
+			url:"/getthreshold?id1="+ms,
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				ty = parseInt(gv[0]);
+				var k=0;
+				
+				if(ty%4!=1)
+				{
+					for(var i=0;i<50;i++)
+					{
+						if(parseInt(gv[9*i+1])>0)
+						{
+							trline[i] = "1";
+							document.getElementById("tr"+i).style.display='';
+							if(k%2!=0)
+								document.getElementById("tr"+i).style.background="#f0f0f0";
+							else
+								document.getElementById("tr"+i).style.background="#ffffff";
+								
+							document.getElementById("a"+i).innerHTML = gv[9*i+1];
+							document.getElementById("b"+i).value = gv[9*i+2];
+							document.getElementById("c"+i).innerHTML = gv[9*i+3];
+							document.getElementById("d"+i).value = gv[9*i+4];
+							document.getElementById("e"+i).value = gv[9*i+5];
+							document.getElementById("f"+i).value = gv[9*i+6];
+							document.getElementById("g"+i).value = gv[9*i+7];
+							document.getElementById("h"+i).value = gv[9*i+8];
+							
+							if(gv[9*i+9]==0)
+							{
+								document.getElementById("k"+i).checked = false;
+							}
+							else
+							{
+								document.getElementById("k"+i).checked = true;
+							}
+							
+							k++;
+						}
+						else
+						{
+							trline[i] = "0";
+							document.getElementById("tr"+i).style.display="none";
+						}
+					}
+					document.getElementById("tr50").style.display='';
+				}
+				else
+				{
+					for(i=0;i<51;i++)
+					{
+						document.getElementById("tr"+i).style.display="none";
+					}
+				}
+				
+			}
+		});
+	}
+	
+	function setunit(num)
+	{
+	//	alert(num);
+	//	var opt =  document.getElementById("opt").value;
+	
+		
+		var n;
+		for(var i=0; i<50; i++)
+		{
+			if(trline[i]==1)
+			{
+				n=i;
+				break;
+			}
+		}
+		if(num==1)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("d"+i).value = document.getElementById("d"+n).value;
+				}
+			}
+		}
+		else if(num==2)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("e"+i).value = document.getElementById("e"+n).value;
+				}
+			}
+		}
+		else if(num==3)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("f"+i).value = document.getElementById("f"+n).value;
+				}
+			}
+		}
+		else if(num==4)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("g"+i).value = document.getElementById("g"+n).value;
+				}
+			}
+		}
+		else if(num==5)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("h"+i).value = document.getElementById("h"+n).value;
+				}
+			}
+		}
+		else if(num==6)
+		{
+			all++;
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					if(all%2==1)
+						document.getElementById("k"+i).checked = true;
+					else if(all%2==0)
+						document.getElementById("k"+i).checked = false;
+				}
+			}
+		}
+	}
+	
+	var ch1 = ["Please set the correct threshold value!", "请正确设置阈值!", "Définissez correctement le seuil!", "Пожалуйста, установите порог", "Por favor, establezca el umbral correctamente", "يرجى ضبط العتبة بشكل صحيح"];
+	var ch2 = ["Please set the correct delay time!", "请正确设置延时!", "Veuillez paramétrer correctement le temps de retard", "правильно установить время задержки", "Por favor, configure el retraso correctamente", "يرجى ضبط التأخير بشكل صحيح"];
+	var ch3 = ["No permission!", "无权限!", "Pas d'autorité", "нет прав", "Sin permiso", "لا إذن"];
+	var ch4 = ["Incorrect setting!", "设置错误!", "Erreur de réglage!", "Ошибка настройки", "Error de configuración", "خطأ في الإعداد"];
+	function setdata()
+	{
+		var per="";
+		var str=new Array(50)
+		for(var i=0; i<50; i++)
+		{
+			if(trline[i]==1)
+			{
+				var num = i+1;
+				var name = document.getElementById("b"+i).value;
+				var delay = document.getElementById("d"+i).value;
+				var min = parseFloat(document.getElementById("e"+i).value)*100;
+				var lc = parseFloat(document.getElementById("f"+i).value)*100;
+				var hc = parseFloat(document.getElementById("g"+i).value)*100;
+				var max= parseFloat(document.getElementById("h"+i).value)*100;
+				if(document.getElementById("k"+i).checked ==true)
+				{
+					per = 1;
+				}
+				else
+				{
+					per = 0;
+				}
+			
+				
+				if(min<0 || max>3200 || min>lc || lc>hc || hc>max)
+				{
+					alert(ch1[flag]);
+					return;
+				}
+				if(delay>15 || delay<0)
+				{
+					alert(ch2[flag]);
+					return;
+				}
+
+				str[i]=num+"$"+name+"$"+delay+"$"+min+"$"+lc+"$"+hc+"$"+max+"$"+per+"$";
+			}
+			else
+			{
+				str[i]="0$0$0$0$0$0$0$0$";
+			}
+		}
+	
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+		ms = "0";
+		
+		$.ajax({
+			dataType:"text",
+			url:"/setthreshold?id1="+ms+"&id2="+str[0]+"&id3="+str[1]+"&id4="+str[2]+"&id5="+str[3]+"&id6="+str[4]+"&id7="+str[5]+"&id8="+str[6]+"&id9="+str[7]+"&id10="+str[8]+"&id11="+str[9]+"&id12="+str[10]+"&id13="+str[11]+"&id14="+str[12]+"&id15="+str[13]+"&id16="+str[14]+"&id17="+str[15]+"&id18="+str[16]+"&id19="+str[17]+"&id20="+str[18]+"&id21="+str[19]+"&id22="+str[20]+"&id23="+str[21]+"&id24="+str[22]+"&id25="+str[23]+"&id26="+str[24]+"&id27="+str[25]+"&id28="+str[26]+"&id29="+str[27]+"&id30="+str[28]+"&id31="+str[29]+"&id32="+str[30]+"&id33="+str[31]+"&id34="+str[32]+"&id35="+str[33]+"&id36="+str[34]+"&id37="+str[35]+"&id38="+str[36]+"&id39="+str[37]+"&id40="+str[38]+"&id41="+str[39]+"&id42="+str[40]+"&id43="+str[41]+"&id44="+str[42]+"&id45="+str[43]+"&id46="+str[44]+"&id47="+str[45]+"&id48="+str[46]+"&id49="+str[47]+"&id50="+str[48]+"&id51="+str[49]+"&",
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				if(sta=="flase")
+				{
+					alert(ch3[flag]);
+				}
+				else if(sta=="err1")
+				{
+					alert(ch4[flag]);
+				}
+				else
+				{
+					$("#wc_0").show(100).delay(1000).hide(100); 
+				//	getdata();
+				}
+			}
+		});
+	}
+		
+	function mov(obj)
+	{
+		obj.style.background="#ffffa0";
+	}
+	
+	function movout(obj)
+	{
+		var index=obj.id.replace("tr","");
+		if(parseInt(index)%2!=0)
+			obj.style.background="#f0f0f0";
+		else
+			obj.style.background="#ffffff";
+	} 
+	
+	function mov_1(obj)
+	{
+		obj.style.cursor="pointer";
+		obj.style.color="#0000ff";
+	}
+	function movout_1(obj)
+	{
+		obj.style.color="#000000";
+	}
+
+	function LangFun()
+	{
+		var lang_1  = ["Outlet setting", "单元设置", "Outlet Set", "Настройки элементов", "Configuración del módulo", "إعداد الوحدة"];
+		var lang_2  = ["PDU selection:", "设备选择:", "PDU selection:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3  = ["No.", "序号", "Numéro de série", "порядковый номер", "Número", "الرقم التسلسلي"];
+		var lang_4  = ["Outlet name", "单元名称", "Nom", "имя ячейки", "Nombre de unidad", "اسم الوحدة"];
+		var lang_5  = ["Output current(A)", "输出电流(A)", "Courant(A)", "выходной ток(A)", "Corriente de salida(A)", "الانتاج الحالي(A)"];
+		var lang_6  = ["Sequential delay(s)", "顺序延时(s)", "Temps de retard(s)", "последовательная задержка(s)", "Retardo de secuencia(s)", "تأخير تسلسلي(s)"];
+		var lang_7  = ["Min(A)", "最小值(A)", "Valeur minimale(A)", "минимум(A)", "Valor mínimo(A)", "القيمة الدنيا(A)"];
+		var lang_8  = ["Lower warning limit (A)", "下临界(A)", "Valeur linéaire(A)", "нижняя критичность(A)", "Umbral inferior(A)", "انخفاض الحرجة(A)"];
+		var lang_9  = ["Upper warning limit(A)", "上临界(A)", "Valeur linéaire(A)", "верхняя критичность(A)", "Umbral superior(A)", "الحرجة العليا(A)"];
+		var lang_10 = ["Max(A)", "最大值(A)", "Max.(A)", "максимум(A)", "Valor máximo(A)", "أقصى(A)"];
+		var lang_11 = ["Select", "选取", "Choix", "выборка", "Seleccionar", "اختر"];
+		//var lang_12 = ["Unified settings", "统一设置："];
+		//var lang_13 = ["Disable", "不启用"];
+		//var lang_14 = ["Enable", "启用"];
+		var lang_12 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		//document.getElementById("lang_12").innerHTML = lang_12[flag];
+		//document.getElementById("lang_13").innerHTML = lang_13[flag];
+		//document.getElementById("lang_14").innerHTML = lang_14[flag];
+		document.getElementById("lang_12").value = lang_12[flag];
+	}
+
+</script>
+</head>
+		
+<body >
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>			
+		</div>
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:100%; background:#ffffff;">		
+	
+		<table width="100%" style="font-size:12px; text-align:center;">
+		<tr align="left" style="color:#000000;background:#e7e7e7; height:30px; text-align:center">
+			<td width="4% "><b id="lang_3"></b></td>
+			<td width="31%"><b id="lang_4"></b></td>
+			<td width="10%"><b id="lang_5"></b></td>
+			<td width="10%" onClick="setunit(1);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_6" ></b></td>
+			<td width="10%" onClick="setunit(2);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_7"></b></td>
+			<td width="10%" onClick="setunit(3);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_8"></b></td>
+			<td width="10%" onClick="setunit(4);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_9"></b></td>
+			<td width="10%" onClick="setunit(5);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_10"></b></td>
+			<td width="5%"  onClick="setunit(6);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_11"></b></td>
+		</tr>
+		<tr id="tr0" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a0" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b0"></input></td>
+			<td id="c0"></td>
+			<td><input type="text" id="d0" class="box"></input></td>
+			<td><input type="text" id="e0" class="box"></input></td>
+			<td><input type="text" id="f0" class="box"></input></td>
+			<td><input type="text" id="g0" class="box"></input></td>
+			<td><input type="text" id="h0" class="box"></input></td>
+			<td><input type="checkbox" id="k0"></input></td>
+		    </tr>	
+		<tr id="tr1" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a1" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b1"></input></td>
+			<td id="c1"></td>
+			<td><input type="text" id="d1" class="box"></input></td>
+			<td><input type="text" id="e1" class="box"></input></td>
+			<td><input type="text" id="f1" class="box"></input></td>
+			<td><input type="text" id="g1" class="box"></input></td>
+			<td><input type="text" id="h1" class="box"></input></td>
+			<td><input type="checkbox" id="k1" ></input></td>
+		    </tr>
+		<tr id="tr2" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a2" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b2"></input></td>
+			<td id="c2"></td>
+			<td><input type="text" id="d2" class="box"></input></td>
+			<td><input type="text" id="e2" class="box"></input></td>
+			<td><input type="text" id="f2" class="box"></input></td>
+			<td><input type="text" id="g2" class="box"></input></td>
+			<td><input type="text" id="h2" class="box"></input></td>
+			<td><input type="checkbox" id="k2" ></input></td>
+		    </tr>
+		<tr id="tr3" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a3" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b3"></input></td>
+			<td id="c3"></td>
+			<td><input type="text" id="d3" class="box"></input></td>
+			<td><input type="text" id="e3" class="box"></input></td>
+			<td><input type="text" id="f3" class="box"></input></td>
+			<td><input type="text" id="g3" class="box"></input></td>
+			<td><input type="text" id="h3" class="box"></input></td>
+			<td><input type="checkbox" id="k3" ></input></td>
+		    </tr>
+		<tr id="tr4" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a4" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b4"></input></td>
+			<td id="c4"></td>
+			<td><input type="text" id="d4" class="box"></input></td>
+			<td><input type="text" id="e4" class="box"></input></td>
+			<td><input type="text" id="f4" class="box"></input></td>
+			<td><input type="text" id="g4" class="box"></input></td>
+			<td><input type="text" id="h4" class="box"></input></td>
+			<td><input type="checkbox" id="k4" ></input></td>
+		    </tr>
+		<tr id="tr5" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a5" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b5"></input></td>
+			<td id="c5"></td>
+			<td><input type="text" id="d5" class="box"></input></td>
+			<td><input type="text" id="e5" class="box"></input></td>
+			<td><input type="text" id="f5" class="box"></input></td>
+			<td><input type="text" id="g5" class="box"></input></td>
+			<td><input type="text" id="h5" class="box"></input></td>
+			<td><input type="checkbox" id="k5" ></input></td>
+		    </tr>
+		<tr id="tr6" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a6" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b6"></input></td>
+			<td id="c6"></td>
+			<td><input type="text" id="d6" class="box"></input></td>
+			<td><input type="text" id="e6" class="box"></input></td>
+			<td><input type="text" id="f6" class="box"></input></td>
+			<td><input type="text" id="g6" class="box"></input></td>
+			<td><input type="text" id="h6" class="box"></input></td>
+			<td><input type="checkbox" id="k6" ></input></td>
+		    </tr>
+		<tr id="tr7" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a7" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b7"></input></td>
+			<td id="c7"></td>
+			<td><input type="text" id="d7" class="box"></input></td>
+			<td><input type="text" id="e7" class="box"></input></td>
+			<td><input type="text" id="f7" class="box"></input></td>
+			<td><input type="text" id="g7" class="box"></input></td>
+			<td><input type="text" id="h7" class="box"></input></td>
+			<td><input type="checkbox" id="k7" ></input></td>
+		    </tr>
+		<tr id="tr8" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a8" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b8"></input></td>
+			<td id="c8"></td>
+			<td><input type="text" id="d8" class="box"></input></td>
+			<td><input type="text" id="e8" class="box"></input></td>
+			<td><input type="text" id="f8" class="box"></input></td>
+			<td><input type="text" id="g8" class="box"></input></td>
+			<td><input type="text" id="h8" class="box"></input></td>
+			<td><input type="checkbox" id="k8" ></input></td>
+		    </tr>
+		<tr id="tr9" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a9" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b9"></input></td>
+			<td id="c9"></td>
+			<td><input type="text" id="d9" class="box"></input></td>
+			<td><input type="text" id="e9" class="box"></input></td>
+			<td><input type="text" id="f9" class="box"></input></td>
+			<td><input type="text" id="g9" class="box"></input></td>
+			<td><input type="text" id="h9" class="box"></input></td>
+			<td><input type="checkbox" id="k9" ></input></td>
+		    </tr>
+		<tr id="tr10" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a10" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b10"></input></td>
+			<td id="c10"></td>
+			<td><input type="text" id="d10" class="box"></input></td>
+			<td><input type="text" id="e10" class="box"></input></td>
+			<td><input type="text" id="f10" class="box"></input></td>
+			<td><input type="text" id="g10" class="box"></input></td>
+			<td><input type="text" id="h10" class="box"></input></td>
+			<td><input type="checkbox" id="k10" ></input></td>
+		    </tr>
+		<tr id="tr11" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a11" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b11"></input></td>
+			<td id="c11"></td>
+			<td><input type="text" id="d11" class="box"></input></td>
+			<td><input type="text" id="e11" class="box"></input></td>
+			<td><input type="text" id="f11" class="box"></input></td>
+			<td><input type="text" id="g11" class="box"></input></td>
+			<td><input type="text" id="h11" class="box"></input></td>
+			<td><input type="checkbox" id="k11" ></input></td>
+		    </tr>
+		<tr id="tr12" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a12" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b12"></input></td>
+			<td id="c12"></td>
+			<td><input type="text" id="d12" class="box"></input></td>
+			<td><input type="text" id="e12" class="box"></input></td>
+			<td><input type="text" id="f12" class="box"></input></td>
+			<td><input type="text" id="g12" class="box"></input></td>
+			<td><input type="text" id="h12" class="box"></input></td>
+			<td><input type="checkbox" id="k12" ></input></td>
+		    </tr>
+		<tr id="tr13" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a13" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b13"></input></td>
+			<td id="c13"></td>
+			<td><input type="text" id="d13" class="box"></input></td>
+			<td><input type="text" id="e13" class="box"></input></td>
+			<td><input type="text" id="f13" class="box"></input></td>
+			<td><input type="text" id="g13" class="box"></input></td>
+			<td><input type="text" id="h13" class="box"></input></td>
+			<td><input type="checkbox" id="k13" ></input></td>
+		    </tr>
+		<tr id="tr14" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a14" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b14"></input></td>
+			<td id="c14"></td>
+			<td><input type="text" id="d14" class="box"></input></td>
+			<td><input type="text" id="e14" class="box"></input></td>
+			<td><input type="text" id="f14" class="box"></input></td>
+			<td><input type="text" id="g14" class="box"></input></td>
+			<td><input type="text" id="h14" class="box"></input></td>
+			<td><input type="checkbox" id="k14" ></input></td>
+		    </tr>
+		<tr id="tr15" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a15" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b15"></input></td>
+			<td id="c15"></td>
+			<td><input type="text" id="d15" class="box"></input></td>
+			<td><input type="text" id="e15" class="box"></input></td>
+			<td><input type="text" id="f15" class="box"></input></td>
+			<td><input type="text" id="g15" class="box"></input></td>
+			<td><input type="text" id="h15" class="box"></input></td>
+			<td><input type="checkbox" id="k15" ></input></td>
+		    </tr>
+		<tr id="tr16" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a16" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b16"></input></td>
+			<td id="c16"></td>
+			<td><input type="text" id="d16" class="box"></input></td>
+			<td><input type="text" id="e16" class="box"></input></td>
+			<td><input type="text" id="f16" class="box"></input></td>
+			<td><input type="text" id="g16" class="box"></input></td>
+			<td><input type="text" id="h16" class="box"></input></td>
+			<td><input type="checkbox" id="k16" ></input></td>
+		    </tr>
+		<tr id="tr17" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a17" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b17"></input></td>
+			<td id="c17"></td>
+			<td><input type="text" id="d17" class="box"></input></td>
+			<td><input type="text" id="e17" class="box"></input></td>
+			<td><input type="text" id="f17" class="box"></input></td>
+			<td><input type="text" id="g17" class="box"></input></td>
+			<td><input type="text" id="h17" class="box"></input></td>
+			<td><input type="checkbox" id="k17" ></input></td>
+		    </tr>
+		<tr id="tr18" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a18" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b18"></input></td>
+			<td id="c18"></td>
+			<td><input type="text" id="d18" class="box"></input></td>
+			<td><input type="text" id="e18" class="box"></input></td>
+			<td><input type="text" id="f18" class="box"></input></td>
+			<td><input type="text" id="g18" class="box"></input></td>
+			<td><input type="text" id="h18" class="box"></input></td>
+			<td><input type="checkbox" id="k18" ></input></td>
+		    </tr>
+		<tr id="tr19" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a19" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b19"></input></td>
+			<td id="c19"></td>
+			<td><input type="text" id="d19" class="box"></input></td>
+			<td><input type="text" id="e19" class="box"></input></td>
+			<td><input type="text" id="f19" class="box"></input></td>
+			<td><input type="text" id="g19" class="box"></input></td>
+			<td><input type="text" id="h19" class="box"></input></td>
+			<td><input type="checkbox" id="k19" ></input></td>
+		    </tr>
+		<tr id="tr20" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a20" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b20"></input></td>
+			<td id="c20"></td>
+			<td><input type="text" id="d20" class="box"></input></td>
+			<td><input type="text" id="e20" class="box"></input></td>
+			<td><input type="text" id="f20" class="box"></input></td>
+			<td><input type="text" id="g20" class="box"></input></td>
+			<td><input type="text" id="h20" class="box"></input></td>
+			<td><input type="checkbox" id="k20" ></input></td>
+		    </tr>
+		<tr id="tr21" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a21" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b21"></input></td>
+			<td id="c21"></td>
+			<td><input type="text" id="d21" class="box"></input></td>
+			<td><input type="text" id="e21" class="box"></input></td>
+			<td><input type="text" id="f21" class="box"></input></td>
+			<td><input type="text" id="g21" class="box"></input></td>
+			<td><input type="text" id="h21" class="box"></input></td>
+			<td><input type="checkbox" id="k21" ></input></td>
+		    </tr>
+		<tr id="tr22" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a22" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b22"></input></td>
+			<td id="c22"></td>
+			<td><input type="text" id="d22" class="box"></input></td>
+			<td><input type="text" id="e22" class="box"></input></td>
+			<td><input type="text" id="f22" class="box"></input></td>
+			<td><input type="text" id="g22" class="box"></input></td>
+			<td><input type="text" id="h22" class="box"></input></td>
+			<td><input type="checkbox" id="k22" ></input></td>
+		    </tr>
+		<tr id="tr23" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a23" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b23"></input></td>
+			<td id="c23"></td>
+			<td><input type="text" id="d23" class="box"></input></td>
+			<td><input type="text" id="e23" class="box"></input></td>
+			<td><input type="text" id="f23" class="box"></input></td>
+			<td><input type="text" id="g23" class="box"></input></td>
+			<td><input type="text" id="h23" class="box"></input></td>
+			<td><input type="checkbox" id="k23" ></input></td>
+		    </tr>
+		<tr id="tr24" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a24" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b24"></input></td>
+			<td id="c24"></td>
+			<td><input type="text" id="d24" class="box"></input></td>
+			<td><input type="text" id="e24" class="box"></input></td>
+			<td><input type="text" id="f24" class="box"></input></td>
+			<td><input type="text" id="g24" class="box"></input></td>
+			<td><input type="text" id="h24" class="box"></input></td>
+			<td><input type="checkbox" id="k24" ></input></td>
+		    </tr>
+		<tr id="tr25" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a25" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b25"></input></td>
+			<td id="c25"></td>
+			<td><input type="text" id="d25" class="box"></input></td>
+			<td><input type="text" id="e25" class="box"></input></td>
+			<td><input type="text" id="f25" class="box"></input></td>
+			<td><input type="text" id="g25" class="box"></input></td>
+			<td><input type="text" id="h25" class="box"></input></td>
+			<td><input type="checkbox" id="k25" ></input></td>
+		    </tr>
+		<tr id="tr26" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a26" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b26"></input></td>
+			<td id="c26"></td>
+			<td><input type="text" id="d26" class="box"></input></td>
+			<td><input type="text" id="e26" class="box"></input></td>
+			<td><input type="text" id="f26" class="box"></input></td>
+			<td><input type="text" id="g26" class="box"></input></td>
+			<td><input type="text" id="h26" class="box"></input></td>
+			<td><input type="checkbox" id="k26" ></input></td>
+		    </tr>
+		<tr id="tr27" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a27" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b27"></input></td>
+			<td id="c27"></td>
+			<td><input type="text" id="d27" class="box"></input></td>
+			<td><input type="text" id="e27" class="box"></input></td>
+			<td><input type="text" id="f27" class="box"></input></td>
+			<td><input type="text" id="g27" class="box"></input></td>
+			<td><input type="text" id="h27" class="box"></input></td>
+			<td><input type="checkbox" id="k27" ></input></td>
+		    </tr>
+		<tr id="tr28" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a28" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b28"></input></td>
+			<td id="c28"></td>
+			<td><input type="text" id="d28" class="box"></input></td>
+			<td><input type="text" id="e28" class="box"></input></td>
+			<td><input type="text" id="f28" class="box"></input></td>
+			<td><input type="text" id="g28" class="box"></input></td>
+			<td><input type="text" id="h28" class="box"></input></td>
+			<td><input type="checkbox" id="k28" ></input></td>
+		    </tr>
+		<tr id="tr29" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a29" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b29"></input></td>
+			<td id="c29"></td>
+			<td><input type="text" id="d29" class="box"></input></td>
+			<td><input type="text" id="e29" class="box"></input></td>
+			<td><input type="text" id="f29" class="box"></input></td>
+			<td><input type="text" id="g29" class="box"></input></td>
+			<td><input type="text" id="h29" class="box"></input></td>
+			<td><input type="checkbox" id="k29" ></input></td>
+		    </tr>
+		<tr id="tr30" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a30" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b30"></input></td>
+			<td id="c30"></td>
+			<td><input type="text" id="d30" class="box"></input></td>
+			<td><input type="text" id="e30" class="box"></input></td>
+			<td><input type="text" id="f30" class="box"></input></td>
+			<td><input type="text" id="g30" class="box"></input></td>
+			<td><input type="text" id="h30" class="box"></input></td>
+			<td><input type="checkbox" id="k30" ></input></td>
+		    </tr>
+		<tr id="tr31" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a31" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b31"></input></td>
+			<td id="c31"></td>
+			<td><input type="text" id="d31" class="box"></input></td>
+			<td><input type="text" id="e31" class="box"></input></td>
+			<td><input type="text" id="f31" class="box"></input></td>
+			<td><input type="text" id="g31" class="box"></input></td>
+			<td><input type="text" id="h31" class="box"></input></td>
+			<td><input type="checkbox" id="k31" ></input></td>
+		    </tr>
+		<tr id="tr32" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a32" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b32"></input></td>
+			<td id="c32"></td>
+			<td><input type="text" id="d32" class="box"></input></td>
+			<td><input type="text" id="e32" class="box"></input></td>
+			<td><input type="text" id="f32" class="box"></input></td>
+			<td><input type="text" id="g32" class="box"></input></td>
+			<td><input type="text" id="h32" class="box"></input></td>
+			<td><input type="checkbox" id="k32" ></input></td>
+		    </tr>
+		<tr id="tr33" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a33" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b33"></input></td>
+			<td id="c33"></td>
+			<td><input type="text" id="d33" class="box"></input></td>
+			<td><input type="text" id="e33" class="box"></input></td>
+			<td><input type="text" id="f33" class="box"></input></td>
+			<td><input type="text" id="g33" class="box"></input></td>
+			<td><input type="text" id="h33" class="box"></input></td>
+			<td><input type="checkbox" id="k33" ></input></td>
+		    </tr>
+		<tr id="tr34" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a34" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b34"></input></td>
+			<td id="c34"></td>
+			<td><input type="text" id="d34" class="box"></input></td>
+			<td><input type="text" id="e34" class="box"></input></td>
+			<td><input type="text" id="f34" class="box"></input></td>
+			<td><input type="text" id="g34" class="box"></input></td>
+			<td><input type="text" id="h34" class="box"></input></td>
+			<td><input type="checkbox" id="k34" ></input></td>
+		    </tr>
+		<tr id="tr35" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a35" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b35"></input></td>
+			<td id="c35"></td>
+			<td><input type="text" id="d35" class="box"></input></td>
+			<td><input type="text" id="e35" class="box"></input></td>
+			<td><input type="text" id="f35" class="box"></input></td>
+			<td><input type="text" id="g35" class="box"></input></td>
+			<td><input type="text" id="h35" class="box"></input></td>
+			<td><input type="checkbox" id="k35" ></input></td>
+		    </tr>
+		<tr id="tr36" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a36" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b36"></input></td>
+			<td id="c36"></td>
+			<td><input type="text" id="d36" class="box"></input></td>
+			<td><input type="text" id="e36" class="box"></input></td>
+			<td><input type="text" id="f36" class="box"></input></td>
+			<td><input type="text" id="g36" class="box"></input></td>
+			<td><input type="text" id="h36" class="box"></input></td>
+			<td><input type="checkbox" id="k36" ></input></td>
+		    </tr>
+		<tr id="tr37" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a37" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b37"></input></td>
+			<td id="c37"></td>
+			<td><input type="text" id="d37" class="box"></input></td>
+			<td><input type="text" id="e37" class="box"></input></td>
+			<td><input type="text" id="f37" class="box"></input></td>
+			<td><input type="text" id="g37" class="box"></input></td>
+			<td><input type="text" id="h37" class="box"></input></td>
+			<td><input type="checkbox" id="k37" ></input></td>
+		    </tr>
+		<tr id="tr38" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a38" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b38"></input></td>
+			<td id="c38"></td>
+			<td><input type="text" id="d38" class="box"></input></td>
+			<td><input type="text" id="e38" class="box"></input></td>
+			<td><input type="text" id="f38" class="box"></input></td>
+			<td><input type="text" id="g38" class="box"></input></td>
+			<td><input type="text" id="h38" class="box"></input></td>
+			<td><input type="checkbox" id="k38" ></input></td>
+		    </tr>
+		<tr id="tr39" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a39" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b39"></input></td>
+			<td id="c39"></td>
+			<td><input type="text" id="d39" class="box"></input></td>
+			<td><input type="text" id="e39" class="box"></input></td>
+			<td><input type="text" id="f39" class="box"></input></td>
+			<td><input type="text" id="g39" class="box"></input></td>
+			<td><input type="text" id="h39" class="box"></input></td>
+			<td><input type="checkbox" id="k39" ></input></td>
+		    </tr>
+		<tr id="tr40" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a40" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b40"></input></td>
+			<td id="c40"></td>
+			<td><input type="text" id="d40" class="box"></input></td>
+			<td><input type="text" id="e40" class="box"></input></td>
+			<td><input type="text" id="f40" class="box"></input></td>
+			<td><input type="text" id="g40" class="box"></input></td>
+			<td><input type="text" id="h40" class="box"></input></td>
+			<td><input type="checkbox" id="k40" ></input></td>
+		    </tr>
+		<tr id="tr41" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a41" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b41"></input></td>
+			<td id="c41"></td>
+			<td><input type="text" id="d41" class="box"></input></td>
+			<td><input type="text" id="e41" class="box"></input></td>
+			<td><input type="text" id="f41" class="box"></input></td>
+			<td><input type="text" id="g41" class="box"></input></td>
+			<td><input type="text" id="h41" class="box"></input></td>
+			<td><input type="checkbox" id="k41" ></input></td>
+		    </tr>
+		<tr id="tr42" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a42" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b42"></input></td>
+			<td id="c42"></td>
+			<td><input type="text" id="d42" class="box"></input></td>
+			<td><input type="text" id="e42" class="box"></input></td>
+			<td><input type="text" id="f42" class="box"></input></td>
+			<td><input type="text" id="g42" class="box"></input></td>
+			<td><input type="text" id="h42" class="box"></input></td>
+			<td><input type="checkbox" id="k42" ></input></td>
+		    </tr>
+		<tr id="tr43" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a43" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b43"></input></td>
+			<td id="c43"></td>
+			<td><input type="text" id="d43" class="box"></input></td>
+			<td><input type="text" id="e43" class="box"></input></td>
+			<td><input type="text" id="f43" class="box"></input></td>
+			<td><input type="text" id="g43" class="box"></input></td>
+			<td><input type="text" id="h43" class="box"></input></td>
+			<td><input type="checkbox" id="k43" ></input></td>
+		    </tr>
+		<tr id="tr44" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a44" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b44"></input></td>
+			<td id="c44"></td>
+			<td><input type="text" id="d44" class="box"></input></td>
+			<td><input type="text" id="e44" class="box"></input></td>
+			<td><input type="text" id="f44" class="box"></input></td>
+			<td><input type="text" id="g44" class="box"></input></td>
+			<td><input type="text" id="h44" class="box"></input></td>
+			<td><input type="checkbox" id="k44" ></input></td>
+		    </tr>
+		<tr id="tr45" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a45" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b45"></input></td>
+			<td id="c45"></td>
+			<td><input type="text" id="d45" class="box"></input></td>
+			<td><input type="text" id="e45" class="box"></input></td>
+			<td><input type="text" id="f45" class="box"></input></td>
+			<td><input type="text" id="g45" class="box"></input></td>
+			<td><input type="text" id="h45" class="box"></input></td>
+			<td><input type="checkbox" id="k45" ></input></td>
+		    </tr>
+		<tr id="tr46" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a46" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b46"></input></td>
+			<td id="c46"></td>
+			<td><input type="text" id="d46" class="box"></input></td>
+			<td><input type="text" id="e46" class="box"></input></td>
+			<td><input type="text" id="f46" class="box"></input></td>
+			<td><input type="text" id="g46" class="box"></input></td>
+			<td><input type="text" id="h46" class="box"></input></td>
+			<td><input type="checkbox" id="k46" ></input></td>
+		    </tr>
+		<tr id="tr47" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a47" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b47"></input></td>
+			<td id="c47"></td>
+			<td><input type="text" id="d47" class="box"></input></td>
+			<td><input type="text" id="e47" class="box"></input></td>
+			<td><input type="text" id="f47" class="box"></input></td>
+			<td><input type="text" id="g47" class="box"></input></td>
+			<td><input type="text" id="h47" class="box"></input></td>
+			<td><input type="checkbox" id="k47" ></input></td>
+		    </tr>
+		<tr id="tr48" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a48" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b48"></input></td>
+			<td id="c48"></td>
+			<td><input type="text" id="d48" class="box"></input></td>
+			<td><input type="text" id="e48" class="box"></input></td>
+			<td><input type="text" id="f48" class="box"></input></td>
+			<td><input type="text" id="g48" class="box"></input></td>
+			<td><input type="text" id="h48" class="box"></input></td>
+			<td><input type="checkbox" id="k48" ></input></td>
+		    </tr>
+		<tr id="tr49" onMouseOut="movout(this);" onMouseMove="mov(this);">
+			<td id="a49" align="center"></td>
+			<td><input type="text" style="width:80%;" id="b49"></input></td>
+			<td id="c49"></td>
+			<td><input type="text" id="d49" class="box"></input></td>
+			<td><input type="text" id="e49" class="box"></input></td>
+			<td><input type="text" id="f49" class="box"></input></td>
+			<td><input type="text" id="g49" class="box"></input></td>
+			<td><input type="text" id="h49" class="box"></input></td>
+			<td><input type="checkbox" id="k49" ></input></td>
+		    </tr>
+		<tr id="tr50" style="height:50px; white-space:nowrap;">
+			
+			<td colspan = " 8 "></td>
+			<td style="position:relative; left:50px;">
+				<input style="position:relative; height:21px; width:60px;  right:50px;" type="button" onClick="setdata();" id="lang_12"/>
+			</td>
+		</tr>
+		</table>
+		</div>
+	
+    </div>
+</div>
+</body>
+</html>

@@ -37,6 +37,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
+        faultCode(dev, json);
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         devInfo(dev->cfg, "pdu_info", json);
@@ -74,6 +75,12 @@ void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,
     QJsonArray array;
     for(int i=0; i<size; ++i) array.append(ptr[i]/r);
     if(array.size()) json.insert(key, QJsonValue(array));
+}
+
+void Integr_JsonBuild::faultCode(sDevData *dev, QJsonObject &json)
+{
+    int size = dev->output.size;
+    if(dev->dtc.fault) arrayAppend(dev->dtc.code, size, "fault_code", json);
 }
 
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
@@ -139,16 +146,15 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
     obj.insert("warn_min", it.crMin/r);
     obj.insert("warn_max", it.crMax/r);
     obj.insert("alarm_enable", it.en?true:false);
-
     json.insert(key, QJsonValue(obj));
 }
 
 void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-//    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
-//    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
-//    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
+    //    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
+    //    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
+    //    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
 
     obj.insert("pf", it.pf/COM_RATE_PF);
     obj.insert("ele", it.ele/COM_RATE_ELE);
@@ -173,19 +179,24 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
 void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("core_ver", it.coreVer);
-    obj.insert("core_md5", it.coreMd5);
-    obj.insert("core_compile_time", it.coreCompileTime);
-    obj.insert("lcd_ver", it.lcdVer);
-    obj.insert("lcd_md5", it.lcdMd5);
-    obj.insert("lcd_compile_time", it.lcdCompileTime);
-    obj.insert("start_ver", it.startVer);
-    obj.insert("start_md5", it.startMd5);
-    obj.insert("start_compile_time", it.startCompileTime);
-    obj.insert("pdu_ver", it.version/1.0);
+    if(strlen(it.coreVer)) obj.insert("core_ver", it.coreVer);
+    if(strlen(it.coreMd5)) obj.insert("core_md5", it.coreMd5);
+    if(strlen(it.coreCompileTime)) obj.insert("core_compile_time", it.coreCompileTime);
+    if(strlen(it.coreReleaseTime)) obj.insert("core_release_time", it.coreReleaseTime);
+
+    if(strlen(it.lcdVer)) obj.insert("lcd_ver", it.lcdVer);
+    if(strlen(it.lcdMd5)) obj.insert("lcd_md5", it.lcdMd5);
+    if(strlen(it.lcdCompileTime)) obj.insert("lcd_compile_time", it.lcdCompileTime);
+    if(strlen(it.lcdReleaseTime)) obj.insert("lcd_release_time", it.lcdReleaseTime);
+
+    if(strlen(it.startVer)) obj.insert("start_ver", it.startVer);
+    if(strlen(it.startMd5)) obj.insert("start_md5", it.startMd5);
+    if(strlen(it.startCompileTime)) obj.insert("start_compile_time", it.startCompileTime);
+    if(strlen(it.startReleaseTime)) obj.insert("start_release_time", it.startReleaseTime);
+    if(it.version) obj.insert("pdu_ver", it.version/1.0);
 
     QJsonArray vs;
-    for(uint i=0; i<5; ++i) vs.append(it.opVers[i]);
+    for(uint i=0; i<6; ++i) vs.append(it.opVers[i]);
     obj.insert("op_vers", vs);
     json.insert(key, obj);
 }
@@ -213,15 +224,12 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("IDC", it.idc);
-    obj.insert("room", it.room);
-    obj.insert("module", it.module);
-    obj.insert("cabinet", it.cab);
-    obj.insert("road", it.road);
-    obj.insert("name", it.devName);
-    obj.insert("sn", it.sn);
-    obj.insert("qrcode", it.qrcode);
-    json.insert(key, obj);
+    if(strlen(it.sn)) obj.insert("sn", it.sn);
+    if(strlen(it.room)) obj.insert("room", it.room);
+    if(strlen(it.devName)) obj.insert("name", it.devName);
+    if(strlen(it.qrcode)) obj.insert("qrcode", it.qrcode);
+    if(strlen(it.location)) obj.insert("location", it.location);
+    if(obj.size()) json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
@@ -262,6 +270,6 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
-//    obj.insert("mac", it.mac);
+    //    obj.insert("mac", it.mac);
     json.insert(key, obj);
 }

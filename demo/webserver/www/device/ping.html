@@ -1,0 +1,1103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+	var ty;
+	var flag;
+	var all=0;
+	var trline=new Array(50)
+	
+	$(document).ready(function () {
+			$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun(flag);
+						for(var i=0;i<10;i++)
+						{
+							if(gv[i*2+2])
+							{
+								document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+							}
+						}
+					}
+				});
+			getdata();
+		});
+
+	function change()
+	{
+		getdata();
+	}
+	
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+
+		$.ajax({
+			dataType:"text",
+			url:"/getping?id1="+ms,
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				ty = parseInt(gv[0]);
+				document.getElementById("opt").value = parseInt(gv[1]);
+				document.getElementById("time").value = gv[2];
+				var k=0;
+				
+				if(ty%4==1 || ty%4==2)
+				{
+					for(i=0;i<51;i++)
+					{
+						document.getElementById("tr"+i).style.display="none";
+					}
+				}
+				else 
+				{
+					for(i=0;i<50;i++)
+					{
+						if(parseInt(gv[5*i+3])>0)
+						{
+							trline[i] = "1";
+							
+							document.getElementById("tr"+i).style.display='';
+							if(k%2!=0)
+								document.getElementById("tr"+i).style.background="#ffffff";
+							else
+								document.getElementById("tr"+i).style.background="#f0f0f0";
+								
+							document.getElementById("a"+i).innerHTML = gv[5*i+3];
+							document.getElementById("b"+i).innerHTML = gv[5*i+4];
+							document.getElementById("c"+i).value = gv[5*i+5];
+							document.getElementById("d"+i).value = gv[5*i+6];
+							
+							if(gv[5*i+7]==0)
+							{
+								document.getElementById("e"+i).checked = false;
+							}
+							else
+							{
+								document.getElementById("e"+i).checked = true;
+							}
+							k++;
+						}
+						else 
+						{
+							trline[i] = "0";
+							document.getElementById("tr"+i).style.display="none";
+						}
+					}
+					document.getElementById("tr50").style.display='';
+				}
+				
+				
+			}
+		});
+	}
+	var ch1 = ["Please set the correct threshold value!", "请正确设置阈值!", "Définissez correctement le seuil!", "Пожалуйста, установите порог", "Por favor, establezca el umbral correctamente", "يرجى ضبط العتبة بشكل صحيح"];
+	var ch2 = ["No permission!", "无权限!", "Pas d'autorité", "нет прав", "Sin permiso", "يلا إذن"];
+	var ch3 = ["Incorrect setting!", "设置错误!", "Erreur de réglage!", "Ошибка настройки", "Error de configuración", "خطأ في الإعداد"];
+	function setdata()
+	{
+		var opt = document.getElementById("opt").value;
+		var time = document.getElementById("time").value;
+		if(time<10)
+		{
+			alert("Please set the time greater than 10 seconds!");
+			return;
+		}
+	
+		var str=new Array(50)
+		for(var i=0; i<50; i++)
+		{
+			if(trline[i]==1)
+			{
+				var num = i+1;
+				var ipadd = document.getElementById("c"+i).value;
+				var action = document.getElementById("d"+i).value;
+				if(document.getElementById("e"+i).checked == true)
+				{
+					var ch1=1;
+				}
+				else
+				{
+					var ch1=0;
+				}
+				
+				str[i]=num+"$"+ipadd+"$"+action+"$"+ch1+"$";
+			}
+			else
+			{
+				str[i]="0$0$0$0$";
+			}
+		}
+	
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+		ms = "0";
+		
+		$.ajax({
+			dataType:"text",
+			url:"/setping?id1="+ms+"&id2="+opt+"&id3="+time+"&id4="+str[0]+"&id5="+str[1]+"&id6="+str[2]+"&id7="+str[3]+"&id8="+str[4]+"&id9="+str[5]+"&id10="+str[6]+"&id11="+str[7]+"&id12="+str[8]+"&id13="+str[9]+"&id14="+str[10]+"&id15="+str[11]+"&id16="+str[12]+"&id17="+str[13]+"&id18="+str[14]+"&id19="+str[15]+"&id20="+str[16]+"&id21="+str[17]+"&id22="+str[18]+"&id23="+str[19]+"&id24="+str[20]+"&id25="+str[21]+"&id26="+str[22]+"&id27="+str[23]+"&id28="+str[24]+"&id29="+str[25]+"&id30="+str[26]+"&id31="+str[27]+"&id32="+str[28]+"&id33="+str[29]+"&id34="+str[30]+"&id35="+str[31]+"&id36="+str[32]+"&id37="+str[33]+"&id38="+str[34]+"&id39="+str[35]+"&id40="+str[36]+"&id41="+str[37]+"&id42="+str[38]+"&id43="+str[39]+"&id44="+str[40]+"&id45="+str[41]+"&id46="+str[42]+"&id47="+str[43]+"&id48="+str[44]+"&id49="+str[45]+"&id50="+str[46]+"&id51="+str[47]+"&id52="+str[48]+"&id53="+str[49]+"&",
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+
+					if(sta=="flase")
+					{
+						alert(ch2[flag]);
+					}
+					else if(sta=="err1")
+					{
+						alert(ch3[flag]);
+					}
+					else
+					{
+						$("#wc_0").show(100).delay(1000).hide(100); 
+					//	getdata();
+					}
+				
+			}
+		});
+	}
+	
+	function mov(obj)
+	{
+		obj.style.background="#f9fae8";
+	}
+	
+	function movout(obj)
+	{
+		var index=obj.id.replace("tr","");
+		if(parseInt(index)%2!=0)
+			obj.style.background="#f0f0f0";
+		else
+			obj.style.background="#ffffff";
+	}
+	
+	function mov_1(obj)
+	{
+		obj.style.cursor="pointer";
+		obj.style.color="#0000ff";
+	}
+	function movout_1(obj)
+	{
+		obj.style.color="#000000";
+	}
+	
+	function setunit(num)
+	{
+	//	alert(num);
+	//	var opt =  document.getElementById("opt").value;
+	
+		
+		var n;
+		for(var i=0; i<50; i++)
+		{
+			if(trline[i]==1)
+			{
+				n=i;
+				break;
+			}
+		}
+		if(num==1)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("c"+i).value = document.getElementById("c"+n).value;
+				}
+			}
+		}
+		else if(num==2)
+		{
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					document.getElementById("d"+i).value = document.getElementById("d"+n).value;
+				}
+			}
+		}
+		else if(num==3)
+		{
+			all++;
+			for(var i=0; i<50; i++)
+			{
+				if(trline[i]==1)
+				{
+					if(all%2==1)
+						document.getElementById("e"+i).checked = true;
+					else if(all%2==0)
+						document.getElementById("e"+i).checked = false;
+				}
+			}
+		}
+	}
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["AutoPing setting", "Ping设置", "ping setting", "ping Настройки", "Preferencias Ping", "نصب PING"];
+		var lang_2  = ["PDU selection:", "设备选择:", "PDU Selection:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3  = ["No.", "序号", "Numéro de série", "порядковый номер", "Número", "الرقم التسلسلي"];
+		var lang_4  = ["Outlet name", "单元名称", "Nom", "имя ячейки", "Nombre de unidad", "اسم الوحدة"];
+		var lang_5  = ["Device IP address", "IP地址", "Adresse IP", "IP - адрес", "Dirección IP", "Adresse IP"];
+		var lang_6  = ["Action on failure", "失败时动作", "Action en cas d'échec", "Действия при неудаче", "Acción en caso de falla", "العمل على الفشل"];
+		var lang_7  = ["Selected", "选取", "Choisis", "выборка", "Seleccionar", "اختر"];
+		var lang_8  = ["AutoPing", "Ping功能：", "AutoPing", "Ping функция", "Función Ping", "AutoPing"];
+		var lang_9  = ["Disable", "不启用", "Interdire", "не включено", "No activo", "غير ممكّن"];
+		var lang_10 = ["Enable", "启用", "Activer", "Включено", "Activar", "مكن"];
+		var lang_11 = ["Please enter the correct device IP address", "注意请按标准IP地址格式填写", "Veuillez remplir le formulaire d 'adresse IP standard", "обратите внимание, что заполните форму IP - адреса", "Atención. Rellene esto en el formulario IP estándar.", "يرجى ملء تنسيق عنوان IP القياسي"];
+		var lang_12  = ["How long does each ping take：", "每次ping多长时间：", "Combien de temps prend chaque ping：", "Как долго длится каждый пинг：", "¿Cuánto tiempo dura cada ping?：", "كم من الوقت يستغرق كل ping："];
+		var lang_13 = ["Submit", "提交", "Soumettre", "представление", "Submit", "عرض"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").value = lang_13[flag];
+		
+	}
+</script>
+</head>
+
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>			
+		</div>
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:100%; background:#ffffff;">
+		<table width="100%" style="font-size:12px; text-align:center;">
+		<tr align="left" style="color:#000000;background:#e7e7e7; height:30px; text-align:center">
+			<td width="4%" align="center"><b id="lang_3"></b></td>
+			<td width="20%"><b id="lang_4"></b></td>
+			<td width="20%" onClick="setunit(1);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_5"></b></td>
+			<td width="20%" onClick="setunit(2);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_6"></b></td>
+			<td width="36%" onClick="setunit(3);" onMouseMove="mov_1(this);" onMouseOut="movout_1(this);" style="color:#000000;"><b id="lang_7" style="margin-left:80%;"></b></td>
+		</tr>
+		<tr id="tr0" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a0" align="center"></td>
+			<td id="b0"></td>
+			<td><input id="c0" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d0" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e0" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr1" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a1" align="center"></td>
+			<td id="b1"></td>
+			<td><input id="c1" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d1" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e1" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr2" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a2" align="center"></td>
+			<td id="b2"></td>
+			<td><input id="c2" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d2" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e2" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr3" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a3" align="center"></td>
+			<td id="b3"></td>
+			<td><input id="c3" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d3" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e3" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr4" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a4" align="center"></td>
+			<td id="b4"></td>
+			<td><input id="c4" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d4" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e4" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr5" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a5" align="center"></td>
+			<td id="b5"></td>
+			<td><input id="c5" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d5" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e5" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr6" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a6" align="center"></td>
+			<td id="b6"></td>
+			<td><input id="c6" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d6" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e6" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr7" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a7" align="center"></td>
+			<td id="b7"></td>
+			<td><input id="c7" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d7" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e7" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr8" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a8" align="center"></td>
+			<td id="b8"></td>
+			<td><input id="c8" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d8" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e8" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr9" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a9" align="center"></td>
+			<td id="b9"></td>
+			<td><input id="c9" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d9" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e9" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr10" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a10" align="center"></td>
+			<td id="b10"></td>
+			<td><input id="c10" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d10" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e10" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr11" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a11" align="center"></td>
+			<td id="b11"></td>
+			<td><input id="c11" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d11" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e11" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr12" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a12" align="center"></td>
+			<td id="b12"></td>
+			<td><input id="c12" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d12" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e12" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr13" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a13" align="center"></td>
+			<td id="b13"></td>
+			<td><input id="c13" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d13" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e13" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr14" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a14" align="center"></td>
+			<td id="b14"></td>
+			<td><input id="c14" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d14" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e14" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr15" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a15" align="center"></td>
+			<td id="b15"></td>
+			<td><input id="c15" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d15" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e15" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr16" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a16" align="center"></td>
+			<td id="b16"></td>
+			<td><input id="c16" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d16" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e16" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr17" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a17" align="center"></td>
+			<td id="b17"></td>
+			<td><input id="c17" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d17" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e17" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr18" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a18" align="center"></td>
+			<td id="b18"></td>
+			<td><input id="c18" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d18" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e18" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr19" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a19" align="center"></td>
+			<td id="b19"></td>
+			<td><input id="c19" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d19" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e19" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr20" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a20" align="center"></td>
+			<td id="b20"></td>
+			<td><input id="c20" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d20" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e20" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr21" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a21" align="center"></td>
+			<td id="b21"></td>
+			<td><input id="c21" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d21" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e21" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr22" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a22" align="center"></td>
+			<td id="b22"></td>
+			<td><input id="c22" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d22" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e22" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr23" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a23" align="center"></td>
+			<td id="b23"></td>
+			<td><input id="c23" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d23" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e23" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr24" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a24" align="center"></td>
+			<td id="b24"></td>
+			<td><input id="c24" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d24" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e24" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr25" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a25" align="center"></td>
+			<td id="b25"></td>
+			<td><input id="c25" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d25" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e25" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr26" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a26" align="center"></td>
+			<td id="b26"></td>
+			<td><input id="c26" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d26" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e26" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr27" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a27" align="center"></td>
+			<td id="b27"></td>
+			<td><input id="c27" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d27" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e27" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr28" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a28" align="center"></td>
+			<td id="b28"></td>
+			<td><input id="c28" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d28" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e28" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr29" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a29" align="center"></td>
+			<td id="b29"></td>
+			<td><input id="c29" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d29" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e29" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr30" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a30" align="center"></td>
+			<td id="b30"></td>
+			<td><input id="c30" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d30" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e30" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr31" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a31" align="center"></td>
+			<td id="b31"></td>
+			<td><input id="c31" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d31" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e31" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr32" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a32" align="center"></td>
+			<td id="b32"></td>
+			<td><input id="c32" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d32" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e32" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr33" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a33" align="center"></td>
+			<td id="b33"></td>
+			<td><input id="c33" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d33" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e33" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr34" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a34" align="center"></td>
+			<td id="b34"></td>
+			<td><input id="c34" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d34" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e34" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr35" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a35" align="center"></td>
+			<td id="b35"></td>
+			<td><input id="c35" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d35" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e35" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr36" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a36" align="center"></td>
+			<td id="b36"></td>
+			<td><input id="c36" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d36" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e36" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr37" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a37" align="center"></td>
+			<td id="b37"></td>
+			<td><input id="c37" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d37" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e37" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr38" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a38" align="center"></td>
+			<td id="b38"></td>
+			<td><input id="c38" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d38" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e38" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr39" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a39" align="center"></td>
+			<td id="b39"></td>
+			<td><input id="c39" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d39" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e39" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr40" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a40" align="center"></td>
+			<td id="b40"></td>
+			<td><input id="c40" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d40" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e40" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr41" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a41" align="center"></td>
+			<td id="b41"></td>
+			<td><input id="c41" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d41" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e41" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr42" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a42" align="center"></td>
+			<td id="b42"></td>
+			<td><input id="c42" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d42" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e42" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr43" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a43" align="center"></td>
+			<td id="b43"></td>
+			<td><input id="c43" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d43" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e43" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr44" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a44" align="center"></td>
+			<td id="b44"></td>
+			<td><input id="c44" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d44" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e44" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr45" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a45" align="center"></td>
+			<td id="b45"></td>
+			<td><input id="c45" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d45" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e45" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr46" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a46" align="center"></td>
+			<td id="b46"></td>
+			<td><input id="c46" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d46" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e46" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr47" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a47" align="center"></td>
+			<td id="b47"></td>
+			<td><input id="c47" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d47" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e47" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr48" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a48" align="center"></td>
+			<td id="b48"></td>
+			<td><input id="c48" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d48" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e48" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr49" onMouseOut="movout(this)" onMouseMove="mov(this)">
+			<td id="a49" align="center"></td>
+			<td id="b49"></td>
+			<td><input id="c49" class="txt" type="text" style="width:200px;"></input></td>
+			<td>
+				<select id="d49" style="width:80px;">
+					<option value="0">None</option>
+					<option value="1">ON</option>
+					<option value="2">OFF</option>
+					<option value="3">Once</option>
+					<option value="4">Cycle</option>
+				</select>
+			</td>
+			<td><input id="e49" type="checkbox" style="margin-left:80%;"></input></td>
+		</tr>
+		<tr id="tr50" style="height:50px; white-space:nowrap;">
+			<td colspan = " 2 " style="text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="lang_8"></span>
+				<select id="opt" style="width:150px">
+				<option value="0" id="lang_9"></option>
+				<option value="1" id="lang_10"></option>
+				</select>
+			</td>
+			<td id="lang_11"></td>
+			<td><span id="lang_12"></span><input id="time" style="width:80px;"></input>s</td>
+			<td style="text-align:right;">
+				<input style="position:relative; height:21px; width:50px; margin-right:7%;"  type="button" onClick="setdata();" id="lang_13"></input>
+			</td>
+			</tr>	
+		</table>
+		</div>
+    </div>   
+</div>
+</body>
+</html>

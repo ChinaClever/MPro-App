@@ -1,0 +1,259 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />
+	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{
+
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+var flag;
+$(document).ready(function () {
+		$.ajax({
+			dataType:"text",
+			url:"/getsnmpinfo",
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				flag = parseInt(gv[0]);
+				LangFun();
+				
+				document.getElementById("index_ip").value = gv[12];
+
+				var objcom = document.getElementById("id_channel");
+				for(var i=0; i<objcom.options.length; i++){
+					if(objcom.options[i].value == gv[13]){
+						objcom.options[i].selected = true;
+					}
+					else{
+						objcom.options[i].selected = false;
+					}
+				}
+				if(gv[14] == "1")
+				{
+					$("#autostatus").attr("checked",true);
+				}
+				else
+				{
+					$("#autostatus").attr("checked",false);
+				}
+				getzebraCodeAuto();
+			}
+		});
+	});
+
+function getzebraCode(){
+	$.ajax({
+		dataType:"text",
+		url:"/getzebracode",
+		async:true,
+		cache:false,
+		success:function(sta)
+		{
+			if(sta=="flase"){
+				alert("No permission!");
+			}
+			else if(sta=="err1"){
+				alert("Failed to get zebra password!");
+			}
+			else
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				document.getElementById("code").value = gv[0];
+				alert("Succeed in getting zebra password!");
+			}
+		}
+	});
+}
+
+function getzebraCodeAuto(){
+	$.ajax({
+		dataType:"text",
+		url:"/getzebracode",
+		async:true,
+		cache:false,
+		success:function(sta)
+		{
+			if(flag==0)
+			{
+				if(sta=="flase"){
+					alert("No permission!");
+				}
+				else if(sta=="err1"){
+					alert("Failed to get zebra password!.");
+				}
+				else
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("code").value = gv[0];
+				}
+			}
+			else
+			{
+				if(sta=="flase"){
+					alert("没有许可！");
+				}
+				else if(sta=="err1"){
+					alert("无法获得zebra密码！");
+				}
+				else
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("code").value = gv[0];
+				}
+			}
+			
+		}
+	});
+}
+
+function set_zebrapara()
+{
+	var channel = document.getElementById("id_channel").value;
+	var index_ip = document.getElementById("index_ip").value;
+	var auto_status = 0;
+
+	if(document.getElementById("autostatus").checked ==true)
+	{
+		auto_status = 1;
+	}
+	$.ajax({
+			dataType:"text",
+			url:"/setzebrapara?idl="+channel+"&id2="+index_ip+"&id3="+auto_status+"&",
+			async:true,
+			cache:false,
+			success:function(sta)
+			{
+				if(flag==0)
+				{
+					if(sta=="success")
+					{
+						alert("Settings succeed, please restart the device!");
+					}
+					else if(sta=="err1")
+					{
+						alert("No permission!");
+					}
+					else
+					{
+						alert("Incorrect setting!");
+					}
+				}
+				else
+				{
+					if(sta=="success")
+					{
+						alert("设置成功，请重启设备！");
+					}
+					else if(sta=="err1")
+					{
+						alert("没有许可！");
+					}
+					else
+					{
+						alert("设置不正确！");
+					}
+				}
+				
+			}
+		});
+}
+
+function LangFun()
+	{
+		var lang_1  = ["ZEBRA service", "ZEBRA服务", "Services zebra", "служба ZEBRA", "Zebra Services", "خدمة ZEBRA"];
+		var lang_2  = ["channel:", "选中通道:", "Canal sélectionné:", "выбранный канал:", "Seleccionar canal:", "قناة مختارة:"];
+		var lang_6  = ["Static server:", "手动设置服务器:", "Serveur de réglage manuel:", "Настройка сервера вручную:", "Servidor web:", "إعداد الخادم يدويًا:"];
+		var lang_7  = ["zebra IP address:", "zebra ip地址:", "zebra IP address:", "адрес zebra ip:", "zebra IP address:", "zebra IP address:"];
+		var lang_8  = ["getzebracode", "获取zebra代码", "get zebra code", "получение кода зебра", "Obtener Código zebra", "get zebra code"];
+		var lang_9  = ["Submit", "提交", "Submit", "представление", "Submit", "تقديم"];
+		
+		document.getElementById("lang_1").innerHTML = lang_1[flag];
+		document.getElementById("lang_2").innerHTML = lang_2[flag];
+		document.getElementById("lang_6").innerHTML = lang_6[flag];
+		document.getElementById("lang_7").innerHTML = lang_7[flag];
+		document.getElementById("lang_8").value  	= lang_8[flag];
+		document.getElementById("lang_9").value  	= lang_9[flag];
+	}
+</script>
+</head>
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:180px; background:#ffffff; ">
+		<table width="100%" border="0" style="font-size:12px; margin-top:10px;" >
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td><select id="id_channel" style="width:200px" onChange="savems();">
+					<option value="0">zebra</option>
+					<option value="1">snmp</option>
+					<option value="2">TCP</option>
+					<option value="3">zebra and snmp</option>
+					<option value="4">zebra and TCP</option></select>
+				</td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_6"></td>
+				<td><input type="checkbox" id="autostatus" value=""></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_7"></td>
+				<td><input id="index_ip" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:100px;"  type="button"  onClick="getzebraCode();" id="lang_8"></input></td>
+				<td><input id="code" style="width:200px"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td><input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="set_zebrapara();" id="lang_9"></input></td>
+				<td></td>
+			</tr>
+		</table>
+		</div>
+</div>
+</div>
+</body>
+</html>

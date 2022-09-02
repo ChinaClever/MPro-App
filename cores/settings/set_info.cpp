@@ -20,10 +20,13 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     switch (type) {
     case 1: res = it->coreVer; break;
     case 2: res = it->coreCompileTime; break;
-    case 3: res = it->startVer; break;
-    case 4: res = it->startCompileTime; break;
-    case 5: res = it->lcdVer; break;
-    case 6: res = it->lcdCompileTime; break;
+    case 3: res = it->coreReleaseTime; break;
+    case 4: res = it->startVer; break;
+    case 5: res = it->startCompileTime; break;
+    case 6: res = it->startReleaseTime; break;
+    case 7: res = it->lcdVer; break;
+    case 8: res = it->lcdCompileTime; break;
+    case 9: res = it->lcdReleaseTime; break;
     case 11: res = it->opVers[0]; break;
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
@@ -44,15 +47,16 @@ int Set_Info::devInfoCfg(int addr, int type)
     switch (type) {
     case 0: ret = dev->offLine;  break;
     case 1: ret = it->param.devSpec; break;
-    case 2: ret = it->param.devMode; break;
-    case 3: ret = it->nums.slaveNum; break;
-    case 4: ret = it->param.modbusAddr; break;
-    case 5: ret = it->param.buzzerSw; break;
+    case 2: ret = dev->status; break;
+    case 3: ret = it->param.devMode; break;
+    case 4: ret = it->param.cascadeAddr; break;
+    case 5: ret = it->param.modbusAddr; break;
     case 6: ret = it->param.hz; break;
-    case 7: ret = it->nums.boardNum; break;
+    case 7: ret = it->param.buzzerSw; break;
     case 8: ret = it->nums.groupEn; break;
     case 9: ret = it->param.runTime; break;
     case 10: ret = it->param.totalTime; break;
+    case 11: ret = it->param.isBreaker; break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
@@ -65,12 +69,12 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     sDevCfg *it = &(cm::devData(addr)->cfg);
     bool ret = true; switch (type) {
     case 1: it->param.devSpec = value; break;
-    case 2: it->param.devMode = value; break;
-    case 3: it->nums.slaveNum = value; break;
-    case 4: it->param.modbusAddr = value; break;
-    case 5: it->param.buzzerSw = value; break;
-    case 7: it->nums.boardNum = value; break;
+    case 3: it->param.devMode = value; break;
+    case 4: it->param.cascadeAddr = value; break;
+    case 5: it->param.modbusAddr = value; break;
+    case 7: it->param.buzzerSw = value; break;
     case 8: it->nums.groupEn = value; break;
+    case 11: it->param.isBreaker = value; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
@@ -78,30 +82,40 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
 }
 
 
-int Set_Info::devCfgNum(int addr, int type)
+int Set_Info::devCfgNum(const sCfgItem &it)
 {
-    sDevNums *it = &(cm::devData(addr)->cfg.nums);
-    int value = 0; switch(type) {
-    case DType::Line: value = it->lineNum; break;
-    case DType::Loop: value = it->loopNum; break;
-    case DType::Output: value = it->outputNum; break;
-    default: qDebug() << Q_FUNC_INFO << type; break;
+    sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
+    int value = 0; switch(it.fc) {
+    case DType::Line: value = dev->lineNum; break;
+    case DType::Loop: value = dev->loopNum; break;
+    case DType::Output: value = dev->outputNum; break;
+    case 4: value = dev->boardNum; break;
+    case 5: value = dev->slaveNum; break;
+    case 6: value = dev->boards[it.sub]; break;
+    case 7: value = dev->groupEn; break;
+    case 11: value = dev->loopStarts[it.sub];  break;
+    case 12: value = dev->loopEnds[it.sub];  break;
+    default: cout << it.fc; break;
     }
     return value;
 }
 
-bool Set_Info::setCfgNum(int addr, int type, int value)
-{
-    bool ret = true;
-    sDevNums *it = &(cm::devData(addr)->cfg.nums);
-    uint *ptr = nullptr; switch(type) {
-    case DType::Line: ptr = &(it->lineNum); break;
-    case DType::Loop: ptr = &(it->loopNum); break;
-    case DType::Output: ptr = &(it->outputNum); break;
-    default: qDebug() << Q_FUNC_INFO << type; break;
+bool Set_Info::setCfgNum(const sCfgItem &it, int value)
+{    
+    sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
+    bool ret = true; switch(it.fc) {
+    case DType::Line: dev->lineNum = value; break;
+    case DType::Loop: dev->loopNum = value; break;
+    case DType::Output: dev->outputNum = value; break;
+    case 4: dev->boardNum = value; break;
+    case 5: dev->slaveNum = value; break;
+    case 6: dev->boards[it.sub] = value; break;
+    case 7: dev->groupEn = value; break;
+    case 11: dev->loopStarts[it.sub] = value;  break;
+    case 12: dev->loopEnds[it.sub] = value;  break;
+    default: ret = false; cout << it.fc; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
-    if(ptr) *ptr = value; else ret = false;
     return ret;
 }
 
@@ -111,14 +125,11 @@ QString Set_Info::getUut(int addr, uchar fc)
     sUutInfo *it = &(cm::devData(addr)->cfg.uut);
 
     switch (fc) {
-    case 1: ptr = it->idc; break;
-    case 2: ptr = it->room; break;
-    case 3: ptr = it->module; break;
-    case 4: ptr = it->cab; break;
-    case 5: ptr = it->road; break;
-    case 6: ptr = it->devName; break;
-    case 7: ptr = it->qrcode; break;
-    case 8: ptr = it->sn; break;
+    case 1: ptr = it->room; break;
+    case 2: ptr = it->location; break;
+    case 3: ptr = it->devName; break;
+    case 4: ptr = it->qrcode; break;
+    case 5: ptr = it->sn; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -128,24 +139,22 @@ QString Set_Info::getUut(int addr, uchar fc)
 bool Set_Info::setUut(uchar fc, const QVariant &v)
 {
     bool ret = true;
-    QString prefix = "uut";
+    //QString prefix = "uut";
     QString key; char *ptr=nullptr;
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
     char *str = v.toByteArray().data();
 
     switch (fc) {
-    case 1: key = "idc";  ptr = it->idc; break;
-    case 2: key = "room";  ptr = it->room; break;
-    case 3: key = "module";  ptr = it->module; break;
-    case 4: key = "cab";  ptr = it->cab; break;
-    case 5: key = "road";  ptr = it->road; break;
-    case 6: key = "devName";  ptr = it->devName; break;
-    case 7: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
-    case 8: key = "sn";  ptr = it->sn; break;
+    case 1: key = "room";  ptr = it->room; break;
+    case 2: key = "location";  ptr = it->location; break;
+    case 3: key = "devName";  ptr = it->devName; break;
+    case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
+    case 5: key = "sn";  ptr = it->sn; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
+    }
 
     if(ptr) qstrcpy(ptr, str);
+    if(ret) Cfg_ReadWrite::bulid()->writeParams();
     //Cfg_Obj *cfg = Cfg_Obj::bulid();
     //cfg->writeCfg(key, QString(ptr), prefix);
     // sOpItem db; db.op_src = "uut"; //opSrc(txType);

@@ -71,13 +71,16 @@
 					</td>
 				</tr>
 			</table>
-			<div style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
+			<div align="center" style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
 				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_35"></div>
+				
 					<br>
-					<div align="left" id="container" style="width:100%; height:500px;">
-						<canvas id="chart" style="display: block; width: 100%; height: 410px;"></canvas>
+					<ul style="padding-right:70%; font-family:courier;" ><span id=""></span><select id="sel1" style="width:100px;" onChange="change_mode(this);"></select></ul> 
+					<div  id="container" style="width:90%; height:500px;">
+						<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
 					</div>
 					<script type="text/javascript">
+						var sel_name =new Array("功率","电流","电压");
 						var sample_num = 50;
 						var data_total = new Array(3);
 						var data_inlet1 = new Array(3);
@@ -85,6 +88,10 @@
 						var data_inlet3 = new Array(3);
 						var data_view = new Array(50);
 						let date  = new Date();
+						var time1 = 0;
+						var chart = 0;
+						var ctx = 0;
+						let total_name = "total_pow";
 						let Hou= 0, Minu = 0,Seco = 0;
 						Seco = date.getSeconds();
 						Minu = date.getMinutes();
@@ -101,35 +108,41 @@
 								data_inlet2[i][j] = 0;
 								data_inlet3[i][j] = 0;
 							}
-							for(var k = 0;k<sample_num;k++){
+							for(var k = sample_num;k>0;k--){
 
 								data_view[k] =0;
-								Seco +=  3;
-								if(Seco > 59){
-									Seco -= 60;
-									Minu += 1;
-									if(Minu > 59){
-										Minu -=  60;
-										Hou += 1;
+								Seco -=  3;
+								if(Seco < 0){
+									Seco = 60 + Seco -3;
+									Minu -= 1;
+									if(Minu < 0){
+										Minu =  59;
+										Hou -= 1;
 									}
-									if(Hou > 23){
-										Hou =0;
+									if(Hou < 0){
+										Hou = 23;
 									}
 								}
-								dataLabels[k] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+								dataLabels[k-1] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
 							}
 						}
+						for(var i=0;i<3;i++)
+						{
+							document.getElementById("sel1").options.add( new Option(sel_name[i] ,i));
+						}
+
 						var config = {
 							type: 'line',
 							data: {
 								labels: dataLabels,
 								datasets: [
 									{
-										label: 'total_pow',
+										label: total_name,
 										data: data_total[1],
 										backgroundColor: 'rgb(255, 99, 132)',
 										borderColor: 'rgb(255, 99, 132)',
 										fill: false,
+										borderWidth:2
 									},
 									{
 										label: 'inletA',
@@ -161,54 +174,77 @@
 									text: '功率信息实时统计'
 								},
 								scales: {
-								xAxes: [{
-									ticks: {
-										min: 50,
-									}
-								}]
-    }
+									xAxes: [{
+										ticks: {
+											min: 50,
+										}
+									}]
+  							  	}
 							}
 						};
-				
-						var ctx = document.getElementById('chart').getContext('2d');
-						var chart = new Chart(ctx, config);
-						function chart_data_read(){
-				
-						}
-						setInterval(function() {
-							if (config.data.datasets.length > 0) {
-								dataLabels = dataLabels.slice(-49);
-								Seco +=  3;
-								if(Seco > 59){
-									Seco -= 60;
-									Minu += 1;
-									if(Minu > 59){
-										Minu -=  60;
-										Hou += 1;
-									}
-									if(Hou > 23){
-										Hou =0;
-									}
-								}
-								dataLabels[49] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+						function create_new_chart(){
+							document.getElementById('chart').remove();
+							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
+							var e = document.createElement("canvas"); 
+							e.id = "chart";
+							e.style.display = "block";
+							e.style.width = "90%";
+							e.style.height = "410px";
+							document.getElementById('container').appendChild(e);
 
-								dataLabels.push();
+							ctx = document.getElementById('chart').getContext('2d');
+							chart = new Chart(ctx, config);
+							time1 = setInterval(flash_chart, 3000);
+						}
+						function change_mode(obj){
+							if(obj.value == 0){
+								clearInterval(time1);
+								total_name = "total_pow";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}else if(obj.value == 1){
+								clearInterval(time1);
+								total_name ="total_cur";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}else{
+								clearInterval(time1);
+								total_name ="total_vol";
+								create_new_chart();
+								config.data.datasets[0].label = total_name;
+								chart.update();
+							}
+						}
+						function flash_chart() {
+							if (config.data.datasets.length > 0) {
+								date  = new Date();
+								Seco = date.getSeconds();
+								Minu = date.getMinutes();
+								Hou = date.getHours();
+								label_ = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+
+								dataLabels.push(label_);
 								data_total[1].push(getRandomNum(500, 700));
 								data_inlet1[1].push(getRandomNum(200, 300));
 								data_inlet2[1].push(getRandomNum(100, 150));
 								data_inlet3[1].push(getRandomNum(150, 200));
-								dataLabels.push(dataLabels[49]);
+								// total_name.push(total_name);
 				
 								dataLabels.shift();
 								data_total[1].shift();
 								data_inlet1[1].shift();
 								data_inlet2[1].shift();
 								data_inlet3[1].shift();
+								// total_name.shift();
 
 								chart.update();
 							}
-						}, 3000);
-				
+						}
+						ctx = document.getElementById('chart').getContext('2d');
+						chart = new Chart(ctx, config);
+						time1 = setInterval(flash_chart, 3000);
 						function getRandomNum(min, max) {
 							var range = max - min;
 							var rand = Math.random();
@@ -218,16 +254,28 @@
 					</script>
 				</div>
 			</div>
-			<!-- <div style ="width: 100%; height: 100px;"></div> -->
 		</div>
 	</div>
     <script>
 		var phase_info = new Array();
+		var total_info = new Array();
+		var system_info = new Array();
+		var loop_info = new Array();
+		var sensor_info = new Array();
 		var phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
 		var loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
 		var len  = data_name.length -1;
 		var total_title = new Array("kW","kVA","kWh","Hz","mA");
 		var lang  = new Array(36);
+		var dev_name = new Array();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+    	var head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
+		var stat_ = new Array("断开","闭合");
+		var Sensor_state = new Array("离线","开启","关闭");
+		var loop_unit = new Array("","","","A","A","V","kVA","kWh");
+		function delay(){
+			for(var i = 0;i<50;i++){}
+		}
 		function LangFun()
 		{
 			for(var i = 0;i<lang.length;i++){
@@ -272,103 +320,128 @@
 				document.getElementById("lang_" + i).innerHTML  = lang[i][1];
 			}
 		}
-
 		function read_data(){
+			total_info[0] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[4] + data_name[1] + addr));
+			total_info[1] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[5] + data_name[1] + addr));
+			total_info[2] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[7] + data_name[1] + addr));
+			total_info[3] = parseInt(sessionStorage.getItem(cfg_name[6] + addr));
+			total_info[4] = 50;
 			for(var i = 1 ;i < phase_num + 1;i++){
 				phase_info[i] =  new Array();
-				for(var k = 0; k < 3; k++){
-					for(var j = 0;j <len;j++){
-						phase_info[i][(len * k) + j] = parseInt(sessionStorage.getItem(type_name[phase]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
-					}
+
+				phase_info[i][0] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[1] + addr + '_' + i));
+				phase_info[i][1] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[2] + data_name[1] + addr + '_' + i));
+				phase_info[i][2] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
+				phase_info[i][3] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[3] + addr + '_' + i));
+				phase_info[i][4] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
+			}
+			for(var i = 1 ;i < loop_num + 1;i++){
+				loop_info[i] =  new Array();
+				loop_info[i][0] = "C" + (i);
+				loop_info[i][1] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[1]+data_name[1]+addr+'_'+i));
+				loop_info[i][2] = (i * 8 + 1) +'-' + (i*8 +8);
+				loop_info[i][3] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[1]+addr+'_'+i));
+				loop_info[i][4] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[4]+addr+'_'+i));
+				loop_info[i][5] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[2]+data_name[1]+addr+'_'+i));
+				loop_info[i][6] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[7]+data_name[1]+addr+'_'+i));
+				loop_info[i][7] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[5]+data_name[1]+addr+'_'+i));
+			}
+			var type_num_ = 0;
+			for(var i = 0; i<head.length;i++){
+				if( i > 3){
+					type_num_ = 7;
+					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] +head[i] + "Val" + addr+"_1");
+				}
+				else{
+					type_num_ = 6;
+					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] +head[i]+ "Val" +addr+"_"+(parseInt(i%2)+1));
 				}
 			}
-			
+			var info = 0;
+			info = sensor_info[1];
+			sensor_info[1] = sensor_info[2];
+			sensor_info[2] = info;
+			system_info[0] = sessionStorage.getItem(cfg_name[0] + addr);
+			system_info[1] = "ida_loction";
+			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" min";
+			system_info[3] = "NPDU("+sessionStorage.getItem(cfg_name[1] + addr)+")";
+			system_info[4] = sessionStorage.getItem(ver_name[1] + addr);
+			for(var i = 0;i<slave_num;i++){
+				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			}
+
+			showdata();
 		}
 
 		$('.total').html(buildTablePhase(0));
 		$('.p1').html(buildTablePhase(1));
 		$('.p2').html(buildTablePhase(2));
 		$('.p3').html(buildTablePhase(3));
-		$('.loop_table').html(buildTableLoop(6));
+		$('.loop_table').html(buildTableLoop(loop_num));
 		$('.sensor_tab').html(buildTableSensor());
 		$('.sys_table').html(buildTableSystem());
 		LangFun();
+		read_data();
 		function showdata(){
-			for(var i = 1 ;i < phase_num + 1;i++){
-				var ss = document.getElementById('pow'+(i -1)).childNodes[2].firstChild;
-				var cs = document.getElementById('pow'+(i -1)).childNodes[1];
-				if(phase_info[i][23] == 1){
-					ss.checked = true;
+			for(var i = 0;i<5;i++){
+				if(i<2){
+					document.getElementById('dat'+(i + 1)).innerHTML =  parseFloat(total_info[i]/100).toFixed(2);
+				}else if(i == 2){
+					document.getElementById('dat'+(i + 1)).innerHTML =  parseFloat(total_info[i]/10).toFixed(1);
+				}else{
+					document.getElementById('dat'+(i + 1)).innerHTML =  total_info[i];
+				}
+				
+			}
+			for(var i = 0;i < phase_num;i++){
+				document.getElementById('dat'+(3 * i + 6)).innerHTML = parseFloat(phase_info[i +1][0]/100).toFixed(2);
+				document.getElementById('dat'+(3 * i + 7)).innerHTML = parseFloat(phase_info[i +1][1]/10).toFixed(1);
+				document.getElementById('dat'+(3 * i + 8)).innerHTML = parseFloat(phase_info[i +1][2]/100).toFixed(2);
+				document.getElementById('pgt'+(i + 1)).style.width = parseFloat(phase_info[i +1][0]/phase_info[i+ 1][4] / 100).toFixed(3) * 100 +'%';
+				if(phase_info[i +1][3] == 2 || phase_info[i +1][3] == 4){
+					document.getElementById('pgt'+(i + 1)).style.background = 'yellow';
+				}
+				else if(phase_info[i +1][3] == 1 || phase_info[i +1][3] == 8){
+					document.getElementById('pgt'+(i + 1)).style.background  = 'red';
 				}
 				else{
-					ss.checked = false;
-				}
-				if(phase_info[i][18] == 2 || phase_info[i][18] == 4){
-					cs.bgColor = 'yellow';
-				}else if(phase_info[i][18] == 1 || phase_info[i][18] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(pow_mark ==1){
-						document.getElementById('pow'+(i)).childNodes[2].firstChild.checked = true;
-					}else{
-						document.getElementById('pow'+(i)).childNodes[2].firstChild.checked = false;
-					}
+					document.getElementById('pgt'+(i + 1)).style.background = '';
 				}
 			}
-			for(var i = 1 ;i < phase_num + 1;i++){
-				ss = document.getElementById('cur'+(i -1)).childNodes[2].firstChild;
-				cs = document.getElementById('cur'+(i -1)).childNodes[1];
-				if(phase_info[i][15] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phase_info[i][10] == 2 || phase_info[i][10] == 4){
-					cs.bgColor = 'yellow';
-				}else if(phase_info[i][10] == 1 || phase_info[i][10] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(cur_mark ==1){
-						document.getElementById('cur'+(i)).childNodes[2].firstChild.checked = true;
+			for(var i = 0;i<loop_num;i++){
+				for(j = 0;j<8;j++){
+					if(j>2 && j!= 5 && j != 7){
+						document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]/100).toFixed(2)+loop_unit[j];
+					}else if(j == 5 || j == 7){
+
+						document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]/10).toFixed(1)+loop_unit[j];
 					}else{
-						document.getElementById('cur'+(i)).childNodes[2].firstChild.checked = false;
+						if( j ==1){
+							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = stat_[loop_info[i + 1][j]];
+						}else{
+							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = loop_info[i + 1][j];
+						}
 					}
+						
 				}
 			}
-			for(var i = 1 ;i < phase_num + 1;i++){
-				ss = document.getElementById('vol'+(i -1)).childNodes[2].firstChild;
-				cs = document.getElementById('vol'+(i -1)).childNodes[1];
-				if(phase_info[i][7] == 1){
-					ss.checked = true;
+			for(var i =0;i<head.length;i++){
+				if(sensor_info[i] == 2|| sensor_info[i] == 4){
+					document.getElementById('dat'+(63+i)).bgColor = 'yellow';
+				}else if(sensor_info[i] == 1 || sensor_info[i] == 8){
+					document.getElementById('dat'+(63+i)).borderColor = 'red';
+				}
+				else if(sensor_info[i] == 65535){
+					document.getElementById('dat'+(63+i)).color = 'green';
+					sensor_info[i] = 0;
 				}
 				else{
-					ss.checked = false;
+					document.getElementById('dat'+(63+i)).bgColor = '';
 				}
-				if(phase_info[i][2] == 2 || phase_info[i][2] == 4){
-					cs.bgColor = 'yellow';
-				}
-				else if(phase_info[i][2] == 1 || phase_info[i][2] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(vol_mark ==1){
-						document.getElementById('vol'+(i)).childNodes[2].firstChild.checked = true;
-					}else{
-						document.getElementById('vol'+(i)).childNodes[2].firstChild.checked = false;
-					}
-				}
+				document.getElementById('dat'+(63+i)).innerHTML = Sensor_state[sensor_info[i]];
+			}
+			for(var i =0;i<5;i++){
+				document.getElementById('dat'+(71+i)).innerHTML = system_info[i];
 			}
 		}
 		function modeset(modesel){
@@ -379,65 +452,22 @@
 				iptname[i].disabled = true;
 			}
 		}
-		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
-				// var ms = document.getElementById("sel");
-				// ms.style.display = "";
-				ros.style.backgroundColor = 'red';
-				ros.innerHTML = "设置模式";
-				var iptname = document.getElementsByTagName("input");
-				for(var i = 0; i<iptname.length;i++)
-				{
-					iptname[i].disabled = false;
-				}
-			}
-			else{
-				// var ms = document.getElementById("sel");
-				// ms.style.display = "none";
-				read = 0;
-				ros.style.backgroundColor = '';
-				ros.innerHTML = "阅读模式";
-				var iptname = document.getElementsByTagName("input");
-				for(var i = 0; i<iptname.length;i++)
-				{
-					iptname[i].disabled = true;
-				}
-			}
-		}
-		function flash_html(par)
-		{
-			read_phase_data(addr);
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				if(par.name == "pow"){
-					$('.pow_table').html(buildTablePow(phase_num));
-				}else if(par.name == "cur"){
-					$('.cur_table').html(buildTableCur(phase_num));
-				}else if(par.name == "vol"){
-					$('.vol_table').html(buildTableVol(phase_num));
-				}
-				showdata();
-			},800);
-		}
-
 		function buildTablePhase(obj){
 			var tbody = '';
 			if(obj == 0){
 				for(let i = 0;i<5;i++){
 					if(i < 2){
-						tbody += '<tr><td><span class = "span_tit" style=" font-size:40px;" id ="dat'+(i + 1)+'"></span>';
+						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;" id ="dat'+(i + 1)+'"></span>';
 						tbody += '<span class = "span_data" style=" padding-top:28px;">'+ total_title[i] +'</span></td></tr>';
 					}else{
 						tbody += '<tr><td><span class = "span_tit" id ="lang_'+(i + 2)+'"></span>';
-						tbody += '<span class = "span_data" id ="dat'+ (i + 1) +'></span>';
+						tbody += '<span class = "span_data" id ="dat'+ (i + 1) +'"></span>';
 						tbody += '<span class = "span_unit">'+ total_title[i] +'</span></td></tr>';
 					}
 				}
 			}else{
 				tbody += '<tr><td><span class = "span_tit" >L'+ obj +'</span></td></tr>';
-				tbody += '<tr><td><span class = "span_tit" style=" font-size:40px;" id="dat'+ (3*(obj-1) + 6)+'" ></span>';
+				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat'+ (3*(obj-1) + 6)+'" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
 				tbody += '<tr><td><div class = "progress"><div class="progress-bar" id="pgt'+ obj +'"></div></div></td></tr>';
 				tbody += '<tr><td><span class = "span_tit" >L'+ obj +'-N:</span>';
@@ -507,24 +537,63 @@
 			}
 			return tbody;
 		}
-		var state_ = 0,state1_ = 0,state2_ = 0;
-		function putdata(){
-			// for(let i = 0;i < phase_num;i++){
-			// 	state_ = document.getElementById('vol'+(i)).childNodes[1];
-			// 	state1_ = document.getElementById('cur'+(i)).childNodes[1];
-			// 	state2_ = document.getElementById('pow'+i).childNodes[1];
-			// 	state_.innerHTML = (parseFloat(phase_info[i + 1][0])/10).toFixed(1);
-			// 	state1_.innerHTML = (parseFloat(phase_info[i + 1][8])/10).toFixed(2);
-			// 	state2_.innerHTML = (parseFloat(phase_info[i + 1][16])/10);
-			// }
+		function get_data(){
+			rpc.call("pduReadData",[addr,total,pow_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,total,energe_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,total,AVpow_,1,1]);
+			delay();
+			for(var i = 1 ;i < phase_num + 1;i++){
+				rpc.call("pduReadData",[addr,phase,vol_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,phase,cur_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,phase,cur_,3,i]);
+				delay();
+				rpc.call("pduReadData",[addr,phase,cur_,4,i]);
+				delay();
+				rpc.call("pduReadData",[addr,phase,pf_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,phase,pow_,1,i]);
+				delay();
+			}
+			for(var i = 1 ;i < loop_num + 1;i++){
+				rpc.call("pduReadData",[addr,loop,switch_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,loop,vol_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,loop,cur_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,loop,cur_,4,i]);
+				delay();
+				rpc.call("pduReadData",[addr,loop,energe_,1,i]);
+				delay();
+				rpc.call("pduReadData",[addr,loop,AVpow_,1,i]);
+				delay();
+			}
+			for(var i = 0; i<head.length;i++){
+				rpc.call("pduReadData",[addr,envir,tmp_,1,1]);
+				delay();
+				rpc.call("pduReadData",[addr,envir,tmp_,1,2]);
+				delay();
+				rpc.call("pduReadData",[addr,envir,hum_,1,1]);
+				delay();
+				rpc.call("pduReadData",[addr,envir,hum_,1,2]);
+				delay();
+				rpc.call("pduReadData",[addr,sensor,door1_,1,1]);
+				delay();
+				rpc.call("pduReadData",[addr,sensor,door2_,1,1]);
+				delay();
+				rpc.call("pduReadData",[addr,sensor,water_,1,1]);
+				delay();
+				rpc.call("pduReadData",[addr,sensor,smoke_,1,1]);
+				delay();
+			}
 		}
 		setInterval(function(){
-			// read_phase_data(addr);
-			// setTimeout(function(){
-			// 	read_data();
-			// 	putdata();
-			// 	showdata();
-			// },800);
+			get_data();
+			setTimeout(read_data(),1000);
 		},2000);
     </script>
 </body>

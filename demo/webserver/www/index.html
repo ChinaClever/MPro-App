@@ -1,0 +1,714 @@
+﻿<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>ZPDU</title>
+<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/skins.css">
+
+<script src="js/jQuery-2.2.0.min.js"></script>
+<script src="js/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/raphael-2.1.4.min.js"></script>
+<script src="js/justgage-1.1.0.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/monitor.js"></script>
+<script>
+var fg;
+		
+$(document).ready(function () {
+	//checkCookie();
+	$.ajax({
+		dataType:"text",
+		url:"/npmslavelist",
+		async:true,
+		cache:false,
+		success:function(sta)
+		{
+			var gv = new Array();
+			gv=sta.split("?");
+			fg = parseInt(gv[0]);
+			menu(fg);
+			LangFun(fg);
+			getVer();
+		}
+	});
+});
+		
+function LangFun(fg)
+{
+	var ch1   = ["User Info", "个人信息", "Utilisateur", "Личные сведения", "Información personal", ""];
+	var ch2   = ["Clear Cache", "清空缓存", "Mémoire cache", "Очистить кеш", "Caché de vacio", ""];
+	var ch3   = ["Skin setting", "皮肤设置", "Peau set", "Настройки кожи", "Preferencias cutáneas", ""];
+	var ch4   = ["Log out", "安全退出", "Retrait", "безопасный выход", "Salida de Seguridad", ""];
+	var ch5   = ["Home", "首页", "Page d 'accueil", "Первая страница", "Página", ""];
+	var ch6   = ["Tabs", "页签操作", "Label", "прокладочная операция", "Operaciones de firma", ""];
+	var ch7   = ["Refresh current page", "刷新当前", "Rafraîchir", "Обновить текущий", "Actualizar el actual", ""];
+	var ch8   = ["Close current page", "关闭当前", "Fermer", "Закрыть текущий", "Cerrar el momento", ""];
+	var ch9   = ["Close all pages", "全部关闭", "Fermer tout", "закрыть все", "Cerrar todo", ""];
+	var ch10  = ["Close other pages", "除此之外全部关闭", "À part ça, tout est fermé", "Кроме всего этого", "Todos los demás están cerrados.", ""];
+	var ch11  = ["Language", "语言选择", "Langue", "Все, кроме этого", "Selección de idioma", ""];
+	var ch12  = ["English", "英文", "Anglais", "английский", "Inglés", ""];
+	var ch13  = ["Chinese", "中文", "Chinois", "китаец", "Chino", ""];
+	var ch14  = ["French", "法文", "Français", "французский язык", "Francés", ""];
+	var ch15  = ["Russian", "俄文", "Russe", "русский язык", "Ruso", ""];
+	var ch16  = ["Espaniol", "西班牙文", "Espagno", "Испания", "Español", ""];
+	var ch17  = ["Arabic", "阿拉伯文", "Arabe", "арабский язык", "árabe", ""];
+
+	document.getElementById("ch1").innerHTML  = ch1[fg];
+	document.getElementById("ch2").innerHTML  = ch2[fg];
+	document.getElementById("ch3").innerHTML  = ch3[fg];
+	document.getElementById("ch4").innerHTML  = ch4[fg];
+	document.getElementById("ch5").innerHTML  = ch5[fg];
+	document.getElementById("ch6").innerHTML  = ch6[fg];
+	document.getElementById("ch7").innerHTML  = ch7[fg];
+	document.getElementById("ch8").innerHTML  = ch8[fg];
+	document.getElementById("ch9").innerHTML  = ch9[fg];
+	document.getElementById("ch10").innerHTML = ch10[fg];
+	document.getElementById("ch11").innerHTML = ch11[fg];
+	document.getElementById("ch12").innerHTML = ch12[fg];
+	document.getElementById("ch13").innerHTML = ch13[fg];
+	document.getElementById("ch14").innerHTML = ch14[fg];
+	document.getElementById("ch15").innerHTML = ch15[fg];
+	document.getElementById("ch16").innerHTML = ch16[fg];
+	document.getElementById("ch17").innerHTML = ch17[fg];
+	
+}		
+	
+function menu(fg)
+{
+	(function ($) {
+		$.learuntab = {
+			requestFullScreen: function () {
+				var de = document.documentElement;
+				if (de.requestFullscreen) {
+					de.requestFullscreen();
+				} else if (de.mozRequestFullScreen) {
+					de.mozRequestFullScreen();
+				} else if (de.webkitRequestFullScreen) {
+					de.webkitRequestFullScreen();
+				}
+			},
+			exitFullscreen: function () {
+				var de = document;
+				if (de.exitFullscreen) {
+					de.exitFullscreen();
+				} else if (de.mozCancelFullScreen) {
+					de.mozCancelFullScreen();
+				} else if (de.webkitCancelFullScreen) {
+					de.webkitCancelFullScreen();
+				}
+			},
+			refreshTab: function () {
+				var currentId = $('.page-tabs-content').find('.active').attr('data-id');
+				var target = $('.LRADMS_iframe[data-id="' + currentId + '"]');
+				var url = target.attr('src');
+				//$.loading(true);
+				target.attr('src', url).load(function () {
+					//$.loading(false);
+				});
+			},
+			activeTab: function () {
+				var currentId = $(this).data('id');
+				if (!$(this).hasClass('active')) {
+					$('.mainContent .LRADMS_iframe').each(function () {
+						if ($(this).data('id') == currentId) {
+							$(this).show().siblings('.LRADMS_iframe').hide();
+							return false;
+						}
+					});
+					$(this).addClass('active').siblings('.menuTab').removeClass('active');
+					$.learuntab.scrollToTab(this);
+				}
+			},
+			closeOtherTabs: function () {
+				$('.page-tabs-content').children("[data-id]").find('.fa-remove').parents('a').not(".active").each(function () {
+					$('.LRADMS_iframe[data-id="' + $(this).data('id') + '"]').remove();
+					$(this).remove();
+				});
+				$('.page-tabs-content').css("margin-left", "0");
+			},
+			closeTab: function () {
+				var closeTabId = $(this).parents('.menuTab').data('id');
+				var currentWidth = $(this).parents('.menuTab').width();
+				if ($(this).parents('.menuTab').hasClass('active')) {
+					if ($(this).parents('.menuTab').next('.menuTab').size()) {
+						var activeId = $(this).parents('.menuTab').next('.menuTab:eq(0)').data('id');
+						$(this).parents('.menuTab').next('.menuTab:eq(0)').addClass('active');
+
+						$('.mainContent .LRADMS_iframe').each(function () {
+							if ($(this).data('id') == activeId) {
+								$(this).show().siblings('.LRADMS_iframe').hide();
+								return false;
+							}
+						});
+						var marginLeftVal = parseInt($('.page-tabs-content').css('margin-left'));
+						if (marginLeftVal < 0) {
+							$('.page-tabs-content').animate({
+								marginLeft: (marginLeftVal + currentWidth) + 'px'
+							}, "fast");
+						}
+						$(this).parents('.menuTab').remove();
+						$('.mainContent .LRADMS_iframe').each(function () {
+							if ($(this).data('id') == closeTabId) {
+								$(this).remove();
+								return false;
+							}
+						});
+					}
+					if ($(this).parents('.menuTab').prev('.menuTab').size()) {
+						var activeId = $(this).parents('.menuTab').prev('.menuTab:last').data('id');
+						$(this).parents('.menuTab').prev('.menuTab:last').addClass('active');
+						$('.mainContent .LRADMS_iframe').each(function () {
+							if ($(this).data('id') == activeId) {
+								$(this).show().siblings('.LRADMS_iframe').hide();
+								return false;
+							}
+						});
+						$(this).parents('.menuTab').remove();
+						$('.mainContent .LRADMS_iframe').each(function () {
+							if ($(this).data('id') == closeTabId) {
+								$(this).remove();
+								return false;
+							}
+						});
+					}
+				}
+				else {
+					$(this).parents('.menuTab').remove();
+					$('.mainContent .LRADMS_iframe').each(function () {
+						if ($(this).data('id') == closeTabId) {
+							$(this).remove();
+							return false;
+						}
+					});
+					$.learuntab.scrollToTab($('.menuTab.active'));
+				}
+				return false;
+			},
+			addTab: function () {
+				$(".navbar-custom-menu>ul>li.open").removeClass("open");
+				var dataId = $(this).attr('data-id');
+				if (dataId != "") {
+					//top.$.cookie('nfine_currentmoduleid', dataId, { path: "/" });
+				}
+				var dataUrl = $(this).attr('href');
+				var menuName = $.trim($(this).text());
+				var flag = true;
+				if (dataUrl == undefined || $.trim(dataUrl).length == 0) {
+					return false;
+				}
+				$('.menuTab').each(function () {
+					if ($(this).data('id') == dataUrl) {
+						if (!$(this).hasClass('active')) {
+							$(this).addClass('active').siblings('.menuTab').removeClass('active');
+							$.learuntab.scrollToTab(this);
+							$('.mainContent .LRADMS_iframe').each(function () {
+								if ($(this).data('id') == dataUrl) {
+									$(this).show().siblings('.LRADMS_iframe').hide();
+									return false;
+								}
+							});
+						}
+						flag = false;
+						return false;
+					}
+				});
+				if (flag) {
+					var str = '<a href="javascript:;" class="active menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-remove"></i></a>';
+					$('.menuTab').removeClass('active');
+					var str1 = '<iframe class="LRADMS_iframe" id="iframe' + dataId + '" name="iframe' + dataId + '"  width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
+					$('.mainContent').find('iframe.LRADMS_iframe').hide();
+					$('.mainContent').append(str1);
+					//$.loading(true);
+					$('.mainContent iframe:visible').load(function () {
+						//$.loading(false);
+					});
+					$('.menuTabs .page-tabs-content').append(str);
+					$.learuntab.scrollToTab($('.menuTab.active'));
+				}
+				return false;
+			},
+			scrollTabRight: function () {
+				var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
+				var tabOuterWidth = $.learuntab.calSumWidth($(".content-tabs").children().not(".menuTabs"));
+				var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
+				var scrollVal = 0;
+				if ($(".page-tabs-content").width() < visibleWidth) {
+					return false;
+				} else {
+					var tabElement = $(".menuTab:first");
+					var offsetVal = 0;
+					while ((offsetVal + $(tabElement).outerWidth(true)) <= marginLeftVal) {
+						offsetVal += $(tabElement).outerWidth(true);
+						tabElement = $(tabElement).next();
+					}
+					offsetVal = 0;
+					while ((offsetVal + $(tabElement).outerWidth(true)) < (visibleWidth) && tabElement.length > 0) {
+						offsetVal += $(tabElement).outerWidth(true);
+						tabElement = $(tabElement).next();
+					}
+					scrollVal = $.learuntab.calSumWidth($(tabElement).prevAll());
+					if (scrollVal > 0) {
+						$('.page-tabs-content').animate({
+							marginLeft: 0 - scrollVal + 'px'
+						}, "fast");
+					}
+				}
+			},
+			scrollTabLeft: function () {
+				var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
+				var tabOuterWidth = $.learuntab.calSumWidth($(".content-tabs").children().not(".menuTabs"));
+				var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
+				var scrollVal = 0;
+				if ($(".page-tabs-content").width() < visibleWidth) {
+					return false;
+				} else {
+					var tabElement = $(".menuTab:first");
+					var offsetVal = 0;
+					while ((offsetVal + $(tabElement).outerWidth(true)) <= marginLeftVal) {
+						offsetVal += $(tabElement).outerWidth(true);
+						tabElement = $(tabElement).next();
+					}
+					offsetVal = 0;
+					if ($.learuntab.calSumWidth($(tabElement).prevAll()) > visibleWidth) {
+						while ((offsetVal + $(tabElement).outerWidth(true)) < (visibleWidth) && tabElement.length > 0) {
+							offsetVal += $(tabElement).outerWidth(true);
+							tabElement = $(tabElement).prev();
+						}
+						scrollVal = $.learuntab.calSumWidth($(tabElement).prevAll());
+					}
+				}
+				$('.page-tabs-content').animate({
+					marginLeft: 0 - scrollVal + 'px'
+				}, "fast");
+			},
+			scrollToTab: function (element) {
+				var marginLeftVal = $.learuntab.calSumWidth($(element).prevAll()), marginRightVal = $.learuntab.calSumWidth($(element).nextAll());
+				var tabOuterWidth = $.learuntab.calSumWidth($(".content-tabs").children().not(".menuTabs"));
+				var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
+				var scrollVal = 0;
+				if ($(".page-tabs-content").outerWidth() < visibleWidth) {
+					scrollVal = 0;
+				} else if (marginRightVal <= (visibleWidth - $(element).outerWidth(true) - $(element).next().outerWidth(true))) {
+					if ((visibleWidth - $(element).next().outerWidth(true)) > marginRightVal) {
+						scrollVal = marginLeftVal;
+						var tabElement = element;
+						while ((scrollVal - $(tabElement).outerWidth()) > ($(".page-tabs-content").outerWidth() - visibleWidth)) {
+							scrollVal -= $(tabElement).prev().outerWidth();
+							tabElement = $(tabElement).prev();
+						}
+					}
+				} else if (marginLeftVal > (visibleWidth - $(element).outerWidth(true) - $(element).prev().outerWidth(true))) {
+					scrollVal = marginLeftVal - $(element).prev().outerWidth(true);
+				}
+				$('.page-tabs-content').animate({
+					marginLeft: 0 - scrollVal + 'px'
+				}, "fast");
+			},
+			calSumWidth: function (element) {
+				var width = 0;
+				$(element).each(function () {
+					width += $(this).outerWidth(true);
+				});
+				return width;
+			},
+			init: function () {
+				$('.menuItem').on('click', $.learuntab.addTab);
+				$('.menuTabs').on('click', '.menuTab i', $.learuntab.closeTab);
+				$('.menuTabs').on('click', '.menuTab', $.learuntab.activeTab);
+				$('.tabLeft').on('click', $.learuntab.scrollTabLeft);
+				$('.tabRight').on('click', $.learuntab.scrollTabRight);
+				$('.tabReload').on('click', $.learuntab.refreshTab);
+				$('.tabCloseCurrent').on('click', function () {
+					$('.page-tabs-content').find('.active i').trigger("click");
+				});
+				$('.tabCloseAll').on('click', function () {
+					$('.page-tabs-content').children("[data-id]").find('.fa-remove').each(function () {
+						$('.LRADMS_iframe[data-id="' + $(this).data('id') + '"]').remove();
+						$(this).parents('a').remove();
+					});
+					$('.page-tabs-content').children("[data-id]:first").each(function () {
+						$('.LRADMS_iframe[data-id="' + $(this).data('id') + '"]').show();
+						$(this).addClass("active");
+					});
+					$('.page-tabs-content').css("margin-left", "0");
+				});
+				$('.tabCloseOther').on('click', $.learuntab.closeOtherTabs);
+				$('.fullscreen').on('click', function () {
+					if (!$(this).attr('fullscreen')) {
+						$(this).attr('fullscreen', 'true');
+						$.learuntab.requestFullScreen();
+					} else {
+						$(this).removeAttr('fullscreen')
+						$.learuntab.exitFullscreen();
+					}
+				});
+			}
+		};
+		$.learunindex = {
+			load: function () {
+				$("body").removeClass("hold-transition")
+				$("#content-wrapper").find('.mainContent').height($(window).height() - 100);
+				$(window).resize(function (e) {
+					$("#content-wrapper").find('.mainContent').height($(window).height() - 100);
+				});
+				$(".sidebar-toggle").click(function () {
+					if (!$("body").hasClass("sidebar-collapse")) {
+						$("body").addClass("sidebar-collapse");
+					} else {
+						$("body").removeClass("sidebar-collapse");
+					}
+				})
+				$(window).load(function () {
+					window.setTimeout(function () {
+						$('#ajax-loader').fadeOut();
+					}, 300);
+				});
+			},
+			jsonWhere: function (data, action) {
+				if (action == null) return;
+				var reval = new Array();
+				$(data).each(function (i, v) {
+					if (action(v)) {
+						reval.push(v);
+					}
+				})
+				return reval;
+			},
+			
+			loadMenu: function () {
+			
+				var lang_1  = ["PDU Overview", "设备监控", "PDU overview", "контроль оборудования", "Dispositivo de vigilancia", ""];
+				var lang_2  = ["Dashboard", "首页", "Page d 'accueil", "Первая страница", "Página", ""];
+				var lang_3  = ["Outlet monitoring", "输出位监测", "Boutique surveillance", "контроль выходного положения", "Control de salida", ""];
+				
+				var lang_4  = ["PDU setting", "设备设置", "PDU set", "Настройки устройства", "Configuración del dispositivo", ""];
+				var lang_5  = ["Daisy-chain setting", "模式设置", "Chaîne de chrysanthème", "Настройки режима", "Configuración de modo", ""];
+				var lang_6  = ["Outlet grouping", "分组设置", "Groupe set", "Настройки группировки", "Configuración de grupo", ""];
+				var lang_7  = ["Threshold setting", "单元设置", "Seuil set", "Настройки элементов", "Configuración del módulo", ""];
+				var lang_8  = ["Environment control setting", "环控设置", "Environnement Contrôle set", "Настройки контроля окружающей среды", "Preferencias de control", ""];
+				var lang_9  = ["Energy reset", "电能清零", "Energie reset", "электрическая очистка", "Energía eléctrica", ""];
+				// var lang_10 = ["Proactive overload protection", "超限断电", "Surcharge protection", "Proactive overload protection", "Apagón ultrarrápido", ""];
+				// var lang_11 = ["Outlet timing switch", "定时开关", "Calendrier Conversion", "дистанционный выключатель", "Interruptor de tiempo", ""];
+				// var lang_12 = ["AutoPing", "Ping设置", "AutoPing", "AutoPing", "AutoPing", ""];
+				var lang_13 = ["Outlet control", "开关控制", "Conversion Contrôle", "коммутационное управление", "Control de interruptores", ""];
+				
+				var lang_14 = ["Network security", "网络安全", "Réseau Sécurité", "сетевая безопасность", "Seguridad de red", ""];
+				var lang_15 = ["Local connectivity", "本地连接", "Local Connection", "локальное соединение", "Conexión local", ""];
+				var lang_16 = ["WIFI", "无线连接", "WIFI", "WIFI", "Conexión inalámbrica", ""];
+				var lang_17 = ["HTTP", "HTTP服务", "HTTP", "HTTP", "HTTP", ""];
+				var lang_18 = ["NTP", "NTP服务", "NTP", "NTP", "NTP", ""];
+				var lang_19 = ["FTP", "FTP服务", "FTP", "FTP", "FTP", ""];
+				var lang_20 = ["SMTP", "SMTP服务", "SMTP", "SMTP", "SMTP", ""];
+				var lang_21 = ["MAC address filter chamber", "MAC滤池", "MAC adresse filtre", "MAC adresse filtre", "MAC adresse filtre", ""];
+				var lang_22 = ["Telnet/SSH", "Telnet/SSH服务", "Telnet/SSH", "Telnet/SSH", "Telnet/SSH", ""];
+				var lang_23 = ["Modbus", "Modbus服务", "Modbus", "Modbus", "Modbus", ""];
+				var lang_24 = ["SNMP", "SNMP服务", "SNMP", "SNMP", "SNMP", ""];
+				var lang_25 = ["RADIUS", "Radius服务", "RADIUS", "RADIUS", "RADIUS", ""];
+				var lang_26 = ["SYSLOG", "Syslog服务", "SYSLOG", "SYSLOG", "SYSLOG", ""];
+				var lang_27 = ["LDAP", "LDAP服务", "LDAP", "LDAP", "LDAP", ""];
+				var lang_28 = ["ZEBRA", "Zebra服务", "ZEBRA", "ZEBRA", "ZEBRA", ""];
+				
+				var lang_29 = ["User management", "用户管理", "Gestion des utilisateurs", "Управление пользователями", "Gestión de usuarios", ""];
+				var lang_30 = ["User setting", "用户设置", "Utilisateur set", "Настройки пользователя", "用户设置", ""];
+				var lang_31 = ["User group setting", "用户组设置", "Utilisateur groupe set", "настройки группы пользователей", "Configuración del Grupo", ""];
+				var lang_32 = ["Outlet permission setting", "输出位权限设置", "Boutique autorisation set", "Настройка прав выхода", "Preferencias de salida", ""];
+				
+				var lang_33 = ["Graph", "图表信息", "Graphique", "графический информация", "Información gráfica", ""];
+				var lang_34 = ["Temperature curve", "温度查询", "Temperature courbe", "температурный запрос", "Consulta de temperatura", ""];
+				var lang_35 = ["Humidity curve", "湿度查询", "Humidité courbe", "влажный запрос", "Consulta de humedad"];
+				var lang_36 = ["Phase Current curve", "相电流查询", "Courant de phase courbe", "запрос фазового тока", "Corriente eléctrica", ""];
+				var lang_37 = ["Phase Voltage curve", "相电压查询", "Tension de phase courbe", "запрос фазового напряжения", "Tensión de fase", ""];
+				var lang_38 = ["Total Active power curve", "总有功功率查询", "Total puissance courbe", "запрос активной мощности", "Búsqueda de potencia", ""];
+				
+				var lang_39 = ["Logs record", "日志查询", "Journal", "запрос журнала", "Consulta de registro", ""];
+				var lang_40 = ["Operation logs", "操作日志", "Manipuler journal", "журнал операций", "Registro de Operaciones", ""];
+				var lang_41 = ["Alarm logs", "告警日志", "Avertissement journal", "журнал оповещения", "Registro de alerta", ""];
+				var lang_42 = ["Energy logs", "电能查询", "Energie journal", "электрический запрос", "Consulta eléctrica", ""];
+				var lang_43 = ["Historical data", "历史数据", "Données historiques", "исторические данные", "Datos históricos", ""];
+				
+				var lang_44 = ["System tools", "系统工具", "Système outil", "системный инструмент", "Herramienta del sistema", ""];
+				var lang_45 = ["System information", "系统信息", "Système information", "системная информация", "Información del sistema", ""];
+				var lang_46 = ["System command", "系统命令", "Système ordre", "системная команда", "Orden del sistema", ""];
+		
+				var data = [{ "F_ModuleId": "1",   "F_ParentId": "0", "F_FullName": lang_1[fg],  "F_Icon": "fa fa-desktop", 	  "F_UrlAddress": null},
+							{ "F_ModuleId": "1_a", "F_ParentId": "1", "F_FullName": lang_2[fg],  "F_Icon": "fa fa-home",   	  "F_UrlAddress": "home.html"},
+							{ "F_ModuleId": "1_b", "F_ParentId": "1", "F_FullName": lang_3[fg],  "F_Icon": "fa fa-th-list",    	  "F_UrlAddress": "output.html"},
+							
+							{ "F_ModuleId": "2",   "F_ParentId": "0", "F_FullName": lang_4[fg],  "F_Icon": "fa fa-gear",  	  "F_UrlAddress": null},
+							{ "F_ModuleId": "2_a", "F_ParentId": "2", "F_FullName": lang_5[fg],  "F_Icon": "fa fa-cubes", 	   	  "F_UrlAddress": "device/device.html"},
+							{ "F_ModuleId": "2_b", "F_ParentId": "2", "F_FullName": lang_6[fg],  "F_Icon": "fa fa-database", 	  	  "F_UrlAddress": "device/group.html"},
+							{ "F_ModuleId": "2_c", "F_ParentId": "2", "F_FullName": lang_7[fg],  "F_Icon": "fa fa-bars",     	  "F_UrlAddress": "device/threshold.html"},
+							{ "F_ModuleId": "2_d", "F_ParentId": "2", "F_FullName": lang_8[fg],  "F_Icon": "fa fa-recycle","F_UrlAddress": "device/sensor.html"},
+							{ "F_ModuleId": "2_e", "F_ParentId": "2", "F_FullName": lang_9[fg],  "F_Icon": "fa fa-bolt", 	  "F_UrlAddress": "device/energy.html"},
+							// { "F_ModuleId": "2_f", "F_ParentId": "2", "F_FullName": lang_10[fg], "F_Icon": "fa fa-warning", 	  	  "F_UrlAddress": "device/super.html"},
+							// { "F_ModuleId": "2_g", "F_ParentId": "2", "F_FullName": lang_11[fg], "F_Icon": "fa fa-hourglass-1",     	  "F_UrlAddress": "device/time.html"},
+							// { "F_ModuleId": "2_h", "F_ParentId": "2", "F_FullName": lang_12[fg], "F_Icon": "fa fa-exchange",     	  "F_UrlAddress": "device/ping.html"},
+							{ "F_ModuleId": "2_i", "F_ParentId": "2", "F_FullName": lang_13[fg], "F_Icon": "fa fa-server",      	  "F_UrlAddress": "device/switch.html"},
+
+							{ "F_ModuleId": "3",   "F_ParentId": "0", "F_FullName": lang_14[fg], "F_Icon": "fa fa-rss", 	  "F_UrlAddress": null},
+							{ "F_ModuleId": "3_a", "F_ParentId": "3", "F_FullName": lang_15[fg], "F_Icon": "fa fa-cogs", 		  "F_UrlAddress": "network/net.html"},
+							{ "F_ModuleId": "3_b", "F_ParentId": "3", "F_FullName": lang_16[fg], "F_Icon": "fa fa-wifi", 	  "F_UrlAddress": "network/wifi.html"},
+							{ "F_ModuleId": "3_c", "F_ParentId": "3", "F_FullName": lang_17[fg], "F_Icon": "fa fa-sort-amount-desc", 	  "F_UrlAddress": "network/http.html"},
+							{ "F_ModuleId": "3_d", "F_ParentId": "3", "F_FullName": lang_18[fg], "F_Icon": "fa fa-object-group", 	  "F_UrlAddress": "network/ntp.html"},
+						/*	{ "F_ModuleId": "3_e", "F_ParentId": "3", "F_FullName": lang_19[fg], "F_Icon": "fa fa-magnet", 	  "F_UrlAddress": "network/ftp.html"},*/
+							{ "F_ModuleId": "3_f", "F_ParentId": "3", "F_FullName": lang_20[fg], "F_Icon": "fa fa-life-ring", 	  "F_UrlAddress": "network/smtp.html"},
+							{ "F_ModuleId": "3_g", "F_ParentId": "3", "F_FullName": lang_21[fg], "F_Icon": "fa fa-connectdevelop", 	  "F_UrlAddress": "network/mac.html"},
+							{ "F_ModuleId": "3_h", "F_ParentId": "3", "F_FullName": lang_22[fg], "F_Icon": "fa fa-map-marker", 	  "F_UrlAddress": "network/telnet.html"},
+							{ "F_ModuleId": "3_i", "F_ParentId": "3", "F_FullName": lang_23[fg], "F_Icon": "fa fa-crosshairs", 	  "F_UrlAddress": "network/modbus.html"},
+							{ "F_ModuleId": "3_j", "F_ParentId": "3", "F_FullName": lang_24[fg], "F_Icon": "fa fa-binoculars", 	  "F_UrlAddress": "network/snmp.html"},
+							{ "F_ModuleId": "3_k", "F_ParentId": "3", "F_FullName": lang_25[fg], "F_Icon": "fa fa-bullseye", 	  "F_UrlAddress": "network/radius.html"},
+							{ "F_ModuleId": "3_l", "F_ParentId": "3", "F_FullName": lang_26[fg], "F_Icon": "fa fa-file-video-o", 	  "F_UrlAddress": "network/syslog.html"},
+							{ "F_ModuleId": "3_m", "F_ParentId": "3", "F_FullName": lang_27[fg], "F_Icon": "fa fa-forumbee", 	  "F_UrlAddress": "network/ldap.html"},
+							{ "F_ModuleId": "3_n", "F_ParentId": "3", "F_FullName": lang_28[fg], "F_Icon": "fa fa-pie-chart", 	  "F_UrlAddress": "network/zebra.html"},
+							
+							{ "F_ModuleId": "4",   "F_ParentId": "0", "F_FullName": lang_29[fg], "F_Icon": "fa fa-user", 	  "F_UrlAddress": null},
+							{ "F_ModuleId": "4_a", "F_ParentId": "4", "F_FullName": lang_30[fg], "F_Icon": "fa fa-user-plus", 		  "F_UrlAddress": "user/user.html"},
+							{ "F_ModuleId": "4_b", "F_ParentId": "4", "F_FullName": lang_31[fg], "F_Icon": "fa fa-users",   "F_UrlAddress": "user/usergp.html"},
+							{ "F_ModuleId": "4_c", "F_ParentId": "4", "F_FullName": lang_32[fg], "F_Icon": "fa fa-user-times",   "F_UrlAddress": "user/userrights.html"},
+							
+							{ "F_ModuleId": "5",   "F_ParentId": "0", "F_FullName": lang_33[fg], "F_Icon": "fa fa-area-chart", 	  "F_UrlAddress": null},
+							{ "F_ModuleId": "5_a", "F_ParentId": "5", "F_FullName": lang_34[fg], "F_Icon": "fa fa-trademark", 		  "F_UrlAddress": "chart/temp.html"},
+							{ "F_ModuleId": "5_b", "F_ParentId": "5", "F_FullName": lang_35[fg], "F_Icon": "fa fa-tint", 		  "F_UrlAddress": "chart/hum.html"},
+							{ "F_ModuleId": "5_c", "F_ParentId": "5", "F_FullName": lang_36[fg], "F_Icon": "fa fa-bar-chart", 	  "F_UrlAddress": "chart/current.html"},
+							{ "F_ModuleId": "5_d", "F_ParentId": "5", "F_FullName": lang_37[fg], "F_Icon": "fa fa-line-chart", 	  "F_UrlAddress": "chart/voltage.html"},
+							{ "F_ModuleId": "5_e", "F_ParentId": "5", "F_FullName": lang_38[fg], "F_Icon": "fa fa-file-archive-o", 	  "F_UrlAddress": "chart/power.html"},
+							
+							{ "F_ModuleId": "6",   "F_ParentId": "0", "F_FullName": lang_39[fg], "F_Icon": "fa fa-globe", 		  "F_UrlAddress": null},
+							{ "F_ModuleId": "6_b", "F_ParentId": "6", "F_FullName": lang_40[fg], "F_Icon": "fa fa-list-ol", 	  "F_UrlAddress": "log/operatelog.html"},
+							{ "F_ModuleId": "6_c", "F_ParentId": "6", "F_FullName": lang_41[fg], "F_Icon": "fa fa-outdent", 	  "F_UrlAddress": "log/alarmlog.html"},
+							{ "F_ModuleId": "6_d", "F_ParentId": "6", "F_FullName": lang_42[fg], "F_Icon": "fa fa-columns", 	  "F_UrlAddress": "log/energylog.html"},
+							{ "F_ModuleId": "6_d", "F_ParentId": "6", "F_FullName": lang_43[fg], "F_Icon": "fa fa-file-text", 	  "F_UrlAddress": "log/historylog.html"},
+							
+							{ "F_ModuleId": "7",   "F_ParentId": "0", "F_FullName": lang_44[fg], "F_Icon": "fa fa-briefcase", 	  "F_UrlAddress": null},
+							{ "F_ModuleId": "7_a", "F_ParentId": "7", "F_FullName": lang_45[fg], "F_Icon": "fa fa fa-book", 	  "F_UrlAddress": "system/system.html"},
+							{ "F_ModuleId": "7_b", "F_ParentId": "7", "F_FullName": lang_46[fg], "F_Icon": "fa fa fa-book", 	  "F_UrlAddress": "system/reboot.html"},
+							];
+			   
+			   var _html = "";
+				$.each(data, function (i) {
+					var row = data[i];
+					if (row.F_ParentId == "0") {
+						if (i == 0) {
+							_html += '<li class="treeview active">';
+						} else {
+							_html += '<li class="treeview">';
+						}
+						_html += '<a href="#">'
+						_html += '<i class="' + row.F_Icon + '"></i><span>' + row.F_FullName + '</span><i class="fa fa-angle-left pull-right"></i>'
+						_html += '</a>'
+						var childNodes = $.learunindex.jsonWhere(data, function (v) { return v.F_ParentId == row.F_ModuleId });
+						if (childNodes.length > 0) {
+							_html += '<ul class="treeview-menu">';
+							$.each(childNodes, function (i) {
+								var subrow = childNodes[i];
+								var subchildNodes = $.learunindex.jsonWhere(data, function (v) { return v.F_ParentId == subrow.F_ModuleId });
+								_html += '<li>';
+								if (subchildNodes.length > 0) {
+									_html += '<a href="#"><i class="' + subrow.F_Icon + '"></i>' + subrow.F_FullName + '';
+									_html += '<i class="fa fa-angle-left pull-right"></i></a>';
+									_html += '<ul class="treeview-menu">';
+									$.each(subchildNodes, function (i) {
+										var subchildNodesrow = subchildNodes[i];
+										_html += '<li><a class="menuItem" data-id="' + subrow.F_ModuleId + '" href="' + subrow.F_UrlAddress + '"><i class="' + subchildNodesrow.F_Icon + '"></i>' + subchildNodesrow.F_FullName + '</a></li>';
+									});
+									_html += '</ul>';
+
+								} else {
+									_html += '<a class="menuItem" data-id="' + subrow.F_ModuleId + '" href="' + subrow.F_UrlAddress + '"><i class="' + subrow.F_Icon + '"></i>' + subrow.F_FullName + '</a>';
+								}
+								_html += '</li>';
+							});
+							_html += '</ul>';
+						}
+						_html += '</li>'
+					}
+				});
+				$("#sidebar-menu").append(_html);
+				$("#sidebar-menu li a").click(function () {
+					var d = $(this), e = d.next();
+					if (e.is(".treeview-menu") && e.is(":visible")) {
+						e.slideUp(500, function () {
+							e.removeClass("menu-open")
+						}),
+						e.parent("li").removeClass("active")
+					} else if (e.is(".treeview-menu") && !e.is(":visible")) {
+						var f = d.parents("ul").first(),
+						g = f.find("ul:visible").slideUp(500);
+						g.removeClass("menu-open");
+						var h = d.parent("li");
+						e.slideDown(500, function () {
+							e.addClass("menu-open"),
+							f.find("li.active").removeClass("active"),
+							h.addClass("active");
+
+							var _height1 = $(window).height() - $("#sidebar-menu >li.active").position().top - 41;
+							var _height2 = $("#sidebar-menu li > ul.menu-open").height() + 10
+							if (_height2 > _height1) {
+								$("#sidebar-menu >li > ul.menu-open").css({
+									overflow: "auto",
+									height: _height1
+								})
+							}
+						})
+					}
+					e.is(".treeview-menu");
+				});
+			}
+		};
+		$(function () {
+			$.learunindex.load();
+			$.learunindex.loadMenu();
+			$.learuntab.init();
+		});
+	})(jQuery);
+}
+
+function langflag(num)
+	{
+		LangFun(num);
+		$.ajax({
+				dataType:"text",
+				url:"/langflag?id1="+num+"&",
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					if(sta=="flase")
+					{
+						alert("No permission!");
+					}
+				}
+			});
+		window.location.reload();
+	}
+	
+function getVer()	
+	{
+		$.ajax({
+				dataType:"text",
+				url:"/getdebug",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					var ff= gv[19].replace("\n","");
+					if(ff == "0")
+						document.getElementById("ver").style.display='';
+					else	
+						document.getElementById("ver").style.display="none";
+				}
+			});
+	}
+
+</script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden;" >
+    <div class="wrapper">
+        <!--头部信息-->
+        <header class="main-header">
+            <a href="http://www.china-clever.com" class="logo">
+                <span class="logo-mini">PDU</span>
+                <span class="logo-lg"><img src="img/logo.jpg" style="width:43px;height:43px;margin-right:10px;margin-top:-3px;border-style:solid;border-width:1px; border-color:#ffffff; display:none;" id="ver"></img>ZPDU<strong></strong></span>
+            </a>
+            <nav class="navbar">
+				
+			
+                <a class="sidebar-toggle"></a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                       
+                        <li class="dropdown user user-menu" style="display:none;">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!--img src="img/user2-160x160.jpg" class="user-image" alt="User Image"-->
+                                <span class="hidden-xs">administrator</span>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a class="menuItem" data-id="userInfo" href="/SystemManage/User/Info"><i class="fa fa-user"></i><span id="ch1"></span></a></li>
+                                <li><a href="javascript:void();"><i class="fa fa-trash-o"></i><span id="ch2"></span></a></li>
+                                <li><a href="javascript:void();"><i class="fa fa-paint-brush"></i><span id="ch3"></span></a></li>
+                                <li class="divider"></li>
+                                <li><a href="~/Login/OutLogin"><i class="ace-icon fa fa-power-off"></i><span id="ch4"></span></a></li>
+                            </ul>
+                        </li>
+						
+						<!--li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="img/logo.png" class="user-image">
+                                
+                            </a>
+                         
+                        </li-->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!--左边导航-->
+        <div class="main-sidebar">
+            <div class="sidebar">
+               
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <a class="btn btn-flat"><i class="fa fa-search"></i></a>
+                        </span>
+                    </div>
+                </form>
+                <ul class="sidebar-menu" id="sidebar-menu">
+                    <!--<li class="header">导航菜单</li>-->
+                </ul>
+            </div>
+        </div>
+        <!--中间内容-->
+        <div id="content-wrapper" class="content-wrapper">
+            <div class="content-tabs">
+                <button class="roll-nav roll-left tabLeft">
+                    <i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs menuTabs">
+                    <div class="page-tabs-content" style="margin-left: 0px;">
+                        <a href="javascript:;" class="menuTab active" data-id="home.html"><span id="ch5"></span></a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right tabRight">
+                    <i class="fa fa-forward" style="margin-left: 3px;"></i>
+                </button>
+                <div class="roll-nav roll-right btn-group ">
+                    <button class="dropdown tabClose" data-toggle="dropdown"><span id="ch6"></span>
+                        <i class="fa fa-caret-down" style="padding-left: 3px;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a class="tabReload" href="javascript:void();"><span id="ch7"></span></a></li>
+                        <li><a class="tabCloseCurrent" href="javascript:void();"><span id="ch8"></span></a></li>
+                        <li><a class="tabCloseAll" href="javascript:void();"><span id="ch9"></span></a></li>
+                        <li><a class="tabCloseOther" href="javascript:void();"><span id="ch10"></span></a></li>
+                    </ul>
+                </div>
+				<div class="roll-nav roll-right btn-lang ">
+                    <button class="dropdown tabClose" data-toggle="dropdown"><span id="ch11"></span>
+                        <i class="fa fa-caret-down" style="padding-left: 3px;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" >
+                        <li style="width:80px;"><a class="tabReload"  onClick="langflag(0);"><span id="ch12"></span></a></li>
+                        <li style="width:80px;"><a class="tabCloseCurrent" onClick="langflag(1);"><span id="ch13"></span></a></li>
+                        <li style="width:80px;"><a class="tabCloseAll" onClick="langflag(2);"><span id="ch14"></span></a></li>
+                        <li style="width:80px;"><a class="tabCloseOther" onClick="langflag(3);"><span id="ch15"></span></a></li>
+                        <li style="width:80px;"><a class="tabCloseOther" onClick="langflag(4);"><span id="ch16"></span></a></li>
+						<li style="width:80px;"><a class="tabCloseAll" onClick="langflag(5);"><span id="ch17"></span></a></li>
+                    </ul>
+                </div>
+                <button class="roll-nav roll-right fullscreen"><i class="fa fa-arrows-alt"></i></button>
+            </div>
+            <div class="content-iframe" style="overflow: hidden; background-color:#ffffff;">
+                <div class="mainContent" id="content-main" style="margin: 10px; margin-bottom: 0px; padding: 0; ">
+                    <iframe class="LRADMS_iframe" width="100%" height="100%" src="home.html" frameborder="0" data-id="home.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

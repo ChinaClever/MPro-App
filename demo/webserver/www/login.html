@@ -1,0 +1,215 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ZPDU</title>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/my.js"></script>
+<!--[if lte IE 9]>
+    <script type="text/javascript" src="html5.js"></script>
+	<script type="text/javascript" src="ie-css3.js"></script>
+<![endif]-->
+<script>
+	var flag;
+	var username;
+	var password;
+	var psd_check;
+	$(document).ready(function () {
+		$.ajax({
+			dataType:"text",
+			url:"/check_register",
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				flag = parseInt(gv[0]);
+				LangFun(flag);		
+				if(parseInt(gv[1])==1)
+				{
+					document.getElementById("login").style.display='';
+				}
+				else
+				{
+					document.getElementById("register").style.display='';
+					document.getElementById("prompt").style.display='';
+				}
+			}
+		});
+	});
+
+	function LangFun(flag)
+	{
+		var lang_1 = ["ZPDU Management System", "ZPDU管理系统", "ZPDU Système Gestion", "ZPDU система управления", "ZPDU Sistema de gestión", ""];
+		var lang_2 = ["Username：", "用户名称：", "Utilisateur", "пользователь", "Usuario", ""];
+		var lang_3 = ["Password：", "用户密码：", "Mot de passe", "пароль", "Contraseña", ""];
+		var lang_4 = ["Login", "登录", "Connecter", "вход", "Entrada", ""];
+		var lang_5 = ["Enter again:", "确认密码："];
+		var lang_6 = ["Register", "注册"];
+		var lang_7 = ["Log in for the first time, please register as a user", "首次登陆，请注册用户", "", "", "", ""];
+		var lang_8 = ["Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "密码规则：密码中必须包含大写字母、小写字母、数字,且至少8个字符，最多16个字符！", "", "", "", ""];
+	
+		document.getElementById("lang_1").innerHTML = lang_1[flag];
+		document.getElementById("lang_2").innerHTML = lang_2[flag];
+		document.getElementById("lang_3").innerHTML = lang_3[flag];
+		document.getElementById("lang_4").value = lang_4[flag];
+		document.getElementById("lang_5").innerHTML = lang_1[flag];
+		document.getElementById("lang_6").innerHTML = lang_2[flag];
+		document.getElementById("lang_7").innerHTML = lang_3[flag];
+		document.getElementById("lang_8").innerHTML = lang_5[flag];
+		document.getElementById("lang_9").value = lang_6[flag];
+		document.getElementById("lang_10").innerHTML = lang_7[flag];
+		document.getElementById("lang_11").innerHTML = lang_8[flag];
+	}
+	
+	var hint_1 = ["The username or password does not conform to the rules!", "用户名或者密码不符合规则！"];
+	var hint_2 = ["Incorrect username or password!", "用户名或者密码不正确！"];
+	var login_err = ["Username or password is incorrect for 5 consecutive times, wait 1 hour before logging in", "用户名或密码连续 5 次不正确，在登录前等待1小时"];
+	
+	// 保存Cookie
+	function SetCookie(username, password) {
+		var Then = new Date();
+		Then.setTime(Then.getTime() + 3*60*1000);  //设置有效时间为1分钟
+		document.cookie += ("username=" + username + "%%" + password );      //+ ";expires=" + Then.toGMTString()
+	}
+
+	function submit(obj) 
+	{
+		if(obj.name=="login")
+		{
+			username=document.getElementById("name").value;
+			password=document.getElementById("psd").value;
+
+			$.ajax({
+				dataType:"text",
+				url:"/user_login?id1="+username+"&id2="+password+"&",
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if(sta=="ERR")
+					{
+						alert(hint_2[flag]);
+						return;
+					}
+					//else if(sta=="login_err")
+					//{
+					//	alert(login_err[flag]);
+					//	return;
+					//}
+					else
+					{
+						//SetCookie(username, password);
+						document.location.href="/user_login?id1="+username+"&id2="+password+"&";
+					}
+				}
+
+		
+			});
+		}
+		else if(obj.name=="register")  
+		{
+			username = document.getElementById("name_create").value;
+			password = document.getElementById("psd_create").value;
+			psd_check = document.getElementById("psd_check").value;
+			
+			if(regular_expression_user.exec(username) && regular_expression_psd.exec(password) && password==psd_check)
+			{
+				$.ajax({
+					dataType:"text",
+					url:"/user_register?id1="+username+"&id2="+password+"&id3="+psd_check+"&",
+					async:true,
+					cache:false,
+					success:function(sta)
+					{
+						if(sta=="OK")
+						{
+							document.getElementById("register").style.display='none';
+							document.getElementById("prompt").style.display='none';
+							document.getElementById("login").style.display='';
+							return;
+						}
+					}
+				});
+			}
+			else
+			{
+				alert(hint_1[flag]);
+			}
+		}
+	}
+
+	function keydm(){
+		if(event.keyCode == 13){
+			submit(obj);
+		}
+
+	}
+
+	function mov(obj)
+	{
+		obj.style.cursor="pointer";
+		obj.style.color="#a90b93";
+	}
+	function movout(obj)
+	{
+		obj.style.color="#2a97c3";
+	}
+</script>
+
+<style type="text/css">
+.font{
+	font-size:17px; color:#3f3f3f;
+	font-family: 'Times New Roman', Times, serif;
+}
+/*table tr td{border:1px solid red;}*/
+</style>
+
+</head>
+<body onkeydown="keydm()" style="overflow:auto; background-image:url(img/background.jpg); ">
+<div align="center" >
+	<div style=" width:630px; height:360px; background:url(img/login-bg.png); background-repeat:round;  margin-top:150px;">
+		
+		<div id="login" style="display:none;">
+		<table style=" position:relative; top:70px; height:220px; width:250px; text-align:center">
+			<tr ><td  colspan="2" id="lang_1"></td></tr>
+			<tr>
+				<td style="position:relative; top:15px;" id="lang_2" nowrap></td>
+				<td style="position:relative; top:15px;"><input id="name" class="font" type="text" style="width:180px;height:20px;" /></td>
+			</tr>
+			<tr>
+				<td id="lang_3" nowrap></td>
+				<td><input id="psd" class="font" type="password" style="width:180px;height:20px;" /></td>
+			</tr>
+			<tr ><td colspan="2" style="position:relative; top:7px;"><input name="login" type="button"   onMouseMove="mov(this);" onMouseOut="movout(this);" onClick="submit(this);" id="lang_4"/></td></tr>
+		</table>
+		</div>
+		
+		<div id="register" style="display:none;">
+		<table style=" position:relative; top:70px; height:220px; width:270px; text-align:center">
+			<tr ><td  colspan="2" id="lang_5"></td></tr>
+			<tr>
+				<td id="lang_6" nowrap></td>
+				<td><input id="name_create" class="font" type="text" style="width:180px;height:20px;" /></td>
+			</tr>
+			<tr>
+				<td id="lang_7" nowrap></td>
+				<td><input id="psd_create" class="font" type="password" style="width:180px;height:20px;" /></td>
+			</tr>
+			<tr>
+				<td id="lang_8" nowrap></td>
+				<td><input id="psd_check" class="font" type="password" style="width:180px;height:20px;" /></td>
+			</tr>
+			<tr ><td colspan="2" style="position:relative; top:2px;"><input name="register" type="button"   onMouseMove="mov(this);" onMouseOut="movout(this);" onClick="submit(this);" id="lang_9"/></td></tr>
+		</table>
+		</div>	
+	</div>
+	
+	<div id="prompt" style="position:relative; top:50px; display:none;">
+		<span style="position:relative; top:10px; color:#000000" align="center" nowrap id="lang_10"></span>
+		<br/>
+		<span style="position:relative; top:30px; color:#000000" align="center" nowrap id="lang_11"></span>
+	</div>
+	
+</div>
+</body>
+</html>

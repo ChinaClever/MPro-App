@@ -83,6 +83,10 @@ bool cm::isIPaddress(const QString& ip)
     return false;
 }
 
+bool cm::language()
+{
+    return masterDev()->cfg.param.language ? false: true;
+}
 
 /**
  * @brief 转16进制

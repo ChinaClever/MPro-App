@@ -17,6 +17,8 @@ private:
 private slots:
     void initFunSlot();
     void startThreadSlot();
+
+
 };
 
 #endif // APP_START_H

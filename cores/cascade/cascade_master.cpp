@@ -19,8 +19,7 @@ bool Cascade_Master::masterRead(uchar addr)
         if((it.fc == fc_readDev) && it.srcAddr){
             deDataStream(it.data); ret = unSequence(it.srcAddr);
         } else qCritical() << "Error: Cascade Master fc" << it.fc;
-    }
-    qDebug() << Q_FUNC_INFO << addr << ret;
+    } //qDebug() << Q_FUNC_INFO << addr << ret;
 
     return ret;
 }
@@ -28,26 +27,27 @@ bool Cascade_Master::masterRead(uchar addr)
 
 void Cascade_Master::masterReadDevs()
 {
-    using namespace cm;
+    using namespace cm; int t = 100;
     uint size = masterDev()->cfg.nums.slaveNum;
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(i, ret, devData(i+1)->offLine);
-    } mdelay(320);
+    }
+
+    if(masterDev()->cfg.param.runTime > 48*60) t = 500;
+    t = QRandomGenerator::global()->bounded(t); mdelay(320+t);
 }
 
 void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
-        if(v == 0) {
-            //qDebug() << " error slave up";
+        if(v == 1) {
             sSysItem it; it.module = tr("级联");
             it.content = tr("副机 %1 连接正常").arg(addr+1);
             Log_Core::bulid(this)->append(it);
-        } v = 3;
-    } else if(v > 0){
-        if(--v == 0)  {
-            //qDebug() << " error slave lose";
+        } v = 5;
+    } else if(v > 1){
+        if(--v == 1)  {
             sSysItem it; it.module = tr("级联");
             it.content = tr("副机 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);

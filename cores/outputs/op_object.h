@@ -13,17 +13,17 @@ struct sOpIt
     uchar addr;
     uchar size;
     uchar hz;
-    ushort vol[OP_ARRAY_SIZE]; // 电压
-    ushort cur[OP_ARRAY_SIZE]; // 电流
+    uint vol[OP_ARRAY_SIZE]; // 电压
+    uint cur[OP_ARRAY_SIZE]; // 电流
     uint pow[OP_ARRAY_SIZE]; // 有功功率
     uint ele[OP_ARRAY_SIZE]; // 电能
-    uchar pf[OP_ARRAY_SIZE]; // 功率因数
-    uchar sw[OP_ARRAY_SIZE]; // 开关状态  0 表示未启用 1 表示开
+    uint pf[OP_ARRAY_SIZE]; // 功率因数
+    uint sw[OP_ARRAY_SIZE]; // 开关状态  0 表示未启用 1 表示开
     uint activePow[OP_ARRAY_SIZE]; // 视在功率
     uint reactivePow[OP_ARRAY_SIZE]; // 无功功率
     uchar chipStatus; //  01表示执行版计量芯片模块损坏，00表示正常
     uchar version;  // 执行板软件版本号
-    uchar ens[4];
+    uchar ens[DEV_NUM];
 };
 
 class OP_Object : public SerialPort
@@ -34,6 +34,17 @@ public:
 
 protected:
     void fillData(uchar addr);
+
+private:
+    bool volFaultCheck(uchar k, uchar i);
+    bool curFaultCheck(uchar k, uchar i);
+    void powFaultCheck(uchar k, uchar i);
+    void eleFaultCheck(uchar k, uchar i);
+
+    void recoveryLog(int id, uint *cnt);
+    void faultLog(int id, uint *cnt, uint value);
+    void faultCode(int id, bool f, uint *cnt, FaultCode code);
+    bool dataFiltering(uint &dest, uint &src, uint max, uint min=0);
 
 protected:
     sOpIt *mOpData;

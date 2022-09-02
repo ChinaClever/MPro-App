@@ -1,0 +1,477 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+	var flag;
+	$(document).ready(function () {
+		$.ajax({
+				dataType:"text",
+				url:"/getgroupinfo",
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					for(var i=1;i<11;i++)
+					{
+						if(gv[i])
+						{
+						document.getElementById("gp").options.add(new Option(gv[i],gv[i]));
+						}
+					}
+				}
+			});
+		$.ajax({
+					dataType:"text",
+					url:"/npmslavelist",
+					cache:false,
+					success:function(sta)
+					{
+						var gv = new Array();
+						gv=sta.split("?");
+						flag = parseInt(gv[0]);
+						LangFun();
+						for(var i=0;i<10;i++)
+						{
+							if(gv[i*2+2])
+							{
+								document.getElementById("device").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+							}
+						}
+					}
+				});
+		loaddata();
+	});
+	
+	function change()
+	{
+		loaddata();
+	}
+	function loaddata()
+	{
+		var gp = document.getElementById("gp").value;
+		if(gp=="")
+			return;
+		var device = document.getElementById("device").value;
+		if(device=="")
+			device="0";
+		$.ajax({
+			dataType:"text",
+			url:"/gpmainper2?id1="+gp+"&id2="+device,
+			async:false,
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				var i;
+				for(i=0;i<42;i++)
+				{
+					if(gv[i]=="1")
+					{
+						document.getElementById("out"+i).style.display = '';
+						document.getElementById("p"+i).checked = true;
+					}
+					else if (gv[i]=="0")
+					{
+						document.getElementById("out"+i).style.display = '';
+						document.getElementById("p"+i).checked = false;
+					}
+					else
+					{
+						document.getElementById("out"+i).style.display = "none";
+					}
+				}
+			}
+		});
+	}
+	function deletegp()
+	{
+		var gp = document.getElementById("gp").value;
+		$.ajax({
+					dataType:"text",
+					url:"/deletegp?id1="+gp,
+					async:false,
+					cache:false,
+					success:function(sta)
+					{
+						if(flag==0)
+						{
+							if(sta =="err")
+							{
+								alert("Incorrect settings!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("No permission!");
+								return;
+							}
+						}
+						else
+						{
+							if(sta =="err")
+							{
+								alert("配置错误!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("不允许!");
+								return;
+							}
+						}
+					}
+				});
+		window.location.reload();
+		//alert("Successfully deleted user group!");
+	}
+	function savegp()
+	{
+		var per="";
+		var gp = document.getElementById("gp").value;
+		if(gp=="")
+			return;
+		var device = document.getElementById("device").value;
+		if(device=="")
+			device="0";
+		for(i=0;i<42;i++)
+		{
+			if(document.getElementById("p"+i).checked ==true)
+			{
+				per += 1;
+			}
+			else
+			{
+				per += 0;
+			}
+		}
+		$.ajax({
+				dataType:"text",
+				url:"/savegpoutput?id1="+gp+"&id2="+device+"&id3="+per,
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					if(flag==0)
+					{
+						if(sta =="err")
+						{
+							alert("Incorrect settings!");
+							return;
+						}
+						else if(sta =="flase")
+						{
+							alert("No permission!");
+							return;
+						}
+					}
+					else
+					{
+						if(sta =="err")
+						{
+							alert("配置错误!");
+							return;
+						}
+						else if(sta =="flase")
+						{
+							alert("不允许!");
+							return;
+						}
+					}
+				}
+			});
+	}
+	
+	function LangFun()
+	{
+		var lang_1  = ["Outlet access permission setting", "输出位权限设置", "Output bit", "Настройка прав выхода", "Preferencias de salida", "إعداد إذن بت الإخراج"];
+		var lang_2  = ["User permission setting", "用户组权限设置", "Paramètres de droits de groupe d 'utilisateurs", "Настройки прав пользователей", "Preferencias del Grupo de usuarios", "إعدادات إذن مجموعة المستخدم"];
+		var lang_3  = ["User group:", "用户组:", "Groupe d 'utilisateurs", "группа пользователей", "Grupo de usuarios", "مجموعة المستخدم"];
+		var lang_4  = ["PDU", "设备:", "PDU", "устройство", "Equipo", "معدات"];
+		var lang	= ["Outlet", "输出位", "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
+		var lang_29 = ["Delete", "删除", "Delete", "Удалить", "Eliminar", "حذف"];
+		var lang_30 = ["Save", "保存", "Enregistrer", "Сохранить", "Guardar", "تخزين"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		for(var i=1;i<43;i++)
+		{
+			var num=i+4;
+			document.getElementById("lang_"+num).innerHTML=lang[flag]+i;
+		}
+		document.getElementById("lang_47").value 	 = lang_29[flag];
+		document.getElementById("lang_48").value 	 = lang_30[flag];
+	}	
+</script>
+</head>
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:500px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_3"></td>
+				<td ><select id="gp" style="width:200px;" onChange="change();"></select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td id="lang_4"></td>
+				<td><select id="device" style="width:200px;" onChange="change();"></select></td>
+			</tr>
+			</table>
+			
+			<table border="0" style="font-size:12px;">
+			<tr id="out0" align="left">
+				<td width="10px"></td>
+				<td id="lang_5" width="120"  ></td>
+				<td><input id="p0" type="checkbox"></input></td>
+			</tr>
+			<tr id="out1" align="left">
+				<td width="10px"></td>
+				<td id="lang_6" width="120"  ></td>
+				<td><input id="p1" type="checkbox"></input></td>
+			</tr>
+			<tr id="out2" align="left">
+				<td width="10px"></td>
+				<td id="lang_7" width="120"  ></td>
+				<td><input id="p2" type="checkbox"></input></td>
+			</tr>
+			<tr id="out3" align="left">
+				<td width="10px"></td>
+				<td id="lang_8" width="120"  ></td>
+				<td><input id="p3" type="checkbox"></input></td>
+			</tr>
+			<tr id="out4" align="left">
+				<td width="10px"></td>
+				<td id="lang_9" width="120"  ></td>
+				<td><input id="p4" type="checkbox"></input></td>
+			</tr>
+			<tr id="out5" align="left">
+				<td width="10px"></td>
+				<td id="lang_10" width="120"  ></td>
+				<td><input id="p5" type="checkbox"></input></td>
+			</tr>
+			<tr id="out6" align="left">
+				<td width="10px"></td>
+				<td id="lang_11" width="120"  ></td>
+				<td><input id="p6" type="checkbox"></input></td>
+			</tr>
+			<tr id="out7" align="left">
+				<td width="10px"></td>
+				<td id="lang_12" width="120"  ></td>
+				<td><input id="p7" type="checkbox"></input></td>
+			</tr>
+			<tr id="out8" align="left">
+				<td width="10px"></td>
+				<td id="lang_13" width="120"  ></td>
+				<td><input id="p8" type="checkbox"></input></td>
+			</tr>
+			<tr id="out9" align="left">
+				<td width="10px"></td>
+				<td id="lang_14" width="120"  ></td>
+				<td><input id="p9" type="checkbox"></input></td>
+			</tr>
+			<tr id="out10" align="left">
+				<td width="10px"></td>
+				<td id="lang_15" width="120"  ></td>
+				<td><input id="p10" type="checkbox"></input></td>
+			</tr>
+			<tr id="out11" align="left">
+				<td width="10px"></td>
+				<td id="lang_16" width="120"  ></td>
+				<td><input id="p11" type="checkbox"></input></td>
+			</tr>
+			</table>
+			
+			<table border="0" style="position: absolute; font-size:12px; top:135px; left:320px;">
+			<tr id="out12" align="left">
+				<td id="lang_17" width="120"  ></td>
+				<td><input id="p12" type="checkbox"></input></td>
+			</tr>
+			<tr id="out13" align="left">
+				<td id="lang_18" width="120"  ></td>
+				<td><input id="p13" type="checkbox"></input></td>
+			</tr>
+			<tr id="out14" align="left">
+				<td id="lang_19" width="120"  ></td>
+				<td><input id="p14" type="checkbox"></input></td>
+			</tr>
+			<tr id="out15" align="left">
+				<td id="lang_20" width="120"  ></td>
+				<td><input id="p15" type="checkbox"></input></td>
+			</tr>
+			<tr id="out16" align="left">
+				<td id="lang_21" width="120"  ></td>
+				<td><input id="p16" type="checkbox"></input></td>
+			</tr>
+			<tr id="out17" align="left">
+				<td id="lang_22" width="120"  ></td>
+				<td><input id="p17" type="checkbox"></input></td>
+			</tr>
+			<tr id="out18" align="left">
+				<td id="lang_23" width="120"  ></td>
+				<td><input id="p18" type="checkbox"></input></td>
+			</tr>
+			<tr id="out19" align="left">
+				<td id="lang_24" width="120"  ></td>
+				<td><input id="p19" type="checkbox"></input></td>
+			</tr>
+			<tr id="out20" align="left">
+				<td id="lang_25" width="120"  ></td>
+				<td><input id="p20" type="checkbox"></input></td>
+			</tr>
+			<tr id="out21" align="left">
+				<td id="lang_26" width="120"  ></td>
+				<td><input id="p21" type="checkbox"></input></td>
+			</tr>
+			<tr id="out22" align="left">
+				<td id="lang_27" width="120"  ></td>
+				<td><input id="p22" type="checkbox"></input></td>
+			</tr>
+			<tr id="out23" align="left">
+				<td id="lang_28" width="120"  ></td>
+				<td><input id="p23" type="checkbox"></input></td>
+			</tr>
+			
+			</table>
+			
+			<table border="0" style="position: absolute; font-size:12px; top:135px; left:640px;">
+			<tr id="out24" align="left">
+				<td id="lang_29" width="120"  ></td>
+				<td><input id="p24" type="checkbox"></input></td>
+			</tr>
+			<tr id="out25" align="left">
+				<td id="lang_30" width="120"  ></td>
+				<td><input id="p25" type="checkbox"></input></td>
+			</tr>
+			<tr id="out26" align="left">
+				<td id="lang_31" width="120"  ></td>
+				<td><input id="p26" type="checkbox"></input></td>
+			</tr>
+			<tr id="out27" align="left">
+				<td id="lang_32" width="120"  ></td>
+				<td><input id="p27" type="checkbox"></input></td>
+			</tr>
+			<tr id="out28" align="left">
+				<td id="lang_33" width="120"  ></td>
+				<td><input id="p28" type="checkbox"></input></td>
+			</tr>
+			<tr id="out29" align="left">
+				<td id="lang_34" width="120"  ></td>
+				<td><input id="p29" type="checkbox"></input></td>
+			</tr>
+			<tr id="out30" align="left">
+				<td id="lang_35" width="120"  ></td>
+				<td><input id="p30" type="checkbox"></input></td>
+			</tr>
+			<tr id="out31" align="left">
+				<td id="lang_36" width="120"  ></td>
+				<td><input id="p31" type="checkbox"></input></td>
+			</tr>
+			<tr id="out32" align="left">
+				<td id="lang_37" width="120"  ></td>
+				<td><input id="p32" type="checkbox"></input></td>
+			</tr>
+			<tr id="out33" align="left">
+				<td id="lang_38" width="120"  ></td>
+				<td><input id="p33" type="checkbox"></input></td>
+			</tr>
+			<tr id="out34" align="left">
+				<td id="lang_39" width="120"  ></td>
+				<td><input id="p34" type="checkbox"></input></td>
+			</tr>
+			<tr id="out35" align="left">
+				<td id="lang_40" width="120"  ></td>
+				<td><input id="p35" type="checkbox"></input></td>
+			</tr>
+			
+			</table>
+			
+			<table border="0" style="position: absolute; font-size:12px; top:135px; left:960px;">
+			<tr id="out36" align="left">
+				<td id="lang_41" width="120"  ></td>
+				<td><input id="p36" type="checkbox"></input></td>
+			</tr>
+			<tr id="out37" align="left">
+				<td id="lang_42" width="120"  ></td>
+				<td><input id="p37" type="checkbox"></input></td>
+			</tr>
+			<tr id="out38" align="left">
+				<td id="lang_43" width="120"  ></td>
+				<td><input id="p38" type="checkbox"></input></td>
+			</tr>
+			<tr id="out39" align="left">
+				<td id="lang_44" width="120"  ></td>
+				<td><input id="p39" type="checkbox"></input></td>
+			</tr>
+			<tr id="out40" align="left">
+				<td id="lang_45" width="120"  ></td>
+				<td><input id="p40" type="checkbox"></input></td>
+			</tr>
+			<tr id="out41" align="left">
+				<td id="lang_46" width="120"  ></td>
+				<td><input id="p41" type="checkbox"></input></td>
+			</tr>
+			
+			</table>
+			<table>
+			<tr>
+				<td width="10px"></td>
+				<td colspan="2">
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="deletegp();" id="lang_47"></input>
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="savegp();" id="lang_48"></input>
+				</td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+</html>

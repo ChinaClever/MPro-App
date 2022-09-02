@@ -3,8 +3,9 @@
 
 #include "mb_update.h"
 
-class Mb_Core : public QRunnable
+class Mb_Core : public QThread
 {
+    Q_OBJECT
     explicit Mb_Core(QObject *parent = nullptr);
 public:
     static Mb_Core *bulid(QObject *parent = nullptr);
@@ -17,18 +18,19 @@ public:
     void setPort(int port);
 
 public slots:
-    void run() override;
+    void run();
+    void initFunSlot();
     bool connectTcp(int en);
     bool connectRtu(int en);
 
 private:
-    void initFun();
     bool connectModbus(Mb_Update *mb, bool en, int rt);
 
 private:
     bool isRun=true;
     Mb_Update *mRtu;
     Mb_Update *mTcp;
+    CThread *mThread;
     sModbusSetting *mCfg;
 };
 

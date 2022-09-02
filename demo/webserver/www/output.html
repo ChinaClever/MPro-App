@@ -1,0 +1,723 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/style.css" />
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/monitor.js"></script>
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+
+<script>
+	
+	var flag;
+	
+	$(document).ready(function () {
+		//checkCookie();
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					flag = parseInt(gv[0]);
+					LangFun();
+					getdata();
+					for(var i=0;i<10;i++)
+					{
+						if(gv[i*2+2])
+						{
+							document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+						}
+					}
+				}
+			});
+		setInterval("getdata();",2000);
+	});
+	
+	function change()
+	{
+		getdata();
+	}
+	
+	var str1 = ["ON", "开", "Ouvre", "открыть", "Abrir", "على"];
+	var str2 = ["OFF", "关", "Fermer", "закрыть", "Cerrar", "إيقاف"];
+	var str3 = ["Normal", "正常", "Normal", "нормальный", "Normal", "عادي"];
+	var str4 = ["Warning", "临界", "Avertissement", "критичность", "Advertencia", "تحذير"];
+	var str5 = ["Alarm", "告警", "Alerter", "предупреждать", "Policía", "إنذار"];
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+		$.ajax({
+				dataType:"text",
+				url:"/getoutput?id1="+ms,
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					var k=0;
+		
+					for(var i=0;i<50;i++)
+					{
+						if(parseInt(gv[8*i+1])!=0)
+						{
+							if(k%2!=0)
+								document.getElementById("tr"+i).style.background="#f0f0f0";
+							else
+								document.getElementById("tr"+i).style.background="#ffffff";
+								
+							document.getElementById("tr"+i).style.display='';
+							document.getElementById("a"+i).innerHTML = gv[8*i+1];
+							document.getElementById("b"+i).innerHTML = gv[8*i+2];
+							
+							if(gv[8*i+3]=="1")
+							{
+								document.getElementById("c"+i).innerHTML=str1[flag];
+								document.getElementById("c"+i).style.color="#00aa00";
+							}
+							else if(gv[8*i+3]=="0")
+							{
+								document.getElementById("c"+i).innerHTML=str2[flag];
+								document.getElementById("c"+i).style.color="#000000";
+							}
+							else
+							{
+								document.getElementById("c"+i).innerHTML="--";
+							}
+							
+							document.getElementById("d"+i).innerHTML=gv[8*i+4];
+							document.getElementById("e"+i).innerHTML=gv[8*i+5];
+							document.getElementById("f"+i).innerHTML=gv[8*i+6];
+							document.getElementById("g"+i).innerHTML=gv[8*i+7];
+							
+							if(gv[8*i+8]=="0")
+							{
+								document.getElementById("h"+i).innerHTML=str3[flag];
+								document.getElementById("h"+i).style.color="#00ff00";
+							}
+							else if(gv[8*i+8]=="2")
+							{
+								document.getElementById("h"+i).innerHTML=str5[flag];
+								document.getElementById("h"+i).style.color="#ff0000";
+							}
+							else if(gv[8*i+8]=="1")
+							{
+								document.getElementById("h"+i).innerHTML=str4[flag];
+								document.getElementById("h"+i).style.color="#fff200";
+							}
+							else
+							{
+								document.getElementById("h"+i).innerHTML="--";
+							}
+							k++;
+						}
+						else
+						{
+							document.getElementById("tr"+i).style.display="none";
+						}
+					} 
+				}
+			});
+	}
+	
+	function mov(obj)
+	{
+		obj.style.background="#ffffa0";
+	}
+	
+	function movout(obj)
+	{
+		var index=obj.id.replace("tr","");
+		if(parseInt(index)%2!=0)
+			obj.style.background="#f0f0f0";
+		else
+			obj.style.background="#ffffff";
+	} 
+
+	function LangFun()
+	{	
+		var lang_1  = ["Outlet monitoring", "输出位监测", "Boutique Surveillance", "контроль выходного положения", "Control de salida", "رصد الانتاج قليلا"];
+		var lang_2  = ["PDU selection:", "设备选择:", "PDU Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3  = ["No.", "序号", "Numéro de série", "порядковый номер", "Número", "الرقم التسلسلي"];
+		var lang_4  = ["Name", "名称", "Nom", "имя", "Nombre", "اسم"];
+		var lang_5  = ["On/off status", "开关状态", "état de commutation", "режим переключения", "Estado del interruptor", "التبديل الدولة"];
+		var lang_6  = ["Load current(A)", "输出电流(A)", "Output Current(A)", "выходной ток(A)", "Corriente de salida(A)", "الانتاج الحالي(A)"];
+		var lang_7  = ["Power factor", "功率因数", "Facteur de puissance", "коэффициент мощности", "Factor de potencia", "عامل القوة"];
+		var lang_8  = ["Apparent power(AV)", "视在功率(AV)", "Puissance apparente(AV)", "Полная мощность(AV)", "Poder aparente(AV)", "القوة الظاهرة(AV)"];
+		var lang_9  = ["Energy consumption(kWh)", "电能消耗(kWh)", "Énergie électrique(kWh)", "расход электроэнергии(kWh)", "Consumo de energía eléctrica(kWh)", "استهلاك الطاقة(kWh)"];
+		var lang_10 = ["Load status", "负载状态", "état de charge", "режим нагрузки", "Estado de carga", "حالة الحمل"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10") .innerHTML = lang_9[flag];
+	}
+
+</script>
+</head>
+<body onload="LangFun()">
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>			
+		</div>
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:100%; background:#ffffff;">
+
+			<table width="100%" style="font-size:12px; text-align:center;">
+				<tr align="left" style="color:#000000;background:#e7e7e7; height:30px; text-align:center">
+					<td width="4% "><b id="lang_3"></b></td>
+					<td width="36%"><b id="lang_4"></b></td>
+					<td width="10%"><b id="lang_5"></b></td>
+					<td width="10%"><b id="lang_6"></b></td>
+					<td width="10%"><b id="lang_7"></b></td>
+					<td width="10%"><b id="lang_8"></b></td>
+					<td width="10%"><b id="lang_9"></b></td>
+					<td width="10%"><b id="lang_10"></b></td>
+					
+				</tr>
+				<tr id="tr0" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a0" align="center"></td>
+					<td id="b0"></td>
+					<td id="c0"></td>
+					<td id="d0"></td>
+					<td id="e0"></td>
+					<td id="f0"></td>
+					<td id="g0"></td>
+					<td id="h0"></td>
+				</tr>
+				<tr id="tr1" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a1" align="center"></td>
+					<td id="b1"></td>
+					<td id="c1"></td>
+					<td id="d1"></td>
+					<td id="e1"></td>
+					<td id="f1"></td>
+					<td id="g1"></td>
+					<td id="h1"></td>
+				</tr>
+				<tr id="tr2" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a2" align="center"></td>
+					<td id="b2"></td>
+					<td id="c2"></td>
+					<td id="d2"></td>
+					<td id="e2"></td>
+					<td id="f2"></td>
+					<td id="g2"></td>
+					<td id="h2"></td>
+				</tr>
+				<tr id="tr3" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a3" align="center"></td>
+					<td id="b3"></td>
+					<td id="c3"></td>
+					<td id="d3"></td>
+					<td id="e3"></td>
+					<td id="f3"></td>
+					<td id="g3"></td>
+					<td id="h3"></td>
+				</tr>
+				<tr id="tr4" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a4" align="center"></td>
+					<td id="b4"></td>
+					<td id="c4"></td>
+					<td id="d4"></td>
+					<td id="e4"></td>
+					<td id="f4"></td>
+					<td id="g4"></td>
+					<td id="h4"></td>
+				</tr>
+				<tr id="tr5" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a5" align="center"></td>
+					<td id="b5"></td>
+					<td id="c5"></td>
+					<td id="d5"></td>
+					<td id="e5"></td>
+					<td id="f5"></td>
+					<td id="g5"></td>
+					<td id="h5"></td>
+				</tr>
+				<tr id="tr6" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a6" align="center"></td>
+					<td id="b6"></td>
+					<td id="c6"></td>
+					<td id="d6"></td>
+					<td id="e6"></td>
+					<td id="f6"></td>
+					<td id="g6"></td>
+					<td id="h6"></td>
+				</tr>
+				<tr id="tr7" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a7" align="center"></td>
+					<td id="b7"></td>
+					<td id="c7"></td>
+					<td id="d7"></td>
+					<td id="e7"></td>
+					<td id="f7"></td>
+					<td id="g7"></td>
+					<td id="h7"></td>
+				</tr>
+				<tr id="tr8" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a8" align="center"></td>
+					<td id="b8"></td>
+					<td id="c8"></td>
+					<td id="d8"></td>
+					<td id="e8"></td>
+					<td id="f8"></td>
+					<td id="g8"></td>
+					<td id="h8"></td>
+				</tr>
+				<tr id="tr9" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a9" align="center"></td>
+					<td id="b9"></td>
+					<td id="c9"></td>
+					<td id="d9"></td>
+					<td id="e9"></td>
+					<td id="f9"></td>
+					<td id="g9"></td>
+					<td id="h9"></td>
+				</tr>
+				<tr id="tr10" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a10" align="center"></td>
+					<td id="b10"></td>
+					<td id="c10"></td>
+					<td id="d10"></td>
+					<td id="e10"></td>
+					<td id="f10"></td>
+					<td id="g10"></td>
+					<td id="h10"></td>
+				</tr>
+				<tr id="tr11" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a11" align="center"></td>
+					<td id="b11"></td>
+					<td id="c11"></td>
+					<td id="d11"></td>
+					<td id="e11"></td>
+					<td id="f11"></td>
+					<td id="g11"></td>
+					<td id="h11"></td>
+				</tr>
+				<tr id="tr12" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a12" align="center"></td>
+					<td id="b12"></td>
+					<td id="c12"></td>
+					<td id="d12"></td>
+					<td id="e12"></td>
+					<td id="f12"></td>
+					<td id="g12"></td>
+					<td id="h12"></td>
+				</tr>
+				<tr id="tr13" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a13" align="center"></td>
+					<td id="b13"></td>
+					<td id="c13"></td>
+					<td id="d13"></td>
+					<td id="e13"></td>
+					<td id="f13"></td>
+					<td id="g13"></td>
+					<td id="h13"></td>
+				</tr>
+				<tr id="tr14" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a14" align="center"></td>
+					<td id="b14"></td>
+					<td id="c14"></td>
+					<td id="d14"></td>
+					<td id="e14"></td>
+					<td id="f14"></td>
+					<td id="g14"></td>
+					<td id="h14"></td>
+				</tr>
+				<tr id="tr15" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a15" align="center"></td>
+					<td id="b15"></td>
+					<td id="c15"></td>
+					<td id="d15"></td>
+					<td id="e15"></td>
+					<td id="f15"></td>
+					<td id="g15"></td>
+					<td id="h15"></td>
+				</tr>
+				<tr id="tr16" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a16" align="center"></td>
+					<td id="b16"></td>
+					<td id="c16"></td>
+					<td id="d16"></td>
+					<td id="e16"></td>
+					<td id="f16"></td>
+					<td id="g16"></td>
+					<td id="h16"></td>
+				</tr>
+				<tr id="tr17" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a17" align="center"></td>
+					<td id="b17"></td>
+					<td id="c17"></td>
+					<td id="d17"></td>
+					<td id="e17"></td>
+					<td id="f17"></td>
+					<td id="g17"></td>
+					<td id="h17"></td>
+				</tr>
+				<tr id="tr18" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a18" align="center"></td>
+					<td id="b18"></td>
+					<td id="c18"></td>
+					<td id="d18"></td>
+					<td id="e18"></td>
+					<td id="f18"></td>
+					<td id="g18"></td>
+					<td id="h18"></td>
+				</tr>
+				<tr id="tr19" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a19" align="center"></td>
+					<td id="b19"></td>
+					<td id="c19"></td>
+					<td id="d19"></td>
+					<td id="e19"></td>
+					<td id="f19"></td>
+					<td id="g19"></td>
+					<td id="h19"></td>
+				</tr>
+				<tr id="tr20" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a20" align="center"></td>
+					<td id="b20"></td>
+					<td id="c20"></td>
+					<td id="d20"></td>
+					<td id="e20"></td>
+					<td id="f20"></td>
+					<td id="g20"></td>
+					<td id="h20"></td>
+				</tr>
+				<tr id="tr21" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a21" align="center"></td>
+					<td id="b21"></td>
+					<td id="c21"></td>
+					<td id="d21"></td>
+					<td id="e21"></td>
+					<td id="f21"></td>
+					<td id="g21"></td>
+					<td id="h21"></td>
+				</tr>
+				<tr id="tr22" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a22" align="center"></td>
+					<td id="b22"></td>
+					<td id="c22"></td>
+					<td id="d22"></td>
+					<td id="e22"></td>
+					<td id="f22"></td>
+					<td id="g22"></td>
+					<td id="h22"></td>
+				</tr>
+				<tr id="tr23" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a23" align="center"></td>
+					<td id="b23"></td>
+					<td id="c23"></td>
+					<td id="d23"></td>
+					<td id="e23"></td>
+					<td id="f23"></td>
+					<td id="g23"></td>
+					<td id="h23"></td>
+				</tr>
+				<tr id="tr24" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a24" align="center"></td>
+					<td id="b24"></td>
+					<td id="c24"></td>
+					<td id="d24"></td>
+					<td id="e24"></td>
+					<td id="f24"></td>
+					<td id="g24"></td>
+					<td id="h24"></td>
+				</tr>
+				<tr id="tr25" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a25" align="center"></td>
+					<td id="b25"></td>
+					<td id="c25"></td>
+					<td id="d25"></td>
+					<td id="e25"></td>
+					<td id="f25"></td>
+					<td id="g25"></td>
+					<td id="h25"></td>
+				</tr>
+				<tr id="tr26" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a26" align="center"></td>
+					<td id="b26"></td>
+					<td id="c26"></td>
+					<td id="d26"></td>
+					<td id="e26"></td>
+					<td id="f26"></td>
+					<td id="g26"></td>
+					<td id="h26"></td>
+				</tr>
+				<tr id="tr27" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a27" align="center"></td>
+					<td id="b27"></td>
+					<td id="c27"></td>
+					<td id="d27"></td>
+					<td id="e27"></td>
+					<td id="f27"></td>
+					<td id="g27"></td>
+					<td id="h27"></td>
+				</tr>
+				<tr id="tr28" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a28" align="center"></td>
+					<td id="b28"></td>
+					<td id="c28"></td>
+					<td id="d28"></td>
+					<td id="e28"></td>
+					<td id="f28"></td>
+					<td id="g28"></td>
+					<td id="h28"></td>
+				</tr>
+				<tr id="tr29" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a29" align="center"></td>
+					<td id="b29"></td>
+					<td id="c29"></td>
+					<td id="d29"></td>
+					<td id="e29"></td>
+					<td id="f29"></td>
+					<td id="g29"></td>
+					<td id="h29"></td>
+				</tr>
+				<tr id="tr30" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a30" align="center"></td>
+					<td id="b30"></td>
+					<td id="c30"></td>
+					<td id="d30"></td>
+					<td id="e30"></td>
+					<td id="f30"></td>
+					<td id="g30"></td>
+					<td id="h30"></td>
+				</tr>
+				<tr id="tr31" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a31" align="center"></td>
+					<td id="b31"></td>
+					<td id="c31"></td>
+					<td id="d31"></td>
+					<td id="e31"></td>
+					<td id="f31"></td>
+					<td id="g31"></td>
+					<td id="h31"></td>
+				</tr>
+				<tr id="tr32" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a32" align="center"></td>
+					<td id="b32"></td>
+					<td id="c32"></td>
+					<td id="d32"></td>
+					<td id="e32"></td>
+					<td id="f32"></td>
+					<td id="g32"></td>
+					<td id="h32"></td>
+				</tr>
+				<tr id="tr33" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a33" align="center"></td>
+					<td id="b33"></td>
+					<td id="c33"></td>
+					<td id="d33"></td>
+					<td id="e33"></td>
+					<td id="f33"></td>
+					<td id="g33"></td>
+					<td id="h33"></td>
+				</tr>
+				<tr id="tr34" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a34" align="center"></td>
+					<td id="b34"></td>
+					<td id="c34"></td>
+					<td id="d34"></td>
+					<td id="e34"></td>
+					<td id="f34"></td>
+					<td id="g34"></td>
+					<td id="h34"></td>
+				</tr>
+				<tr id="tr35" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a35" align="center"></td>
+					<td id="b35"></td>
+					<td id="c35"></td>
+					<td id="d35"></td>
+					<td id="e35"></td>
+					<td id="f35"></td>
+					<td id="g35"></td>
+					<td id="h35"></td>
+				</tr>
+				<tr id="tr36" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a36" align="center"></td>
+					<td id="b36"></td>
+					<td id="c36"></td>
+					<td id="d36"></td>
+					<td id="e36"></td>
+					<td id="f36"></td>
+					<td id="g36"></td>
+					<td id="h36"></td>
+				</tr>
+				<tr id="tr37" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a37" align="center"></td>
+					<td id="b37"></td>
+					<td id="c37"></td>
+					<td id="d37"></td>
+					<td id="e37"></td>
+					<td id="f37"></td>
+					<td id="g37"></td>
+					<td id="h37"></td>
+				</tr>
+				<tr id="tr38" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a38" align="center"></td>
+					<td id="b38"></td>
+					<td id="c38"></td>
+					<td id="d38"></td>
+					<td id="e38"></td>
+					<td id="f38"></td>
+					<td id="g38"></td>
+					<td id="h38"></td>
+				</tr>
+				<tr id="tr39" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a39" align="center"></td>
+					<td id="b39"></td>
+					<td id="c39"></td>
+					<td id="d39"></td>
+					<td id="e39"></td>
+					<td id="f39"></td>
+					<td id="g39"></td>
+					<td id="h39"></td>
+				</tr>
+				<tr id="tr40" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a40" align="center"></td>
+					<td id="b40"></td>
+					<td id="c40"></td>
+					<td id="d40"></td>
+					<td id="e40"></td>
+					<td id="f40"></td>
+					<td id="g40"></td>
+					<td id="h40"></td>
+				</tr>
+				<tr id="tr41" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a41" align="center"></td>
+					<td id="b41"></td>
+					<td id="c41"></td>
+					<td id="d41"></td>
+					<td id="e41"></td>
+					<td id="f41"></td>
+					<td id="g41"></td>
+					<td id="h41"></td>
+				</tr>
+				<tr id="tr42" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a42" align="center"></td>
+					<td id="b42"></td>
+					<td id="c42"></td>
+					<td id="d42"></td>
+					<td id="e42"></td>
+					<td id="f42"></td>
+					<td id="g42"></td>
+					<td id="h42"></td>
+				</tr>
+				<tr id="tr43" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a43" align="center"></td>
+					<td id="b43"></td>
+					<td id="c43"></td>
+					<td id="d43"></td>
+					<td id="e43"></td>
+					<td id="f43"></td>
+					<td id="g43"></td>
+					<td id="h43"></td>
+				</tr>
+				<tr id="tr44" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a44" align="center"></td>
+					<td id="b44"></td>
+					<td id="c44"></td>
+					<td id="d44"></td>
+					<td id="e44"></td>
+					<td id="f44"></td>
+					<td id="g44"></td>
+					<td id="h44"></td>
+				</tr>
+				<tr id="tr45" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a45" align="center"></td>
+					<td id="b45"></td>
+					<td id="c45"></td>
+					<td id="d45"></td>
+					<td id="e45"></td>
+					<td id="f45"></td>
+					<td id="g45"></td>
+					<td id="h45"></td>
+				</tr>
+				<tr id="tr46" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a46" align="center"></td>
+					<td id="b46"></td>
+					<td id="c46"></td>
+					<td id="d46"></td>
+					<td id="e46"></td>
+					<td id="f46"></td>
+					<td id="g46"></td>
+					<td id="h46"></td>
+				</tr>
+				<tr id="tr47" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a47" align="center"></td>
+					<td id="b47"></td>
+					<td id="c47"></td>
+					<td id="d47"></td>
+					<td id="e47"></td>
+					<td id="f47"></td>
+					<td id="g47"></td>
+					<td id="h47"></td>
+				</tr>
+				<tr id="tr48" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a48" align="center"></td>
+					<td id="b48"></td>
+					<td id="c48"></td>
+					<td id="d48"></td>
+					<td id="e48"></td>
+					<td id="f48"></td>
+					<td id="g48"></td>
+					<td id="h48"></td>
+				</tr>
+				<tr id="tr49" onMouseOut="movout(this);" onMouseMove="mov(this);">
+					<td id="a49" align="center"></td>
+					<td id="b49"></td>
+					<td id="c49"></td>
+					<td id="d49"></td>
+					<td id="e49"></td>
+					<td id="f49"></td>
+					<td id="g49"></td>
+					<td id="h49"></td>
+				</tr>
+			</table> 
+		</div>
+	</div>
+</div>
+</body>
+</html>

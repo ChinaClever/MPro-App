@@ -1,0 +1,489 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/my.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:28px;
+}
+</style>
+<script>
+	var flag;
+	$(document).ready(function () {
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					flag = parseInt(gv[0]);
+					LangFun(flag);
+				}
+			});
+		loaddata();
+	});
+
+	function userchange()
+	{
+		loadlist();
+	} 
+	function loaddata()
+	{
+		$.ajax({
+			dataType:"text",
+			url:"/getuserinfo",
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				for(var i=1;i<11;i++)
+				{
+					if(gv[i])
+					{
+						document.getElementById("user").options.add(new Option(gv[i],gv[i]));
+					}
+				}
+			}
+		});
+		$.ajax({
+			dataType:"text",
+			url:"/getgroupinfo",
+			cache:false,
+			success:function(sta)
+			{
+				var gv = new Array();
+				gv=sta.split("?");
+				for(var i=1;i<11;i++)
+				{
+					if(gv[i])
+					{
+					document.getElementById("gp").options.add(new Option(gv[i],gv[i]));
+					}
+				}
+			}
+		});
+		loadlist();
+	}
+	function loadlist()
+	{	
+	
+		var username =  document.getElementById("user").value;
+		// if(username=="")
+		// {
+		// 	document.getElementById("user").value = "";
+		// 	document.getElementById("username").value = "";
+		// 	document.getElementById("psd1").value = "";
+		// 	document.getElementById("psd2").value = "";
+		// 	for(var i=0;i<3;i++)
+		// 	{
+		// 		document.getElementById("email"+i).value = "";
+		// 	}
+		// 	document.getElementById("tel").value = "";
+		// 	document.getElementById("gp").value = "";
+		// 	return;
+		// }
+		$.ajax({
+				dataType:"text",
+				url:"/userlistinfo?id1="+username,
+				async:false,
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					document.getElementById("username").value = gv[0];
+					document.getElementById("psd1").value = gv[1];
+					document.getElementById("psd2").value = gv[1];
+					for(var i=0;i<3;i++)
+					{
+						document.getElementById("email"+i).value = gv[2+i];
+					}
+					document.getElementById("tel").value = gv[5];
+					document.getElementById("gp").value = gv[6];
+				}
+			});
+	}
+	var hint_1 = ["The username or password does not conform to the rules!", "用户名或者密码不符合规则！"];
+	function deleteuser()
+	{
+		var user = document.getElementById("user").value;
+		if(user=="")
+			return;
+		var info;
+		if(flag==0)
+			info = "Are you sure?";
+		else
+			info = "你确定执行此操作?";
+		if(confirm(info))
+		{
+			$.ajax({
+					dataType:"text",
+					url:"/deleteuser?id1="+user,
+					async:false,
+					cache:false,
+					success:function(sta)
+					{
+						if(flag==0)
+						{
+							if(sta =="err")
+							{
+								alert("Incorrect setting!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("No permission!");
+								return;
+							}
+						}
+						else
+						{
+							if(sta =="err")
+							{
+								alert("配置错误!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("不允许!");
+							} 
+						}
+						
+					}
+				});
+			window.location.reload();
+			document.getElementById("user").value="";
+			document.getElementById("username").value = "";
+			document.getElementById("psd1").value = "";
+			document.getElementById("psd2").value = "";
+			for(var i=0;i<3;i++)
+			{
+				document.getElementById("email"+i).value = "";
+			}
+			document.getElementById("tel").value = "";
+			document.getElementById("gp").value="";
+		}
+	}
+	function adduser(fg)
+	{
+		var username=document.getElementById("username").value;
+		var psd1 = document.getElementById("psd1").value;
+		var psd2 = document.getElementById("psd2").value;
+		var email0 = document.getElementById("email0").value;
+		var email1 = document.getElementById("email1").value;
+		var email2 = document.getElementById("email2").value;
+		
+		var tel = document.getElementById("tel").value;
+		var gp = document.getElementById("gp").value;
+		if(username.length>0 && psd1.length>0 && regular_expression_user.exec(username) && regular_expression_psd.exec(psd1) && psd1==psd2)
+		{
+			
+			$.ajax({
+					dataType:"text",
+					url:"/adduser?id1="+username+"&id2="+psd1+"&id3="+email0+"&id4="+email1+"&id5="+email2+"&id6="+tel+"&id7="+gp,
+					async:false,
+					cache:false,
+					success:function(sta)
+					{
+						if(fg==0)
+						{
+							if(sta =="flase")
+							{
+								alert("No permission!");
+								return;
+							}
+							else if(sta =="err1")
+							{
+								alert("Incorrect setting!");
+								return;
+							}
+							else if(sta =="err2")
+							{
+								alert("Incorrect setting!");
+								return;
+							}
+						}
+						else
+						{
+							if(sta =="flase")
+							{
+								alert("不允许!");
+								return;
+							}
+							else if(sta =="err1")
+							{
+								alert("配置错误!");
+								return;
+							}
+							else if(sta =="err2")
+							{
+								alert("配置错误!");
+								return;
+							}
+						}
+					}
+				});
+			window.location.reload();
+			return;
+		}
+		else if(!regular_expression_user.exec(username) || !regular_expression_psd.exec(psd1)){
+			alert(hint_1[flag]);
+		}
+		else if(username.length==0)
+		{
+			if(fg==0)
+				alert("Incorrect setting!");
+			else
+				alert("配置错误!");
+			return;
+		}
+		else if(psd1!=psd2)
+		{
+			if(fg==0)
+				alert("The confirm password is different from the user password！");
+			else
+				alert("确认密码和用户密码不一致!");
+			return;
+		}
+		// if(fg==0)
+		// 	alert("Incorrect setting!");
+		// else
+		// 	alert("配置错误!");
+	}
+	function changeuser(fg)
+	{
+		var user = document.getElementById("user").value;
+		var username=document.getElementById("username").value;
+		var psd1 = document.getElementById("psd1").value;
+		var psd2 = document.getElementById("psd2").value;
+		var email0 = document.getElementById("email0").value;
+		var email1 = document.getElementById("email1").value;
+		var email2 = document.getElementById("email2").value;
+		
+		var tel = document.getElementById("tel").value;
+		var gp = document.getElementById("gp").value;
+		if(user.length==0)
+		{
+			if(fg==0)
+				alert("Incorrect setting!");
+			else
+				alert("配置错误!");
+			return;
+		}
+		
+		if(username.length>0 && psd1.length>0 && regular_expression_user.exec(username) && regular_expression_psd.exec(psd1) && (psd1==psd2))
+		{
+			$.ajax({
+					dataType:"text",
+					url:"/changeuser?id1="+username+"&id2="+psd1+"&id3="+email0+"&id4="+email1+"&id5="+email2+"&id6="+tel+"&id7="+gp+"&id8="+user+"&",
+					async:false,
+					cache:false,
+					success:function(sta)
+					{
+						if(fg==0)
+						{
+							if(sta =="err1")
+							{
+								alert("Incorrect setting!");
+								return;
+							}
+							else if(sta =="err2")
+							{
+								alert("Incorrect setting!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("No permission!");
+								return;
+							}
+						}
+						else
+						{
+							if(sta =="err1")
+							{
+								alert("配置错误!");
+								return;
+							}
+							else if(sta =="err2")
+							{
+								alert("配置错误!");
+								return;
+							}
+							else if(sta =="flase")
+							{
+								alert("不允许!");
+								return;
+							}
+						}
+						
+					}
+				});
+			window.location.reload();
+			return;
+		}
+		else if(!regular_expression_user.exec(username) || !regular_expression_psd.exec(psd1)){
+			alert(hint_1[flag]);
+		}
+		else if(username.length==0)
+		{	
+			if(fg==0)
+				alert("Incorrect setting!");
+			else
+				alert("配置错误!");
+			return;
+		}
+		else if(psd1!=psd2)
+		{
+			if(fg==0)
+				alert("The confirm password is different from the user password！");
+			else
+				alert("确认密码和用户密码不一致!");
+			return;
+		}
+		// if(fg==0)
+		// 	alert("Incorrect setting!");
+		// else
+		// 	alert("配置错误!");
+	}
+	
+	
+	function LangFun(flag)
+	{
+		var lang_1  = ["User management", "用户管理", "Gestion des utilisateurs", "Управление пользователями", "Gestión de usuarios", "إدارة المستخدم"];
+		var lang_2  = ["User setting", "用户设置", "Paramètres utilisateur", "Настройки пользователя", "Preferencias del usuario", "إعدادات المستخدم"];
+		var lang_3  = ["Select a user:", "选择用户:", "Sélectionner l 'utilisateur", "выбор пользователя", "Seleccionar usuario", "اختر المستخدم"];
+		var lang_4  = ["User name", "用户名称:", "Nom de l 'utilisateur", "Имя пользователя", "Nombre del usuario", "اسم المستخدم"];
+		var lang_5  = ["Password", "用户密码:", "Mot de passe utilisateur", "пароль пользователя", "Contraseña de usuario", "كلمة مرور المستخدم"];
+		var lang_6  = ["Confirm password", "密码确认:", "Confirm password", "Подтверждение пароля", "Contraseña confirmada.", "كلمة مرور المستخدم"];
+		var lang_7  = ["Email address 1:", "邮箱地址1:", "Adresse postale1", "почтовый ящик1", "Dirección de correo1", "عنوان البريد الإلكتروني 1"];
+		var lang_8  = ["Email address 2:", "邮箱地址2:", "Adresse postale2", "почтовый ящик2", "Dirección de correo2", "عنوان البريد الإلكتروني 2"];
+		var lang_9  = ["Email address 3",  "邮箱地址3:", "Adresse postale3", "почтовый ящик3", "Dirección de correo3", "عنوان البريد الإلكتروني 3"];
+		var lang_10 = ["Cell phone:", "移动电话:", "Téléphone mobile", "мобильный телефон", "Teléfono móvil", "الهاتف المحمول"];
+		var lang_11 = ["User group:", "用户组:", "Groupe d 'utilisateurs", "группа пользователей", "Grupo de usuarios", "مجموعة المستخدم"];
+		var lang_12 = ["Delete", "删除", "Delete", "Удалить", "Eliminar", "حذف"];
+		var lang_13 = ["Add", "添加", "Ajouter", "Добавить", "Adición", "إضافة"];
+		var lang_14 = ["Edit", "修改", "Modifier", "Изменить", "Modificación", "تعديل"];
+
+		document.getElementById("lang_1") .innerHTML = lang_1[flag];
+		document.getElementById("lang_2") .innerHTML = lang_2[flag];
+		document.getElementById("lang_3") .innerHTML = lang_3[flag];
+		document.getElementById("lang_4") .innerHTML = lang_4[flag];
+		document.getElementById("lang_5") .innerHTML = lang_5[flag];
+		document.getElementById("lang_6") .innerHTML = lang_6[flag];
+		document.getElementById("lang_7") .innerHTML = lang_7[flag];
+		document.getElementById("lang_8") .innerHTML = lang_8[flag];
+		document.getElementById("lang_9") .innerHTML = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").value 	 = lang_12[flag];
+		document.getElementById("lang_13").value	 = lang_13[flag];
+		document.getElementById("lang_14").value	 = lang_14[flag];
+	}
+</script>
+</head>
+<body>
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="float: left; width: 100%; margin-bottom: 0.8%; height:96%; background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading" ><i class="fa fa-th-list fa-lg" style="padding-right: 5px;" ></i ><span id="lang_1"></span></div>			
+		</div>
+		
+		<div style="border:1px solid;border-color: #ffffff; margin:10px; height:340px; background:#ffffff; ">		
+			<table width="100%" border="0" style="font-size:12px;">
+			<tr>
+				<td width="10px"></td>
+				<td width="120" id="lang_2"></td>
+				<td></td>
+			</tr>
+			<tr >
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_3"></td>
+				<td><select id="user" style="width:200px;" onChange="userchange();"></select></td>
+			</tr>
+			<tr >
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_4"></td>
+				<td><input id="username" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_5"></td>
+				<td><input id="psd1" type="password" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_6"></td>
+				<td><input id="psd2" type="password" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_7"></td>
+				<td><input id="email0" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_8"></td>
+				<td><input id="email1" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_9"></td>
+				<td><input id="email2" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_10"></td>
+				<td><input id="tel" style="width:200px;"></input></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="120" nowrap id="lang_11"></td>
+				<td><select id="gp" style="width:200px;"></select></td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td colspan="2">
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="deleteuser();" id="lang_12"></input>
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="adduser();" id="lang_13"></input>
+					<input style="margin-top:10px; height:21px; width:50px;"  type="button"  onClick="changeuser();" id="lang_14"></input>
+				</td>
+			</tr>
+			</table>
+		</div>	
+	</div>
+</div>
+</body>
+</html>
+			

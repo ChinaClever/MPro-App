@@ -1,0 +1,912 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PDU</title>
+<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />	
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/buttons.css">
+
+<script src="js/raphael-2.1.4.min.js"></script>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/highcharts.js"></script>
+<script src="js/highcharts-more.js"></script>
+<script src="js/solid-gauge.js"></script>
+<script src="js/highcharts-zh_CN.js"></script>
+<script src="js/echarts.min.js"></script>
+<script type="text/javascript" src="js/monitor.js"></script>
+
+<style type="text/css">
+.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+}
+
+.panel-default > .panel-heading{
+	color: #222;
+	font-size:13px;
+	background-color: #fff;
+	border-color: #e6e6e6;
+	padding: 10px 12px;
+}
+
+body{ 
+	
+	background: #fafafa;
+}
+
+tr{
+	height:32px;
+}
+
+.spacing{
+	text-align:left; 
+	padding-left:20px;
+}
+</style>
+
+<script>
+	var flag,ty,pow,L1,L2,L3;	
+	$(document).ready(function () {
+		//checkCookie();
+		$.ajax({
+				dataType:"text",
+				url:"/npmslavelist",
+				cache:false,
+				success:function(sta)
+				{
+					var gv = new Array();
+					gv=sta.split("?");
+					flag = parseInt(gv[0]);
+					LangFun();
+					getdata();
+					for(var i=0;i<10;i++)
+					{
+						if(gv[i*2+2])
+						{
+							document.getElementById("ms").options.add( new Option(gv[i*2+2],parseInt(gv[i*2+3])) );
+						}
+					}
+				}
+			});
+	
+		setInterval(function() {
+			getdata();
+		
+		    axisData = (new Date()).toLocaleTimeString().replace(/^\D*/, '');
+
+		    
+			var data0 = option.series[0].data;
+			data0.shift();
+		    data0.push(pow);
+			if(ty<5 || (ty>8 && ty<13))
+			{
+				var data1 = option.series[1].data;
+				data1.shift();
+				data1.push(L1);
+				option.legend.data[2]='none';
+				option.legend.data[3]='none';
+			}
+			else
+			{	var data1 = option.series[1].data;
+				var data2 = option.series[2].data;
+				var data3 = option.series[3].data;
+				data1.shift();
+				data1.push(L1);
+				data2.shift();
+				data2.push(L2);
+				data3.shift();
+				data3.push(L3);
+			}
+			
+		    option.xAxis[0].data.shift();
+		    option.xAxis[0].data.push(axisData);
+
+		    myChart.setOption(option);
+		}, 3000);
+	});
+
+	function change()
+	{
+		getdata();
+	}
+	
+	var cc1 = ["Breaker closed","闭合","Disjoncteur Fermer", "замыкание", "Cierre", "مغلق"];
+	var cc2 = ["Breaker open","断开","Disjoncteur Ouvert", "отключение", "Desconectar vt.", "افتح"];
+	var ch1 = ["Normal", "正常","Normal", "нормальный", "Normal", "طبيعي"];
+	var ch2 = ["Abnormal", "预警","Anomalie", "раннее предупреждение", "Alerta", "الإنذار المبكر"];
+	var ch3 = ["Alarm", "告警","Alerter", "предупреждать", "Alarma", "تحذير"];
+	var ch4 = ["Closed", "关闭","Fermer", "закрыть", "Cerrar", "قريب"];
+	var ch5 = ["Open", "打开","Ouvert", "открыть", "Abrir", "فتح"];
+	var str1 = ["day","天","Jour", "день", "Día", "يوم"];
+	var str2 = ["hour","时","Heure", "час", "Tiempo", "ساعة"];
+	var str3 = ["minute","分","Minutes", "минута", "Punto", "دقيقة"];
+	function getdata()
+	{
+		var ms;
+		ms =  document.getElementById("ms").value;
+		if(ms=="")
+			ms = "0";
+	
+		$.ajax({
+				dataType:"text",
+				url:"/total?id1="+ms,
+				async:true,
+				cache:false,
+				success:function(sta)
+				{
+					if("failed"==sta)
+					{
+						window.parent.location.href="/login.html";
+						return;
+					}
+					var gv = new Array();
+					gv=sta.split("?");
+					
+					ty=gv[80];
+					pow=gv[0];
+					L1=gv[6];
+					L2=gv[10];
+					L3=gv[14];
+					
+					if(ty<5)
+					{
+						document.getElementById("x").innerHTML="L";
+						document.getElementById("L2").style.display="none";
+						document.getElementById("L3").style.display="none";
+						document.getElementById("ht").style.height="136px";
+						document.getElementById("tr0").style.display='';
+						document.getElementById("tr1").style.display='';
+						document.getElementById("tr2").style.display="none";
+						document.getElementById("tr3").style.display="none";
+						document.getElementById("tr4").style.display="none";
+						document.getElementById("tr5").style.display="none";
+					}
+					else if(ty>4 && ty<9)
+					{
+						document.getElementById("x").innerHTML="L1";
+						document.getElementById("L2").style.display='';
+						document.getElementById("L3").style.display='';
+						document.getElementById("ht").style.height="168px";	
+						document.getElementById("tr0").style.display='';
+						document.getElementById("tr1").style.display='';
+						document.getElementById("tr2").style.display='';
+						document.getElementById("tr3").style.display="none";
+						document.getElementById("tr4").style.display="none";
+						document.getElementById("tr5").style.display="none";
+					}
+					else if(ty>8 && ty<13)
+					{
+						document.getElementById("x").innerHTML="L";
+						document.getElementById("L2").style.display="none";
+						document.getElementById("L3").style.display="none";
+						document.getElementById("ht").style.height="200px";	
+						document.getElementById("tr0").style.display='';
+						document.getElementById("tr1").style.display='';
+						document.getElementById("tr2").style.display='';
+						document.getElementById("tr3").style.display='';
+						document.getElementById("tr4").style.display="none";
+						document.getElementById("tr5").style.display="none";
+					}
+					else if(ty>12 && ty<17)
+					{
+						document.getElementById("x").innerHTML="L1";
+						document.getElementById("L2").style.display='';
+						document.getElementById("L3").style.display='';
+						document.getElementById("ht").style.height="264px";	
+						document.getElementById("tr0").style.display='';
+						document.getElementById("tr1").style.display='';
+						document.getElementById("tr2").style.display='';
+						document.getElementById("tr3").style.display='';
+						document.getElementById("tr4").style.display='';
+						document.getElementById("tr5").style.display='';
+					}
+					else if(ty>16 && ty<21)
+					{
+						document.getElementById("x").innerHTML="L";
+						document.getElementById("L2").style.display="none";
+						document.getElementById("L3").style.display="none";
+						document.getElementById("ht").style.height="136px";
+						document.getElementById("tr0").style.display='';
+						document.getElementById("tr1").style.display="none";
+						document.getElementById("tr2").style.display="none";
+						document.getElementById("tr3").style.display="none";
+						document.getElementById("tr4").style.display="none";
+						document.getElementById("tr5").style.display="none";
+					}
+					
+					document.getElementById("dat1").innerHTML = gv[0];
+					document.getElementById("dat2").innerHTML = gv[1];
+					document.getElementById("dat3").innerHTML = gv[2];
+					document.getElementById("dat4").innerHTML = gv[3];
+					document.getElementById("dat5").innerHTML = gv[4];
+					
+					for(var i=0;i<3;i++)
+					{
+						document.getElementById("dat"+(6+3*i)).innerHTML = gv[4*i+6];
+						document.getElementById("pgt"+(i+1)).style.width=(gv[4*i+6]/50*100)+"%";
+						if(gv[4*i+5]==0) //正常
+						{
+							document.getElementById("pgt"+(i+1)).style.background="#13db06";
+						}
+						else if(gv[4*i+5]==1) //预警
+						{
+							document.getElementById("pgt"+(i+1)).style.background="#fff200";
+						}
+						else //告警
+						{
+							document.getElementById("pgt"+(i+1)).style.background="#ff0000";
+						}
+						document.getElementById("dat"+(7+3*i)).innerHTML = gv[4*i+7];
+						document.getElementById("dat"+(8+3*i)).innerHTML = gv[4*i+8];
+					}
+					
+					for(var i=0;i<6;i++)
+					{
+						document.getElementById("dat"+(15+8*i)).innerHTML = gv[8*i+17];
+						if(gv[8*i+18]==0)
+						{
+							document.getElementById("dat"+(16+8*i)).innerHTML = cc1[flag];
+							document.getElementById("dat"+(16+8*i)).style.color="#13db06";
+						}
+						else
+						{
+							document.getElementById("dat"+(16+8*i)).innerHTML = cc2[flag];
+							document.getElementById("dat"+(16+8*i)).style.color="#ff0000";
+						}
+						document.getElementById("dat"+(17+8*i)).innerHTML = gv[8*i+19];
+						document.getElementById("dat"+(18+8*i)).innerHTML = gv[8*i+20];
+						document.getElementById("dat"+(19+8*i)).innerHTML = gv[8*i+21];
+						document.getElementById("dat"+(20+8*i)).innerHTML = gv[8*i+22];
+						document.getElementById("dat"+(21+8*i)).innerHTML = gv[8*i+23];
+						document.getElementById("dat"+(22+8*i)).innerHTML = gv[8*i+24];
+					}
+					
+					for(var i=0;i<2;i++)
+					{
+						if(gv[66+i*4]==0 && gv[68+i*4]==0)
+						{
+							document.getElementById("dat"+(63+i*2)).innerHTML = "none";
+							document.getElementById("dat"+(64+i*2)).innerHTML = "none";
+						}
+						else
+						{
+							document.getElementById("dat"+(63+i*2)).innerHTML = gv[66+i*4]+"℃";
+							if(gv[65+i*4]==1) //预警
+							{
+								document.getElementById("dat"+(63+i*2)).style.color="#fff200";
+							}
+							else if(gv[65+i*4]==2) //告警
+							{
+								document.getElementById("dat"+(63+i*2)).style.color="#ff0000";
+							}
+							else
+							{
+								document.getElementById("dat"+(63+i*2)).style.color="#000000";
+							}
+							document.getElementById("dat"+(64+i*2)).innerHTML = gv[68+i*4]+"%";
+							if(gv[67+i*4]==1) //预警
+							{
+								document.getElementById("dat"+(64+i*2)).style.color="#fff200";
+							}
+							else if(gv[67+i*4]==2)//告警
+							{
+								document.getElementById("dat"+(64+i*2)).style.color="#ff0000";
+							}
+							else
+							{
+								document.getElementById("dat"+(64+i*2)).style.color="#000000";
+							}
+						}
+					}
+					
+				//	for(var i=0;i<2;i++)
+					for(var i=0;i<1;i++)
+					{
+						if(gv[73+i]==0)
+						{
+							document.getElementById("dat"+(67+i)).innerHTML = "none";
+							document.getElementById("dat"+(67+i)).style.color="#000000";
+						}
+						else if(gv[73+i]==1)
+						{
+							document.getElementById("dat"+(67+i)).innerHTML = ch4[flag];
+							document.getElementById("dat"+(67+i)).style.color="#13db06";
+						}
+						else if(gv[73+i]==2)
+						{
+							document.getElementById("dat"+(67+i)).innerHTML = ch5[flag];
+							document.getElementById("dat"+(67+i)).style.color="#ff0000";
+						}
+					}
+					for(var i=0;i<2;i++)
+					{
+						if(gv[75+i]==0)
+						{
+							document.getElementById("dat"+(69+i)).innerHTML = "none";
+							document.getElementById("dat"+(69+i)).style.color="#000000";
+						}
+						else if(gv[75+i]==1)
+						{
+							document.getElementById("dat"+(69+i)).innerHTML = ch1[flag];
+							document.getElementById("dat"+(69+i)).style.color="#13db06";
+						}
+						else if(gv[75+i]==2)
+						{
+							document.getElementById("dat"+(69+i)).innerHTML = ch3[flag];
+							document.getElementById("dat"+(69+i)).style.color="#ff0000";
+						}
+					}
+					
+					if(gv[77]==0)
+					{
+						document.getElementById("dat"+71).innerHTML = ch1[flag];
+						document.getElementById("dat"+71).style.color="#13db06";
+					}
+					else if(gv[77]==1)
+					{
+						document.getElementById("dat"+71).innerHTML = ch2[flag];
+						document.getElementById("dat"+71).style.color="#fff200";
+						
+					}
+					else if(gv[77]==2)
+					{
+						document.getElementById("dat"+71).innerHTML = ch3[flag];
+						document.getElementById("dat"+71).style.color="#ff0000";
+					}
+				
+					document.getElementById("dat"+72).innerHTML = gv[78];
+					
+					var aa = parseInt(gv[79]/1440);
+					var bb = parseInt((gv[79]%1440)/60);
+					var cc = parseInt((gv[79]%1440)%60);
+					document.getElementById("dat"+73).innerHTML = aa+str1[flag]+bb+str2[flag]+cc+str3[flag];
+					
+					if(gv[80]%4==1)
+					{
+						document.getElementById("dat"+74).innerHTML = "ZPDU(A)";
+					}
+					if(gv[80]%4==2)
+					{
+						document.getElementById("dat"+74).innerHTML = "ZPDU(B)";
+					}
+					else if(gv[80]%4==3)
+					{
+						document.getElementById("dat"+74).innerHTML = "ZPDU(C)";
+					}
+					else if(gv[80]%4==0)
+					{
+						document.getElementById("dat"+74).innerHTML = "ZPDU(D)";
+					}
+					document.getElementById("dat"+75).innerHTML = gv[81];
+				}
+			});
+	}
+
+
+	function LangFun()
+	{
+		var lang_1   = ["Dashboard", "首页", "Tableau", "Первая страница", "Página", "منزل"];
+		var lang_2   = ["PDU Selection: ", "设备选择:", "Dispositif Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+		var lang_3   = ["Input ", "输入", "Input", "вход", "Entrada", "دخول"];
+		var lang_4   = ["Electric energy: ", "电能消耗:", "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
+		var lang_5   = ["Frequency:", "频率:", "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
+		var lang_6   = ["Leakage current:", "漏电电流:", "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
+		var lang_7   = ["Output", "输出", "Output", "выход", "Salida", "تصدير"];
+		var lang_8   = ["Circuit", "回路", "Circuit", "цепь", "Vuelta", "فرع الطريق"];
+		var lang_9   = ["Status", "状态", "état", "состояние", "Estado", "دولة"];
+		var lang_10  = ["Outlet", "输出位", "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
+		var lang_11  = ["Load current", "当前电流", "Courant", "текущий ток", "Corriente actual", "التيار الحالي"];
+		var lang_12  = ["Overload current", "过载电流", "Surcharge Courant", "максимальный ток", "Corriente de sobrecarga", "الزائد الحالي"];
+		var lang_13  = ["Input voltage", "当前电压", "Tension", "текущее напряжение", "Tensión actual", "الجهد"];
+		var lang_14  = ["Apparent power", "视在功率", "Puissance optique", "кажущаяся мощность", "Potencia visual", "القوة الظاهرة"];
+		var lang_15  = ["Energy consumption", "电能消耗", "Énergie électrique", "расход электроэнергии", "Consumo de energía eléctrica", "استهلاك الطاقة"];
+		var lang_16  = ["Sensor", "传感器", "Capteur", "датчик", "Sensor", "الاستشعار"];
+		var lang_17  = ["Sensor name", "传感器名称", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+		var lang_18  = ["Sensor status", "传感器状态", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+		var lang_19  = ["Sensor name", "传感器名称", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+		var lang_20  = ["Sensor status", "传感器状态", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+		var lang_21  = ["Temperature 1", "温度1", "Temperature 1", "температура1", "Temperatura 1", "درجة الحرارة 1"];
+		var lang_22  = ["Humidity 1", "湿度1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
+		var lang_23  = ["Temperature 2", "温度2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
+		var lang_24  = ["Humidity 2", "湿度2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
+		var lang_25  = ["Door1", "门禁1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+		var lang_26  = ["Door2", "门禁2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
+		var lang_27  = ["Water", "水浸", "Eau", "погружение", "Inmersión", "الفيضانات"];
+		var lang_28  = ["Smoke", "烟雾", "Fumée", "дым", "Humo", "دخان"];
+		var lang_29  = ["Information", "信息", "Information", "сведения", "Información", "معلومات"];
+		var lang_30  = ["Working status:", "工作状态：", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
+		var lang_31  = ["PDU location:", "PDU位置：", "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
+		var lang_32  = ["PDU uptime:", "运行时长：", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
+		var lang_33  = ["PDU series:", "产品系列：", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
+		var lang_34  = ["PDU version:", "软件版本：", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
+		var lang_35  = ["Real-time dynamic power and current trend graph", "实时动态功率和电流趋势图", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
+
+		document.getElementById("lang_1").innerHTML  = lang_1[flag];
+		document.getElementById("lang_2").innerHTML  = lang_2[flag];
+		document.getElementById("lang_3").innerHTML  = lang_3[flag];
+		document.getElementById("lang_4").innerHTML  = lang_4[flag];
+		document.getElementById("lang_5").innerHTML  = lang_5[flag];
+		document.getElementById("lang_6").innerHTML  = lang_6[flag];
+		document.getElementById("lang_7").innerHTML  = lang_7[flag];
+		document.getElementById("lang_8").innerHTML  = lang_8[flag];
+		document.getElementById("lang_9").innerHTML  = lang_9[flag];
+		document.getElementById("lang_10").innerHTML = lang_10[flag];
+		document.getElementById("lang_11").innerHTML = lang_11[flag];
+		document.getElementById("lang_12").innerHTML = lang_12[flag];
+		document.getElementById("lang_13").innerHTML = lang_13[flag];
+		document.getElementById("lang_14").innerHTML = lang_14[flag];
+		document.getElementById("lang_15").innerHTML = lang_15[flag];
+		document.getElementById("lang_16").innerHTML = lang_16[flag];
+		document.getElementById("lang_17").innerHTML = lang_17[flag];
+		document.getElementById("lang_18").innerHTML = lang_18[flag];
+		document.getElementById("lang_19").innerHTML = lang_19[flag];
+		document.getElementById("lang_20").innerHTML = lang_20[flag];
+		document.getElementById("lang_21").innerHTML = lang_21[flag];
+		document.getElementById("lang_22").innerHTML = lang_22[flag];
+		document.getElementById("lang_23").innerHTML = lang_23[flag];
+		document.getElementById("lang_24").innerHTML = lang_24[flag];
+		document.getElementById("lang_25").innerHTML = lang_25[flag];
+	//	document.getElementById("lang_26").innerHTML = lang_26[flag];
+		document.getElementById("lang_27").innerHTML = lang_27[flag];
+		document.getElementById("lang_28").innerHTML = lang_28[flag];
+		document.getElementById("lang_29").innerHTML = lang_29[flag];
+		document.getElementById("lang_30").innerHTML = lang_30[flag];
+		document.getElementById("lang_31").innerHTML = lang_31[flag];
+		document.getElementById("lang_32").innerHTML = lang_32[flag];
+		document.getElementById("lang_33").innerHTML = lang_33[flag];
+		document.getElementById("lang_34").innerHTML = lang_34[flag];
+		document.getElementById("lang_35").innerHTML = lang_35[flag];
+	}
+
+</script>
+
+</head>
+<body >
+<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+	<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
+		<div class="panel panel-default">
+			<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>
+		</div>
+		
+		<div style="border:0px solid;border-color: #ffffff; margin:10px; height:250px; background:#ffffff; text-align:center;">
+			<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_3"></div>
+			<div style="float:left; display:table-cell; width:22%; height:210px; border:0px solid;border-color: #aaaaff;">
+				<table style="width:100%; margin-top:10px; font-size:12px; border:0px solid;border-color: #aaaaff;">
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px; font-size:40px;" id="dat1"></span>
+						<span style="float:left; padding-left:10px; padding-top:28px;">kW</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px; font-size:40px;" id="dat2"></span>
+						<span style="float:left; padding-left:10px; padding-top:28px;">kVA</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;" id="lang_4"></span>
+						<span style="float:left; padding-left:10px;" id="dat3"></span>
+						<span style="float:left; padding-left:2px;">kWh</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;" id="lang_5"></span>
+						<span style="float:left; padding-left:10px;" id="dat4"></span>
+						<span style="float:left; padding-left:2px;">Hz</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;" id="lang_6"></span>
+						<span style="float:left; padding-left:5px;" id="dat5"></span>
+						<span style="float:left; padding-left:2px;">mA</span>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div style="float:left; display:table-cell; width:26%; height:210px; border:0px solid;border-color: #aaaaff;" id="L1">
+				<table style="width:100%; margin-top:10px; font-size:12px; border:0px solid;border-color: #aaaaff;">
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;" id="x"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px; font-size:40px;" id="dat6"></span>
+						<span style="float:left; padding-left:10px; padding-top:28px;">A</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="progress" >
+						  <div class="progress-bar" id="pgt1"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">L1-N:</span>
+						<span style="float:left; padding-left:10px;" id="dat7"></span>
+						<span style="float:left; padding-left:2px;">V</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">PF:</span>
+						<span style="float:left; padding-left:10px;" id="dat8"></span>
+						<span style="float:left; padding-left:2px;"></span>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div style="float:left; display:table-cell; width:26%; height:210px; border:0px solid;border-color: #aaaaff;" id="L2">
+				<table style="width:100%; margin-top:10px; font-size:12px; border:0px solid;border-color: #aaaaff;">
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">L2</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px; font-size:40px;" id="dat9"></span>
+						<span style="float:left; padding-left:10px; padding-top:28px;">A</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="progress" >
+						  <div class="progress-bar" id="pgt2"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">L2-N:</span>
+						<span style="float:left; padding-left:10px;" id="dat10"></span>
+						<span style="float:left; padding-left:2px;">V</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">PF:</span>
+						<span style="float:left; padding-left:10px;" id="dat11"></span>
+						<span style="float:left; padding-left:2px;"></span>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div style="float:left; display:table-cell; width:26%; height:210px; border:0px solid;border-color: #aaaaff;" id="L3">
+				<table style="width:100%; margin-top:10px; font-size:12px; border:0px solid;border-color: #aaaaff;">
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">L3</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px; font-size:40px;" id="dat12"></span>
+						<span style="float:left; padding-left:10px; padding-top:28px;">A</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="progress" >
+						  <div class="progress-bar" id="pgt3"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">L3-N:</span>
+						<span style="float:left; padding-left:10px;" id="dat13"></span>
+						<span style="float:left; padding-left:2px;">V</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span style="float:left; padding-left:20px;">PF:</span>
+						<span style="float:left; padding-left:10px;" id="dat14"></span>
+						<span style="float:left; padding-left:2px;"></span>
+					</td>
+				</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div id="ht" style="border:1px solid;border-color: #ffffff; margin:10px;  background:#ffffff; text-align:center;">	
+			<table style="width:100%;  font-size:12px; border:0px solid; border-color:#aaaaff;">
+			<tr >
+				<td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td>
+			</tr>
+			<tr>
+				<td class="spacing" id="lang_8"></td>
+				<td class="spacing" id="lang_9"></td>
+				<td class="spacing" id="lang_10"></td>
+				<td class="spacing" id="lang_11"></td>
+				<td class="spacing" id="lang_12"></td>
+				<td class="spacing" id="lang_13"></td>
+				<td class="spacing" id="lang_14"></td>
+				<td class="spacing" id="lang_15"></td>
+			</tr>
+			<tr id="tr0" style="background:#e7e7e7;">
+				<td class="spacing" id="dat15"></td>
+				<td class="spacing" id="dat16"></td>
+				<td class="spacing" id="dat17"></td>
+				<td class="spacing" id="dat18"></td>
+				<td class="spacing" id="dat19"></td>
+				<td class="spacing" id="dat20"></td>
+				<td class="spacing" id="dat21"></td>
+				<td class="spacing" id="dat22"></td>
+			</tr>
+			<tr id="tr1">
+				<td class="spacing" id="dat23"></td>
+				<td class="spacing" id="dat24"></td>
+				<td class="spacing" id="dat25"></td>
+				<td class="spacing" id="dat26"></td>
+				<td class="spacing" id="dat27"></td>
+				<td class="spacing" id="dat28"></td>
+				<td class="spacing" id="dat29"></td>
+				<td class="spacing" id="dat30"></td>
+			</tr>
+			<tr id="tr2" style="background:#e7e7e7;">
+				<td class="spacing" id="dat31"></td>
+				<td class="spacing" id="dat32"></td>
+				<td class="spacing" id="dat33"></td>
+				<td class="spacing" id="dat34"></td>
+				<td class="spacing" id="dat35"></td>
+				<td class="spacing" id="dat36"></td>
+				<td class="spacing" id="dat37"></td>
+				<td class="spacing" id="dat38"></td>
+			</tr>
+			<tr id="tr3">
+				<td class="spacing" id="dat39"></td>
+				<td class="spacing" id="dat40"></td>
+				<td class="spacing" id="dat41"></td>
+				<td class="spacing" id="dat42"></td>
+				<td class="spacing" id="dat43"></td>
+				<td class="spacing" id="dat44"></td>
+				<td class="spacing" id="dat45"></td>
+				<td class="spacing" id="dat46"></td>
+			</tr>
+			<tr id="tr4" style="background:#e7e7e7;">
+				<td class="spacing" id="dat47"></td>
+				<td class="spacing" id="dat48"></td>
+				<td class="spacing" id="dat49"></td>
+				<td class="spacing" id="dat50"></td>
+				<td class="spacing" id="dat51"></td>
+				<td class="spacing" id="dat52"></td>
+				<td class="spacing" id="dat53"></td>
+				<td class="spacing" id="dat54"></td>
+			</tr>
+			<tr id="tr5">
+				<td class="spacing" id="dat55"></td>
+				<td class="spacing" id="dat56"></td>
+				<td class="spacing" id="dat57"></td>
+				<td class="spacing" id="dat58"></td>
+				<td class="spacing" id="dat59"></td>
+				<td class="spacing" id="dat60"></td>
+				<td class="spacing" id="dat61"></td>
+				<td class="spacing" id="dat62"></td>
+			</tr>
+			</table>
+		</div>
+		
+		<table style="width:100%;height:203px; ">
+		<tr>
+			<td style=" width: 64%;">
+				<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:203px; background:#ffffff; text-align:center;">
+				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" id="lang_16"></div>
+				<table style="height:32px; width:100%; font-size:12px;">
+					<tr>
+						<td class="spacing" id="lang_17"></td>
+						<td class="spacing" id="lang_18"></td>
+						<td class="spacing" id="lang_19"></td>
+						<td class="spacing" id="lang_20"></td>
+					</tr>
+					<tr style="background:#e7e7e7;">
+						<td class="spacing" id="lang_21"></td>
+						<td class="spacing" id="dat63"></td>
+						<td class="spacing" id="lang_22"></td>
+						<td class="spacing" id="dat64"></td>
+					</tr>
+					<tr>
+						<td class="spacing" id="lang_23"></td>
+						<td class="spacing" id="dat65"></td>
+						<td class="spacing" id="lang_24"></td>
+						<td class="spacing" id="dat66"></td>
+					</tr>
+					<tr style="background:#e7e7e7;">
+						<td class="spacing" id="lang_25"></td>
+						<td class="spacing" id="dat67"></td>
+						<!--td class="spacing" id="lang_26"></td>
+						<td class="spacing" id="dat68"></td-->
+						<td class="spacing" ></td>
+						<td class="spacing" ></td>
+					</tr>
+					<tr>
+						<td class="spacing" id="lang_27"></td>
+						<td class="spacing" id="dat69"></td>
+						<td class="spacing" id="lang_28"></td>
+						<td class="spacing" id="dat70"></td>
+					</tr>
+				</table>
+				</div>
+			</td>
+			
+			<td style="width: 32%;">
+				<div style="width: 97%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-top:-5px; margin-left:10px; height:203px;  background:#ffffff; ">
+				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" id="lang_29"></div>
+				<table style=" font-size:12px;">
+					<tr><td class="spacing" style="width:40%" id="lang_30"></td><td id="dat71" style="font-weight:bold"></td></tr>
+					<tr><td class="spacing" style="width:40%" id="lang_31"></td><td id="dat72"></td></tr>
+					<tr><td class="spacing" style="width:40%" id="lang_32"></td><td id="dat73"></td></tr>
+					<tr><td class="spacing" style="width:40%" id="lang_33"></td><td id="dat74"></td></tr>
+					<tr><td class="spacing" style="width:40%" id="lang_34"></td><td id="dat75"></td></tr>
+				</table>
+				</div>
+			</td>
+			
+			
+		</tr>
+		</table>	
+		
+		<div style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:400px; background:#ffffff;">
+		<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_35"></div>
+			<br>
+			<div align="left" id="container" style="width:100%; height:360px;">
+				<script type="text/javascript">
+				var myChart = echarts.init(document.getElementById('container'));
+				var option = {
+					tooltip: {
+						trigger: 'axis'
+					},
+					grid:{
+							x:50,
+							y:50,
+							x2:50,
+							y2:60,
+							borderWidth:1
+						},
+					legend: {
+						data: ['P' , 'L1'  , 'L2'  , 'L3']
+					},
+					xAxis: [{
+						type: 'category',
+						boundaryGap: false,
+						data: (function() {
+							var now = new Date();
+							var res = [];
+							var len = 200;
+							while (len--) {
+								res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''));
+								now = new Date(now - 3000);
+							}
+							return res;
+						})()
+					}],
+					yAxis: [{
+						type: 'value',
+						scale: true,
+						name: 'kW',
+						min: 0,
+						boundaryGap: [0.2, 0.2]
+					}, {
+						type: 'value',
+						scale: true,
+						name: 'A',
+						min: 0,
+						boundaryGap: [0.2, 0.2]
+					}
+					, {
+						type: 'value',
+						scale: true,
+						name: 'A',
+						min: 0,
+						boundaryGap: [0.2, 0.2]
+					}
+					, {
+						type: 'value',
+						scale: true,
+						name: 'A',
+						min: 0,
+						boundaryGap: [0.2, 0.2]
+					}],
+					series: [{
+						name: 'P',
+						type: 'line',
+						smooth:true,
+						itemStyle: {normal: {
+							color:'#0099ff',
+							areaStyle: {type: 'default'},
+							lineStyle:{color:'#0099ff'}  
+						}},
+						areaStyle: {
+							normal: {
+								color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+									offset: 0,
+									color: 'rgb(0, 153, 255)'
+								}, {
+									offset: 1,
+									color: 'rgb(255,255,255)'
+								}])
+							}
+						},
+						data: (function() {
+							var res = [];
+							var len = 0;
+							while (len < 200) {
+								res.push(null);
+								len++;
+							}
+							return res;
+						})()
+					},
+					{
+						name: 'L1',
+						type: 'line',
+						yAxisIndex: 1,
+						itemStyle: {normal: {
+							color:'#ffd700', 
+							lineStyle:{color:'#ffd700'}  
+						}},
+						data: (function() {
+							var res = [];
+							var len = 200;
+							while (len--) {
+								res.push(null);
+							}
+							return res;
+						})()
+					},
+					{
+						name: 'L2',
+						type: 'line',
+						yAxisIndex: 1,
+						itemStyle: {normal: {
+							color:'#00d700', 
+							lineStyle:{color:'#00d700'}  
+						}},
+						data: (function() {
+							var res = [];
+							var len = 200;
+							while (len--) {
+								res.push(null);
+							}
+							return res;
+						})()
+					},
+					{
+						name: 'L3',
+						type: 'line',
+						yAxisIndex: 1,
+						itemStyle: {normal: {
+							color:'#ef5f7c', 
+							lineStyle:{color:'#ef5f7c'}  
+						}},
+						data: (function() {
+							var res = [];
+							var len = 200;
+							while (len--) {
+								res.push(null);
+							}
+							return res;
+						})()
+					}
+					]
+				};
+			</script>
+		</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

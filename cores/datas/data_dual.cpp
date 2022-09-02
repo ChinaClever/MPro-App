@@ -17,6 +17,7 @@ int Data_Dual::setDualSize()
         size = mDev->cfg.nums.outputNum;
         mDev->cfg.nums.slaveNum = 1;
     }
+
     sObjData *obj = &(mDev->dual);
     obj->vol.size = obj->cur.size = 0;
     obj->size = obj->pow.size = size;
@@ -30,7 +31,7 @@ void Data_Dual::dualWork()
 {
     int size = setDualSize();
     if(size > 0) dualData();
-    else disDualAlarm();
+    //else disDualAlarm();
 }
 
 

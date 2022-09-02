@@ -25,13 +25,14 @@ void Cascade_Core::startFun()
 {    
     if(!isRun) {
         //QTimer::singleShot(1,this,SLOT(initFunSlot())); cm::mdelay(2);
+        mThread->init(this, SLOT(run()));
         isRun = true; mThread->start();
     }
 }
 
 void Cascade_Core::initFunSlot()
 {
-    if(cm::masterDev()->cfg.param.devMode > 1) {
+    if(cm::masterDev()->cfg.param.devMode < DevMode::DM_Rtu) {
         qint32 baudRate = QSerialPort::Baud57600;
         openSerial("/dev/ttyUSB0", baudRate, QSerialPort::EvenParity);
     }
@@ -62,11 +63,10 @@ void Cascade_Core::workFun()
 void Cascade_Core::run()
 {
     while(isRun) {
-        cm::mdelay(1000);
-        if(cm::masterDev()->cfg.param.devMode > 1) {
+        int mode = cm::masterDev()->cfg.param.devMode;
+        if(mode && (mode < DevMode::DM_Rtu)) {
             if(isOpened()) workFun(); else QTimer::singleShot(1,this,SLOT(initFunSlot()));
-        } else {
-            if(isOpened()) closeSerial();
-        }
+        } else if(isOpened()) closeSerial();
+        else cm::mdelay(1);
     }
 }
