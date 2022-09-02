@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include "sshrpcclient.h"
 #include <iostream>
+#include <QTime>
 
 namespace Ssh{
 void usage()
@@ -71,7 +72,7 @@ void pduGetParam(const QStringList &ls)
         uchar fc = ls.at(k++).toInt();
         uchar addr = 0; if(ls.size() > 2) addr = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
-        qDebug() << rpc->pduGetParam(type, fc, addr, sub);
+        qDebug() << rpc->pduGetParam(type, fc, addr, sub).toString();
     } else qCritical() << "pduGetParam Parameter error";
 }
 
@@ -99,13 +100,15 @@ void pduMetaData(const QStringList &ls)
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 4) {
+    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
+    int k = 0; if(ls.size() > 2) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
         std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
     } else qCritical() << "pduLogFun Parameter error";
+    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
 }
 
 void pduRelaysCtrl(const QStringList &ls)

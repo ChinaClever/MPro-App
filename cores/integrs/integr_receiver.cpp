@@ -30,6 +30,9 @@ Integr_Receiver::~Integr_Receiver()
 void Integr_Receiver::initRecvFun()
 {
     sPushCfg *cfg = &pushCfg;
+    cfg->recvEn = 1;
+    cfg->recvPort = 5655;
+
     switch(cfg->recvEn) {
     case 1: mUdp->bind(cfg->recvPort); break;
     case 2: mTcp->listen(cfg->recvPort); break;
