@@ -47,7 +47,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     switch (type) {
     case 0: ret = dev->offLine;  break;
     case 1: ret = it->param.devSpec; break;
-    case 2: ret = it->param.devStatus; break;
+    case 2: ret = dev->status; break;
     case 3: ret = it->param.devMode; break;
     case 4: ret = it->param.cascadeAddr; break;
     case 5: ret = it->param.modbusAddr; break;
