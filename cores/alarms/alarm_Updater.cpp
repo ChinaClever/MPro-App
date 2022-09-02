@@ -136,10 +136,12 @@ bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 
 bool Alarm_Updater::upSensorStatus(sDataItem &index, uint *ptr, int id)
 {
-    bool ret = false; uchar alarm = 0;
-    if(ptr[id] == 2) alarm = 1; else alarm = 0;
-    if(ptr[id+2] != alarm) emit alarmSig(index, alarm);
-    ptr[id+2] = alarm; ret |= alarm;
+    bool ret = false; if(ptr[id]) {
+        uchar alarm = 0; index.id = id;
+        if(ptr[id] == 2) alarm = 1; else alarm = 0;
+        if(ptr[id+2] != alarm) emit alarmSig(index, alarm);
+        ptr[id+2] = alarm; ret |= alarm;
+    }
     return ret;
 }
 
@@ -172,7 +174,7 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     ret |= upObjData(index, it->loop);
 
     index.type = DType::Output;
-    ret |= upObjData(index, it->output);    
+    ret |= upObjData(index, it->output);
 
     index.type = DType::Group;
     ret |= upObjData(index, it->group);
