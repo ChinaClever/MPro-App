@@ -34,7 +34,7 @@ typedef unsigned int uint;
 #define COM_RATE_TEM	10.0    // 温度
 #define COM_RATE_HUM	10.0    // 湿度
 
-#define COM_MIN_VOL     (60*COM_RATE_VOL)
+#define COM_MIN_VOL     (50*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
 #define COM_MAX_CUR     (100*COM_RATE_CUR)
 #define COM_MAX_POW     (100*600)
