@@ -97,8 +97,8 @@ void Cfg_RwInitial::initDevData(sDevData *dev)
 {
     initObjData(dev->line, LINE_NUM, 32);
     initObjData(dev->loop, LOOP_NUM, 16);
-    initObjData(dev->dual, OUTPUT_NUM, 10);
-    initObjData(dev->group, GROUP_NUM, 10);
+    initObjData(dev->dual, OUTPUT_NUM, 20);
+    initObjData(dev->group, GROUP_NUM, 14);
     initObjData(dev->output, OUTPUT_NUM, 10);
     initRelayUnit(dev->dual.relay, OUTPUT_NUM);
     initRelayUnit(dev->group.relay, GROUP_NUM);
