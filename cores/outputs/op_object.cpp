@@ -159,7 +159,7 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     if(!faultCode(id, ret, cnt, FaultCode::DTC_ELE)) {
         if(mDev->cfg.param.runTime < 48*60) dest[id] = src[i];
         else if(cnt[id] > FAULT_NUM) dest[id] = src[i];
-    }
+    } else dest[id] = src[i];
 }
 
 void OP_Object::fillData(uchar addr)
