@@ -9,8 +9,8 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : QObject{parent}
 {
-    initFun();
-    setInterface();
+    //initFun();
+    //setInterface();
 }
 
 
