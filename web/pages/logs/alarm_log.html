@@ -83,12 +83,12 @@
 				stat= 0;
 			}
 			read_log_data(1,2,stat,show_num);
-		},300);
+		},600);
 		setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
 			showdata();
-		},600);
+		},800);
 		function flash_html(par)
 		{
 			setTimeout(function(){

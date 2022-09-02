@@ -22,6 +22,22 @@ let rpc_info = new Array("","JsonMode","JsonPort","XmlMode","XmlPort");
 let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","CtrlMode","Ctrlport","Delay","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
 let url_1;
+let total_data = new Array(3);
+let inletA_data = new Array(3);
+let inletB_data = new Array(3);
+let inletC_data = new Array(3);
+for(let i = 0;i<3;i++){
+  total_data[i] = new Array(3);
+  inletA_data[i] = new Array(3);
+  inletB_data[i] = new Array(3);
+  inletC_data[i] = new Array(3);
+  for(let j = 0;j< 50;j++){
+    total_data[i][j] = 0;
+    inletA_data[i][j] = 0;
+    inletB_data[i][j] = 0;
+    inletC_data[i][j] = 0;
+  }
+}
 var jsonrpc = function()
 {
   var pro = 0;
@@ -81,7 +97,11 @@ var jsonrpc = function()
         sessionStorage.setItem(uut_name[topic]+ addr ,JSON.parse(evt.data).result[5]); 
       break;
       case 12:
-        sessionStorage.setItem(type_info[topic - 1]+ "Num" + addr ,JSON.parse(evt.data).result[5]);
+        if(topic>10){
+          sessionStorage.setItem(type_info[topic]+ "Num" + subtopic  +'_'+ addr ,JSON.parse(evt.data).result[5]);
+        }else{
+          sessionStorage.setItem(type_info[topic]+ "Num" + addr ,JSON.parse(evt.data).result[5]);
+        }
       break;
       case 13:
         sessionStorage.setItem(cfg_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
@@ -304,7 +324,14 @@ function read_num_info(addr){
       clearInterval(time1);
     }
     if((j < 7 || j > 10) && j <= num_num){
-      rpc.call('pduReadParam',[addr,num,j,0,0]);
+      if(j > 10){
+       var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
+        for(let i =0;i<loop_num;i++){
+          rpc.call('pduReadParam',[addr,num,j,i,0]);
+        }
+      }else{
+        rpc.call('pduReadParam',[addr,num,j,0,0]);
+      }
     }
     j++;
   },1);
