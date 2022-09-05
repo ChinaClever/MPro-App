@@ -8,7 +8,7 @@
 
 sSmtpCfg App_Smtp::smtpCfg;
 App_Smtp::App_Smtp(QObject *parent)
-    : QObject{parent}
+    : App_Ntp{parent}
 {
     connect(this, &App_Smtp::sendMailSig, this, &App_Smtp::sendMailSlot);
 }

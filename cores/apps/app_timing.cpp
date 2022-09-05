@@ -7,7 +7,7 @@
 #include "set_core.h"
 
 App_Timing::App_Timing(QObject *parent)
-    : App_Ntp{parent}
+    : App_Smtp{parent}
 {
     QTimer::singleShot(755,this,SLOT(timing_initFunSlot()));
 }

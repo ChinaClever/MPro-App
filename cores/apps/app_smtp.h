@@ -15,7 +15,7 @@ struct sSmtpCfg {
     QString lastErr;
 };
 
-class App_Smtp : public QObject
+class App_Smtp : public App_Ntp
 {
     Q_OBJECT
 public:

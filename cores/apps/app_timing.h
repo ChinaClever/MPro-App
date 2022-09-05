@@ -3,7 +3,7 @@
 
 #include "app_smtp.h"
 
-class App_Timing : public App_Ntp
+class App_Timing : public App_Smtp
 {
     Q_OBJECT
 public:
