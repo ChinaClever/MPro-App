@@ -16,30 +16,29 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#ifndef MIMEATTACHMENT_H
+#define MIMEATTACHMENT_H
 
-/* [1] Constructors and Destructors */
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+#include "smtpmime_global.h"
+#include "mimepart.h"
+#include "mimefile.h"
+
+class SMTP_MIME_EXPORT MimeAttachment : public MimeFile
 {
-}
+public:
 
-/* [1] --- */
+    /* [1] Constructors and Destructors */
 
+    MimeAttachment(QFile* file);
+    ~MimeAttachment();
 
-/* [2] Getters and Setters */
+    /* [1] --- */
 
+protected:
 
-QString EmailAddress::getName() const
-{
-    return name;
-}
+    /* [2] Protected methods */
+    /* [2] --- */
+};
 
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
-
-/* [2] --- */
-
+#endif // MIMEATTACHMENT_H

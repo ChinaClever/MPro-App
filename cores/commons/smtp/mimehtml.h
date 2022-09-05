@@ -16,30 +16,42 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#ifndef MIMEHTML_H
+#define MIMEHTML_H
 
-/* [1] Constructors and Destructors */
+#include "smtpmime_global.h"
+#include "mimetext.h"
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+class SMTP_MIME_EXPORT MimeHtml : public MimeText
 {
-}
+public:
 
-/* [1] --- */
+    /* [1] Constructors and Destructors */
+
+    MimeHtml(const QString &html = "");
+    ~MimeHtml();
+
+    /* [1] --- */
 
 
-/* [2] Getters and Setters */
+    /* [2] Getters and Setters */
+
+    void setHtml(const QString & html);
+
+    QString getHtml() const;
+
+    /* [2] --- */
+
+protected:
+
+    /* [3] Protected members */
+
+    /* [3] --- */
 
 
-QString EmailAddress::getName() const
-{
-    return name;
-}
+    /* [4] Protected methods */
 
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
+    /* [4] --- */
+};
 
-/* [2] --- */
-
+#endif // MIMEHTML_H

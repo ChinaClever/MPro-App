@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_netaddr.h"
-#include "app_netaddr.h"
+#include "app_core.h"
 
 Set_NetAddr::Set_NetAddr()
 {
@@ -50,7 +50,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     }
 
     if(res) {
-        App_NetAddr::bulid()->setInterface();
+        App_Core::bulid()->inet_setInterface();
         Cfg_ReadWrite::bulid()->writeParams();
     }
 

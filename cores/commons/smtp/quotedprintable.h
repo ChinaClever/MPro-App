@@ -16,30 +16,16 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#ifndef QUOTEDPRINTABLE_H
+#define QUOTEDPRINTABLE_H
 
-/* [1] Constructors and Destructors */
+#include <QByteArray>
+#include <QString>
+#include "smtpmime_global.h"
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
-{
+namespace QuotedPrintable {
+    SMTP_MIME_EXPORT QString encode(const QByteArray &input);
+    SMTP_MIME_EXPORT QByteArray decode(const QString &input);
 }
 
-/* [1] --- */
-
-
-/* [2] Getters and Setters */
-
-
-QString EmailAddress::getName() const
-{
-    return name;
-}
-
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
-
-/* [2] --- */
-
+#endif // QUOTEDPRINTABLE_H

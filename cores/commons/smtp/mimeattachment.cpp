@@ -16,30 +16,24 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#include "mimeattachment.h"
+#include <QFileInfo>
 
 /* [1] Constructors and Destructors */
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+MimeAttachment::MimeAttachment(QFile *file)
+    : MimeFile(file)
+{
+    this->headerLines += "Content-disposition: attachment\r\n";
+}
+
+MimeAttachment::~MimeAttachment()
 {
 }
 
 /* [1] --- */
 
 
-/* [2] Getters and Setters */
-
-
-QString EmailAddress::getName() const
-{
-    return name;
-}
-
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
+/* [2] Protected methods */
 
 /* [2] --- */
-

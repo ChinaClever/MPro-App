@@ -30,7 +30,9 @@ void Set_Core::writeAlarm()
 QVariant Set_Core::getCfg(sCfgItem &it)
 {
     QVariant res; switch (it.type) {
+    case SFnCode::ENtp: res = ntpCfg(it.fc); break;
     case SFnCode::EWeb: res = webCfg(it.fc); break;
+    case SFnCode::ESmtp: res = smtpCfg(it.fc); break;
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
@@ -65,9 +67,11 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
 
+    case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
-    case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
+    case SFnCode::ESmtp: ret = smtpSet(it.fc, v); break;
+    case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
