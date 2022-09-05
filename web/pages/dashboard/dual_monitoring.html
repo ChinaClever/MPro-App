@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>dashboard</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">.
+	    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+		<script src="../../include/js/rpc-over-websocket.js"></script>
+	    <script src="../../include/js/public.min.js"></script>
+		<script src="../../doc-lib/highlight.pack.js"></script>
+		<script src="../../include/js/fn_public.js"></script>
+		<script src="../../doc-lib/doc.js"></script>
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_2">机架监测</span>
+								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-striped text-center"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+    <script>
+		let PowValA = new Array();
+		let PowValB = new Array();
+		let AlarmPowValA = new Array();
+		let AlarmPowValB = new Array();
+		let AVPowValA = new Array();
+		let AVPowValB = new Array();
+		let TotalPowVal = new Array();
+		let TotalAVPowVal = new Array();
+		let EnergeValA = new Array();
+		let EnergeValB = new Array();
+		let TotalEnergeVal = new Array();
+		var output_name = new Array();
+		var Input_state = new Array("开","闭","重启");
+		var State = new Array("关","开");
+		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		var dev_name =new Array();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		read_monitoring_data();
+		setInterval(function(){
+			read_data();
+			$('.table-striped').html(buildTable(output_num));
+			$('.devname').html(buildSel(slave_num));
+		},800);
+		
+		function read_data(){
+			for(var i = 1 ;i < output_num + 1;i++){
+				PowValA = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
+				PowValB = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+(addr +1) +'_'+i));;
+				AlarmPowValA = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+addr+'_'+i));
+				AlarmPowValB = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+(addr +1)+'_'+i));
+				AVPowValA = parseInt(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
+				AVPowValB = parseInt(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+(addr +1)+'_'+i));
+				TotalPowVal = PowValA + PowValB;
+				TotalAVPowVal = AVPowValA + AVPowValB;
+				EnergeValA = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				EnergeValB = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+(addr +1)+'_'+i));
+				TotalEnergeVal = EnergeValA + EnergeValB;
+			}
+			for(var i = 0;i<slave_num;i++){
+				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			}
+		}
+		function buildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+			}
+			return tbody;
+		}
+		function showdata(){
+			for(var i = 1 ;i < output_num+ 1;i++){
+				var cs = document.getElementById('c'+(i-1));
+				var ss = document.getElementById('d'+(i-1));
+				if(AlarmPowValA[i] == 2|| AlarmPowValA[i] == 4){
+					cs.bgColor = 'yellow';
+				}else if(AlarmPowValA[i] == 1 || AlarmPowValA[i] == 8){
+					cs.bgColor = 'red';
+				}
+				else{
+					cs.bgColor = '';
+				}
+				if(AlarmPowValB[i] == 2|| AlarmPowValB[i] == 4){
+					ss.bgColor = 'yellow';
+				}else if(AlarmPowValB[i] == 1 || AlarmPowValB[i] == 8){
+					ss.bgColor = 'red';
+				}else{
+					ss.bgColor = '';
+				}
+			}
+		}
+		function read_monitoring_data(){
+			var j = 1;var i = 1;
+			var time1 = setInterval(function(){
+				if(i >= parseInt(output_num + 1)){
+					clearInterval(time1);
+				}
+				if(i <= output_num){
+					rpc.call('pduReadData',[addr,output,pow_,j,i]);
+					// rpc.call('pduReadData',[addr+1,output,pow_,j,i]);
+					rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
+					// rpc.call('pduReadData',[addr+1,output,AVpow_,j,i]);
+					rpc.call('pduReadData',[addr,output,energe_,j,i]);
+					// rpc.call('pduReadData',[addr+1,output,energe_,j,i]);
+					rpc.call('pduReadData',[addr,output,pow_,3,i]);
+					rpc.call('pduReadData',[addr+1,output,pow_,3,i]);
+				}
+				i++;
+			},1);
+		}
+		function buildTable(rows) {
+			var thead = '',tbody = '';
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+					thead = '<tr><td width ="8%">序号</td>\
+					<td width ="32%">名称</td>\
+					<td width ="12%">A路有功功率(KW)</td>\
+					<td width ="12%">B路有功功率(KW)</td>\
+					<td width ="12%">总有功功率(KW)</td>\
+					<td width ="12%">总视在功率(AV)</td>\
+					<td width ="12%">电能消耗(kWh)</td>';
+				}
+				tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(PowValA[i + 1]/1000).toFixed(2)  +'</td>';
+				tbody += '<td id = "d'+ i + '">' + parseFloat(PowValB[i + 1]/1000).toFixed(2)  + '</td>';
+				tbody += '<td id = "e'+ i + '">'+ parseFloat(TotalPowVal[i + 1]/1000).toFixed(2) +'</td>';
+				tbody += '<td id = "f'+ i + '">'+ parseFloat(TotalAVPowVal[i + 1]/1000).toFixed(2) +'</td>';
+				tbody += '<td id = "g'+ i + '">' + parseFloat(TotalEnergeVal[i + 1]/10).toFixed(1) + '</td>';
+				tbody += '</tr>';
+			}
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				document.getElementById('c'+i).innerHTML = (parseFloat(PowValA[i + 1])/1000).toFixed(2);
+				document.getElementById('d'+i).innerHTML = (parseFloat(PowValB[i + 1])/1000).toFixed(2);
+				document.getElementById('e'+i).innerHTML = (parseFloat(TotalPowVal[i + 1])/1000).toFixed(2);
+				document.getElementById('f'+i).innerHTML = (parseFloat(TotalAVPowVal[i + 1])/1000).toFixed(2);
+				document.getElementById('g'+i).innerHTML = (parseFloat(TotalEnergeVal[i + 1])/10).toFixed(1);
+			}
+		}
+		setInterval(function(){
+			read_monitoring_data();
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
+		},2000);
+    </script>
+</body>
+</html>

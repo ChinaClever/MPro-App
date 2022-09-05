@@ -22,6 +22,7 @@ let rpc_info = new Array("","JsonMode","JsonPort","XmlMode","XmlPort");
 let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","CtrlMode","Ctrlport","Delay","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
 let url_1;
+let group_num  = 8;
 let total_data = new Array(3);
 let inletA_data = new Array(3);
 let inletB_data = new Array(3);
@@ -165,7 +166,7 @@ var jsonrpc = function()
 var rpc = jsonrpc();
 var start  = 0;
 var hum_num = 2,num_num = 12,cfg_num = 11,uut_num = 5, sub_num = 8;
-var total = 0, phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,log = 81;
+var total = 0, phase  = 1,loop = 2,output = 3,group = 4,double = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
@@ -263,6 +264,35 @@ function read_loop_data(addr)
       i = 1;
       j++;
     }
+  },1);
+}
+function read_cfg_info(addr){
+  var j = 0;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(cfg_num)){
+      clearInterval(time1);
+    }
+    if(j < cfg_num){
+      rpc.call('pduReadParam',[addr,cfg,j,0,0]);
+    }
+    j++;
+  },1);
+}
+function read_group_data(addr)
+{
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(group_num + 1)){
+      clearInterval(time1);
+    }
+    if(j < group_num){
+
+      rpc.call('pduReadData',[addr,group,pow_,1,j]);
+      rpc.call('pduReadData',[addr,group,energe_,1,j]);
+      rpc.call('pduReadData',[addr,group,AVpow_,1,j]);
+      rpc.call('pduReadData',[addr,group,pow_,3,j]);
+    }
+    j++;
   },1);
 }
 function read_output_data(addr)
