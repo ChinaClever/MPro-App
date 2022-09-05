@@ -33,7 +33,7 @@ void App_NetAddr::inet_setInterface()
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
         QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
 #endif
-        QTimer::singleShot(755,this,SLOT(updateInterface()));
+        QTimer::singleShot(755,this,SLOT(inet_updateInterface()));
     }
 }
 

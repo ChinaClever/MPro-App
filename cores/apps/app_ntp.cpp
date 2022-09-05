@@ -10,8 +10,8 @@ App_Ntp::App_Ntp(QObject *parent)
     : App_NetAddr{parent}
 {
     mUdp = new Net_Udp(this);
+    QTimer::singleShot(55,this,SLOT(ntp_initSlot()));
     connect(mUdp, &Net_Udp::recvSig, this, &App_Ntp::ntp_recvSlot);
-    QTimer::singleShot(55,this,SLOT(ntpInitSlot()));
 }
 
 void App_Ntp::ntp_initSlot()
