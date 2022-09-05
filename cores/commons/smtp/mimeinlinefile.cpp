@@ -16,30 +16,30 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#include "mimeinlinefile.h"
 
 /* [1] Constructors and Destructors */
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+MimeInlineFile::MimeInlineFile(QFile *f)
+    : MimeFile(f)
 {
+    addHeaderLine("Content-Disposition: inline");
 }
+
+MimeInlineFile::~MimeInlineFile()
+{}
 
 /* [1] --- */
 
 
 /* [2] Getters and Setters */
 
-
-QString EmailAddress::getName() const
-{
-    return name;
-}
-
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
-
 /* [2] --- */
+
+
+/* [3] Protected methods */
+
+/* [3] --- */
+
+
 

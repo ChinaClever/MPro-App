@@ -12,6 +12,48 @@ Set_Service::Set_Service()
 
 }
 
+QVariant Set_Service::smtpCfg(int fc)
+{
+    QVariant ret;
+    sSmtpCfg *it = &App_Smtp::smtpCfg;
+    switch (fc) {
+    case 1: ret = it->en; break;
+    case 2: ret = it->host; break;
+    case 3: ret = it->from; break;
+    case 4: ret = it->pwd; break;
+    case 5: ret = it->to; break;
+    case 6: ret = it->port; break;
+    case 7: ret = it->ct; break;
+    case 8: ret = it->lastErr; break;
+    default: cout << fc; break;
+    }
+    return ret;
+}
+
+bool Set_Service::smtpSet(int fc, const QVariant &v)
+{
+    bool ret = true;
+    sSmtpCfg *it = &App_Smtp::smtpCfg;
+    QString prefix = "smtp"; QString key;
+
+    switch (fc) {
+    case 1: key = "en"; it->en = v.toInt(); break;
+    case 2: key = "host";  it->host = v.toString(); break;
+    case 3: key = "from";  it->from = v.toString();  break;
+    case 4: key = "pwd";  it->pwd =v.toString();  break;
+    case 5: key = "to";  it->to =v.toString();  break;
+    case 6: key = "port";  it->port =v.toInt();  break;
+    case 7: key = "ct";  it->ct =v.toInt();  break;
+    default: ret = false; cout << fc << v; break;
+    }
+
+    if(key.size()){
+        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}
+
 QVariant Set_Service::ntpCfg(int fc)
 {
     QVariant ret;

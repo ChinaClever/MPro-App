@@ -16,30 +16,46 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#ifndef MIMEFILE_H
+#define MIMEFILE_H
 
-/* [1] Constructors and Destructors */
+#include "mimepart.h"
+#include "smtpmime_global.h"
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+class QFile;
+
+class SMTP_MIME_EXPORT MimeFile : public MimePart
 {
-}
+public:
 
-/* [1] --- */
+    /* [1] Constructors and Destructors */
+
+    MimeFile(QFile *f);
+    ~MimeFile();
+
+    /* [1] --- */
 
 
-/* [2] Getters and Setters */
+    /* [2] Getters and Setters */
+
+    /* [2] --- */
+
+protected:
+
+    /* [3] Protected members */
+
+    QFile* file;
+
+    /* [3] --- */
 
 
-QString EmailAddress::getName() const
-{
-    return name;
-}
+    /* [4] Protected methods */
 
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
+    void writeContent(QIODevice &device) const;
 
-/* [2] --- */
 
+    /* [4] --- */
+
+};
+
+#endif // MIMEFILE_H

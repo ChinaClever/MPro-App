@@ -16,30 +16,36 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#include "mimehtml.h"
 
 /* [1] Constructors and Destructors */
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+MimeHtml::MimeHtml(const QString &html) : MimeText(html)
 {
+    this->cType = "text/html";
 }
+
+MimeHtml::~MimeHtml() {}
 
 /* [1] --- */
 
 
 /* [2] Getters and Setters */
 
-
-QString EmailAddress::getName() const
+void MimeHtml::setHtml(const QString & html)
 {
-    return name;
+    this->text = html;
 }
 
-QString EmailAddress::getAddress() const
+QString MimeHtml::getHtml() const
 {
-    return address;
+    return text;
 }
+
 
 /* [2] --- */
 
+
+/* [3] Protected methods */
+
+/* [3] --- */

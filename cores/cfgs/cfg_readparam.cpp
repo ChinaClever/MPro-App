@@ -26,6 +26,7 @@ void Cfg_ReadParam::readCfgParams()
     rpc();
     push();
     snmp();
+    smtp();
     mqtt();
     login();
     modbus();
@@ -33,6 +34,29 @@ void Cfg_ReadParam::readCfgParams()
     dualName();
     groupName();
     outputName();
+}
+
+
+void Cfg_ReadParam::smtp()
+{
+    sSmtpCfg *cfg = &App_Smtp::smtpCfg;
+    QString prefix = "smtp";  QString key;
+    QString *str = nullptr; int *ptr = nullptr;
+    for(int i=1; i<8; ++i) {
+        switch (i) {
+        case 1: key = "en"; ptr = &cfg->en; break;
+        case 2: key = "host"; str = &cfg->host; break;
+        case 3: key = "from"; str = &cfg->from; break;
+        case 4: key = "pwd"; str = &cfg->pwd; break;
+        case 5: key = "to"; str = &cfg->to; break;
+        case 6: key = "port"; ptr = &cfg->port; break;
+        case 7: key = "ct"; ptr = &cfg->ct; break;
+        default: ptr = nullptr; str = nullptr; break;
+        }
+
+        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+    }
 }
 
 void Cfg_ReadParam::snmp()

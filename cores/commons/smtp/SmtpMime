@@ -16,30 +16,17 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#ifndef SMTPMIME_H
+#define SMTPMIME_H
 
-/* [1] Constructors and Destructors */
+#include "smtpclient.h"
+#include "mimepart.h"
+#include "mimehtml.h"
+#include "mimeattachment.h"
+#include "mimemessage.h"
+#include "mimetext.h"
+#include "mimeinlinefile.h"
+#include "mimefile.h"
+#include "mimebytearrayattachment.h"
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
-{
-}
-
-/* [1] --- */
-
-
-/* [2] Getters and Setters */
-
-
-QString EmailAddress::getName() const
-{
-    return name;
-}
-
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
-
-/* [2] --- */
-
+#endif // SMTPMIME_H

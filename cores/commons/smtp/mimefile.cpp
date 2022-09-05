@@ -16,30 +16,41 @@
   See the LICENSE file for more details.
 */
 
-#include "emailaddress.h"
+#include "mimefile.h"
+#include <QFileInfo>
 
 /* [1] Constructors and Destructors */
 
-EmailAddress::EmailAddress(const QString & address, const QString & name)
-    : address(address), name(name)
+MimeFile::MimeFile(QFile *file)
+{
+    this->file = file;
+    this->cType = "application/octet-stream";
+    this->cName = QFileInfo(*file).fileName();
+    this->cEncoding = Base64;
+}
+
+MimeFile::~MimeFile()
 {
 }
 
 /* [1] --- */
 
 
-/* [2] Getters and Setters */
-
-
-QString EmailAddress::getName() const
-{
-    return name;
-}
-
-QString EmailAddress::getAddress() const
-{
-    return address;
-}
+/* [2] Getters and setters */
 
 /* [2] --- */
+
+
+/* [3] Protected methods */
+
+
+void MimeFile::writeContent(QIODevice &device) const {
+    file->open(QIODevice::ReadOnly);    
+    const QByteArray &fileContent = file->readAll();
+    file->close();
+
+    MimePart::writeContent(device, fileContent);
+}
+
+/* [3] --- */
 

@@ -1,7 +1,7 @@
 #ifndef APP_TIMING_H
 #define APP_TIMING_H
 
-#include "app_ntp.h"
+#include "app_smtp.h"
 
 class App_Timing : public App_Ntp
 {
