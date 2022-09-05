@@ -9,6 +9,9 @@ public:
 
     int webCfg(int fc);
     bool webSet(int fc, const QVariant &v);
+
+    QVariant ntpCfg(int fc);
+    bool ntpSet(int fc, const QVariant &v);
 };
 
 #endif // SET_SERVICE_H

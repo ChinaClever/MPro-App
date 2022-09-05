@@ -5,21 +5,20 @@
 class App_NetAddr: public QObject
 {
     Q_OBJECT
-    explicit App_NetAddr(QObject *parent = nullptr);
 public:
-    static App_NetAddr *bulid(QObject *parent = nullptr);
-    void setInterface();
+    explicit App_NetAddr(QObject *parent = nullptr);
+    void inet_setInterface();
 
 public slots:
-    void updateInterface();
+    void inet_updateInterface();
 
 private slots:
-    void setInterfaceSlot();
+    void inet_initFunSlot();
+    void inet_setInterfaceSlot();
 
 private:
-    void initFun();
-    void setIpV4();
-    void dhcp(const QString &n);
+    void inet_setIpV4();
+    void inet_dhcp(const QString &n);
 
 private:
     bool isRun=false;

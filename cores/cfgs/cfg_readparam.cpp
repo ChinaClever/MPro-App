@@ -3,14 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
+#include "web_server/web_core.h"
 #include "cfg_readparam.h"
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "sercret_core.h"
 #include "mqtt_client.h"
 #include "agent_core.h"
+#include "app_core.h"
 #include "mb_core.h"
-#include "web_server/web_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -20,6 +21,7 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    ntp();
     web();
     rpc();
     push();
@@ -72,6 +74,20 @@ void Cfg_ReadParam::web()
 
         if(key.size() && ptr) {
             *ptr = mCfg->readCfg(key, value, prefix).toInt();
+        }
+    }
+}
+
+void Cfg_ReadParam::ntp()
+{
+    sNtpCfg *it = &App_Ntp::ntpCfg;
+    QString prefix = "ntp"; QString key;
+
+    for(int i=1; i<5; ++i)  {
+        switch (i) {
+        case 2: key = "udp_en";  it->udp_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 3: key = "ntp_host";  it->ntp_host = mCfg->readCfg(key, "", prefix).toString();  break;
+        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "", prefix).toString();  break;
         }
     }
 }

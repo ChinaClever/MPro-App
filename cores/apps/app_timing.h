@@ -1,21 +1,20 @@
 #ifndef APP_TIMING_H
 #define APP_TIMING_H
 
-#include "app_netaddr.h"
+#include "app_ntp.h"
 
-class App_Timing : public QObject
+class App_Timing : public App_Ntp
 {
     Q_OBJECT
-    explicit App_Timing(QObject *parent = nullptr);
 public:
-    static App_Timing *bulid(QObject *parent = nullptr);
+    explicit App_Timing(QObject *parent = nullptr);
 
 private:
     void writeTotalTime(uint h);
 
 private slots:
-    void initFunSlot();
-    void onTimeoutDone();
+    void timing_initFunSlot();
+    void timing_onTimeoutDone();
 
 private:
     QTimer *mTimer;

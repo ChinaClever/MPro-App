@@ -1,14 +1,13 @@
 #ifndef APP_START_H
 #define APP_START_H
 
-#include <QtCore>
+#include "app_timing.h"
 
-class App_Start : public QObject
+class App_Start : public App_Timing
 {
     Q_OBJECT
-    explicit App_Start(QObject *parent = nullptr);
 public:
-    static App_Start *bulid(QObject *parent = nullptr);
+    explicit App_Start(QObject *parent = nullptr);
     ~App_Start();
 
 private:
@@ -17,8 +16,6 @@ private:
 private slots:
     void initFunSlot();
     void startThreadSlot();
-
-
 };
 
 #endif // APP_START_H

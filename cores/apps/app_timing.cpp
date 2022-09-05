@@ -7,25 +7,16 @@
 #include "set_core.h"
 
 App_Timing::App_Timing(QObject *parent)
-    : QObject{parent}
+    : App_Ntp{parent}
 {
-    QTimer::singleShot(755,this,SLOT(initFunSlot()));
+    QTimer::singleShot(755,this,SLOT(timing_initFunSlot()));
 }
 
-App_Timing *App_Timing::bulid(QObject *parent)
-{
-    static App_Timing* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new App_Timing(parent);
-    }
-    return sington;
-}
-
-void App_Timing::initFunSlot()
+void App_Timing::timing_initFunSlot()
 {
     mTimer = new QTimer(this);
     mTimer->start(60*1000); cm::masterDev()->cfg.param.runTime = 0;
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(onTimeoutDone()));
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(timing_onTimeoutDone()));
 }
 
 void App_Timing::writeTotalTime(uint h)
@@ -43,7 +34,7 @@ void App_Timing::writeTotalTime(uint h)
     if(ret) Cfg_ReadWrite::bulid()->writeParams();
 }
 
-void App_Timing::onTimeoutDone()
+void App_Timing::timing_onTimeoutDone()
 {
     sParameter *param = &(cm::masterDev()->cfg.param);
     if(0 == (++param->runTime)%60) {
