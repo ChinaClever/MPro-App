@@ -8,7 +8,7 @@ let user_name='user_name';
 let password = 'password';
 let identify = '';
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
-let type_name = new Array("Total","Phs","Loop","Group","Double","","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push");
+let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","","","Content","Output","Group","Dual");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
@@ -21,6 +21,7 @@ let snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","K
 let rpc_info = new Array("","JsonMode","JsonPort","XmlMode","XmlPort");
 let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","CtrlMode","Ctrlport","Delay","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
+let info_info = new Array("","Name","PowerOn","PowerOff");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -129,6 +130,18 @@ var jsonrpc = function()
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
+      break;
+      case 21:
+        sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
+      break;
+      case 22:
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+      break;
+      case 23:
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+      break;
+      case 24:
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
         sessionStorage.setItem(ver_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
