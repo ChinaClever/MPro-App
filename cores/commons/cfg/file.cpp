@@ -6,6 +6,17 @@
 #include "file.h"
 #include "crc.h"
 
+QStringList File::entryList(const QString &p)
+{
+    QString path = QDir::currentPath();//获取当前工程目录
+    if(p.size()) path = p;
+    QDir dir(path); QStringList filename;
+    //filename << "*.png" << "*.jpg";//可叠加，可使用通配符筛选
+    QStringList results;
+    results = dir.entryList(filename, QDir::Files|QDir::Readable, QDir::Name);
+    return results;
+}
+
 QString File::Md5(const QString &fn)
 {
     QFile sourceFile(fn);

@@ -24,6 +24,8 @@ namespace File {
     bool AppendCrc(const QString &fn);
     uint Size(const QString &fn);
 
+    QStringList entryList(const QString &p="");
+
     QString certFile();
     QString keyFile();
 }
