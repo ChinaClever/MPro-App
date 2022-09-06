@@ -28,6 +28,8 @@ void Data_Core::upAlarm()
         Alarm_Updater::bulid()->run();
     }
 
+
+    /////////============
     for(int i=0; i<24; ++i) {
         char *ptr = mDev->output.relay.timingOn[i];
         qstrcpy(ptr, "2020-10-01 11:10:00");
