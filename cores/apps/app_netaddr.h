@@ -21,7 +21,7 @@ private:
     void inet_dhcp(const QString &n);
 
 private:
-    bool isRun=false;
+    bool inet_isRun=false;
 };
 
 #endif // APP_NETADDR_H

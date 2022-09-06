@@ -20,15 +20,16 @@ class App_Smtp : public App_Ntp
     Q_OBJECT
 public:
     explicit App_Smtp(QObject *parent = nullptr);
-    void smtp_sendMail(const QString &subject, const QString &content);
+    void smtp_sendMail(const QString &content);
     static sSmtpCfg smtpCfg;
+    void smtp_run();
 
-signals:
-    void sendMailSig(const QString &subject, const QString &content);
+private:
+    void sendMail();
 
-private slots:
-    void sendMailSlot(const QString &subject, const QString &content);
-
+private:
+    QStringList mList;
+    bool smtp_isRun=false;
 };
 
 #endif // APP_SMTP_H

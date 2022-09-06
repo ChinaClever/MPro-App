@@ -5,7 +5,7 @@
  */
 #include "cfg_obj.h"
 
-QSettings *Cfg_Obj::mCfgIni = nullptr;
+//QSettings *Cfg_Obj::mCfgIni = nullptr;
 Cfg_Obj::Cfg_Obj(const QString &fn, QObject *parent)
 {
     if(!mCfgIni) {

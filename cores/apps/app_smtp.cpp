@@ -10,15 +10,16 @@ sSmtpCfg App_Smtp::smtpCfg;
 App_Smtp::App_Smtp(QObject *parent)
     : App_Ntp{parent}
 {
-    connect(this, &App_Smtp::sendMailSig, this, &App_Smtp::sendMailSlot);
+
 }
 
-void App_Smtp::smtp_sendMail(const QString &subject, const QString &content)
+void App_Smtp::smtp_sendMail(const QString &content)
 {
-    emit sendMailSig(subject, content);
+    mList << content; if(!smtp_isRun)
+    QtConcurrent::run(this, &App_Smtp::smtp_run);
 }
 
-void App_Smtp::sendMailSlot(const QString &subject, const QString &content)
+void App_Smtp::sendMail()
 {
     if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
@@ -29,10 +30,15 @@ void App_Smtp::sendMailSlot(const QString &subject, const QString &content)
 
     EmailAddress to(cfg->to);
     message.addRecipient(to);
-    message.setSubject(subject);
+    message.setSubject("PDU Email");
+
+    QString contents;
+    foreach(const auto &it, mList)
+        contents += it + "\r\n";
+    mList.clear();
 
     MimeText text;
-    text.setText(content);
+    text.setText(contents);
     message.addPart(&text);
 
     SmtpClient::ConnectionType ct;
@@ -46,12 +52,12 @@ void App_Smtp::sendMailSlot(const QString &subject, const QString &content)
     SmtpClient smtp(cfg->host, cfg->port, ct);
     smtp.connectToHost();
     if (!smtp.waitForReadyConnected()) {
-        cfg->lastErr = "Failed to connect to host!";
+        cfg->lastErr = "Failed to connect to host!" + cfg->host;
     }
 
     smtp.login(cfg->from, cfg->pwd);
     if (!smtp.waitForAuthenticated()) {
-        cfg->lastErr = "Failed to login!";
+        cfg->lastErr = "Failed to login!" + cfg->from;
     }
 
     smtp.sendMail(message);
@@ -61,4 +67,14 @@ void App_Smtp::sendMailSlot(const QString &subject, const QString &content)
 
     cfg->lastErr.clear();
     smtp.quit();
+}
+
+void App_Smtp::smtp_run()
+{
+    if(!smtp_isRun) {
+        smtp_isRun = true;
+        cm::mdelay(500);
+        sendMail();
+        smtp_isRun = false;
+    }
 }

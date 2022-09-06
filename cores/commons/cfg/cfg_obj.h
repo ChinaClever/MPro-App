@@ -6,8 +6,8 @@
 
 class Cfg_Obj
 {
-    Cfg_Obj(const QString& fn, QObject *parent = nullptr);
 public:
+    Cfg_Obj(const QString& fn, QObject *parent = nullptr);
     static Cfg_Obj* bulid(const QString& fn=CFG_FN, QObject *parent = nullptr);
     static QString pathOfCfg(const QString& name);
 
@@ -23,7 +23,7 @@ private:
     bool openCfg(QObject *parent = nullptr, const QString& fn = CFG_FN);
 
 private:
-    static QSettings  *mCfgIni; //*mCfgIni;
+    QSettings *mCfgIni=nullptr;
 };
 
 #endif // CFG_OBJ_H
