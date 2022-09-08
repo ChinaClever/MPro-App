@@ -16,6 +16,8 @@ bool language();
 sDevData *masterDev();
 sDataPacket *dataPacket();
 sDevData *devData(uchar id);
+QString execute(const QString &cmd);
+
 
 const QDateTime buildDateTime();
 template<typename T> QByteArray toByteArray(const T &v) {
@@ -25,6 +27,7 @@ template<typename T> QByteArray toByteArray(const T &v) {
 template<typename T> T toStruct(const QByteArray &array) {
     T ret; memcpy(&ret, array.data(), sizeof(T)); return ret;
 }
+
 
 
 #define setbit(x,y) x|=(1<<y) //将X的第Y位置1

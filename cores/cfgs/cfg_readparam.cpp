@@ -237,7 +237,7 @@ void Cfg_ReadParam::push()
         case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
         case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
-
+        case 10: key = "dc";  ptr = &cfg->dataContent; value = 0; break;
         case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 12: key = "httpUrl"; str = &cfg->http.url; break;
         case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;

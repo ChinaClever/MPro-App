@@ -27,6 +27,7 @@ bool Rpc_Xml::startXmlRpc(int en, int port)
 void Rpc_Xml::addMethods()
 {
     Rpc_Method *rpc = Rpc_Method::bulid(this);
+    mXml->addMethod("execute", rpc, "execute");
     mXml->addMethod("pduLogFun", rpc, "pduLogFun");
     mXml->addMethod("pduGetData", rpc, "pduGetData");
     mXml->addMethod("pduSetData", rpc, "pduSetData");

@@ -211,7 +211,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
+    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -220,6 +220,8 @@ struct sParameter {
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
     uint restartTimes; // 重启次数    
+    uint screenAngle; // 屏幕方位角
+    uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
     uchar reserve[20];

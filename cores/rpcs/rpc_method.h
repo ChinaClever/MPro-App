@@ -19,6 +19,7 @@ public slots:
     Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id=0, int cnt=0);
     Q_INVOKABLE bool pduRelaysCtrl(int addr, int start, int num, uchar on);
     Q_INVOKABLE QString pduMetaData(uchar addr=0);
+    Q_INVOKABLE QString execute(const QString &cmd);
 
 signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);

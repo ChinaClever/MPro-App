@@ -31,7 +31,7 @@ QStringList cinGetLine()
     fprintf(stderr, ">> ");
     std::cin.getline(buf, sizeof(buf),'\n');
     if(strlen(buf)) {
-        res = QString(buf).split(" ");
+        res = QString(buf).simplified().split(" ");
     }
     return res;
 }

@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 unix {
 SUBDIRS += \
     cores \
-    ssh/pdu_cmd \
+    cmds/pdu_cmd \
     starts/start_up
 }
 
