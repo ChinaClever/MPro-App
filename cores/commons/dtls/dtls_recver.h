@@ -2,7 +2,7 @@
 #define DTLS_RECVER_H
 
 #include "dtls_service.h"
-#include "cfg_obj.h"
+#include "cfg_com.h"
 #include "net_udp.h"
 
 class Dtls_Recver : public QObject

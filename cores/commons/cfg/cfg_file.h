@@ -1,6 +1,6 @@
-#ifndef FILE_H
-#define FILE_H
-#include <QtCore>
+#ifndef CFG_FILE_H
+#define CFG_FILE_H
+#include "cfg_obj.h"
 #include <QMetaType>
 
 struct sFileTrans {
@@ -31,4 +31,4 @@ namespace File {
 }
 
 
-#endif // FILE_H
+#endif // CFG_FILE_H

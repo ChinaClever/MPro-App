@@ -50,7 +50,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     }
 
     if(ret) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, value, prefix);
     }
 
@@ -89,7 +89,7 @@ bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
     }
 
     if(ret) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
 
@@ -123,7 +123,7 @@ bool Set_Integr::rpcSet(uchar fc, int value)
     }
 
     if(ret) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, value, prefix);
     }
 
@@ -167,7 +167,7 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     }
 
     if(ret) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
         obj->set(fc, v);
     }
@@ -229,7 +229,7 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
     }
 
     if(ret) {
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
 

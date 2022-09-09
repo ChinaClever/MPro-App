@@ -5,7 +5,7 @@
  */
 #include "httpserver.h"
 #include <QJsonObject>
-#include "file.h"
+#include "cfg_file.h"
 
 HttpServer::HttpServer(QObject *parent)
     : QObject{parent}

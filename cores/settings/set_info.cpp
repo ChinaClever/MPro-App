@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_info.h"
-#include "cfg_obj.h"
+#include "cfg_com.h"
 
 Set_Info::Set_Info()
 {

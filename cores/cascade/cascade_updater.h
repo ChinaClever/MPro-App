@@ -1,6 +1,6 @@
 #ifndef CASCADE_UPDATER_H
 #define CASCADE_UPDATER_H
-#include "file.h"
+#include "cfg_file.h"
 #include "dtls_recver.h"
 #include "cascade_object.h"
 

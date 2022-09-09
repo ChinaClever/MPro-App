@@ -80,7 +80,7 @@ bool Set_Sercret::setSercret(uchar fc, const QVariant &v)
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
-    Cfg_Obj *cfg = Cfg_Obj::bulid();
+    Cfg_Com *cfg = Cfg_Com::bulid();
     cfg->writeCfg(key, v, prefix);
     return ret;
 }

@@ -3,7 +3,7 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "file.h"
+#include "cfg_file.h"
 #include "crc.h"
 
 QStringList File::entryList(const QString &p)
