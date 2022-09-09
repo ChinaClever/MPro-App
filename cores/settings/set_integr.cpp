@@ -191,6 +191,7 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 7: res = cfg->recvEn; break;
     case 8: res = cfg->recvPort; break;
     case 9: res = cfg->sec; break;
+    case 10: res = cfg->dataContent; break;
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;
@@ -218,7 +219,7 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
     case 7: key = "recvEn"; obj->startRecv(v.toInt()); break;
     case 8: key = "recvPort"; obj->setRecvPort(v.toInt()); break;
     case 9: key = "sec"; cfg->sec = v.toInt(); break;
-
+    case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
     case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
     case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;

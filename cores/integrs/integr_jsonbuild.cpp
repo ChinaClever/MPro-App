@@ -19,10 +19,10 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
     return sington;
 }
 
-QByteArray Integr_JsonBuild::getJson(uchar addr)
+QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
 {
     QByteArray array;
-    QJsonObject json = getJsonObject(addr);
+    QJsonObject json = getJsonObject(addr, dc);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,19 +31,20 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
     return array;
 }
 
-QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
+QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 {
     sDevData *dev = cm::devData(addr);  QJsonObject json;
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
+        mDataContent = dc;
         faultCode(dev, json);
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
+        json.insert("status", dev->status);
         devInfo(dev->cfg, "pdu_info", json);
         uutInfo(dev->cfg.uut, "uut_info", json);
         verInfo(dev->cfg.vers, "pdu_version", json);
-        json.insert("alarm", dev->alarm?true:false);
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
@@ -85,15 +86,22 @@ void Integr_JsonBuild::faultCode(sDevData *dev, QJsonObject &json)
 
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
 {
-    int size = it.size;
+    int size = it.size; bool dc = false;
     arrayAppend(it.value, size, key+"_value", json, r);
-    arrayAppend(it.en, size, key+"_alarm_enable", json);
-    arrayAppend(it.rated, size, key+"_rated", json, r);
-    arrayAppend(it.min, size, key+"_alarm_min", json, r);
-    arrayAppend(it.max, size, key+"_alarm_max", json, r);
-    arrayAppend(it.crMin, size, key+"_warn_min", json, r);
-    arrayAppend(it.crMax, size, key+"_warn_max", json, r);
     arrayAppend(it.alarm, size, key+"_alarm_status", json);
+
+    if(mDataContent == 0) {
+        for(int i=0; i<size; ++i) dc |= it.alarm[i];
+    } else if(mDataContent == 1) dc = true;
+
+    if(dc) {
+        arrayAppend(it.rated, size, key+"_rated", json, r);
+        arrayAppend(it.en, size, key+"_alarm_enable", json);
+        arrayAppend(it.min, size, key+"_alarm_min", json, r);
+        arrayAppend(it.max, size, key+"_alarm_max", json, r);
+        arrayAppend(it.crMin, size, key+"_warn_min", json, r);
+        arrayAppend(it.crMax, size, key+"_warn_max", json, r);
+    }
 }
 
 void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json)
@@ -106,16 +114,23 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 
 void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
-    int size = it.size;
+    int size = it.size; bool dc = false;
     arrayAppend(it.sw, size, key+"_state", json);
-    arrayAppend(it.alarm, size, key+"_alarm", json);
-    arrayAppend(it.offAlarm, size, key+"_off_alarm", json);
-    arrayAppend(it.resetDelay, size, key+"_reset_delay", json);
-    arrayAppend(it.powerUpDelay, size, key+"_powerup_delay", json);
-    arrayAppend(it.overrunOff, size, key+"_overrun_off", json);
-    arrayAppend(it.timingEn, size, key+"_timing_en", json);
-    strListAppend(it.timingOn, size, key+"_timing_on", json);
-    strListAppend(it.timingOff, size, key+"_timing_off", json);
+
+    if(mDataContent == 0) {
+        for(int i=0; i<size; ++i) dc |= it.alarm[i];
+    } else if(mDataContent == 1) dc = true;
+
+    if(dc) {
+        arrayAppend(it.alarm, size, key+"_alarm", json);
+        arrayAppend(it.offAlarm, size, key+"_off_alarm", json);
+        arrayAppend(it.resetDelay, size, key+"_reset_delay", json);
+        arrayAppend(it.powerUpDelay, size, key+"_powerup_delay", json);
+        arrayAppend(it.overrunOff, size, key+"_overrun_off", json);
+        arrayAppend(it.timingEn, size, key+"_timing_en", json);
+        strListAppend(it.timingOn, size, key+"_timing_on", json);
+        strListAppend(it.timingOff, size, key+"_timing_off", json);
+    }
 }
 
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
@@ -152,14 +167,16 @@ void Integr_JsonBuild::tgUnit(const sTgUnit &it, const QString &key, QJsonObject
 void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    //    tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
-    //    tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
-    //    tgUnit(it.pow, "pow", obj, COM_RATE_POW);
+    if(it.vol.en) tgUnit(it.vol, "vol", obj, COM_RATE_VOL);
+
+    if(it.cur.en) tgUnit(it.cur, "cur", obj, COM_RATE_CUR);
+    else obj.insert("cur", it.cur.value/COM_RATE_CUR);
+
+    if(it.pow.en) tgUnit(it.pow, "pow", obj, COM_RATE_POW);
+    else  obj.insert("pow", it.pow.value/COM_RATE_POW);
 
     obj.insert("pf", it.pf/COM_RATE_PF);
     obj.insert("ele", it.ele/COM_RATE_ELE);
-    obj.insert("cur", it.cur.value/COM_RATE_CUR);
-    obj.insert("pow", it.pow.value/COM_RATE_POW);
     obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
     obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
     json.insert(key, QJsonValue(obj));
@@ -168,12 +185,12 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
+    if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
+    if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
+    if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
     alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
     alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
-    arrayAppend(it.door, 2, "door", obj);
-    arrayAppend(it.water, 1, "water", obj);
-    arrayAppend(it.smoke, 1, "smoke", obj);
-    json.insert(key, obj);
+    if(obj.size()) json.insert(key, obj);
 }
 
 void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
@@ -232,32 +249,32 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     if(obj.size()) json.insert(key, obj);
 }
 
-void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)/////////////
+void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////////////////////////////////////
+    it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////==========
     ObjData(it->line, "line_item_list", obj);
 
-    it->loop.size = 6;/////////////////////////////////////////
+    it->loop.size = 6;///////=============
     it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
 
     ObjData(it->loop, "loop_item_list", obj, 2);
 
-    it->group.size = 8;////////////////////////////////////////
+    it->group.size = 8;/////////////////==============
     it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
     ObjData(it->group, "group_item_list", obj);
 
-    it->dual.size = 48;/////////////////////////////////////
+    it->dual.size = 48;/////////////////============
     it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
     ObjData(it->dual, "dual_item_list", obj);
 
-    it->output.size = 48;/////////////////////////////////////
+    it->output.size = 48;///////////////==========
     it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
     ObjData(it->output, "output_item_list", obj, 1);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
-    it->env.tem.size = 2;/////////////////////////////////////
-    it->env.hum.size = 2;/////////////////////////////////////
+    it->env.tem.size = 2;////////////////===========
+    it->env.hum.size = 2;////////////////============
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }

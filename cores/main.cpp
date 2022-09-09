@@ -4,13 +4,13 @@
  *      Author: Lzy
  */
 #include <QCoreApplication>
-#include "app_start.h"
+#include "app_core.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
-    App_Start::bulid(p);
+    App_Core::bulid(p);
 
     return a.exec();
 }

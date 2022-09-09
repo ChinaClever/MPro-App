@@ -10,8 +10,10 @@ public:
     void readCfgParams();
 
 private:
+    void ntp();
     void web();
     void rpc();
+    void smtp();
     void push();
     void snmp();
     void mqtt();

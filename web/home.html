@@ -229,7 +229,7 @@
 								label_ = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
 
 								dataLabels.push(label_);
-								data_total.push(total_info[chart_type][49]);
+								data_total.push(total_data[chart_type][49]);
 								data_inlet1.push(inletA_data[chart_type][49]);
 								data_inlet2.push(inletB_data[chart_type][49]);
 								data_inlet3.push(inletC_data[chart_type][49]);
@@ -336,9 +336,9 @@
 			total_data[1][49] = parseFloat(total_info[6]/100).toFixed(2);
 			total_data[2][49] = parseFloat(total_info[5]/10).toFixed(1);
 			for(let i = 0;i<3;i++){
-				inletA_data[i][49] = parseFloat(phase_info[1][6]/100).toFixed(2);
-				inletB_data[i][49] = parseFloat(phase_info[2][0]/100).toFixed(2);
-				inletC_data[i][49] = parseFloat(phase_info[3][1]/10).toFixed(1);
+				inletA_data[i][49] = parseFloat(phase_info[i + 1][5]/100).toFixed(2);
+				inletB_data[i][49] = parseFloat(phase_info[i + 1][0]/100).toFixed(2);
+				inletC_data[i][49] = parseFloat(phase_info[i + 1][1]/10).toFixed(1);
 			}
 		}
 		function read_data(){
@@ -357,7 +357,7 @@
 				phase_info[i][2] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
 				phase_info[i][3] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[3] + addr + '_' + i));
 				phase_info[i][4] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
-				phase_info[i][4] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
+				phase_info[i][5] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
 			}
 			for(let i = 1 ;i < loop_num + 1;i++){
 				loop_info[i] =  new Array();

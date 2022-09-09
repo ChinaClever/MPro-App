@@ -3,14 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
+#include "web_server/web_core.h"
 #include "cfg_readparam.h"
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "sercret_core.h"
 #include "mqtt_client.h"
 #include "agent_core.h"
+#include "app_core.h"
 #include "mb_core.h"
-#include "web_server/web_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
@@ -20,10 +21,12 @@ Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
 
 void Cfg_ReadParam::readCfgParams()
 {
+    ntp();
     web();
     rpc();
     push();
     snmp();
+    smtp();
     mqtt();
     login();
     modbus();
@@ -31,6 +34,29 @@ void Cfg_ReadParam::readCfgParams()
     dualName();
     groupName();
     outputName();
+}
+
+
+void Cfg_ReadParam::smtp()
+{
+    sSmtpCfg *cfg = &App_Smtp::smtpCfg;
+    QString prefix = "smtp";  QString key;
+    QString *str = nullptr; int *ptr = nullptr;
+    for(int i=1; i<8; ++i) {
+        switch (i) {
+        case 1: key = "en"; ptr = &cfg->en; break;
+        case 2: key = "host"; str = &cfg->host; break;
+        case 3: key = "from"; str = &cfg->from; break;
+        case 4: key = "pwd"; str = &cfg->pwd; break;
+        case 5: key = "to"; str = &cfg->to; break;
+        case 6: key = "port"; ptr = &cfg->port; break;
+        case 7: key = "ct"; ptr = &cfg->ct; break;
+        default: ptr = nullptr; str = nullptr; break;
+        }
+
+        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+    }
 }
 
 void Cfg_ReadParam::snmp()
@@ -72,6 +98,20 @@ void Cfg_ReadParam::web()
 
         if(key.size() && ptr) {
             *ptr = mCfg->readCfg(key, value, prefix).toInt();
+        }
+    }
+}
+
+void Cfg_ReadParam::ntp()
+{
+    sNtpCfg *it = &App_Ntp::ntpCfg;
+    QString prefix = "ntp"; QString key;
+
+    for(int i=1; i<5; ++i)  {
+        switch (i) {
+        case 2: key = "udp_en";  it->udp_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 3: key = "ntp_host";  it->ntp_host = mCfg->readCfg(key, "", prefix).toString();  break;
+        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "", prefix).toString();  break;
         }
     }
 }
@@ -197,7 +237,7 @@ void Cfg_ReadParam::push()
         case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
         case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
-
+        case 10: key = "dc";  ptr = &cfg->dataContent; value = 0; break;
         case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 12: key = "httpUrl"; str = &cfg->http.url; break;
         case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;

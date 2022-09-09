@@ -11,7 +11,6 @@
 #include "ssdp_server.h"
 #include "integr_core.h"
 #include "agent_core.h"
-#include "app_timing.h"
 #include "data_core.h"
 #include "app_start.h"
 #include "log_core.h"
@@ -20,7 +19,7 @@
 #include "op_core.h"
 
 App_Start::App_Start(QObject *parent)
-    : QObject{parent}
+    : App_Timing{parent}
 {
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
@@ -38,19 +37,9 @@ App_Start::~App_Start()
 #endif
 }
 
-App_Start *App_Start::bulid(QObject *parent)
-{
-    static App_Start* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new App_Start(parent);
-    }
-    return sington;
-}
-
 void App_Start::initFunSlot()
 {
     IPC_CoreServer::bulid(this);
-    App_NetAddr::bulid(this);
     Dtls_Recver::bulid(this);
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
@@ -71,7 +60,6 @@ void App_Start::startThreadSlot()
     Web_Core::bulid();
     Data_Core::bulid();
     Mb_Core::bulid(this);
-    App_Timing::bulid(this);
     //OP_Core::bulid(this)->startFun();
     Cascade_Core::bulid(this)->startFun();
 

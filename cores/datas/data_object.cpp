@@ -42,7 +42,7 @@ uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
          std::sort(list.begin(), list.end());
          int k = (list.size() + 1) / 2;
          if(k < list.size()) ret = list.at(k);
-         else ret = list.first();
+         else ret = list.last();
      }
 
      return ret;
@@ -100,7 +100,8 @@ void Data_Object::loopData(int id, int start, int end)
 {
     sumObjData(id, mDev->loop, mDev->output, start, end);
     uint *ptr = mDev->output.vol.value; uint sw = 0;
-    if(ptr[start] || ptr[end-1]) sw = 1;
+    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
+    for(int i=start; i<end; ++i) if(ptr[i] > 50 *COM_RATE_VOL) sw = 1;
     mDev->loop.relay.sw[id] = sw;
 }
 

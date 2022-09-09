@@ -9,21 +9,10 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : QObject{parent}
 {
-    //initFun();
-    //setInterface();
+    QTimer::singleShot(544,this,SLOT(inet_initFunSlot()));
 }
 
-
-App_NetAddr *App_NetAddr::bulid(QObject *parent)
-{
-    static App_NetAddr* sington = nullptr;
-    if(sington == nullptr) {
-        sington = new App_NetAddr(parent);
-    }
-    return sington;
-}
-
-void App_NetAddr::initFun()
+void App_NetAddr::inet_initFunSlot()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(!strlen(net->name)) {
@@ -34,34 +23,35 @@ void App_NetAddr::initFun()
         qstrcpy(inet->mask, "255.255.255.0");
         qstrcpy(net->name, "eth0");
     } net->inet.en = 1;
+    inet_setInterface();
 }
 
-void App_NetAddr::setInterface()
+void App_NetAddr::inet_setInterface()
 {
-    if(!isRun) {
-        isRun = true;
-        QTimer::singleShot(755,this,SLOT(updateInterface()));
+    if(!inet_isRun) {
+        inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(555,this,SLOT(setInterfaceSlot()));
+        QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
 #endif
+        QTimer::singleShot(755,this,SLOT(inet_updateInterface()));
     }
 }
 
-void App_NetAddr::setInterfaceSlot()
+void App_NetAddr::inet_setInterfaceSlot()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(strlen(net->name)) {
         if(net->inet.mode) {
-            dhcp(net->name);
+            inet_dhcp(net->name);
         } else {
-            setIpV4();
+            inet_setIpV4();
         }
     }
 
-    isRun = false;
+    inet_isRun = false;
 }
 
-void App_NetAddr::setIpV4()
+void App_NetAddr::inet_setIpV4()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     QString fn = net->name;
@@ -72,18 +62,18 @@ void App_NetAddr::setIpV4()
     system(str.toStdString().c_str());
 }
 
-void App_NetAddr::dhcp(const QString &n)
+void App_NetAddr::inet_dhcp(const QString &n)
 {
     QString cmd = "dhclient " + n;
     system(cmd.toStdString().c_str());
 }
 
-void App_NetAddr::updateInterface()
+void App_NetAddr::inet_updateInterface()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
-        if(interface.name() == "lo") continue;
+        if(interface.name() != "eth0") continue;
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址
@@ -102,10 +92,12 @@ void App_NetAddr::updateInterface()
                     qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
                     net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
                     break;
+
                 default:
+                    cout << net->name << net->mac << hostIp.toString() << entry.netmask().toString();
                     break;
                 }
             }
-        }  break;
+        }
     }
 }

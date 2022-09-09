@@ -5,7 +5,6 @@
  */
 #include "cfg_obj.h"
 
-QSettings *Cfg_Obj::mCfgIni = nullptr;
 Cfg_Obj::Cfg_Obj(const QString &fn, QObject *parent)
 {
     if(!mCfgIni) {
@@ -18,13 +17,16 @@ void Cfg_Obj::initCfg()
 {
     QCoreApplication::setOrganizationName("CLEVER");
     QCoreApplication::setOrganizationDomain("clever.com");
-    QCoreApplication::setApplicationName("PDU-Core");
+    QCoreApplication::setApplicationName("PDU-Pro");
 }
 
 Cfg_Obj *Cfg_Obj::bulid(const QString& fn, QObject *parent)
 {
     static Cfg_Obj* sington = nullptr;
-    if(!sington) sington = new Cfg_Obj(fn, parent);
+    if(!sington) {
+        QString name = pathOfCfg(fn);
+        sington = new Cfg_Obj(name, parent);
+    }
     return sington;
 }
 
@@ -53,11 +55,10 @@ QString Cfg_Obj::pathOfCfg(const QString& name)
  * 开发人员：Lzy     2016 - 七夕
  */
 bool Cfg_Obj::openCfg(QObject *parent, const QString& fn)
-{
-    QString strFilename = pathOfCfg(fn);
-    bool ret = QFileInfo::exists(strFilename);
+{    
+    bool ret = QFileInfo::exists(fn);
     if(mCfgIni == nullptr) {
-        mCfgIni = new QSettings(strFilename, QSettings::IniFormat, parent);
+        mCfgIni = new QSettings(fn, QSettings::IniFormat, parent);
         mCfgIni->setIniCodec(QTextCodec::codecForName("utf-8"));
     }
 

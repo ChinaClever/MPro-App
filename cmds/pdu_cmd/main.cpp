@@ -6,7 +6,6 @@
 #include <QCoreApplication>
 #include "sshrpcclient.h"
 #include <iostream>
-#include <QTime>
 
 namespace Ssh{
 void usage()
@@ -27,12 +26,11 @@ void usage()
 QStringList cinGetLine()
 {
     QStringList res;
-    char buf[128] = {0};
     fprintf(stderr, ">> ");
+    static char buf[1024] = {0};
+    memset(buf, 0, sizeof(buf));
     std::cin.getline(buf, sizeof(buf),'\n');
-    if(strlen(buf)) {
-        res = QString(buf).split(" ");
-    }
+    res = QString(buf).simplified().split(" ");
     return res;
 }
 
@@ -92,9 +90,9 @@ void pduSetParam(const QStringList &ls)
 
 void pduMetaData(const QStringList &ls)
 {
-     SshRpcClient *rpc = SshRpcClient::bulid();
-     uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
-     std::cout << rpc->pduMetaData(addr).toStdString() << std::endl;
+    SshRpcClient *rpc = SshRpcClient::bulid();
+    uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
+    std::cout << rpc->pduMetaData(addr).toStdString() << std::endl;
 }
 
 void pduLogFun(const QStringList &ls)
@@ -121,10 +119,11 @@ void pduRelaysCtrl(const QStringList &ls)
     } else qCritical() << "pduRelaysCtrl Parameter error";
 }
 
-bool workDown()
+
+bool workDown(const QStringList &str)
 {
-    bool ret = true;
-    QStringList cmds = cinGetLine();
+    int ret = true;
+    QStringList cmds = str;
     if(cmds.size()) {
         QString fc = cmds.takeFirst();
         if(fc == "pduMetaData") pduMetaData(cmds);
@@ -146,11 +145,19 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     SshRpcClient *rpc = SshRpcClient::bulid(p);
-    bool ret = true; Ssh::usage();
+    if(argc > 1) {
+        QStringList cmd;
+        for(int i=1; i<argc; i++) cmd << argv[i];
+        Ssh::workDown(cmd);
+    } else {
+        bool ret = true;
+        Ssh::usage();
+        do {
+            QStringList cmd = Ssh::cinGetLine();
+            if(cmd.size()) ret = Ssh::workDown(cmd);
+        } while(ret);
+    }
 
-    do {
-        ret = Ssh::workDown();
-    } while(ret);
     rpc->close();
 
     return 0;

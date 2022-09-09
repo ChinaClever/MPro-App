@@ -74,7 +74,7 @@ void OP_Object::recoveryLog(int id, uint *cnt)
     }
 }
 
-void OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
+bool OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
 {
     uint *dtc = mDev->dtc.code;
     if(f) {
@@ -86,6 +86,7 @@ void OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
         dtc[id] |= code;
         mDev->dtc.fault = 1;
     }
+    return f;
 }
 
 bool OP_Object::volFaultCheck(uchar k, uchar i)
@@ -94,13 +95,14 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
     uint *src = mOpData->vol;
     uint *cnt = mDev->dtc.cnt[0];
     uint *dest = mDev->output.vol.value;
-    if(!mDev->cfg.param.isBreaker) min = 80;
+    if(!mDev->cfg.param.isBreaker) min = COM_MIN_VOL;
     bool ret = dataFiltering(dest[id], src[i], COM_MAX_VOL, min);
-    if(src[i] == 16*COM_RATE_VOL) {ret = false; dest[id] = 0;}
-    faultCode(id, ret, cnt, FaultCode::DTC_VOL);
-    if(!ret) {
+    if(src[i] == 16*COM_RATE_VOL) {ret = false; /*dest[id] = 0;*/}
+    if(!faultCode(id, ret, cnt, FaultCode::DTC_VOL)) {
         faultLog(id, cnt, src[i]);
-        if(cnt[id] == FAULT_NUM) dest[id] = 222*COM_RATE_VOL;
+        if(mDev->cfg.param.runTime > 48*60) {
+            if(cnt[id] > FAULT_NUM) dest[id] = mDev->line.vol.value[0];
+        }
     }
     return ret;
 }
@@ -112,10 +114,11 @@ bool OP_Object::curFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[1];
     uint *dest = mDev->output.cur.value;
     bool ret = dataFiltering(dest[id], src[i], COM_MAX_CUR);
-    faultCode(id, ret, cnt, FaultCode::DTC_CUR);
-    if(!ret) {
+    if(!faultCode(id, ret, cnt, FaultCode::DTC_CUR)) {
         faultLog(id, cnt, src[i]);
-        if(cnt[id] == FAULT_NUM) dest[id] = 0;
+         if(mDev->cfg.param.runTime > 48*60) {
+            if(cnt[id] > FAULT_NUM) dest[id] = 0;
+         }
     }
     return ret;
 }
@@ -147,14 +150,16 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
     if(dest[id] && src[i]) {
-        if(src[i] - dest[id] > 1) {
+        if(src[i] - dest[id] > 2) {
             ret = false;
             faultLog(id, cnt, src[i]);
         } else cnt[id] = 0;
     }
 
-    dest[id] = src[i];
-    faultCode(id, ret, cnt, FaultCode::DTC_ELE);
+    if(!faultCode(id, ret, cnt, FaultCode::DTC_ELE)) {
+        if(mDev->cfg.param.runTime < 48*60) dest[id] = src[i];
+        else if(cnt[id] > FAULT_NUM) dest[id] = src[i];
+    } else dest[id] = src[i];
 }
 
 void OP_Object::fillData(uchar addr)

@@ -34,7 +34,7 @@ typedef unsigned int uint;
 #define COM_RATE_TEM	10.0    // 温度
 #define COM_RATE_HUM	10.0    // 湿度
 
-#define COM_MIN_VOL     (60*COM_RATE_VOL)
+#define COM_MIN_VOL     (50*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
 #define COM_MAX_CUR     (100*COM_RATE_CUR)
 #define COM_MAX_POW     (100*600)
@@ -211,7 +211,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
+    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
     uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -220,6 +220,8 @@ struct sParameter {
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
     uint restartTimes; // 重启次数    
+    uint screenAngle; // 屏幕方位角
+    uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
     uchar reserve[20];
@@ -336,7 +338,7 @@ struct sDataItem
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
              EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
-             EINet=41, EWeb};
+             EINet=41, EWeb, ENtp, ESmtp};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

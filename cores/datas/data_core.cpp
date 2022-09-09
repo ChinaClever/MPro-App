@@ -27,6 +27,26 @@ void Data_Core::upAlarm()
     if(!(++cnt % 5)) {
         Alarm_Updater::bulid()->run();
     }
+
+
+    /////////============
+    for(int i=0; i<24; ++i) {
+        char *ptr = mDev->output.relay.timingOn[i];
+        qstrcpy(ptr, "2020-10-01 11:10:00");
+        ptr = mDev->output.relay.timingOff[i];
+        qstrcpy(ptr, "2020-10-01 18:10:00");
+
+        ptr = mDev->group.relay.timingOn[i];
+        qstrcpy(ptr, "2021-10-01 11:10:00");
+        ptr = mDev->group.relay.timingOff[i];
+        qstrcpy(ptr, "2021-10-01 18:10:00");
+
+        ptr = mDev->group.relay.timingOn[i];
+        qstrcpy(ptr, "2022-10-01 11:10:00");
+        ptr = mDev->group.relay.timingOff[i];
+        qstrcpy(ptr, "2022-10-01 18:10:00");
+    }
+
 }
 
 void Data_Core::run()

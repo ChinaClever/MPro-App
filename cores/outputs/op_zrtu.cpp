@@ -61,7 +61,7 @@ void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
         m_array[addr] = cmd; sHardwareItem it; it.module = tr("执行板通讯");
-        it.content = tr("数据读取失败, addr:%1 cmd:%2").arg(addr+1).arg(cm::byteArrayToHexStr(cmd));
+        it.content = tr("执行板无响应 addr:%1 ").arg(addr+1);
         Log_Core::bulid(this)->append(it);
     }
 }
@@ -83,8 +83,8 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     } else {
         cout << addr << recv.size(); //
         sSysItem it; it.module = tr("执行板通讯");
-        it.content = tr("执行板 %1 数据读取错误: ").arg(addr);
-        it.content +=cm::byteArrayToHexStr(recv);
+        it.content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
+        //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid(this)->append(it);
     }
 

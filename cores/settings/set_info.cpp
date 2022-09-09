@@ -57,7 +57,9 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 9: ret = it->param.runTime; break;
     case 10: ret = it->param.totalTime; break;
     case 11: ret = it->param.isBreaker; break;
-    default: qDebug() << Q_FUNC_INFO << type; break;
+    case 12: ret = it->param.vh; break;
+    case 13: ret = it->param.screenAngle; break;
+    default: cout << type; break;
     }
 
     return ret;
@@ -75,7 +77,9 @@ bool Set_Info::setInfoCfg(int addr, int type, int value)
     case 7: it->param.buzzerSw = value; break;
     case 8: it->nums.groupEn = value; break;
     case 11: it->param.isBreaker = value; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << type; break;
+    case 12: it->param.vh = value; break;
+    case 13: it->param.screenAngle = value; break;
+    default: ret = false; cout << type; break;
     } if(ret) Cfg_ReadWrite::bulid()->writeParams();
 
     return ret;
@@ -150,7 +154,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     case 3: key = "devName";  ptr = it->devName; break;
     case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
     case 5: key = "sn";  ptr = it->sn; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ptr) qstrcpy(ptr, str);
