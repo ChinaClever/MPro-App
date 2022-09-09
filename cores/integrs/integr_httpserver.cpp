@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_httpserver.h"
+#include "file.h"
 
 QPointer<JQHttpServer::Session> Integr_HttpServer::mSession;
 Integr_HttpServer::Integr_HttpServer(QObject *parent)
@@ -160,7 +161,9 @@ void Integr_HttpServer::initHttpsServer(int port)
 #ifndef QT_NO_SSL
     static JQHttpServer::SslServerManage sslServerManage(2); // 设置最大处理线程数，默认2个
     sslServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
-    const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,":/server.crt", ":/server.key" );
+    const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,
+                                                       File::certFile(), File::keyFile()
+                                                       /*":/server.crt", ":/server.key"*/ );
     qDebug() << "HTTPS server listen:" << port << listenSucceed;
 #else
     qDebug() << "SSL not support"

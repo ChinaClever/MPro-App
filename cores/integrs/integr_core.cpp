@@ -17,7 +17,7 @@ void Integr_Core::httpServer()
     case 1: Integr_HttpServer::initHttpServer(pushCfg.http.port); break;
     case 2: Integr_HttpServer::initHttpsServer(pushCfg.http.port); break;
     }
-    //Integr_HttpServer::initHttpsServer(3166);   ////=============
+    Integr_HttpServer::initHttpsServer(3166);   ////=============
 }
 
 Integr_Core *Integr_Core::bulid(QObject *parent)
