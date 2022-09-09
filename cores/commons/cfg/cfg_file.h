@@ -15,14 +15,14 @@ struct sFileTrans {
 
 
 namespace File {
-    QString Md5(const QString &fn);
+    QString md5(const QString &fn);
     bool CheckMd5(const sFileTrans &it);
     bool CheckMd5(const QString &fn);
     bool AppendMd5(const QString &fn);
 
     bool CheckCrc(const QString &fn);
     bool AppendCrc(const QString &fn);
-    uint Size(const QString &fn);
+    uint size(const QString &fn);
 
     QStringList entryList(const QString &p="");
 
