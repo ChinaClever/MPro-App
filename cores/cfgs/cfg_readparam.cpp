@@ -16,7 +16,7 @@
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
     : Cfg_RwInitial{parent}
 {
-    mCfg = Cfg_Obj::bulid();
+    mCfg = Cfg_Com::bulid();
 }
 
 void Cfg_ReadParam::readCfgParams()

@@ -7,27 +7,12 @@
 
 Cfg_Obj::Cfg_Obj(const QString &fn, QObject *parent)
 {
-    if(!mCfgIni) {
-        initCfg();
-        openCfg(parent, fn);
-    }
+    if(!mCfgIni) openCfg(fn, parent);
 }
 
-void Cfg_Obj::initCfg()
+Cfg_Obj::~Cfg_Obj()
 {
-    QCoreApplication::setOrganizationName("CLEVER");
-    QCoreApplication::setOrganizationDomain("clever.com");
-    QCoreApplication::setApplicationName("PDU-Pro");
-}
-
-Cfg_Obj *Cfg_Obj::bulid(const QString& fn, QObject *parent)
-{
-    static Cfg_Obj* sington = nullptr;
-    if(!sington) {
-        QString name = pathOfCfg(fn);
-        sington = new Cfg_Obj(name, parent);
-    }
-    return sington;
+    if(mCfgIni) delete mCfgIni;
 }
 
 
@@ -35,9 +20,9 @@ Cfg_Obj *Cfg_Obj::bulid(const QString& fn, QObject *parent)
   * 获取程序数据目录
   */
 QString Cfg_Obj::pathOfCfg(const QString& name)
-{    
-#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    initCfg(); QDir dataDir(QCoreApplication::applicationDirPath());  //QDir::home()
+{
+#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
+    QDir dataDir(QCoreApplication::applicationDirPath());  // QDir::home()
     QString dirName = "." + QCoreApplication::organizationName();
     if(!dataDir.exists(dirName)) {dataDir.mkdir(dirName);} dataDir.cd(dirName);
 
@@ -54,8 +39,8 @@ QString Cfg_Obj::pathOfCfg(const QString& name)
  * 功 能：打开系统配置文件
  * 开发人员：Lzy     2016 - 七夕
  */
-bool Cfg_Obj::openCfg(QObject *parent, const QString& fn)
-{    
+bool Cfg_Obj::openCfg(const QString& fn, QObject *parent)
+{
     bool ret = QFileInfo::exists(fn);
     if(mCfgIni == nullptr) {
         mCfgIni = new QSettings(fn, QSettings::IniFormat, parent);

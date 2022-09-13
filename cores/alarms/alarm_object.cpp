@@ -277,6 +277,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
 bool Alarm_Object::upMetaData(sDataItem &index)
 {
     bool  ret = false;
+    if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
     switch (index.type) {
     case DType::Tg: return tgValue(index);
     case DType::Sensor: return sensorValue(index);

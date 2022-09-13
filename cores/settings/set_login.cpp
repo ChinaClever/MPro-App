@@ -44,7 +44,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
 
     if(ptr) {
         qstrcpy(ptr, str);
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
 
         sOpItem db; db.op_src = QStringLiteral("登陆信息"); //opSrc(txType);

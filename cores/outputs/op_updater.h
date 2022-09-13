@@ -2,7 +2,7 @@
 #define OP_UPDATER_H
 
 #include "op_object.h"
-#include "file.h"
+#include "cfg_file.h"
 
 class OP_Updater : public OP_Object
 {

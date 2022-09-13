@@ -3,7 +3,7 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "file.h"
+#include "cfg_file.h"
 #include "crc.h"
 
 QStringList File::entryList(const QString &p)
@@ -17,7 +17,7 @@ QStringList File::entryList(const QString &p)
     return results;
 }
 
-QString File::Md5(const QString &fn)
+QString File::md5(const QString &fn)
 {
     QFile sourceFile(fn);
     qint64 fileSize = sourceFile.size();
@@ -41,20 +41,20 @@ QString File::Md5(const QString &fn)
 
 bool File::CheckMd5(const sFileTrans &it)
 {
-    QString crc = Md5(it.path + it.file);
+    QString crc = md5(it.path + it.file);
     return it.md5 == crc;
 }
 
 bool File::CheckMd5(const QString &fn)
 {
     QString ret = fn.split(".").last();
-    QString crc = Md5(fn);
+    QString crc = md5(fn);
     return ret == crc;
 }
 
 bool File::AppendMd5(const QString &fn)
 {
-    QString crc = Md5(fn);
+    QString crc = md5(fn);
     return QFile::rename(fn, fn+"."+crc);
 }
 
@@ -73,7 +73,7 @@ bool File::AppendCrc(const QString &fn)
     return QFile::rename(fn, fn+"."+b);
 }
 
-uint File::Size(const QString &fn)
+uint File::size(const QString &fn)
 {
     uint size = 0; QFile file(fn);
     if (file.open(QIODevice::ReadOnly)) {

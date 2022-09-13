@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "cfg_rwmain.h"
-#include "cfg_obj.h"
+#include "cfg_com.h"
 
 Cfg_RwMain::Cfg_RwMain(QObject *parent)
     : Cfg_ReadParam{parent}

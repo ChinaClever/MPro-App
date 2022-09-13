@@ -26,7 +26,7 @@ void Cfg_RwObj::writeAlarms()
 
 bool Cfg_RwObj::writeParams()
 {
-    QFile file(Cfg_Obj::pathOfCfg(CFG_PARAM_FN));
+    QFile file(Cfg_Com::pathOfCfg(CFG_PARAM_FN));
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array; ushort end = END_CRC;
@@ -45,7 +45,7 @@ bool Cfg_RwObj::writeParams()
 
 bool Cfg_RwObj::readParam(const QString &fn)
 {
-    bool ret = false; QFile file(Cfg_Obj::pathOfCfg(fn));
+    bool ret = false; QFile file(Cfg_Com::pathOfCfg(fn));
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
         QByteArray array = file.readAll();
         if(array.size()) {
@@ -63,7 +63,7 @@ bool Cfg_RwObj::readParam(const QString &fn)
                 it.content = tr("设备配置参数读取异常:");
                 it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
-                cout << Cfg_Obj::pathOfCfg(fn);
+                cout << Cfg_Com::pathOfCfg(fn);
             }
         }
     }file.close();
@@ -74,7 +74,7 @@ bool Cfg_RwObj::readParam(const QString &fn)
 bool Cfg_RwObj::saveAlarms()
 {
     mThread->msleep(450);
-    mFile->setFileName(Cfg_Obj::pathOfCfg(CFG_ALARM_FN)); fillData();
+    mFile->setFileName(Cfg_Com::pathOfCfg(CFG_ALARM_FN)); fillData();
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
@@ -87,7 +87,7 @@ bool Cfg_RwObj::saveAlarms()
 
 bool Cfg_RwObj::readAlarm(const QString &fn)
 {
-    bool ret = false; mFile->setFileName(Cfg_Obj::pathOfCfg(fn));
+    bool ret = false; mFile->setFileName(Cfg_Com::pathOfCfg(fn));
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         QByteArray array = mFile->readAll();
         if(array.size()) {
@@ -97,7 +97,7 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
                 it.content = tr("设备报警数据读取异常");
                 it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
-                cout << Cfg_Obj::pathOfCfg(fn);
+                cout << Cfg_Com::pathOfCfg(fn);
             }
         }  mFile->close();
     }

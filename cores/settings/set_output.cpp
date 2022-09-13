@@ -208,8 +208,8 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     if(ptr){
         qstrcpy(ptr, v.toByteArray().data());
         if(it.fc == 1) {
-            QString key = QString::number(id);
-            Cfg_Obj *cfg = Cfg_Obj::bulid();
+            QString key = QString::number(id+1);
+            Cfg_Com *cfg = Cfg_Com::bulid();
             cfg->writeCfg(key, v, prefix);
         }
     }
