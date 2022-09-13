@@ -22,7 +22,7 @@ Cfg_Com *Cfg_Com::bulid(QObject *parent, const QString& fn)
 {
     static Cfg_Com* sington = nullptr;
     if(!sington) {
-        QString name = pathOfCfg(fn); initCfg();
+        initCfg(); QString name = pathOfCfg(fn);
         sington = new Cfg_Com(name, parent);
     }
     return sington;
