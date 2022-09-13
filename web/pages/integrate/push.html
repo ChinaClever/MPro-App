@@ -41,7 +41,7 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_push_data();
+		read_push_data(0);
 		var mode_set = new Array("禁用","启用");
 		var mode_name = new Array("禁用","UDP","TCP","WebSocket");
 		var select_name = new Array("udp1En","udp1Addr","udp1Port","udp2En","udp2Addr","udp2Port","delay","mode","port");
@@ -174,7 +174,7 @@
 			}else{}
 		}
 		function flash_html(){
-			read_push_data();
+			read_push_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();

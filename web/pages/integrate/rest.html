@@ -41,7 +41,7 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_http_data();
+		read_http_data(0);
 		var mode_set = new Array("禁用","POST","PUT");
 		var mode_set1 = new Array("禁用","启用","加密");
 		var select_name = new Array("push","addr","delay","encrypt","port");
@@ -128,7 +128,7 @@
 			}else{}
 		}
 		function flash_html(){
-			read_http_data();
+			read_http_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();

@@ -126,6 +126,7 @@ QString Set_Output::outputCfg(sCfgItem &it)
     case 3: res = obj->relay.timingOff[id]; break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
+
     return res;
 }
 

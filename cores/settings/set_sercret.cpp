@@ -19,8 +19,8 @@ QVariant Set_Sercret::getTlsCert(uchar fc)
     else if(fc > 10) res = it->issuerInfo(fc-10);
     else {
         switch (fc) {
-        case 1: res = it->publicKey().length();break;
-        case 2: res = it->serialNumber(); break;
+        case 1: res = it->serialNumber();break;
+        case 2: res = it->publicKey().length();  break;
         case 3: res = it->effectiveDate(); break;
         case 4: res = it->expiryDate(); break;
         default: qDebug() << Q_FUNC_INFO << fc; break;

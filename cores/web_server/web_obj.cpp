@@ -25,7 +25,7 @@ uint Web_Obj::getNumber(mg_str &r, int id)
 {
     uint num =0; double res=0; char buffer[10] = {0};  sprintf(buffer , "$[%d]" , id);
     bool ret = mg_json_get_num(r, buffer, &res);
-    if(ret) num = res; else qDebug() << "Error: JsonRpc Get Number" << ret;
+    if(ret) num = res; else cout << "Error: JsonRpc Get Number" << ret << r.ptr << id;
     return num;
 }
 

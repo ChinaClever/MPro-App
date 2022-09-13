@@ -41,7 +41,7 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_modbus_data();
+		read_modbus_data(0);
 		var mode_set = new Array("禁用","启用");
 		var baud_name = new Array("9600","19200","38400","57600","115200");
 		var databits_name = new Array("5","6","7","8");
@@ -129,7 +129,7 @@
 			}else{}
 		}
 		function flash_html(){
-			read_modbus_data();
+			read_modbus_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();

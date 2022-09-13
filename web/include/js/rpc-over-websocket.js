@@ -7,6 +7,7 @@ let value_now = 0, val = 0;
 let user_name='user_name';
 let password = 'password';
 let identify = '';
+let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","","","Content","Output","Group","Dual");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
@@ -22,6 +23,8 @@ let rpc_info = new Array("","JsonMode","JsonPort","XmlMode","XmlPort");
 let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","CtrlMode","Ctrlport","Delay","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
 let info_info = new Array("","Name","PowerOn","PowerOff");
+let tls_info = new Array("","Before","After","SN","KeyLength");
+let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -53,7 +56,7 @@ var jsonrpc = function()
   }url = pro + url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
-  var type = 0,topic = 0,subtopic = 0,addr = 0,num = 0;
+  var type = 0,topic = 0,subtopic = 0,num = 0;
   ws.onclose = function(){};
   ws.onmessage = function(evt) {
     addr  = parseInt(JSON.parse(evt.data).result[0]);
@@ -146,6 +149,17 @@ var jsonrpc = function()
       case 30:
         sessionStorage.setItem(ver_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
       break;
+      case 32:
+        if(topic < 5){
+          sessionStorage.setItem("Tls"+tls_info[topic], JSON.parse(evt.data).result[5]);
+        }else if(topic > 10 && topic<30){
+          if(topic / 10 == 1){
+            sessionStorage.setItem("Theme"+tls_info1[topic % 10], JSON.parse(evt.data).result[5]);
+          }else{
+            sessionStorage.setItem("Issue"+tls_info1[topic % 10], JSON.parse(evt.data).result[5]);
+          }
+        }
+      break;
       case 51:
       break;
       case 81:
@@ -179,7 +193,7 @@ var jsonrpc = function()
 var rpc = jsonrpc();
 var start  = 0;
 var hum_num = 2,num_num = 12,cfg_num = 11,uut_num = 5, sub_num = 8;
-var total = 0, phase  = 1,loop = 2,output = 3,group = 4,double = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,log = 81;
+var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
@@ -224,12 +238,12 @@ function read_uut_info(addr)
   },1);
 }
 function read_total_data(addr){
-  var j = 1;
+  var j = 2;
   var time1 = setInterval(function(){
-    if(j >= 9){
+    if(j >= 8){
       clearInterval(time1);
     }
-    if(j < 9){
+    if(j < 8 && j != 6){
       rpc.call('pduReadData',[addr,total,j,1,1]);
     }
     j++;
@@ -298,12 +312,34 @@ function read_group_data(addr)
     if(j >= parseInt(group_num + 1)){
       clearInterval(time1);
     }
-    if(j < group_num){
-
+    if(j <= group_num){
+      rpc.call('pduReadParam',[addr,23,1,j,j]);
+      rpc.call('pduReadParam',[addr,23,2,j,j]);
+      rpc.call('pduReadParam',[addr,23,3,j,j]);
       rpc.call('pduReadData',[addr,group,pow_,1,j]);
       rpc.call('pduReadData',[addr,group,energe_,1,j]);
       rpc.call('pduReadData',[addr,group,AVpow_,1,j]);
       rpc.call('pduReadData',[addr,group,pow_,3,j]);
+    }
+    j++;
+  },1);
+}
+function read_dual_data(addr)
+{
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(output_num + 1)){
+      clearInterval(time1);
+    }
+    if(j <= output_num){
+      rpc.call('pduReadParam',[addr,24,1,j,j]);
+      rpc.call('pduReadParam',[addr,24,2,j,j]);
+      rpc.call('pduReadParam',[addr,24,3,j,j]);
+      // rpc.call('pduReadData',[addr,group,pow_,1,j]);
+      // rpc.call('pduReadData',[addr,group,energe_,1,j]);
+      // rpc.call('pduReadData',[addr,group,AVpow_,1,j]);
+      // rpc.call('pduReadData',[addr,group,pow_,3,j]);
     }
     j++;
   },1);
@@ -404,7 +440,7 @@ function read_output_name(addr){
     j++;
   },1);
 }
-function read_modbus_data(){
+function read_modbus_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
     if(j >= parseInt(13)){
@@ -416,7 +452,7 @@ function read_modbus_data(){
     j++;
   },1);
 }
-function read_rpc_data(){
+function read_rpc_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
     if(j >= parseInt(6)){
@@ -431,7 +467,7 @@ function read_rpc_data(){
   },1);
 }
 
-function read_snmp_data(){
+function read_snmp_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
     if(j >= parseInt(7)){
@@ -460,7 +496,7 @@ function read_push_data(){
 
 
 }
-function read_http_data(){
+function read_http_data(addr){
   let j = 11;
   var time1 = setInterval(function(){
     if(j >= parseInt(16)){
@@ -472,15 +508,27 @@ function read_http_data(){
     j++;
   },1);
 }
-function read_ver_info(){
-  let j = 0;
+function read_ver_info(addr){
+  let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(11)){
+    if(j >= parseInt(15)){
       clearInterval(time1);
     }
-    if(j <= 10){
+    if(j != 10 && j < 15){
       rpc.call('pduReadParam',[addr,ver_,j,0,0]);
     }
     j++;
   },1);
+}
+function read_tls_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(30)){
+      clearInterval(time1);
+    }
+    if(j < 5 || (j>10 && j<18) || (j>20 && j<28)){
+      rpc.call('pduReadParam',[addr,tls_,j,0,0]);
+    }
+    j++;
+  },3);
 }
