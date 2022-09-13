@@ -48,7 +48,7 @@ bool Set_Service::smtpSet(int fc, const QVariant &v)
     }
 
     if(key.size()){
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
     return ret;
@@ -87,7 +87,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     }
 
     if(key.size()){
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
     return ret;
@@ -125,7 +125,7 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     }
 
     if(key.size()){
-        Cfg_Obj *cfg = Cfg_Obj::bulid();
+        Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
     return ret;

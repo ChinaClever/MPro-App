@@ -28,8 +28,8 @@ void App_NetAddr::inet_initFunSlot()
 
 void App_NetAddr::inet_setInterface()
 {
-    if(!isRun) {
-        isRun = true;
+    if(!inet_isRun) {
+        inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
         QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
 #endif
@@ -48,7 +48,7 @@ void App_NetAddr::inet_setInterfaceSlot()
         }
     }
 
-    isRun = false;
+    inet_isRun = false;
 }
 
 void App_NetAddr::inet_setIpV4()

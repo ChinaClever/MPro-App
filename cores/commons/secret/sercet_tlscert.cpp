@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "sercet_tlscert.h"
-#include "file.h"
+#include "cfg_file.h"
 
 Sercret_TlsCert::Sercret_TlsCert()
 {

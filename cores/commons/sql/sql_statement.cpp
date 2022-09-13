@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "sql_statement.h"
-#include "cfg_obj.h"
+#include "cfg_com.h"
 
 Sql_Statement::Sql_Statement()
 {
@@ -254,7 +254,7 @@ bool Sql_Statement::initDb()
     mDb = QSqlDatabase::database();
     bool ret = mDb.isOpen(); if(!ret){
         mDb = QSqlDatabase::addDatabase("QSQLITE");
-        mDb.setDatabaseName(Cfg_Obj::pathOfCfg("logs.db"));
+        mDb.setDatabaseName(Cfg_Com::pathOfCfg("logs.db"));
         ret = mDb.open(); if(!ret) throwError(mDb.lastError());
     }
     return ret;

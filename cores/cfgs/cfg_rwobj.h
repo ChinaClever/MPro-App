@@ -1,7 +1,7 @@
 #ifndef CFG_RWOBJ_H
 #define CFG_RWOBJ_H
 
-#include "cfg_obj.h"
+#include "cfg_com.h"
 #include "cfg_rwstream.h"
 
 #define CFG_ALARM_FN    "cfg_alarm.bin"

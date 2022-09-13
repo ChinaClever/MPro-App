@@ -170,6 +170,7 @@ double Integr_JsonRecv::getDataItem(const QJsonObject &object)
 {
     QString key = "getDataItem"; sDataItem it;
     if (dataItem(key, object, it)) {
+        if(it.id) it.id -= 1;
         Set_Core::bulid()->upMetaData(it);
     }
 

@@ -25,7 +25,7 @@ private:
     void outputName();
 
 private:
-     Cfg_Obj *mCfg;
+     Cfg_Com *mCfg;
 };
 
 #endif // CFG_READPARAM_H
