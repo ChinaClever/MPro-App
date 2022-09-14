@@ -208,7 +208,7 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
 
 QVariant Integr_JsonRecv::getCfgItem(const QJsonObject &object)
 {
-    QString key = "setCfgItem";
+    QString key = "getCfgItem";
     QVariant res; sCfgItem it;
     if(cfgItem(key, object, it)) {
         res = Set_Core::bulid()->getCfg(it);
