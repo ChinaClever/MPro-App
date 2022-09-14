@@ -41,7 +41,7 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_snmp_data();
+		read_snmp_data(0);
 		var mode_set = new Array("禁用","启用");
 		var snmp_name = new Array("addr1","addr2","enable","usr","psd","parity");
 		var snmp_data = new Array();
@@ -110,7 +110,7 @@
 			}else{}
 		}
 		function flash_html(){
-			read_snmp_data();
+			read_snmp_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();
