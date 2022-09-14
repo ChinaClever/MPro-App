@@ -9,7 +9,8 @@
 Integr_JsonRecv::Integr_JsonRecv(QObject *parent)
     : QObject{parent}
 {
-
+    qRegisterMetaType<sCfgItem>("sCfgItem");
+    qRegisterMetaType<sDataItem>("sDataItem");
 }
 
 Integr_JsonRecv *Integr_JsonRecv::bulid(QObject *parent)
@@ -199,7 +200,7 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     bool ret = cfgItem(key, object, it);
     if (ret) {
         QJsonObject obj = getObject(object, key);
-        QVariant value = getValue(obj, "value");
+        QVariant value = getValue(obj, "value").toVariant();
         emit recvCfgSig(it, value);
     }
 

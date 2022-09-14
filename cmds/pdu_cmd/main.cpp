@@ -98,7 +98,6 @@ void pduMetaData(const QStringList &ls)
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
     int k = 0; if(ls.size() > 2) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
@@ -106,7 +105,6 @@ void pduLogFun(const QStringList &ls)
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
         std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
     } else qCritical() << "pduLogFun Parameter error";
-    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
 }
 
 void pduRelaysCtrl(const QStringList &ls)
