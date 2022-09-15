@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_httpserver.h"
-#include "file.h"
+#include "cfg_file.h"
 
 QPointer<JQHttpServer::Session> Integr_HttpServer::mSession;
 Integr_HttpServer::Integr_HttpServer(QObject *parent)

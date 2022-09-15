@@ -9,7 +9,7 @@
 Set_Ssdp::Set_Ssdp(QObject *parent)
     : Ssdp_Search{parent}
 {
-    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this);
+    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
     connect(j, &Integr_JsonRecv::recvCfgSig, this, &Set_Ssdp::recvCfgSlot);
     connect(this, &Ssdp_Obj::recvSig, this, &Set_Ssdp::recvSlot);
@@ -26,7 +26,7 @@ bool Set_Ssdp::setting(sDataItem &it, const QString &room, const QString &ip)
 {
     sSdpIt item; item.fc = 2; item.room = room; item.ip = ip;
     item.data = cm::toByteArray(it);
-    return send(item);
+    return ssdpSend(item);
 }
 
 bool Set_Ssdp::setCfg(sCfgItem &it, const QVariant &v, const QString &room, const QString &ip)
@@ -35,14 +35,14 @@ bool Set_Ssdp::setCfg(sCfgItem &it, const QVariant &v, const QString &room, cons
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << cm::toByteArray(it) << v;
     item.data = array;
-    return send(item);
+    return ssdpSend(item);
 }
 
 bool Set_Ssdp::setJson(const QByteArray &data, const QString &room, const QString &ip)
 {
     sSdpIt item; item.fc = 1; item.data = data;
     item.room = room; item.ip = ip;
-    return send(item);
+    return ssdpSend(item);
 }
 
 bool Set_Ssdp::checkInput(const sSdpIt &it)
@@ -98,8 +98,7 @@ bool Set_Ssdp::rplySearchTarget(const sSdpIt &it)
         sSdpIt item; item.fc = 0;
         item.ip = cm::dataPacket()->net.inet.ip;
         item.room = cm::masterDev()->cfg.uut.room;
-        item.data = "ok";
-        ret = send(item);
+        item.data = "ok"; ret = udpSend(item);
     }
     return ret;
 }
