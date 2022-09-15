@@ -28,17 +28,20 @@ struct _sObjData {
     ushort ratedCur;
     uint activePow;
     uint reactivePow;
+    uint reserve;
 };
 
 
 struct _sEnvData
 {
     uchar type_index;
+    uchar isInsert;
     _sAlarmUnit tem; // 温度
     _sAlarmUnit hum; // 湿度
     uchar door; // 门禁
     uchar water; // 水浸
     uchar smoke; // 烟雾
+    uchar reserve;
 };
 
 struct _sDevData

@@ -13,6 +13,7 @@ struct _sAlarmIt
 
     ushort crMin; // 最小值
     ushort crMax; // 最大值
+    ushort reserve; // 预留
 };
 
 struct _sRelayIt
@@ -23,6 +24,7 @@ struct _sRelayIt
     uchar resetDelay;
     uchar overrunOff;
     uchar timingEn;
+    uchar reserve; // 预留
     char timingOn[NAME_SIZE];
     char timingOff[NAME_SIZE];
 };

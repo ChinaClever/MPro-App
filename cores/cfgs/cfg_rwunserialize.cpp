@@ -19,11 +19,13 @@ void Cfg_RwUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
     unit.rated[id] = it.rated;
+    unit.reserve[id] = it.reserve;
 }
 
 void Cfg_RwUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     unit.en[id] = it.en;
+    unit.reserve[id] = it.reserve;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.resetDelay[id] = it.resetDelay;

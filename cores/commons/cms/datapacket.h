@@ -23,7 +23,7 @@ typedef unsigned int uint;
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   (OUTPUT_NUM+4)
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+6)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
@@ -58,6 +58,7 @@ struct sAlarmUnit
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
+    uint reserve[PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sRelayUnit
@@ -73,6 +74,7 @@ struct sRelayUnit
     uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
+    uint reserve[PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -97,6 +99,7 @@ struct sObjData
     uint artPow[PACK_ARRAY_SIZE]; // 视在功率
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
+    uint reserve[PACK_ARRAY_SIZE]; // 预留
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -122,6 +125,7 @@ struct sEnvData
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
     uint smoke[SENOR_NUM]; // 烟雾
+    uint reserve[SENOR_NUM];
 };
 
 struct sTgUnit
