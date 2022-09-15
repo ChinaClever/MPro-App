@@ -6,9 +6,7 @@
 #include "web_server/web_core.h"
 #include "ipc_coreserver.h"
 #include "cascade_core.h"
-#include "sercret_core.h"
 #include "rpc_service.h"
-#include "ssdp_server.h"
 #include "integr_core.h"
 #include "agent_core.h"
 #include "data_core.h"
@@ -62,7 +60,6 @@ void App_Start::startThreadSlot()
     Mb_Core::bulid(this);
     //OP_Core::bulid(this)->startFun();
     Cascade_Core::bulid(this)->startFun();
-
 }
 
 void App_Start::compileTime()

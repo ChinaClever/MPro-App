@@ -41,9 +41,9 @@ void Data_Core::upAlarm()
         ptr = mDev->group.relay.timingOff[i];
         qstrcpy(ptr, "2021-10-01 18:10:00");
 
-        ptr = mDev->group.relay.timingOn[i];
+        ptr = mDev->dual.relay.timingOn[i];
         qstrcpy(ptr, "2022-10-01 11:10:00");
-        ptr = mDev->group.relay.timingOff[i];
+        ptr = mDev->dual.relay.timingOff[i];
         qstrcpy(ptr, "2022-10-01 18:10:00");
     }
 

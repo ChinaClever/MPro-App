@@ -31,7 +31,7 @@ void App_NetAddr::inet_setInterface()
     if(!inet_isRun) {
         inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
+        QTimer::singleShot(55,this,SLOT(inet_setInterfaceSlot()));
 #endif
         QTimer::singleShot(755,this,SLOT(inet_updateInterface()));
     }
@@ -73,7 +73,11 @@ void App_NetAddr::inet_updateInterface()
     sNetInterface *net = &(cm::dataPacket()->net);
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
+#if (QT_VERSION < QT_VERSION_CHECK(5,13,0))
         if(interface.name() != "eth0") continue;
+#else
+        if(interface.name() !="ens33") continue;
+#endif
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址
