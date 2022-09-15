@@ -178,7 +178,7 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
-    uint reserve;
+    uint reserve[20];
 };
 
 struct sVersions
@@ -230,7 +230,7 @@ struct sParameter {
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
-    uchar reserve[20];
+    uint reserve[20];
 };
 
 struct sDevCfg {
