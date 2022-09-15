@@ -178,6 +178,7 @@ struct sDevNums
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint groupEn; // 组开关使能
+    uint reserve;
 };
 
 struct sVersions
@@ -209,6 +210,7 @@ struct sUutInfo {
     char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[3*NAME_SIZE]; // 二维码
+    char reserve[NAME_SIZE];
     char sn[NAME_SIZE];
 };
 
