@@ -139,8 +139,8 @@ QVariant Set_Integr::mqttCfg(uchar fc)
     case 3: res = cfg->port; break;
     case 4: res = cfg->path; break;
     case 5: res = cfg->clientId; break;
-    case 6: res = cfg->usr; break;
-    case 7: res = cfg->pwd; break;
+    case 6: res = QString(cfg->usr); break;
+    case 7: res = QString(cfg->pwd); break;
     case 8: res = cfg->keepAlive; break;
     case 9: res = cfg->qos; break;
     case 10: res = cfg->isConnected; break;

@@ -51,7 +51,7 @@ bool Integr_HttpServer::getDataItem(const QByteArray &body)
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     bool ret = it->checkInput(body, object);
     if(ret) {
-        int res = it->getDataItem(object);
+        double res = it->getDataItem(object);
         replyValue(res);
     } else {
         ret = replyHttp("error", 212);

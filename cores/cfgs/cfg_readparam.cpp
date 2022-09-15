@@ -124,7 +124,7 @@ void Cfg_ReadParam::mqtt()
         switch (i) {
         case 1: key = "type"; cfg->type = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "url"; cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 3: key = "port"; cfg->type = mCfg->readCfg(key, 1883, prefix).toInt(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 1883, prefix).toInt(); break;
         case 4: key = "path"; cfg->path = mCfg->readCfg(key, "/mqtt", prefix).toString(); break;
         case 5: key = "clientId"; cfg->clientId = mCfg->readCfg(key, "", prefix).toString(); break;
         case 6: key = "usr"; cfg->usr = mCfg->readCfg(key, "", prefix).toByteArray(); break;
