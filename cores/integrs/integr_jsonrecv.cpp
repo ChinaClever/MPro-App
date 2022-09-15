@@ -135,6 +135,8 @@ double Integr_JsonRecv::getDecimal(const sDataItem &it)
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
+    if(DSub::Size==it.subtopic || DSub::Alarm==it.subtopic || DSub::EnAlarm==it.subtopic) res = 1;
+
     return res;
 }
 

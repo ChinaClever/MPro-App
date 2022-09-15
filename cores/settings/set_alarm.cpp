@@ -46,7 +46,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
     switch (index.topic) {
     case DTopic::Vol: rate = COM_RATE_VOL; suffix = "V"; break;
     case DTopic::Cur: rate = COM_RATE_CUR; suffix = "A"; break;
-    case DTopic::Pow: rate = COM_RATE_POW; suffix = "KW"; break;
+    case DTopic::Pow: rate = COM_RATE_POW; suffix = "kW"; break;
     case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C"; break;
     case DTopic::Hum: rate = COM_RATE_HUM; suffix = "%";break;
     }
@@ -57,7 +57,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
     case DSub::VMin: str = QStringLiteral("报警最小值"); break;
     case DSub::VCrMax: str = QStringLiteral("预警最大值"); break;
     case DSub::VCrMin: str = QStringLiteral("预警最小值"); break;
-    case DSub::EnAlarm: str = QStringLiteral("报警开关"); break;
+    case DSub::EnAlarm: str = QStringLiteral("报警开关"); rate = 1; break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 

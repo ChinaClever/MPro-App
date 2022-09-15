@@ -19,8 +19,8 @@ QVariant Set_Sercret::getTlsCert(uchar fc)
     else if(fc > 10) res = it->issuerInfo(fc-10);
     else {
         switch (fc) {
-        case 1: res = it->publicKey().length();break;
-        case 2: res = it->serialNumber(); break;
+        case 1: res = QString(it->serialNumber());break;
+        case 2: res = it->publicKey().length(); break;
         case 3: res = it->effectiveDate(); break;
         case 4: res = it->expiryDate(); break;
         default: qDebug() << Q_FUNC_INFO << fc; break;
@@ -44,18 +44,18 @@ QVariant Set_Sercret::getSercret(uchar fc)
     case 11: res = it->aesCfg.mode; break;
     case 12: res = it->aesCfg.padding; break;
     case 13: res = it->aesCfg.level; break;
-    case 14: res = it->aesCfg.key; break;
-    case 15: res = it->aesCfg.iv; break;
+    case 14: res = QString(it->aesCfg.key); break;
+    case 15: res = QString(it->aesCfg.iv); break;
 
     case 21: res = it->rsaCfg.length; break;
-    case 22: res = it->rsaCfg.padding; break;
-    case 23: res = it->rsaCfg.pubKey; break;
-    case 24: res = it->rsaCfg.privKey; break;
+    case 22: res = QString(it->rsaCfg.padding); break;
+    case 23: res = QString(it->rsaCfg.pubKey); break;
+    case 24: res = QString(it->rsaCfg.privKey); break;
 
-    case 31: res = it->sm4Cfg.type; break;
-    case 32: res = it->sm4Cfg.padding; break;
-    case 33: res = it->sm4Cfg.key; break;
-    case 34: res = it->sm4Cfg.iv; break;
+    case 31: res = QString(it->sm4Cfg.type); break;
+    case 32: res = QString(it->sm4Cfg.padding); break;
+    case 33: res = QString(it->sm4Cfg.key); break;
+    case 34: res = QString(it->sm4Cfg.iv); break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
     return res;
