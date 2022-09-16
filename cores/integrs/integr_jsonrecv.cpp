@@ -150,7 +150,7 @@ bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDa
         res = getData(obj, "topic"); if(res >= 0) it.topic = res;
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "value"); if(res >= 0) it.value = res;
+        res = getData(obj, "value"); if(res >= 0){res *= getDecimal(it); it.value = res;}
         it.txType = DTxType::TxJson;
     } else ret = false;
     return ret;
@@ -162,7 +162,6 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     bool ret = dataItem(key, object, it);
     if (ret) {
         it.rw = 1;
-        it.value *= getDecimal(it);
         emit recvSetSig(it);
     } else ret = false;
 
