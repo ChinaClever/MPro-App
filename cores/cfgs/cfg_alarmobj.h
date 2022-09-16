@@ -1,8 +1,8 @@
-#ifndef CFG_RWOBJ_H
-#define CFG_RWOBJ_H
+#ifndef CFG_ALARMOBJ_H
+#define CFG_ALARMOBJ_H
 
 #include "cfg_com.h"
-#include "cfg_rwstream.h"
+#include "cfg_alarmstream.h"
 
 #define CFG_ALARM_FN    "cfg_alarm.bin"
 #define CFG_ALARM_DF    "cfg_alarm.df"
@@ -10,11 +10,11 @@
 #define CFG_PARAM_DF    "cfg_param.df"
 
 
-class Cfg_RwObj : public QObject
+class Cfg_AlarmObj : public QObject
 {
     Q_OBJECT
 public:
-    explicit Cfg_RwObj(QObject *parent = nullptr);
+    explicit Cfg_AlarmObj(QObject *parent = nullptr);
 
     bool writeParams();
     void writeAlarms();
@@ -41,7 +41,7 @@ private:
     bool isRun;
     QFile *mFile;
     cfg::_sDevData *mData;
-    Cfg_RwStream *mDataStream;
+    Cfg_AlarmStream *mDataStream;
 };
 
-#endif // CFG_RWOBJ_H
+#endif // CFG_ALARMOBJ_H

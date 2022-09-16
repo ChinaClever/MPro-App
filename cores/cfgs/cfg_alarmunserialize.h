@@ -1,12 +1,12 @@
-#ifndef _CFG_RWUNSERIALIZE_H
-#define _CFG_RWUNSERIALIZE_H
+#ifndef _CFG_ALARMUNSERIALIZE_H
+#define _CFG_ALARMUNSERIALIZE_H
 
-#include "cfg_rwfill.h"
+#include "cfg_alarmfill.h"
 
-class Cfg_RwUnserialize : public Cfg_RwFill
+class Cfg_AlarmUnserialize : public Cfg_AlarmFill
 {
 public:
-    explicit Cfg_RwUnserialize(QObject *parent = nullptr);
+    explicit Cfg_AlarmUnserialize(QObject *parent = nullptr);
 
 protected:
     void unSequence() override ;

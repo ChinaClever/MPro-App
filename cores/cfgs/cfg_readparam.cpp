@@ -14,7 +14,7 @@
 #include "mb_core.h"
 
 Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
-    : Cfg_RwInitial{parent}
+    : Cfg_AlarmInitial{parent}
 {
     mCfg = Cfg_Com::bulid();
 }

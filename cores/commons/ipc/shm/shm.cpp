@@ -24,7 +24,7 @@ static void *share_mem_get(uint size)
     if(shm == (void*)-1) {
         fprintf(stderr, "share mem shmat failed\n");
         return NULL;
-    } //else memset(shm, 0, size);
+    } else printf("share mem shmat size %d\n", size/1024);
 
     return shm;
 }

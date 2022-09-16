@@ -19,9 +19,7 @@
 App_Start::App_Start(QObject *parent)
     : App_Timing{parent}
 {
-#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
-#endif
     Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));

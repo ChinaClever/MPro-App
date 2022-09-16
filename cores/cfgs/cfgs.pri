@@ -2,20 +2,20 @@ INCLUDEPATH += $$PWD
 
 
 HEADERS += \
+    $$PWD/cfg_alarmfill.h \
+    $$PWD/cfg_alarminitial.h \
+    $$PWD/cfg_alarmobj.h \
+    $$PWD/cfg_alarmstream.h \
+    $$PWD/cfg_alarmunserialize.h \
     $$PWD/cfg_readparam.h \
-    $$PWD/cfg_rwfill.h \
-    $$PWD/cfg_rwinitial.h \
-    $$PWD/cfg_rwmain.h \
-    $$PWD/cfg_rwobj.h \
-    $$PWD/cfg_rwstream.h \
-    $$PWD/cfg_rwunserialize.h
+    $$PWD/cfg_rwmain.h
 
 SOURCES += \
+    $$PWD/cfg_alarmfill.cpp \
+    $$PWD/cfg_alarminitial.cpp \
+    $$PWD/cfg_alarmobj.cpp \
+    $$PWD/cfg_alarmstream.cpp \
+    $$PWD/cfg_alarmunserialize.cpp \
     $$PWD/cfg_readparam.cpp \
-    $$PWD/cfg_rwfill.cpp \
-    $$PWD/cfg_rwinitial.cpp \
-    $$PWD/cfg_rwmain.cpp \
-    $$PWD/cfg_rwobj.cpp \
-    $$PWD/cfg_rwstream.cpp \
-    $$PWD/cfg_rwunserialize.cpp
+    $$PWD/cfg_rwmain.cpp
 

@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwfill.h"
+#include "cfg_alarmfill.h"
 
-Cfg_RwFill::Cfg_RwFill(QObject *parent) : Cfg_RwObj{parent}
+Cfg_AlarmFill::Cfg_AlarmFill(QObject *parent) : Cfg_AlarmObj{parent}
 {
 
 }
 
 
-void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
+void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
     it.en = unit.en[id];
     it.rated = unit.rated[id];
@@ -24,7 +24,7 @@ void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
     it.reserve = unit.reserve[id];
 }
 
-void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
+void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
     it.reserve = unit.reserve[id];
@@ -37,7 +37,7 @@ void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
-void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
+void Cfg_AlarmFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
     qstrcpy(obj.name, data.name[id]);
     upAlarmUnit(id, data.vol, obj.vol);
@@ -46,13 +46,13 @@ void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
     upRelayUnit(id, data.relay, obj.relay);
 }
 
-void Cfg_RwFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
+void Cfg_AlarmFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 {
     upAlarmUnit(id, data.tem, obj.tem);
     upAlarmUnit(id, data.hum, obj.hum);
 }
 
-void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
+void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)
 {
     uchar size = data->line.size;
     for(int i=0; i<size; ++i) upObjData(i, data->line, obj->line[i]);
@@ -77,7 +77,7 @@ void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     obj->tg.pf = obj->tg.artPow = 0;
 }
 
-void Cfg_RwFill::fillData()
+void Cfg_AlarmFill::fillData()
 {
     cfg::_sDevData *dev = getDev();
     sDevData *data = cm::masterDev();
