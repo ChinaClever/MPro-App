@@ -19,8 +19,6 @@
 App_Start::App_Start(QObject *parent)
     : App_Timing{parent}
 {
-    Shm::initShm();
-    Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
@@ -60,9 +58,4 @@ void App_Start::startThreadSlot()
     Cascade_Core::bulid(this)->startFun();
 }
 
-void App_Start::compileTime()
-{
-    sVersions *vers = &(cm::masterDev()->cfg.vers);
-    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
-}
+

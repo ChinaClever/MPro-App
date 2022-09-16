@@ -37,7 +37,7 @@ bool Cfg_AlarmObj::writeParams()
            << cm::toByteArray(cfg->uut) << end;
         file.write(array);
     }
-    mFile->close();
+    file.close();
     return ret;
 }
 
@@ -56,9 +56,9 @@ bool Cfg_AlarmObj::readParam(const QString &fn)
                 cfg->param = cm::toStruct<sParameter>(param);
                 cfg->uut = cm::toStruct<sUutInfo>(uut); ret = true;
             } else {
-                sSysItem it; it.module = tr("报警参数");
-                it.content = tr("设备报警参数读取异常:");
-                it.content += mFile->errorString();
+                sSysItem it; it.module = tr("配置参数");
+                it.content = tr("设备配置参数读取异常:");
+                it.content += file.errorString();
                 Log_Core::bulid(this)->append(it);
                 cout << it.module << it.content << Cfg_Com::pathOfCfg(fn);
             }
@@ -76,6 +76,7 @@ bool Cfg_AlarmObj::saveAlarms()
     if(ret) {
         QByteArray array = toDataStream();
         mFile->write(array);
+        mFile->flush();
     }
     mFile->close();
     isRun = false;
@@ -90,7 +91,7 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
         if(array.size()) {
             ret = deDataStream(array); if(ret) unSequence();
             else {
-                sSysItem it; it.module = tr("配置参数");
+                sSysItem it; it.module = tr("报警参数");
                 it.content = tr("设备报警数据读取异常");
                 it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
