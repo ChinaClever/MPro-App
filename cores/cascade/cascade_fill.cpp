@@ -21,12 +21,14 @@ void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 
     it.crMin = unit.crMin[id];
     it.crMax = unit.crMax[id];
+    it.reserve = unit.reserve[id];
 }
 
 void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     it.sw = unit.sw[id];
     it.en = unit.en[id];
+    it.reserve = unit.reserve[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.overrunOff = unit.overrunOff[id];
@@ -48,17 +50,20 @@ void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
     obj.ele = data.ele[id];
     obj.activePow = data.artPow[id];
     obj.reactivePow = data.reactivePow[id];
+    obj.reserve = data.reserve[id];
 }
 
 void Cascade_Fill::upEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
 {
     obj.type_index = id;
+    obj.isInsert = data.isInsert[id];
     upAlarmUnit(id, data.tem, obj.tem);
     upAlarmUnit(id, data.hum, obj.hum);
 
     obj.door = data.door[id];
     obj.water = data.water[id];
     obj.smoke = data.smoke[id];
+    obj.reserve = data.reserve[id];
 }
 
 void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)

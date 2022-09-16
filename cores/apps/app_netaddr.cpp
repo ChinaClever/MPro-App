@@ -5,6 +5,7 @@
  */
 #include "app_netaddr.h"
 #include <QNetworkInterface>
+#include "cfg_obj.h"
 
 App_NetAddr::App_NetAddr(QObject *parent)
     : QObject{parent}
@@ -25,6 +26,18 @@ void App_NetAddr::inet_initFunSlot()
     } net->inet.en = 1;
     inet_setInterface();
 }
+
+void App_NetAddr::inet_readCfg()
+{
+    sNetInterface *net = &(cm::dataPacket()->net);
+    QString fn = Cfg_Obj::pathOfCfg("inet.ini");
+    Cfg_Obj cfg(fn, this);
+
+
+
+
+}
+
 
 void App_NetAddr::inet_setInterface()
 {

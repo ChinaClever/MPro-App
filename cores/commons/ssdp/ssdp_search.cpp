@@ -33,11 +33,11 @@ void Ssdp_Search::searchRecvSlot(const sSdpIt &it)
 QStringList Ssdp_Search::respondList()
 {
     int cnt = 0; mSet.clear();
-    for(int i=0; i<1000; i+=100) {
+    for(int i=0; i<100; i+=10) {
         if(mSet.size() != cnt) {
             cnt = mSet.size();
-            i = 700;
-        } cm::mdelay(100);
+            i = 70;
+        } cm::mdelay(10);
     }
 
     return mSet.values();
@@ -53,7 +53,7 @@ QStringList Ssdp_Search::searchTarget(const QString &room, const QString &ip)
                     "MX:3\r\n" \
                     "\r\n");
     sSdpIt it; it.fc = 0; it.room = room; it.ip = ip;
-    it.data = message.toLatin1(); bool ret = send(it);
+    it.data = message.toLatin1(); bool ret = ssdpSend(it);
     if(ret) ls = respondList();
     return ls;
 }

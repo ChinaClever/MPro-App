@@ -20,12 +20,14 @@ void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
     it.max = unit.max[id];
 
     it.crMin = unit.crMin[id];
-    it.crMax = unit.crMax[id];
+    it.crMax = unit.crMax[id];    
+    it.reserve = unit.reserve[id];
 }
 
 void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
+    it.reserve = unit.reserve[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.resetDelay = unit.resetDelay[id];

@@ -17,6 +17,7 @@ private slots:
     void inet_setInterfaceSlot();
 
 private:
+    void inet_readCfg();
     void inet_setIpV4();
     void inet_dhcp(const QString &n);
 
