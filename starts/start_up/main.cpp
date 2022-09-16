@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    initSystem();
     createDirectory();
-    init_share_mem();
+    //init_share_mem();
+    initSystem();
     startSnmpd();
 
     QObject *p = a.parent();

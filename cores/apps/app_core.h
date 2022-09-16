@@ -10,6 +10,8 @@ class App_Core : public App_Start
 public:
     static App_Core *bulid(QObject *parent = nullptr);
 
+private:
+    void compileTime();
 };
 
 #endif // APP_CORE_H
