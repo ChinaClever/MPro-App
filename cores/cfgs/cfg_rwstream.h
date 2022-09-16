@@ -8,12 +8,12 @@ struct _sAlarmIt
 {
     uint rated;
     uchar en;
-    ushort min; // 最小值
-    ushort max; // 最大值
+    uint min; // 最小值
+    uint max; // 最大值
 
-    ushort crMin; // 最小值
-    ushort crMax; // 最大值
-    ushort reserve; // 预留
+    uint crMin; // 最小值
+    uint crMax; // 最大值
+    uint reserve; // 预留
 };
 
 struct _sRelayIt

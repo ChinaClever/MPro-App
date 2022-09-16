@@ -24,8 +24,8 @@ struct _sObjData {
     _sRelayUnit relay;
 
     uint ele; // 电能
-    ushort pf; // 功率因数
-    ushort ratedCur;
+    uint pf; // 功率因数
+    uint ratedCur;
     uint activePow;
     uint reactivePow;
     uint reserve;
