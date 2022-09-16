@@ -15,7 +15,7 @@ void usage()
     cout << "* usage: of pdu_cmd" <<endl;
     cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
     cout << "*    pduGetData      addr  type   topic  sub    id" <<endl;
-    cout << "*    pduSetData      addr  type   topic  sub    addr  value" <<endl;
+    cout << "*    pduSetData      addr  type   topic  sub    id  value" <<endl;
     cout << "*    pduSetParam     type  fc     value  [addr] [sub]" <<endl;
     cout << "*    pduGetParam     type  fc     [addr] [sub]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
