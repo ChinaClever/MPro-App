@@ -1,9 +1,9 @@
 #ifndef CFG_READPARAM_H
 #define CFG_READPARAM_H
 
-#include "cfg_rwinitial.h"
+#include "cfg_alarminitial.h"
 
-class Cfg_ReadParam : public Cfg_RwInitial
+class Cfg_ReadParam : public Cfg_AlarmInitial
 {
 public:
     explicit Cfg_ReadParam(QObject *parent = nullptr);

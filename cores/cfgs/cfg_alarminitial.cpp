@@ -3,22 +3,22 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwinitial.h"
+#include "cfg_alarminitial.h"
 
-Cfg_RwInitial::Cfg_RwInitial(QObject *parent)
-    : Cfg_RwUnserialize{parent}
+Cfg_AlarmInitial::Cfg_AlarmInitial(QObject *parent)
+    : Cfg_AlarmUnserialize{parent}
 {
 
 }
 
-bool Cfg_RwInitial::initialData()
+bool Cfg_AlarmInitial::initialData()
 {
     sDevData *dev = cm::masterDev();    
     initDevData(dev);
     return true;
 }
 
-bool Cfg_RwInitial::initialParam()
+bool Cfg_AlarmInitial::initialParam()
 {
     sDevData *dev = cm::masterDev();
     dev->cfg.param.isBreaker = 1;
@@ -26,7 +26,7 @@ bool Cfg_RwInitial::initialParam()
     return true;
 }
 
-void Cfg_RwInitial::initDevInfo(sDevNums &it)
+void Cfg_AlarmInitial::initDevInfo(sDevNums &it)
 {
     it.boardNum = 3;
     it.lineNum = LINE_NUM;
@@ -38,7 +38,7 @@ void Cfg_RwInitial::initDevInfo(sDevNums &it)
     }
 }
 
-void Cfg_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
+void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
@@ -48,7 +48,7 @@ void Cfg_RwInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
     }
 }
 
-void Cfg_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
+void Cfg_AlarmInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
@@ -58,42 +58,42 @@ void Cfg_RwInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
     }
 }
 
-void Cfg_RwInitial::initObjData(sObjData &it, uchar size, uint curRated)
+void Cfg_AlarmInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
     setAlarmUnit(it.pow, size, 220*curRated);
     setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
     setAlarmUnit(it.cur, size, curRated*COM_RATE_CUR);
 }
 
-void Cfg_RwInitial::setTgVol(sTgUnit &it, uint rated)
+void Cfg_AlarmInitial::setTgVol(sTgUnit &it, uint rated)
 {
     it.rated = rated;
     it.max = it.crMax = rated * 1.2;
     it.min = it.crMin = rated * 0.8;
 }
 
-void Cfg_RwInitial::setTgUnit(sTgUnit &it, uint rated)
+void Cfg_AlarmInitial::setTgUnit(sTgUnit &it, uint rated)
 {
     it.max = rated;
     it.rated = rated;
     it.crMax = rated * 0.8;
 }
 
-void Cfg_RwInitial::initTgObjData(sTgObjData &it)
+void Cfg_AlarmInitial::initTgObjData(sTgObjData &it)
 {
     setTgVol(it.vol, 220*COM_RATE_VOL);
     setTgUnit(it.cur, 32*COM_RATE_CUR);
     setTgUnit(it.pow, 220*32);
 }
 
-void Cfg_RwInitial::initEnvData(sEnvData &it)
+void Cfg_AlarmInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
     setAlarmUnit(it.tem, size, 60*COM_RATE_TEM);
     setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
 }
 
-void Cfg_RwInitial::initDevData(sDevData *dev)
+void Cfg_AlarmInitial::initDevData(sDevData *dev)
 {
     initObjData(dev->line, LINE_NUM, 32);
     initObjData(dev->loop, LOOP_NUM, 16);
@@ -107,7 +107,7 @@ void Cfg_RwInitial::initDevData(sDevData *dev)
     initEnvData(dev->env);
 }
 
-void Cfg_RwInitial::initRelayUnit(sRelayUnit &it, uchar size)
+void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;

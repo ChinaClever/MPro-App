@@ -1,12 +1,12 @@
-#ifndef CFG_RWFILL_H
-#define CFG_RWFILL_H
+#ifndef CFG_ALARMFILL_H
+#define CFG_ALARMFILL_H
 
-#include "cfg_rwobj.h"
+#include "cfg_alarmobj.h"
 
-class Cfg_RwFill : public Cfg_RwObj
+class Cfg_AlarmFill : public Cfg_AlarmObj
 {
 public:
-    explicit Cfg_RwFill(QObject *parent = nullptr);
+    explicit Cfg_AlarmFill(QObject *parent = nullptr);
 
 protected:
     void fillData() override ;
@@ -19,4 +19,4 @@ private:
     void upDevData(sDevData *data, cfg::_sDevData *obj);
 };
 
-#endif // CFG_RWFILL_H
+#endif // CFG_ALARMFILL_H
