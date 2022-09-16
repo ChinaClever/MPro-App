@@ -102,7 +102,7 @@ QByteArray Sercret_TlsCert::serialNumber()
 {
     QByteArray res;
     if(!mCert->isNull())
-        res = mCert->serialNumber().toHex();
+        res = mCert->serialNumber();
     return res;
 }
 
