@@ -63,6 +63,10 @@ void Cfg_AlarmUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
     size = obj->groupSize;
     for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
 
+    size = obj->dualSize;
+    for(int i=0; i<size; ++i) unObjData(i, data->dual, obj->dual[i]);
+    data->output.vol.size = 0;
+
     size = obj->outputSize;
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
     data->output.vol.size = 0;

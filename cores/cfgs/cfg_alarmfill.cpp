@@ -54,24 +54,26 @@ void Cfg_AlarmFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 
 void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)
 {
-    uchar size = data->line.size;
+    uchar size = obj->lineSize = LINE_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->line, obj->line[i]);
 
-    size = data->loop.size;
+    size = obj->loopSize = LOOP_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->loop, obj->loop[i]);
 
-    size = data->group.size;
+    size = obj->groupSize = GROUP_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->group, obj->group[i]);
 
-    size = data->output.size;
+    size = obj->dualSize = OUTPUT_NUM;
+    for(int i=0; i<size; ++i) upObjData(i, data->dual, obj->dual[i]);
+
+    size = obj->outputSize = OUTPUT_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->output, obj->output[i]);
 
-    size = data->env.size;
+    size = obj->envSize = SENOR_NUM;
     for(int i=0; i<size; ++i) upEnvData(i, data->env, obj->env[i]);
 
     obj->tg = data->tg;
     //obj->info = data->info;
-
     //obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;
     obj->tg.pf = obj->tg.artPow = 0;

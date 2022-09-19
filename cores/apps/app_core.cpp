@@ -9,9 +9,8 @@
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
 {
-    Shm::initShm();
+    Shm::initShm(); compileTime();
     Cfg_ReadWrite::bulid();
-    compileTime();
 }
 
 App_Core *App_Core::bulid(QObject *parent)

@@ -115,6 +115,6 @@ cfg::_sDevData *Cfg_AlarmObj::deDataStream(QByteArray &array)
 {
     QDataStream out(&array, QIODevice::ReadOnly);
     ushort end; out >> *mDataStream >> end;
-    if(end != END_CRC) return nullptr;
+    if(end != END_CRC) {cout << end; return nullptr;}
     return mData;
 }
