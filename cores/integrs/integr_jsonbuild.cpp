@@ -90,9 +90,10 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
     arrayAppend(it.value, size, key+"_value", json, r);
     arrayAppend(it.alarm, size, key+"_alarm_status", json);
 
-    if(mDataContent == 0) {
+    if(mDataContent == 0) dc = true;
+    else if(mDataContent == 1) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    }
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r);
@@ -117,9 +118,10 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     int size = it.size; bool dc = false;
     arrayAppend(it.sw, size, key+"_state", json);
 
-    if(mDataContent == 0) {
+    if(mDataContent == 0) dc = true;
+    else if(mDataContent == 1) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    }
 
     if(dc) {
         arrayAppend(it.alarm, size, key+"_alarm", json);

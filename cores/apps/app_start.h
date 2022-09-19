@@ -10,9 +10,6 @@ public:
     explicit App_Start(QObject *parent = nullptr);
     ~App_Start();
 
-private:
-    void compileTime();
-
 private slots:
     void initFunSlot();
     void startThreadSlot();

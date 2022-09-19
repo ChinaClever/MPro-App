@@ -23,8 +23,8 @@ void Data_Env::initData()
 {
     for(int i=0; i<SENOR_NUM; ++i) {
         if(!mDev->env.isInsert[i]) {
-            mDev->env.tem.value[i] = 0xffff;
-            mDev->env.hum.value[i] = 0xffff;
+            mDev->env.tem.value[i] = 0xffff * COM_RATE_TEM;
+            mDev->env.hum.value[i] = 0xffff * COM_RATE_HUM;
         }
     }
 }

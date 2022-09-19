@@ -9,7 +9,8 @@
 Integr_JsonRecv::Integr_JsonRecv(QObject *parent)
     : QObject{parent}
 {
-
+    qRegisterMetaType<sCfgItem>("sCfgItem");
+    qRegisterMetaType<sDataItem>("sDataItem");
 }
 
 Integr_JsonRecv *Integr_JsonRecv::bulid(QObject *parent)
@@ -134,6 +135,8 @@ double Integr_JsonRecv::getDecimal(const sDataItem &it)
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
+    if(DSub::Size==it.subtopic || DSub::Alarm==it.subtopic || DSub::EnAlarm==it.subtopic) res = 1;
+
     return res;
 }
 
@@ -147,7 +150,7 @@ bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDa
         res = getData(obj, "topic"); if(res >= 0) it.topic = res;
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "value"); if(res >= 0) it.value = res;
+        res = getData(obj, "value"); if(res >= 0){res *= getDecimal(it); it.value = res;}
         it.txType = DTxType::TxJson;
     } else ret = false;
     return ret;
@@ -159,7 +162,6 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     bool ret = dataItem(key, object, it);
     if (ret) {
         it.rw = 1;
-        it.value *= getDecimal(it);
         emit recvSetSig(it);
     } else ret = false;
 
@@ -199,7 +201,7 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     bool ret = cfgItem(key, object, it);
     if (ret) {
         QJsonObject obj = getObject(object, key);
-        QVariant value = getValue(obj, "value");
+        QVariant value = getValue(obj, "value").toVariant();
         emit recvCfgSig(it, value);
     }
 
@@ -208,7 +210,7 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
 
 QVariant Integr_JsonRecv::getCfgItem(const QJsonObject &object)
 {
-    QString key = "setCfgItem";
+    QString key = "getCfgItem";
     QVariant res; sCfgItem it;
     if(cfgItem(key, object, it)) {
         res = Set_Core::bulid()->getCfg(it);

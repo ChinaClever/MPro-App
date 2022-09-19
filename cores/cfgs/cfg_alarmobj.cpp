@@ -3,20 +3,20 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwobj.h"
+#include "cfg_alarmobj.h"
 #include "log_core.h"
 
-Cfg_RwObj::Cfg_RwObj(QObject *parent) : QObject{parent}
+Cfg_AlarmObj::Cfg_AlarmObj(QObject *parent) : QObject{parent}
 {
     isRun = false;
     mFile = new QFile;
     mData = new cfg::_sDevData;
     mThread = new CThread(this);
-    mDataStream = new Cfg_RwStream(mData);
+    mDataStream = new Cfg_AlarmStream(mData);
     memset((void *)mData, 0, sizeof(cfg::_sDevData));
 }
 
-void Cfg_RwObj::writeAlarms()
+void Cfg_AlarmObj::writeAlarms()
 {
     if(!isRun) {
         isRun = true;
@@ -24,46 +24,43 @@ void Cfg_RwObj::writeAlarms()
     }
 }
 
-bool Cfg_RwObj::writeParams()
+bool Cfg_AlarmObj::writeParams()
 {
     QFile file(Cfg_Com::pathOfCfg(CFG_PARAM_FN));
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array; ushort end = END_CRC;
         QDataStream in(&array, QIODevice::WriteOnly);
-        sNetInterface *net = &(cm::dataPacket()->net);
         sDevCfg *cfg = &(cm::masterDev()->cfg);
-        in << cm::toByteArray(*net)
-           << cm::toByteArray(cfg->nums)
+        in << cm::toByteArray(cfg->nums)
            << cm::toByteArray(cfg->param)
            << cm::toByteArray(cfg->uut) << end;
         file.write(array);
     }
-    mFile->close();
+    file.close();
     return ret;
 }
 
-bool Cfg_RwObj::readParam(const QString &fn)
+bool Cfg_AlarmObj::readParam(const QString &fn)
 {
     bool ret = false; QFile file(Cfg_Com::pathOfCfg(fn));
     if(file.exists() && file.open(QIODevice::ReadOnly)) {
         QByteArray array = file.readAll();
         if(array.size()) {
-            QByteArray nums, param, uut, net;
+            QByteArray nums, param, uut;
             QDataStream out(&array, QIODevice::ReadOnly);
-            ushort end; out >> net >> nums >> param >> uut >> end;
+            ushort end; out >> nums >> param >> uut >> end;
             if(end == END_CRC){
                 sDevCfg *cfg = &cm::masterDev()->cfg;
                 cfg->nums = cm::toStruct<sDevNums>(nums);
                 cfg->param = cm::toStruct<sParameter>(param);
                 cfg->uut = cm::toStruct<sUutInfo>(uut); ret = true;
-                cm::dataPacket()->net = cm::toStruct<sNetInterface>(net);
             } else {
                 sSysItem it; it.module = tr("配置参数");
                 it.content = tr("设备配置参数读取异常:");
-                it.content += mFile->errorString();
+                it.content += file.errorString();
                 Log_Core::bulid(this)->append(it);
-                cout << Cfg_Com::pathOfCfg(fn);
+                cout << it.module << it.content << Cfg_Com::pathOfCfg(fn);
             }
         }
     }file.close();
@@ -71,7 +68,7 @@ bool Cfg_RwObj::readParam(const QString &fn)
     return ret;
 }
 
-bool Cfg_RwObj::saveAlarms()
+bool Cfg_AlarmObj::saveAlarms()
 {
     mThread->msleep(450);
     mFile->setFileName(Cfg_Com::pathOfCfg(CFG_ALARM_FN)); fillData();
@@ -79,13 +76,14 @@ bool Cfg_RwObj::saveAlarms()
     if(ret) {
         QByteArray array = toDataStream();
         mFile->write(array);
+        mFile->flush();
     }
     mFile->close();
     isRun = false;
     return ret;
 }
 
-bool Cfg_RwObj::readAlarm(const QString &fn)
+bool Cfg_AlarmObj::readAlarm(const QString &fn)
 {
     bool ret = false; mFile->setFileName(Cfg_Com::pathOfCfg(fn));
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
@@ -93,7 +91,7 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
         if(array.size()) {
             ret = deDataStream(array); if(ret) unSequence();
             else {
-                sSysItem it; it.module = tr("配置参数");
+                sSysItem it; it.module = tr("报警参数");
                 it.content = tr("设备报警数据读取异常");
                 it.content += mFile->errorString();
                 Log_Core::bulid(this)->append(it);
@@ -105,7 +103,7 @@ bool Cfg_RwObj::readAlarm(const QString &fn)
     return ret;
 }
 
-QByteArray Cfg_RwObj::toDataStream()
+QByteArray Cfg_AlarmObj::toDataStream()
 {
     QByteArray array; ushort end = END_CRC;
     QDataStream in(&array, QIODevice::WriteOnly);
@@ -113,10 +111,10 @@ QByteArray Cfg_RwObj::toDataStream()
     return array;
 }
 
-cfg::_sDevData *Cfg_RwObj::deDataStream(QByteArray &array)
+cfg::_sDevData *Cfg_AlarmObj::deDataStream(QByteArray &array)
 {
     QDataStream out(&array, QIODevice::ReadOnly);
     ushort end; out >> *mDataStream >> end;
-    if(end != END_CRC) return nullptr;
+    if(end != END_CRC) {cout << end; return nullptr;}
     return mData;
 }

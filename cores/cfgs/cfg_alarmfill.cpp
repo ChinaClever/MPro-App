@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwfill.h"
+#include "cfg_alarmfill.h"
 
-Cfg_RwFill::Cfg_RwFill(QObject *parent) : Cfg_RwObj{parent}
+Cfg_AlarmFill::Cfg_AlarmFill(QObject *parent) : Cfg_AlarmObj{parent}
 {
 
 }
 
 
-void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
+void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
     it.en = unit.en[id];
     it.rated = unit.rated[id];
@@ -20,12 +20,14 @@ void Cfg_RwFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
     it.max = unit.max[id];
 
     it.crMin = unit.crMin[id];
-    it.crMax = unit.crMax[id];
+    it.crMax = unit.crMax[id];    
+    it.reserve = unit.reserve[id];
 }
 
-void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
+void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
+    it.reserve = unit.reserve[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.resetDelay = unit.resetDelay[id];
@@ -35,7 +37,7 @@ void Cfg_RwFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
-void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
+void Cfg_AlarmFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
     qstrcpy(obj.name, data.name[id]);
     upAlarmUnit(id, data.vol, obj.vol);
@@ -44,38 +46,40 @@ void Cfg_RwFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
     upRelayUnit(id, data.relay, obj.relay);
 }
 
-void Cfg_RwFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
+void Cfg_AlarmFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 {
     upAlarmUnit(id, data.tem, obj.tem);
     upAlarmUnit(id, data.hum, obj.hum);
 }
 
-void Cfg_RwFill::upDevData(sDevData *data, cfg::_sDevData *obj)
+void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)
 {
-    uchar size = data->line.size;
+    uchar size = obj->lineSize = LINE_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->line, obj->line[i]);
 
-    size = data->loop.size;
+    size = obj->loopSize = LOOP_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->loop, obj->loop[i]);
 
-    size = data->group.size;
+    size = obj->groupSize = GROUP_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->group, obj->group[i]);
 
-    size = data->output.size;
+    size = obj->dualSize = OUTPUT_NUM;
+    for(int i=0; i<size; ++i) upObjData(i, data->dual, obj->dual[i]);
+
+    size = obj->outputSize = OUTPUT_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->output, obj->output[i]);
 
-    size = data->env.size;
+    size = obj->envSize = SENOR_NUM;
     for(int i=0; i<size; ++i) upEnvData(i, data->env, obj->env[i]);
 
     obj->tg = data->tg;
     //obj->info = data->info;
-
     //obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;
     obj->tg.pf = obj->tg.artPow = 0;
 }
 
-void Cfg_RwFill::fillData()
+void Cfg_AlarmFill::fillData()
 {
     cfg::_sDevData *dev = getDev();
     sDevData *data = cm::masterDev();

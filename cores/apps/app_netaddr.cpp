@@ -14,24 +14,58 @@ App_NetAddr::App_NetAddr(QObject *parent)
 
 void App_NetAddr::inet_initFunSlot()
 {
+    QString fn = Cfg_Obj::pathOfCfg("inet.ini");
+    mInetCfg = new Cfg_Obj(fn, this);
+
     sNetInterface *net = &(cm::dataPacket()->net);
-    if(!strlen(net->name)) {
+    inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
+    inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
+
+    if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
         inet->en = 1; inet->mode = 0;
         qstrcpy(inet->gw, "192.168.1.1");
         qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
-        qstrcpy(net->name, "eth0");
-    } net->inet.en = 1;
-    inet_setInterface();
+    } inet_setInterface();
 }
+
+void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
+{
+    Cfg_Obj *cfg = mInetCfg;
+    QString str = cfg->readCfg("ip", "", g).toString();
+    qstrcpy(inet.ip, str.toStdString().c_str());
+    str = cfg->readCfg("gw", "", g).toString();
+    qstrcpy(inet.gw, str.toStdString().c_str());
+
+    str = cfg->readCfg("mask", "", g).toString();
+    qstrcpy(inet.mask, str.toStdString().c_str());
+    str = cfg->readCfg("dns", "", g).toString();
+    qstrcpy(inet.dns, str.toStdString().c_str());
+    inet.en = cfg->readCfg("en", 0, g).toInt();
+    inet.mode = cfg->readCfg("mode", 0, g).toInt();
+    inet.prefixLen = cfg->readCfg("prefixLen", 0, g).toInt();
+}
+
+void App_NetAddr::inet_writeCfg(sNetAddr &inet, const QString &g)
+{
+    Cfg_Obj *cfg = mInetCfg;
+    cfg->writeCfg("en", inet.en, g);
+    cfg->writeCfg("ip", inet.ip, g);
+    cfg->writeCfg("gw", inet.gw, g);
+    cfg->writeCfg("dns", inet.dns, g);
+    cfg->writeCfg("mask", inet.mask, g);
+    cfg->writeCfg("mode", inet.mode, g);
+    cfg->writeCfg("prefixLen", inet.prefixLen, g);
+}
+
 
 void App_NetAddr::inet_setInterface()
 {
     if(!inet_isRun) {
         inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(55,this,SLOT(setInterfaceSlot()));
+        QTimer::singleShot(455,this,SLOT(inet_setInterfaceSlot()));
 #endif
         QTimer::singleShot(755,this,SLOT(inet_updateInterface()));
     }
@@ -60,6 +94,7 @@ void App_NetAddr::inet_setIpV4()
     QString cmd = "ifconfig %1 %2 netmask %3";
     QString str = cmd.arg(fn, ip, mask);
     system(str.toStdString().c_str());
+    inet_writeCfg(net->inet, "IPV4");
 }
 
 void App_NetAddr::inet_dhcp(const QString &n)
@@ -73,7 +108,11 @@ void App_NetAddr::inet_updateInterface()
     sNetInterface *net = &(cm::dataPacket()->net);
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
+#if (QT_VERSION < QT_VERSION_CHECK(5,13,0))
         if(interface.name() != "eth0") continue;
+#else
+        if(interface.name() !="ens33") continue;
+#endif
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址

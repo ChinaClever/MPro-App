@@ -6,9 +6,7 @@
 #include "web_server/web_core.h"
 #include "ipc_coreserver.h"
 #include "cascade_core.h"
-#include "sercret_core.h"
 #include "rpc_service.h"
-#include "ssdp_server.h"
 #include "integr_core.h"
 #include "agent_core.h"
 #include "data_core.h"
@@ -21,10 +19,6 @@
 App_Start::App_Start(QObject *parent)
     : App_Timing{parent}
 {
-#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    Shm::initShm();
-#endif
-    Cfg_ReadWrite::bulid(); compileTime();
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
@@ -62,12 +56,6 @@ void App_Start::startThreadSlot()
     Mb_Core::bulid(this);
     //OP_Core::bulid(this)->startFun();
     Cascade_Core::bulid(this)->startFun();
-
 }
 
-void App_Start::compileTime()
-{
-    sVersions *vers = &(cm::masterDev()->cfg.vers);
-    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
-}
+

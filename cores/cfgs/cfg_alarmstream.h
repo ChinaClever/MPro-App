@@ -1,5 +1,5 @@
-#ifndef CFG_RWSTREAM_H
-#define CFG_RWSTREAM_H
+#ifndef CFG_ALARMSTREAM_H
+#define CFG_ALARMSTREAM_H
 #include "alarm_log.h"
 #include <QDataStream>
 
@@ -8,11 +8,12 @@ struct _sAlarmIt
 {
     uint rated;
     uchar en;
-    ushort min; // 最小值
-    ushort max; // 最大值
+    uint min; // 最小值
+    uint max; // 最大值
 
-    ushort crMin; // 最小值
-    ushort crMax; // 最大值
+    uint crMin; // 最小值
+    uint crMax; // 最大值
+    uint reserve; // 预留
 };
 
 struct _sRelayIt
@@ -23,6 +24,7 @@ struct _sRelayIt
     uchar resetDelay;
     uchar overrunOff;
     uchar timingEn;
+    uchar reserve; // 预留
     char timingOn[NAME_SIZE];
     char timingOff[NAME_SIZE];
 };
@@ -67,15 +69,15 @@ struct _sDevData
 };
 }
 
-class Cfg_RwStream
+class Cfg_AlarmStream
 {
 public:
-    explicit Cfg_RwStream(cfg::_sDevData *data);
-    friend QDataStream& operator>>(QDataStream&, Cfg_RwStream&);
-    friend QDataStream& operator<<(QDataStream&, Cfg_RwStream&);
+    explicit Cfg_AlarmStream(cfg::_sDevData *data);
+    friend QDataStream& operator>>(QDataStream&, Cfg_AlarmStream&);
+    friend QDataStream& operator<<(QDataStream&, Cfg_AlarmStream&);
 
 private:
     cfg::_sDevData *mDevData;
 };
 
-#endif // CFG_RWSTREAM_H
+#endif // CFG_ALARMSTREAM_H

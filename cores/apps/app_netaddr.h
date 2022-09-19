@@ -1,6 +1,7 @@
 #ifndef APP_NETADDR_H
 #define APP_NETADDR_H
 #include "commons.h"
+#include "cfg_obj.h"
 
 class App_NetAddr: public QObject
 {
@@ -19,9 +20,12 @@ private slots:
 private:
     void inet_setIpV4();
     void inet_dhcp(const QString &n);
+    void inet_readCfg(sNetAddr &inet, const QString &g);
+    void inet_writeCfg(sNetAddr &inet, const QString &g);
 
 private:
     bool inet_isRun=false;
+    Cfg_Obj *mInetCfg;
 };
 
 #endif // APP_NETADDR_H

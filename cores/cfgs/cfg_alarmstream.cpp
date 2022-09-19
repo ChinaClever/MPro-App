@@ -3,15 +3,15 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwstream.h"
+#include "cfg_alarmstream.h"
 
-Cfg_RwStream::Cfg_RwStream(cfg::_sDevData *data) : mDevData{data}
+Cfg_AlarmStream::Cfg_AlarmStream(cfg::_sDevData *data) : mDevData{data}
 {
 
 }
 
 
-QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
+QDataStream& operator<<(QDataStream& in, Cfg_AlarmStream& data)
 {
     using namespace cm;
     cfg::_sDevData *ptr = data.mDevData;
@@ -39,7 +39,7 @@ QDataStream& operator<<(QDataStream& in, Cfg_RwStream& data)
     return in;
 }
 
-QDataStream& operator>>(QDataStream& out, Cfg_RwStream& data)
+QDataStream& operator>>(QDataStream& out, Cfg_AlarmStream& data)
 {
     using namespace cm; using namespace cfg;
     cfg::_sDevData *ptr = data.mDevData;

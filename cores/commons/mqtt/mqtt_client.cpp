@@ -37,6 +37,8 @@ bool Mqtt_Client::createMqtt()
         delete m_client; m_client=nullptr;
     }
 
+    cfg.url = "192.168.1.100";   ///////======
+
     if(1 == cfg.type) {
         QHostAddress host(cfg.url);
         m_client = new QMQTT::Client(host, cfg.port, this);

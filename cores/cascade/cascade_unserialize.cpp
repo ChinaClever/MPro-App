@@ -21,12 +21,14 @@ void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &
     unit.max[id] = it.max;
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
+    unit.reserve[id] = it.reserve;
 }
 
 void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     unit.sw[id] = it.sw;
     unit.en[id] = it.en;
+    unit.reserve[id] = it.reserve;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.overrunOff[id] = it.overrunOff;
@@ -47,17 +49,20 @@ void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
     data.ele[id] = obj.ele;
     data.artPow[id] = obj.activePow;
     data.reactivePow[id] = obj.reactivePow;
+    data.reserve[id] = obj.reserve;
 }
 
 void Cascade_Unserialize::unEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
 {
     obj.type_index = id;
+    data.isInsert[id] = obj.isInsert;
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
 
     data.door[id] = obj.door;
     data.water[id] = obj.water;
     data.smoke[id] = obj.smoke;
+    data.reserve[id] = obj.reserve;
 }
 
 void Cascade_Unserialize::unDevSize(uchar size, sObjData &data)

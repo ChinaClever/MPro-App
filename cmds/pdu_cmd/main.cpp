@@ -15,7 +15,7 @@ void usage()
     cout << "* usage: of pdu_cmd" <<endl;
     cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
     cout << "*    pduGetData      addr  type   topic  sub    id" <<endl;
-    cout << "*    pduSetData      addr  type   topic  sub    addr  value" <<endl;
+    cout << "*    pduSetData      addr  type   topic  sub    id  value" <<endl;
     cout << "*    pduSetParam     type  fc     value  [addr] [sub]" <<endl;
     cout << "*    pduGetParam     type  fc     [addr] [sub]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
@@ -98,7 +98,6 @@ void pduMetaData(const QStringList &ls)
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
     int k = 0; if(ls.size() > 2) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
@@ -106,7 +105,6 @@ void pduLogFun(const QStringList &ls)
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
         std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
     } else qCritical() << "pduLogFun Parameter error";
-    qDebug() << QTime::currentTime().toString("hh:mm:ss zzz");
 }
 
 void pduRelaysCtrl(const QStringList &ls)

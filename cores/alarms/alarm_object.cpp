@@ -144,6 +144,10 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
 
+
+         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
+         //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
+         //}
 //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
 //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
 //         }
