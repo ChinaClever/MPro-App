@@ -168,7 +168,7 @@
 				rpc.call('pduReadData',[addr,output,switch_,4,i]);
 				rpc.call('pduReadData',[addr,output,switch_,5,i]);
 				rpc.call('pduReadData',[addr,output,switch_,8,i]);
-				rpc.call('pduReadParam',[addr,bit,0,0,i]);
+				rpc.call('pduReadParam',[addr,bit,i,0,0]);
 			}
 		}
 		function flash_html(par)
@@ -232,7 +232,7 @@
 					}else{
 						num = 0;
 					}
-					rpc.call('pduSetParam',[addr,bit,0,0,num,stat]);
+					rpc.call('pduSetParam',[addr,bit,num,0,0,stat]);
 				}
 				else if(type1 === 'd'){
 					stat = parseInt(ipt.value);

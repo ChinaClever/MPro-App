@@ -96,7 +96,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 10:
-        sessionStorage.setItem("Output_name"+ addr +'_'+num,JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem("Output_name"+ addr +'_'+topic,JSON.parse(evt.data).result[5]); 
       break;
       case 11:
         sessionStorage.setItem(uut_name[topic]+ addr ,JSON.parse(evt.data).result[5]); 
@@ -320,11 +320,17 @@ function read_group_data(addr)
       rpc.call('pduReadData',[addr,group,energe_,1,j]);
       rpc.call('pduReadData',[addr,group,AVpow_,1,j]);
       rpc.call('pduReadData',[addr,group,pow_,3,j]);
+      rpc.call('pduReadData',[addr,group,pow_,2,j]);
+      rpc.call('pduReadData',[addr,group,pow_,4,j]);
+      rpc.call('pduReadData',[addr,group,pow_,5,j]);
+      rpc.call('pduReadData',[addr,group,pow_,6,j]);
+      rpc.call('pduReadData',[addr,group,pow_,7,j]);
+      rpc.call('pduReadData',[addr,group,pow_,7,j]);
     }
     j++;
   },1);
 }
-function read_dual_data(addr)
+function read_dual_param_data(addr)
 {
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
   var j = 1;
@@ -342,6 +348,24 @@ function read_dual_data(addr)
       // rpc.call('pduReadData',[addr,group,pow_,3,j]);
     }
     j++;
+  },1);
+}
+function read_dual_data(addr)
+{
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= output_num && j <= sub_num){
+      rpc.call('pduReadData',[addr,dual,pow_,j,i]);
+    }
+    i++;
+    if(i >= (output_num + 1)){
+      i = 1;
+      j++;
+    }
   },1);
 }
 function read_output_data(addr)
@@ -435,7 +459,7 @@ function read_output_name(addr){
       clearInterval(time1);
     }
     if(j <= output_num){
-      rpc.call('pduReadParam',[addr,bit,0,0,j]);
+      rpc.call('pduReadParam',[addr,bit,j,0,0]);
     }
     j++;
   },1);

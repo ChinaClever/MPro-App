@@ -50,10 +50,10 @@
 		function read_data(){
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				AVpow_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
-				pow_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
-				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+addr+'_'+i));
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				AVpow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[cur_]+data_name[1]+addr+'_'+i));
+				pow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
+				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[3]+addr+'_'+i));
+				energe_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
