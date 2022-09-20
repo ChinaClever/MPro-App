@@ -12,7 +12,7 @@ let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutpu
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","","","Content","Output","Group","Dual");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
-let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
+let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","DevAddr","ModbusAddr","Freq","Buz","GroupSwEn","LastRunTime","RunTime","BreakerEn");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
@@ -81,7 +81,6 @@ var jsonrpc = function()
         }else{
           sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
         }
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 4:
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
@@ -378,16 +377,14 @@ function read_output_data(addr)
     }
     if(i <= output_num && j <= sub_num){
       if(j == 1 && i <= output_num){
+        rpc.call('pduReadData',[addr,output,switch_,j,i]);
+        rpc.call('pduReadData',[addr,output,cur_,j,i]);
+        rpc.call('pduReadData',[addr,output,pow_,j,i]);
         rpc.call('pduReadData',[addr,output,energe_,j,i]);
         rpc.call('pduReadData',[addr,output,pf_,j,i]);
         rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
         rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
       }
-      if((j == 1 || j == 2 || j == 4 || j == 5 || j == 8) && i <= output_num){
-        rpc.call('pduReadData',[addr,output,switch_,j,i]);
-      }
-      rpc.call('pduReadData',[addr,output,cur_,j,i]);
-      rpc.call('pduReadData',[addr,output,pow_,j,i]);
     }
       i++;
       if(i >= parseInt(output_num + 1)){
@@ -459,7 +456,7 @@ function read_output_name(addr){
       clearInterval(time1);
     }
     if(j <= output_num){
-      rpc.call('pduReadParam',[addr,bit,j,0,0]);
+      rpc.call('pduReadParam',[addr,22,1,j,j]);
     }
     j++;
   },1);

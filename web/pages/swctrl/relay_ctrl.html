@@ -37,7 +37,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">开关控制</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
+								<span id="lang_2">开关控制</span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);">阅读模式</button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 									<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
@@ -72,7 +72,7 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
 				switch_mode[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[2]+addr+'_'+i));
 				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
@@ -168,7 +168,7 @@
 				rpc.call('pduReadData',[addr,output,switch_,4,i]);
 				rpc.call('pduReadData',[addr,output,switch_,5,i]);
 				rpc.call('pduReadData',[addr,output,switch_,8,i]);
-				rpc.call('pduReadParam',[addr,bit,i,0,0]);
+				rpc.call('pduReadParam',[addr,22,1,i,i]);
 			}
 		}
 		function flash_html(par)
@@ -232,7 +232,7 @@
 					}else{
 						num = 0;
 					}
-					rpc.call('pduSetParam',[addr,bit,num,0,0,stat]);
+					rpc.call('pduSetParam',[addr,22,1,num,num,stat]);
 				}
 				else if(type1 === 'd'){
 					stat = parseInt(ipt.value);
