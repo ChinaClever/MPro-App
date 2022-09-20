@@ -292,8 +292,8 @@ struct sNetAddr
 
 struct sNetInterface
 {
-    sNetAddr inet;
-    sNetAddr inet6;
+    struct sNetAddr inet;
+    struct sNetAddr inet6;
     char mac[NAME_SIZE];
     char name[NAME_SIZE];
 };
