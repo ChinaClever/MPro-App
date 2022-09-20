@@ -292,8 +292,8 @@ struct sNetAddr
 
 struct sNetInterface
 {
-    sNetAddr inet;
-    sNetAddr inet6;
+    struct sNetAddr inet;
+    struct sNetAddr inet6;
     char mac[NAME_SIZE];
     char name[NAME_SIZE];
 };
@@ -343,7 +343,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
              EINet=41, EWeb, ENtp, ESmtp};
 
 struct sCfgItem {

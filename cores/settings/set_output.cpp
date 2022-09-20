@@ -173,6 +173,17 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
     return outputSet(it, v);
 }
 
+bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
+{
+    bool ret = true;
+    sDevData *dev = cm::devData(it.addr);
+    uchar *ptr = dev->cfg.nums.group[it.fc];
+    if(it.sub < OUTPUT_NUM) ptr[it.sub] = v.toInt();
+    else {cout << it.sub; ret = false;}
+    if(ret) ret = Cfg_ReadWrite::bulid()->writeParams();
+    return ret;
+}
+
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     QStringList strs = v.toString().split("; ");

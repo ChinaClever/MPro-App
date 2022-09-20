@@ -1,7 +1,7 @@
 #ifndef CFG_READPARAM_H
 #define CFG_READPARAM_H
 
-#include "cfg_alarminitial.h"
+#include "cfg_devparam.h"
 
 class Cfg_ReadParam : public Cfg_AlarmInitial
 {

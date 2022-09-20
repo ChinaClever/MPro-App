@@ -64,6 +64,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     bool ret = false; switch (it.type) {
     case SFnCode::EOutput: case SFnCode::EGroup:
     case SFnCode::EDual: ret = outputSet(it, v); break;
+    case SFnCode::EGroupSet:
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
 
