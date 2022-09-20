@@ -588,38 +588,36 @@
 				rpc.call("pduReadData",[addr,phase,pow_,1,i]);
 				delay();
 			}
-			for(let i = 1 ;i < loop_num + 1;i++){
-				rpc.call("pduReadData",[addr,loop,switch_,1,i]);
+			for(let j = 1 ;j < loop_num + 1;j++){
+				rpc.call("pduReadData",[addr,loop,switch_,1,j]);
 				delay();
-				rpc.call("pduReadData",[addr,loop,vol_,1,i]);
+				rpc.call("pduReadData",[addr,loop,vol_,1,j]);
 				delay();
-				rpc.call("pduReadData",[addr,loop,cur_,1,i]);
+				rpc.call("pduReadData",[addr,loop,cur_,1,j]);
 				delay();
-				rpc.call("pduReadData",[addr,loop,cur_,4,i]);
+				rpc.call("pduReadData",[addr,loop,cur_,4,j]);
 				delay();
-				rpc.call("pduReadData",[addr,loop,energe_,1,i]);
+				rpc.call("pduReadData",[addr,loop,energe_,1,j]);
 				delay();
-				rpc.call("pduReadData",[addr,loop,AVpow_,1,i]);
-				delay();
-			}
-			for(let i = 0; i<head.length;i++){
-				rpc.call("pduReadData",[addr,envir,tmp_,1,1]);
-				delay();
-				rpc.call("pduReadData",[addr,envir,tmp_,1,2]);
-				delay();
-				rpc.call("pduReadData",[addr,envir,hum_,1,1]);
-				delay();
-				rpc.call("pduReadData",[addr,envir,hum_,1,2]);
-				delay();
-				rpc.call("pduReadData",[addr,sensor,door1_,1,1]);
-				delay();
-				rpc.call("pduReadData",[addr,sensor,door2_,1,1]);
-				delay();
-				rpc.call("pduReadData",[addr,sensor,water_,1,1]);
-				delay();
-				rpc.call("pduReadData",[addr,sensor,smoke_,1,1]);
+				rpc.call("pduReadData",[addr,loop,AVpow_,1,j]);
 				delay();
 			}
+			rpc.call("pduReadData",[addr,envir,tmp_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,envir,tmp_,1,2]);
+			delay();
+			rpc.call("pduReadData",[addr,envir,hum_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,envir,hum_,1,2]);
+			delay();
+			rpc.call("pduReadData",[addr,sensor,door1_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,sensor,door2_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,sensor,water_,1,1]);
+			delay();
+			rpc.call("pduReadData",[addr,sensor,smoke_,1,1]);
+			delay();
 		}
 		setInterval(function(){
 			get_data();

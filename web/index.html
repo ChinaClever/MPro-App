@@ -32,6 +32,12 @@
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
+		window.history.pushState(null,null,document.URL);
+		window.addEventListener('popstate',this.popstateFun,false);
+		function popstateFun(){
+			window.history.pushState(null,null,document.URL);
+		}
+		window.removeEventListener('popstate',this.popstateFun);
 		function sign_out(){
 			window.open(url_1,'_blank');
 			closeWebPage();

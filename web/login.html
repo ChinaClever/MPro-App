@@ -17,6 +17,12 @@
   <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
+    document.onkeydown = function(e){
+      var keyNum = window.event?e.keyCode:e.which;
+      if(keyNum == 13){
+        sign_in();
+      }
+    }
     $('.center_form').html(builddiv('signin'));
     console.log("1");
     var time = setTimeout(function (){
@@ -158,21 +164,21 @@
       {
         tbody += '<p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="用户名" onblur = "validataForm(this)">';
-        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="密码"></p>';
-        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
+        tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="密码"></p>';
+        tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
         tbody += '<br/><p class="title"><span>登陆页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)"></p>';
-        tbody += '<p><input id ="psd" type="password" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></p>';
+        tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "登陆" onclick="sign_in()"></p></input>';
       }else if(Reg === 'submite'){
         tbody += '<p class="title"><span>重置密码</span></p><p class="error" id = "Errinfo"></p>';
         tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="用户名"></p>';
-        tbody += '<p><input id ="psd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="新密码"></p>';
-        tbody += '<p><input id ="conpsd" type="password" maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
+        tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="新密码"></p>';
+        tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
         tbody += '<p class = "signIn_btn"><input type = "button" value = "提交" onclick="submite1()"></input></p>';
       }
@@ -195,6 +201,7 @@
         read_ver_info(0);
         read_group_data(0);
         read_dual_data(0);
+        read_dual_param_data(0);
       },500);
     },1500);
 

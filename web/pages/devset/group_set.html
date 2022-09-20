@@ -21,8 +21,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">分组设置</span><span style="padding-left: 320px;"><button onclick ="readonlyset(this);">阅读模式</button></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" onclick ="readonlyset(this);"></button></span>
+								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
 							</div>
 						</div>
 					</div>
@@ -43,18 +43,42 @@
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		let group_name = new Array();
+		let lang = new Array();
 		read_data();
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<7;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","分组设置","","","",""];
+			lang[2] = ["","阅读模式","","","",""];
+			lang[3] = ["","设备选择","","","",""];
+			lang[4] = ["","序号","","","",""];
+			lang[5] = ["","分组名称","","","",""];
+			lang[6] = ["","设置模式","","","",""];
+		}
+		function lang_fun(){
+			for(let j = 1;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+			}
+		}
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
-				output_name[i] = sessionStorage.getItem("Output_name"+ addr +'_'+i);
+				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
+			for(var i = 1 ;i < group_num + 1;i++){
+				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
+			}
 		}
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));
+		modeset();
+		lang_fun();
 		function buildSel(rows)
 		{
 			var tbody = '';
@@ -64,7 +88,6 @@
 			}
 			return tbody;
 		}
-		modeset();
 		function modeset(modesel){
 			var iptname = document.getElementsByTagName("input");
 			for(var i = 0; i<iptname.length;i++)
@@ -76,7 +99,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = "设置模式";
+				ros.innerHTML = lang[6][1];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -86,7 +109,7 @@
 			else{
 				read = 0;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = "阅读模式";
+				ros.innerHTML = lang[2][1];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -115,6 +138,18 @@
 				}
 				//rpc.call('pduSetData',[0,3,1,2,addr,stat]);
 			}
+			flash_html(ckd);
+		}
+
+		function flash_html(par)
+		{
+			read_output_name(0);
+			setTimeout(function(){
+				par.parentNode.parentNode.parentNode.remove();
+				read_data();
+				$('.table-striped').html(buildTable(output_num));
+				lang_fun();
+			},500);
 		}
 		function buildTable(rows) {
 			var thead = '',
@@ -122,16 +157,16 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="30%">单元名称</td>\
-					<td width ="8%">组别1</td>\
-					<td width ="8%">组别2</td>\
-					<td width ="8%">组别3</td>\
-					<td width ="8%">组别4</td>\
-					<td width ="8%">组别5</td>\
-					<td width ="8%">组别6</td>\
-					<td width ="8%">组别7</td>\
-					<td width ="8%">组别8</td>';
+					thead = '<tr><td width ="6%" id="lang_4">序号</td>\
+					<td width ="30%" id="lang_5">单元名称</td>\
+					<td width ="8%">'+ group_name[1] +'</td>\
+					<td width ="8%">'+ group_name[2] +'</td>\
+					<td width ="8%">'+ group_name[3] +'</td>\
+					<td width ="8%">'+ group_name[4] +'</td>\
+					<td width ="8%">'+ group_name[5] +'</td>\
+					<td width ="8%">'+ group_name[6] +'</td>\
+					<td width ="8%">'+ group_name[7] +'</td>\
+					<td width ="8%">'+ group_name[8] +'</td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
