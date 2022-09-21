@@ -180,20 +180,19 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
     uchar *ptr = dev->cfg.nums.group[it.fc];
     if(it.sub < OUTPUT_NUM) ptr[it.sub] = v.toInt();
     else {cout << it.sub; ret = false;}
-    if(ret) ret = Cfg_ReadWrite::bulid()->writeParams();
+    if(ret) Cfg_ReadWrite::bulid()->groupWrite();
     return ret;
 }
 
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     QStringList strs = v.toString().simplified().split(";");
-    sDevData *dev = cm::devData(it.addr);
+    sDevData *dev = cm::devData(it.addr); bool ret = true;
     uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
         int id = str.toInt(); ptr[id] = 1;
-    } bool ret = false;
-    if(strs.size()) ret = Cfg_ReadWrite::bulid()->writeParams();
+    } if(strs.size()) Cfg_ReadWrite::bulid()->groupWrite(); else ret = false;
     return ret;
 }
 

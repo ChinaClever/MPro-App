@@ -32,7 +32,7 @@ typedef unsigned int uint;
 #define COM_RATE_ELE	10.0    // 电能
 #define COM_RATE_PF     100.0   // 功率因数
 #define COM_RATE_TEM	10.0    // 温度
-#define COM_RATE_HUM	10.0    // 湿度
+#define COM_RATE_HUM	1.0    // 湿度
 
 #define COM_MIN_VOL     (50*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
@@ -178,7 +178,6 @@ struct sDevNums
     uchar loopStarts[LOOP_NUM];
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
-    uint groupEn; // 组开关使能
     uint reserve[20];
 };
 
@@ -226,8 +225,9 @@ struct sParameter {
     uchar isBreaker; // 0没有断路器 1有断路器
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
-    uint restartTimes; // 重启次数    
+    uint restartCnt; // 重启次数
     uint screenAngle; // 屏幕方位角
+    uint groupEn; // 组开关使能
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 

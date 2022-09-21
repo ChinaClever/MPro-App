@@ -31,7 +31,6 @@ void Agent_Get::addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev)
     addOidValue(addr, id++, oid, prefix+"output", dev.outputNum, w);
     addOidValue(addr, id++, oid, prefix+"slave", dev.slaveNum, w);
     addOidValue(addr, id++, oid, prefix+"board", dev.boardNum, w);
-    addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
 }
 
 void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &dev)
@@ -40,6 +39,7 @@ void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &de
     int id = 1; QString prefix = oidPrefix + "info_";
     addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
     addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
+    //addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
 }
 
 void Agent_Get::addDevVer(uchar addr, const QString &oidPrefix, sVersions &dev)

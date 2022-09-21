@@ -31,13 +31,11 @@ void Cfg_RwMain::writeAlarmDefault()
 
 bool Cfg_RwMain::readSettings()
 {
-    bool ret = readParam(CFG_PARAM_FN);
-    if(!ret) ret = readParamDefault();
-    if(!ret) initialParam();
-
-    ret = readAlarm(CFG_ALARM_FN);
+    bool ret = readAlarm(CFG_ALARM_FN);
     if(!ret) ret = readAlarmDefault();
     if(!ret) ret = initialData();
+
+    initialParam();
     readCfgParams();
 
     return ret;

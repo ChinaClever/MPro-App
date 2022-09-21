@@ -79,7 +79,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;

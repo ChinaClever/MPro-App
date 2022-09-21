@@ -47,12 +47,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 6: qstrcpy(inet->dns, v.toByteArray().data());  break;
     case 7: qstrcpy(inet->dns2, v.toByteArray().data()); break;
     default: res = false; qDebug() << Q_FUNC_INFO; break;
-    }
-
-    if(res) {
-        App_Core::bulid()->inet_setInterface();
-        Cfg_ReadWrite::bulid()->writeParams();
-    }
+    } if(res) App_Core::bulid()->inet_setInterface();
 
     return res;
 }

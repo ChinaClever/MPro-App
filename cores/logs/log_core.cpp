@@ -22,7 +22,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-        int cnt = cm::masterDev()->cfg.param.restartTimes++;
+        int cnt = cm::masterDev()->cfg.param.restartCnt;
 
         sSysItem it;
         it.module = "system";

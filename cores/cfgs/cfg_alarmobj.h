@@ -6,8 +6,6 @@
 
 #define CFG_ALARM_FN    "cfg_alarm.bin"
 #define CFG_ALARM_DF    "cfg_alarm.df"
-#define CFG_PARAM_FN    "cfg_param.bin"
-#define CFG_PARAM_DF    "cfg_param.df"
 
 
 class Cfg_AlarmObj

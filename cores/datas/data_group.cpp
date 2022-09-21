@@ -13,7 +13,7 @@ Data_Group::Data_Group() : Data_Line{}
 void Data_Group::setGroupSize()
 {
     int size = 0;
-    if(mDev->cfg.nums.groupEn) size = GROUP_NUM;
+    if(mDev->cfg.param.groupEn) size = GROUP_NUM;
     sObjData *obj = &(mDev->group);
     obj->vol.size = obj->cur.size =0;
     obj->size = obj->pow.size = size;
@@ -25,19 +25,18 @@ QList<int> Data_Group::outletByGroup(int id, int addr)
 {
     QList<int> res;
     sDevData *dev = cm::devData(addr);
-//    if(dev->cfg.nums.groupEn)
-    {
-        uchar *ptr = dev->cfg.nums.group[id];
-        for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
-    } //else disGroupAlarm(id);
+    uchar *ptr = dev->cfg.nums.group[id];
+    for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
 
     return res;
 }
 
 void Data_Group::groupWork()
 {
+    sDevData *dev = cm::masterDev();
     for(int i=0; i<GROUP_NUM; ++i) {
-        QList<int> ls = outletByGroup(i);
+        QList<int> ls;
+        if(dev->cfg.param.groupEn) ls = outletByGroup(i);
         sumObjData(i, mDev->group, mDev->output, ls);
     } setGroupSize(); groupOverrunOff(); groupTiming();
 }

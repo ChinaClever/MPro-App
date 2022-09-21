@@ -7,16 +7,18 @@ class Cfg_devParam : public Cfg_AlarmInitial
 public:
     Cfg_devParam();
 
-    bool writeParams();
-    bool initialParam();
+    void groupWrite();
+    void totalTimeWrite(uint h);
+    void devParamWrite(const QString &key, const QVariant &v, const QString &g);
 
 protected:
-    void initDevInfo(sDevNums &it);
-    bool readParam(const QString &fn);
+    void initialParam();
 
 private:
-    void uutInfoRead(sUutInfo &uut);
+    void restartCntWrite();
     void devNumRead(sDevNums &it);
+    void uutInfoRead(sUutInfo &uut);
+    void devParamRead(sParameter &it);
 
 private:
     Cfg_Obj *mDevCfg;
