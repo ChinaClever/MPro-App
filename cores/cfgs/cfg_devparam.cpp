@@ -4,6 +4,7 @@ Cfg_devParam::Cfg_devParam()
 {
     QString fn = Cfg_Obj::pathOfCfg("devParam.ini");
     mDevCfg = new Cfg_Obj(fn);
+    initialParam();
 }
 
 void Cfg_devParam::uutInfoRead(sUutInfo &uut)

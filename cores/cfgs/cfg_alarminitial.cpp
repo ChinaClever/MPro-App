@@ -17,26 +17,6 @@ bool Cfg_AlarmInitial::initialData()
     return true;
 }
 
-bool Cfg_AlarmInitial::initialParam()
-{
-    sDevData *dev = cm::masterDev();
-    dev->cfg.param.isBreaker = 1;
-    initDevInfo(dev->cfg.nums);
-    return true;
-}
-
-void Cfg_AlarmInitial::initDevInfo(sDevNums &it)
-{
-    it.boardNum = 3;
-    it.lineNum = LINE_NUM;
-    it.loopNum = LOOP_NUM / 2;
-    it.outputNum = OUTPUT_NUM / 2;
-    for(uint i=0; i<it.loopNum; ++i) {
-        it.loopEnds[i] = 8*(i+1);
-        it.loopStarts[i] = 8*i;
-    }
-}
-
 void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {

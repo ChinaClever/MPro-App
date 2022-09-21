@@ -4,8 +4,8 @@
 #include "cfg_com.h"
 #include "cfg_alarmstream.h"
 
-#define CFG_ALARM_FN    "cfg_alarm.bin"
-#define CFG_ALARM_DF    "cfg_alarm.df"
+#define CFG_ALARM_FN    "alarm.cfg"
+#define CFG_ALARM_DF    "alarm.df"
 
 
 class Cfg_AlarmObj
@@ -22,6 +22,7 @@ protected:
     cfg::_sDevData *getDev() {return mData;}
 
 private:
+    void initAlarms();
     bool saveAlarms();
     QByteArray toDataStream();
     cfg::_sDevData *deDataStream(QByteArray &array);

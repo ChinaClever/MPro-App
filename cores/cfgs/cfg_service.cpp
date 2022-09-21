@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "web_server/web_core.h"
-#include "cfg_readparam.h"
+#include "cfg_service.h"
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "sercret_core.h"
@@ -13,12 +13,13 @@
 #include "app_core.h"
 #include "mb_core.h"
 
-Cfg_ReadParam::Cfg_ReadParam()
+Cfg_Service::Cfg_Service()
 {
-    mCfg = Cfg_Com::bulid();
+    mCfg = Cfg_Com::bulid();    
+    readCfgParams();
 }
 
-void Cfg_ReadParam::readCfgParams()
+void Cfg_Service::readCfgParams()
 {
     ntp();
     web();
@@ -36,7 +37,7 @@ void Cfg_ReadParam::readCfgParams()
 }
 
 
-void Cfg_ReadParam::smtp()
+void Cfg_Service::smtp()
 {
     sSmtpCfg *cfg = &App_Smtp::smtpCfg;
     QString prefix = "smtp";  QString key;
@@ -58,7 +59,7 @@ void Cfg_ReadParam::smtp()
     }
 }
 
-void Cfg_ReadParam::snmp()
+void Cfg_Service::snmp()
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
@@ -79,7 +80,7 @@ void Cfg_ReadParam::snmp()
     }
 }
 
-void Cfg_ReadParam::web()
+void Cfg_Service::web()
 {
     int *ptr = nullptr; int value = 0;
     QString prefix = "web"; QString key;
@@ -101,7 +102,7 @@ void Cfg_ReadParam::web()
     }
 }
 
-void Cfg_ReadParam::ntp()
+void Cfg_Service::ntp()
 {
     sNtpCfg *it = &App_Ntp::ntpCfg;
     QString prefix = "ntp"; QString key;
@@ -115,7 +116,7 @@ void Cfg_ReadParam::ntp()
     }
 }
 
-void Cfg_ReadParam::mqtt()
+void Cfg_Service::mqtt()
 {
     QString prefix = "mqtt"; QString key;
     sMqttCfg *cfg = &(Mqtt_Client::cfg);
@@ -135,7 +136,7 @@ void Cfg_ReadParam::mqtt()
     }
 }
 
-void Cfg_ReadParam::login()
+void Cfg_Service::login()
 {
     QString prefix = "login";
     QString key; char *ptr=nullptr;
@@ -153,7 +154,7 @@ void Cfg_ReadParam::login()
     }
 }
 
-void Cfg_ReadParam::modbus()
+void Cfg_Service::modbus()
 {
     int *ptr = nullptr; int value = 0;
     QString prefix = "modbus"; QString key;
@@ -174,7 +175,7 @@ void Cfg_ReadParam::modbus()
     }
 }
 
-void Cfg_ReadParam::rpc()
+void Cfg_Service::rpc()
 {
     int *ptr = nullptr; int value = 0;
     QString prefix = "rpc"; QString key;
@@ -192,7 +193,7 @@ void Cfg_ReadParam::rpc()
     }
 }
 
-void Cfg_ReadParam::sercret()
+void Cfg_Service::sercret()
 {
     QByteArray *arr = nullptr;
     QString prefix = "sercret"; QString key;
@@ -218,7 +219,7 @@ void Cfg_ReadParam::sercret()
     }
 }
 
-void Cfg_ReadParam::push()
+void Cfg_Service::push()
 {
     QString *str = nullptr;
     int *ptr = nullptr; int value = 0;
@@ -253,7 +254,7 @@ void Cfg_ReadParam::push()
     }
 }
 
-void Cfg_ReadParam::dualName()
+void Cfg_Service::dualName()
 {
     QString prefix = "DualName";
     sDevData *dev = cm::masterDev();
@@ -265,7 +266,7 @@ void Cfg_ReadParam::dualName()
     }
 }
 
-void Cfg_ReadParam::groupName()
+void Cfg_Service::groupName()
 {
     QString prefix = "GroupName";
     sDevData *dev = cm::masterDev();
@@ -277,7 +278,7 @@ void Cfg_ReadParam::groupName()
     }
 }
 
-void Cfg_ReadParam::outputName()
+void Cfg_Service::outputName()
 {
     QString prefix = "OutputName";
     sDevData *dev = cm::masterDev();

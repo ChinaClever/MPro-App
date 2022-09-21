@@ -31,7 +31,7 @@ void App_Timing::writeTotalTime(uint h)
         if(!h%12) ret = true;
     } if(!h%24) ret = true;
 
-    if(ret) Cfg_ReadWrite::bulid()->totalTimeWrite(h);
+    if(ret) Cfg_Core::bulid()->totalTimeWrite(h);
 }
 
 void App_Timing::timing_onTimeoutDone()

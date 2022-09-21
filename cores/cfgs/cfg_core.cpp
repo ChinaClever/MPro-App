@@ -3,23 +3,23 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "cfg_rwmain.h"
+#include "cfg_core.h"
 
-Cfg_RwMain::Cfg_RwMain()
+Cfg_Core::Cfg_Core()
 {
     readSettings();
 }
 
-Cfg_RwMain *Cfg_RwMain::bulid()
+Cfg_Core *Cfg_Core::bulid()
 {
-    static Cfg_RwMain* sington = nullptr;
+    static Cfg_Core* sington = nullptr;
     if(sington == nullptr) {
-        sington = new Cfg_RwMain();
+        sington = new Cfg_Core();
     }
     return sington;
 }
 
-void Cfg_RwMain::writeAlarmDefault()
+void Cfg_Core::writeAlarmDefault()
 {
     QString cmd = "rm -f %1";
     system(cmd.arg(CFG_ALARM_DF).toLatin1().data());
@@ -29,14 +29,11 @@ void Cfg_RwMain::writeAlarmDefault()
     system(cmd.toLatin1().data());
 }
 
-bool Cfg_RwMain::readSettings()
+bool Cfg_Core::readSettings()
 {
     bool ret = readAlarm(CFG_ALARM_FN);
     if(!ret) ret = readAlarmDefault();
     if(!ret) ret = initialData();
-
-    initialParam();
-    readCfgParams();
 
     return ret;
 }

@@ -17,9 +17,7 @@ Cfg_AlarmObj::Cfg_AlarmObj()
 
 void Cfg_AlarmObj::writeAlarms()
 {
-    if(!isRun) {
-        isRun = true;
-        //mThread->onceRun();
+    if(!isRun) { isRun = true;
         QtConcurrent::run(this,&Cfg_AlarmObj::alarm_run);
     }
 }

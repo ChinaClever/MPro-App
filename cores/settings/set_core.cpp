@@ -9,7 +9,7 @@
 
 Set_Core::Set_Core()
 {
-    Cfg_ReadWrite::bulid();
+    Cfg_Core::bulid();
 }
 
 Set_Core *Set_Core::bulid()
@@ -23,7 +23,7 @@ Set_Core *Set_Core::bulid()
 
 void Set_Core::writeAlarm()
 {
-    Cfg_ReadWrite::bulid()->writeAlarms();
+    Cfg_Core::bulid()->writeAlarms();
 }
 
 

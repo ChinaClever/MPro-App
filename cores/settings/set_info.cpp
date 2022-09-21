@@ -81,7 +81,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 12: key = "vh"; it->vh = value; break;
     case 13: key = "screenAngle"; it->screenAngle = value; break;
     default: ret = false; cout << fc; break;
-    } if(ret) Cfg_ReadWrite::bulid()->devParamWrite(key, value, prefix);
+    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     return ret;
 }
@@ -118,7 +118,7 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case 11: key = "loopStarts_" + QString::number(it.sub); dev->loopStarts[it.sub] = value;  break;
     case 12: key = "loopEnds_" + QString::number(it.sub); dev->loopEnds[it.sub] = value;  break;
     default: ret = false; cout << it.fc; break;
-    } if(ret) Cfg_ReadWrite::bulid()->devParamWrite(key, value, prefix);
+    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     return ret;
 }
@@ -159,7 +159,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
     if(ptr) {
         qstrcpy(ptr, str);
-        Cfg_ReadWrite *cfg = Cfg_ReadWrite::bulid();
+        Cfg_Core *cfg = Cfg_Core::bulid();
         cfg->devParamWrite(key, v, prefix);
     }
 
