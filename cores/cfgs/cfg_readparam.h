@@ -3,10 +3,10 @@
 
 #include "cfg_devparam.h"
 
-class Cfg_ReadParam : public Cfg_AlarmInitial
+class Cfg_ReadParam : public Cfg_devParam
 {
 public:
-    explicit Cfg_ReadParam(QObject *parent = nullptr);
+    explicit Cfg_ReadParam();
     void readCfgParams();
 
 private:

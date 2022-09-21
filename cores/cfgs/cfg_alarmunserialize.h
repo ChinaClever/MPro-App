@@ -6,7 +6,7 @@
 class Cfg_AlarmUnserialize : public Cfg_AlarmFill
 {
 public:
-    explicit Cfg_AlarmUnserialize(QObject *parent = nullptr);
+    explicit Cfg_AlarmUnserialize();
 
 protected:
     void unSequence() override ;

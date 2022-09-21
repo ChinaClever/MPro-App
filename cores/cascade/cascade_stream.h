@@ -76,6 +76,7 @@ struct _sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
+    uchar reserve;
 };
 
 struct _sFrame {

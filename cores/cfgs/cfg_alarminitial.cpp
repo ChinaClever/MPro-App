@@ -5,8 +5,7 @@
  */
 #include "cfg_alarminitial.h"
 
-Cfg_AlarmInitial::Cfg_AlarmInitial(QObject *parent)
-    : Cfg_AlarmUnserialize{parent}
+Cfg_AlarmInitial::Cfg_AlarmInitial()
 {
 
 }

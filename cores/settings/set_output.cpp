@@ -77,7 +77,7 @@ bool Set_Output::groupCtrl(sDataItem &unit)
         ids = Data_Core::bulid()->outletByGroup(id-1);
     } else {
         for(int i=0; i<GROUP_NUM; ++i)
-            ids << Data_Core::bulid()->outletByGroup(id);
+            ids << Data_Core::bulid()->outletByGroup(i);
     }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
@@ -135,7 +135,7 @@ QString Set_Output::grouping(int addr, int id)
 {
     QString res;
     QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
-    foreach(auto &i, ids) res += QString::number(i) +": ";
+    foreach(auto &i, ids) res += QString::number(i) +";";
     return res;
 }
 
@@ -186,7 +186,7 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
-    QStringList strs = v.toString().split("; ");
+    QStringList strs = v.toString().simplified().split(";");
     sDevData *dev = cm::devData(it.addr);
     uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);

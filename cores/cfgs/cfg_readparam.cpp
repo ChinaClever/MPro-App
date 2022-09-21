@@ -13,8 +13,7 @@
 #include "app_core.h"
 #include "mb_core.h"
 
-Cfg_ReadParam::Cfg_ReadParam(QObject *parent)
-    : Cfg_AlarmInitial{parent}
+Cfg_ReadParam::Cfg_ReadParam()
 {
     mCfg = Cfg_Com::bulid();
 }

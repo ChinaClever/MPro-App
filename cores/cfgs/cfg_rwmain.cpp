@@ -4,19 +4,17 @@
  *      Author: Lzy
  */
 #include "cfg_rwmain.h"
-#include "cfg_com.h"
 
-Cfg_RwMain::Cfg_RwMain(QObject *parent)
-    : Cfg_ReadParam{parent}
+Cfg_RwMain::Cfg_RwMain()
 {
-    QTimer::singleShot(1,this,SLOT(readSettings()));
+    readSettings();
 }
 
-Cfg_RwMain *Cfg_RwMain::bulid(QObject *parent)
+Cfg_RwMain *Cfg_RwMain::bulid()
 {
     static Cfg_RwMain* sington = nullptr;
     if(sington == nullptr) {
-        sington = new Cfg_RwMain(parent);
+        sington = new Cfg_RwMain();
     }
     return sington;
 }
@@ -33,7 +31,6 @@ void Cfg_RwMain::writeAlarmDefault()
 
 bool Cfg_RwMain::readSettings()
 {
-    mThread->init(this, SLOT(run()));
     bool ret = readParam(CFG_PARAM_FN);
     if(!ret) ret = readParamDefault();
     if(!ret) initialParam();

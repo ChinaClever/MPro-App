@@ -4,16 +4,15 @@
 #include "cfg_readparam.h"
 
 class Cfg_RwMain : public Cfg_ReadParam
-{
-    Q_OBJECT
-    explicit Cfg_RwMain(QObject *parent = nullptr);
+{    
+    explicit Cfg_RwMain();
 public:
-    static Cfg_RwMain *bulid(QObject *parent = nullptr);
+    static Cfg_RwMain *bulid();
     bool readParamDefault() {return readParam(CFG_PARAM_DF);}
     bool readAlarmDefault() {return readAlarm(CFG_ALARM_DF);}
     void writeAlarmDefault();
 
-private slots:
+private:
     bool readSettings();
 };
 

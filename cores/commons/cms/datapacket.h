@@ -163,6 +163,7 @@ struct sRtuBoard
     uchar offLines[DEV_NUM];
     uchar chipStates[DEV_NUM];
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    uint reserve;
 };
 
 struct sDevNums
@@ -244,6 +245,7 @@ struct sFaultCode {
     uint fault; // 是否在故障
     uint cnt[4][PACK_ARRAY_SIZE];
     uint code[PACK_ARRAY_SIZE];
+    uint reserve;
 };
 
 /**
@@ -273,6 +275,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
+    uint reserve;
 };
 
 
@@ -287,6 +290,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
+    char reserve[NAME_SIZE];
     uint prefixLen;
 };
 
@@ -304,6 +308,7 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
+    char reserve[NAME_SIZE];
 };
 
 /**

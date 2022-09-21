@@ -5,7 +5,7 @@
  */
 #include "cfg_alarmunserialize.h"
 
-Cfg_AlarmUnserialize::Cfg_AlarmUnserialize(QObject *parent) : Cfg_AlarmFill{parent}
+Cfg_AlarmUnserialize::Cfg_AlarmUnserialize()
 {
 
 }

@@ -5,7 +5,7 @@
  */
 #include "cfg_alarmfill.h"
 
-Cfg_AlarmFill::Cfg_AlarmFill(QObject *parent) : Cfg_AlarmObj{parent}
+Cfg_AlarmFill::Cfg_AlarmFill()
 {
 
 }

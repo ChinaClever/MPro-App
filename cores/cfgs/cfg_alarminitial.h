@@ -6,7 +6,7 @@
 class Cfg_AlarmInitial : public Cfg_AlarmUnserialize
 {
 public:
-    explicit Cfg_AlarmInitial(QObject *parent = nullptr);
+    explicit Cfg_AlarmInitial();
     bool initialData();
     bool initialParam();
 

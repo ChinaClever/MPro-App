@@ -6,12 +6,11 @@
 #include "cfg_alarmobj.h"
 #include "log_core.h"
 
-Cfg_AlarmObj::Cfg_AlarmObj(QObject *parent) : QObject{parent}
+Cfg_AlarmObj::Cfg_AlarmObj()
 {
     isRun = false;
     mFile = new QFile;
     mData = new cfg::_sDevData;
-    mThread = new CThread(this);
     mDataStream = new Cfg_AlarmStream(mData);
     memset((void *)mData, 0, sizeof(cfg::_sDevData));
 }
@@ -20,58 +19,15 @@ void Cfg_AlarmObj::writeAlarms()
 {
     if(!isRun) {
         isRun = true;
-        mThread->onceRun();
+        //mThread->onceRun();
+        QtConcurrent::run(this,&Cfg_AlarmObj::alarm_run);
     }
-}
-
-bool Cfg_AlarmObj::writeParams()
-{
-    QFile file(Cfg_Com::pathOfCfg(CFG_PARAM_FN));
-    bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-    if(ret) {
-        QByteArray array; ushort end = END_CRC;
-        QDataStream in(&array, QIODevice::WriteOnly);
-        sDevCfg *cfg = &(cm::masterDev()->cfg);
-        in << cm::toByteArray(cfg->nums)
-           << cm::toByteArray(cfg->param)
-           << cm::toByteArray(cfg->uut) << end;
-        file.write(array);
-    }
-    file.close();
-    return ret;
-}
-
-bool Cfg_AlarmObj::readParam(const QString &fn)
-{
-    bool ret = false; QFile file(Cfg_Com::pathOfCfg(fn));
-    if(file.exists() && file.open(QIODevice::ReadOnly)) {
-        QByteArray array = file.readAll();
-        if(array.size()) {
-            QByteArray nums, param, uut;
-            QDataStream out(&array, QIODevice::ReadOnly);
-            ushort end; out >> nums >> param >> uut >> end;
-            if(end == END_CRC){
-                sDevCfg *cfg = &cm::masterDev()->cfg;
-                cfg->nums = cm::toStruct<sDevNums>(nums);
-                cfg->param = cm::toStruct<sParameter>(param);
-                cfg->uut = cm::toStruct<sUutInfo>(uut); ret = true;
-            } else {
-                sSysItem it; it.module = tr("配置参数");
-                it.content = tr("设备配置参数读取异常:");
-                it.content += file.errorString();
-                Log_Core::bulid(this)->append(it);
-                cout << it.module << it.content << Cfg_Com::pathOfCfg(fn);
-            }
-        }
-    }file.close();
-
-    return ret;
 }
 
 bool Cfg_AlarmObj::saveAlarms()
 {
-    mThread->msleep(450);
-    mFile->setFileName(Cfg_Com::pathOfCfg(CFG_ALARM_FN)); fillData();
+    cm::mdelay(450); fillData();
+    mFile->setFileName(Cfg_Com::pathOfCfg(CFG_ALARM_FN));
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
@@ -91,10 +47,10 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
         if(array.size()) {
             ret = deDataStream(array); if(ret) unSequence();
             else {
-                sSysItem it; it.module = tr("报警参数");
-                it.content = tr("设备报警数据读取异常");
+                sSysItem it; it.module = QStringLiteral("报警参数");
+                it.content = QStringLiteral("设备报警数据读取异常");
                 it.content += mFile->errorString();
-                Log_Core::bulid(this)->append(it);
+                Log_Core::bulid()->append(it);
                 cout << Cfg_Com::pathOfCfg(fn);
             }
         }  mFile->close();
