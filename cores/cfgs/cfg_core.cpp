@@ -32,7 +32,7 @@ void Cfg_Core::writeAlarmDefault()
 bool Cfg_Core::readSettings()
 {
     bool ret = readAlarm(CFG_ALARM_FN);
-    if(!ret) ret = readAlarmDefault();
+    if(!ret) ret = readAlarm(CFG_ALARM_DF);
     if(!ret) ret = initialData();
 
     return ret;

@@ -8,7 +8,6 @@ class Cfg_Core : public Cfg_Service
     explicit Cfg_Core();
 public:
     static Cfg_Core *bulid();
-    bool readAlarmDefault() {return readAlarm(CFG_ALARM_DF);}
     void writeAlarmDefault();
 
 private:

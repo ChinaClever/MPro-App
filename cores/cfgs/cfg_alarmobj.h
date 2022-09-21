@@ -29,7 +29,6 @@ private:
 
 private:
     bool isRun;
-    QFile *mFile;
     cfg::_sDevData *mData;
     Cfg_AlarmStream *mDataStream;
 };
