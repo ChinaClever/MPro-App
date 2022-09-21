@@ -79,6 +79,11 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
 			}
 		}
+		function lang_fun_(){
+			for(let j = 4;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+			}
+		}
 		function modeset(modesel){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
@@ -144,7 +149,7 @@
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(group_num));
-				lang_fun();
+				lang_fun_();
 			},500);
 		}
 		function buildSel(rows)

@@ -25,7 +25,8 @@ QList<int> Data_Group::outletByGroup(int id, int addr)
 {
     QList<int> res;
     sDevData *dev = cm::devData(addr);
-    if(dev->cfg.nums.groupEn) {
+    //if(dev->cfg.nums.groupEn)
+    {
         uchar *ptr = dev->cfg.nums.group[id];
         for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
     } //else disGroupAlarm(id);
@@ -37,7 +38,7 @@ void Data_Group::groupWork()
 {
     for(int i=0; i<GROUP_NUM; ++i) {
         QList<int> ls = outletByGroup(i);
-        sumObjData(i, mDev->group, mDev->output, ls);
+        sumObjData(i, mDev->group, mDev->output, ls);        
     } setGroupSize(); groupOverrunOff(); groupTiming();
 }
 

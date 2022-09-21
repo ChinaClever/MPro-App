@@ -9,7 +9,7 @@ let password = 'password';
 let identify = '';
 let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
-let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","","","Content","Output","Group","Dual");
+let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
@@ -144,6 +144,9 @@ var jsonrpc = function()
       break;
       case 24:
         sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+      break;
+      case 25:
+        sessionStorage.setItem(type_name[type]+ addr +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
         sessionStorage.setItem(ver_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
@@ -376,7 +379,7 @@ function read_output_data(addr)
       clearInterval(time1);
     }
     if(i <= output_num && j <= sub_num){
-      if(j == 1 && i <= output_num){
+      if(i <= output_num){
         rpc.call('pduReadData',[addr,output,switch_,j,i]);
         rpc.call('pduReadData',[addr,output,cur_,j,i]);
         rpc.call('pduReadData',[addr,output,pow_,j,i]);
@@ -549,6 +552,18 @@ function read_tls_data(addr){
     }
     if(j < 5 || (j>10 && j<18) || (j>20 && j<28)){
       rpc.call('pduReadParam',[addr,tls_,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_group_info(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(group_num +1)){
+      clearInterval(time1);
+    }
+    if(j < group_num +1){
+      rpc.call('pduReadParam',[addr,25,j,0,0]);
     }
     j++;
   },3);

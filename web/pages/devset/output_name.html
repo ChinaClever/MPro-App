@@ -63,15 +63,20 @@
 			for(let i = 1;i<7;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","机架名称","","","",""];
+			lang[1] = ["","单元名称","","","",""];
 			lang[2] = ["","阅读模式","","","",""];
 			lang[3] = ["","设备选择","","","",""];
 			lang[4] = ["","序号","","","",""];
-			lang[5] = ["","机架名称","","","",""];
+			lang[5] = ["","单元名称","","","",""];
 			lang[6] = ["","设置模式","","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+			}
+		}
+		function lang_fun_(){
+			for(let j = 4;j<6;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
 			}
 		}
@@ -128,7 +133,7 @@
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
-				rpc.call('pduSetParam',[addr_,24,1,number,number,val]);
+				rpc.call('pduSetParam',[addr_,22,1,number,number,val]);
 				flash_html(ipt);
 			}else{}
 		}
@@ -140,7 +145,7 @@
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
-				lang_fun();
+				lang_fun_();
 			},500);
 		}
 		function buildSel(rows)
