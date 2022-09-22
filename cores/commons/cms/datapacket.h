@@ -23,7 +23,7 @@ typedef unsigned int uint;
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   (OUTPUT_NUM+6)
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
