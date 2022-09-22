@@ -4,42 +4,31 @@
 #include "cfg_com.h"
 #include "cfg_alarmstream.h"
 
-#define CFG_ALARM_FN    "cfg_alarm.bin"
-#define CFG_ALARM_DF    "cfg_alarm.df"
-#define CFG_PARAM_FN    "cfg_param.bin"
-#define CFG_PARAM_DF    "cfg_param.df"
+#define CFG_ALARM_FN    "alarm.cfg"
+#define CFG_ALARM_DF    "alarm.df"
 
 
-class Cfg_AlarmObj : public QObject
+class Cfg_AlarmObj
 {
-    Q_OBJECT
 public:
-    explicit Cfg_AlarmObj(QObject *parent = nullptr);
-
-    bool writeParams();
+    explicit Cfg_AlarmObj();
+    void alarm_run() {saveAlarms();}
     void writeAlarms();
-
-public slots:
-    void run() {saveAlarms();}
 
 protected:
     virtual void fillData()=0;
     virtual void unSequence()=0;
-    bool readParam(const QString &fn);
     bool readAlarm(const QString &fn);
     cfg::_sDevData *getDev() {return mData;}
 
 private:
+    void initAlarms();
     bool saveAlarms();
     QByteArray toDataStream();
     cfg::_sDevData *deDataStream(QByteArray &array);
 
-protected:
-    CThread *mThread;
-
 private:
     bool isRun;
-    QFile *mFile;
     cfg::_sDevData *mData;
     Cfg_AlarmStream *mDataStream;
 };

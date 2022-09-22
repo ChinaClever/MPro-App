@@ -22,8 +22,7 @@ static void *share_mem_get(uint size)
 
     shm = shmat(shmid, 0, 0); //将共享内存连接到当前进程的地址空间
     if(shm == (void*)-1) {
-        fprintf(stderr, "share mem shmat failed\n");
-        return NULL;
+        fprintf(stderr, "share mem shmat failed\n"); return NULL;
     } else printf("share mem shmat size %d\n", size/1024);
 
     return shm;

@@ -23,7 +23,7 @@ typedef unsigned int uint;
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   (OUTPUT_NUM+6)
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
@@ -32,7 +32,7 @@ typedef unsigned int uint;
 #define COM_RATE_ELE	10.0    // 电能
 #define COM_RATE_PF     100.0   // 功率因数
 #define COM_RATE_TEM	10.0    // 温度
-#define COM_RATE_HUM	10.0    // 湿度
+#define COM_RATE_HUM	1.0    // 湿度
 
 #define COM_MIN_VOL     (50*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
@@ -54,7 +54,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和8表示已报警 2和4表示预警
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -163,6 +163,7 @@ struct sRtuBoard
     uchar offLines[DEV_NUM];
     uchar chipStates[DEV_NUM];
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    uint reserve;
 };
 
 struct sDevNums
@@ -177,7 +178,6 @@ struct sDevNums
     uchar loopStarts[LOOP_NUM];
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
-    uint groupEn; // 组开关使能
     uint reserve[20];
 };
 
@@ -225,8 +225,9 @@ struct sParameter {
     uchar isBreaker; // 0没有断路器 1有断路器
     uint runTime; // 最近开关运行时间 分钟为单位
     uint totalTime; // 持续运行时间 单位小时
-    uint restartTimes; // 重启次数    
+    uint restartCnt; // 重启次数
     uint screenAngle; // 屏幕方位角
+    uint groupEn; // 组开关使能
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
@@ -244,6 +245,7 @@ struct sFaultCode {
     uint fault; // 是否在故障
     uint cnt[4][PACK_ARRAY_SIZE];
     uint code[PACK_ARRAY_SIZE];
+    uint reserve;
 };
 
 /**
@@ -273,6 +275,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
+    uint reserve;
 };
 
 
@@ -287,6 +290,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
+    char reserve[NAME_SIZE];
     uint prefixLen;
 };
 
@@ -304,6 +308,7 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
+    char reserve[NAME_SIZE];
 };
 
 /**

@@ -36,6 +36,9 @@ QDataStream& operator<<(QDataStream& in, Cfg_AlarmStream& data)
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
     in << toByteArray(ptr->tg);
 
+    for(int i=0; i<6; ++i) {size = 0; in << size; in << QByteArray();}
+    for(int i=0; i<6; ++i) in << QByteArray();
+
     return in;
 }
 
@@ -64,6 +67,9 @@ QDataStream& operator>>(QDataStream& out, Cfg_AlarmStream& data)
     out >> size; ptr->envSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->env[i] = toStruct<_sEnvData>(v);}
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
+
+    for(int i=0; i<6; ++i) {out >> size; out >> v;}
+    for(int i=0; i<6; ++i) out >> v;
 
     return out;
 }

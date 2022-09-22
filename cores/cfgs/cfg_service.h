@@ -1,12 +1,12 @@
-#ifndef CFG_READPARAM_H
-#define CFG_READPARAM_H
+#ifndef CFG_SERVICE_H
+#define CFG_SERVICE_H
 
 #include "cfg_devparam.h"
 
-class Cfg_ReadParam : public Cfg_AlarmInitial
+class Cfg_Service : public Cfg_devParam
 {
 public:
-    explicit Cfg_ReadParam(QObject *parent = nullptr);
+    explicit Cfg_Service();
     void readCfgParams();
 
 private:
@@ -28,4 +28,4 @@ private:
      Cfg_Com *mCfg;
 };
 
-#endif // CFG_READPARAM_H
+#endif // CFG_SERVICE_H

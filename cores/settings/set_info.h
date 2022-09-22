@@ -16,7 +16,7 @@ protected:
     bool setCfgNum(const sCfgItem &it, int value);
 
     int devInfoCfg(int addr, int type);
-    bool setInfoCfg(int addr, int type, int value);
+    bool setInfoCfg(int fc, int value);
     QVariant softwareVersion(int addr, int type);
 
 private:

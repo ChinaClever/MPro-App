@@ -6,12 +6,10 @@
 class Cfg_AlarmInitial : public Cfg_AlarmUnserialize
 {
 public:
-    explicit Cfg_AlarmInitial(QObject *parent = nullptr);
+    explicit Cfg_AlarmInitial();
     bool initialData();
-    bool initialParam();
 
 private:
-    void initDevInfo(sDevNums &it);
     void setAlarmUnit(sAlarmUnit &it, uchar size, uint rated);
     void initObjData(sObjData &it, uchar size, uint curRated);
 

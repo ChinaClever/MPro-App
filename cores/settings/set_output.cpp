@@ -77,7 +77,7 @@ bool Set_Output::groupCtrl(sDataItem &unit)
         ids = Data_Core::bulid()->outletByGroup(id-1);
     } else {
         for(int i=0; i<GROUP_NUM; ++i)
-            ids << Data_Core::bulid()->outletByGroup(id);
+            ids << Data_Core::bulid()->outletByGroup(i);
     }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
@@ -98,7 +98,7 @@ bool Set_Output::relaySet(sDataItem &unit)
             case DSub::Value:  ret = outputCtrl(unit); break;
             case DSub::Relays: ret = outputsCtrl(unit); break;
             case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-            default: ret = upMetaData(unit); Cfg_ReadWrite::bulid()->writeAlarms(); break;
+            default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
             } } relayOpLog(unit);
     } else if(unit.type == DType::Dual) {
         unit.addr = 1; ret = Cascade_Core::bulid()->masterSeting(unit);
@@ -135,7 +135,7 @@ QString Set_Output::grouping(int addr, int id)
 {
     QString res;
     QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
-    foreach(auto &i, ids) res += QString::number(i) +": ";
+    foreach(auto &i, ids) res += QString::number(i) +";";
     return res;
 }
 
@@ -180,20 +180,19 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
     uchar *ptr = dev->cfg.nums.group[it.fc];
     if(it.sub < OUTPUT_NUM) ptr[it.sub] = v.toInt();
     else {cout << it.sub; ret = false;}
-    if(ret) ret = Cfg_ReadWrite::bulid()->writeParams();
+    if(ret) Cfg_Core::bulid()->groupWrite();
     return ret;
 }
 
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
-    QStringList strs = v.toString().split("; ");
-    sDevData *dev = cm::devData(it.addr);
+    QStringList strs = v.toString().simplified().split(";");
+    sDevData *dev = cm::devData(it.addr); bool ret = true;
     uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
         int id = str.toInt(); ptr[id] = 1;
-    } bool ret = false;
-    if(strs.size()) ret = Cfg_ReadWrite::bulid()->writeParams();
+    } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
     return ret;
 }
 
@@ -248,7 +247,7 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
     }
 
     if(it.fc == 1){it.sub = id; opNameLog(it, v); }
-    else Cfg_ReadWrite::bulid()->writeAlarms();
+    else Cfg_Core::bulid()->writeAlarms();
     if(it.type == DType::Dual) {
         it.addr = 1; ret = Cascade_Core::bulid()->masterSetCfg(it, v);
     }

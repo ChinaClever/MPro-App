@@ -17,12 +17,12 @@ static void initSystem()
 static void startSnmpd()
 {
     QString custom = "/usr/data";
-    QString fn = "/etc/snmpd.conf";
+    QString fn = "/etc/snmp/snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
     // bool ret = App_Run::isRun("snmpd"); if(ret) return ;
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";
-    } else if(QFile::exists(custom + fn)) {
+    } else if(QFile::exists(fn)) {
         cmd +=  fn + " &";
     } else {
         cmd.clear();
