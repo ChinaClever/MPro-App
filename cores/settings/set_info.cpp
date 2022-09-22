@@ -96,9 +96,9 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case DType::Output: value = dev->outputNum; break;
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
-    case 6: value = dev->boards[it.sub]; break;
-    case 11: value = dev->loopStarts[it.sub];  break;
-    case 12: value = dev->loopEnds[it.sub];  break;
+    case 6: value = dev->boards[it.id]; break;
+    case 11: value = dev->loopStarts[it.id];  break;
+    case 12: value = dev->loopEnds[it.id];  break;
     default: cout << it.fc; break;
     }
     return value;
@@ -114,9 +114,9 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break;
-    case 6: key = "boards_" + QString::number(it.sub); dev->boards[it.sub] = value; break;
-    case 11: key = "loopStarts_" + QString::number(it.sub); dev->loopStarts[it.sub] = value;  break;
-    case 12: key = "loopEnds_" + QString::number(it.sub); dev->loopEnds[it.sub] = value;  break;
+    case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
+    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
+    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value;  break;
     default: ret = false; cout << it.fc; break;
     } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 

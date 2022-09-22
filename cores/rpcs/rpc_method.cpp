@@ -32,7 +32,7 @@ QString Rpc_Method::execute(const QString &cmd)
     return cm::execute(cmd);
 }
 
-int Rpc_Method::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+int Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
@@ -42,7 +42,7 @@ int Rpc_Method::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, ucha
     return mIt.value;
 }
 
-bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id;
@@ -50,16 +50,16 @@ bool Rpc_Method::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduSetParam(uchar type, uchar fc, const QVariant &value, uchar addr, uchar sub)
+bool Rpc_Method::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar addr, uchar id)
 {
     sCfgItem it; it.addr = addr; it.type = type;
-    it.txType = mTxType; it.fc = fc; it.sub = sub;
+    it.txType = mTxType; it.fc = fc; it.id = id;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Rpc_Method::pduGetParam(uchar type, uchar fc, uchar addr, uchar sub)
+QString Rpc_Method::pduCfgGet(uchar type, uchar fc, uchar addr, uchar id)
 {
-    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.sub = sub;
+    sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.id = id;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 
@@ -77,6 +77,6 @@ bool Rpc_Method::pduRelaysCtrl(int addr, int start, int num, uchar on)
     uchar sub = DSub::Relays;
     uchar type = start;
 
-    return pduSetData(addr, type, topic, sub, num, on);
+    return pduDataSet(addr, type, topic, sub, num, on);
 }
 
