@@ -76,27 +76,11 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.buzzerSw = cfg->readCfg("buzzerSw", 0, g).toInt();
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();
-    it.totalTime = cfg->readCfg("totalTime", 0, g).toInt();
-    it.restartCnt = cfg->readCfg("restartCnt", 0, g).toInt();
     it.screenAngle = cfg->readCfg("screenAngle", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
 }
 
-void Cfg_devParam::totalTimeWrite(uint h)
-{
-    Cfg_Obj *cfg = mDevCfg;
-    QString g = "devParams";
-    cfg->writeCfg("totalTime", h, g);
-}
-
-void Cfg_devParam::restartCntWrite()
-{
-    Cfg_Obj *cfg = mDevCfg; QString g = "devParams";
-    cm::masterDev()->cfg.param.restartCnt += 1;
-    uint n = cm::masterDev()->cfg.param.restartCnt;
-    cfg->writeCfg("restartCnt", n, g);
-}
 
 void Cfg_devParam::devParamWrite(const QString& key, const QVariant &v, const QString& g)
 {
@@ -110,6 +94,5 @@ void Cfg_devParam::initialParam()
     devNumRead(cfg->nums);
     uutInfoRead(cfg->uut);
     devParamRead(cfg->param);
-    restartCntWrite();
 }
 

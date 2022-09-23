@@ -54,8 +54,6 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
-    case 9: ret = it->runTime; break;
-    case 10: ret = it->totalTime; break;
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
     case 13: ret = it->screenAngle; break;
@@ -96,9 +94,9 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case DType::Output: value = dev->outputNum; break;
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
-    case 6: value = dev->boards[it.sub]; break;
-    case 11: value = dev->loopStarts[it.sub];  break;
-    case 12: value = dev->loopEnds[it.sub];  break;
+    case 6: value = dev->boards[it.id]; break;
+    case 11: value = dev->loopStarts[it.id];  break;
+    case 12: value = dev->loopEnds[it.id];  break;
     default: cout << it.fc; break;
     }
     return value;
@@ -114,9 +112,9 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break;
-    case 6: key = "boards_" + QString::number(it.sub); dev->boards[it.sub] = value; break;
-    case 11: key = "loopStarts_" + QString::number(it.sub); dev->loopStarts[it.sub] = value;  break;
-    case 12: key = "loopEnds_" + QString::number(it.sub); dev->loopEnds[it.sub] = value;  break;
+    case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
+    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
+    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value;  break;
     default: ret = false; cout << it.fc; break;
     } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
@@ -164,6 +162,42 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     }
 
     return ret;
+}
+
+
+QString Set_Info::process_log()
+{
+    QString fn = "usr/data/clever/cfg/process_log.txt";
+#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
+    fn = "process_log.txt";
+#endif
+    QFile file(fn); QByteArray array;
+    if(file.open(QIODevice::ReadOnly)) {
+        array =  file.readAll();
+    } file.close();
+
+    return array;
+}
+
+QVariant Set_Info::proStartupLog(const sCfgItem &it)
+{
+    QVariant res;
+    sProState *pro = &(cm::devData(it.addr)->pro);
+    sRunTime *run = nullptr; switch (it.fc) {
+    case 1: run = &(pro->core); break;
+    case 2: run = &(pro->daemon); break;
+    case 3: run = &(pro->lcd); break;
+    case 4: run = &(pro->sensor); break;
+    case 5: run = &(pro->sys); break;
+    case 10: res = process_log();
+    default: cout << it.fc; break;
+    }
+
+     if(run) {
+        if(it.id==1) res = run->runSec;
+        else res = run->start;
+    }
+    return res;
 }
 
 bool Set_Info::qrcodeGenerator(const QString& msg)

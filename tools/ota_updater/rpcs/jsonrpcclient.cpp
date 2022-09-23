@@ -20,7 +20,7 @@ int JsonRpcClient::pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, 
     return ret;
 }
 
-bool JsonRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool JsonRpcClient::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
     bool ret = false;
     auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value);

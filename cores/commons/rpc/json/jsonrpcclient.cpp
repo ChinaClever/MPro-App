@@ -11,6 +11,18 @@ JsonRpcClient::JsonRpcClient(QObject *parent)
 
 }
 
+QString JsonRpcClient::execute(const QString &cmd)
+{
+    QString ret;
+    auto result = rpc_client->call("execute", cmd);
+    if (result->isSuccess()) {
+        ret = result->result().toString();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+
+    return ret;
+}
 
 QString JsonRpcClient::pduMetaData(uchar addr)
 {
@@ -25,10 +37,10 @@ QString JsonRpcClient::pduMetaData(uchar addr)
     return ret;
 }
 
-int JsonRpcClient::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+int JsonRpcClient::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     int ret = -1;
-    auto result = rpc_client->call("pduGetData", addr, type, topic, sub, id);
+    auto result = rpc_client->call("pduDataGet", addr, type, topic, sub, id);
     if (result->isSuccess()) {
         ret = result->result().toInt();
     } else {
@@ -38,10 +50,10 @@ int JsonRpcClient::pduGetData(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-bool JsonRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool JsonRpcClient::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetData", addr, type, topic,sub, id, value);
+    auto result = rpc_client->call("pduDataSet", addr, type, topic,sub, id, value);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {
@@ -51,10 +63,10 @@ bool JsonRpcClient::pduSetData(uchar addr,  uchar type, uchar topic, uchar sub, 
     return ret;
 }
 
-QVariant JsonRpcClient::pduGetParam(uchar type, uchar fc, uchar addr, uchar sub)
+QVariant JsonRpcClient::pduCfgGet(uchar type, uchar fc, uchar id, uchar addr)
 {
     QVariant ret;
-    auto result = rpc_client->call("pduGetParam", type, fc, addr, sub);
+    auto result = rpc_client->call("pduCfgGet", type, fc, id, addr);
     if (result->isSuccess()) {
         ret = result->result();
     } else {
@@ -64,10 +76,10 @@ QVariant JsonRpcClient::pduGetParam(uchar type, uchar fc, uchar addr, uchar sub)
     return ret;
 }
 
-bool JsonRpcClient::pduSetParam(uchar type, uchar fc, const QVariant &value, uchar addr, uchar sub)
+bool JsonRpcClient::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id, uchar addr)
 {
     bool ret = false;
-    auto result = rpc_client->call("pduSetParam", type, fc, value, addr, sub);
+    auto result = rpc_client->call("pduCfgSet", type, fc, value, id, addr);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {

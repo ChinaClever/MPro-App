@@ -46,11 +46,12 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
-    case SFnCode::EINet: res = netAddrCfg(it.fc, it.sub); break;
+    case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
+    case SFnCode::EPro: res = proStartupLog(it); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;

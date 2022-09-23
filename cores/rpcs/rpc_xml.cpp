@@ -28,11 +28,11 @@ void Rpc_Xml::addMethods()
 {
     Rpc_Method *rpc = Rpc_Method::bulid(this);
     mXml->addMethod("execute", rpc, "execute");
+    mXml->addMethod("pduCfgSet", rpc, "pduCfgSet");
+    mXml->addMethod("pduCfgGet", rpc, "pduCfgGet");
     mXml->addMethod("pduLogFun", rpc, "pduLogFun");
-    mXml->addMethod("pduGetData", rpc, "pduGetData");
-    mXml->addMethod("pduSetData", rpc, "pduSetData");
+    mXml->addMethod("pduDataGet", rpc, "pduDataGet");
+    mXml->addMethod("pduDataSet", rpc, "pduDataSet");
     mXml->addMethod("pduMetaData", rpc, "pduMetaData");
-    mXml->addMethod("pduSetParam", rpc, "pduSetParam");
-    mXml->addMethod("pduGetParam", rpc, "pduGetParam");
     mXml->addMethod("pduRelaysCtrl", rpc, "pduRelaysCtrl");
 }

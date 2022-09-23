@@ -110,7 +110,7 @@ bool Set_Output::relaySet(sDataItem &unit)
 QString Set_Output::outputCfg(sCfgItem &it)
 {
     sDevData *dev = cm::devData(it.addr);
-    QString res; int id = it.sub; if(id) id--;
+    QString res; int id = it.id; if(id) id--;
     sObjData *obj = nullptr;
 
     switch (it.type) {
@@ -143,7 +143,7 @@ QString Set_Output::grouping(int addr, int id)
 QString Set_Output::outputName(int addr, int id)
 {    
     sCfgItem it; it.fc = 1; it.addr = addr;
-    it.type = SFnCode::EOutput; it.sub = id;
+    it.type = SFnCode::EOutput; it.id = id;
     return outputCfg(it);
 }
 
@@ -169,7 +169,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 {
     it.type = SFnCode::EOutput;
-    it.sub = it.fc; it.fc = 1;
+    it.id = it.fc; it.fc = 1;
     return outputSet(it, v);
 }
 
@@ -178,8 +178,8 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
     bool ret = true;
     sDevData *dev = cm::devData(it.addr);
     uchar *ptr = dev->cfg.nums.group[it.fc];
-    if(it.sub < OUTPUT_NUM) ptr[it.sub] = v.toInt();
-    else {cout << it.sub; ret = false;}
+    if(it.id < OUTPUT_NUM) ptr[it.id] = v.toInt();
+    else {cout << it.id; ret = false;}
     if(ret) Cfg_Core::bulid()->groupWrite();
     return ret;
 }
@@ -198,7 +198,7 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 {
-    QString prefix; bool res=true; int id = it.sub;
+    QString prefix; bool res=true; int id = it.id;
     sObjData *obj = nullptr; char *ptr = nullptr;
     sDevData *dev = cm::devData(it.addr);
 
@@ -229,9 +229,9 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
 {
-    int id = it.sub;
-    bool ret = false; if(it.sub){
-        it.sub--; ret = outputSetById(it, v);
+    int id = it.id;
+    bool ret = false; if(it.id){
+        it.id--; ret = outputSetById(it, v);
     } else {
         sObjData *obj = nullptr;
         sDevData *dev = cm::devData(it.addr);
@@ -242,11 +242,11 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
         default: qDebug() << Q_FUNC_INFO << it.type; return ret;
         }
         for(int i=0; i<obj->size; ++i) {
-            it.sub = i; ret = outputSetById(it, v);
+            it.id = i; ret = outputSetById(it, v);
         }
     }
 
-    if(it.fc == 1){it.sub = id; opNameLog(it, v); }
+    if(it.fc == 1){it.id = id; opNameLog(it, v); }
     else Cfg_Core::bulid()->writeAlarms();
     if(it.type == DType::Dual) {
         it.addr = 1; ret = Cascade_Core::bulid()->masterSetCfg(it, v);

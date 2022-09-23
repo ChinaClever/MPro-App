@@ -23,7 +23,7 @@ void App_NetAddr::inet_initFunSlot()
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
-        inet->en = 1; inet->mode = 0;
+        inet->en = 1; inet->dhcp = 0;
         qstrcpy(inet->gw, "192.168.1.1");
         qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
@@ -43,7 +43,7 @@ void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
     str = cfg->readCfg("dns", "", g).toString();
     qstrcpy(inet.dns, str.toStdString().c_str());
     inet.en = cfg->readCfg("en", 0, g).toInt();
-    inet.mode = cfg->readCfg("mode", 0, g).toInt();
+    inet.dhcp = cfg->readCfg("dhcp", 0, g).toInt();
     inet.prefixLen = cfg->readCfg("prefixLen", 0, g).toInt();
 }
 
@@ -55,7 +55,7 @@ void App_NetAddr::inet_writeCfg(sNetAddr &inet, const QString &g)
     cfg->writeCfg("gw", inet.gw, g);
     cfg->writeCfg("dns", inet.dns, g);
     cfg->writeCfg("mask", inet.mask, g);
-    cfg->writeCfg("mode", inet.mode, g);
+    cfg->writeCfg("dhcp", inet.dhcp, g);
     cfg->writeCfg("prefixLen", inet.prefixLen, g);
 }
 
@@ -75,7 +75,7 @@ void App_NetAddr::inet_setInterfaceSlot()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(strlen(net->name)) {
-        if(net->inet.mode) {
+        if(net->inet.dhcp) {
             inet_dhcp(net->name);
         } else {
             inet_setIpV4();

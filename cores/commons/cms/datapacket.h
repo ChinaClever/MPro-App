@@ -223,15 +223,28 @@ struct sParameter {
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
-    uint runTime; // 最近开关运行时间 分钟为单位
-    uint totalTime; // 持续运行时间 单位小时
-    uint restartCnt; // 重启次数
     uint screenAngle; // 屏幕方位角
     uint groupEn; // 组开关使能
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
     uint reserve[20];
+};
+
+struct sRunTime
+{
+    uint runSec; // 最近开关运行时间 秒钟为单位
+    char start[NAME_SIZE]; // 启动时间
+};
+
+struct sProState
+{
+    struct sRunTime sys; // 系统启动时间
+    struct sRunTime daemon; // 守护进程
+    struct sRunTime core; // 主程序启动时间
+    struct sRunTime lcd; // 屏幕启动时间
+    struct sRunTime sensor; // 传感器
+    struct sRunTime reserve;
 };
 
 struct sDevCfg {
@@ -271,6 +284,7 @@ struct sDevData
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
+    struct sProState pro; // 进程状态
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -282,9 +296,9 @@ struct sDevData
 struct sNetAddr
 {
 #ifndef SUPPORT_C
-    sNetAddr() {en = mode=0;}
+    sNetAddr() {en = dhcp=0;}
 #endif    
-    uchar en, mode;
+    uchar en, dhcp;
     char ip[NAME_SIZE];
     char gw[NAME_SIZE];
     char mask[NAME_SIZE];
@@ -348,18 +362,19 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
-             EINet=41, EWeb, ENtp, ESmtp};
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert,
+             EINet=41, EWeb, ENtp, ESmtp,
+             ELog=81, EPro, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
-    sCfgItem():addr(0),sub(0){}
+    sCfgItem():addr(0),id(0){}
 #endif
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar addr; // 地址
     uchar type; // 10 输出位  11 UUT信息
     uchar fc; // 功能码　0 表示统一设置
-    uchar sub;
+    uchar id;
 };
 
 #ifndef SUPPORT_C
