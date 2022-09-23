@@ -38,6 +38,7 @@ bool Mqtt_Client::createMqtt()
     }
 
     cfg.url = "192.168.1.100";   ///////======
+    cfg.type = 0;
 
     if(1 == cfg.type) {
         QHostAddress host(cfg.url);
