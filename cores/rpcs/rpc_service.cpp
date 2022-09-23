@@ -24,35 +24,20 @@ Rpc_Service *Rpc_Service::bulid(QObject *parent)
     return sington;
 }
 
-bool Rpc_Service::startJsonRpc(int en)
+bool Rpc_Service::startJsonRpc()
 {
-    sRpcIt *ptr = &rpcCfg.json; ptr->en = en;
+    sRpcIt *ptr = &rpcCfg.json;
     return mJson->startRpc(ptr->en, ptr->port);
 }
 
-bool Rpc_Service::setJsonPort(int port)
-{
-    sRpcIt *ptr = &rpcCfg.json;
-    ptr->port = port;
-    return startJsonRpc(ptr->en);
-}
-
-bool Rpc_Service::startXmlRpc(int en)
-{
-    sRpcIt *ptr = &rpcCfg.xml; ptr->en = en;
-    return mXml->startXmlRpc(ptr->en, ptr->port);
-}
-
-bool Rpc_Service::setXmlPort(int port)
+bool Rpc_Service::startXmlRpc()
 {
     sRpcIt *ptr = &rpcCfg.xml;
-    ptr->port = port;
-    return startXmlRpc(ptr->en);
+    return mXml->startXmlRpc(ptr->en, ptr->port);
 }
 
 void Rpc_Service::initFunSlot()
 {
-    rpcCfg.json.en = 1;   //////////////===========
     mJson->startRpc(rpcCfg.json.en, rpcCfg.json.port);
     mXml->startXmlRpc(rpcCfg.xml.en, rpcCfg.xml.port);
 }

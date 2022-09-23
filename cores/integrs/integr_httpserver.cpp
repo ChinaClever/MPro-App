@@ -150,24 +150,32 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
     }
 }
 
-void Integr_HttpServer::initHttpServer(int port)
+void Integr_HttpServer::initHttpServer(bool en, int port)
 {
-    static JQHttpServer::TcpServerManage tcpServerManage(2); // 设置最大处理线程数，默认2个
-    tcpServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ));
-    const auto listenSucceed = tcpServerManage.listen(QHostAddress::Any, port);
-    qDebug() << "HTTP server listen:" << port << listenSucceed;
+    static JQHttpServer::TcpServerManage *tcpServerManage=nullptr; // 设置最大处理线程数，默认2个
+    if(tcpServerManage) {delete tcpServerManage; tcpServerManage=nullptr;}
+    if(en) {
+        tcpServerManage = new JQHttpServer::TcpServerManage(2);
+        tcpServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ));
+        const auto listenSucceed = tcpServerManage->listen(QHostAddress::Any, port);
+        qDebug() << "HTTP server listen:" << port << listenSucceed;
+    }
 }
 
-void Integr_HttpServer::initHttpsServer(int port)
+void Integr_HttpServer::initHttpsServer(bool en, int port)
 {
 #ifndef QT_NO_SSL
-    static JQHttpServer::SslServerManage sslServerManage(2); // 设置最大处理线程数，默认2个
-    sslServerManage.setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
-    const auto listenSucceed = sslServerManage.listen( QHostAddress::Any, port,
-                                                       File::certFile(), File::keyFile()
-                                                       /*":/server.crt", ":/server.key"*/ );
-    qDebug() << "HTTPS server listen:" << port << listenSucceed;
+    static JQHttpServer::SslServerManage *sslServerManage=nullptr; // 设置最大处理线程数，默认2个
+    if(sslServerManage) {delete sslServerManage; sslServerManage=nullptr;}
+    if(en) {
+        sslServerManage = new JQHttpServer::SslServerManage(2);
+        sslServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
+        const auto listenSucceed = sslServerManage->listen( QHostAddress::Any, port,
+                                                           File::certFile(), File::keyFile()
+                                                           /*":/server.crt", ":/server.key"*/ );
+        qDebug() << "HTTPS server listen:" << port << listenSucceed;
+    }
 #else
-    qDebug() << "SSL not support"
+    qDebug() << "SSL not support";
 #endif
 }

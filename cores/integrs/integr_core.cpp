@@ -13,11 +13,12 @@ Integr_Core::Integr_Core(QObject *parent)
 
 void Integr_Core::httpServer()
 {
+    bool en = pushCfg.http.en;
+    int port = pushCfg.http.port;
     switch (pushCfg.http.enServ) {
-    case 1: Integr_HttpServer::initHttpServer(pushCfg.http.port); break;
-    case 2: Integr_HttpServer::initHttpsServer(pushCfg.http.port); break;
+    case 1: Integr_HttpServer::initHttpServer(en, port); break;
+    case 2: Integr_HttpServer::initHttpsServer(en, port); break;
     }
-    //Integr_HttpServer::initHttpsServer(3166);   ////=============
 }
 
 Integr_Core *Integr_Core::bulid(QObject *parent)

@@ -25,6 +25,7 @@ public:
     static Mqtt_Client *bulid(QObject *parent = nullptr);
     bool set(uchar fc, const QVariant &v);
     static sMqttCfg cfg;
+    void startMqtt();
     ~Mqtt_Client();
 
 signals:

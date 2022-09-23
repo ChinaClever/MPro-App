@@ -7,10 +7,10 @@
 
 sModbusSetting Mb_Core::modbusCfg;
 Mb_Core::Mb_Core(QObject *parent) : QThread{parent}
-{
-    mRtu = new Mb_Update(parent);
-    mTcp = new Mb_Update(parent);
-    mCfg = &modbusCfg;
+{    
+    mRtu = new Mb_Update(this);  mTcp = new Mb_Update(this); mCfg = &modbusCfg;
+    connect(this, &Mb_Core::connectTcpSig, this, &Mb_Core::connectTcpSlot);
+    connect(this, &Mb_Core::connectRtuSig, this, &Mb_Core::connectRtuSlot);
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)
@@ -26,10 +26,10 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
 
 void Mb_Core::initFunSlot()
 {
-    //mCfg->enTcp = 1;
-    //mCfg->port = 1502;
-    connectTcp(mCfg->enTcp);
-    connectRtu(mCfg->enRtu);
+    // mCfg->enTcp = 1;
+    // mCfg->port = 1502;
+    emit connectTcpSig();
+    emit connectRtuSig();
 }
 
 void Mb_Core::setAddress(int addr)
@@ -57,34 +57,22 @@ void Mb_Core::setRtu(int parameter, const QVariant &value)
     } if(ret) mRtu->setModbus(parameter, value);
 }
 
-bool Mb_Core::connectModbus(Mb_Update *mb, bool en, int rt)
-{
-    bool ret = true; if(en) {
-        //ret = mb->isConnectedModbus();
-        if(rt) ret = mb->connectTcp(mCfg->port);
-        else ret = mRtu->connectRtu(*mCfg);
-        if(ret) mb->mbUpdates();
-    } else {
-        ret = mb->isConnectedModbus();
-        if(ret) mb->disconnectModbus();
-    }
 
-    return ret;
+void Mb_Core::connectTcpSlot()
+{
+    bool ret = false;
+    mTcp->disconnectModbus();
+    if(mCfg->enTcp) ret =mTcp->connectTcp(mCfg->port);
+    if(ret) mTcp->mbUpdates();
 }
 
-bool Mb_Core::connectTcp(int en)
-{
-    mCfg->enTcp = en;
-    return connectModbus(mTcp, en, 1);
-}
-
-bool Mb_Core::connectRtu(int en)
+void Mb_Core::connectRtuSlot()
 {     
+    bool ret = false;mRtu->disconnectModbus();
     int res = cm::masterDev()->cfg.param.devMode;
-    bool ret = false; if(res == DevMode::DM_Rtu) {
-        mCfg->enRtu = en; ret = connectModbus(mRtu, en, 0);
-    }
-    return ret;
+    if(res == DevMode::DM_Rtu && mCfg->enRtu) {
+        ret = mRtu->connectRtu(*mCfg);
+    } if(ret) mRtu->mbUpdates();
 }
 
 void Mb_Core::run()
