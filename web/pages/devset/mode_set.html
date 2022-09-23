@@ -5,28 +5,12 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>integrate</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../../doc-lib/doc.css">
-		<style>
-			.panel-default{
-            border: none;
-            border-radius: 0px;
-            margin-bottom: 0px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-			}
-			.panel-default > .panel-heading{
-				color: #222;
-				font-size:13px;
-				background-color: #fff;
-				border-color: #e6e6e6;
-				padding: 10px 12px;
-			}
-		</style>
+		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -37,99 +21,231 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">模式设置</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_2">Modbus设置</span>
 							</div>
 						</div>
 					</div>
-					<div class="grid-col grid-col-7">
-						<table class="table table-striped text-center"></table>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left mode_set"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left sw_set"></table>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../../doc-lib/highlight.pack.js"></script>
-	<script src="../../doc-lib/doc.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
     <script>
-		//hljs.initHighlightingOnLoad();
-		var Input_state = new Array("开","闭","重启");
-		var State = new Array("关","开");
-
-		var Val = new Array(); 
-		var rpc = 0;
-		var output_status = new Array();
-		var j = 0;
-		var logs;
-		var time1 = 0;
-		function btn_click(btn)
-		{
-			var addr = parseInt(btn.id.slice(1))+1;
-			var stat = 0;
-			if(btn.innerText == Input_state[0]){
-				stat = 1;
+		read_cfg_info(0);
+		var mode_set = new Array("禁用","启用");
+		var baud_name = new Array("9600","19200","38400","57600","115200");
+		var databits_name = new Array("5","6","7","8");
+		var parity_name = new Array("None","Even","Odd");
+		var stopbits_name = new Array("1","2");
+		var select_name = new Array("rtu","addr","baud","parity","databits","stopbits","tcp","tcp_port");
+		var mode_data = new Array();
+		let lang = new Array();
+		lang_init();
+		function lang_init(){
+			for(let i = 0;i<14;i++){
+				lang[i] = new Array();
 			}
-			else if(btn.innerText == Input_state[1]){
-				stat = 0;
-			}
-			else{
-				stat = 2;
-			}
-			rpc.call('pduSetData',[0,addr,stat]);
-			alter("sending");
+			lang[1] = ["","MQTT设置","","","",""];
+			lang[2] = ["","MQTT设置","","","",""];
+			lang[3] = ["","MQTT是否开启:","","","",""];
+			lang[4] = ["","服务器地址:","","","",""];
+			lang[5] = ["","端口:","","","",""];
+			lang[6] = ["","Path:","","","",""];
+			lang[7] = ["","ClientID:","","","",""];
+			lang[8] = ["","用户名:","","","",""];
+			lang[9] = ["","密码:","","","",""];
+			lang[10] = ["","KeepAlive(S):","","","",""];
+			lang[11] = ["","Qos:","","","",""];
+			lang[12] = ["","连接状态:","","","",""];
+			lang[13] = ["","保存","","","",""];
+			lang[14] = ["","禁用","","","",""];
+			lang[15] = ["","0 消息最多传递一次","","","",""];
+			lang[16] = ["","1 消息传递最少一次","","","",""];
+			lang[17] = ["","2 消息仅传递一次","","","",""];
+			lang[18] = ["","已连接","","","",""];
+			lang[19] = ["","未连接","","","",""];
 		}
-		rpc = jsonrpc();
-		var time2 = setTimeout(function(){
-			rpc.call('pduGetInfo',[0,3,0,0,0]);
-			tick ++;
-			var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,1,0,i]);
-				}},100);
-			},800);
-
-		var time3 = setInterval(function(){
-			if(!tick && push){
-				push = 0;
-				$('.table-striped').html(buildTable(output_num));
+		function lang_fun(){
+			for(let i = 1;i < 10; i++){
+				document.getElementById("lang_" + i).value = mode_data[i];
 			}
-		},1000);
-		function buildTable(rows) {
-			var thead = '',
-				tbody = '';
-
-			for (var i = 0; i < rows; i++) {
-				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">名称</td>\
-					<td width ="12%">开关状态</td>\
-					<td width ="10%">顺序延时(S)</td>\
-					<td width ="30%"></td>\
-					<td width ="8%">开启</td>\
-					<td width ="8%">关闭</td>';
+		}
+		function read_data(){
+			for(var j = 1;j<13;j++){
+				if(j < 7 || j > 10){
+					modbus_data[j] = parseInt(sessionStorage.getItem(type_name[15]+ modbus_info[j]));
 				}
-				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
-				tbody += '<td></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
-				tbody += '</tr>';
 			}
-
+		}
+		$('.mode_set').html(buildTableMode());
+		$('.sw_set').html(buildTableSw());
+		setTimeout(function(){
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			var lab = 0,btn1 = 0,btn2 = 0,setbtn =0;
+			btn1 = document.getElementById(select_name[0]);
+			btn2 = document.getElementById(select_name[6]);
+			setbtn =  document.getElementById('save1');
+			for(var i = 1; i < (select_name.length-2);i++){
+				lab = document.getElementById(select_name[i]);
+				if(modbus_data[1] == 0){
+					lab.disabled = true;
+					setbtn.disabled = true;
+					btn1[modbus_data[1]].selected = true;
+				}
+				else{
+					lab.disabled = false;
+					setbtn.disabled = false;
+					btn1[modbus_data[1]].selected = true;
+				}
+				lab.value = modbus_data[i + 1];
+			}
+			lab = document.getElementById(select_name[7]);
+			setbtn =  document.getElementById('save2');
+			lab.value = modbus_data[12];
+			if(modbus_data[11] == 0){
+				lab.disabled = true;
+				setbtn.disabled = true;
+				btn2[modbus_data[11]].selected = true;
+			}else{
+				lab.disabled = false;
+				setbtn.disabled = false;
+				btn2[modbus_data[11]].selected = true;
+			}
+		}
+		function SetData(btn){
+			let mds_data = 0, setbtn = 0 ,lab = 0;
+			mds_data = parseInt(btn.value);
+			if(confirm("请确认是否开启此功能。")){
+				if(btn.id =="rtu"){
+					setbtn =  document.getElementById('save1');
+					for(var i = 1; i < (select_name.length-2);i++){
+						lab = document.getElementById(select_name[i]);
+						if(mds_data == 0){
+							lab.disabled = true;
+							setbtn.disabled = true;
+						}
+						else{
+							lab.disabled = false;
+							setbtn.disabled = false;
+						}
+					}
+					rpc.call('pduSetParam',[0,modbus,1,0,0,mds_data]);
+				}else{
+					setbtn =  document.getElementById('save2');
+					lab = document.getElementById(select_name[7]);
+					if(mds_data == 0){
+						lab.disabled = true;
+						setbtn.disabled = true;
+					}
+					else{
+						lab.disabled = false;
+						setbtn.disabled = false;
+					}
+					rpc.call('pduSetParam',[0,modbus,11,0,0,mds_data]);
+				}
+				flash_html();
+			}else{}
+		}
+		function flash_html(){
+			read_cfg_info(0);
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},800);
+		}
+		function rtuSet(){
+			var sel =0;
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 1 ;i<(select_name.length -2);i++){
+					sel = parseInt(document.getElementById(select_name[i]).value);
+					if(sel != modbus_data[i+1]){
+						rpc.call('pduSetParam',[0,modbus,(i+1),0,0,sel]);
+					}
+				}
+				flash_html();
+			}else{}
+		}
+		function tcpSet(){
+			if(confirm("请确认是否保存此次修改？")){
+				var sel = parseInt(document.getElementById(select_name[select_name.length -1]).value);
+				if(sel != modbus_data[12]){
+					rpc.call('pduSetParam',[0,modbus,12,0,0,sel]);
+				}
+				flash_html();
+			}else{}
+		}
+		function buildTableMode() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%">Modbus RTU设置</td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td>ModbusRtu启用：</td>';
+			tbody += '<td><select id ="rtu" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>Modbus地址：</td>';
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td>波特率：</td>';
+			tbody += '<td><select id ="baud">';
+			for(var i = 0; i<baud_name.length;i++){
+				tbody +='<option value ="'+i+'">'+baud_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>校验位：</td>';
+			tbody += '<td><select id ="parity">';
+			for(var i = 0; i<parity_name.length;i++){
+				tbody +='<option value ="'+i+'">'+parity_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>数据位：</td>';
+			tbody += '<td><select id ="databits">';
+			for(var i = 0; i<databits_name.length;i++){
+				tbody +='<option value ="'+i+'">'+databits_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>停止位：</td>';
+			tbody += '<td><select id ="stopbits">';
+			for(var i = 0; i<stopbits_name.length;i++){
+				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td><input id = "save1" type = "button" style ="width:60%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-
-		
+		function buildTableSw() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%">Modbus TCP设置</td>\
+				<td width ="85%"></td></tr>';
+			tbody += '<tr><td>ModbusTcp启用：</td>';
+			tbody += '<td><select id ="tcp" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td>Modbus端口号：</td>';
+			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+		}
     </script>
 </body>
 </html>
