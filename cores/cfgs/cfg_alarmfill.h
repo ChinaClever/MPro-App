@@ -6,7 +6,7 @@
 class Cfg_AlarmFill : public Cfg_AlarmObj
 {
 public:
-    explicit Cfg_AlarmFill(QObject *parent = nullptr);
+    explicit Cfg_AlarmFill();
 
 protected:
     void fillData() override ;

@@ -23,7 +23,7 @@ typedef unsigned int uint;
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 5
 #define GROUP_NUM 8
-#define PACK_ARRAY_SIZE   (OUTPUT_NUM+6)
+#define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
 // 倍率定义
 #define COM_RATE_VOL	10.0    // 电压
@@ -32,7 +32,7 @@ typedef unsigned int uint;
 #define COM_RATE_ELE	10.0    // 电能
 #define COM_RATE_PF     100.0   // 功率因数
 #define COM_RATE_TEM	10.0    // 温度
-#define COM_RATE_HUM	10.0    // 湿度
+#define COM_RATE_HUM	1.0    // 湿度
 
 #define COM_MIN_VOL     (50*COM_RATE_VOL)
 #define COM_MAX_VOL     (600*COM_RATE_VOL)
@@ -54,7 +54,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1表示已报警 2表示已纪录
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和8表示已报警 2和4表示预警
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -163,6 +163,7 @@ struct sRtuBoard
     uchar offLines[DEV_NUM];
     uchar chipStates[DEV_NUM];
     ushort br;  // 00	表示波特率9600(00默认9600，01为4800，02为9600，03为19200，04为38400)
+    uint reserve;
 };
 
 struct sDevNums
@@ -177,7 +178,6 @@ struct sDevNums
     uchar loopStarts[LOOP_NUM];
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
-    uint groupEn; // 组开关使能
     uint reserve[20];
 };
 
@@ -219,18 +219,33 @@ struct sParameter {
     uchar language; // 0 中文 1 英文
     uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
-    uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
-    uint runTime; // 最近开关运行时间 分钟为单位
-    uint totalTime; // 持续运行时间 单位小时
-    uint restartTimes; // 重启次数    
     uint screenAngle; // 屏幕方位角
+    uint groupEn; // 组开关使能
+    uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
+    uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
     uint reserve[20];
+};
+
+struct sRunTime
+{
+    uint runSec; // 最近开关运行时间 秒钟为单位
+    char start[NAME_SIZE]; // 启动时间
+};
+
+struct sProState
+{
+    struct sRunTime sys; // 系统启动时间
+    struct sRunTime daemon; // 守护进程
+    struct sRunTime core; // 主程序启动时间
+    struct sRunTime lcd; // 屏幕启动时间
+    struct sRunTime sensor; // 传感器
+    struct sRunTime reserve;
 };
 
 struct sDevCfg {
@@ -244,6 +259,7 @@ struct sFaultCode {
     uint fault; // 是否在故障
     uint cnt[4][PACK_ARRAY_SIZE];
     uint code[PACK_ARRAY_SIZE];
+    uint reserve;
 };
 
 /**
@@ -269,24 +285,27 @@ struct sDevData
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
+    struct sProState pro; // 进程状态
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
+    uint reserve;
 };
 
 
 struct sNetAddr
 {
 #ifndef SUPPORT_C
-    sNetAddr() {en = mode=0;}
+    sNetAddr() {en = dhcp=0;}
 #endif    
-    uchar en, mode;
+    uchar en, dhcp;
     char ip[NAME_SIZE];
     char gw[NAME_SIZE];
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
+    char reserve[NAME_SIZE];
     uint prefixLen;
 };
 
@@ -304,6 +323,7 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
+    char reserve[NAME_SIZE];
 };
 
 /**
@@ -343,18 +363,19 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EGrouping=21, EOutput, EGroup, EDual, EVersion=30, ESercret, ETlsCert, ELog=81, ECmd=111,
-             EINet=41, EWeb, ENtp, ESmtp};
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert,
+             EINet=41, EWeb, ENtp, ESmtp,
+             ELog=81, EPro, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
-    sCfgItem():addr(0),sub(0){}
+    sCfgItem():addr(0),id(0){}
 #endif
     uchar txType; // 通讯类型 1 UDP  3:SNMP  4：Zebra
     uchar addr; // 地址
     uchar type; // 10 输出位  11 UUT信息
     uchar fc; // 功能码　0 表示统一设置
-    uchar sub;
+    uchar id;
 };
 
 #ifndef SUPPORT_C

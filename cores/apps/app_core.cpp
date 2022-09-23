@@ -4,13 +4,13 @@
  *      Author: Lzy
  */
 #include "app_core.h"
-#include "cfg_rwmain.h"
+#include "cfg_core.h"
 
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
 {
     Shm::initShm(); compileTime();
-    Cfg_ReadWrite::bulid();
+    Cfg_Core::bulid();
 }
 
 App_Core *App_Core::bulid(QObject *parent)

@@ -12,3 +12,6 @@ contains(TARGET_ARCH, x86_64) {
 #        tools/app_pack \
         tools/ota_updater
 }
+
+SUBDIRS += \
+    cmds/process_log

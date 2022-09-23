@@ -8,7 +8,7 @@
 
 Sercret_TlsCert::Sercret_TlsCert()
 {
-    QFile crtFile(File::certFile());
+    QFile crtFile(File::certFile()); mCert = nullptr;
     if(crtFile.exists() && crtFile.open(QIODevice::ReadOnly)) {
         mCert = new QSslCertificate(&crtFile, QSsl::Pem);
     } crtFile.close();
@@ -57,7 +57,7 @@ QSslConfiguration Sercret_TlsCert::sslConfiguration()
 QString Sercret_TlsCert::effectiveDate()
 {
     QString res;
-    if(!mCert->isNull())
+    if(mCert)
         res = mCert->effectiveDate().toString("yyyy-MM-dd hh:mm:ss");
     return res;
 }
@@ -65,7 +65,7 @@ QString Sercret_TlsCert::effectiveDate()
 QString Sercret_TlsCert::expiryDate()
 {
     QString res;
-    if(!mCert->isNull())
+    if(mCert)
         res = mCert->expiryDate().toString("yyyy-MM-dd hh:mm:ss");
     return res;
 }
@@ -73,52 +73,52 @@ QString Sercret_TlsCert::expiryDate()
 // 返回此证书的加密摘要。
 QByteArray Sercret_TlsCert::digest()
 {
-    QByteArray res;
-    if(!mCert->isNull())
-        res = mCert->digest();
+    QByteArray res; if(mCert) {
+         res = mCert->digest();
+    }
     return res;
 }
 
 // 证书是否是自签名的。颁发者和主题相同则证书被认为是自签名的。
 bool Sercret_TlsCert::isSelfSigned()
 {
-    bool res=false;
-    if(!mCert->isNull())
-        res = mCert->isBlacklisted();
+    bool res=false; if(mCert) {
+         res = mCert->isBlacklisted();
+    }
     return res;
 }
 
 // 返回证书主题的公钥。
 QSslKey Sercret_TlsCert::publicKey()
 {
-    QSslKey res;
-    if(!mCert->isNull())
-        res = mCert->publicKey();
+    QSslKey res; if(mCert) {
+         res = mCert->publicKey();
+    }
     return res;
 }
 
 // 以十六进制格式返回证书的序列号字符串。
 QByteArray Sercret_TlsCert::serialNumber()
 {
-    QByteArray res;
-    if(!mCert->isNull())
+    QByteArray res; if(mCert) {
         res = mCert->serialNumber();
+    }
     return res;
 }
 
 QByteArray Sercret_TlsCert::version()
 {
-    QByteArray res;
-    if(!mCert->isNull())
+    QByteArray res; if(mCert) {
         res = mCert->version();
+    }
     return res;
 }
 
 QString Sercret_TlsCert::toText()
 {
-    QString res;
-    if(!mCert->isNull())
+    QString res; if(mCert) {
         res = mCert->toText();
+    }
     return res;
 }
 
@@ -143,8 +143,7 @@ QSslCertificate::SubjectInfo Sercret_TlsCert::toSubjectInfo(int id)
 
 QString Sercret_TlsCert::subjectInfo(int id)
 {
-    QString res;
-    if(!mCert->isNull()) {
+    QString res; if(mCert) {
         QSslCertificate::SubjectInfo info;
         info = toSubjectInfo(id);
         QStringList ls = mCert->subjectInfo(info);
@@ -155,8 +154,7 @@ QString Sercret_TlsCert::subjectInfo(int id)
 
 QString Sercret_TlsCert::issuerInfo(int id)
 {
-    QString res;
-    if(!mCert->isNull()) {
+    QString res; if(mCert) {
         QSslCertificate::SubjectInfo info;
         info = toSubjectInfo(id);
         QStringList ls = mCert->issuerInfo(info);

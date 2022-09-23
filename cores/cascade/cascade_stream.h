@@ -72,10 +72,12 @@ struct _sDevData
     sFaultCode dtc; // 故障码
     sRtuBoard rtu; // 传输情况
     sTgObjData tg; // 回路数据
+    sProState pro;
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
+    uchar reserve;
 };
 
 struct _sFrame {

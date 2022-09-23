@@ -112,7 +112,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         }
     }
 
-    if(mDev->cfg.param.runTime > 48*60) {
+    if(cm::runTime() > 48*60*60) {
         int t = QRandomGenerator::global()->bounded(500);
         cm::mdelay(t);
     } cm::mdelay(360);

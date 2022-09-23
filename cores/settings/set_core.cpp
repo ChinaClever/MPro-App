@@ -9,7 +9,7 @@
 
 Set_Core::Set_Core()
 {
-    Cfg_ReadWrite::bulid();
+    Cfg_Core::bulid();
 }
 
 Set_Core *Set_Core::bulid()
@@ -23,7 +23,7 @@ Set_Core *Set_Core::bulid()
 
 void Set_Core::writeAlarm()
 {
-    Cfg_ReadWrite::bulid()->writeAlarms();
+    Cfg_Core::bulid()->writeAlarms();
 }
 
 
@@ -46,11 +46,12 @@ QVariant Set_Core::getCfg(sCfgItem &it)
 
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
-    case SFnCode::EINet: res = netAddrCfg(it.fc, it.sub); break;
+    case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
+    case SFnCode::EPro: res = proStartupLog(it); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;
@@ -64,6 +65,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     bool ret = false; switch (it.type) {
     case SFnCode::EOutput: case SFnCode::EGroup:
     case SFnCode::EDual: ret = outputSet(it, v); break;
+    case SFnCode::EGroupSet: ret = groupSet(it, v); break;
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
 
@@ -78,7 +80,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.addr, it.fc, v.toInt()); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;

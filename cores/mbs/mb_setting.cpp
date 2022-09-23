@@ -5,6 +5,7 @@
  */
 #include "mb_setting.h"
 #include  "op_core.h"
+#include "mb_core.h"
 
 Mb_Setting::Mb_Setting(QObject *parent) : Mb_Env{parent}
 {
@@ -19,7 +20,7 @@ void Mb_Setting::mbSetUpdate()
 void Mb_Setting::upSetData()
 {
     vshort vs;
-    vs << mDevData->cfg.param.modbusAddr;
+    vs << Mb_Core::modbusCfg.addr;
     vs << mDevData->cfg.param.buzzerSw;
     vs << mDevData->cfg.param.drySw;
     setRegs(MbReg_Settings, vs);
@@ -27,7 +28,7 @@ void Mb_Setting::upSetData()
 
 void Mb_Setting::addrSet(ushort &v)
 {
-    mDevData->cfg.param.modbusAddr = v;
+    Mb_Core::modbusCfg.addr = v;
     setAddress(v);
     qDebug() << Q_FUNC_INFO << "modbus set addr OK" << v;
 }

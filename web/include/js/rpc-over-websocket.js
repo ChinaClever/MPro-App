@@ -9,10 +9,10 @@ let password = 'password';
 let identify = '';
 let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
-let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","","","Content","Output","Group","Dual");
+let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
-let alarm_name = new Array("","State","Mode","","Seq","Reset","","","Enable");
+let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","DevAddr","ModbusAddr","Freq","Buz","GroupSwEn","LastRunTime","RunTime","BreakerEn");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
@@ -25,6 +25,7 @@ let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UI
 let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
+let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -81,7 +82,6 @@ var jsonrpc = function()
         }else{
           sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
         }
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 4:
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
@@ -96,7 +96,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 10:
-        sessionStorage.setItem("Output_name"+ addr +'_'+num,JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem("Output_name"+ addr +'_'+topic,JSON.parse(evt.data).result[5]); 
       break;
       case 11:
         sessionStorage.setItem(uut_name[topic]+ addr ,JSON.parse(evt.data).result[5]); 
@@ -134,6 +134,9 @@ var jsonrpc = function()
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
       break;
+      case 19:
+        sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
+      break;
       case 21:
         sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
       break;
@@ -145,6 +148,9 @@ var jsonrpc = function()
       break;
       case 24:
         sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+      break;
+      case 25:
+        sessionStorage.setItem(type_name[type]+ addr +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
         sessionStorage.setItem(ver_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
@@ -320,11 +326,17 @@ function read_group_data(addr)
       rpc.call('pduReadData',[addr,group,energe_,1,j]);
       rpc.call('pduReadData',[addr,group,AVpow_,1,j]);
       rpc.call('pduReadData',[addr,group,pow_,3,j]);
+      rpc.call('pduReadData',[addr,group,pow_,2,j]);
+      rpc.call('pduReadData',[addr,group,pow_,4,j]);
+      rpc.call('pduReadData',[addr,group,pow_,5,j]);
+      rpc.call('pduReadData',[addr,group,pow_,6,j]);
+      rpc.call('pduReadData',[addr,group,pow_,7,j]);
+      rpc.call('pduReadData',[addr,group,pow_,7,j]);
     }
     j++;
   },1);
 }
-function read_dual_data(addr)
+function read_dual_param_data(addr)
 {
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
   var j = 1;
@@ -344,6 +356,24 @@ function read_dual_data(addr)
     j++;
   },1);
 }
+function read_dual_data(addr)
+{
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var j = 1;var i = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(sub_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= output_num && j <= sub_num){
+      rpc.call('pduReadData',[addr,dual,pow_,j,i]);
+    }
+    i++;
+    if(i >= (output_num + 1)){
+      i = 1;
+      j++;
+    }
+  },1);
+}
 function read_output_data(addr)
 {
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
@@ -353,17 +383,15 @@ function read_output_data(addr)
       clearInterval(time1);
     }
     if(i <= output_num && j <= sub_num){
-      if(j == 1 && i <= output_num){
+      if(i <= output_num){
+        rpc.call('pduReadData',[addr,output,switch_,j,i]);
+        rpc.call('pduReadData',[addr,output,cur_,j,i]);
+        rpc.call('pduReadData',[addr,output,pow_,j,i]);
         rpc.call('pduReadData',[addr,output,energe_,j,i]);
         rpc.call('pduReadData',[addr,output,pf_,j,i]);
         rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
         rpc.call('pduReadData',[addr,output,reactpow_,j,i]);
       }
-      if((j == 1 || j == 2 || j == 4 || j == 5 || j == 8) && i <= output_num){
-        rpc.call('pduReadData',[addr,output,switch_,j,i]);
-      }
-      rpc.call('pduReadData',[addr,output,cur_,j,i]);
-      rpc.call('pduReadData',[addr,output,pow_,j,i]);
     }
       i++;
       if(i >= parseInt(output_num + 1)){
@@ -435,7 +463,7 @@ function read_output_name(addr){
       clearInterval(time1);
     }
     if(j <= output_num){
-      rpc.call('pduReadParam',[addr,bit,0,0,j]);
+      rpc.call('pduReadParam',[addr,22,1,j,j]);
     }
     j++;
   },1);
@@ -528,6 +556,30 @@ function read_tls_data(addr){
     }
     if(j < 5 || (j>10 && j<18) || (j>20 && j<28)){
       rpc.call('pduReadParam',[addr,tls_,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_group_info(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(group_num +1)){
+      clearInterval(time1);
+    }
+    if(j < group_num +1){
+      rpc.call('pduReadParam',[addr,25,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_mqtt_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10 +1)){
+      clearInterval(time1);
+    }
+    if(j < 10 +1){
+      rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;
   },3);

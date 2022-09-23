@@ -284,7 +284,7 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("mode", it.mode);
+    obj.insert("mode", it.dhcp);
     obj.insert("ip", it.ip);
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);

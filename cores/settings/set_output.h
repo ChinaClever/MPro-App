@@ -17,6 +17,7 @@ protected:
     bool outputSet(sCfgItem &it, const QVariant &v);
     QString grouping(int addr, int id);
     bool groupingSet(sCfgItem &it, const QVariant &v);
+    bool groupSet(sCfgItem &it, const QVariant &v);
 
 private:
     bool groupCtrl(sDataItem &unit);

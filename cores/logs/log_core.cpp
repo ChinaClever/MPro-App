@@ -22,12 +22,10 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-        int cnt = cm::masterDev()->cfg.param.restartTimes++;
 
         sSysItem it;
-        it.module = "system";
+        it.module = "core";
         it.content = "Software startup ";
-        it.content += QString::number(cnt);
         sington->append(it);
     }
     return sington;

@@ -104,6 +104,8 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->lps = obj->lps;
     data->dc = obj->dc;
     data->hz = obj->hz;
+    data->pro = obj->pro;
+    data->reserve = obj->reserve;
 }
 
 bool Cascade_Unserialize::unSequence(uchar addr)

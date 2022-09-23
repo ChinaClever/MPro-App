@@ -41,24 +41,23 @@ QVariant Set_Info::softwareVersion(int addr, int type)
 int Set_Info::devInfoCfg(int addr, int type)
 {
     sDevData *dev = cm::devData(addr);
-    sDevCfg *it = &(dev->cfg);
+    sParameter *it = &(dev->cfg.param);
     int ret = 0;
 
     switch (type) {
     case 0: ret = dev->offLine;  break;
-    case 1: ret = it->param.devSpec; break;
+    case 1: ret = it->devSpec; break;
     case 2: ret = dev->status; break;
-    case 3: ret = it->param.devMode; break;
-    case 4: ret = it->param.cascadeAddr; break;
-    case 5: ret = it->param.modbusAddr; break;
-    case 6: ret = it->param.hz; break;
-    case 7: ret = it->param.buzzerSw; break;
-    case 8: ret = it->nums.groupEn; break;
-    case 9: ret = it->param.runTime; break;
-    case 10: ret = it->param.totalTime; break;
-    case 11: ret = it->param.isBreaker; break;
-    case 12: ret = it->param.vh; break;
-    case 13: ret = it->param.screenAngle; break;
+    case 3: ret = it->devMode; break;
+    case 4: ret = it->cascadeAddr; break;
+    case 6: ret = it->hz; break;
+    case 7: ret = it->buzzerSw; break;
+    case 8: ret = it->groupEn; break;
+    case 9: ret = it->eleLogEn; break;
+    case 10: ret = it->powLogEn; break;
+    case 11: ret = it->isBreaker; break;
+    case 12: ret = it->vh; break;
+    case 13: ret = it->screenAngle; break;
     default: cout << type; break;
     }
 
@@ -66,21 +65,23 @@ int Set_Info::devInfoCfg(int addr, int type)
 }
 
 
-bool Set_Info::setInfoCfg(int addr, int type, int value)
+bool Set_Info::setInfoCfg(int fc, int value)
 {
-    sDevCfg *it = &(cm::devData(addr)->cfg);
-    bool ret = true; switch (type) {
-    case 1: it->param.devSpec = value; break;
-    case 3: it->param.devMode = value; break;
-    case 4: it->param.cascadeAddr = value; break;
-    case 5: it->param.modbusAddr = value; break;
-    case 7: it->param.buzzerSw = value; break;
-    case 8: it->nums.groupEn = value; break;
-    case 11: it->param.isBreaker = value; break;
-    case 12: it->param.vh = value; break;
-    case 13: it->param.screenAngle = value; break;
-    default: ret = false; cout << type; break;
-    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
+    QString key, prefix = "devParams";
+    sParameter *it = &(cm::masterDev()->cfg.param);
+    bool ret = true; switch (fc) {
+    case 1: key = "devSpec"; it->devSpec = value; break;
+    case 3: key = "devMode"; it->devMode = value; break;
+    case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
+    case 7: key = "buzzerSw"; it->buzzerSw = value; break;
+    case 8: key = "groupEn"; it->groupEn = value; break;
+    case 9: key = "eleLogEn"; it->eleLogEn = value; break;
+    case 10: key = "powLogEn"; it->powLogEn = value; break;
+    case 11: key = "isBreaker";  it->isBreaker = value; break;
+    case 12: key = "vh"; it->vh = value; break;
+    case 13: key = "screenAngle"; it->screenAngle = value; break;
+    default: ret = false; cout << fc; break;
+    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     return ret;
 }
@@ -95,10 +96,9 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case DType::Output: value = dev->outputNum; break;
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
-    case 6: value = dev->boards[it.sub]; break;
-    case 7: value = dev->groupEn; break;
-    case 11: value = dev->loopStarts[it.sub];  break;
-    case 12: value = dev->loopEnds[it.sub];  break;
+    case 6: value = dev->boards[it.id]; break;
+    case 11: value = dev->loopStarts[it.id];  break;
+    case 12: value = dev->loopEnds[it.id];  break;
     default: cout << it.fc; break;
     }
     return value;
@@ -106,19 +106,19 @@ int Set_Info::devCfgNum(const sCfgItem &it)
 
 bool Set_Info::setCfgNum(const sCfgItem &it, int value)
 {    
+    QString key, prefix = "devNums";
     sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
     bool ret = true; switch(it.fc) {
-    case DType::Line: dev->lineNum = value; break;
-    case DType::Loop: dev->loopNum = value; break;
-    case DType::Output: dev->outputNum = value; break;
-    case 4: dev->boardNum = value; break;
-    case 5: dev->slaveNum = value; break;
-    case 6: dev->boards[it.sub] = value; break;
-    case 7: dev->groupEn = value; break;
-    case 11: dev->loopStarts[it.sub] = value;  break;
-    case 12: dev->loopEnds[it.sub] = value;  break;
+    case DType::Line: key = "lineNum"; dev->lineNum = value; break;
+    case DType::Loop: key = "loopNum"; dev->loopNum = value; break;
+    case DType::Output: key = "outputNum"; dev->outputNum = value; break;
+    case 4: key = "boardNum"; dev->boardNum = value; break;
+    case 5: key = "slaveNum"; dev->slaveNum = value; break;
+    case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
+    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
+    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value;  break;
     default: ret = false; cout << it.fc; break;
-    } if(ret) Cfg_ReadWrite::bulid()->writeParams();
+    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     return ret;
 }
@@ -143,7 +143,7 @@ QString Set_Info::getUut(int addr, uchar fc)
 bool Set_Info::setUut(uchar fc, const QVariant &v)
 {
     bool ret = true;
-    //QString prefix = "uut";
+    QString prefix = "uut";
     QString key; char *ptr=nullptr;
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
     char *str = v.toByteArray().data();
@@ -157,15 +157,49 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     default: ret = false; cout << fc; break;
     }
 
-    if(ptr) qstrcpy(ptr, str);
-    if(ret) Cfg_ReadWrite::bulid()->writeParams();
-    //Cfg_Obj *cfg = Cfg_Obj::bulid();
-    //cfg->writeCfg(key, QString(ptr), prefix);
-    // sOpItem db; db.op_src = "uut"; //opSrc(txType);
-    // db.content = QStringLiteral("%1 修改为 %2").arg(key, str);
-    // Log_Core::bulid()->append(db);
+    if(ptr) {
+        qstrcpy(ptr, str);
+        Cfg_Core *cfg = Cfg_Core::bulid();
+        cfg->devParamWrite(key, v, prefix);
+    }
 
     return ret;
+}
+
+
+QString Set_Info::process_log()
+{
+    QString fn = "usr/data/clever/cfg/process_log.txt";
+#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
+    fn = "process_log.txt";
+#endif
+    QFile file(fn); QByteArray array;
+    if(file.open(QIODevice::ReadOnly)) {
+        array =  file.readAll();
+    } file.close();
+
+    return array;
+}
+
+QVariant Set_Info::proStartupLog(const sCfgItem &it)
+{
+    QVariant res;
+    sProState *pro = &(cm::devData(it.addr)->pro);
+    sRunTime *run = nullptr; switch (it.fc) {
+    case 1: run = &(pro->core); break;
+    case 2: run = &(pro->daemon); break;
+    case 3: run = &(pro->lcd); break;
+    case 4: run = &(pro->sensor); break;
+    case 5: run = &(pro->sys); break;
+    case 10: res = process_log(); break;
+    default: cout << it.fc; break;
+    }
+
+    if(run) {
+        if(it.id==1) res = run->runSec;
+        else res = run->start;
+    }
+    return res;
 }
 
 bool Set_Info::qrcodeGenerator(const QString& msg)

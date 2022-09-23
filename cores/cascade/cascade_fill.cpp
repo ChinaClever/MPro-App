@@ -93,6 +93,8 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     obj->lps = data->lps;
     obj->dc = data->dc;
     obj->hz = data->hz;
+    obj->pro = data->pro;
+    obj->reserve = data->reserve;
 }
 
 void Cascade_Fill::fillData(uchar addr)
