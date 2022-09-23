@@ -90,11 +90,11 @@
 		show_data();
 		function show_data(){
 			for(let i=1;i<group_num+1;i++){
-				let num_ = 'b'.charCodeAt() +1;
+				let num_ = 'b'.charCodeAt(0) +i;
 				group_data[i] = new Array();
 				group_data[i] = group_info[i].split(";"); 
-				for(let j = 0;j < group_info[i].length;j++){
-					document.getElementById(String.fromCharCode(num_)+(parseInt(group_info[i][j]-1))).checked = true;
+				for(let j = 0;j < group_data[i].length -1;j++){
+					document.getElementById(String.fromCharCode(num_)+(parseInt(group_data[i][j]-1))).checked = true;
 				}
 			}
 		}
@@ -156,12 +156,13 @@
 		}
 		function flash_html(par)
 		{
-			read_output_name(0);
+			read_group_info(0);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
 				lang_fun_();
+				show_data();
 			},500);
 		}
 		function buildTable(rows) {
