@@ -219,12 +219,13 @@ struct sParameter {
     uchar language; // 0 中文 1 英文
     uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
-    uchar modbusAddr; // 通讯地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
     uint groupEn; // 组开关使能
+    uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
+    uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 

@@ -50,10 +50,11 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 2: ret = dev->status; break;
     case 3: ret = it->devMode; break;
     case 4: ret = it->cascadeAddr; break;
-    case 5: ret = it->modbusAddr; break;
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
+    case 9: ret = it->eleLogEn; break;
+    case 10: ret = it->powLogEn; break;
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
     case 13: ret = it->screenAngle; break;
@@ -72,9 +73,10 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 1: key = "devSpec"; it->devSpec = value; break;
     case 3: key = "devMode"; it->devMode = value; break;
     case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
-    case 5: key = "modbusAddr"; it->modbusAddr = value; break;
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
+    case 9: key = "eleLogEn"; it->eleLogEn = value; break;
+    case 10: key = "powLogEn"; it->powLogEn = value; break;
     case 11: key = "isBreaker";  it->isBreaker = value; break;
     case 12: key = "vh"; it->vh = value; break;
     case 13: key = "screenAngle"; it->screenAngle = value; break;
@@ -189,11 +191,11 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
     case 3: run = &(pro->lcd); break;
     case 4: run = &(pro->sensor); break;
     case 5: run = &(pro->sys); break;
-    case 10: res = process_log();
+    case 10: res = process_log(); break;
     default: cout << it.fc; break;
     }
 
-     if(run) {
+    if(run) {
         if(it.id==1) res = run->runSec;
         else res = run->start;
     }
