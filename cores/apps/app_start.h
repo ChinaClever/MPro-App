@@ -1,9 +1,9 @@
 #ifndef APP_START_H
 #define APP_START_H
 
-#include "app_timing.h"
+#include "app_runing.h"
 
-class App_Start : public App_Timing
+class App_Start : public App_Runing
 {
     Q_OBJECT
 public:

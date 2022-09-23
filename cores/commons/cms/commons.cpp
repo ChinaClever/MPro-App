@@ -131,6 +131,12 @@ sDevData *cm::devData(uchar id)
     return &(dataPacket()->data[id]);
 }
 
+uint cm::runTime(uchar id)
+{
+    sDevData *dev = devData(id);
+    return dev->pro.core.runSec;
+}
+
 sDevData *cm::masterDev()
 {
     return devData(0);

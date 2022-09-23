@@ -50,14 +50,14 @@ bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar addr, uchar id)
+bool Rpc_Method::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id, uchar addr)
 {
     sCfgItem it; it.addr = addr; it.type = type;
     it.txType = mTxType; it.fc = fc; it.id = id;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Rpc_Method::pduCfgGet(uchar type, uchar fc, uchar addr, uchar id)
+QString Rpc_Method::pduCfgGet(uchar type, uchar fc, uchar id, uchar addr)
 {
     sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.id = id;
     return Set_Core::bulid()->getCfg(it).toString();

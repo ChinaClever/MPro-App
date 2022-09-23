@@ -16,8 +16,8 @@ void usage()
     cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
     cout << "*    pduDataGet      addr  type   topic  sub    id" <<endl;
     cout << "*    pduDataSet      addr  type   topic  sub    id  value" <<endl;
-    cout << "*    pduCfgSet       type  fc     value  [addr] [id]" <<endl;
-    cout << "*    pduCfgGet       type  fc     [addr] [sub]" <<endl;
+    cout << "*    pduCfgSet       type  fc     value  [id]   [addr] " <<endl;
+    cout << "*    pduCfgGet       type  fc     [id]   [addr]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
     cout << "*    pduMetaData     [addr]  " <<endl;
     cout << "*******************************************************" <<endl;
@@ -68,9 +68,9 @@ void pduCfgGet(const QStringList &ls)
     int k = 0; if(ls.size() > 1) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
-        uchar addr = 0; if(ls.size() > 2) addr = ls.at(k++).toInt();
-        uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
-        qDebug() << rpc->pduCfgGet(type, fc, addr, sub).toString();
+        uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
+        uchar addr = 0; if(ls.size() > 3) addr = ls.at(k++).toInt();
+        qDebug() << rpc->pduCfgGet(type, fc, id, addr).toString();
     } else qCritical() << "pduCfgGet Parameter error";
 }
 
@@ -82,9 +82,9 @@ void pduCfgSet(const QStringList &ls)
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         QString value = ls.at(k++);
-        uchar addr = 0; if(ls.size() > 3) addr = ls.at(k++).toInt();
-        uchar sub = 0; if(ls.size() > 4) sub = ls.at(k++).toInt();
-        qDebug() << rpc->pduCfgSet(type, fc, value, addr, sub);
+        uchar id = 0; if(ls.size() > 3) id = ls.at(k++).toInt();
+        uchar addr = 0; if(ls.size() > 4) addr = ls.at(k++).toInt();
+        qDebug() << rpc->pduCfgSet(type, fc, value, id, addr);
     } else qCritical() << "pduCfgSet Parameter error";
 }
 
