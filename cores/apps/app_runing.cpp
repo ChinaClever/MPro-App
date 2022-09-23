@@ -9,6 +9,7 @@
 App_Runing::App_Runing(QObject *parent)
     : App_Smtp{parent}
 {
+    //std::system("process_log core"); //////=======
     QTimer::singleShot(755,this,SLOT(runing_initFunSlot()));
 }
 
