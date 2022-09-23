@@ -25,6 +25,7 @@ let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UI
 let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
+let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -132,6 +133,9 @@ var jsonrpc = function()
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
+      break;
+      case 19:
+        sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:
         sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
@@ -564,6 +568,18 @@ function read_group_info(addr){
     }
     if(j < group_num +1){
       rpc.call('pduReadParam',[addr,25,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_mqtt_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10 +1)){
+      clearInterval(time1);
+    }
+    if(j < 10 +1){
+      rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;
   },3);
