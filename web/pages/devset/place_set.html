@@ -5,28 +5,12 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>integrate</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../../doc-lib/doc.css">
-		<style>
-			.panel-default{
-            border: none;
-            border-radius: 0px;
-            margin-bottom: 0px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-			}
-			.panel-default > .panel-heading{
-				color: #222;
-				font-size:13px;
-				background-color: #fff;
-				border-color: #e6e6e6;
-				padding: 10px 12px;
-			}
-		</style>
+		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -37,99 +21,102 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">模式设置</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_1"></span>
 							</div>
 						</div>
 					</div>
-					<div class="grid-col grid-col-7">
-						<table class="table table-striped text-center"></table>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left place_set"></table>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../../doc-lib/highlight.pack.js"></script>
-	<script src="../../doc-lib/doc.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
     <script>
-		//hljs.initHighlightingOnLoad();
-		var Input_state = new Array("开","闭","重启");
-		var State = new Array("关","开");
-
-		var Val = new Array(); 
-		var rpc = 0;
-		var output_status = new Array();
-		var j = 0;
-		var logs;
-		var time1 = 0;
-		function btn_click(btn)
-		{
-			var addr = parseInt(btn.id.slice(1))+1;
-			var stat = 0;
-			if(btn.innerText == Input_state[0]){
-				stat = 1;
+		let language = 1;
+		var place_data = new Array();
+		let lang = new Array();
+		let id_val = new Array("","room","addr","dev","qr","sn",);
+		lang_init();
+		function lang_init(){
+			for(let i = 0;i<8;i++){
+				lang[i] = new Array();
 			}
-			else if(btn.innerText == Input_state[1]){
-				stat = 0;
-			}
-			else{
-				stat = 2;
-			}
-			rpc.call('pduSetData',[0,addr,stat]);
-			alter("sending");
+			lang[1] = ["","位置设置","","","",""];
+			lang[2] = ["","位置设置","","","",""];
+			lang[3] = ["","机房名称:","","","",""];
+			lang[4] = ["","位置信息:","","","",""];
+			lang[5] = ["","设备名称:","","","",""];
+			lang[6] = ["","二维码:","","","",""];
+			lang[7] = ["","设备SN码:","","","",""];
 		}
-		rpc = jsonrpc();
-		var time2 = setTimeout(function(){
-			rpc.call('pduGetInfo',[0,3,0,0,0]);
-			tick ++;
-			var time3 = setTimeout(function(){
-				for(var i = 1 ;i < output_num + 1;i++)
-				{
-					tick ++;
-					rpc.call('pduReadData',[0,3,1,0,i]);
-				}},100);
-			},800);
-
-		var time3 = setInterval(function(){
-			if(!tick && push){
-				push = 0;
-				$('.table-striped').html(buildTable(output_num));
+		function lang_fun(){
+			for(let i = 1;i < 8; i++){
+				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
-		},1000);
-		function buildTable(rows) {
-			var thead = '',
-				tbody = '';
-
-			for (var i = 0; i < rows; i++) {
-				if (i === 0) {
-					thead = '<tr><td width ="6%">序号</td>\
-					<td width ="26%">名称</td>\
-					<td width ="12%">开关状态</td>\
-					<td width ="10%">顺序延时(S)</td>\
-					<td width ="30%"></td>\
-					<td width ="8%">开启</td>\
-					<td width ="8%">关闭</td>';
+		}
+		function read_data(){
+			for(let i = 1;i<6;i++){
+				place_data[i] = sessionStorage.getItem(uut_name[i] + addr);
+			}
+		}
+		$('.place_set').html(buildTable());
+		lang_fun();
+		read_data();
+		showdata();
+		function showdata(){
+			for(let i = 1;i<id_val.length;i++){
+				document.getElementById(id_val[i]).value = place_data[i];
+			}
+		}
+		function SetData(btn){
+			let mds_data = 0;
+			mds_data = parseInt(btn.value);
+			if(confirm("请确认是否修改此项。")){
+				for(let  i = 0;i < id_val.length;i++){
+					if(id_val[i] == btn.id){
+						rpc.call("pduSetParam",[0,uut,i,0,0,mds_data]);
+					}
 				}
-				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" class = "input" id = "d'+ i + '"></input></td>';
-				tbody += '<td></td>';
-				// tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + Input_state[1] + '</button></td>';
-				// tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[2] + '</button></td>';
-				tbody += '</tr>';
-			}
-
+				flash_html();
+			}else{}
+		}
+		function flash_html(){
+			read_uut_info(0);
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},800);
+		}
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id = "lang_2"></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id = "lang_3"></td>';
+			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id = "lang_4"></td>';
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id = "lang_5"></td>';
+			tbody += '<td><input id = "dev" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id = "lang_6"></td>';
+			tbody += '<td><input id = "qr" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id = "lang_7"></td>';
+			tbody += '<td><input id = "sn" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-
-		
     </script>
 </body>
 </html>
