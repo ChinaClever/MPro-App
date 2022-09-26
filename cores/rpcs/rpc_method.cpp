@@ -23,8 +23,7 @@ Rpc_Method *Rpc_Method::bulid(QObject *parent)
 
 QString Rpc_Method::pduMetaData(uchar addr)
 {
-    uchar dc = Integr_Core::pushCfg.dataContent;
-    return Integr_JsonBuild::bulid()->getJson(addr, dc);
+    return Integr_JsonBuild::bulid()->getJson(addr);
 }
 
 QString Rpc_Method::execute(const QString &cmd)

@@ -19,10 +19,10 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
     return sington;
 }
 
-QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
-{
-    QByteArray array;
-    QJsonObject json = getJsonObject(addr, dc);
+QByteArray Integr_JsonBuild::getJson(uchar addr)
+{    
+    mDataContent = cm::masterDev()->cfg.param.dataContent;
+    QByteArray array; QJsonObject json = getJsonObject(addr);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,13 +31,12 @@ QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
     return array;
 }
 
-QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
+QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 {
     sDevData *dev = cm::devData(addr);  QJsonObject json;
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
-        mDataContent = dc;
         faultCode(dev, json);
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
@@ -90,10 +89,9 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
     arrayAppend(it.value, size, key+"_value", json, r);
     arrayAppend(it.alarm, size, key+"_alarm_status", json);
 
-    if(mDataContent == 0) dc = true;
-    else if(mDataContent == 1) {
+    if(mDataContent == 0){
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    }
+    } else if(mDataContent == 1) dc = true;
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r);
@@ -118,10 +116,9 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     int size = it.size; bool dc = false;
     arrayAppend(it.sw, size, key+"_state", json);
 
-    if(mDataContent == 0) dc = true;
-    else if(mDataContent == 1) {
+    if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    }
+    } else if(mDataContent == 1) dc = true;
 
     if(dc) {
         arrayAppend(it.alarm, size, key+"_alarm", json);

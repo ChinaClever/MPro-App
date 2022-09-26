@@ -199,7 +199,6 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 8: res = cfg->recvEn; break;
     case 9: res = cfg->recvPort; break;
 
-    case 10: res = cfg->dataContent; break;     /////////==========
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;

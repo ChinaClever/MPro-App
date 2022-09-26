@@ -226,6 +226,7 @@ struct sParameter {
     uint groupEn; // 组开关使能
     uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
     uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint dataContent; // 0：自动 1：最多 2：最少
     uint runTime; // 总运行时间 单位天
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁

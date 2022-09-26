@@ -23,7 +23,6 @@ struct sPushHttpCfg{
 struct sPushCfg{
     sPushUdpCfg udp[INTEGR_UDP_SIZE];
     sPushHttpCfg http;
-    int dataContent=0; // 0：自动 1：最多 2：最少
     int recvPort=3096;
     int recvEn = 0; // 0 禁此 1 UDP 2 TCP 3
     int sec = 5;
