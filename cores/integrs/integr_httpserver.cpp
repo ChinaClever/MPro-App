@@ -36,8 +36,7 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     int addr = it->getData(body, "id");
     if(addr >= 0) {
-        uchar dc = Integr_PushThread::pushCfg.dataContent;
-        QJsonObject obj = Integr_JsonBuild::bulid()->getJsonObject(addr, dc);
+        QJsonObject obj = Integr_JsonBuild::bulid()->getJsonObject(addr);
         mSession->replyJsonObject(obj);
     } else {
         ret = replyHttp("error", 211);

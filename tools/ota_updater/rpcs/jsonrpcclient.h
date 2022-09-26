@@ -9,8 +9,8 @@ class JsonRpcClient : public JsonRpcObj
 public:
     explicit JsonRpcClient(QObject *parent = nullptr);
 
-    int pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
-    bool pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value);
+    double pduMetaData(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
+    bool pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value);
 
     QString pduGetString(uchar addr, uchar fc, uchar id);
     bool pduSetString(uchar addr, uchar fc, uchar id, const QString &str);

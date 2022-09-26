@@ -64,7 +64,7 @@ void Integr_PushThread::workDown()
     for(int i=0; i<DEV_NUM; ++i) {
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
-            QByteArray res = mJson->getJson(i, pushCfg.dataContent);
+            QByteArray res = mJson->getJson(i);
             udpPush(res); mqttPush(res); httpPush(res);
         } if(isRun) delay();
     }

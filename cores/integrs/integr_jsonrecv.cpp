@@ -130,12 +130,16 @@ double Integr_JsonRecv::getDecimal(const sDataItem &it)
     case DTopic::Vol: res = COM_RATE_VOL; break;
     case DTopic::Cur: res = COM_RATE_CUR; break;
     case DTopic::Pow: res = COM_RATE_POW; break;
+    case DTopic::Ele: res = COM_RATE_ELE; break;
+    case DTopic::PF: res = COM_RATE_PF; break;
+    case DTopic::ArtPow: res = COM_RATE_POW; break;
+    case DTopic::ReactivePow: res = COM_RATE_POW; break;
     case DTopic::Tem: res = COM_RATE_TEM; break;
     case DTopic::Hum: res = COM_RATE_HUM; break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    if(DSub::Size==it.subtopic || DSub::Alarm==it.subtopic || DSub::EnAlarm==it.subtopic) res = 1;
+    if((DSub::Size==it.subtopic) || (DSub::Alarm==it.subtopic) || (DSub::EnAlarm==it.subtopic)) res = 1;
 
     return res;
 }

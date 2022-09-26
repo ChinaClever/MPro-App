@@ -26,6 +26,8 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
     case 5: res = inet->prefixLen; break;
     case 6: res = inet->dns; break;
     case 7: res = inet->dns2; break;
+    case 10: res = net->name; break;
+    case 11: res = net->mac; break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
     return res;
@@ -46,6 +48,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 5: inet->prefixLen = v.toInt(); break;
     case 6: qstrcpy(inet->dns, v.toByteArray().data());  break;
     case 7: qstrcpy(inet->dns2, v.toByteArray().data()); break;
+    case 11: qstrcpy(net->mac, v.toByteArray().data()); break;
     default: res = false; qDebug() << Q_FUNC_INFO; break;
     } if(res) App_Core::bulid()->inet_setInterface();
 

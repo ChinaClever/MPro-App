@@ -78,6 +78,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();
     it.screenAngle = cfg->readCfg("screenAngle", 0, g).toInt();
+    it.dataContent = cfg->readCfg("dataContent", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();

@@ -66,6 +66,8 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         result = pduSetParam(params);
     } else if (strcmp(method, "pduLogFun") == 0) {
         result = pduLogFun(params);
+    } else if (strcmp(method, "execute") == 0) {
+        result = execute(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
                               "error", "code", -32601, "message", "Method not found");
