@@ -6,14 +6,16 @@
 #include <QCoreApplication>
 #include "app_core.h"
 
-__attribute__((constructor)) void load_file()
+__attribute__((constructor)) void app_startup()
 {
-    printf("Constructor is called.\n");
+    std::system("./proc_log core_startup");
+    //printf("Constructor is called.\n");
 }
 
-__attribute__((destructor)) void unload_file()
+__attribute__((destructor)) void app_exit()
 {
-    printf("destructor is called.\n");
+    std::system("./proc_log core_exit");
+    //printf("destructor is called.\n");
 }
 
 int main(int argc, char *argv[])
