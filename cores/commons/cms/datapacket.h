@@ -219,6 +219,7 @@ struct sParameter {
     uchar language; // 0 中文 1 英文
     uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
+    uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器

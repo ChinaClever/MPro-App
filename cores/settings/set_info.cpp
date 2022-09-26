@@ -148,20 +148,20 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
+    QByteArray array = v.toByteArray();
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
-    char *str = v.toByteArray().data();
 
     switch (fc) {
     case 1: key = "room";  ptr = it->room; break;
     case 2: key = "location";  ptr = it->location; break;
     case 3: key = "devName";  ptr = it->devName; break;
-    case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
+    case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(array); break;
     case 5: key = "sn";  ptr = it->sn; break;
     default: ret = false; cout << fc; break;
     }
 
     if(ptr) {
-        qstrcpy(ptr, str);
+        qstrcpy(ptr, array.data());
         Cfg_Core *cfg = Cfg_Core::bulid();
         cfg->devParamWrite(key, v, prefix);
     }
