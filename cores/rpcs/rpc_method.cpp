@@ -32,21 +32,40 @@ QString Rpc_Method::execute(const QString &cmd)
     return cm::execute(cmd);
 }
 
-int Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+double Rpc_Method::getDecimal(const sDataItem &it)
+{
+    double res = 1; switch (it.topic) {
+    case DTopic::Vol: res = COM_RATE_VOL; break;
+    case DTopic::Cur: res = COM_RATE_CUR; break;
+    case DTopic::Pow: res = COM_RATE_POW; break;
+    case DTopic::Ele: res = COM_RATE_ELE; break;
+    case DTopic::PF: res = COM_RATE_PF; break;
+    case DTopic::ArtPow: res = COM_RATE_POW; break;
+    case DTopic::ReactivePow: res = COM_RATE_POW; break;
+    case DTopic::Tem: res = COM_RATE_TEM; break;
+    case DTopic::Hum: res = COM_RATE_HUM; break;
+    default: cout << Q_FUNC_INFO; break;
+    }
+
+    if((DSub::Size==it.subtopic) || (DSub::Alarm==it.subtopic) || (DSub::EnAlarm==it.subtopic)) res = 1;
+
+    return res;
+}
+
+double Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
     //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
     it->topic = topic; it->subtopic = sub; it->id = id;
-    it->rw = 0; it->value = 0;
-    Set_Core::bulid()->upMetaData(mIt);
-    return mIt.value;
+    it->rw = 0; it->value = 0; Set_Core::bulid()->upMetaData(mIt);
+    return mIt.value / getDecimal(mIt);
 }
 
-bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value)
 {
     sDataItem it; it.addr = addr; it.type = type;
-    it.topic = topic; it.subtopic = sub; it.id = id;
-    it.value = value; it.rw = 1; it.txType = mTxType;
+    it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
+    it.value = value * getDecimal(mIt); it.txType = mTxType;
     return Set_Core::bulid()->setting(it);
 }
 

@@ -12,8 +12,8 @@ public:
     void setTxType(uchar txType) {mTxType=txType;}
 
 public slots:
-    Q_INVOKABLE int pduDataGet(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
-    Q_INVOKABLE bool pduDataSet(uchar addr, uchar type, uchar topic, uchar sub, uchar id, uint value);
+    Q_INVOKABLE double pduDataGet(uchar addr, uchar type, uchar topic, uchar sub, uchar id);
+    Q_INVOKABLE bool pduDataSet(uchar addr, uchar type, uchar topic, uchar sub, uchar id, double value);
     Q_INVOKABLE bool pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id=0, uchar addr=0);
     Q_INVOKABLE QString pduCfgGet(uchar type, uchar fc, uchar id=0, uchar addr=0);
     Q_INVOKABLE QString pduLogFun(uchar type, uchar fc, int id=0, int cnt=0);
@@ -23,6 +23,9 @@ public slots:
 
 signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);
+
+private:
+    double getDecimal(const sDataItem &it);
 
 private:
     uchar mTxType=0;

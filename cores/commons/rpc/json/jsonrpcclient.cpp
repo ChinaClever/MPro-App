@@ -37,12 +37,12 @@ QString JsonRpcClient::pduMetaData(uchar addr)
     return ret;
 }
 
-int JsonRpcClient::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+double JsonRpcClient::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
 {
-    int ret = -1;
+    double ret = -1;
     auto result = rpc_client->call("pduDataGet", addr, type, topic, sub, id);
     if (result->isSuccess()) {
-        ret = result->result().toInt();
+        ret = result->result().toDouble();
     } else {
         qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
     }
@@ -50,7 +50,7 @@ int JsonRpcClient::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, u
     return ret;
 }
 
-bool JsonRpcClient::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, uint value)
+bool JsonRpcClient::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value)
 {
     bool ret = false;
     auto result = rpc_client->call("pduDataSet", addr, type, topic,sub, id, value);
