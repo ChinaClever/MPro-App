@@ -39,9 +39,6 @@ void Integr_PushThread::udpPush(const QByteArray &array)
             mUdp->writeDatagram(array, host, mCfg->udp[i].port);
         }
     }
-    //QHostAddress host("192.168.1.100");
-    //mUdp->writeDatagram(array, host, 8766);
-    //qDebug() << "AAAAAAAAAAA" << array.size();
 }
 
 void Integr_PushThread::httpPush(const QByteArray &array)

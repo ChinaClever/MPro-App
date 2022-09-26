@@ -134,7 +134,7 @@ sDevData *cm::devData(uchar id)
 uint cm::runTime(uchar id)
 {
     sDevData *dev = devData(id);
-    return dev->pro.core.runSec;
+    return dev->proc.core.runSec;
 }
 
 sDevData *cm::masterDev()

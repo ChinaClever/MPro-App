@@ -19,12 +19,8 @@ class Rpc_Service : public QObject
 public:
     static Rpc_Service *bulid(QObject *parent = nullptr);    
     static sRpcCfg rpcCfg;
-
-    bool startJsonRpc(int en);
-    bool setJsonPort(int port);
-
-    bool startXmlRpc(int en);
-    bool setXmlPort(int port);
+    bool startJsonRpc();
+    bool startXmlRpc();
 
 private slots:
     void initFunSlot();

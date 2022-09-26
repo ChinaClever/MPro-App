@@ -226,6 +226,7 @@ struct sParameter {
     uint groupEn; // 组开关使能
     uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
     uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint runTime; // 总运行时间 单位天
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
@@ -238,7 +239,7 @@ struct sRunTime
     char start[NAME_SIZE]; // 启动时间
 };
 
-struct sProState
+struct sProcState
 {
     struct sRunTime sys; // 系统启动时间
     struct sRunTime daemon; // 守护进程
@@ -285,7 +286,7 @@ struct sDevData
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
-    struct sProState pro; // 进程状态
+    struct sProcState proc; // 进程状态
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位

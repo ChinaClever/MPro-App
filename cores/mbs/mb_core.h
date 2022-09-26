@@ -17,14 +17,16 @@ public:
     void setAddress(int addr);
     void setPort(int port);
 
+signals:
+    void connectTcpSig();
+    void connectRtuSig();
+
 public slots:
     void run();
     void initFunSlot();
-    bool connectTcp(int en);
-    bool connectRtu(int en);
+    void connectTcpSlot();
+    void connectRtuSlot();
 
-private:
-    bool connectModbus(Mb_Update *mb, bool en, int rt);
 
 private:
     bool isRun=true;

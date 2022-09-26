@@ -11,7 +11,7 @@ sMqttCfg Mqtt_Client::cfg;
 Mqtt_Client::Mqtt_Client(QObject *parent)
     : QObject{parent}
 {
-    connectToHost();
+    startMqtt();
     connect(this, &Mqtt_Client::publish, this, &Mqtt_Client::onPublish);
 }
 
@@ -31,15 +31,7 @@ Mqtt_Client::~Mqtt_Client()
 
 bool Mqtt_Client::createMqtt()
 {
-    bool ret = true;
-    if(m_client) {
-        m_client->disconnectFromHost();
-        delete m_client; m_client=nullptr;
-    }
-
-    cfg.url = "192.168.1.100";   ///////======
-    cfg.type = 0;
-
+    bool ret = true;    
     if(1 == cfg.type) {
         QHostAddress host(cfg.url);
         m_client = new QMQTT::Client(host, cfg.port, this);
@@ -82,6 +74,18 @@ void Mqtt_Client::connectToHost()
     }
 }
 
+void Mqtt_Client::startMqtt()
+{
+    if(m_client) {
+        m_client->disconnectFromHost();
+        delete m_client; m_client=nullptr;
+    }
+
+    //cfg.url = "192.168.1.100";   ///////======
+    //cfg.type = 0;
+    if(cfg.type) connectToHost();
+
+}
 void Mqtt_Client::onConnected()
 {
     cfg.isConnected = true;

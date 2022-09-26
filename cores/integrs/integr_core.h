@@ -9,8 +9,6 @@ class Integr_Core : public Integr_Receiver
     explicit Integr_Core(QObject *parent = nullptr);
 public:
     static Integr_Core *bulid(QObject *parent = nullptr);
-
-private:
     void httpServer();
 };
 

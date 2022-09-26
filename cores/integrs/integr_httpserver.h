@@ -8,8 +8,8 @@ class Integr_HttpServer : public QObject
     Q_OBJECT
 public:
     explicit Integr_HttpServer(QObject *parent = nullptr);
-    static void initHttpServer(int port=23412);
-    static void initHttpsServer(int port=23413);
+    static void initHttpServer(bool en, int port=23412);
+    static void initHttpsServer(bool en, int port=23413);
 
 private:
     static bool execute(const QByteArray &body);

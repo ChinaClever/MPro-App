@@ -50,6 +50,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 2: ret = dev->status; break;
     case 3: ret = it->devMode; break;
     case 4: ret = it->cascadeAddr; break;
+    case 5: ret = it->runTime; break;
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
@@ -169,9 +170,9 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
 QString Set_Info::process_log()
 {
-    QString fn = "usr/data/clever/cfg/process_log.txt";
+    QString fn = "usr/data/clever/cfg/proc_log.txt";
 #if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "process_log.txt";
+    fn = "proc_log.txt";
 #endif
     QFile file(fn); QByteArray array;
     if(file.open(QIODevice::ReadOnly)) {
@@ -184,7 +185,7 @@ QString Set_Info::process_log()
 QVariant Set_Info::proStartupLog(const sCfgItem &it)
 {
     QVariant res;
-    sProState *pro = &(cm::devData(it.addr)->pro);
+    sProcState *pro = &(cm::devData(it.addr)->proc);
     sRunTime *run = nullptr; switch (it.fc) {
     case 1: run = &(pro->core); break;
     case 2: run = &(pro->daemon); break;
