@@ -32,13 +32,14 @@ void Cfg_AlarmUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayI
 
     unit.overrunOff[id] = it.overrunOff;
     unit.timingEn[id] = it.timingEn;
+    unit.timingOn[id][0] = unit.timingOff[id][0] = 0;
     qstrcpy(unit.timingOn[id], it.timingOn);
     qstrcpy(unit.timingOff[id], it.timingOff);
 }
 
 void Cfg_AlarmUnserialize::unObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
-    qstrcpy(data.name[id], obj.name);
+    //qstrcpy(data.name[id], obj.name);
     unAlarmUnit(id, data.vol, obj.vol);
     unAlarmUnit(id, data.cur, obj.cur);
     unAlarmUnit(id, data.pow, obj.pow);
