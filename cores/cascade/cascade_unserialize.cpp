@@ -104,7 +104,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->lps = obj->lps;
     data->dc = obj->dc;
     data->hz = obj->hz;
-    data->pro = obj->pro;
+    data->proc = obj->proc;
     data->reserve = obj->reserve;
 }
 

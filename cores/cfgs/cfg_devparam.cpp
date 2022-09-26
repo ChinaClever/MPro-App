@@ -79,7 +79,16 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();
     it.screenAngle = cfg->readCfg("screenAngle", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
+    it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
+}
+
+void Cfg_devParam::runTimeWrite()
+{
+    QString g = "devParams";
+    sDevCfg *cfg = &(cm::masterDev()->cfg);
+    uint t = cfg->param.runTime += 1;
+    devParamWrite("runTime", t, g);
 }
 
 

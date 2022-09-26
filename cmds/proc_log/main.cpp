@@ -4,15 +4,17 @@
  *      Author: Lzy
  */
 #include <QCoreApplication>
+#include <unistd.h>
 #include <QtCore>
 
 bool appendFile(const QString &msg)
 {
-    QString fn = "usr/data/clever/cfg/process_log.txt";
+    int t = QRandomGenerator::global()->bounded(10*1000);
+    QString fn = "usr/data/clever/cfg/proc_log.txt";
 #if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "process_log.txt";
+    fn = "proc_log.txt";
 #endif
-    QFile file(fn);
+    QFile file(fn); usleep(t);
     if(file.open(QIODevice::Append | QIODevice::Text)) {
         QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
         QByteArray array = t.toUtf8() + msg.toUtf8()+"\n";

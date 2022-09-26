@@ -8,6 +8,7 @@ public:
     Cfg_devParam();
 
     void groupWrite();
+    void runTimeWrite();
     void devParamWrite(const QString &key, const QVariant &v, const QString &g);
 
 protected:
