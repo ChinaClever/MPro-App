@@ -17,7 +17,7 @@
 #include "op_core.h"
 
 App_Start::App_Start(QObject *parent)
-    : App_Runing{parent}
+    : App_RunTime{parent}
 {
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));

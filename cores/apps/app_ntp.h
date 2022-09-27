@@ -1,7 +1,7 @@
 #ifndef APP_NTP_H
 #define APP_NTP_H
 #include "net_udp.h"
-#include "app_netaddr.h"
+#include "app_nftables.h"
 
 struct sNtpCfg {
     sNtpCfg(){udp_en=0; }
@@ -10,7 +10,7 @@ struct sNtpCfg {
     QString time_zone;
 };
 
-class App_Ntp : public App_NetAddr
+class App_Ntp : public App_Nftables
 {
     Q_OBJECT
 public:
