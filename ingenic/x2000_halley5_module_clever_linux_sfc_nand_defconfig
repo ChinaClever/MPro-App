@@ -56,7 +56,6 @@ CONFIG_MACH_XBURST2=y
 # CONFIG_MIPS_PARAVIRT is not set
 CONFIG_EXTAL_CLOCK=24
 CONFIG_INGENIC_GPT_CHECK=y
-# CONFIG_SUSPEND_TEST is not set
 
 #
 # SOC Type Selection
@@ -85,7 +84,7 @@ CONFIG_DT_X2000_MODULE_BASE=y
 # CONFIG_DT_X2000_YIAN_V10 is not set
 # CONFIG_DT_LIFESMART_480P is not set
 # CONFIG_DT_X2000_HUABY is not set
-CONFIG_DT_X2000_MODULE_BASE_DTS_FILE="x2000_halley5_module_base.dts"
+CONFIG_DT_X2000_MODULE_BASE_DTS_FILE="x2000_halley5_clever_module_base.dts"
 # CONFIG_RAW_BOOT is not set
 # CONFIG_FPGA_TEST is not set
 # CONFIG_XBURST2_CPU_TEST is not set
@@ -172,7 +171,6 @@ CONFIG_DEFAULT_MMAP_MIN_ADDR=4096
 # CONFIG_ZBUD is not set
 # CONFIG_ZSMALLOC is not set
 # CONFIG_IDLE_PAGE_TRACKING is not set
-CONFIG_FRAME_VECTOR=y
 CONFIG_SMP=y
 CONFIG_SYS_SUPPORTS_SMP=y
 CONFIG_NR_CPUS=2
@@ -743,11 +741,7 @@ CONFIG_BT_DEBUGFS=y
 #
 # Bluetooth device drivers
 #
-# CONFIG_BT_HCIBTUSB is not set
-# CONFIG_BT_HCIBTSDIO is not set
 # CONFIG_BT_HCIUART is not set
-# CONFIG_BT_HCIBCM203X is not set
-# CONFIG_BT_HCIBFUSB is not set
 # CONFIG_BT_HCIVHCI is not set
 # CONFIG_BT_MRVL is not set
 # CONFIG_AF_RXRPC is not set
@@ -809,11 +803,8 @@ CONFIG_DEVTMPFS_MOUNT=y
 # CONFIG_SYS_HYPERVISOR is not set
 # CONFIG_GENERIC_CPU_DEVICES is not set
 CONFIG_REGMAP=y
-CONFIG_REGMAP_I2C=y
-CONFIG_REGMAP_SPI=y
 CONFIG_REGMAP_MMIO=y
-CONFIG_DMA_SHARED_BUFFER=y
-# CONFIG_FENCE_TRACE is not set
+# CONFIG_DMA_SHARED_BUFFER is not set
 
 #
 # Bus devices
@@ -872,8 +863,6 @@ CONFIG_MTD_CFI_I2=y
 #
 # Self-contained MTD device drivers
 #
-# CONFIG_MTD_DATAFLASH is not set
-# CONFIG_MTD_SST25L is not set
 # CONFIG_MTD_SLRAM is not set
 # CONFIG_MTD_PHRAM is not set
 # CONFIG_MTD_MTDRAM is not set
@@ -954,11 +943,8 @@ CONFIG_BLK_DEV=y
 # CONFIG_SENSORS_APDS990X is not set
 # CONFIG_HMC6352 is not set
 # CONFIG_DS1682 is not set
-# CONFIG_TI_DAC7512 is not set
 # CONFIG_BMP085_I2C is not set
-# CONFIG_BMP085_SPI is not set
 # CONFIG_USB_SWITCH_FSA9480 is not set
-# CONFIG_LATTICE_ECP3_CONFIG is not set
 # CONFIG_SRAM is not set
 # CONFIG_INGENIC_AK5811 is not set
 # CONFIG_SY7734 is not set
@@ -968,17 +954,14 @@ CONFIG_BLK_DEV=y
 # EEPROM support
 #
 # CONFIG_EEPROM_AT24 is not set
-# CONFIG_EEPROM_AT25 is not set
 # CONFIG_EEPROM_LEGACY is not set
 # CONFIG_EEPROM_MAX6875 is not set
 # CONFIG_EEPROM_93CX6 is not set
-# CONFIG_EEPROM_93XX46 is not set
 
 #
 # Texas Instruments shared transport line discipline
 #
 # CONFIG_TI_ST is not set
-# CONFIG_SENSORS_LIS3_SPI is not set
 # CONFIG_SENSORS_LIS3_I2C is not set
 
 #
@@ -1021,44 +1004,11 @@ CONFIG_HAVE_IDE=y
 #
 CONFIG_SCSI_MOD=y
 # CONFIG_RAID_ATTRS is not set
-CONFIG_SCSI=y
-CONFIG_SCSI_DMA=y
+# CONFIG_SCSI is not set
+# CONFIG_SCSI_DMA is not set
 # CONFIG_SCSI_NETLINK is not set
-# CONFIG_SCSI_MQ_DEFAULT is not set
-CONFIG_SCSI_PROC_FS=y
-
-#
-# SCSI support type (disk, tape, CD-ROM)
-#
-CONFIG_BLK_DEV_SD=y
-# CONFIG_CHR_DEV_ST is not set
-# CONFIG_CHR_DEV_OSST is not set
-# CONFIG_BLK_DEV_SR is not set
-# CONFIG_CHR_DEV_SG is not set
-# CONFIG_CHR_DEV_SCH is not set
-# CONFIG_SCSI_CONSTANTS is not set
-# CONFIG_SCSI_LOGGING is not set
-# CONFIG_SCSI_SCAN_ASYNC is not set
-
-#
-# SCSI Transports
-#
-# CONFIG_SCSI_SPI_ATTRS is not set
-# CONFIG_SCSI_FC_ATTRS is not set
-# CONFIG_SCSI_ISCSI_ATTRS is not set
-# CONFIG_SCSI_SAS_ATTRS is not set
-# CONFIG_SCSI_SAS_LIBSAS is not set
-# CONFIG_SCSI_SRP_ATTRS is not set
-CONFIG_SCSI_LOWLEVEL=y
-# CONFIG_ISCSI_TCP is not set
-# CONFIG_ISCSI_BOOT_SYSFS is not set
-# CONFIG_SCSI_UFSHCD is not set
-# CONFIG_SCSI_DEBUG is not set
-# CONFIG_SCSI_DH is not set
-# CONFIG_SCSI_OSD_INITIATOR is not set
 # CONFIG_ATA is not set
 # CONFIG_MD is not set
-# CONFIG_TARGET_CORE is not set
 CONFIG_NETDEVICES=y
 CONFIG_NET_CORE=y
 # CONFIG_BONDING is not set
@@ -1097,9 +1047,6 @@ CONFIG_ETHERNET=y
 # CONFIG_NET_VENDOR_INTEL is not set
 # CONFIG_NET_VENDOR_MARVELL is not set
 # CONFIG_NET_VENDOR_MICREL is not set
-CONFIG_NET_VENDOR_MICROCHIP=y
-# CONFIG_ENC28J60 is not set
-# CONFIG_ENCX24J600 is not set
 # CONFIG_NET_VENDOR_NATSEMI is not set
 # CONFIG_ETHOC is not set
 # CONFIG_NET_VENDOR_QUALCOMM is not set
@@ -1145,26 +1092,15 @@ CONFIG_PHYLIB=y
 # CONFIG_MDIO_BUS_MUX_GPIO is not set
 # CONFIG_MDIO_BUS_MUX_MMIOREG is not set
 # CONFIG_MDIO_BCM_UNIMAC is not set
-# CONFIG_MICREL_KS8995MA is not set
 # CONFIG_PPP is not set
 # CONFIG_SLIP is not set
-CONFIG_USB_NET_DRIVERS=y
-# CONFIG_USB_CATC is not set
-# CONFIG_USB_KAWETH is not set
-# CONFIG_USB_PEGASUS is not set
-# CONFIG_USB_RTL8150 is not set
-# CONFIG_USB_RTL8152 is not set
-# CONFIG_USB_LAN78XX is not set
-# CONFIG_USB_USBNET is not set
-# CONFIG_USB_HSO is not set
-# CONFIG_USB_IPHETH is not set
+
+#
+# Host-side USB support is needed for USB Network Adapter support
+#
 CONFIG_WLAN=y
 # CONFIG_WLAN_WEXT_INTERFACE is not set
 # CONFIG_LIBERTAS_THINFIRM is not set
-# CONFIG_AT76C50X_USB is not set
-# CONFIG_USB_ZD1201 is not set
-# CONFIG_USB_NET_RNDIS_WLAN is not set
-# CONFIG_RTL8187 is not set
 # CONFIG_MAC80211_HWSIM is not set
 # CONFIG_ATH_CARDS is not set
 # CONFIG_B43 is not set
@@ -1176,10 +1112,7 @@ CONFIG_WLAN=y
 # CONFIG_P54_COMMON is not set
 # CONFIG_RT2X00 is not set
 # CONFIG_WL_MEDIATEK is not set
-# CONFIG_RTL_CARDS is not set
-# CONFIG_RTL8XXXU is not set
 # CONFIG_WL_TI is not set
-# CONFIG_ZD1211RW is not set
 # CONFIG_MWIFIEX is not set
 # CONFIG_CW1200 is not set
 # CONFIG_RSI_91X is not set
@@ -1254,8 +1187,6 @@ CONFIG_DEVMEM=y
 #
 # Non-8250 serial port support
 #
-# CONFIG_SERIAL_MAX3100 is not set
-# CONFIG_SERIAL_MAX310X is not set
 # CONFIG_SERIAL_UARTLITE is not set
 CONFIG_SERIAL_CORE=y
 CONFIG_SERIAL_CORE_CONSOLE=y
@@ -1264,7 +1195,6 @@ CONFIG_SERIAL_CORE_CONSOLE=y
 # CONFIG_SERIAL_BCM63XX is not set
 # CONFIG_SERIAL_ALTERA_JTAGUART is not set
 # CONFIG_SERIAL_ALTERA_UART is not set
-# CONFIG_SERIAL_IFX6X60 is not set
 # CONFIG_SERIAL_XILINX_PS_UART is not set
 # CONFIG_SERIAL_ARC is not set
 # CONFIG_SERIAL_FSL_LPUART is not set
@@ -1284,8 +1214,8 @@ CONFIG_INGENIC_CDBUS=y
 #
 CONFIG_I2C=y
 CONFIG_I2C_BOARDINFO=y
-# CONFIG_I2C_COMPAT is not set
-CONFIG_I2C_CHARDEV=y
+CONFIG_I2C_COMPAT=y
+# CONFIG_I2C_CHARDEV is not set
 # CONFIG_I2C_MUX is not set
 CONFIG_I2C_HELPER_AUTO=y
 
@@ -1312,11 +1242,8 @@ CONFIG_I2C_HELPER_AUTO=y
 #
 # External I2C/SMBus adapter drivers
 #
-# CONFIG_I2C_DIOLAN_U2C is not set
 # CONFIG_I2C_PARPORT_LIGHT is not set
-# CONFIG_I2C_ROBOTFUZZ_OSIF is not set
 # CONFIG_I2C_TAOS_EVM is not set
-# CONFIG_I2C_TINY_USB is not set
 
 #
 # Other I2C/SMBus bus drivers
@@ -1326,33 +1253,7 @@ CONFIG_I2C_HELPER_AUTO=y
 # CONFIG_I2C_DEBUG_CORE is not set
 # CONFIG_I2C_DEBUG_ALGO is not set
 # CONFIG_I2C_DEBUG_BUS is not set
-CONFIG_SPI=y
-# CONFIG_SPI_DEBUG is not set
-CONFIG_SPI_MASTER=y
-
-#
-# SPI Master Controller Drivers
-#
-# CONFIG_SPI_ALTERA is not set
-CONFIG_SPI_BITBANG=y
-# CONFIG_SPI_CADENCE is not set
-# CONFIG_SPI_GPIO is not set
-# CONFIG_SPI_IMG_SPFI is not set
-# CONFIG_SPI_FSL_SPI is not set
-# CONFIG_SPI_OC_TINY is not set
-# CONFIG_SPI_PXA2XX_PCI is not set
-# CONFIG_SPI_ROCKCHIP is not set
-# CONFIG_SPI_SC18IS602 is not set
-# CONFIG_SPI_XCOMM is not set
-# CONFIG_SPI_XILINX is not set
-# CONFIG_SPI_ZYNQMP_GQSPI is not set
-# CONFIG_SPI_DESIGNWARE is not set
-
-#
-# SPI Protocol Masters
-#
-CONFIG_SPI_SPIDEV=y
-# CONFIG_SPI_TLE62X0 is not set
+# CONFIG_SPI is not set
 # CONFIG_SPMI is not set
 # CONFIG_HSI is not set
 
@@ -1395,7 +1296,7 @@ CONFIG_GPIOLIB=y
 CONFIG_GPIO_DEVRES=y
 CONFIG_OF_GPIO=y
 # CONFIG_DEBUG_GPIO is not set
-CONFIG_GPIO_SYSFS=y
+# CONFIG_GPIO_SYSFS is not set
 
 #
 # Memory mapped GPIO drivers
@@ -1425,20 +1326,9 @@ CONFIG_GPIO_SYSFS=y
 #
 
 #
-# SPI GPIO expanders
-#
-# CONFIG_GPIO_74X164 is not set
-# CONFIG_GPIO_MAX7301 is not set
-# CONFIG_GPIO_MC33880 is not set
-
-#
 # SPI or I2C GPIO expanders
 #
 # CONFIG_GPIO_MCP23S08 is not set
-
-#
-# USB GPIO expanders
-#
 # CONFIG_W1 is not set
 # CONFIG_POWER_SUPPLY is not set
 # CONFIG_POWER_AVS is not set
@@ -1460,11 +1350,6 @@ CONFIG_WATCHDOG_CORE=y
 # CONFIG_BCM7038_WDT is not set
 # CONFIG_IMGPDC_WDT is not set
 # CONFIG_MEN_A21_WDT is not set
-
-#
-# USB-based Watchdog Cards
-#
-# CONFIG_USBPCWATCHDOG is not set
 CONFIG_SSB_POSSIBLE=y
 
 #
@@ -1491,14 +1376,11 @@ CONFIG_BCMA_POSSIBLE=y
 # CONFIG_MFD_BCM590XX is not set
 # CONFIG_MFD_AXP20X is not set
 # CONFIG_PMIC_DA903X is not set
-# CONFIG_MFD_DA9052_SPI is not set
 # CONFIG_MFD_DA9052_I2C is not set
 # CONFIG_MFD_DA9055 is not set
 # CONFIG_MFD_DA9062 is not set
 # CONFIG_MFD_DA9063 is not set
 # CONFIG_MFD_DA9150 is not set
-# CONFIG_MFD_DLN2 is not set
-# CONFIG_MFD_MC13XXX_SPI is not set
 # CONFIG_MFD_MC13XXX_I2C is not set
 # CONFIG_MFD_HI6421_PMIC is not set
 # CONFIG_HTC_PASIC3 is not set
@@ -1518,12 +1400,9 @@ CONFIG_BCMA_POSSIBLE=y
 # CONFIG_MFD_MAX8998 is not set
 # CONFIG_MFD_MT6397 is not set
 # CONFIG_MFD_MENF21BMC is not set
-# CONFIG_EZX_PCAP is not set
-# CONFIG_MFD_VIPERBOARD is not set
 # CONFIG_MFD_RETU is not set
 # CONFIG_MFD_PCF50633 is not set
 # CONFIG_MFD_RT5033 is not set
-# CONFIG_MFD_RTSX_USB is not set
 # CONFIG_MFD_RC5T583 is not set
 # CONFIG_MFD_RN5T567 is not set
 # CONFIG_MFD_RICOH619 is not set
@@ -1551,7 +1430,6 @@ CONFIG_MFD_SYSCON=y
 # CONFIG_MFD_TPS65910 is not set
 # CONFIG_MFD_TPS65912 is not set
 # CONFIG_MFD_TPS65912_I2C is not set
-# CONFIG_MFD_TPS65912_SPI is not set
 # CONFIG_MFD_TPS80031 is not set
 # CONFIG_TWL4030_CORE is not set
 # CONFIG_TWL6040_CORE is not set
@@ -1560,10 +1438,8 @@ CONFIG_MFD_SYSCON=y
 # CONFIG_MFD_TC3589X is not set
 # CONFIG_MFD_TMIO is not set
 # CONFIG_MFD_ARIZONA_I2C is not set
-# CONFIG_MFD_ARIZONA_SPI is not set
 # CONFIG_MFD_WM8400 is not set
 # CONFIG_MFD_WM831X_I2C is not set
-# CONFIG_MFD_WM831X_SPI is not set
 # CONFIG_MFD_WM8350_I2C is not set
 # CONFIG_MFD_WM8994 is not set
 CONFIG_REGULATOR=y
@@ -1596,182 +1472,7 @@ CONFIG_REGULATOR_GPIO=y
 # CONFIG_REGULATOR_TPS62360 is not set
 # CONFIG_REGULATOR_TPS65023 is not set
 # CONFIG_REGULATOR_TPS6507X is not set
-# CONFIG_REGULATOR_TPS6524X is not set
-CONFIG_MEDIA_SUPPORT=y
-
-#
-# Multimedia core support
-#
-CONFIG_MEDIA_CAMERA_SUPPORT=y
-# CONFIG_MEDIA_ANALOG_TV_SUPPORT is not set
-# CONFIG_MEDIA_DIGITAL_TV_SUPPORT is not set
-# CONFIG_MEDIA_RADIO_SUPPORT is not set
-# CONFIG_MEDIA_SDR_SUPPORT is not set
-# CONFIG_MEDIA_RC_SUPPORT is not set
-CONFIG_MEDIA_CONTROLLER=y
-CONFIG_VIDEO_DEV=y
-CONFIG_VIDEO_V4L2_SUBDEV_API=y
-CONFIG_VIDEO_V4L2=y
-# CONFIG_VIDEO_ADV_DEBUG is not set
-# CONFIG_VIDEO_FIXED_MINOR_RANGES is not set
-CONFIG_V4L2_MEM2MEM_DEV=y
-CONFIG_VIDEOBUF2_CORE=y
-CONFIG_VIDEOBUF2_MEMOPS=y
-CONFIG_VIDEOBUF2_DMA_CONTIG=y
-CONFIG_VIDEOBUF2_DMA_CONTIG_INGENIC=y
-CONFIG_CAMERA_RESERVE_KB_SIZE=0
-# CONFIG_TTPCI_EEPROM is not set
-
-#
-# Media drivers
-#
-# CONFIG_MEDIA_USB_SUPPORT is not set
-# CONFIG_V4L_PLATFORM_DRIVERS is not set
-CONFIG_V4L_MEM2MEM_DRIVERS=y
-# CONFIG_VIDEO_MEM2MEM_DEINTERLACE is not set
-# CONFIG_VIDEO_SH_VEU is not set
-CONFIG_V4L2_LOOPBACK_DEVICE=y
-# CONFIG_V4L_TEST_DRIVERS is not set
-
-#
-# Supported MMC/SDIO adapters
-#
-# CONFIG_CYPRESS_FIRMWARE is not set
-
-#
-# Media ancillary drivers (tuners, sensors, i2c, frontends)
-#
-# CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
-
-#
-# Encoders, decoders, sensors and other helper chips
-#
-
-#
-# Audio decoders, processors and mixers
-#
-# CONFIG_VIDEO_TVAUDIO is not set
-# CONFIG_VIDEO_TDA7432 is not set
-# CONFIG_VIDEO_TDA9840 is not set
-# CONFIG_VIDEO_TEA6415C is not set
-# CONFIG_VIDEO_TEA6420 is not set
-# CONFIG_VIDEO_MSP3400 is not set
-# CONFIG_VIDEO_CS5345 is not set
-# CONFIG_VIDEO_CS53L32A is not set
-# CONFIG_VIDEO_TLV320AIC23B is not set
-# CONFIG_VIDEO_UDA1342 is not set
-# CONFIG_VIDEO_WM8775 is not set
-# CONFIG_VIDEO_WM8739 is not set
-# CONFIG_VIDEO_VP27SMPX is not set
-# CONFIG_VIDEO_SONY_BTF_MPX is not set
-
-#
-# RDS decoders
-#
-# CONFIG_VIDEO_SAA6588 is not set
-
-#
-# Video decoders
-#
-# CONFIG_VIDEO_ADV7180 is not set
-# CONFIG_VIDEO_ADV7183 is not set
-# CONFIG_VIDEO_ADV7604 is not set
-# CONFIG_VIDEO_ADV7842 is not set
-# CONFIG_VIDEO_BT819 is not set
-# CONFIG_VIDEO_BT856 is not set
-# CONFIG_VIDEO_BT866 is not set
-# CONFIG_VIDEO_KS0127 is not set
-# CONFIG_VIDEO_ML86V7667 is not set
-# CONFIG_VIDEO_SAA7110 is not set
-# CONFIG_VIDEO_SAA711X is not set
-# CONFIG_VIDEO_TC358743 is not set
-# CONFIG_VIDEO_TVP514X is not set
-# CONFIG_VIDEO_TVP5150 is not set
-# CONFIG_VIDEO_TVP7002 is not set
-# CONFIG_VIDEO_TW2804 is not set
-# CONFIG_VIDEO_TW9903 is not set
-# CONFIG_VIDEO_TW9906 is not set
-# CONFIG_VIDEO_VPX3220 is not set
-
-#
-# Video and audio decoders
-#
-# CONFIG_VIDEO_SAA717X is not set
-# CONFIG_VIDEO_CX25840 is not set
-
-#
-# Video encoders
-#
-# CONFIG_VIDEO_SAA7127 is not set
-# CONFIG_VIDEO_SAA7185 is not set
-# CONFIG_VIDEO_ADV7170 is not set
-# CONFIG_VIDEO_ADV7175 is not set
-# CONFIG_VIDEO_ADV7343 is not set
-# CONFIG_VIDEO_ADV7393 is not set
-# CONFIG_VIDEO_ADV7511 is not set
-# CONFIG_VIDEO_AD9389B is not set
-# CONFIG_VIDEO_AK881X is not set
-# CONFIG_VIDEO_THS8200 is not set
-
-#
-# Camera sensor devices
-#
-# CONFIG_VIDEO_OV2659 is not set
-# CONFIG_VIDEO_OV7640 is not set
-# CONFIG_VIDEO_OV7670 is not set
-# CONFIG_VIDEO_OV9650 is not set
-# CONFIG_VIDEO_VS6624 is not set
-# CONFIG_VIDEO_MT9M032 is not set
-# CONFIG_VIDEO_MT9P031 is not set
-# CONFIG_VIDEO_MT9T001 is not set
-# CONFIG_VIDEO_MT9V011 is not set
-# CONFIG_VIDEO_MT9V032 is not set
-# CONFIG_VIDEO_SR030PC30 is not set
-# CONFIG_VIDEO_NOON010PC30 is not set
-# CONFIG_VIDEO_M5MOLS is not set
-# CONFIG_VIDEO_S5K6AA is not set
-# CONFIG_VIDEO_S5K6A3 is not set
-# CONFIG_VIDEO_S5K4ECGX is not set
-# CONFIG_VIDEO_S5K5BAF is not set
-# CONFIG_VIDEO_SMIAPP is not set
-# CONFIG_VIDEO_S5C73M3 is not set
-
-#
-# Flash devices
-#
-# CONFIG_VIDEO_ADP1653 is not set
-# CONFIG_VIDEO_AS3645A is not set
-# CONFIG_VIDEO_LM3560 is not set
-# CONFIG_VIDEO_LM3646 is not set
-
-#
-# Video improvement chips
-#
-# CONFIG_VIDEO_UPD64031A is not set
-# CONFIG_VIDEO_UPD64083 is not set
-
-#
-# Audio/Video compression chips
-#
-# CONFIG_VIDEO_SAA6752HS is not set
-
-#
-# Miscellaneous helper chips
-#
-# CONFIG_VIDEO_THS7303 is not set
-# CONFIG_VIDEO_M52790 is not set
-
-#
-# Customise DVB Frontends
-#
-# CONFIG_DVB_AU8522_V4L is not set
-# CONFIG_DVB_TUNER_DIB0070 is not set
-# CONFIG_DVB_TUNER_DIB0090 is not set
-
-#
-# Tools to develop new frontends
-#
-# CONFIG_DVB_DUMMY_FE is not set
+# CONFIG_MEDIA_SUPPORT is not set
 
 #
 # Graphics support
@@ -1806,8 +1507,6 @@ CONFIG_FB_CMDLINE=y
 #
 # CONFIG_FB_OPENCORES is not set
 # CONFIG_FB_S1D13XXX is not set
-# CONFIG_FB_SMSCUFX is not set
-# CONFIG_FB_UDL is not set
 # CONFIG_FB_IBM_GXT4500 is not set
 # CONFIG_FB_VIRTUAL is not set
 # CONFIG_FB_METRONOME is not set
@@ -1818,19 +1517,7 @@ CONFIG_FB_CMDLINE=y
 # CONFIG_FB_SSD1307 is not set
 CONFIG_BACKLIGHT_LCD_SUPPORT=y
 CONFIG_LCD_CLASS_DEVICE=y
-# CONFIG_LCD_L4F00242T03 is not set
-# CONFIG_LCD_LMS283GF05 is not set
-# CONFIG_LCD_LTV350QV is not set
-# CONFIG_LCD_ILI922X is not set
-# CONFIG_LCD_ILI9320 is not set
-# CONFIG_LCD_TDO24M is not set
-# CONFIG_LCD_VGG2432A4 is not set
 # CONFIG_LCD_PLATFORM is not set
-# CONFIG_LCD_S6E63M0 is not set
-# CONFIG_LCD_LD9040 is not set
-# CONFIG_LCD_AMS369FG06 is not set
-# CONFIG_LCD_LMS501KF03 is not set
-# CONFIG_LCD_HX8357 is not set
 CONFIG_BACKLIGHT_CLASS_DEVICE=y
 CONFIG_BACKLIGHT_GENERIC=y
 # CONFIG_BACKLIGHT_PM8941_WLED is not set
@@ -1851,132 +1538,7 @@ CONFIG_DUMMY_CONSOLE_COLUMNS=80
 CONFIG_DUMMY_CONSOLE_ROWS=25
 # CONFIG_FRAMEBUFFER_CONSOLE is not set
 # CONFIG_LOGO is not set
-CONFIG_SOUND=y
-# CONFIG_SOUND_OSS_CORE is not set
-CONFIG_SND=y
-CONFIG_SND_TIMER=y
-CONFIG_SND_PCM=y
-# CONFIG_SND_DMAENGINE_PCM is not set
-CONFIG_SND_JACK=y
-# CONFIG_SND_SEQUENCER is not set
-# CONFIG_SND_MIXER_OSS is not set
-# CONFIG_SND_PCM_OSS is not set
-CONFIG_SND_PCM_TIMER=y
-# CONFIG_SND_HRTIMER is not set
-CONFIG_SND_DYNAMIC_MINORS=y
-CONFIG_SND_MAX_CARDS=32
-CONFIG_SND_SUPPORT_OLD_API=y
-CONFIG_SND_PROC_FS=y
-CONFIG_SND_VERBOSE_PROCFS=y
-# CONFIG_SND_VERBOSE_PRINTK is not set
-# CONFIG_SND_DEBUG is not set
-# CONFIG_SND_RAWMIDI_SEQ is not set
-# CONFIG_SND_OPL3_LIB_SEQ is not set
-# CONFIG_SND_OPL4_LIB_SEQ is not set
-# CONFIG_SND_SBAWE_SEQ is not set
-# CONFIG_SND_EMU10K1_SEQ is not set
-# CONFIG_SND_DRIVERS is not set
-
-#
-# HD-Audio
-#
-CONFIG_SND_HDA_PREALLOC_SIZE=64
-# CONFIG_SND_SPI is not set
-# CONFIG_SND_MIPS is not set
-# CONFIG_SND_USB is not set
-CONFIG_SND_SOC=y
-# CONFIG_SND_ATMEL_SOC is not set
-# CONFIG_SND_DESIGNWARE_I2S is not set
-
-#
-# SoC Audio for Freescale CPUs
-#
-
-#
-# Common SoC Audio options for Freescale CPUs:
-#
-# CONFIG_SND_SOC_FSL_ASRC is not set
-# CONFIG_SND_SOC_FSL_SAI is not set
-# CONFIG_SND_SOC_FSL_SSI is not set
-# CONFIG_SND_SOC_FSL_SPDIF is not set
-# CONFIG_SND_SOC_FSL_ESAI is not set
-# CONFIG_SND_SOC_IMX_AUDMUX is not set
-
-#
-# Allwinner SoC Audio support
-#
-# CONFIG_SND_SUN4I_CODEC is not set
-# CONFIG_SND_SOC_XTFPGA_I2S is not set
-CONFIG_SND_SOC_I2C_AND_SPI=y
-
-#
-# CODEC drivers
-#
-# CONFIG_SND_SOC_AC97_CODEC is not set
-# CONFIG_SND_SOC_ADAU1701 is not set
-# CONFIG_SND_SOC_AK4104 is not set
-# CONFIG_SND_SOC_AK4554 is not set
-# CONFIG_SND_SOC_AK4613 is not set
-# CONFIG_SND_SOC_AK4642 is not set
-# CONFIG_SND_SOC_AK5386 is not set
-# CONFIG_SND_SOC_ALC5623 is not set
-# CONFIG_SND_SOC_CS35L32 is not set
-# CONFIG_SND_SOC_CS42L51_I2C is not set
-# CONFIG_SND_SOC_CS42L52 is not set
-# CONFIG_SND_SOC_CS42L56 is not set
-# CONFIG_SND_SOC_CS42L73 is not set
-# CONFIG_SND_SOC_CS4265 is not set
-# CONFIG_SND_SOC_CS4270 is not set
-# CONFIG_SND_SOC_CS4271_I2C is not set
-# CONFIG_SND_SOC_CS4271_SPI is not set
-# CONFIG_SND_SOC_CS42XX8_I2C is not set
-# CONFIG_SND_SOC_CS4349 is not set
-# CONFIG_SND_SOC_ES8328 is not set
-# CONFIG_SND_SOC_GTM601 is not set
-# CONFIG_SND_SOC_PCM1681 is not set
-# CONFIG_SND_SOC_PCM1792A is not set
-# CONFIG_SND_SOC_PCM512x_I2C is not set
-# CONFIG_SND_SOC_PCM512x_SPI is not set
-# CONFIG_SND_SOC_RT5631 is not set
-# CONFIG_SND_SOC_RT5677_SPI is not set
-# CONFIG_SND_SOC_SGTL5000 is not set
-# CONFIG_SND_SOC_SIRF_AUDIO_CODEC is not set
-# CONFIG_SND_SOC_SPDIF is not set
-# CONFIG_SND_SOC_SSM2602_SPI is not set
-# CONFIG_SND_SOC_SSM2602_I2C is not set
-# CONFIG_SND_SOC_SSM4567 is not set
-# CONFIG_SND_SOC_STA32X is not set
-# CONFIG_SND_SOC_STA350 is not set
-# CONFIG_SND_SOC_STI_SAS is not set
-# CONFIG_SND_SOC_TAS2552 is not set
-# CONFIG_SND_SOC_TAS5086 is not set
-# CONFIG_SND_SOC_TAS571X is not set
-# CONFIG_SND_SOC_TFA9879 is not set
-# CONFIG_SND_SOC_TLV320AIC23_I2C is not set
-# CONFIG_SND_SOC_TLV320AIC23_SPI is not set
-# CONFIG_SND_SOC_TLV320AIC31XX is not set
-# CONFIG_SND_SOC_TLV320AIC3X is not set
-# CONFIG_SND_SOC_TS3A227E is not set
-# CONFIG_SND_SOC_WM8510 is not set
-# CONFIG_SND_SOC_WM8523 is not set
-# CONFIG_SND_SOC_WM8580 is not set
-# CONFIG_SND_SOC_WM8711 is not set
-# CONFIG_SND_SOC_WM8728 is not set
-# CONFIG_SND_SOC_WM8731 is not set
-# CONFIG_SND_SOC_WM8737 is not set
-# CONFIG_SND_SOC_WM8741 is not set
-# CONFIG_SND_SOC_WM8750 is not set
-# CONFIG_SND_SOC_WM8753 is not set
-# CONFIG_SND_SOC_WM8770 is not set
-# CONFIG_SND_SOC_WM8776 is not set
-# CONFIG_SND_SOC_WM8804_I2C is not set
-# CONFIG_SND_SOC_WM8804_SPI is not set
-# CONFIG_SND_SOC_WM8903 is not set
-# CONFIG_SND_SOC_WM8962 is not set
-# CONFIG_SND_SOC_WM8978 is not set
-# CONFIG_SND_SOC_TPA6130A2 is not set
-# CONFIG_SND_SIMPLE_CARD is not set
-# CONFIG_SOUND_PRIME is not set
+# CONFIG_SOUND is not set
 
 #
 # HID support
@@ -1993,26 +1555,19 @@ CONFIG_HID_GENERIC=y
 # CONFIG_HID_A4TECH is not set
 # CONFIG_HID_ACRUX is not set
 # CONFIG_HID_APPLE is not set
-# CONFIG_HID_APPLEIR is not set
 # CONFIG_HID_AUREAL is not set
 # CONFIG_HID_BELKIN is not set
-# CONFIG_HID_BETOP_FF is not set
 # CONFIG_HID_CHERRY is not set
 # CONFIG_HID_CHICONY is not set
-# CONFIG_HID_PRODIKEYS is not set
-# CONFIG_HID_CP2112 is not set
 # CONFIG_HID_CYPRESS is not set
 # CONFIG_HID_DRAGONRISE is not set
 # CONFIG_HID_EMS_FF is not set
 # CONFIG_HID_ELECOM is not set
-# CONFIG_HID_ELO is not set
 # CONFIG_HID_EZKEY is not set
 # CONFIG_HID_GEMBIRD is not set
 # CONFIG_HID_GFRM is not set
-# CONFIG_HID_HOLTEK is not set
 # CONFIG_HID_KEYTOUCH is not set
 # CONFIG_HID_KYE is not set
-# CONFIG_HID_UCLOGIC is not set
 # CONFIG_HID_WALTOP is not set
 # CONFIG_HID_GYRATION is not set
 # CONFIG_HID_ICADE is not set
@@ -2025,15 +1580,12 @@ CONFIG_HID_GENERIC=y
 # CONFIG_HID_MICROSOFT is not set
 # CONFIG_HID_MONTEREY is not set
 # CONFIG_HID_MULTITOUCH is not set
-# CONFIG_HID_NTRIG is not set
 # CONFIG_HID_ORTEK is not set
 # CONFIG_HID_PANTHERLORD is not set
-# CONFIG_HID_PENMOUNT is not set
 # CONFIG_HID_PETALYNX is not set
 # CONFIG_HID_PICOLCD is not set
 # CONFIG_HID_PLANTRONICS is not set
 # CONFIG_HID_PRIMAX is not set
-# CONFIG_HID_ROCCAT is not set
 # CONFIG_HID_SAITEK is not set
 # CONFIG_HID_SAMSUNG is not set
 # CONFIG_HID_SPEEDLINK is not set
@@ -2052,244 +1604,14 @@ CONFIG_HID_GENERIC=y
 # CONFIG_HID_SENSOR_HUB is not set
 
 #
-# USB HID support
-#
-CONFIG_USB_HID=y
-# CONFIG_HID_PID is not set
-# CONFIG_USB_HIDDEV is not set
-
-#
 # I2C HID support
 #
 # CONFIG_I2C_HID is not set
 CONFIG_USB_OHCI_LITTLE_ENDIAN=y
-CONFIG_USB_SUPPORT=y
-CONFIG_USB_COMMON=y
-CONFIG_USB_ARCH_HAS_HCD=y
-CONFIG_USB=y
-CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-
-#
-# Miscellaneous USB options
-#
-CONFIG_USB_DEFAULT_PERSIST=y
-# CONFIG_USB_DYNAMIC_MINORS is not set
-CONFIG_USB_OTG=y
-# CONFIG_USB_OTG_WHITELIST is not set
-# CONFIG_USB_OTG_BLACKLIST_HUB is not set
-# CONFIG_USB_OTG_FSM is not set
-# CONFIG_USB_ULPI_BUS is not set
-# CONFIG_USB_MON is not set
-# CONFIG_USB_WUSB_CBAF is not set
-
-#
-# USB Host Controller Drivers
-#
-# CONFIG_USB_C67X00_HCD is not set
-# CONFIG_USB_XHCI_HCD is not set
-# CONFIG_USB_EHCI_HCD is not set
-# CONFIG_USB_OXU210HP_HCD is not set
-# CONFIG_USB_ISP116X_HCD is not set
-# CONFIG_USB_ISP1362_HCD is not set
-# CONFIG_USB_FOTG210_HCD is not set
-# CONFIG_USB_MAX3421_HCD is not set
-# CONFIG_USB_OHCI_HCD is not set
-# CONFIG_USB_SL811_HCD is not set
-# CONFIG_USB_R8A66597_HCD is not set
-# CONFIG_USB_HCD_TEST_MODE is not set
-
-#
-# USB Device Class drivers
-#
-# CONFIG_USB_ACM is not set
-# CONFIG_USB_PRINTER is not set
-# CONFIG_USB_WDM is not set
-# CONFIG_USB_TMC is not set
-
-#
-# NOTE: USB_STORAGE depends on SCSI but BLK_DEV_SD may
-#
-
-#
-# also be needed; see USB_STORAGE Help for more info
-#
-CONFIG_USB_STORAGE=y
-# CONFIG_USB_STORAGE_DEBUG is not set
-# CONFIG_USB_STORAGE_REALTEK is not set
-# CONFIG_USB_STORAGE_DATAFAB is not set
-# CONFIG_USB_STORAGE_FREECOM is not set
-# CONFIG_USB_STORAGE_ISD200 is not set
-# CONFIG_USB_STORAGE_USBAT is not set
-# CONFIG_USB_STORAGE_SDDR09 is not set
-# CONFIG_USB_STORAGE_SDDR55 is not set
-# CONFIG_USB_STORAGE_JUMPSHOT is not set
-# CONFIG_USB_STORAGE_ALAUDA is not set
-# CONFIG_USB_STORAGE_ONETOUCH is not set
-# CONFIG_USB_STORAGE_KARMA is not set
-# CONFIG_USB_STORAGE_CYPRESS_ATACB is not set
-# CONFIG_USB_STORAGE_ENE_UB6250 is not set
-# CONFIG_USB_UAS is not set
-
-#
-# USB Imaging devices
-#
-# CONFIG_USB_MDC800 is not set
-# CONFIG_USB_MICROTEK is not set
-# CONFIG_USBIP_CORE is not set
-# CONFIG_USB_MUSB_HDRC is not set
-# CONFIG_USB_DWC3 is not set
-# CONFIG_USB_DWC2 is not set
-CONFIG_USB_DWC2_NEW=y
-# CONFIG_USB_DWC2_NEW_HOST is not set
-
-#
-# Gadget/Dual-role mode requires USB Gadget support to be enabled
-#
-# CONFIG_USB_DWC2_NEW_PERIPHERAL is not set
-CONFIG_USB_DWC2_NEW_DUAL_ROLE=y
-# CONFIG_USB_DWC2_NEW_TRACK_MISSED_SOFS is not set
-# CONFIG_USB_DWC2_NEW_FORCE_FULL_SPEED is not set
-# CONFIG_USB_DWC2_NEW_EXT_ID_PIN is not set
-# CONFIG_USB_DWC2_NEW_EXT_VBUS_DETECT is not set
-# CONFIG_USB_CHIPIDEA is not set
-# CONFIG_USB_ISP1760 is not set
-
-#
-# USB port drivers
-#
-# CONFIG_USB_SERIAL is not set
-
-#
-# USB Miscellaneous drivers
-#
-# CONFIG_USB_EMI62 is not set
-# CONFIG_USB_EMI26 is not set
-# CONFIG_USB_ADUTUX is not set
-# CONFIG_USB_SEVSEG is not set
-# CONFIG_USB_RIO500 is not set
-# CONFIG_USB_LEGOTOWER is not set
-# CONFIG_USB_LCD is not set
-# CONFIG_USB_LED is not set
-# CONFIG_USB_CYPRESS_CY7C63 is not set
-# CONFIG_USB_CYTHERM is not set
-# CONFIG_USB_IDMOUSE is not set
-# CONFIG_USB_FTDI_ELAN is not set
-# CONFIG_USB_APPLEDISPLAY is not set
-# CONFIG_USB_LD is not set
-# CONFIG_USB_TRANCEVIBRATOR is not set
-# CONFIG_USB_IOWARRIOR is not set
-# CONFIG_USB_TEST is not set
-# CONFIG_USB_EHSET_TEST_FIXTURE is not set
-# CONFIG_USB_ISIGHTFW is not set
-# CONFIG_USB_YUREX is not set
-# CONFIG_USB_EZUSB_FX2 is not set
-# CONFIG_USB_HSIC_USB3503 is not set
-# CONFIG_USB_LINK_LAYER_TEST is not set
-
-#
-# USB Physical Layer drivers
-#
-CONFIG_USB_PHY=y
-# CONFIG_NOP_USB_XCEIV is not set
-CONFIG_INGENIC_USB_PHY=y
-# CONFIG_INGENIC_USBPHY_X1800 is not set
-# CONFIG_INGENIC_INNOPHY is not set
-# CONFIG_USB_GPIO_VBUS is not set
-# CONFIG_USB_ISP1301 is not set
-CONFIG_USB_GADGET=y
-# CONFIG_USB_GADGET_DEBUG is not set
-# CONFIG_USB_GADGET_DEBUG_FILES is not set
-# CONFIG_USB_GADGET_DEBUG_FS is not set
-CONFIG_USB_GADGET_VBUS_DRAW=2
-CONFIG_USB_GADGET_STORAGE_NUM_BUFFERS=2
-
-#
-# USB Peripheral Controller
-#
-# CONFIG_USB_FUSB300 is not set
-# CONFIG_USB_FOTG210_UDC is not set
-# CONFIG_USB_GR_UDC is not set
-# CONFIG_USB_R8A66597 is not set
-# CONFIG_USB_PXA27X is not set
-# CONFIG_USB_MV_UDC is not set
-# CONFIG_USB_MV_U3D is not set
-# CONFIG_USB_M66592 is not set
-# CONFIG_USB_BDC_UDC is not set
-# CONFIG_USB_NET2272 is not set
-# CONFIG_USB_GADGET_XILINX is not set
-# CONFIG_USB_DUMMY_HCD is not set
-CONFIG_USB_LIBCOMPOSITE=y
-CONFIG_USB_F_ACM=y
-CONFIG_USB_U_SERIAL=y
-CONFIG_USB_F_MASS_STORAGE=y
-CONFIG_USB_F_FS=y
-CONFIG_USB_F_HID=y
-CONFIG_USB_CONFIGFS=y
-# CONFIG_USB_CONFIGFS_SERIAL is not set
-CONFIG_USB_CONFIGFS_ACM=y
-# CONFIG_USB_CONFIGFS_OBEX is not set
-# CONFIG_USB_CONFIGFS_NCM is not set
-# CONFIG_USB_CONFIGFS_ECM is not set
-# CONFIG_USB_CONFIGFS_ECM_SUBSET is not set
-# CONFIG_USB_CONFIGFS_RNDIS is not set
-# CONFIG_USB_CONFIGFS_EEM is not set
-CONFIG_USB_CONFIGFS_MASS_STORAGE=y
-# CONFIG_USB_CONFIGFS_F_LB_SS is not set
-CONFIG_USB_CONFIGFS_F_FS=y
-# CONFIG_USB_CONFIGFS_F_MTP is not set
-# CONFIG_USB_CONFIGFS_UEVENT is not set
-# CONFIG_USB_CONFIGFS_F_UAC1 is not set
-# CONFIG_USB_CONFIGFS_F_UAC2 is not set
-# CONFIG_USB_CONFIGFS_F_MIDI is not set
-CONFIG_USB_CONFIGFS_F_HID=y
-# CONFIG_USB_CONFIGFS_F_UVC is not set
-# CONFIG_USB_CONFIGFS_F_PRINTER is not set
-# CONFIG_USB_ZERO is not set
-# CONFIG_USB_AUDIO is not set
-# CONFIG_USB_ETH is not set
-# CONFIG_USB_G_NCM is not set
-# CONFIG_USB_GADGETFS is not set
-# CONFIG_USB_FUNCTIONFS is not set
-# CONFIG_USB_MASS_STORAGE is not set
-# CONFIG_USB_G_SERIAL is not set
-# CONFIG_USB_MIDI_GADGET is not set
-# CONFIG_USB_G_PRINTER is not set
-# CONFIG_USB_CDC_COMPOSITE is not set
-# CONFIG_USB_G_ACM_MS is not set
-# CONFIG_USB_G_MULTI is not set
-# CONFIG_USB_G_HID is not set
-# CONFIG_USB_G_DBGP is not set
-# CONFIG_USB_G_WEBCAM is not set
-CONFIG_USB_ROLE_SWITCH=y
+# CONFIG_USB_SUPPORT is not set
 # CONFIG_UWB is not set
-CONFIG_MMC=y
-# CONFIG_MMC_DEBUG is not set
-
-#
-# MMC Core configuration
-#
-# CONFIG_MMC_CORE_INIT_SEQUENCE_DELAY is not set
-
-#
-# MMC/SD/SDIO Card Drivers
-#
-CONFIG_MMC_BLOCK=y
-CONFIG_MMC_BLOCK_MINORS=16
-CONFIG_MMC_BLOCK_BOUNCE=y
-# CONFIG_SDIO_UART is not set
-# CONFIG_MMC_TEST is not set
-
-#
-# MMC/SD/SDIO Host Controller Drivers
-#
+# CONFIG_MMC is not set
 # CONFIG_MMC_SDHCI_INGENIC is not set
-CONFIG_MMC_SDHCI=y
-# CONFIG_MMC_SDHCI_PLTFM is not set
-# CONFIG_MMC_DW is not set
-# CONFIG_MMC_VUB300 is not set
-# CONFIG_MMC_USHC is not set
-# CONFIG_MMC_USDHI6ROL0 is not set
-# CONFIG_MMC_MTK is not set
 # CONFIG_MEMSTICK is not set
 # CONFIG_NEW_LEDS is not set
 # CONFIG_SWITCH is not set
@@ -2310,7 +1632,7 @@ CONFIG_RTC_INTF_PROC=y
 CONFIG_RTC_INTF_DEV=y
 # CONFIG_RTC_INTF_DEV_UIE_EMUL is not set
 # CONFIG_RTC_DRV_TEST is not set
-CONFIG_RTC_DRV_INGENIC=y
+# CONFIG_RTC_DRV_INGENIC is not set
 
 #
 # I2C RTC drivers
@@ -2330,7 +1652,7 @@ CONFIG_RTC_DRV_INGENIC=y
 # CONFIG_RTC_DRV_X1205 is not set
 # CONFIG_RTC_DRV_PCF2127 is not set
 # CONFIG_RTC_DRV_PCF8523 is not set
-# CONFIG_RTC_DRV_PCF8563 is not set
+CONFIG_RTC_DRV_PCF8563=y
 # CONFIG_RTC_DRV_PCF85063 is not set
 # CONFIG_RTC_DRV_PCF8583 is not set
 # CONFIG_RTC_DRV_M41T80 is not set
@@ -2346,19 +1668,6 @@ CONFIG_RTC_DRV_INGENIC=y
 #
 # SPI RTC drivers
 #
-# CONFIG_RTC_DRV_M41T93 is not set
-# CONFIG_RTC_DRV_M41T94 is not set
-# CONFIG_RTC_DRV_DS1305 is not set
-# CONFIG_RTC_DRV_DS1343 is not set
-# CONFIG_RTC_DRV_DS1347 is not set
-# CONFIG_RTC_DRV_DS1390 is not set
-# CONFIG_RTC_DRV_MAX6902 is not set
-# CONFIG_RTC_DRV_R9701 is not set
-# CONFIG_RTC_DRV_RS5C348 is not set
-# CONFIG_RTC_DRV_DS3234 is not set
-# CONFIG_RTC_DRV_PCF2123 is not set
-# CONFIG_RTC_DRV_RX4581 is not set
-# CONFIG_RTC_DRV_MCP795 is not set
 
 #
 # Platform RTC drivers
@@ -2389,7 +1698,6 @@ CONFIG_RTC_DRV_INGENIC=y
 #
 # HID Sensor RTC drivers
 #
-# CONFIG_RTC_DRV_HID_SENSOR_TIME is not set
 CONFIG_DMADEVICES=y
 # CONFIG_DMADEVICES_DEBUG is not set
 
@@ -3171,7 +2479,6 @@ CONFIG_MTD_INGENIC_SFC_NANDFLASH=y
 #
 # [ISP] Drivers
 #
-# CONFIG_VIDEO_INGENIC_ISP is not set
 
 #
 # [CIM] Drivers
@@ -3180,14 +2487,10 @@ CONFIG_MTD_INGENIC_SFC_NANDFLASH=y
 #
 # [Rotator] Drivers
 #
-CONFIG_VIDEO_INGENIC_ROTATE=y
 
 #
 # [VPU] Drivers
 #
-CONFIG_VIDEO_INGENIC_VCODEC=y
-# CONFIG_INGENIC_HELIX is not set
-# CONFIG_INGENIC_FELIX is not set
 
 #
 # [Sensors] Camera Sensors

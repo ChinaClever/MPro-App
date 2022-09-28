@@ -213,40 +213,6 @@
 				flash_html(ckd);
 			}else{}
 		}
-		function setdata(ipt)
-		{
-			var stat;
-			var type1 = ipt.id.substr(0,1);
-			var num = parseInt(ipt.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(type1 === 'b'){
-					stat = ipt.value;
-					if(num !== dual_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetParam',[addr,22,1,num,num,stat]);
-				}
-				else if(type1 === 'd'){
-					stat = parseInt(ipt.value);
-					if(num !== dual_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
-				}else if(type1 === 'j'){
-					stat = parseInt(ipt.value);
-					if(num !== dual_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
-				}
-				flash_html(ipt);
-			}else{}
-		}
 		function btn_click(btn)
 		{
 			var addr = parseInt(btn.id.slice(1))+1;
