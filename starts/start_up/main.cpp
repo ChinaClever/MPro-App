@@ -12,6 +12,7 @@ static void initSystem()
     system("ifconfig eth0 up"); //system("dhclient");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    //system("mount -t nfs 192.168.1.130:/home/lzy/work/nfs /usr/data/nfs");
 }
 
 static void startSnmpd()
@@ -44,6 +45,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/certs");
     system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/download");
+    system("mkdir -p /usr/data/clever/drivers");
 }
 
 extern void init_share_mem();
