@@ -96,11 +96,12 @@
 			lang[10] = ["","下临界(W)","","","",""];
 			lang[11] = ["","上临界(W)","","","",""];
 			lang[12] = ["","最大值(W)","","","",""];
-			lang[13] = ["","只读模式","","","",""];
+			lang[13] = ["","设置模式","","","",""];
 			lang[14] = ["","统一设置","","","",""];
 			for(var i = 1;i<13;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][1];
 			}
+			document.getElementById("b" + group_num).innerHTML  = lang[14][1];
 		}
 		$('.table-striped').html(buildTable(group_num));
 		$('.devname').html(buildSel(slave_num));
@@ -267,14 +268,14 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="4%" id="lang_4">序号</td>\
-					<td width ="19%" id="lang_5" >单元名称</td>\
-					<td width ="11%" id="lang_6">有功功率(W)</td>\
-					<td width ="11%" id="lang_7">告警使能</td>\
-					<td width ="11%" id="lang_8">额定值(W)</td>\
-					<td width ="11%" id="lang_9">最小值(W)</td>\
-					<td width ="11%" id="lang_10">下临界(W)</td>\
-					<td width ="11%" id="lang_11">上临界(W)</td>\
-					<td width ="11%" id="lang_12">最大值(W)</td>';
+					<td width ="19%" id="lang_5" ></td>\
+					<td width ="11%" id="lang_6"></td>\
+					<td width ="11%" id="lang_7"></td>\
+					<td width ="11%" id="lang_8"></td>\
+					<td width ="11%" id="lang_9"></td>\
+					<td width ="11%" id="lang_10"></td>\
+					<td width ="11%" id="lang_11"></td>\
+					<td width ="11%" id="lang_12"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
@@ -291,7 +292,7 @@
 					i++;
 					tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-					tbody += '<td id = "b'+ i + '">统一设置</td>';
+					tbody += '<td id = "b'+ i + '"></td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td id = "e'+ i + '"></td>';

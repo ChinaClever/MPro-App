@@ -96,7 +96,7 @@
 		}
 		modeset();
 		showdata();
-		function modeset(modesel){
+		function modeset(){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
 			var btnname = document.getElementsByTagName("button");
@@ -226,15 +226,7 @@
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
-				if(type1 === 'b'){
-					stat = ipt.value;
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetParam',[addr,22,1,num,num,stat]);
-				}
-				else if(type1 === 'd'){
+				if(type1 === 'd'){
 					stat = parseInt(ipt.value);
 					if(num !== output_num + 1){
 					}else{
@@ -295,7 +287,7 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
+				tbody += '<td id = "b'+ i + '" >'+output_name[i + 1]+'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';

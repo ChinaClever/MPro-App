@@ -57,10 +57,10 @@ var jsonrpc = function()
   }url = pro + url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
-  var type = 0,topic = 0,subtopic = 0,num = 0;
+  let type = 0,topic = 0,subtopic = 0,num = 0;
   ws.onclose = function(){};
   ws.onmessage = function(evt) {
-    addr  = parseInt(JSON.parse(evt.data).result[0]);
+    let addr_  = parseInt(JSON.parse(evt.data).result[0]);
     type = parseInt(JSON.parse(evt.data).result[1]);
     topic = parseInt(JSON.parse(evt.data).result[2]);
     subtopic = parseInt(JSON.parse(evt.data).result[3]);
@@ -68,48 +68,48 @@ var jsonrpc = function()
     switch(type)
     {
       case 0:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 1:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 2:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 3:
         if(topic == 1){
-          sessionStorage.setItem(type_name[type]+ data_type[topic] + alarm_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+          sessionStorage.setItem(type_name[type]+ data_type[topic] + alarm_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
         }else{
-          sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+          sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
         }
       break;
       case 4:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 5:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 6:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5])); 
       break;
       case 7:
-        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr +'_'+num, parseInt(JSON.parse(evt.data).result[5]));
+        sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_ +'_'+num, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 10:
-        sessionStorage.setItem("Output_name"+ addr +'_'+topic,JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem("Output_name"+ addr_ +'_'+topic,JSON.parse(evt.data).result[5]); 
       break;
       case 11:
-        sessionStorage.setItem(uut_name[topic]+ addr ,JSON.parse(evt.data).result[5]); 
+        sessionStorage.setItem(uut_name[topic]+ addr_ ,JSON.parse(evt.data).result[5]); 
       break;
       case 12:
         if(topic>10){
-          sessionStorage.setItem(type_info[topic]+ "Num" + subtopic  +'_'+ addr ,JSON.parse(evt.data).result[5]);
+          sessionStorage.setItem(type_info[topic]+ "Num" + subtopic  +'_'+ addr_ ,JSON.parse(evt.data).result[5]);
         }else{
-          sessionStorage.setItem(type_info[topic]+ "Num" + addr ,JSON.parse(evt.data).result[5]);
+          sessionStorage.setItem(type_info[topic]+ "Num" + addr_ ,JSON.parse(evt.data).result[5]);
         }
       break;
       case 13:
-        sessionStorage.setItem(cfg_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
+        sessionStorage.setItem(cfg_name[topic] + addr_, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 14:
         if(topic  == 11)
@@ -141,19 +141,19 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
       break;
       case 22:
-        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr_ +'_'+subtopic, JSON.parse(evt.data).result[5]);
       break;
       case 23:
-        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr_ +'_'+subtopic, JSON.parse(evt.data).result[5]);
       break;
       case 24:
-        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr +'_'+subtopic, JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ info_info[topic] + addr_ +'_'+subtopic, JSON.parse(evt.data).result[5]);
       break;
       case 25:
-        sessionStorage.setItem(type_name[type]+ addr +'_'+topic, JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(type_name[type]+ addr_ +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
-        sessionStorage.setItem(ver_name[topic] + addr, parseInt(JSON.parse(evt.data).result[5]));
+        sessionStorage.setItem(ver_name[topic] + addr_, parseInt(JSON.parse(evt.data).result[5]));
       break;
       case 32:
         if(topic < 5){
@@ -582,5 +582,30 @@ function read_mode_data(addr){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;
+  },3);
+}
+
+function read_monitoring_data(addr){
+  var j = 1;var i = 1;
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  var time1 = setInterval(function(){
+    if(i >= parseInt(output_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= output_num){
+      rpc.call('pduReadData',[addr,output,pow_,j,i]);
+      rpc.call('pduReadData',[addr+1,output,pow_,j,i]);
+      rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
+      rpc.call('pduReadData',[addr+1,output,AVpow_,j,i]);
+      rpc.call('pduReadData',[addr,output,energe_,j,i]);
+      rpc.call('pduReadData',[addr+1,output,energe_,j,i]);
+      rpc.call('pduReadData',[addr,output,pow_,3,i]);
+      rpc.call('pduReadData',[addr+1,output,pow_,3,i]);
+      rpc.call('pduReadData',[addr,output,switch_,1,i]);
+      rpc.call('pduReadData',[addr+1,output,switch_,1,i]);
+      rpc.call('pduReadData',[addr,output,switch_,8,i]);
+      rpc.call('pduReadData',[addr+1,output,switch_,8,i]);
+    }
+    i++;
   },3);
 }
