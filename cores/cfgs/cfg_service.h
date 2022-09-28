@@ -20,6 +20,7 @@ private:
     void login();
     void modbus();
     void sercret();
+    void whiteList();
     void dualName();
     void groupName();
     void outputName();

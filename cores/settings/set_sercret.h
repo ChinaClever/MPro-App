@@ -12,6 +12,9 @@ public:
 
     QVariant getTlsCert(uchar fc);
     bool setTlsCert(uchar fc, const QVariant &v);
+
+    QVariant whiteListCfg(int fc);
+    bool setWhiteList(uchar fc, const QVariant &v);
 };
 
 #endif // SET_SERCRET_H

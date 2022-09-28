@@ -17,7 +17,7 @@ static void initSystem()
 static void startSnmpd()
 {
     QString custom = "/usr/data";
-    QString fn = "/etc/snmp/snmpd.conf";
+    QString fn = "/etc/snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
     // bool ret = App_Run::isRun("snmpd"); if(ret) return ;
     if(QFile::exists(custom + fn)) {

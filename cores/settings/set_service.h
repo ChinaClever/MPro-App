@@ -15,6 +15,8 @@ public:
 
     QVariant smtpCfg(int fc);
     bool smtpSet(int fc, const QVariant &v);
+
+
 };
 
 #endif // SET_SERVICE_H

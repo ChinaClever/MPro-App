@@ -31,6 +31,7 @@ void Cfg_Service::readCfgParams()
     login();
     modbus();
     sercret();
+    whiteList();
     dualName();
     groupName();
     outputName();
@@ -172,7 +173,7 @@ void Cfg_Service::modbus()
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
-    }
+    } cm::masterDev()->cfg.param.modbusRtuAddr = cfg->addr;
 }
 
 void Cfg_Service::rpc()
@@ -216,6 +217,24 @@ void Cfg_Service::sercret()
             if(arr) *arr = mCfg->readCfg(key, "", prefix).toByteArray();
             arr = nullptr;
         }
+    }
+}
+
+void Cfg_Service::whiteList()
+{
+    QString *str = nullptr;
+    QString prefix = "whiteList"; QString key;
+    sWhiteListCfg *it = &App_WhiteList::whiteListCfg;
+    for(int i=1; i<6; ++i) {
+        switch (i) {
+        case 1: key = "en"; it->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "mac1"; str = &it->mac[0]; break;
+        case 3: key = "mac2"; str = &it->mac[1]; break;
+        case 4: key = "ip1"; str = &it->ip[0]; break;
+        case 5: key = "ip2"; str = &it->ip[1]; break;
+        default: key.clear(); break;
+        }
+        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 

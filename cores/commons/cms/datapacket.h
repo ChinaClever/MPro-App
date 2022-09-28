@@ -309,7 +309,7 @@ struct sNetAddr
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
     char reserve[NAME_SIZE];
-    uint prefixLen;
+    uchar prefixLen;
 };
 
 struct sNetInterface
@@ -366,7 +366,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert,
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp,
              ELog=81, EPro, ECmd=111};
 

@@ -3,17 +3,17 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "app_runing.h"
+#include "app_runtime.h"
 #include "set_core.h"
 
-App_Runing::App_Runing(QObject *parent)
+App_RunTime::App_RunTime(QObject *parent)
     : App_Smtp{parent}
 {
     //std::system("proc_log core"); //////=======
     QTimer::singleShot(755,this,SLOT(runing_initFunSlot()));
 }
 
-void App_Runing::runing_initFunSlot()
+void App_RunTime::runing_initFunSlot()
 {
     mTimer = new QTimer(this);
     mTimer->start(1000); cm::masterDev()->proc.core.runSec = 0;
@@ -23,7 +23,7 @@ void App_Runing::runing_initFunSlot()
     qstrcpy(run->start, t.toLatin1().data());
 }
 
-void App_Runing::runing_onTimeoutDone()
+void App_RunTime::runing_onTimeoutDone()
 {
     sRunTime *param = &(cm::masterDev()->proc.core);
     param->runSec += 1; if(0 == param->runSec % 24*60*60) {
