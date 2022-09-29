@@ -44,8 +44,9 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
     system("mkdir -p /usr/data/clever/upload");
-    system("mkdir -p /usr/data/clever/download");
     system("mkdir -p /usr/data/clever/drivers");
+    system("mkdir -p /usr/data/clever/download");
+    system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 
 extern void init_share_mem();
