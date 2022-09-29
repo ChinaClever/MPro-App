@@ -246,7 +246,7 @@
 		}
 		function btn_click(btn)
 		{
-			var addr = parseInt(btn.id.slice(1))+1;
+			var num = parseInt(btn.id.slice(1))+1;
 			var stat = 0;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
@@ -261,11 +261,11 @@
 					stat = 2;
 				}
 
-				if(addr !== output_num + 1){
+				if(num !== output_num + 1){
 				}else{
-					addr = 0;
+					num = 0;
 				}
-				rpc.call('pduSetData',[addr,output,switch_,1,addr,stat]);
+				rpc.call('pduSetData',[0,output,switch_,1,num,stat]);
 				flash_html(btn);
 			}else{}
 		}

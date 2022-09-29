@@ -87,6 +87,9 @@
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 			document.getElementById("b" + dual_num).innerHTML  = lang[14][language];
+			if(read == 1){
+				document.getElementById("lang_2").innerHTML = lang[13][language];
+			}
 		}
 		function read_data(){
 			for(var i = 1 ;i < dual_num + 1;i++)
@@ -174,6 +177,7 @@
 				read_data();
 				$('.table-striped').html(buildTable(dual_num));
 				showdata();
+				lang_fun();
 			},800);
 		}
 		function cked(ckd)
@@ -215,26 +219,21 @@
 		}
 		function btn_click(btn)
 		{
-			var addr = parseInt(btn.id.slice(1))+1;
+			var type1 = btn.id.substr(0,1);
+			var num = parseInt(btn.id.slice(1))+1;
 			var stat = 0;
 			var retVal = confirm("您已更改表单，请确认提交！");
+			let dual = 0,addr_num =0;
 			if(retVal == true)
 			{
-				if(btn.innerText == Input_state[0]){
-					stat = 1;
-				}
-				else if(btn.innerText == Input_state[1]){
-					stat = 0;
-				}
-				else if(btn.innerText == Input_state[2]){
-					stat = 2;
-				}
-
-				if(addr !== dual_num + 1){
+				dual = type1.charCodeAt() - 'g'.charCodeAt();
+				addr_num = parseInt(dual / 3);
+				stat = parseInt(dual % 3);
+				if(num !== dual_num + 1){
 				}else{
-					addr = 0;
+					num = 0;
 				}
-				rpc.call('pduSetData',[addr,output,switch_,1,addr,stat]);
+				rpc.call('pduSetData',[addr_num,output,switch_,1,num,stat]);
 				flash_html(btn);
 			}else{}
 		}
