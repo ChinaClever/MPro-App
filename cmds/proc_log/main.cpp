@@ -10,7 +10,7 @@
 bool appendFile(const QString &msg)
 {
     int t = QRandomGenerator::global()->bounded(10*1000);
-    QString fn = "usr/data/clever/cfg/proc_log.txt";
+    QString fn = "/usr/data/clever/cfg/proc_log.txt";
 #if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
     fn = "proc_log.txt";
 #endif
@@ -19,7 +19,8 @@ bool appendFile(const QString &msg)
         QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
         QByteArray array = t.toUtf8() + msg.toUtf8()+"\n";
         file.write(array);
-    } file.close();
+    } else qDebug() << file.errorString();
+    file.close();
 
     return true;
 }

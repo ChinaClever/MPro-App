@@ -38,6 +38,7 @@ bool Rpc_Service::startXmlRpc()
 
 void Rpc_Service::initFunSlot()
 {
+    rpcCfg.json.en = 1;
     mJson->startRpc(rpcCfg.json.en, rpcCfg.json.port);
     mXml->startXmlRpc(rpcCfg.xml.en, rpcCfg.xml.port);
 }
