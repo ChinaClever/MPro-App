@@ -19,8 +19,8 @@ void Agent_Trap::initTrapSlot()
     Alarm_Updater *alarm = Alarm_Updater::bulid();
     //connect(alarm, &Alarm_Updater::alarmSig, this, &Agent_Trap::alarmSlot);
 
-    //timer = new QTimer(this);
-    timer->start(3000); ////==========
+    timer = new QTimer(this);
+    //timer->start(3000); ////==========
     connect(timer, SIGNAL(timeout()), this, SLOT(timeoutDone()));
 }
 
