@@ -37,20 +37,21 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
 {    
     sNetInterface *net = &(cm::dataPacket()->net);
     sNetAddr *inet = &net->inet; bool res = true;
-    if(it.id) inet = &net->inet6;
+    char *ptr = nullptr; if(it.id) inet = &net->inet6;
 
     switch (it.fc) {
     case 0: inet->en = v.toInt(); break;
     case 1: inet->dhcp = v.toInt(); break;
-    case 2: qstrcpy(inet->ip, v.toByteArray().data()); break;
-    case 3: qstrcpy(inet->mask, v.toByteArray().data()); break;
-    case 4: qstrcpy(inet->gw, v.toByteArray().data());  break;
+    case 2: ptr = inet->ip; break;
+    case 3: ptr = inet->mask; break;
+    case 4: ptr = inet->gw;  break;
     case 5: inet->prefixLen = v.toInt(); break;
-    case 6: qstrcpy(inet->dns, v.toByteArray().data());  break;
-    case 7: qstrcpy(inet->dns2, v.toByteArray().data()); break;
-    case 11: qstrcpy(net->mac, v.toByteArray().data()); break;
-    default: res = false; qDebug() << Q_FUNC_INFO; break;
-    } if(res) App_Core::bulid()->inet_setInterface();
+    case 6: ptr = inet->dns;  break;
+    case 7: ptr = inet->dns2; break;
+    case 11: ptr = net->mac; break;
+    case 15: App_Core::bulid()->inet_setInterface();
+    default: res = false; cout << it.fc; break;
+    } if(ptr) qstrcpy(ptr, v.toByteArray().data());
 
     return res;
 }
