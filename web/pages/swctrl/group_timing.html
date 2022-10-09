@@ -186,10 +186,10 @@
 			hh = checkTime(hh);
 			mm = checkTime(mm);
 			ss = checkTime(ss);
-			var time = yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm+ ":" + ss;
+			var time = hh + ":" + mm+ ":" + ss;
 
 			for(let i = 0; i<group_num + 1;i++){
-				document.getElementById('e'+i).value = time;
+				document.getElementById('f'+i).value = time;
 			}
 		}
 		function checkTime(i) {
@@ -200,7 +200,7 @@
 		}
 		function flash_html(par)
 		{
-			read_group_data(0);
+			read_group_param_data(0);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
@@ -214,16 +214,20 @@
 		{
 			var type1 = btn.id.substr(0,1);
 			var num = parseInt(btn.id.slice(1))+1;
-			var stat = 0,val = 0;
+			var stat = 0,val = "";
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
-				stat = type1.charCodeAt() - 'f'.charCodeAt() + 2;
+				stat = type1.charCodeAt() - 'g'.charCodeAt() + 2;
 				if(num !== group_num + 1){
 				}else{
 					num = 0;
 				}
-				val = document.getElementById('e'+ num).value;
+				val = document.getElementById('e'+ (num -1)).value;
+				if(val != ""){
+					val += " ";
+				}
+				val += document.getElementById('f'+ (num -1)).value;
 				rpc.call('pduSetParam',[0,23,stat,num,0,val]);
 				flash_html(btn);
 			}else{}
@@ -236,7 +240,7 @@
 					thead = '<tr><td width ="5%" rowspan = "2" id="lang_4"></td>\
 					<td width ="25%" rowspan = "2" id="lang_5"></td>\
 					<td width ="40%" colspan = "2" id="lang_6"></td>\
-					<td width ="20%" rowspan = "2" id="lang_7"></td>\
+					<td  rowspan = "2" colspan = "2" id="lang_7"></td>\
 					<td width ="10%" rowspan = "2" colspan = "2" id="lang_8"></td>\
 					</tr>';
 					thead += '<tr><td id="lang_9"></td>\
@@ -247,9 +251,10 @@
 				tbody += '<td id = "b'+ i + '" >'+group_name[i + 1]+'</td>';
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><input  type = "datetime-local" step ="1"   id = "e'+ i + '"></td>';
-				tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
-				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+				tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
+				tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
+				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -257,9 +262,10 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">统一设置</td>';
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
-					tbody += '<td><input  type = "datetime-local" step ="1"  id = "e'+ i + '"></td>';
-					tbody += '<td><button id = "f'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
-					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
+					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
+					tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
 					tbody += '</tr>';
 				}
 			}

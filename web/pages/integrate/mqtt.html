@@ -48,7 +48,7 @@
 		var mqtt_data = new Array();
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<14;i++){
+			for(let i = 1;i<20;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","MQTT设置","","","",""];
@@ -63,7 +63,7 @@
 			lang[10] = ["","KeepAlive(S):","","","",""];
 			lang[11] = ["","Qos:","","","",""];
 			lang[12] = ["","连接状态:","","","",""];
-			lang[13] = ["","保存","","","",""];
+			lang[13] = ["","立即生效","","","",""];
 			lang[14] = ["","禁用","","","",""];
 			lang[15] = ["","0 消息最多传递一次","","","",""];
 			lang[16] = ["","1 消息传递最少一次","","","",""];
@@ -94,9 +94,9 @@
 			}
 		}
 		$('.mqtt').html(buildTable());
+		lang_fun();
 		setTimeout(function(){
 			read_data();
-			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
@@ -113,29 +113,7 @@
 					document.getElementById(id_name[j]).value = mqtt_data[j +1];
 				}
 			}
-			if(parseInt(mqtt_data[1]) == 0){
-				document.getElementById("lang_13").disabled = true;
-			}
 			document.getElementById(id_name[id_name.length-1]).innerHTML = mqtt_data[10];
-		}
-		function SetData(btn){
-			let mds_data = 0, setbtn = 0 ,lab = 0;
-			mds_data = parseInt(btn.value);
-			if(confirm("请确认是否开启此功能。")){
-				if(mds_data == 0){
-					for(var i = 1; i < (id_name.length-1);i++){
-						document.getElementById(id_name[i]).disabled = true;
-					}
-					document.getElementById("lang_13").disabled = true;
-				}else{
-					for(var i = 1; i < (id_name.length-1);i++){
-						document.getElementById(id_name[i]).disabled = false;
-					}
-					document.getElementById("lang_13").disabled = false;
-				}
-				rpc.call('pduSetParam',[0,19,1,0,0,mds_data]);
-				flash_html();
-			}else{}
 		}
 		function flash_html(){
 			read_mqtt_data(0);
@@ -144,16 +122,20 @@
 				showdata();
 			},800);
 		}
-		function Set(){
-			var sel =0;
+		function changed(ipt){
 			if(confirm("请确认是否保存此次修改？")){
-				for(var i = 1 ;i<(id_name.length -1);i++){
-					sel = document.getElementById(id_name[i]).value;
-					if(sel != mqtt_data[i+1]){
-						rpc.call('pduSetParam',[0,19,(i+1),0,0,sel]);
+				for(var i = 0 ;i<(id_name.length -1);i++){
+					if(ipt.id == id_name[i]){
+						rpc.call('pduSetParam',[0,19,(i+1),0,0,ipt.value]);
 					}
 				}
 				flash_html();
+			}else{}
+		}
+		function Set(){
+			var sel =0;
+			if(confirm("请确认是否保存此次修改？")){
+				rpc.call('pduSetParam',[0,19,11,0,0,sel]);
 			}else{}
 		}
 		function buildTable() {
@@ -163,27 +145,27 @@
 			tbody += '<tr><td id  = "lang_12"></td>';
 			tbody += '<td id = "'+ id_name[9] +'"></td></tr>';
 			tbody += '<tr><td id  = "lang_3"></td>';
-			tbody += '<td><select  id = "'+ id_name[0] +'" onchange ="SetData(this)">';
+			tbody += '<td><select  id = "'+ id_name[0] +'" onchange ="changed(this)">';
 			for(var i = 0; i<enable.length;i++){
 				tbody +='<option value ="'+i+'">'+enable[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id  = "lang_4"></td>';
-			tbody += '<td><input  id = "'+ id_name[1] +'" style ="width:24.5%" type = "text"  placeholder="0.0.0.0"></input></td></tr>';
+			tbody += '<td><input  id = "'+ id_name[1] +'" style ="width:24.5%" type = "text"  onchange ="changed(this)" placeholder="0.0.0.0"></input></td></tr>';
 			tbody += '<tr><td id  = "lang_5"></td>';
-			tbody += '<td><input  id = "'+ id_name[2] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input  id = "'+ id_name[2] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_6"></td>';
-			tbody += '<td><input  id = "'+ id_name[3] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input  id = "'+ id_name[3] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_7"></td>';
-			tbody += '<td><input  id = "'+ id_name[4] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input  id = "'+ id_name[4] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_8"></td>';
-			tbody += '<td><input  id = "'+ id_name[5] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input  id = "'+ id_name[5] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_9"></td>';
-			tbody += '<td><input id = "'+ id_name[6] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input id = "'+ id_name[6] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_10"></td>';
-			tbody += '<td><input id = "'+ id_name[7] +'" style ="width:24.5%" type = "text" ></input></td></tr>';
+			tbody += '<td><input id = "'+ id_name[7] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_11"></td>';
-			tbody += '<td><select  id = "'+ id_name[8] +'">';
+			tbody += '<td><select  id = "'+ id_name[8] +'" onchange ="changed(this)" >';
 			for(var i = 0; i<qos_.length;i++){
 				tbody +='<option value ="'+i+'">'+qos_[i] +'</option>';
 			}
