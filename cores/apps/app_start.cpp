@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "web_server/web_core.h"
-#include "ipc_coreserver.h"
+//#include "ipc_coreserver.h"
 #include "cascade_core.h"
 #include "rpc_service.h"
 #include "integr_core.h"
@@ -33,8 +33,8 @@ App_Start::~App_Start()
 
 void App_Start::initFunSlot()
 {
-    IPC_CoreServer::bulid(this);
-    Dtls_Recver::bulid(this);
+//    IPC_CoreServer::bulid(this);
+//    Dtls_Recver::bulid(this);
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
     Log_Core::bulid(this);

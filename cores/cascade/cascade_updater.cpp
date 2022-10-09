@@ -8,7 +8,8 @@
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
     isOta = false; mFile = new QFile;
-    QTimer::singleShot(50,this,SLOT(initFunSlot()));
+    qRegisterMetaType<sFileTrans>("sFileTrans");
+    //QTimer::singleShot(50,this,SLOT(initFunSlot()));  ///////==========
 }
 
 bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
@@ -23,10 +24,10 @@ bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
             if(ret) {
                 i += data.size(); int v = (i*100.0)/it.size;
                  if(v > pro){ pro = v; emit otaProSig(addr, v);
-                     mDtls->throwMessage(tr("addr=%1: %2").arg(addr).arg(v));
+//                     mDtls->throwMessage(tr("addr=%1: %2").arg(addr).arg(v)); //////////////===========
                  }
             } else {
-                mDtls->throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
+//                mDtls->throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;  //////=====
             }
         } mFile->close(); ret = otaSendFinish(addr, ret?1:0); isOta = false;
     } cm::mdelay(100);
@@ -112,9 +113,9 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     return writeData(fc_otaEnd, 0, str.toLocal8Bit());
 }
 
-void Cascade_Updater::initFunSlot()
-{
-    mDtls = Dtls_Recver::bulid(this);
-    qRegisterMetaType<sFileTrans>("sFileTrans");
-    connect(mDtls, &Dtls_Recver::finishSig, this, &Cascade_Updater::dtlsFinishSlot);
-}
+//void Cascade_Updater::initFunSlot()
+//{
+//    mDtls = Dtls_Recver::bulid(this);
+
+//    connect(mDtls, &Dtls_Recver::finishSig, this, &Cascade_Updater::dtlsFinishSlot);
+//}
