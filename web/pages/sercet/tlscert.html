@@ -255,7 +255,17 @@
 			document.getElementById("dat17").innerHTML = tls_data[1];
 			document.getElementById("dat18").innerHTML = tls_data[2];
 		}
-		function SetData(btn){
+		function create(){
+			if(confirm("请确认是否保存此次修改？")){
+				rpc.call('pduSetParam',[0,tls_,31,0,0,0]);
+			}else{}
+		}
+		function SetData(ipt){
+			if(confirm("请确认是否保存此次修改？")){
+				let id = parseInt(ipt.id.slice(3));
+				rpc.call('pduSetParam',[0,tls_,id+11,0,0,ipt.value]);
+				flash_html();
+			}else{}
 		}
 		function flash_html(){
 			// read_modbus_data(0);
@@ -293,9 +303,9 @@
 			for(let i = 0;i<7 ;i++){
 				tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;" id="lang_'+(28 + i)+'"></td>';
 				if(i<3){
-					tbody +='<td><input id="ipt'+i +'" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
+					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+' "></input></td></tr>';
 				}else{
-					tbody +='<td><input id="ipt'+i +'" style="width:80%;background:#F8F8F8;border:1px;"></input></td></tr>';
+					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"></input></td></tr>';
 				}
 			}
 			return tbody;
@@ -303,14 +313,14 @@
 		function buildTableNew1(){
 			let tbody ="";
 			tbody +='<tr><td style="padding-left:20px;"colspan= "2" id="lang_36"></td></tr>';
-			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><input id="ipt8" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input>&nbsp&nbsp&nbsp<button>-</button></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><input id="ipt7" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input>&nbsp&nbsp&nbsp<button>-</button></td></tr>';
 			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><button id="lang_37" ></button></td></tr>';
-			tbody +='<tr><td style="padding-left:20px;"colspan= "2" id="lang_38"style="font-weight:bold"></td></tr>';
-			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_39"></td><td></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;style="width:32%;" id="lang_38" style="font-weight:bold"></td><td>RSA</td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_39"></td><td>4096 bits</td></tr>';
 			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_40"></td><td><input id="ipt8" type = "checkbox"></input></td></tr>';
 			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_41"></td><td><input id="ipt9" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
 			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_42"></td><td><input id="ipt10" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
-			tbody +='<tr><td  colspan= "2" align="center"><button id="lang_43" ></button></td></tr>';
+			tbody +='<tr><td  colspan= "2" align="center"><button id="lang_43" onclick = "create();" ></button></td></tr>';
 			return tbody;
 		}
     </script>
