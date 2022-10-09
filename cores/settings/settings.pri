@@ -13,7 +13,8 @@ HEADERS += \
     $$PWD/set_output.h \
     $$PWD/set_sercret.h \
     $$PWD/set_service.h \
-    $$PWD/set_ssdp.h
+    $$PWD/set_ssdp.h \
+    $$PWD/set_tlscert.h
 
 SOURCES += \
     $$PWD/set_alarm.cpp \
@@ -25,4 +26,5 @@ SOURCES += \
     $$PWD/set_output.cpp \
     $$PWD/set_sercret.cpp \
     $$PWD/set_service.cpp \
-    $$PWD/set_ssdp.cpp
+    $$PWD/set_ssdp.cpp \
+    $$PWD/set_tlscert.cpp

@@ -1,8 +1,8 @@
 #ifndef SET_SERCRET_H
 #define SET_SERCRET_H
-#include "set_output.h"
+#include "set_tlscert.h"
 
-class Set_Sercret : public Set_Output
+class Set_Sercret : public Set_TlsCert
 {
 public:
     Set_Sercret();
@@ -10,8 +10,6 @@ public:
     QVariant getSercret(uchar fc);
     bool setSercret(uchar fc, const QVariant &v);
 
-    QVariant getTlsCert(uchar fc);
-    bool setTlsCert(uchar fc, const QVariant &v);
 
     QVariant whiteListCfg(int fc);
     bool setWhiteList(uchar fc, const QVariant &v);

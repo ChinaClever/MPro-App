@@ -39,5 +39,6 @@ void ProcStart::startLcd()
     if(QFile::exists(fn)) {
         QString cmd = fn; cmd += " &";
         system(cmd.toLatin1().data());
+        proc_log("awtk_startup");
     } else qDebug() << "proc start err:" << fn;
 }
