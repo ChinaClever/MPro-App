@@ -9,14 +9,13 @@
 App_RunTime::App_RunTime(QObject *parent)
     : App_Smtp{parent}
 {
-    //std::system("proc_log core"); //////=======
     QTimer::singleShot(755,this,SLOT(runing_initFunSlot()));
 }
 
 void App_RunTime::runing_initFunSlot()
 {
     mTimer = new QTimer(this);
-    mTimer->start(1000); cm::masterDev()->proc.core.runSec = 0;
+    mTimer->start(1000); //cm::masterDev()->proc.core.runSec = 0;
     connect(mTimer, SIGNAL(timeout()), this, SLOT(runing_onTimeoutDone()));
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     sRunTime *run = &(cm::masterDev()->proc.core);

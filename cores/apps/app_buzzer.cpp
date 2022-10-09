@@ -42,7 +42,7 @@ void App_Buzzer::beep_initFunSlot()
     QTimer::singleShot(5*1000,this,SLOT(beep_offSlot()));
 
     mBeepTimer = new QTimer(this); mBeepTimer->start(1000);
-    connect(mBeepTimer, SIGNAL(timeout()), this, SLOT(beep_onTimeoutDone()));
+    //connect(mBeepTimer, SIGNAL(timeout()), this, SLOT(beep_onTimeoutDone())); /////////=======
 }
 
 void App_Buzzer::beep_offSlot()

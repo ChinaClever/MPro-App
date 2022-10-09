@@ -238,6 +238,8 @@ struct sParameter {
 struct sRunTime
 {
     uint runSec; // 最近开关运行时间 秒钟为单位
+    uint resetCnt; // 重启次数；
+    uint daemonSec; // 守护进程使用
     char start[NAME_SIZE]; // 启动时间
 };
 

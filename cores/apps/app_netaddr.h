@@ -2,7 +2,7 @@
 #define APP_NETADDR_H
 #include "app_led.h"
 
-class App_NetAddr: public QObject
+class App_NetAddr: public App_Led
 {
     Q_OBJECT
 public:
