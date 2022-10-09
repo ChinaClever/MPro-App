@@ -74,12 +74,22 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.cascadeAddr = cfg->readCfg("cascadeAddr", 1, g).toInt();
     it.eleLogEn = cfg->readCfg("eleLogEn", 0, g).toInt();
     it.powLogEn = cfg->readCfg("powLogEn", 0, g).toInt();
-    it.buzzerSw = cfg->readCfg("buzzerSw", 0, g).toInt();
+    it.buzzerSw = cfg->readCfg("buzzerSw", 1, g).toInt();
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();
     it.screenAngle = cfg->readCfg("screenAngle", 0, g).toInt();
+    it.dataContent = cfg->readCfg("dataContent", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
+    it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
+}
+
+void Cfg_devParam::runTimeWrite()
+{
+    QString g = "devParams";
+    sDevCfg *cfg = &(cm::masterDev()->cfg);
+    uint t = cfg->param.runTime += 1;
+    devParamWrite("runTime", t, g);
 }
 
 

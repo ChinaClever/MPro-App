@@ -219,6 +219,7 @@ struct sParameter {
     uchar language; // 0 中文 1 英文
     uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
     uchar cascadeAddr; // 级联地址
+    uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
@@ -226,6 +227,8 @@ struct sParameter {
     uint groupEn; // 组开关使能
     uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
     uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint dataContent; // 0：自动 1：最多 2：最少
+    uint runTime; // 总运行时间 单位天
     uchar vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
@@ -235,10 +238,12 @@ struct sParameter {
 struct sRunTime
 {
     uint runSec; // 最近开关运行时间 秒钟为单位
+    uint resetCnt; // 重启次数；
+    uint daemonSec; // 守护进程使用
     char start[NAME_SIZE]; // 启动时间
 };
 
-struct sProState
+struct sProcState
 {
     struct sRunTime sys; // 系统启动时间
     struct sRunTime daemon; // 守护进程
@@ -285,7 +290,7 @@ struct sDevData
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
-    struct sProState pro; // 进程状态
+    struct sProcState proc; // 进程状态
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -306,7 +311,7 @@ struct sNetAddr
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
     char reserve[NAME_SIZE];
-    uint prefixLen;
+    uchar prefixLen;
 };
 
 struct sNetInterface
@@ -363,7 +368,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
-             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert,
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp,
              ELog=81, EPro, ECmd=111};
 

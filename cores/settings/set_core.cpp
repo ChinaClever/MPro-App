@@ -45,11 +45,12 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
-    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
-    case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
+    case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
-    case SFnCode::EModbus: res = modbusCfg(it.fc); break;
+    case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
+    case SFnCode::EWhiteList: res = whiteListCfg(it.fc); break;
+    case SFnCode::EDevInfo: res = devInfoCfg(it.addr, it.fc); break;
     case SFnCode::Uuts: res = getUut(it.addr, it.fc); break;
     case SFnCode::EPro: res = proStartupLog(it); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
@@ -68,6 +69,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGroupSet: ret = groupSet(it, v); break;
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
+    case SFnCode::EWhiteList: ret = setWhiteList(it.fc, v); break;
 
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
@@ -78,6 +80,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
+    case SFnCode::ETlsCert: ret = setTlsCert(it.fc, v); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;

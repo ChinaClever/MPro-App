@@ -1,7 +1,7 @@
 #ifndef APP_CORE_H
 #define APP_CORE_H
 
-#include "app_start.h"
+#include "app_whitelist.h"
 
 class App_Core : public App_Start
 {

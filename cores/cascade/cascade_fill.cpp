@@ -33,13 +33,14 @@ void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
     it.powerUpDelay = unit.powerUpDelay[id];
     it.overrunOff = unit.overrunOff[id];
     it.timingEn = unit.timingEn[id];
+    it.timingOn[0] = it.timingOff[0] = 0;
     qstrcpy(it.timingOn, unit.timingOn[id]);
     qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
 void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
 {
-    obj.id = id;
+    obj.id = id; obj.name[0] = 0;
     qstrcpy(obj.name, data.name[id]);
     upAlarmUnit(id, data.vol, obj.vol);
     upAlarmUnit(id, data.cur, obj.cur);
@@ -93,7 +94,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     obj->lps = data->lps;
     obj->dc = data->dc;
     obj->hz = data->hz;
-    obj->pro = data->pro;
+    obj->proc = data->proc;
     obj->reserve = data->reserve;
 }
 

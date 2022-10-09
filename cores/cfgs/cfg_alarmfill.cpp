@@ -33,13 +33,14 @@ void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     it.resetDelay = unit.resetDelay[id];
     it.overrunOff = unit.overrunOff[id];
     it.timingEn = unit.timingEn[id];
+    it.timingOn[0] = it.timingOff[0] = 0;
     qstrcpy(it.timingOn, unit.timingOn[id]);
     qstrcpy(it.timingOff, unit.timingOff[id]);
 }
 
 void Cfg_AlarmFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
-    qstrcpy(obj.name, data.name[id]);
+    //qstrcpy(obj.name, data.name[id]);
     upAlarmUnit(id, data.vol, obj.vol);
     upAlarmUnit(id, data.cur, obj.cur);
     upAlarmUnit(id, data.pow, obj.pow);

@@ -80,6 +80,5 @@ QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
 
 QString Web_Obj::metaData(uint addr)
 {
-    uchar dc = Integr_Core::pushCfg.dataContent;
-    return Integr_JsonBuild::bulid()->getJson(addr, dc);
+    return Integr_JsonBuild::bulid()->getJson(addr);
 }

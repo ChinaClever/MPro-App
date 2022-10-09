@@ -50,6 +50,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 2: ret = dev->status; break;
     case 3: ret = it->devMode; break;
     case 4: ret = it->cascadeAddr; break;
+    case 5: ret = it->runTime; break;
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
@@ -58,6 +59,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
     case 13: ret = it->screenAngle; break;
+    case 14: ret = it->dataContent; break;
     default: cout << type; break;
     }
 
@@ -80,6 +82,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 11: key = "isBreaker";  it->isBreaker = value; break;
     case 12: key = "vh"; it->vh = value; break;
     case 13: key = "screenAngle"; it->screenAngle = value; break;
+    case 14: key = "dataContent"; it->dataContent = value; break;
     default: ret = false; cout << fc; break;
     } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
@@ -145,20 +148,20 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
+    QByteArray array = v.toByteArray();
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
-    char *str = v.toByteArray().data();
 
     switch (fc) {
     case 1: key = "room";  ptr = it->room; break;
     case 2: key = "location";  ptr = it->location; break;
     case 3: key = "devName";  ptr = it->devName; break;
-    case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(str); break;
+    case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(array); break;
     case 5: key = "sn";  ptr = it->sn; break;
     default: ret = false; cout << fc; break;
     }
 
     if(ptr) {
-        qstrcpy(ptr, str);
+        qstrcpy(ptr, array.data());
         Cfg_Core *cfg = Cfg_Core::bulid();
         cfg->devParamWrite(key, v, prefix);
     }
@@ -169,9 +172,9 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
 QString Set_Info::process_log()
 {
-    QString fn = "usr/data/clever/cfg/process_log.txt";
+    QString fn = "usr/data/clever/cfg/proc_log.txt";
 #if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "process_log.txt";
+    fn = "proc_log.txt";
 #endif
     QFile file(fn); QByteArray array;
     if(file.open(QIODevice::ReadOnly)) {
@@ -184,7 +187,7 @@ QString Set_Info::process_log()
 QVariant Set_Info::proStartupLog(const sCfgItem &it)
 {
     QVariant res;
-    sProState *pro = &(cm::devData(it.addr)->pro);
+    sProcState *pro = &(cm::devData(it.addr)->proc);
     sRunTime *run = nullptr; switch (it.fc) {
     case 1: run = &(pro->core); break;
     case 2: run = &(pro->daemon); break;
@@ -204,14 +207,13 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
 {
-    int s = 5; QString fn = "catQR.png";
-    char *ptr = cm::masterDev()->cfg.uut.qrcode;
-    if(msg.size()) {
-        QString cmd = "qrencode -o %1 -s %2 '%3'";
-        QString qr = cmd.arg(fn).arg(s).arg(msg);
-        qstrcpy(ptr, msg.toLatin1().data());
-        system(qr.toLatin1().data());
-    } else ptr[0] = 0;
+    int s = 5; char *ptr = cm::masterDev()->cfg.uut.qrcode;
+    QString fn = "/usr/data/clever/cfg/qrcode.png";
+    QString cmd = "qrencode -o %1 -s %2 '%3'";
+    QString qr = cmd.arg(fn).arg(s).arg(msg);
+    qstrcpy(ptr, msg.toLatin1().data());
+    system(qr.toLatin1().data());
+    if(msg.isEmpty()) ptr[0] = 0;
 
     return true;
 }

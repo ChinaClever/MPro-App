@@ -25,6 +25,14 @@ char *Web_Rpc::pduMetaData(mg_str &r)
     return responRpcString(its, value);
 }
 
+char *Web_Rpc::execute(mg_str &r)
+{
+    QVector<uint> its = mObj->getNumbers(r, 5);
+    QString value = mObj->getString(r, 5);
+    value = cm::execute(value);
+    return responRpcString(its, value);
+}
+
 char* Web_Rpc::pduSetData(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 6);

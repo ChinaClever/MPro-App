@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 App_NetAddr::App_NetAddr(QObject *parent)
-    : QObject{parent}
+    : App_Led{parent}
 {
     QTimer::singleShot(544,this,SLOT(inet_initFunSlot()));
 }

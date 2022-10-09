@@ -35,17 +35,20 @@ int Set_Integr::modbusCfg(uchar fc)
 
 bool Set_Integr::modbusSet(uchar fc, int value)
 {
-    Mb_Core *mb = Mb_Core::bulid();
+    sModbusSetting *cfg = &(Mb_Core::modbusCfg);
     QString prefix = "modbus";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "enRtu"; mb->connectRtu(value); break;
-    case 2: key = "addr"; mb->setAddress(value); break;
-    case 3: key = "baud"; value = toBaud(value); mb->setRtu(2, value); break;
-    case 4: key = "parity"; value = toParity(value); mb->setRtu(1, value); break;
-    case 5: key = "dataBits"; value = toDataBits(value); mb->setRtu(3, value); break;
-    case 6: key = "stopBits"; value = toStopBits(value); mb->setRtu(4, value); break;
-    case 11: key = "enTcp"; mb->connectTcp(value); break;
-    case 12: key = "port"; mb->setPort(value); break;
+    case 1: key = "enRtu"; cfg->enRtu = value; break;
+    case 2: key = "addr"; cfg->addr = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
+    case 3: key = "baud"; value = toBaud(value); cfg->baud = value; /*mb->setRtu(2, value);*/break;
+    case 4: key = "parity"; value = toParity(value); cfg->parity = value;  /*mb->setRtu(1, value);*/ break;
+    case 5: key = "dataBits"; value = toDataBits(value); cfg->dataBits = value; /*mb->setRtu(3, value);*/ break;
+    case 6: key = "stopBits"; value = toStopBits(value); cfg->stopBits = value; /*mb->setRtu(4, value);*/ break;
+    case 7: emit Mb_Core::bulid()->connectRtuSig(); break;
+
+    case 11: key = "enTcp"; cfg->enTcp = value; break;
+    case 12: key = "port"; cfg->port = value; break;
+    case 13: emit Mb_Core::bulid()->connectTcpSig(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
@@ -112,13 +115,16 @@ int Set_Integr::rpcCfg(uchar fc)
 
 bool Set_Integr::rpcSet(uchar fc, int value)
 {
-    Rpc_Service *obj = Rpc_Service::bulid();
+    sRpcCfg *cfg = &(Rpc_Service::rpcCfg);
     QString prefix = "rpc";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "jsonRpcEn"; obj->startJsonRpc(value); break;
-    case 2: key = "jsonRpcPort"; obj->setJsonPort(value); break;
-    case 4: key = "xmlRpcEn"; obj->startXmlRpc(value); break;
-    case 5: key = "xmlRpcPort"; obj->setXmlPort(value); break;
+    case 1: key = "jsonRpcEn"; cfg->json.en = value; break;
+    case 2: key = "jsonRpcPort"; cfg->json.port = value; break;
+    case 3: Rpc_Service::bulid()->startJsonRpc();  break;
+
+    case 4: key = "xmlRpcEn"; cfg->xml.en = value; break;
+    case 5: key = "xmlRpcPort"; cfg->xml.port = value; break;
+    case 6: Rpc_Service::bulid()->startXmlRpc();  break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
@@ -151,25 +157,26 @@ QVariant Set_Integr::mqttCfg(uchar fc)
 
 bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
 {
-    Mqtt_Client *obj = Mqtt_Client::bulid();
+    sMqttCfg *cfg = &(Mqtt_Client::cfg);
     QString prefix = "mqtt";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "type"; break;
-    case 2: key = "url"; break;
-    case 3: key = "port"; break;
-    case 4: key = "path"; break;
-    case 5: key = "clientId"; break;
-    case 6: key = "usr"; break;
-    case 7: key = "pwd"; break;
-    case 8: key = "keepAlive"; break;
-    case 9: key = "qos"; break;
+    case 1: key = "type"; cfg->type = v.toInt(); break;
+    case 2: key = "url"; cfg->url = v.toString(); break;
+    case 3: key = "port"; cfg->port = v.toInt(); break;
+    case 4: key = "path"; cfg->path =v.toString(); break;
+    case 5: key = "clientId"; cfg->clientId = v.toString(); break;
+    case 6: key = "usr"; cfg->usr = v.toByteArray(); break;
+    case 7: key = "pwd"; cfg->pwd = v.toByteArray(); break;
+    case 8: key = "keepAlive"; cfg->keepAlive = v.toInt(); break;
+    case 9: key = "qos"; cfg->qos = v.toInt(); break;
+    case 11: Mqtt_Client::bulid()->startMqtt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
     if(ret) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
-        obj->set(fc, v);
+        //Mqtt_Client::bulid()->set(fc, v);
     }
 
     return ret;
@@ -188,10 +195,10 @@ QVariant Set_Integr::pushCfg(uchar fc)
     case 4: res = cfg->udp[1].en; break;
     case 5: res = cfg->udp[1].host; break;
     case 6: res = cfg->udp[1].port; break;
-    case 7: res = cfg->recvEn; break;
-    case 8: res = cfg->recvPort; break;
-    case 9: res = cfg->sec; break;
-    case 10: res = cfg->dataContent; break;
+    case 7: res = cfg->sec; break;
+    case 8: res = cfg->recvEn; break;
+    case 9: res = cfg->recvPort; break;
+
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;
@@ -207,7 +214,6 @@ QVariant Set_Integr::pushCfg(uchar fc)
 bool Set_Integr::pushSet(uchar fc, const QVariant &v)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
-    Integr_Core *obj = Integr_Core::bulid();
     QString prefix = "push";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "udpEn"; cfg->udp[0].en = v.toInt(); break;
@@ -216,15 +222,19 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
     case 4: key = "udp2En"; cfg->udp[1].en = v.toInt(); break;
     case 5: key = "ddp2Host"; cfg->udp[1].host = v.toString(); break;
     case 6: key = "udp2Port"; cfg->udp[1].port = v.toInt(); break;
-    case 7: key = "recvEn"; obj->startRecv(v.toInt()); break;
-    case 8: key = "recvPort"; obj->setRecvPort(v.toInt()); break;
-    case 9: key = "sec"; cfg->sec = v.toInt(); break;
-    case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
+    case 7: key = "sec"; cfg->sec = v.toInt(); break;
+
+    case 8: key = "recvEn"; cfg->recvEn = v.toInt(); break;
+    case 9: key = "recvPort"; cfg->recvPort = v.toInt(); break;
+    case 10: Integr_Core::bulid()->initRecvFun(); break;
+
+//    case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
     case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
     case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;
     case 14: key = "enServ"; cfg->http.enServ = v.toInt(); break;
     case 15: key = "httpPort"; cfg->http.port = v.toInt(); break;
+    case 16: Integr_Core::bulid()->httpServer(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 

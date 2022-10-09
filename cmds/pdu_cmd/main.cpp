@@ -56,7 +56,7 @@ void pduDataSet(const QStringList &ls)
         uchar topic = ls.at(k++).toInt();
         uchar sub = ls.at(k++).toInt();
         uchar id = ls.at(k++).toInt();
-        uint value = ls.at(k++).toInt();
+        double value = ls.at(k++).toDouble();
         qDebug() << rpc->pduDataSet(addr, type, topic, sub, id, value);
     } else qCritical() << "pduDataSet Parameter error";
 }

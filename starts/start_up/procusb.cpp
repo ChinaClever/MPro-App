@@ -3,7 +3,7 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "app_usb.h"
+#include "procusb.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,13 +13,12 @@
 #include <linux/netlink.h>
 #define UEVENT_BUFFER_SIZE 2048
 
-App_Usb::App_Usb(QObject *parent)
-    : QThread{parent}
+ProcUsb::ProcUsb()
 {
 
 }
 
-void App_Usb::run()
+void ProcUsb::usb_run()
 {
     struct sockaddr_nl client;
     struct timeval tv;

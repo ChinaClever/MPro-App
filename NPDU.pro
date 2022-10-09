@@ -4,6 +4,7 @@ unix {
 SUBDIRS += \
     cores \
     cmds/pdu_cmd \
+    cmds/proc_log \
     starts/start_up
 }
 
@@ -13,5 +14,3 @@ contains(TARGET_ARCH, x86_64) {
         tools/ota_updater
 }
 
-SUBDIRS += \
-    cmds/process_log

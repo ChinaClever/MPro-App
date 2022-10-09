@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>devset</title>
+		<title>swctrl</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -46,6 +46,8 @@
 					</div>
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
 					</div>
 				</div>
 			</div>
@@ -96,7 +98,7 @@
 		}
 		modeset();
 		showdata();
-		function modeset(modesel){
+		function modeset(){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
 			var btnname = document.getElementsByTagName("button");
@@ -226,15 +228,7 @@
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
-				if(type1 === 'b'){
-					stat = ipt.value;
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetParam',[addr,22,1,num,num,stat]);
-				}
-				else if(type1 === 'd'){
+				if(type1 === 'd'){
 					stat = parseInt(ipt.value);
 					if(num !== output_num + 1){
 					}else{
@@ -254,7 +248,7 @@
 		}
 		function btn_click(btn)
 		{
-			var addr = parseInt(btn.id.slice(1))+1;
+			var num = parseInt(btn.id.slice(1))+1;
 			var stat = 0;
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
@@ -269,11 +263,11 @@
 					stat = 2;
 				}
 
-				if(addr !== output_num + 1){
+				if(num !== output_num + 1){
 				}else{
-					addr = 0;
+					num = 0;
 				}
-				rpc.call('pduSetData',[addr,output,switch_,1,addr,stat]);
+				rpc.call('pduSetData',[0,output,switch_,1,num,stat]);
 				flash_html(btn);
 			}else{}
 		}
@@ -295,7 +289,7 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input> </td>';
+				tbody += '<td id = "b'+ i + '" >'+output_name[i + 1]+'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';

@@ -17,7 +17,7 @@
 #include "op_core.h"
 
 App_Start::App_Start(QObject *parent)
-    : App_Runing{parent}
+    : App_RunTime{parent}
 {
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(15,this,SLOT(startThreadSlot()));
@@ -47,15 +47,15 @@ void App_Start::initFunSlot()
 
 void App_Start::startThreadSlot()
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    Agent_Core::bulid(this);
-#endif
-
     Web_Core::bulid();
     Data_Core::bulid();
     Mb_Core::bulid(this);
-    //OP_Core::bulid(this)->startFun();
+
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    Agent_Core::bulid(this);
+    OP_Core::bulid(this)->startFun();
     Cascade_Core::bulid(this)->startFun();
+#endif
 }
 
 

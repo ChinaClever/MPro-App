@@ -56,12 +56,11 @@
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-		//read_monitoring_data();
-		// setInterval(function(){
+		setInterval(function(){
 			read_data();
 			$('.table-striped').html(buildTable(output_num));
 			$('.devname').html(buildSel(slave_num));
-		// },800);
+		},800);
 		
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
@@ -111,25 +110,6 @@
 					ss.bgColor = '';
 				}
 			}
-		}
-		function read_monitoring_data(addr){
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(i >= parseInt(output_num + 1)){
-					clearInterval(time1);
-				}
-				if(i <= output_num){
-					rpc.call('pduReadData',[addr,output,pow_,j,i]);
-					rpc.call('pduReadData',[addr+1,output,pow_,j,i]);
-					rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
-					rpc.call('pduReadData',[addr+1,output,AVpow_,j,i]);
-					rpc.call('pduReadData',[addr,output,energe_,j,i]);
-					rpc.call('pduReadData',[addr+1,output,energe_,j,i]);
-					rpc.call('pduReadData',[addr,output,pow_,3,i]);
-					rpc.call('pduReadData',[addr+1,output,pow_,3,i]);
-				}
-				i++;
-			},1);
 		}
 		function buildTable(rows) {
 			var thead = '',tbody = '';

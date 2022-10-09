@@ -56,17 +56,17 @@ QSslConfiguration Sercret_TlsCert::sslConfiguration()
 
 QString Sercret_TlsCert::effectiveDate()
 {
-    QString res;
-    if(mCert)
+    QString res; if(mCert) {
         res = mCert->effectiveDate().toString("yyyy-MM-dd hh:mm:ss");
+    }
     return res;
 }
 
 QString Sercret_TlsCert::expiryDate()
 {
-    QString res;
-    if(mCert)
+    QString res; if(mCert) {
         res = mCert->expiryDate().toString("yyyy-MM-dd hh:mm:ss");
+    }
     return res;
 }
 

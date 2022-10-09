@@ -50,7 +50,7 @@ QByteArray Ssdp_Obj::toArray(const sSdpIt &it)
 
 bool Ssdp_Obj::toItem(const QByteArray &array, sSdpIt &it)
 {
-    QByteArray data = qUncompress(array);
+    QByteArray data = qUncompress(array); //qDebug() << data;
     QDataStream out(&data, QIODevice::ReadOnly); bool ret = false;
     out >> it.version >> it.fc >> it.room >> it.ip >> it.target >> it.data >> it.crc;
     if(it.crc == END_CRC) ret = true;

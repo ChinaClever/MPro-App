@@ -9,7 +9,10 @@
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
 {
-    Shm::initShm(); compileTime();
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    Shm::initShm();
+#endif
+    compileTime();
     Cfg_Core::bulid();
 }
 

@@ -1,9 +1,8 @@
 #ifndef APP_NETADDR_H
 #define APP_NETADDR_H
-#include "commons.h"
-#include "cfg_obj.h"
+#include "app_led.h"
 
-class App_NetAddr: public QObject
+class App_NetAddr: public App_Led
 {
     Q_OBJECT
 public:

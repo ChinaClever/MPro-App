@@ -29,10 +29,8 @@ Integr_Receiver::~Integr_Receiver()
 
 void Integr_Receiver::initRecvFun()
 {
+    closeServers();
     sPushCfg *cfg = &pushCfg;
-    cfg->recvEn = 1;
-    cfg->recvPort = 5655;
-
     switch(cfg->recvEn) {
     case 1: mUdp->bind(cfg->recvPort); break;
     case 2: mTcp->listen(cfg->recvPort); break;
@@ -49,21 +47,6 @@ void Integr_Receiver::closeServers()
     mWss->close();
 }
 
-void Integr_Receiver::startRecv(int en)
-{
-    closeServers();
-    pushCfg.recvEn = en;
-    initRecvFun();
-}
-
-void Integr_Receiver::setRecvPort(int port)
-{
-    if(pushCfg.recvPort != port) {
-        pushCfg.recvPort = port;
-        closeServers();
-        initRecvFun();
-    }
-}
 
 void Integr_Receiver::recvSlot(const QByteArray &array)
 {

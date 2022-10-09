@@ -1,13 +1,13 @@
-#ifndef APP_RUNING_H
-#define APP_RUNING_H
+#ifndef APP_RUNTIME_H
+#define APP_RUNTIME_H
 
 #include "app_smtp.h"
 
-class App_Runing : public App_Smtp
+class App_RunTime : public App_Smtp
 {
     Q_OBJECT
 public:
-    explicit App_Runing(QObject *parent = nullptr);
+    explicit App_RunTime(QObject *parent = nullptr);
 
 private slots:
     void runing_initFunSlot();
@@ -17,4 +17,4 @@ private:
     QTimer *mTimer;
 };
 
-#endif // APP_RUNING_H
+#endif // APP_RUNTIME_H

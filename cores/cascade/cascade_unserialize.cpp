@@ -33,12 +33,14 @@ void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.overrunOff[id] = it.overrunOff;
     unit.timingEn[id] = it.timingEn;
+    unit.timingOn[id][0] = unit.timingOff[id][0] = 0;
     qstrcpy(unit.timingOn[id], it.timingOn);
     qstrcpy(unit.timingOff[id], it.timingOff);
 }
 
 void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
 {
+    data.name[id][0] = 0;
     qstrcpy(data.name[id], obj.name);
     unAlarmUnit(id, data.vol, obj.vol);
     unAlarmUnit(id, data.cur, obj.cur);
@@ -104,7 +106,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->lps = obj->lps;
     data->dc = obj->dc;
     data->hz = obj->hz;
-    data->pro = obj->pro;
+    data->proc = obj->proc;
     data->reserve = obj->reserve;
 }
 

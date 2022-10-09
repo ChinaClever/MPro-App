@@ -1,5 +1,6 @@
 
 QT -= gui
+QT += concurrent
 
 CONFIG += c++17 console
 CONFIG -= app_bundle
@@ -9,16 +10,17 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    app_run.h \
-    app_usb.h \
-    start_app.h
+    daemons.h \
+    procruning.h \
+    procstart.h \
+    procusb.h
 
 SOURCES += \
-        app_run.cpp \
-        app_shm.cpp \
-        app_usb.cpp \
+        daemons.cpp \
         main.cpp \
-        start_app.cpp
+        procruning.cpp \
+        procstart.cpp \
+        procusb.cpp
 
 contains(TARGET_ARCH, x86_64) {
     # Default rules for deployment.
