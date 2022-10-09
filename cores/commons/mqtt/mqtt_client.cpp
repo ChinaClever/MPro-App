@@ -71,7 +71,7 @@ void Mqtt_Client::connectToHost()
         m_client->setUsername(cfg.usr);
         m_client->setPassword(cfg.pwd);
         m_client->connectToHost();
-    }
+    } else if(m_client) m_client->setAutoReconnect(ret);
 }
 
 void Mqtt_Client::startMqtt()

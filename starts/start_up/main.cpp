@@ -4,7 +4,20 @@
  *      Author: Lzy
  */
 #include <QCoreApplication>
-#include "start_app.h"
+#include "daemons.h"
+
+__attribute__((constructor)) void startup()
+{
+    std::system("./proc_log daemon_startup");
+    //printf("Constructor is called.\n");
+}
+
+__attribute__((destructor)) void app_exit()
+{
+    std::system("./proc_log daemon_exit");
+    //printf("destructor is called.\n");
+}
+
 
 static void initSystem()
 {
@@ -12,6 +25,7 @@ static void initSystem()
     system("ifconfig eth0 up"); //system("dhclient");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.130:/home/lzy/work/nfs /usr/data/nfs");
 }
 
@@ -20,7 +34,7 @@ static void startSnmpd()
     QString custom = "/usr/data";
     QString fn = "/etc/snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
-    // bool ret = App_Run::isRun("snmpd"); if(ret) return ;
+    bool ret = ProcRuning::isRun("snmpd"); if(ret) return ;
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";
     } else if(QFile::exists(fn)) {
@@ -49,18 +63,15 @@ static void createDirectory()
     system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 
-extern void init_share_mem();
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     createDirectory();
-    //init_share_mem();
     initSystem();
     startSnmpd();
 
-    QObject *p = a.parent();
-    Start_App::bulid(p);
+    // Daemons::bulid();
 #endif
     return a.exec();
 }

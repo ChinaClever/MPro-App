@@ -21,13 +21,15 @@ OP_Core *OP_Core::bulid(QObject *parent)
 void OP_Core::initFunSlot()
 {
     qint32 baudRate = QSerialPort::Baud19200;
-    openSerial("/dev/ttyUSB0", baudRate);
+    openSerial("/dev/ttyS1", baudRate);
 }
 
 void OP_Core::startFun()
 {
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QTimer::singleShot(1,this,SLOT(initFunSlot()));
     mThread->init(this, SLOT(run()));
     cm::mdelay(3); mThread->start();
+#endif
 }
 

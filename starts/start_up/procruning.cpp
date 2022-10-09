@@ -3,7 +3,7 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "app_run.h"
+#include "procruning.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-static int isRunning(const char *procname)
+int ProcRuning::isRunning(const char *procname)
 {
     int ret = 0;
     char sCurrPid[16] = {0};
@@ -53,8 +53,15 @@ static int isRunning(const char *procname)
     return ret;
 }
 
-bool App_Run::isRun(const char *procname)
+bool ProcRuning::isRun(const char *procname)
 {
     int ret = isRunning(procname);
     return ret == 1 ? true:false;
+}
+
+void cm_mdelay(int msec)
+{
+    QEventLoop loop;
+    QTimer::singleShot(msec, &loop, SLOT(quit()));
+    loop.exec();
 }
