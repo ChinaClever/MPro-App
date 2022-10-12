@@ -19,6 +19,12 @@ __attribute__((destructor)) void app_exit()
 }
 
 
+/***
+ * 在/usr/data/目录下，建立 启动脚本 start_up.sh
+ * 必须得先 执行升级命令 cp -rf /usr/data/updater/  /usr/data/clever/
+ * 再清空升级目录　rm -rf /usr/data/updater/*
+ */
+
 static void initSystem()
 {
     system("chmod 777 /usr/data/clever/app/*");
@@ -52,6 +58,7 @@ static void startSnmpd()
 
 static void createDirectory()
 {
+    system("mkdir -p /usr/data/updater");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");

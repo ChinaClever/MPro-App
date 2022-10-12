@@ -75,6 +75,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
+    case SFnCode::EOta: ret = ota_updater(it.fc); break;
     case SFnCode::ESmtp: ret = smtpSet(it.fc, v); break;
     case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;

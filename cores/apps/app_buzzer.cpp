@@ -19,9 +19,9 @@
 App_Buzzer::App_Buzzer(QObject *parent)
     : QObject{parent}
 {
-    if(QFile::exists("/sys/clever/beep/switch")) {
-        QTimer::singleShot(1,this,SLOT(beep_initFunSlot()));
-    } else cout << "Buzzer driver error";
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    QTimer::singleShot(1,this,SLOT(beep_initFunSlot()));
+#endif
 }
 
 App_Buzzer::~App_Buzzer()

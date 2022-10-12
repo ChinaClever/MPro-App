@@ -13,7 +13,6 @@ public:
 private:
     void onStartSsdp();
 
-
 private slots:
     void runing_initFunSlot();
     void runing_onTimeoutDone();

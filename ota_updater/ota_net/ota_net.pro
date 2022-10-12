@@ -11,13 +11,13 @@ include(common/common.pri)
 
 HEADERS += \
     ota_core.h \
-    ota_dtls.h \
+    ota_net.h \
     ota_obj.h
 
 SOURCES += \
     main.cpp \
     ota_core.cpp \
-    ota_dtls.cpp \
+    ota_net.cpp \
     ota_obj.cpp
 
 # Default rules for deployment.
