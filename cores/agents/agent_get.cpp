@@ -46,8 +46,8 @@ void Agent_Get::addDevVer(uchar addr, const QString &oidPrefix, sVersions &dev)
 {
     bool w = false; QString oid = "0.3.";
     int id = 1; QString prefix = oidPrefix + "ver_";
-    addOid(addr, id++, oid, prefix+"version", dev.coreVer, w);
-    addOid(addr, id++, oid, prefix+"compileTime", dev.coreCompileTime, w);
+    addOid(addr, id++, oid, prefix+"version", dev.ver, w);
+    addOid(addr, id++, oid, prefix+"compileTime", dev.compileDate, w);
 }
 
 void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev)

@@ -28,6 +28,5 @@ App_Core *App_Core::bulid(QObject *parent)
 void App_Core::compileTime()
 {
     sVersions *vers = &(cm::masterDev()->cfg.vers);
-    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
+    cm::buildDateTime(vers->compileDate);
 }

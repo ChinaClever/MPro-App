@@ -195,21 +195,13 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
 void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    if(strlen(it.coreVer)) obj.insert("core_ver", it.coreVer);
-    if(strlen(it.coreMd5)) obj.insert("core_md5", it.coreMd5);
-    if(strlen(it.coreCompileTime)) obj.insert("core_compile_time", it.coreCompileTime);
-    if(strlen(it.coreReleaseTime)) obj.insert("core_release_time", it.coreReleaseTime);
-
-    if(strlen(it.lcdVer)) obj.insert("lcd_ver", it.lcdVer);
-    if(strlen(it.lcdMd5)) obj.insert("lcd_md5", it.lcdMd5);
-    if(strlen(it.lcdCompileTime)) obj.insert("lcd_compile_time", it.lcdCompileTime);
-    if(strlen(it.lcdReleaseTime)) obj.insert("lcd_release_time", it.lcdReleaseTime);
-
-    if(strlen(it.startVer)) obj.insert("start_ver", it.startVer);
-    if(strlen(it.startMd5)) obj.insert("start_md5", it.startMd5);
-    if(strlen(it.startCompileTime)) obj.insert("start_compile_time", it.startCompileTime);
-    if(strlen(it.startReleaseTime)) obj.insert("start_release_time", it.startReleaseTime);
-    if(it.version) obj.insert("pdu_ver", it.version/1.0);
+    if(strlen(it.usr)) obj.insert("usr", it.usr);
+    if(strlen(it.md5)) obj.insert("md5", it.md5);
+    if(strlen(it.ver)) obj.insert("ver", it.ver);
+    if(strlen(it.remark)) obj.insert("remark", it.remark);
+    if(strlen(it.oldVersion)) obj.insert("oldVersion", it.oldVersion);
+    if(strlen(it.compileDate)) obj.insert("compileDate", it.compileDate);
+    if(strlen(it.releaseDate)) obj.insert("releaseDate", it.releaseDate);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]);
