@@ -26,6 +26,8 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
+let ip_mode = new Array("Ipv4","Ipv6");
+let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -165,6 +167,9 @@ var jsonrpc = function()
             sessionStorage.setItem("Issue"+tls_info1[topic % 10], JSON.parse(evt.data).result[5]);
           }
         }
+      break;
+      case 41:
+        sessionStorage.setItem(ip_mode[subtopic]+ip_addr[topic] , JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -617,5 +622,21 @@ function read_monitoring_data(addr){
       rpc.call('pduReadData',[addr+1,output,switch_,8,i]);
     }
     i++;
+  },3);
+}
+function read_ip_addr_data(addr){
+  let j = 0,i =0;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(11 +1)){
+      clearInterval(time1);
+    }
+    if(j < 11 +1 && (j<7 || j>9)){
+      rpc.call('pduReadParam',[addr,41,j,i,0]);
+    }
+    j++;
+    if(j>=12 && i < 1){
+      j = 0;
+      i++;
+    }
   },3);
 }

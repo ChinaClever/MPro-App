@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>swctrl</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
+		<style>
+			.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+			}
+			.panel-default > .panel-heading{
+				color: #222;
+				font-size:13px;
+				background-color: #fff;
+				border-color: #e6e6e6;
+				padding: 10px 12px;
+			}
+		</style>
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button  id="lang_2" onclick ="readonlyset(this);"></button></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7" style ="height: 90%;">
+						<table class="table table-striped text-center"></table>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
+				</div>
+			</div>
+		</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../doc-lib/highlight.pack.js"></script>
+	<script src="../../doc-lib/doc.js"></script>
+    <script>
+		let read  = 0;
+		let dual_name = new Array();
+		let language = 1;
+		let lang = new Array();
+		let dual_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		let dual_data = new Array();
+		let state_ = new Array();
+		lang_init();
+		read_data();
+		function lang_init(){
+			lang[1] = ["","分组控制","","","",""];
+			lang[2] = ["","阅读模式","","","",""];
+			lang[3] = ["","序号","","","",""];
+			lang[4] = ["","机架名称","","","",""];
+			lang[5] = ["","开关状态","","","",""];
+			lang[6] = ["","开关使能","","","",""];
+			lang[7] = ["","开关控制","","","",""];
+			lang[8] = ["","开启","","","",""];
+			lang[9] = ["","关闭","","","",""];
+			lang[10] = ["","复位","","","",""];
+			lang[11] = ["","A路","","","",""];
+			lang[12] = ["","B路","","","",""];
+			lang[13] = ["","设置模式","","","",""];
+			lang[14] = ["","统一设置","","","",""];
+			state_[0] = lang[9][language];
+			state_[1] = lang[8][language];
+		}
+		function lang_fun(){
+			for(var i = 1;i<8;i++){
+				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
+			}
+			document.getElementById("b" + dual_num).innerHTML  = lang[14][language];
+			if(read == 1){
+				document.getElementById("lang_2").innerHTML = lang[13][language];
+			}
+		}
+		function read_data(){
+			for(var i = 1 ;i < dual_num + 1;i++)
+			{
+				dual_data[i] = new Array();
+				dual_name[i] = sessionStorage.getItem("DualName"+ addr +'_'+i);
+				dual_data[i][0] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
+				dual_data[i][1] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+(addr +1) +'_'+i));
+				dual_data[i][2] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
+				dual_data[i][3] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+(addr +1) +'_'+i));
+			}
+		}
+		$('.table-striped').html(buildTable(dual_num));
+		lang_fun();
+		modeset();
+		showdata();
+		function modeset(){
+			var iptname = document.getElementsByTagName("input");
+			var btnname = document.getElementsByTagName("button");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+			for(var j = 1; j<btnname.length;j++)
+			{
+				btnname[j].disabled = true;
+			}
+		}
+		function readonlyset(ros){
+			if(read === 0){
+				read = 1;
+				ros.style.backgroundColor = 'red';
+				ros.innerHTML = lang[13][language];
+				var iptname = document.getElementsByTagName("input");
+				var btnname = document.getElementsByTagName("button");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = false;
+				}
+				for(var j = 1; j<btnname.length;j++)
+				{
+					btnname[j].disabled = false;
+				}
+			}
+			else{
+				read = 0;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = lang[2][language];
+				var iptname = document.getElementsByTagName("input");
+				var btnname = document.getElementsByTagName("button");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = true;
+				}
+				for(var j = 1; j<btnname.length;j++)
+				{
+					btnname[j].disabled = true;
+				}
+			}
+		}
+		function showdata(){
+			for(var i = 1 ;i < dual_num + 1;i++)
+			{
+				var ss = document.getElementById('e'+(i -1));
+				var ms = document.getElementById('f'+(i -1));
+				if(dual_data[i][2] === 1){
+					ss.checked = true;
+				}
+				else{
+					ss.checked = false;
+				}
+				if(dual_data[i][3] === 1){
+					ms.checked = true;
+				}
+				else{
+					ms.checked = false;
+				}
+			}
+		}
+		function flash_html(par)
+		{
+			read_monitoring_data(addr);
+			setTimeout(function(){
+				par.parentNode.parentNode.parentNode.remove();
+				read_data();
+				$('.table-striped').html(buildTable(dual_num));
+				showdata();
+				lang_fun();
+			},800);
+		}
+		function cked(ckd)
+		{
+			var stat;
+			var type1 = ckd.id.substr(0,1);
+			var num = parseInt(ckd.id.slice(1))+1;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				if(type1 === 'e'){
+					if(ckd.checked == true){
+						stat = 1;
+					}else{
+						stat = 0;
+					}
+					if(num !== dual_num + 1){
+
+					}else{
+						num = 0;
+					}
+					rpc.call('pduSetData',[addr,output,switch_,8,num,stat]);
+				}
+				else if(type1 === 'f'){
+					if(ckd.checked == true){
+						stat = 1;
+					}else{
+						stat = 0;
+					}
+
+					if(num !== dual_num + 1){
+					}else{
+						num = 0;
+					}
+					rpc.call('pduSetData',[addr + 1,output,switch_,8,num,stat]);
+				}
+				flash_html(ckd);
+			}else{}
+		}
+		function btn_click(btn)
+		{
+			var type1 = btn.id.substr(0,1);
+			var num = parseInt(btn.id.slice(1))+1;
+			var stat = 0;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			let dual = 0,addr_num =0;
+			if(retVal == true)
+			{
+				dual = type1.charCodeAt() - 'g'.charCodeAt();
+				addr_num = parseInt(dual / 3);
+				stat = parseInt(dual % 3);
+				if(num !== dual_num + 1){
+				}else{
+					num = 0;
+				}
+				rpc.call('pduSetData',[addr_num,output,switch_,1,num,stat]);
+				flash_html(btn);
+			}else{}
+		}
+		function buildTable(rows) {
+			var thead = '',
+				tbody = '';
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+					thead = '<tr><td  rowspan = "2" width ="5%" id="lang_3"></td>\
+					<td width ="35%" rowspan = "2" id="lang_4"></td>\
+					<td width ="10%" colspan = "2" id="lang_5"></td>\
+					<td width ="10%" colspan = "2" id="lang_6"></td>\
+					<td width ="40%" colspan = "6" id="lang_7"></td></tr>\
+					<tr><td >'+ lang[11][language] +'</td>\
+					<td >'+ lang[12][language] +'</td>\
+					<td >'+ lang[11][language] +'</td>\
+					<td >'+ lang[12][language] +'</td>\
+					<td colspan = "3" >'+ lang[11][language] +'</td>\
+					<td colspan = "3" >'+ lang[12][language] +'</td></tr>';
+				}
+				tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+				tbody += '<td id = "b'+ i + '">' + dual_name[i + 1]+'</td>';
+				tbody += '<td id = "c'+ i + '">'+ state_[dual_data[i + 1][0]] +'</td>';
+				tbody += '<td id = "d'+ i + '">'+ state_[dual_data[i + 1][1]] +'</td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
+				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
+				tbody += '<td><button id = "i'+ i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>';
+				tbody += '<td><button id = "j'+ i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+				tbody += '<td><button id = "k'+ i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
+				tbody += '<td><button id = "l'+ i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>';
+				tbody += '</tr>';
+				if(i === rows - 1){
+					i++;
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+					tbody += '<td id = "b'+ i + '"></td>';
+					tbody += '<td id = "c'+ i + '"></td>';
+					tbody += '<td id = "d'+ i + '"></td>';
+					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
+					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
+					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+					tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
+					tbody += '<td><button id = "i'+ i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>';
+					tbody += '<td><button id = "j'+ i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+					tbody += '<td><button id = "k'+ i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
+					tbody += '<td><button id = "l'+ i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>';
+					tbody += '</tr>';
+				}
+			}
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		} 
+    </script>
+</body>
+</html>
