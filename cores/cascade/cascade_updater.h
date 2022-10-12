@@ -9,14 +9,14 @@ class Cascade_Updater : public Cascade_Object
     Q_OBJECT
 public:
     explicit Cascade_Updater(QObject *parent = nullptr);
-    bool ota_update(int addr, const sFileTrans &it);
+    bool ota_update(int addr, const sOtaFile &it);
     void ota_updates();
 
 public slots:
-    void ota_start(const sFileTrans &it) {mIt=it;}
+    void ota_start(const sOtaFile &it) {mIt=it;}
 
 signals:
-    void otaReplyFinishSig(const sFileTrans &it,bool);
+    void otaReplyFinishSig(const sOtaFile &it,bool);
     void otaSendSig(uchar addr, const QString &message);
     void otaProSig(uchar addr, int pro);
 
@@ -27,7 +27,7 @@ protected:
 
 private:
     bool otaSetFile(const QString &fn);
-    bool otaSendInit(int addr, const sFileTrans &it);
+    bool otaSendInit(int addr, const sOtaFile &it);
 
     bool otaSendFinish(int addr, uint state);
     bool otaSendPacket(int addr, const QByteArray &array);
@@ -43,7 +43,7 @@ protected:
 private:
     int mSize;
     QFile *mFile;
-    sFileTrans mIt;
+    sOtaFile mIt;
 //    Dtls_Recver *mDtls;  //////////////=============
 };
 

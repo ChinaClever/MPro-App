@@ -9,10 +9,19 @@ CONFIG -= app_bundle
 
 include(common/common.pri)
 
+HEADERS += \
+    ota_core.h \
+    ota_dtls.h \
+    ota_obj.h
+
 SOURCES += \
-        main.cpp
+    main.cpp \
+    ota_core.cpp \
+    ota_dtls.cpp \
+    ota_obj.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+

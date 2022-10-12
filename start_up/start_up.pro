@@ -12,15 +12,13 @@ CONFIG -= app_bundle
 HEADERS += \
     daemons.h \
     procruning.h \
-    procstart.h \
-    procusb.h
+    procstart.h
 
 SOURCES += \
         daemons.cpp \
         main.cpp \
         procruning.cpp \
-        procstart.cpp \
-        procusb.cpp
+        procstart.cpp
 
 contains(TARGET_ARCH, x86_64) {
     # Default rules for deployment.

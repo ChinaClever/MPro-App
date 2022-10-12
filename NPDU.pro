@@ -3,10 +3,13 @@ TEMPLATE = subdirs
 unix {
 SUBDIRS += \
     cores \
-    pdu_cmd \
-    proc_log \
     start_up \
-    ota_updater
+    cmds/pdu_cmd \
+    cmds/proc_log \
+    cmds/updater_cmd \
+    ota_updater/ota_net \
+    ota_updater/ota_usb
 }
+
 
 

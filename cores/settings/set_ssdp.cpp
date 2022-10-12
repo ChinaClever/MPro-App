@@ -7,7 +7,7 @@
 #include "integr_jsonrecv.h"
 
 Set_Ssdp::Set_Ssdp(QObject *parent)
-    : Ssdp_Search{parent}
+    : Ssdp_Obj{parent}
 {
     Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
@@ -98,7 +98,8 @@ bool Set_Ssdp::rplySearchTarget(const sSdpIt &it)
         sSdpIt item; item.fc = 0;
         item.ip = cm::dataPacket()->net.inet.ip;
         item.room = cm::masterDev()->cfg.uut.room;
-        item.data = "ok"; ret = udpSend(item);
+        item.data = QByteArray::number(cm::masterDev()->cfg.nums.slaveNum);
+        ret = udpSend(item);
     }
     return ret;
 }

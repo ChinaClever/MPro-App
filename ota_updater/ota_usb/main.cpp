@@ -3,7 +3,8 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "procusb.h"
+#include <QCoreApplication>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,12 +14,8 @@
 #include <linux/netlink.h>
 #define UEVENT_BUFFER_SIZE 2048
 
-ProcUsb::ProcUsb()
-{
 
-}
-
-void ProcUsb::usb_run()
+static void usb_run()
 {
     struct sockaddr_nl client;
     struct timeval tv;
@@ -48,4 +45,11 @@ void ProcUsb::usb_run()
         }
     }
     close(CppLive);
+}
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    return a.exec();
 }

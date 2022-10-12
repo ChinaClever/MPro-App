@@ -1,6 +1,6 @@
 #ifndef OP_OBJECT_H
 #define OP_OBJECT_H
-
+#include "crc.h"
 #include "serialport.h"
 #define OP_ARRAY_SIZE 16
 

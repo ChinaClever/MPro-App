@@ -5,6 +5,7 @@
  */
 #include "op_objrtu.h"
 
+
 OP_ObjRtu::OP_ObjRtu(QObject *parent)
     : OP_Updater{parent}
 {

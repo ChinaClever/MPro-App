@@ -15,10 +15,9 @@
 Daemons::Daemons()
 {
     mProcs = nullptr;
-    init_share_mem(); start_proc();
-    QtConcurrent::run(this,&Daemons::workDown);
+    init_share_mem();
+    if(mProcs) start_proc();
 }
-
 
 Daemons *Daemons::bulid()
 {
@@ -29,10 +28,11 @@ Daemons *Daemons::bulid()
 
 void Daemons::start_proc()
 {
-    cm_mdelay(152);
-    startCore();
-    //startLcd();   //////////==========
-
+    cm_mdelay(152); initFun();
+    proc_start(mProcs->core, "cores");
+    proc_start(mProcs->awtk, "awtk");
+    proc_start(mProcs->ota, "ota_updater");
+    QtConcurrent::run(this,&Daemons::workDown);
 }
 
 void Daemons::init_share_mem()
@@ -47,54 +47,56 @@ void Daemons::init_share_mem()
     } else fprintf(stderr, "shmget failed %d\n", shmid);
 }
 
-bool Daemons::procRunStatus(sRunTime *proc)
+void Daemons::initFun()
 {
-    bool ret = true;
-    if(proc->runSec > proc->daemonSec) {
-        proc->daemonSec = proc->runSec;
-    } else {
-        ret = false;
+    QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    sRunTime *run = &(mProcs->daemon);
+    qstrcpy(run->start, t.toLatin1().data());
+
+    QString dateTime;
+    dateTime += __DATE__; dateTime += __TIME__;
+    dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
+    QDateTime dt = QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
+    QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(run->compileTime, str.toUtf8().data());
+}
+
+bool Daemons::resetProc(sRunTime &proc, const QString &name)
+{
+    bool ret = isRun(name.toLatin1().data());
+    if(ret) {
+        QString cmd = "killall " + name;
+        system(cmd.toLatin1().data());
+        cm_mdelay(100);
     }
+    proc_log(name +"_exit"); cm_mdelay(100);
+    proc_start(proc, name); cm_mdelay(5000);
+
     return ret;
 }
 
-void Daemons::coreRunStatus()
+
+bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
 {
-    int t = 5000;
-    sRunTime *proc = &mProcs->core;
-    bool ret = procRunStatus(proc);
-    if(!ret) {
-        ret = isRun("cores");
-        if(ret) system("killall cores");
-        proc_log("core_exit");
-        proc->resetCnt++;
-        startCore();
-    } else t = 100;
-    cm_mdelay(t);
+    bool ret = true;
+    if(proc.runSec > proc.daemonSec) {
+        proc.daemonSec = proc.runSec;
+    } else {
+        resetProc(proc, name);
+        ret = false;
+    } cm_mdelay(100);
+    return ret;
 }
 
-void Daemons::lcdRunStatus()
-{
-    int t = 5000;
-    sRunTime *proc = &mProcs->lcd;
-    bool ret = procRunStatus(proc);
-    if(!ret) {
-        ret = isRun("demo");
-        if(ret) system("killall demo");
-        proc_log("awtk_exit");
-        proc->resetCnt++;
-        startLcd();
-    } else t = 100;
-    cm_mdelay(t);
-}
 
 void Daemons::workDown()
 {
     cm_mdelay(5400);
     while(1) {
-        cm_mdelay(1400);
-        coreRunStatus();
-        //lcdRunStatus(); //////////==========
-
+        cm_mdelay(1800);
+        procRunStatus(mProcs->core, "cores");
+        procRunStatus(mProcs->awtk, "awtk");
+        procRunStatus(mProcs->ota, "ota_updater");
+        mProcs->daemon.runSec += 1;
     }
 }

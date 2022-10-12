@@ -21,11 +21,13 @@ __attribute__((destructor)) void app_exit()
 
 static void initSystem()
 {
-    system("echo 3 > /proc/sys/vm/drop_caches");
-    system("ifconfig eth0 up"); //system("dhclient");
+    system("chmod 777 /usr/data/clever/app/*");
+    system("chmod 777 /usr/data/clever/awtk/release/bin/*");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
-    //system("sync"); system("echo 3 > /proc/sys/vm/drop_caches");
+    system("ln -s /usr/data/clever/awtk/release/bin/demo /usr/data/clever/app/awtk");
+    system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
+    system("ifconfig eth0 up"); system("dhclient");
     //system("mount -t nfs 192.168.1.130:/home/lzy/work/nfs /usr/data/nfs");
 }
 
@@ -57,6 +59,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/cfg");
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
+    system("mkdir -p /usr/data/clever/outlet");
     system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/drivers");
     system("mkdir -p /usr/data/clever/download");

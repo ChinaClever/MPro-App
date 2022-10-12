@@ -191,9 +191,9 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
     sRunTime *run = nullptr; switch (it.fc) {
     case 1: run = &(pro->core); break;
     case 2: run = &(pro->daemon); break;
-    case 3: run = &(pro->lcd); break;
-    case 4: run = &(pro->sensor); break;
-    case 5: run = &(pro->sys); break;
+    case 3: run = &(pro->awtk); break;
+    case 4: run = &(pro->ota); break;
+    // case 5: run = &(pro->sys); break;
     case 10: res = process_log(); break;
     default: cout << it.fc; break;
     }

@@ -15,7 +15,7 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
     connect(mDtls, &Dtls_Service::errorMessage, this, &Dtls_Recver::throwError);
     connect(mDtls, &Dtls_Service::warningMessage, this, &Dtls_Recver::throwMessage);
     connect(mDtls, &Dtls_Service::infoMessage, this, &Dtls_Recver::throwMessage);
-    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);    
+    connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);
 }
 
 
@@ -33,6 +33,7 @@ bool Dtls_Recver::setFile(const QString &fn)
     mFile->setFileName(fn); isFinshed = false;
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) mSize = 0; else throwMessage(tr("Error: Dtls Recver open file").arg(fn));
+    emit startSig(mDtls->clientHost().toString().remove("::ffff:"));
     return ret;
 }
 
@@ -65,7 +66,7 @@ bool Dtls_Recver::recvFinish()
 bool Dtls_Recver::initFile(const QByteArray &array)
 {
     QByteArray rcv(array); bool ret = false;
-    sFileTrans *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly);
+    sOtaFile *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) ret = setFile(it->path + it->file);
     else throwMessage("Error: Dtls recver head");

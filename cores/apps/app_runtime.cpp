@@ -9,7 +9,7 @@
 App_RunTime::App_RunTime(QObject *parent)
     : App_Smtp{parent}
 {
-    QTimer::singleShot(755,this,SLOT(runing_initFunSlot()));
+    QTimer::singleShot(75,this,SLOT(runing_initFunSlot()));
 }
 
 void App_RunTime::runing_initFunSlot()
@@ -20,6 +20,7 @@ void App_RunTime::runing_initFunSlot()
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     sRunTime *run = &(cm::masterDev()->proc.core);
     qstrcpy(run->start, t.toLatin1().data());
+    cm::buildDateTime(run->compileTime);
 }
 
 void App_RunTime::runing_onTimeoutDone()

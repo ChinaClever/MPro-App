@@ -22,16 +22,18 @@ class Ssdp_Obj : public QObject
 {
     Q_OBJECT
 public:
-    explicit Ssdp_Obj(QObject *parent = nullptr);
+    explicit Ssdp_Obj(QObject *parent = nullptr);    
+    ~Ssdp_Obj();
     bool ssdpSend(const sSdpIt &it);
     bool udpSend(const sSdpIt &it);
+    void ssdpClose();
+    bool ssdpBind();
 
 signals:
     void recvSig(const sSdpIt &it);
 
 protected:
     bool udpBind();
-    bool ssdpBind();
 
 private:
     void recvMsg(const QByteArray &array);
@@ -49,6 +51,7 @@ private:
     QHostAddress mHost;
     QUdpSocket *mSocket;
     QHostAddress mAddress;
+    bool isOpen=false;
 };
 
 #endif // SSDP_OBJ_H

@@ -8,13 +8,13 @@
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
     isOta = false; mFile = new QFile;
-    qRegisterMetaType<sFileTrans>("sFileTrans");
+    qRegisterMetaType<sOtaFile>("sOtaFile");
     //QTimer::singleShot(50,this,SLOT(initFunSlot()));  ///////==========
 }
 
-bool Cascade_Updater::ota_update(int addr, const sFileTrans &it)
+bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
 {
-    bool ret = false; int max = 40*1024; int i=0, pro=0;
+    bool ret = false; int max = 4*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         ret = otaSendInit(addr, it); cm::mdelay(5);
@@ -47,7 +47,7 @@ void Cascade_Updater::ota_updates()
     }
 }
 
-bool Cascade_Updater::otaSendInit(int addr, const sFileTrans &it)
+bool Cascade_Updater::otaSendInit(int addr, const sOtaFile &it)
 {
     isOta = true; waitForLock(); cm::mdelay(200);
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
@@ -85,7 +85,7 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
 
 bool Cascade_Updater::otaReplyStart(const QByteArray &data)
 {
-    sFileTrans *it = &mIt; QByteArray rcv(data);
+    sOtaFile *it = &mIt; QByteArray rcv(data);
     QDataStream out(&rcv, QIODevice::ReadOnly);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);

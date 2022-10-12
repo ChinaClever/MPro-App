@@ -10,35 +10,62 @@ ProcStart::ProcStart()
 
 }
 
-void ProcStart::proc_start(const QString &app, const QString &arg)
+void ProcStart::proc_time(sRunTime &proc)
+{
+    QDateTime dateTime = QDateTime::currentDateTime();
+    QString str = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(proc.start, str.toUtf8().data());
+}
+
+void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
+{
+    QString str = md5(fn); proc.resetCnt += 1;
+    qstrcpy(proc.md5, str.toUtf8().data());
+}
+
+void ProcStart::proc_start(sRunTime &proc, const QString &app)
 {
     QString path = "/usr/data/clever/app/";
     QString fn = path + app;
     if(QFile::exists(fn)) {
-        QString cmd = fn;
-        if(arg.size()) cmd += " " + arg;
-        cmd += " &"; system(cmd.toLatin1().data());
+        proc_time(proc);
+        proc_md5(proc, fn);
+
+        QString cmd = fn + " &";
+        system(cmd.toLatin1().data());
+        proc_log(app +"_startup");
     } else qDebug() << "proc start err:" << fn;
 }
 
 void ProcStart::proc_log(const QString &arg)
 {
-    proc_start("proc_log", arg);
-}
-
-void ProcStart::startCore()
-{
-    proc_log("core_startup");
-    proc_start("cores");
-}
-
-void ProcStart::startLcd()
-{    
-    QString path = "/usr/data/clever/awtk/release/bin/";
-    QString fn = path + "demo"; proc_log("awtk_startup");
+    QString fn = "/usr/data/clever/app/proc_log";
     if(QFile::exists(fn)) {
-        QString cmd = fn; cmd += " &";
+        QString cmd = fn + " " + arg + " &";
         system(cmd.toLatin1().data());
-        proc_log("awtk_startup");
-    } else qDebug() << "proc start err:" << fn;
+        cm_mdelay(2);
+    } else qDebug() << "proc log err:" << fn << arg;
+}
+
+
+QString ProcStart::md5(const QString &fn)
+{
+    QFile sourceFile(fn);
+    qint64 fileSize = sourceFile.size();
+    const qint64 bufferSize = 8*1024;
+
+    if (sourceFile.open(QIODevice::ReadOnly)) {
+        char buffer[bufferSize]; int bytesRead;
+        int readSize = qMin(fileSize, bufferSize);
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        while (readSize > 0 && (bytesRead = sourceFile.read(buffer, readSize)) > 0) {
+            fileSize -= bytesRead;
+            hash.addData(buffer, bytesRead);
+            readSize = qMin(fileSize, bufferSize);
+        }
+        sourceFile.close();
+        return QString(hash.result().toHex());
+    }
+
+    return QString();
 }

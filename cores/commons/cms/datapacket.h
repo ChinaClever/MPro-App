@@ -240,16 +240,17 @@ struct sRunTime
     uint runSec; // 最近开关运行时间 秒钟为单位
     uint resetCnt; // 重启次数；
     uint daemonSec; // 守护进程使用
+    char md5[NAME_SIZE]; // 运行程序的ＭＤ５值
     char start[NAME_SIZE]; // 启动时间
+    char compileTime[NAME_SIZE]; // 编译时间
 };
 
 struct sProcState
 {
-    struct sRunTime sys; // 系统启动时间
     struct sRunTime daemon; // 守护进程
     struct sRunTime core; // 主程序启动时间
-    struct sRunTime lcd; // 屏幕启动时间
-    struct sRunTime sensor; // 传感器
+    struct sRunTime ota; // 升级启动时间
+    struct sRunTime awtk; // 屏幕启动时间
     struct sRunTime reserve;
 };
 
@@ -331,11 +332,22 @@ struct sDevLogin
     char reserve[NAME_SIZE];
 };
 
+struct sOtaUpdater
+{
+    //sOtaUpdater() {}
+    uchar isRun; // 0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    uchar subId; // 升级子对象 第几个副机，或者第几块执板
+    uchar progress; // 升级进度 百分之几十
+    uchar isOk; //  0 完成 1 正常  2 失败
+    char host[NAME_SIZE]; // 服务端地址
+};
+
 /**
  * 数据包
  */
 struct sDataPacket
 {
+    struct sOtaUpdater ota; // 升级信息
     struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
     struct sDevLogin login[USER_NUM];
