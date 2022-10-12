@@ -104,8 +104,6 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
         if (mg_http_match_uri(hm, "/websocket")) {
-            // Upgrade to websocket. From now on, a connection is a full-duplex
-            // Websocket connection, which will receive MG_EV_WS_MSG events.
             mg_ws_upgrade(c, hm, NULL);
         } else if(mg_http_match_uri(hm, "/upload")){
             MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
@@ -113,36 +111,39 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            printf("%s \n", name);
+            //printf("%s \n", name);
             if (name[0] == '\0') {
                 mg_http_reply(c, 400, "", "%s", "name required");
             } else {
-                mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
+                if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
+                    mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
             }
-            printf("%s \n", name);
+            //printf("%s \n", name);
             if((int) hm->query.len > 5){
-                printf("%s \n", file_path);
+                //printf("%s \n", file_path);
                 fp = fopen(file_path , "w+b");
             }
             fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
             fclose(fp);//
             fp = NULL;//
             mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
-        } else if(mg_http_match_uri(hm, "/index.html/cert-client.pem")){
+        } else if(mg_http_match_uri(hm, "/index.html/client-cert.pem")){
             struct mg_http_serve_opts opts;
 
             memset(&opts , 0 , sizeof(opts));
             //opts.mime_types = "foo=a/b,pem=c/d";
             opts.mime_types = "foo=a/b,txt=c/d";
-            mg_http_serve_file(c , hm , "/etc/ssl/certs/cert.pem" , &opts);
+            //mg_http_serve_file(c , hm , "/etc/ssl/certs/cert.pem" , &opts);
+            mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
             //mg_http_serve_file(c , hm , "/usr/data/clever/app/json_server_log.txt" , &opts);
-        }else if(mg_http_match_uri(hm, "/index.html/key-client.pem")){
+        }else if(mg_http_match_uri(hm, "/index.html/client-key.pem")){
             struct mg_http_serve_opts opts;
 
             memset(&opts , 0 , sizeof(opts));
             //opts.mime_types = "foo=a/b,pem=c/d";
             opts.mime_types = "foo=a/b,txt=c/d";
-            mg_http_serve_file(c , hm , "/etc/ssl/certs/key.pem" , &opts);
+            //mg_http_serve_file(c , hm , "/etc/ssl/certs/key.pem" , &opts);
+            mg_http_serve_file(c , hm , File::keyFile().toLatin1().data() , &opts);
         }
         else {
             // Serve static files
@@ -158,14 +159,15 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         if(state == 0){
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            printf("%s \n", name);
+            //printf("%s \n", name);
             if (name[0] == '\0') {
                 mg_http_reply(c, 400, "", "%s", "name required");
             } else {
-                mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
+                if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
+                    mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
             }
             if((int) hm->query.len > 5){
-                printf("%s \n", file_path);
+                //printf("%s \n", file_path);
                 fp = fopen(file_path , "w+b");
                 state = 1;
             }

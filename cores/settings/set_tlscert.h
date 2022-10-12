@@ -4,8 +4,13 @@
 
 struct sTlsCertIt
 {
-    sTlsCertIt() {}
-
+    QString country; // 国家
+    QString province; // 州或省
+    QString city; // 地方性
+    QString company; // 组织
+    QString group; // 组织单位
+    QString certname; // 通用名称
+    QString mail; // 电子邮件地址
 };
 
 class Set_TlsCert : public Set_Output
@@ -15,6 +20,10 @@ public:
 
     QVariant getTlsCert(uchar fc);
     bool setTlsCert(uchar fc, const QVariant &v);
+
+private:
+    bool createTlsCert();
+    bool systemCmd(QString str);
 
 private:
     sTlsCertIt mTlsCert;
