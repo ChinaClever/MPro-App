@@ -123,27 +123,30 @@
 					}).then(function(res) {
 					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
 					document.getElementById('loading').style.color = 'green';
+					document.getElementById('info').value= '';
 					});
 				};
 			}
-			if(cert != ""){
-				let fileObj = document.getElementById('inputcert').files[0];
-				if (!fileObj) return;
-				var f = fileObj, r = new FileReader();
-				r.readAsArrayBuffer(f);
-				r.onload = function() {
-					document.getElementById('inputcert').value = '';
-					document.getElementById('loading1').innerText = 'Uploading...';
-					document.getElementById('loading1').style.color = 'red';
-					fetch('/upload?name=' + encodeURIComponent(f.name), {
-					method: 'POST',
-					body: r.result,
-					}).then(function(res) {
-					document.getElementById('loading1').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
-					document.getElementById('loading1').style.color = 'green';
-					});
-				};
-			}
+			setTimeout(function(){if(cert != ""){
+					let fileObj = document.getElementById('inputcert').files[0];
+					if (!fileObj) return;
+					var f = fileObj, r = new FileReader();
+					r.readAsArrayBuffer(f);
+					r.onload = function() {
+						document.getElementById('inputcert').value = '';
+						document.getElementById('loading1').innerText = 'Uploading...';
+						document.getElementById('loading1').style.color = 'red';
+						fetch('/upload?name=' + encodeURIComponent(f.name), {
+						method: 'POST',
+						body: r.result,
+						}).then(function(res) {
+						document.getElementById('loading1').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
+						document.getElementById('loading1').style.color = 'green';
+						document.getElementById('info1').value= '';
+						});
+					};
+				}
+			},500);
 		}
 		function openupdate(obj){
 			if(obj.checked == true){
@@ -277,11 +280,11 @@
 		function download(obj){
 			let url = window.location.origin;
 			if(obj.id == "lang_24"){
-				url += "/index.html/key-client.pem";
-				window.open(url_1,'_self');
+				url += "/index.html/client-key.pem";
+				window.open(url,'_blank');
 			}else{
-				url += "/index.html/cert-client.pem";
-				window.open(url_1,'_self');
+				url += "/index.html/client-cert.pem";
+				window.open(url,'_blank');
 			}
 		}
 		function buildTableCert(obj){
