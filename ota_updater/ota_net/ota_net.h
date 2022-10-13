@@ -12,7 +12,7 @@ public:
 private:
     void workDown();
     bool coreRuning();
-    void cmd_updater();
+    void cmd_updater(bool ok);
     QString unzip(const QString &fn);
 
 private slots:

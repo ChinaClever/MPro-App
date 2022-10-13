@@ -10,12 +10,13 @@ Dtls_Recver::Dtls_Recver(QObject *parent)
     : QObject{parent}
 {
     mFile = new QFile;
-    mNet = new Net_Udp(this);
     mDtls = new Dtls_Service(this); isFinshed = false;
+    mNet = new Net_Udp(this); mTimer = new QTimer(this);
     connect(mDtls, &Dtls_Service::errorMessage, this, &Dtls_Recver::throwError);
     connect(mDtls, &Dtls_Service::warningMessage, this, &Dtls_Recver::throwMessage);
     connect(mDtls, &Dtls_Service::infoMessage, this, &Dtls_Recver::throwMessage);
     connect(mDtls, &Dtls_Service::datagramReceived, this, &Dtls_Recver::rcvClientMessage);
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(onTimeoutDone()));
 }
 
 
@@ -43,6 +44,12 @@ bool Dtls_Recver::waitForFinish()
     return recvFinish();
 }
 
+void Dtls_Recver::onTimeoutDone()
+{
+    if(mSize > mCnt) mCnt = mSize;
+    else if(!isFinshed) throwError(tr("传输中断"));
+}
+
 void Dtls_Recver::throwError(const QString &message)
 {
     bool ret = recvFinish();    
@@ -58,15 +65,15 @@ void Dtls_Recver::throwMessage(const QString &message)
 
 bool Dtls_Recver::recvFinish()
 {
-    isFinshed = true;  mSize = 0;
+    isFinshed = true; mSize = 0; mTimer->stop();
     if(mFile->isOpen()) mFile->close();
     return File::CheckMd5(mIt);
 }
 
 bool Dtls_Recver::initFile(const QByteArray &array)
 {
-    QByteArray rcv(array); bool ret = false;
-    sOtaFile *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly);
+    QByteArray rcv(array); bool ret = false; mTimer->start(1000);
+    sOtaFile *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly); mCnt = 0;
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) ret = setFile(it->path + it->file);
     else throwMessage("Error: Dtls recver head");

@@ -28,7 +28,7 @@ Daemons *Daemons::bulid()
 
 void Daemons::start_proc()
 {
-    cm_mdelay(152); initFun();
+    mdelay(152); initFun();
     proc_start(mProcs->core, "cores");
     proc_start(mProcs->awtk, "awtk");
     proc_start(mProcs->ota, "ota_updater");
@@ -63,14 +63,13 @@ void Daemons::initFun()
 
 bool Daemons::resetProc(sRunTime &proc, const QString &name)
 {
-    bool ret = isRun(name.toLatin1().data());
+    bool ret = proc_isRun(name);
     if(ret) {
         QString cmd = "killall " + name;
-        system(cmd.toLatin1().data());
-        cm_mdelay(100);
+        system(cmd.toLatin1().data()); mdelay(100);
     }
-    proc_log(name +"_exit"); cm_mdelay(100);
-    proc_start(proc, name); cm_mdelay(5000);
+    proc_log(name +"_exit"); mdelay(100);
+    proc_start(proc, name); mdelay(5000);
 
     return ret;
 }
@@ -84,16 +83,16 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
     } else {
         resetProc(proc, name);
         ret = false;
-    } cm_mdelay(100);
+    } mdelay(100);
     return ret;
 }
 
 
 void Daemons::workDown()
 {
-    cm_mdelay(5400);
+    mdelay(5400);
     while(1) {
-        cm_mdelay(1800);
+        mdelay(1800);
         procRunStatus(mProcs->core, "cores");
         procRunStatus(mProcs->awtk, "awtk");
         procRunStatus(mProcs->ota, "ota_updater");

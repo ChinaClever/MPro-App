@@ -11,13 +11,11 @@ CONFIG -= app_bundle
 
 HEADERS += \
     daemons.h \
-    procruning.h \
     procstart.h
 
 SOURCES += \
         daemons.cpp \
         main.cpp \
-        procruning.cpp \
         procstart.cpp
 
 contains(TARGET_ARCH, x86_64) {

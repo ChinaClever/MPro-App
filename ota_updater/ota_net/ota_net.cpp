@@ -25,38 +25,34 @@ void Ota_Net::startSlot(const QString &host)
 QString Ota_Net::unzip(const QString &fn)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dst = "/usr/data/updater/";
+    QString dst = "/usr/data/";
 #else
-    QString dst = "/home/lzy/work/updater/";
+    QString dst = "/home/lzy/work/";
 #endif
-    QString str = "unzip -o %1 -d " + dst;
-    str = cm::execute(str.arg(fn));
+    QString str = "unzip -o %1 -d " + dst+"updater/clever/";
+    throwMessage(str); str = cm::execute(str.arg(fn));
     throwMessage(str);
     return dst;
 }
 
 bool Ota_Net::coreRuning()
 {
-    QString cmd = "/usr/data/clever/app/proc_run cores";
+    QString cmd = "proc_run cores";
     return cm::execute(cmd).toInt();
 }
 
-void Ota_Net::cmd_updater()
+void Ota_Net::cmd_updater(bool ok)
 {
-    QString cmd = "/usr/data/clever/app/pdu_cmd";
-    cmd += " pduCfgSet 83 11 1";
-    system(cmd.toUtf8().data());
+    QString cmd = "pdu_cmd";
+    cmd += " pduCfgSet 83 11 " + QString::number(ok?1:0);
+    system(cmd.toUtf8().data()); throwMessage(cmd);
 }
 
 void Ota_Net::workDown()
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
-    if(ret) {
-        cmd_updater();
-    } else {
-        system("reboot");
-    }
+    if(!ret) system("reboot");
 #endif
 }
 
@@ -75,5 +71,5 @@ void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
         QString fn = it.path + it.file;
         QString cmd = "rm -f " + fn;
         system(cmd.toUtf8().data());
-    }
+    } cmd_updater(ok);
 }

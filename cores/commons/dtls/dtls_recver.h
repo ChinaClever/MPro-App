@@ -26,18 +26,20 @@ private:
     bool recvFinish();
 
 public slots:
-     void throwMessage(const QString &message);
+    void throwMessage(const QString &message);
 
 private slots:
-    void throwError(const QString &message);   
+    void onTimeoutDone();
+    void throwError(const QString &message);
     void rcvClientMessage(const QByteArray &data);
 
 private:
-    int mSize;
+    int mSize, mCnt;
     sOtaFile mIt;
     QFile *mFile;
     bool isFinshed;
     Net_Udp *mNet;
+    QTimer *mTimer;
     Dtls_Service *mDtls;
 };
 

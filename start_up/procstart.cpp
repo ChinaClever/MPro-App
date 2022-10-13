@@ -25,7 +25,7 @@ void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
 
 void ProcStart::proc_start(sRunTime &proc, const QString &app)
 {
-    QString path = "/usr/data/clever/app/";
+    QString path;// = "/usr/data/clever/app/";
     QString fn = path + app;
     if(QFile::exists(fn)) {
         proc_time(proc);
@@ -39,11 +39,10 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
 
 void ProcStart::proc_log(const QString &arg)
 {
-    QString fn = "/usr/data/clever/app/proc_log";
+    QString fn = "proc_log";
     if(QFile::exists(fn)) {
         QString cmd = fn + " " + arg + " &";
-        system(cmd.toLatin1().data());
-        cm_mdelay(2);
+        system(cmd.toLatin1().data()); mdelay(2);
     } else qDebug() << "proc log err:" << fn << arg;
 }
 
@@ -68,4 +67,20 @@ QString ProcStart::md5(const QString &fn)
     }
 
     return QString();
+}
+
+bool ProcStart::proc_isRun(const QString &p)
+{
+    QString cmd = "proc_run " + p;
+    QProcess pro; pro.start(cmd); pro.waitForFinished();
+    QByteArray bs = pro.readAllStandardOutput();
+    bs +=  pro.readAllStandardError();
+    return QString::fromLocal8Bit(bs).toInt();
+}
+
+void ProcStart::mdelay(int msec)
+{
+    QEventLoop loop;
+    QTimer::singleShot(msec, &loop, SLOT(quit()));
+    loop.exec();
 }

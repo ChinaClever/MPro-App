@@ -21,8 +21,8 @@ __attribute__((destructor)) void app_exit()
 
 /***
  * 在/usr/data/目录下，建立 启动脚本 start_up.sh
- * 必须得先 执行升级命令 cp -rf /usr/data/updater/  /usr/data/clever/
- * 再清空升级目录　rm -rf /usr/data/updater/*
+ * 必须得先 执行升级命令 cp -rf /usr/data/updater/clever/ *  /usr/data/clever/
+ * 再清空升级目录　rm -rf /usr/data/updater/clever/ *
  */
 
 static void initSystem()
@@ -39,14 +39,15 @@ static void initSystem()
 
 static void startSnmpd()
 {
-    QString custom = "/usr/data";
-    QString fn = "/etc/snmpd.conf";
+    QString fn = "snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
-    bool ret = ProcRuning::isRun("snmpd"); if(ret) return ;
+    bool ret = ProcStart::proc_isRun("snmpd"); if(ret) return ;
+
+    QString custom = "/usr/data/clever/cfg/";
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";
-    } else if(QFile::exists(fn)) {
-        cmd +=  fn + " &";
+    } else if(QFile::exists("/etc/"+fn)) {
+        cmd += "/etc/"+ fn + " &";
     } else {
         cmd.clear();
     }
@@ -58,10 +59,10 @@ static void startSnmpd()
 
 static void createDirectory()
 {
-    system("mkdir -p /usr/data/updater");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
+    system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");
     system("mkdir -p /usr/data/clever/awtk");
@@ -70,7 +71,8 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/drivers");
     system("mkdir -p /usr/data/clever/download");
-    system("touch /usr/data/etc/snmp/snmpd.conf");
+    system("mkdir -p /usr/data/updater/clever");
+    //system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 
 int main(int argc, char *argv[])
