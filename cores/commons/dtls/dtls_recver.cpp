@@ -84,6 +84,6 @@ void Dtls_Recver::rcvClientMessage(const QByteArray &data)
 {
     if(mFile->isWritable() && mSize) mFile->write(data);
     else if(!mFile->isOpen() && !mSize) initFile(data);
-    else throwMessage(tr("Error: Dtls Recver write file %1").arg(data.data()));
+    else throwMessage(tr("Error: Dtls Recver write file %1").arg(data.size()));
     mSize += data.size(); //throwMessage(tr("Dtls Recver File Size %1").arg(mSize));
 }

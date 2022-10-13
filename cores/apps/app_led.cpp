@@ -24,7 +24,9 @@ App_Led::App_Led(QObject *parent)
     : App_Buzzer{parent}
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QTimer::singleShot(1,this,SLOT(led_initFunSlot()));
+    if(QFile::exists("/sys/clever/led/red/switch")) {
+        QTimer::singleShot(1,this,SLOT(led_initFunSlot()));
+    } else cout << "led err";
 #endif
 }
 

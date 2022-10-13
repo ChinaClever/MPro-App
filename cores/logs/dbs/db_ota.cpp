@@ -8,7 +8,7 @@
 
 Db_Ota::Db_Ota()
 {
-    mHeadList << "module"<< "content";
+    mHeadList << "ver"<< "md5" << "remark" << "oldVersion" << "releaseDate";
 }
 
 Db_Ota *Db_Ota::bulid()
@@ -24,8 +24,8 @@ Db_Ota *Db_Ota::bulid()
 QJsonArray Db_Ota::itemJson(const sOtaItem &it)
 {
     QJsonArray  var;
-    var << it.datetime << it.module;
-    var << it.content;
+    var << it.datetime << it.ver << it.md5 << it.remark;
+    var << it.oldVersion <<  it.releaseDate;
     return var;
 }
 
@@ -34,8 +34,12 @@ bool Db_Ota::modifyItem(const sOtaItem &item, const QString &cmd)
     QSqlQuery query(mDb);
     query.prepare(cmd);
     query.bindValue(":dtime",item.datetime);
-    query.bindValue(":module",item.module);
-    query.bindValue(":content",item.content);
+    query.bindValue(":ver",item.ver);
+    query.bindValue(":md5",item.md5);
+    query.bindValue(":remark",item.remark);
+    query.bindValue(":oldVersion",item.oldVersion);
+    query.bindValue(":releaseDate",item.releaseDate);
+
     return sqlQuery(query);
 }
 
@@ -43,6 +47,9 @@ void Db_Ota::selectItem(QSqlQuery &query,sOtaItem &item)
 {
     item.id = query.value("id").toInt();
     item.datetime = query.value("dtime").toString();
-    item.module = query.value("module").toString();
-    item.content = query.value("content").toString();
+    item.ver = query.value("ver").toString();
+    item.md5 = query.value("md5").toString();
+    item.remark = query.value("remark").toString();
+    item.oldVersion = query.value("oldVersion").toString();
+    item.releaseDate = query.value("releaseDate").toString();
 }

@@ -53,7 +53,7 @@ void App_Start::startThreadSlot()
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     Agent_Core::bulid(this);
-    OP_Core::bulid(this)->startFun();
+    //OP_Core::bulid(this)->startFun();
     Cascade_Core::bulid(this)->startFun();
 #endif
 }

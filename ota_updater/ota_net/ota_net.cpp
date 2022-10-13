@@ -41,11 +41,11 @@ bool Ota_Net::coreRuning()
     return cm::execute(cmd).toInt();
 }
 
-void Ota_Net::cmd_updater(bool ok)
+void Ota_Net::cmd_updater(const QString &fn)
 {
     QString cmd = "pdu_cmd";
-    cmd += " pduCfgSet 83 11 " + QString::number(ok?1:0);
-    system(cmd.toUtf8().data()); throwMessage(cmd);
+    cmd += " pduCfgSet 83 11 " + fn;
+    cm::execute(cmd); throwMessage(cmd);
 }
 
 void Ota_Net::workDown()
@@ -66,10 +66,11 @@ void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
             str = cm::execute(str.arg(dir));
             throwMessage(str);
         } else workDown();
+        cmd_updater(it.path+it.file);
     } else {
         ota->isOk = 2;
         QString fn = it.path + it.file;
         QString cmd = "rm -f " + fn;
         system(cmd.toUtf8().data());
-    } cmd_updater(ok);
+    }
 }

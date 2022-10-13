@@ -33,7 +33,7 @@ static void initSystem()
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
     system("ln -s /usr/data/clever/awtk/release/bin/demo /usr/data/clever/app/awtk");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
-    system("ifconfig eth0 up"); system("dhclient");
+    system("ifconfig eth0 up"); //system("dhclient");
     //system("mount -t nfs 192.168.1.130:/home/lzy/work/nfs /usr/data/nfs");
 }
 
@@ -70,8 +70,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/outlet");
     system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/drivers");
-    system("mkdir -p /usr/data/clever/download");
-    system("mkdir -p /usr/data/updater/clever");
+    system("mkdir -p /usr/data/clever/download");    
     //system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 

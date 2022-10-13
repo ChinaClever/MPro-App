@@ -56,7 +56,7 @@ int isRunning(const char *procname)
 
 int main(int argc, char *argv[])
 {
-    if(argc == 2) isRunning(argv[1]);
+    if(argc == 2) qDebug() << isRunning(argv[1]);
     else qDebug() << "param error" << argc;
     return 0;
 }

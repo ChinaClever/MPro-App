@@ -12,7 +12,6 @@ public:
     static Daemons *bulid();
     void workDown();
 
-
 private:
     void initFun();
     void start_proc();
