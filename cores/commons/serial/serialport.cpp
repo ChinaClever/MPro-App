@@ -18,13 +18,14 @@ bool SerialPort::openSerial(const QString &name,qint32 baudRate, QSerialPort::Pa
 {
     mSerial->close(); mSerial->setPortName(name);
     bool ret = mSerial->open(QIODevice::ReadWrite);
-    if(ret) {
+    if(ret) { mBr = baudRate;
         mSerial->setParity(parity);    //无奇偶校验
         mSerial->setBaudRate(baudRate);  //波特率
         mSerial->setDataBits(QSerialPort::Data8); //数据位        
         mSerial->setStopBits(QSerialPort::OneStop);   //无停止位
         mSerial->setFlowControl(QSerialPort::NoFlowControl);  //无控制
     } else qCritical() << Q_FUNC_INFO << mSerial->errorString();
+
 
     return ret;
 }
@@ -57,12 +58,20 @@ bool SerialPort::writeSerial(const QByteArray &array)
     return ret;
 }
 
+void SerialPort::waitForSend(int size)
+{
+    if((size > 0) && (mBr > 0)) {
+        int ms = (size*10.0)/mBr*1000;
+        cm::mdelay(ms+20);
+    }
+}
+
 void SerialPort::cmsWriteSlot(int msecs)
 {
     QWriteLocker locker(mRwLock);  while(mList.size()) {
         cm::mdelay(msecs); int ret = mSerial->write(mList.takeFirst());
         if(ret > 0) mSerial->flush(); else qCritical() << "Error" << mSerial->errorString();
-        if(!mList.size()) cm::mdelay(msecs);
+        waitForSend(ret); cm::mdelay(msecs);
     }
 }
 
@@ -75,8 +84,9 @@ QByteArray SerialPort::readSerial(int msecs)
             rcv = mSerial->readAll();
             if(rcv.size()) break; else cm::mdelay(10);
         }
+
         do{
-            cm::mdelay(msecs/5);
+            cm::mdelay(msecs/10);
             array = mSerial->readAll();
             rcv.append(array);
         } while (array.size());
@@ -90,7 +100,9 @@ QByteArray SerialPort::transmit(const QByteArray &array, int msecs)
     QByteArray rcv; if(mSerial->isOpen()) {
     QWriteLocker locker(mRwLock); mSerial->readAll();
     if(mSerial->write(array) > 0) {
-        mSerial->flush(); rcv = readSerial(msecs);
+        mSerial->flush();
+        waitForSend(array.size());
+        rcv = readSerial(msecs);
     } else qCritical() << mSerial->errorString();}
     return rcv;
 }

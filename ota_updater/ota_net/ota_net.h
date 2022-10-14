@@ -10,12 +10,13 @@ public:
     explicit Ota_Net(QObject *parent = nullptr);
 
 private:
-    void workDown();
     bool coreRuning();
-    void cmd_updater(const QString &fn);
+    void workDown(const QString &fn);
+    bool cmd_updater(const QString &fn);
     QString unzip(const QString &fn);
 
 private slots:
+    void rebootSlot();
     void startSlot(const QString &host);
     void finishSlot(const sOtaFile &it, bool ok);
     void throwMessage(const QString &msg) {mDtls->throwMessage(msg);}

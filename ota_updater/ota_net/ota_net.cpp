@@ -17,9 +17,9 @@ Ota_Net::Ota_Net(QObject *parent)
 
 void Ota_Net::startSlot(const QString &host)
 {
-    sOtaUpdater *ota = mOta;
+    sOtaUpdater *ota = mOta; setbit(ota->work, 2);
     qstrcpy(ota->host, host.toUtf8().data());
-    ota->isRun = 2; ota->isOk = 1;
+    ota->net.isRun = 1;
 }
 
 QString Ota_Net::unzip(const QString &fn)
@@ -41,36 +41,45 @@ bool Ota_Net::coreRuning()
     return cm::execute(cmd).toInt();
 }
 
-void Ota_Net::cmd_updater(const QString &fn)
+bool Ota_Net::cmd_updater(const QString &fn)
 {
     QString cmd = "pdu_cmd";
     cmd += " pduCfgSet 83 11 " + fn;
-    cm::execute(cmd); throwMessage(cmd);
+    bool ret = cm::execute(cmd).toInt();
+    cmd += " res:" + QString::number(ret);
+    throwMessage(cmd);
+    return ret;
 }
 
-void Ota_Net::workDown()
+void Ota_Net::workDown(const QString &fn)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
-    if(!ret) system("reboot");
+    if(ret) ret = cmd_updater(fn);
+    if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
 #endif
+}
+
+void Ota_Net::rebootSlot()
+{
+    //system("rm -rf /usr/data/clever/upload/*");
+    system("sync"); system("reboot");
 }
 
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
 {
     sOtaUpdater *ota = mOta; if(ok) {
-        ota->isRun = 2; ota->isOk = 0;
         QString dir = unzip(it.path+it.file);
         if(QFile::exists(dir+"auto.sh")) {
             QString str = "sh %1/auto.sh ";
             str = cm::execute(str.arg(dir));
             throwMessage(str);
-        } else workDown();
-        cmd_updater(it.path+it.file);
+        } else workDown(it.path+it.file);
+        ota->net.isRun = 0;
     } else {
-        ota->isOk = 2;
+        ota->net.isRun = 2;
         QString fn = it.path + it.file;
         QString cmd = "rm -f " + fn;
         system(cmd.toUtf8().data());
-    }
+    } clrbit(ota->work, 2);
 }

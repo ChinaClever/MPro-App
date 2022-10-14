@@ -73,7 +73,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
 
-    QByteArray recv = transmit(cmd, sizeof(cmd));    
+    QByteArray recv = transmit(cmd, sizeof(cmd));
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
@@ -112,10 +112,9 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         }
     }
 
-    if(cm::runTime() > 48*60*60) {
-        int t = QRandomGenerator::global()->bounded(500);
-        cm::mdelay(t);
-    } cm::mdelay(360);
+    int t = 0; if(cm::runTime() > 48*60*60) {
+        t = QRandomGenerator::global()->bounded(565);
+    } cm::mdelay(t + 360);
 
     return ret;
 }

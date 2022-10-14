@@ -30,7 +30,11 @@ public slots:
     void setBaudRateSlot() {mSerial->setBaudRate(mBr);}
 
 private:
-    bool isRun; qint32 mBr;
+    void waitForSend(int size);
+
+private:
+    bool isRun;
+    qint32 mBr=1;
     QByteArrayList mList;
     QSerialPort  *mSerial;
     QReadWriteLock *mRwLock;

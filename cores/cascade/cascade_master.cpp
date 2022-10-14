@@ -52,7 +52,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
             it.content = tr("副机 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(100);
+    } cm::mdelay(255);
 }
 
 bool Cascade_Master::masterSeting(const sDataItem &unit)

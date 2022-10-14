@@ -320,13 +320,20 @@ struct sDevLogin
     char reserve[NAME_SIZE];
 };
 
-struct sOtaUpdater
+struct sOtaUpIt
 {
-    //sOtaUpdater() {}
-    uchar isRun; // 0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    uchar isRun; // 0 完成 1 进行中  2 失败
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
-    uchar isOk; //  0 完成 1 进行中  2 失败
+};
+
+struct sOtaUpdater
+{
+    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    sOtaUpIt usb; // USB升级状态
+    sOtaUpIt net; // 网络升级状态
+    sOtaUpIt slave; // 级联升级状态
+    sOtaUpIt outlet; // 执行板升级状态
     char host[NAME_SIZE]; // 服务端地址
 };
 

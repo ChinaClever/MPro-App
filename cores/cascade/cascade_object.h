@@ -19,8 +19,7 @@ protected:
     QVector<c_sFrame> transData(uchar fc, uchar addr, const QByteArray &value);
     QByteArray tranData(uchar fc, uchar addr, const QByteArray &value);
     bool writeData(uchar fc, uchar addr, const QByteArray &value);
-
-    uchar getAddress() {return mSelfAddr;}
+    uchar getAddress() {setAddress(); return mSelfAddr;}
     c_sDevData *deDataStream(QByteArray &array);
     c_sDevData *getDev() {return mCData;}
     QByteArray toDataStream();
@@ -36,7 +35,7 @@ private:
     void setAddress();
 
 private:
-    uchar mSelfAddr;
+    uchar mSelfAddr=1;
     c_sDevData *mCData;
     c_DataStream *mDataStream;
 };

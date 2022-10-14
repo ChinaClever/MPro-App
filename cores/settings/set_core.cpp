@@ -36,7 +36,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
-    case SFnCode::EOta: res = otaStatus(it.fc); break;
+    case SFnCode::EOta: res = otaStatus(it.fc, it.id); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
 
     case SFnCode::EOutput: case SFnCode::EGroup:
