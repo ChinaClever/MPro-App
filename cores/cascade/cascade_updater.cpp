@@ -149,8 +149,6 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 
 void Cascade_Updater::otaReboot()
 {
-    if(!cm::dataPacket()->ota.work) {
-        system("rm -rf /usr/data/clever/upload/*");
-        system("sync"); system("reboot");
-    }
+    system("rm -rf /usr/data/clever/upload/*");
+    system("sync"); system("reboot");
 }

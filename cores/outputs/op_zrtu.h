@@ -18,6 +18,7 @@ private:
     bool setEndisable(int addr, bool ret, uchar &v);
     bool recvPacket(const QByteArray &array, sOpIt *obj);
     void hardwareLog(int addr, const QByteArray &cmd);
+    void rtuThrowMessage(const QString &msg);
 
 
 protected:

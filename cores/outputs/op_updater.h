@@ -18,10 +18,10 @@ signals:
 
 protected:
     bool ota_updates();
-    void throwMessage(const QString &msg);
 
 private:
     bool initOta(int id);
+    void throwMessage(const QString &msg);
     bool ota_update(int addr, const QString &fn);
     bool ota_update(int addr, QByteArray &array);
     bool sendPacket(int addr, const QByteArray &array);
