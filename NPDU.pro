@@ -11,6 +11,10 @@ SUBDIRS += \
     ota_updater/ota_usb
 }
 
+SUBDIRS += \
+    web_server
+
+
 
 
 

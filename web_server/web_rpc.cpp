@@ -6,9 +6,9 @@
 #include "web_rpc.h"
 
 Web_Obj *Web_Rpc::mObj = nullptr;
-Web_Rpc::Web_Rpc()
+Web_Rpc::Web_Rpc(QObject *parent) : QObject{parent}
 {
-    mObj = new Web_Obj();
+    mObj = Web_Obj::bulid(parent);
 }
 
 char* Web_Rpc::pduReadData(mg_str &r)
@@ -29,7 +29,7 @@ char *Web_Rpc::execute(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
     QString value = mObj->getString(r, 5);
-    value = cm::execute(value);
+    value = mObj->execute(value);
     return responRpcString(its, value);
 }
 

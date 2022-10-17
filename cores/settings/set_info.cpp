@@ -191,7 +191,8 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
     case 0: run = &(pro->daemon); break;
     case 1: run = &(pro->core); break;
     case 2: run = &(pro->ota); break;
-    case 3: run = &(pro->awtk); break;
+    case 3: run = &(pro->web); break;
+    case 4: run = &(pro->awtk); break;
     case 10: res = process_log(); break;
     default: cout << it.fc; break;
     }

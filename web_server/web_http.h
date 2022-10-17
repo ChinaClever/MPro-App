@@ -2,7 +2,7 @@
 #define WEB_HTTP_H
 #include "web_rpc.h"
 
-struct sWebCfg{
+struct sWeb_Cfg{
     int http_en = 1;
     int http_port = 80;
     int http_redirect = 0;
@@ -13,19 +13,20 @@ struct sWebCfg{
 
 class Web_Http: public Web_Rpc
 {
+    Q_OBJECT
 public:
-    Web_Http();
+    Web_Http(QObject *parent = nullptr);
     ~Web_Http();
-    void run();
-    static sWebCfg cfg;
+    static sWeb_Cfg cfg;
 
-protected:
+private:
+    static void mgr_init(mg_mgr &mgr);
     static void process_json_message(mg_connection *c, mg_str &frame);
     static void fn(mg_connection *c, int ev, void *ev_data, void *fn_data);
     static void process_json_reply(mg_connection *c, const mg_str &frame, char *result);
 
-private:
-    bool isRun=true;
+private slots:
+    void run();
 };
 
 #endif // WEB_HTTP_H

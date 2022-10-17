@@ -2,7 +2,7 @@ unix {
 INCLUDEPATH += $$PWD
 
 #include(SMX/SMX.pri)
-
+LIBS += -lcrypto
 
 HEADERS += \
     $$PWD/AES/qaesencryption.h \

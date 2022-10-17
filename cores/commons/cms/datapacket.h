@@ -238,6 +238,7 @@ struct sProcState
     struct sRunTime daemon; // 守护进程
     struct sRunTime core; // 主程序启动时间
     struct sRunTime ota; // 升级启动时间
+    struct sRunTime web; // 网页启动时间
     struct sRunTime awtk; // 屏幕启动时间
     struct sRunTime reserve;
 };
@@ -337,11 +338,21 @@ struct sOtaUpdater
     char host[NAME_SIZE]; // 服务端地址
 };
 
+struct sWebCfg{
+    ushort http_en;
+    ushort http_port;
+    ushort http_redirect;
+
+    ushort https_en;
+    ushort https_port;
+};
+
 /**
  * 数据包
  */
 struct sDataPacket
 {
+    struct sWebCfg web;
     struct sOtaUpdater ota; // 升级信息
     struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据

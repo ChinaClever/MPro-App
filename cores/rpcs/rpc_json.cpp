@@ -6,11 +6,15 @@
 #include "rpc_json.h"
 
 Rpc_Json::Rpc_Json(QObject *parent)
-    : JsonRpcObj{parent}
+    : QObject{parent}
 {
-     mMethod = Rpc_Method::bulid(this);
-     bool ret = startLocalServer({mMethod});
-     if(!ret) qDebug() << "RPC Local Server Start err";
+    mMethod = Rpc_Method::bulid(this);
+    mServer = new JsonRpc_Server(this);
+    mSsh = new JsonRpc_Server(this);
+    mSsh->startLocalServer({mMethod}, 9224);
+
+    mWeb = new JsonRpc_Server(this);
+    mWeb->startLocalServer({mMethod}, 9225);
 }
 
 bool Rpc_Json::startRpc(int en, int port)
@@ -19,8 +23,8 @@ bool Rpc_Json::startRpc(int en, int port)
     switch (en) {
     case 1: socket_type = SocketType::tcp; break;
     case 2: socket_type = SocketType::websocket; break;
-    default: close(); return true;
+    default: mServer->close(); return true;
     }
 
-    return startServer({mMethod}, port, socket_type);
+    return mServer->startServer({mMethod}, port, socket_type);
 }

@@ -2,9 +2,9 @@
 #define RPC_JSON_H
 
 #include "rpc_method.h"
-#include "jsonrpcobj.h"
+#include "jsonrpc_server.h"
 
-class Rpc_Json : public JsonRpcObj
+class Rpc_Json : public QObject
 {
     Q_OBJECT
 public:
@@ -13,6 +13,9 @@ public:
 
 private:
     Rpc_Method *mMethod;
+    JsonRpc_Server *mSsh;
+    JsonRpc_Server *mWeb;
+    JsonRpc_Server *mServer;
 };
 
 #endif // RPC_JSON_H
