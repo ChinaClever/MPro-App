@@ -4,7 +4,9 @@
  *      Author: Lzy
  */
 #include "cfg_file.h"
+#ifdef CRC_H
 #include "crc.h"
+#endif
 
 QStringList File::entryList(const QString &p)
 {
@@ -39,7 +41,7 @@ QString File::md5(const QString &fn)
     return QString();
 }
 
-bool File::CheckMd5(const sFileTrans &it)
+bool File::CheckMd5(const sOtaFile &it)
 {
     QString crc = md5(it.path + it.file);
     return it.md5 == crc;
@@ -58,6 +60,7 @@ bool File::AppendMd5(const QString &fn)
     return QFile::rename(fn, fn+"."+crc);
 }
 
+#ifdef CRC_H
 bool File::CheckCrc(const QString &fn)
 {
     uint crc = Crc::File(fn);
@@ -72,6 +75,7 @@ bool File::AppendCrc(const QString &fn)
     QByteArray b = QByteArray::number(crc).toHex();
     return QFile::rename(fn, fn+"."+b);
 }
+#endif
 
 uint File::size(const QString &fn)
 {
@@ -87,7 +91,10 @@ QString File::keyFile()
 {
     QString fn;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    fn = "certs/key.pem";
+    QString key = "certs/client-key.pem";
+    QString cert = "certs/client-cert.pem";
+    if(QFile::exists(key) && QFile::exists(cert)) fn = key;
+    else fn = "certs/key.pem";
 #else
     QString key = "/usr/data/clever/certs/client-key.pem";
     QString cert = "/usr/data/clever/certs/client-cert.pem";
@@ -101,7 +108,10 @@ QString File::certFile()
 {
     QString fn;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
-    fn = "certs/cert.pem";
+    QString key = "certs/client-key.pem";
+    QString cert = "certs/client-cert.pem";
+    if(QFile::exists(key) && QFile::exists(cert)) fn = cert;
+    else fn = "certs/cert.pem";
 #else
     QString key = "/usr/data/clever/certs/client-key.pem";
     QString cert = "/usr/data/clever/certs/client-cert.pem";

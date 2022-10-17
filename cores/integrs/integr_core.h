@@ -5,7 +5,6 @@
 
 class Integr_Core : public Integr_Receiver
 {
-    Q_OBJECT
     explicit Integr_Core(QObject *parent = nullptr);
 public:
     static Integr_Core *bulid(QObject *parent = nullptr);

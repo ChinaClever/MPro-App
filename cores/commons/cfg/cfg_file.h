@@ -3,7 +3,7 @@
 #include "cfg_obj.h"
 #include <QMetaType>
 
-struct sFileTrans {
+struct sOtaFile {
     ushort fc;
     QString dev;
     QString path;
@@ -13,17 +13,18 @@ struct sFileTrans {
     ushort crc;
 };
 
-
 namespace File {
     QString md5(const QString &fn);
-    bool CheckMd5(const sFileTrans &it);
+    bool CheckMd5(const sOtaFile &it);
     bool CheckMd5(const QString &fn);
     bool AppendMd5(const QString &fn);
 
+#ifdef CRC_H
     bool CheckCrc(const QString &fn);
     bool AppendCrc(const QString &fn);
-    uint size(const QString &fn);
+#endif
 
+    uint size(const QString &fn);
     QStringList entryList(const QString &p="");
 
     QString certFile();

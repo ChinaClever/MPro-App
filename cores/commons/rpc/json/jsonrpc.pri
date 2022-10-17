@@ -3,9 +3,9 @@ INCLUDEPATH += $$PWD
 include($$PWD/jcon/jcon.pri)
 
 HEADERS += \
-    $$PWD/jsonrpcclient.h \
-    $$PWD/jsonrpcobj.h
+    $$PWD/jsonrpc_client.h \
+    $$PWD/jsonrpc_server.h
 
 SOURCES += \
-    $$PWD/jsonrpcclient.cpp \
-    $$PWD/jsonrpcobj.cpp
+    $$PWD/jsonrpc_client.cpp \
+    $$PWD/jsonrpc_server.cpp

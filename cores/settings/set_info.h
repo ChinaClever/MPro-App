@@ -19,6 +19,7 @@ protected:
     bool setInfoCfg(int fc, int value);
     QVariant softwareVersion(int addr, int type);
     QVariant proStartupLog(const sCfgItem &it);
+
 private:
     bool qrcodeGenerator(const QString& msg);
     QString process_log();

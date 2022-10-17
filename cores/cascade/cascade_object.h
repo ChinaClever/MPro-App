@@ -6,7 +6,6 @@
 
 class Cascade_Object : public SerialPort
 {
-    Q_OBJECT
 public:
     explicit Cascade_Object(QObject *parent = nullptr);
     enum {fc_readDev=0x51, fc_setting=0x11,  fc_setCfg,
@@ -19,8 +18,7 @@ protected:
     QVector<c_sFrame> transData(uchar fc, uchar addr, const QByteArray &value);
     QByteArray tranData(uchar fc, uchar addr, const QByteArray &value);
     bool writeData(uchar fc, uchar addr, const QByteArray &value);
-
-    uchar getAddress() {return mSelfAddr;}
+    uchar getAddress() {setAddress(); return mSelfAddr;}
     c_sDevData *deDataStream(QByteArray &array);
     c_sDevData *getDev() {return mCData;}
     QByteArray toDataStream();
@@ -36,7 +34,7 @@ private:
     void setAddress();
 
 private:
-    uchar mSelfAddr;
+    uchar mSelfAddr=1;
     c_sDevData *mCData;
     c_DataStream *mDataStream;
 };

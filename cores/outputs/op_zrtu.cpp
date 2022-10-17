@@ -11,6 +11,12 @@ OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
 
 }
 
+void OP_ZRtu::rtuThrowMessage(const QString &msg)
+{
+    QString str = "rtu outlet " + msg;
+    QString ip = cm::dataPacket()->ota.host;
+    if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
+}
 
 bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
@@ -62,6 +68,7 @@ void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
     if(m_array[addr] != cmd) {
         m_array[addr] = cmd; sHardwareItem it; it.module = tr("执行板通讯");
         it.content = tr("执行板无响应 addr:%1 ").arg(addr+1);
+        rtuThrowMessage(it.module + it.content);
         Log_Core::bulid(this)->append(it);
     }
 }
@@ -73,7 +80,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
 
-    QByteArray recv = transmit(cmd, sizeof(cmd));    
+    QByteArray recv = transmit(cmd, sizeof(cmd));
     if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
@@ -84,6 +91,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         cout << addr << recv.size(); //
         sSysItem it; it.module = tr("执行板通讯");
         it.content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
+        rtuThrowMessage(it.module + it.content + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid(this)->append(it);
     }
@@ -112,10 +120,9 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         }
     }
 
-    if(cm::runTime() > 48*60*60) {
-        int t = QRandomGenerator::global()->bounded(500);
-        cm::mdelay(t);
-    } cm::mdelay(360);
+    int t = 0; if(cm::runTime() > 48*60*60) {
+        t = QRandomGenerator::global()->bounded(565);
+    } cm::mdelay(t + 360);
 
     return ret;
 }
@@ -127,14 +134,3 @@ bool OP_ZRtu::readData(int addr)
     return setEndisable(addr, ret, mOpData->ens[addr]);
 }
 
-void OP_ZRtu::run()
-{
-    while (isRun) {
-        int size = mDev->cfg.nums.boardNum;
-        for(int i=0; i<size; ++i) {
-            cmsWriteSlot(175);
-            ota_updates();
-            readData(i+1);
-        } cm::mdelay(10);
-    }
-}

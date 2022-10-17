@@ -11,6 +11,7 @@ public:
     static App_Core *bulid(QObject *parent = nullptr);
 
 private:
+    void initVer();
     void compileTime();
 };
 

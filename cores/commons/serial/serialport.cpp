@@ -9,23 +9,29 @@
 SerialPort::SerialPort(QObject *parent)
     : QObject{parent}
 {
-    isRun = false;
-    mSerial = new QSerialPort(this);
+    mSerial = new Serial_Port();
     mRwLock = new QReadWriteLock;
 }
 
 bool SerialPort::openSerial(const QString &name,qint32 baudRate, QSerialPort::Parity parity)
 {
-    mSerial->close(); mSerial->setPortName(name);
-    bool ret = mSerial->open(QIODevice::ReadWrite);
-    if(ret) {
-        mSerial->setParity(parity);    //无奇偶校验
-        mSerial->setBaudRate(baudRate);  //波特率
-        mSerial->setDataBits(QSerialPort::Data8); //数据位        
-        mSerial->setStopBits(QSerialPort::OneStop);   //无停止位
-        mSerial->setFlowControl(QSerialPort::NoFlowControl);  //无控制
-    } else qCritical() << Q_FUNC_INFO << mSerial->errorString();
+    mSerial->closePort(); mSerial->setPortName(name);
+    bool ret = mSerial->openPort(); // QIODevice::ReadWrite
+    if(ret) { mBr = baudRate;
+        // mSerial->setParity(parity);    //无奇偶校验
+        // mSerial->setBaudRate(baudRate);  //波特率
+        // mSerial->setDataBits(QSerialPort::Data8); //数据位
+        // mSerial->setStopBits(QSerialPort::OneStop);   //无停止位
+        // mSerial->setFlowControl(QSerialPort::NoFlowControl);  //无控制
 
+        int p = 'N';
+        switch (parity) {
+        case QSerialPort::EvenParity: p = 'E'; break;
+        case QSerialPort::OddParity: p = 'O'; break;
+        default: p = 'N'; break;
+        } ret = mSerial->setup(baudRate, 0, 8, 1, p);
+        if(!ret) cout << "serial setup err" << name << baudRate;
+    } else cout << name;
     return ret;
 }
 
@@ -53,30 +59,39 @@ bool SerialPort::waitForLock()
 bool SerialPort::writeSerial(const QByteArray &array)
 {
     bool ret = mSerial->isWritable();
-    if(ret) mList << array;
+    if(ret) mCmdList << array;
     return ret;
 }
 
-void SerialPort::cmsWriteSlot(int msecs)
+void SerialPort::waitForSend(int size)
 {
-    QWriteLocker locker(mRwLock);  while(mList.size()) {
-        cm::mdelay(msecs); int ret = mSerial->write(mList.takeFirst());
-        if(ret > 0) mSerial->flush(); else qCritical() << "Error" << mSerial->errorString();
-        if(!mList.size()) cm::mdelay(msecs);
+    if((size > 0) && (mBr > 0)) {
+        int ms = (size*10.0)/mBr*1000;
+        cm::mdelay(ms+20);
+    }
+}
+
+void SerialPort::cmsWrite(int msecs)
+{
+    QWriteLocker locker(mRwLock);  while(mCmdList.size()) {
+        cm::mdelay(msecs); int ret = mSerial->writePort(mCmdList.takeFirst());
+        if(ret > 0) mSerial->flush(); else cout << "Error" << ret;  //mSerial->errorString();
+        waitForSend(ret); cm::mdelay(msecs);
     }
 }
 
 QByteArray SerialPort::readSerial(int msecs)
 {
     QByteArray rcv, array;
-    if(mSerial->isReadable()) {        
+    if(mSerial->isReadable()) {
         //mSerial->waitForReadyRead(msecs);
-        for(int i=0; i<msecs; i+=10) {
+        for(int i=0; i<msecs; i+=100) {
             rcv = mSerial->readAll();
-            if(rcv.size()) break; else cm::mdelay(10);
+            if(rcv.size()) break; //else cm::mdelay(10);
         }
+
         do{
-            cm::mdelay(msecs/5);
+            //cm::mdelay(msecs/10);
             array = mSerial->readAll();
             rcv.append(array);
         } while (array.size());
@@ -88,10 +103,13 @@ QByteArray SerialPort::readSerial(int msecs)
 QByteArray SerialPort::transmit(const QByteArray &array, int msecs)
 {
     QByteArray rcv; if(mSerial->isOpen()) {
-    QWriteLocker locker(mRwLock); mSerial->readAll();
-    if(mSerial->write(array) > 0) {
-        mSerial->flush(); rcv = readSerial(msecs);
-    } else qCritical() << mSerial->errorString();}
+        QWriteLocker locker(mRwLock); mSerial->readAll();
+        if(mSerial->writePort(array) > 0) {
+            mSerial->flush();
+            waitForSend(array.size());
+            rcv = readSerial(msecs);
+        } else cout << array; //mSerial->errorString();
+    }
     return rcv;
 }
 
@@ -105,7 +123,3 @@ int SerialPort::writeSerial(quint8 *cmd, int len)
     return writeSerial(QByteArray((char *)cmd, len));
 }
 
-void SerialPort::setBaudRate(qint32 br)
-{
-    mBr = br; QTimer::singleShot(50,this,SLOT(setBaudRateSlot()));
-}

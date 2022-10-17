@@ -21,18 +21,17 @@ signals:
     void connectTcpSig();
     void connectRtuSig();
 
-public slots:
+private slots:
     void run();
     void initFunSlot();
     void connectTcpSlot();
     void connectRtuSlot();
 
-
 private:
     bool isRun=true;
+    QTimer *mTimer;
     Mb_Update *mRtu;
     Mb_Update *mTcp;
-    CThread *mThread;
     sModbusSetting *mCfg;
 };
 

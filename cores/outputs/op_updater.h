@@ -1,6 +1,6 @@
 #ifndef OP_UPDATER_H
 #define OP_UPDATER_H
-
+#include "net_udp.h"
 #include "op_object.h"
 #include "cfg_file.h"
 
@@ -21,13 +21,20 @@ protected:
 
 private:
     bool initOta(int id);
+    void throwMessage(const QString &msg);
     bool ota_update(int addr, const QString &fn);
     bool ota_update(int addr, QByteArray &array);
     bool sendPacket(int addr, const QByteArray &array);
 
+private slots:
+    void onOtaFinish(uchar addr, bool ok);
+    void onOtaProgress(uchar addr, int v);
+    void onOtaSig(int addr, const QString &msg);
+
 protected:
     bool isOta;
     QString mOtaFile;
+    Net_Udp *mNet;
 };
 
 #endif // OP_UPDATER_H

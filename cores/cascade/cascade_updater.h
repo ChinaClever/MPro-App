@@ -1,7 +1,7 @@
 #ifndef CASCADE_UPDATER_H
 #define CASCADE_UPDATER_H
 #include "cfg_file.h"
-#include "dtls_recver.h"
+#include "net_udp.h"
 #include "cascade_object.h"
 
 class Cascade_Updater : public Cascade_Object
@@ -9,14 +9,14 @@ class Cascade_Updater : public Cascade_Object
     Q_OBJECT
 public:
     explicit Cascade_Updater(QObject *parent = nullptr);
-    bool ota_update(int addr, const sFileTrans &it);
+    bool ota_update(int addr, const sOtaFile &it);
     void ota_updates();
 
 public slots:
-    void ota_start(const sFileTrans &it) {mIt=it;}
+    void ota_start(const sOtaFile &it) {mIt=it;}
 
 signals:
-    void otaReplyFinishSig(const sFileTrans &it,bool);
+    void otaReplyFinishSig(const sOtaFile &it,bool);
     void otaSendSig(uchar addr, const QString &message);
     void otaProSig(uchar addr, int pro);
 
@@ -26,16 +26,18 @@ protected:
     bool otaReplyPacket(const QByteArray &data);
 
 private:
+    void throwMessage(const QString &msg);
     bool otaSetFile(const QString &fn);
-    bool otaSendInit(int addr, const sFileTrans &it);
+    bool otaSendInit(int addr, const sOtaFile &it);
 
     bool otaSendFinish(int addr, uint state);
     bool otaSendPacket(int addr, const QByteArray &array);
     bool otaSendData(uchar fn, int addr, const QByteArray &array);
+    void otaReboot();
 
 private slots:
-    void initFunSlot();
-    void dtlsFinishSlot(const sFileTrans &it, bool f) {if(f) ota_start(it);}
+    void rebootSlot(){system("reboot");}
+    void otaRecvFinishSlot(const sOtaFile &it, bool ok);
 
 protected:
     bool isOta;
@@ -43,8 +45,8 @@ protected:
 private:
     int mSize;
     QFile *mFile;
-    sFileTrans mIt;
-    Dtls_Recver *mDtls;
+    sOtaFile mIt;
+    Net_Udp *mNet;
 };
 
 #endif // CASCADE_UPDATER_H

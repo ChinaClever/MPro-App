@@ -5,7 +5,6 @@
 
 class Cascade_Unserialize : public Cascade_Updater
 {
-    Q_OBJECT
 public:
     explicit Cascade_Unserialize(QObject *parent = nullptr);
 

@@ -18,15 +18,13 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     QVariant res;
 
     switch (type) {
-    case 1: res = it->coreVer; break;
-    case 2: res = it->coreCompileTime; break;
-    case 3: res = it->coreReleaseTime; break;
-    case 4: res = it->startVer; break;
-    case 5: res = it->startCompileTime; break;
-    case 6: res = it->startReleaseTime; break;
-    case 7: res = it->lcdVer; break;
-    case 8: res = it->lcdCompileTime; break;
-    case 9: res = it->lcdReleaseTime; break;
+    case 1: res = it->ver; break;
+    case 2: res = it->md5; break;
+    case 3: res = it->usr; break;
+    case 4: res = it->remark; break;
+    case 5: res = it->oldVersion; break;
+    case 6: res = it->compileDate; break;
+    case 7: res = it->releaseDate; break;
     case 11: res = it->opVers[0]; break;
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
@@ -184,24 +182,32 @@ QString Set_Info::process_log()
     return array;
 }
 
+
 QVariant Set_Info::proStartupLog(const sCfgItem &it)
 {
     QVariant res;
     sProcState *pro = &(cm::devData(it.addr)->proc);
     sRunTime *run = nullptr; switch (it.fc) {
+    case 0: run = &(pro->daemon); break;
     case 1: run = &(pro->core); break;
-    case 2: run = &(pro->daemon); break;
-    case 3: run = &(pro->lcd); break;
-    case 4: run = &(pro->sensor); break;
-    case 5: run = &(pro->sys); break;
+    case 2: run = &(pro->ota); break;
+    case 3: run = &(pro->web); break;
+    case 4: run = &(pro->awtk); break;
     case 10: res = process_log(); break;
     default: cout << it.fc; break;
     }
 
     if(run) {
-        if(it.id==1) res = run->runSec;
-        else res = run->start;
+        switch (it.id) {
+        case 1: res = run->runSec; break;
+        case 2: res = run->start; break;
+        case 3: res = run->md5; break;
+        case 4: res = run->compileTime; break;
+        case 5: res = run->resetCnt; break;
+        default: cout << it.fc; break;
+        }
     }
+
     return res;
 }
 

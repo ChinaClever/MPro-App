@@ -1,7 +1,9 @@
 #ifndef COMMONS_H
 #define COMMONS_H
 #include "datapacket.h"
+#ifdef CRC_H
 #include "crc.h"
+#endif
 
 namespace cm {
 void mdelay(int msec=1);
@@ -19,7 +21,7 @@ sDevData *devData(uchar id);
 QString execute(const QString &cmd);
 uint runTime(uchar id=0);
 
-
+void buildDateTime(char *ptr);
 const QDateTime buildDateTime();
 template<typename T> QByteArray toByteArray(const T &v) {
     return QByteArray::fromRawData((char *)&v, sizeof(T));

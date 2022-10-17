@@ -5,7 +5,6 @@
 
 class Mb_Line : public Mb_Object
 {
-    Q_OBJECT
 public:
     explicit Mb_Line(QObject *parent = nullptr);
 

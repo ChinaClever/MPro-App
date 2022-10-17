@@ -15,7 +15,6 @@ struct sAgentCfg {
 
 class Agent_Core : public Agent_Trap
 {
-    Q_OBJECT
     explicit Agent_Core(QObject *parent = nullptr);
 public:
     static Agent_Core *bulid(QObject *parent = nullptr);

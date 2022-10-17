@@ -183,26 +183,14 @@ struct sDevNums
 
 struct sVersions
 {
-    uint core;
-    char coreMd5[NAME_SIZE];
-    char coreVer[NAME_SIZE];
-    char coreCompileTime[NAME_SIZE];
-    char coreReleaseTime[NAME_SIZE];
-
-    uint start;
-    char startMd5[NAME_SIZE];
-    char startVer[NAME_SIZE];
-    char startCompileTime[NAME_SIZE];
-    char startReleaseTime[NAME_SIZE];
-
-    uint lcd;
-    char lcdMd5[NAME_SIZE];
-    char lcdVer[NAME_SIZE];
-    char lcdCompileTime[NAME_SIZE];
-    char lcdReleaseTime[NAME_SIZE];
-
+    char usr[NAME_SIZE]; // 客户名称
+    char md5[NAME_SIZE]; // 校验码
+    char ver[NAME_SIZE]; // 版本号
+    char remark[4*NAME_SIZE]; // 发布说明
+    char oldVersion[NAME_SIZE]; // 旧版本号
+    char compileDate[NAME_SIZE]; // 编译时间
+    char releaseDate[NAME_SIZE]; // 发布时间
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
-    uint version;
 };
 
 struct sUutInfo {
@@ -217,7 +205,7 @@ struct sUutInfo {
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU    
+    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uchar cascadeAddr; // 级联地址
     uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
@@ -240,16 +228,18 @@ struct sRunTime
     uint runSec; // 最近开关运行时间 秒钟为单位
     uint resetCnt; // 重启次数；
     uint daemonSec; // 守护进程使用
+    char md5[NAME_SIZE]; // 运行程序的ＭＤ５值
     char start[NAME_SIZE]; // 启动时间
+    char compileTime[NAME_SIZE]; // 编译时间
 };
 
 struct sProcState
 {
-    struct sRunTime sys; // 系统启动时间
     struct sRunTime daemon; // 守护进程
     struct sRunTime core; // 主程序启动时间
-    struct sRunTime lcd; // 屏幕启动时间
-    struct sRunTime sensor; // 传感器
+    struct sRunTime ota; // 升级启动时间
+    struct sRunTime web; // 网页启动时间
+    struct sRunTime awtk; // 屏幕启动时间
     struct sRunTime reserve;
 };
 
@@ -277,7 +267,7 @@ struct sDevData
 #endif
 
     uchar id;  // 设备号
-    uchar alarm; // 工作状态 ==0 正常    
+    uchar alarm; // 工作状态 ==0 正常
     uchar status; // 0：正常 1：告警 2：故障
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
@@ -331,11 +321,39 @@ struct sDevLogin
     char reserve[NAME_SIZE];
 };
 
+struct sOtaUpIt
+{
+    uchar isRun; // 0 完成 1 进行中  2 失败
+    uchar subId; // 升级子对象 第几个副机，或者第几块执板
+    uchar progress; // 升级进度 百分之几十
+};
+
+struct sOtaUpdater
+{
+    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    sOtaUpIt usb; // USB升级状态
+    sOtaUpIt net; // 网络升级状态
+    sOtaUpIt slave; // 级联升级状态
+    sOtaUpIt outlet; // 执行板升级状态
+    char host[NAME_SIZE]; // 服务端地址
+};
+
+struct sWebCfg{
+    ushort http_en;
+    ushort http_port;
+    ushort http_redirect;
+
+    ushort https_en;
+    ushort https_port;
+};
+
 /**
  * 数据包
  */
 struct sDataPacket
 {
+    struct sWebCfg web;
+    struct sOtaUpdater ota; // 升级信息
     struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
     struct sDevLogin login[USER_NUM];
@@ -370,7 +388,7 @@ struct sDataItem
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp,
-             ELog=81, EPro, ECmd=111};
+             ELog=81, EPro, EOta, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

@@ -5,7 +5,6 @@
 
 class Cascade_Master : public Cascade_Unserialize
 {
-    Q_OBJECT
 public:
     explicit Cascade_Master(QObject *parent = nullptr);
 

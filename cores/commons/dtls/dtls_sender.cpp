@@ -9,13 +9,14 @@ bool Dtls_Sender::gRunState = true;
 Dtls_Sender::Dtls_Sender(QObject *parent)
     : QObject{parent}
 {
-    //    mThread = new CThread(this);
-    //    mThread->init(this, SLOT(run()));
+    // mThread = new CThread(this);
+    // mThread->init(this, SLOT(run()));
+    qRegisterMetaType<sOtaFile>("sOtaFile");
 }
 
 bool Dtls_Sender::writeData(Dtls_Association *dtls)
 {    
-    QByteArray array; int max=20*1024;
+    QByteArray array; int max=8*1024;
     QString name = dtls->getName();
     bool ret = dtls->writeData(mHead); int pro=0;
     if(ret) emit infoMessage(ret, tr("%1 连接成功").arg(name));
@@ -58,7 +59,7 @@ void Dtls_Sender::run()
     }
 }
 
-bool Dtls_Sender::sendFile(const QString &ip, const QString &fn, const sFileTrans &it)
+bool Dtls_Sender::sendFile(const QString &ip, const QString &fn, const sOtaFile &it)
 {
     bool ret = true; QFile file(fn);
     QByteArray head; QDataStream in(&head, QIODevice::WriteOnly);
@@ -69,7 +70,7 @@ bool Dtls_Sender::sendFile(const QString &ip, const QString &fn, const sFileTran
     return ret;
 }
 
-void Dtls_Sender::sendData(const QString &ip, const sFileTrans &it, const QByteArray &data)
+void Dtls_Sender::sendData(const QString &ip, const sOtaFile &it, const QByteArray &data)
 {
     QByteArray head; QDataStream in(&head, QIODevice::WriteOnly);
     in << it.fc << it.dev << it.path << it.file << it.md5 << it.size <<END_CRC;

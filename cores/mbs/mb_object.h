@@ -5,7 +5,6 @@
 
 class Mb_Object : public Modbus_SlaveRtu , public Set_Output
 {
-    Q_OBJECT
 public:
     explicit Mb_Object(QObject *parent = nullptr);
 

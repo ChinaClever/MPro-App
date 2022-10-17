@@ -77,12 +77,11 @@ void Mqtt_Client::connectToHost()
 void Mqtt_Client::startMqtt()
 {
     if(m_client) {
+        cfg.isConnected = false;
         m_client->disconnectFromHost();
         delete m_client; m_client=nullptr;
     }
 
-    //cfg.url = "192.168.1.100";   ///////======
-    //cfg.type = 0;
     if(cfg.type) connectToHost();
 
 }

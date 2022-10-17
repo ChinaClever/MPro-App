@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>sercet</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/index.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../doc-lib/doc.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
+						<div class ="phase_div2" id="lang_2"></div>
+						<table style="width:100%;height:35%; ">
+							<tr>
+								<td style=" width: 46%;">
+									<div style=" width: 98%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#ffffff;">
+										<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_3"></div>
+										<table class = "theme_table" style="height:32px; width:96%; line-height:30px; font-size:14px;"></table>
+									</div>
+								</td>
+								<td style="width: 46%;">
+									<div style=" width: 98%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#ffffff;">
+										<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_11"></div>
+										<table class = "issue_table" style="height:32px; width: 97%;line-height:30px;font-size:14px;"></table>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#ffffff;">
+							<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_19"></div>
+							<table class = "cert_table" style="height:32px; width: 97%;line-height:30px;font-size:14px;"></table>
+							<div style="display:flex;align-items:center;justify-content:center;height: 50px;background:#f0f0f0;" >
+								<button style = "width: 8%;" id = "lang_24" type="button" onclick="download(this)"></button>&nbsp;&nbsp;&nbsp;
+								<button style = "width: 8%;"id = "lang_25" type="button" onclick="download(this)" ></button>
+							</div>
+						</div>
+					</div>
+					<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#D8D8D8;">
+						<div class ="phase_div2" id="lang_26"></div>
+						<table style="width:100%;height:35%; ">
+							<tr>
+								<td style=" width: 46%;">
+									<div style=" width: 98%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#E8E8E8;">
+										<div style="text-align:left; padding-left:20px; padding-top:8px; height:50px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_27"></div>
+										<table class = "new_table" style="height:32px; width:96%; line-height:40px; font-size:14px;"></table>
+									</div>
+								</td>
+								<td style="width: 46%;">
+									<div style=" width: 98%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#E8E8E8;">
+										<div style="text-align:left; padding-left:20px; padding-top:8px; height:50px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_35"></div>
+										<table class = "set_table" style="height:32px; width: 97%;line-height:31px;font-size:14px;"></table>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<div style="padding-left:40px;" ><input type = "checkbox"  onclick="openupdate(this)"><label id = "lang_44"></label></div>
+						<div id = "update_file" style="display: none;">
+							<div align="center">
+								<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
+								<button id = "lang_45" type ="button" onclick = "document.getElementById('inputkey').click()"></button> 
+								<input type = "text" value = "" id = "info" >
+								<label id  = "loading"></label>
+							</div>
+							<div align="center">
+								<input  id = "inputcert" type = "file" style ="display: none;" onchange="chosefile1()">
+								<button id = "lang_46" type ="button" onclick = "document.getElementById('inputcert').click()"></button> 
+								<input type = "text" value = ""  id = "info1" >
+								<label id  = "loading1"></label>
+							</div>
+							<div align = "center"><button onclick = 'upload_data()'>upload</button></div>
+						</div>
+					</div>
+					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		read_tls_data(0);
+		var tls_data = new Array();
+		var lang = new Array();
+		let length = 49;
+		lang_init();
+		function upload_data(){
+			let  key = document.getElementById("info").value;
+			let  cert = document.getElementById("info1").value;
+			if(key != ""){
+				let fileObj = document.getElementById('inputkey').files[0];
+				if (!fileObj) return;
+				var f = fileObj, r = new FileReader();
+				r.readAsArrayBuffer(f);
+				r.onload = function() {
+					document.getElementById('inputkey').value = '';
+					document.getElementById('loading').innerText = 'Uploading...';
+					document.getElementById('loading').style.color = 'red';
+					fetch('/upload?name=' + encodeURIComponent(f.name), {
+					method: 'POST',
+					body: r.result,
+					}).then(function(res) {
+					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
+					document.getElementById('loading').style.color = 'green';
+<<<<<<< HEAD
+					document.getElementById("info").value = '';
+					});
+				};
+			}
+			setTimeout(function(){
+				if(cert != ""){
+=======
+					document.getElementById('info').value= '';
+					});
+				};
+			}
+			setTimeout(function(){if(cert != ""){
+>>>>>>> pmd
+					let fileObj = document.getElementById('inputcert').files[0];
+					if (!fileObj) return;
+					var f = fileObj, r = new FileReader();
+					r.readAsArrayBuffer(f);
+					r.onload = function() {
+						document.getElementById('inputcert').value = '';
+						document.getElementById('loading1').innerText = 'Uploading...';
+						document.getElementById('loading1').style.color = 'red';
+						fetch('/upload?name=' + encodeURIComponent(f.name), {
+						method: 'POST',
+						body: r.result,
+						}).then(function(res) {
+						document.getElementById('loading1').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
+						document.getElementById('loading1').style.color = 'green';
+<<<<<<< HEAD
+						document.getElementById("info1").value = '';
+=======
+						document.getElementById('info1').value= '';
+>>>>>>> pmd
+						});
+					};
+				}
+			},500);
+		}
+		function openupdate(obj){
+			if(obj.checked == true){
+				document.getElementById("update_file").style.display ="";
+			}
+			else{
+				document.getElementById("update_file").style.display ="none";
+			}
+			document.getElementById("info").placeholder = lang[48][1];
+			document.getElementById("info1").placeholder = lang[48][1];
+		}
+		function chosefile(){
+			document.getElementById("info").value = document.getElementById("inputkey").value;
+		}
+		function chosefile1(){
+			document.getElementById("info1").value = document.getElementById("inputcert").value;
+		}
+		function lang_init(){
+			for(let i = 0;i<length;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","TLS证书","","","",""];
+			lang[2] = ["","活动TLS证书","","","",""];
+			lang[3] = ["","主题","","","",""];
+			lang[4] = ["","国家","","","",""];
+			lang[5] = ["","州或省","","","",""];
+			lang[6] = ["","地方性","","","",""];
+			lang[7] = ["","组织","","","",""];
+			lang[8] = ["","组织单位","","","",""];
+			lang[9] = ["","通用名称","","","",""];
+			lang[10] = ["","电子邮件地址","","","",""];
+			lang[11] = ["","发行人","","","",""];
+			lang[12] = ["","国家","","","",""];
+			lang[13] = ["","州或省","","","",""];
+			lang[14] = ["","地方性","","","",""];
+			lang[15] = ["","组织","","","",""];
+			lang[16] = ["","组织单位","","","",""];
+			lang[17] = ["","通用名称","","","",""];
+			lang[18] = ["","电子邮件地址","","","",""];
+			lang[19] = ["","各种各样的","","","",""];
+			lang[20] = ["","之前无效","","","",""];
+			lang[21] = ["","之前有效","","","",""];
+			lang[22] = ["","序列号","","","",""];
+			lang[23] = ["","密钥长度","","","",""];
+			lang[24] = ["","下载密钥","","","",""];
+			lang[25] = ["","下载证书","","","",""];
+			lang[26] = ["","新的TLS证书","","","",""];
+			lang[27] = ["","主题","","","",""];
+			lang[28] = ["","国家","","","",""];
+			lang[29] = ["","州或省","","","",""];
+			lang[30] = ["","地方性","","","",""];
+			lang[31] = ["","组织","","","",""];
+			lang[32] = ["","组织单位","","","",""];
+			lang[33] = ["","通用名称","","","",""];
+			lang[34] = ["","电子邮件地址","","","",""];
+			lang[35] = ["","主题备用名称","","","",""];
+			lang[36] = ["","这些都是证书对其有效的主机名或IP地址:","","","",""];
+			lang[37] = ["","+添加名称","","","",""];
+			lang[38] = ["","密钥创建参数","","","",""];
+			lang[39] = ["","密钥长度","","","",""];
+			lang[40] = ["","自签","","","",""];
+			lang[41] = ["","挑战","","","",""];
+			lang[42] = ["","确认挑战","","","",""];
+			lang[43] = ["","创建新的TLS密钥","","","",""];
+			lang[44] = ["","上传密钥和证书","","","",""];
+			lang[45] = ["","选择密钥","","","",""];
+			lang[46] = ["","选择证书","","","",""];
+			lang[47] = ["","必需的","","","",""];
+			lang[48] = ["","请选择需要上传的文件","","","",""];
+		}
+		function lang_fun(obj){
+			for(var i = 1;i<47;i++){
+				document.getElementById("lang_" + i).innerHTML  = lang[i][1];
+			}
+		}
+		function read_data(){
+			for(var j = 1;j<30;j++){
+				if(j < 5){
+					tls_data[j] = sessionStorage.getItem("Tls"+tls_info[j]);
+				}else if((j>10&& j<18) || (j>20 && j<28)){
+					if(j/10 == 1){
+						tls_data[j] = sessionStorage.getItem("Theme"+tls_info1[j % 10]);
+					}else{
+						tls_data[j] = sessionStorage.getItem("Issue"+tls_info1[j % 10]);
+					}
+					
+				}
+			}
+		}
+		$('.theme_table').html(buildTableCert(0));
+		$('.issue_table').html(buildTableCert(1));
+		$('.cert_table').html(buildTableCert1());
+		$('.new_table').html(buildTableNew());
+		$('.set_table').html(buildTableNew1());
+		setTimeout(function(){
+			read_data();
+			lang_fun(1);
+			showdata();
+		},500);
+		function showdata(){
+			for(i = 1;i<8;i++){
+				document.getElementById("dat"+i).innerHTML = tls_data[10+i];
+			}
+			for(i = 8;i<15;i++){
+				document.getElementById("dat"+i).innerHTML = tls_data[20+(i-7)];
+			}
+			document.getElementById("dat15").innerHTML = tls_data[3];
+			document.getElementById("dat16").innerHTML = tls_data[4];
+			document.getElementById("dat17").innerHTML = tls_data[1];
+			document.getElementById("dat18").innerHTML = tls_data[2];
+		}
+		function create(){
+			if(confirm("请确认是否保存此次修改？")){
+				rpc.call('pduSetParam',[0,tls_,31,0,0,0]);
+			}else{}
+		}
+		function SetData(ipt){
+			if(confirm("请确认是否保存此次修改？")){
+				let id = parseInt(ipt.id.slice(3));
+				rpc.call('pduSetParam',[0,tls_,id+11,0,0,ipt.value]);
+				flash_html();
+			}else{}
+		}
+		function flash_html(){
+			// read_modbus_data(0);
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},800);
+		}
+		function download(obj){
+			let url = window.location.origin;
+			if(obj.id == "lang_24"){
+				url += "/index.html/client-key.pem";
+				window.open(url,'_blank');
+			}else{
+				url += "/index.html/client-cert.pem";
+				window.open(url,'_blank');
+			}
+		}
+		function buildTableCert(obj){
+			let tbody ="";
+			for(let i = 0;i< 7 ;i++){
+				tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;" id="lang_'+(4 +8 * obj + i)+'"></td><td id="dat'+(7 * obj + i + 1)+'"></td></tr>';
+			}
+			return tbody;
+		}
+		function buildTableCert1(){
+			let tbody ="";
+			for(let i = 0;i<4 ;i++){
+				tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;" id="lang_'+(20 + i)+'"></td><td id="dat'+(15 + i)+'"></td></tr>';
+			}
+			return tbody;
+		}
+		function buildTableNew(){
+			let tbody ="";
+			for(let i = 0;i<7 ;i++){
+				tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;" id="lang_'+(28 + i)+'"></td>';
+				if(i<3){
+					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+' "></input></td></tr>';
+				}else{
+					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"></input></td></tr>';
+				}
+			}
+			return tbody;
+		}
+		function buildTableNew1(){
+			let tbody ="";
+			tbody +='<tr><td style="padding-left:20px;"colspan= "2" id="lang_36"></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><input id="ipt7" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input>&nbsp&nbsp&nbsp<button>-</button></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><button id="lang_37" ></button></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;style="width:32%;" id="lang_38" style="font-weight:bold"></td><td>RSA</td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_39"></td><td>4096 bits</td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_40"></td><td><input id="ipt8" type = "checkbox"></input></td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_41"></td><td><input id="ipt9" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_42"></td><td><input id="ipt10" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
+			tbody +='<tr><td  colspan= "2" align="center"><button id="lang_43" onclick = "create();" ></button></td></tr>';
+			return tbody;
+		}
+    </script>
+</body>
+</html>
