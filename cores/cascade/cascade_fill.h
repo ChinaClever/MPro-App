@@ -5,7 +5,6 @@
 
 class Cascade_Fill : public Cascade_Master
 {
-    Q_OBJECT
 public:
     explicit Cascade_Fill(QObject *parent = nullptr);
 

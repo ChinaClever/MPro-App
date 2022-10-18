@@ -1,3 +1,8 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
 #include <QCoreApplication>
 #include "web_core.h"
 

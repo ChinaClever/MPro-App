@@ -7,7 +7,6 @@
 enum class SocketType {tcp, websocket};
 class JsonRpc_Server : public QObject
 {
-    Q_OBJECT
 public:
     explicit JsonRpc_Server(QObject *parent = nullptr);
     bool startLocalServer(const QObjectList &services, int port);

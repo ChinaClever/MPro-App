@@ -5,7 +5,6 @@
 
 class Mb_Alarm : public Mb_Setting
 {
-    Q_OBJECT
 public:
     explicit Mb_Alarm(QObject *parent = nullptr);
 

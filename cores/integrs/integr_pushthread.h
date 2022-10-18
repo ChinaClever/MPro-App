@@ -34,12 +34,15 @@ class Integr_PushThread : public QObject
     Q_OBJECT
 public:
     explicit Integr_PushThread(QObject *parent = nullptr);
-    ~Integr_PushThread();
+    ~Integr_PushThread() {isRun = false;}
     static sPushCfg pushCfg;
+
+signals:
+    void pushSig();
 
 public slots:
     void run();
-    void startSlot();
+    void onPushSlot();
 
 private:
     void delay();
@@ -50,11 +53,11 @@ private:
     void mqttPush(const QByteArray &array);
 
 private:
+    QByteArray mArray;
     bool isRun = false;
     Net_Udp *mUdp = nullptr;
     Integr_JsonBuild *mJson;
-    CThread *mThread = nullptr;
-    sPushCfg *mCfg = &pushCfg;    
+    sPushCfg *mCfg = &pushCfg;
 };
 
 #endif // INTEGR_PUSHTHREAD_H

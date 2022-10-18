@@ -28,7 +28,6 @@ struct sOpIt
 
 class OP_Object : public SerialPort
 {
-    Q_OBJECT
 public:
     explicit OP_Object(QObject *parent = nullptr);
 

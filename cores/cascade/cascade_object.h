@@ -6,7 +6,6 @@
 
 class Cascade_Object : public SerialPort
 {
-    Q_OBJECT
 public:
     explicit Cascade_Object(QObject *parent = nullptr);
     enum {fc_readDev=0x51, fc_setting=0x11,  fc_setCfg,

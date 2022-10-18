@@ -6,7 +6,6 @@
 
 class Rpc_Json : public QObject
 {
-    Q_OBJECT
 public:
     explicit Rpc_Json(QObject *parent = nullptr);
     bool startRpc(int en, int port);

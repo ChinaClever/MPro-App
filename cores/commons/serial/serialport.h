@@ -1,16 +1,16 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
-#include <QtCore>
+//#include <QtCore>
 #include <QSerialPort>
 #include "commons.h"
+#include "serial_port.h"
 
 class SerialPort : public QObject
 {
-    Q_OBJECT
 public:
     explicit SerialPort(QObject *parent = nullptr);
     static QStringList ports();
-    void closeSerial() {mSerial->close();}
+    void closeSerial() {mSerial->closePort();}
     bool isOpened(){return mSerial->isOpen();}
     QString nameSerial() {return mSerial->portName();}
     bool isContains(const QString &name) {return ports().contains(name);}
@@ -22,22 +22,17 @@ public:
     QByteArray transmit(uchar *sent, int len, int msecs=1000);
     QByteArray transmit(const QByteArray &array, int msecs=1000);
     QByteArray readSerial(int msecs=1000);
-    void setBaudRate(qint32 br);
+    void cmsWrite(int msecs=1);
     bool waitForLock();
-
-public slots:
-    void cmsWriteSlot(int msecs=1);
-    void setBaudRateSlot() {mSerial->setBaudRate(mBr);}
 
 private:
     void waitForSend(int size);
 
 private:
-    bool isRun;
     qint32 mBr=1;
-    QByteArrayList mList;
-    QSerialPort  *mSerial;
+    Serial_Port  *mSerial;
     QReadWriteLock *mRwLock;
+    QByteArrayList mCmdList;
 };
 
 #endif // SERIALPORT_H

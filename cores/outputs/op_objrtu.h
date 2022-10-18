@@ -5,7 +5,6 @@
 
 class OP_ObjRtu : public OP_Updater
 {
-    Q_OBJECT
 public:
     explicit OP_ObjRtu(QObject *parent = nullptr);
     virtual bool readData(int addr)=0;

@@ -5,7 +5,6 @@
 
 class OP_ZCtrl : public OP_ObjCtrl
 {
-    Q_OBJECT
 public:
     explicit OP_ZCtrl(QObject *parent = nullptr);
     enum {zCmdLen=68, zRcvLen=127};

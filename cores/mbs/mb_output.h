@@ -4,7 +4,6 @@
 
 class Mb_Output : public Mb_Line
 {
-    Q_OBJECT
 public:
     explicit Mb_Output(QObject *parent = nullptr);
 
@@ -14,7 +13,6 @@ protected:
 private:
     void upOutputData();
     void upOutputThreshold();
-
 };
 
 #endif // MB_OUTPUT_H

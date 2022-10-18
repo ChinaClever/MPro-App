@@ -4,6 +4,7 @@ unix {
 SUBDIRS += \
     cores \
     start_up \
+    web_server \
     cmds/pdu_cmd \
     cmds/proc_log \
     cmds/proc_run \
@@ -11,8 +12,6 @@ SUBDIRS += \
     ota_updater/ota_usb
 }
 
-SUBDIRS += \
-    web_server
 
 
 

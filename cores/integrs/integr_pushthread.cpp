@@ -12,22 +12,8 @@ Integr_PushThread::Integr_PushThread(QObject *parent)
 {
     mUdp = new Net_Udp(this);
     mJson = Integr_JsonBuild::bulid();
-    mThread = new CThread(this);
-}
-
-Integr_PushThread::~Integr_PushThread()
-{
-    isRun = false;
-    mThread->stop();
-    //wait();
-}
-
-void Integr_PushThread::startSlot()
-{
-    if(!isRun) {
-        mThread->init(this, SLOT(run()));
-        mThread->start();
-    }
+    QtConcurrent::run(this,&Integr_PushThread::run);
+    connect(this, &Integr_PushThread::pushSig, this, &Integr_PushThread::onPushSlot);
 }
 
 void Integr_PushThread::udpPush(const QByteArray &array)
@@ -59,13 +45,20 @@ void Integr_PushThread::mqttPush(const QByteArray &array)
     }
 }
 
+void Integr_PushThread::onPushSlot()
+{
+    udpPush(mArray);
+    mqttPush(mArray);
+    httpPush(mArray);
+}
+
 void Integr_PushThread::workDown()
 {
     for(int i=0; i<DEV_NUM; ++i) {
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
-            QByteArray res = mJson->getJson(i);
-            udpPush(res); mqttPush(res); httpPush(res);
+            mArray = mJson->getJson(i);
+            emit pushSig();
         } if(isRun) delay();
     }
 }
@@ -92,8 +85,6 @@ bool Integr_PushThread::checkPush()
 
 void Integr_PushThread::run()
 {
-    if(isRun) return;
-    else isRun = true;
     while (isRun) {
         int t = QRandomGenerator::global()->bounded(100);
         cm::mdelay(t);delay(); if(checkPush()) workDown();

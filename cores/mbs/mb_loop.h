@@ -5,7 +5,6 @@
 
 class Mb_Loop : public Mb_Output
 {
-    Q_OBJECT
 public:
     explicit Mb_Loop(QObject *parent = nullptr);
 
