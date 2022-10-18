@@ -15,6 +15,7 @@ public:
     bool setJson(const QByteArray &data, const QString &room, const QString &ip);
 
 private:
+    void recvSwVersion();
     bool checkInput(const sSdpIt &it);
 
 private slots:
