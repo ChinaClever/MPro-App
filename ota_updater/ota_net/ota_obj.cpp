@@ -15,7 +15,7 @@ Ota_Obj::Ota_Obj(QObject *parent)
 void Ota_Obj::onStartSsdp()
 {
     static uint sec = 1; if(++sec%5) return ;
-    sRunTime *run = &(cm::masterDev()->proc.core);
+    sRunTime *run = &(cm::masterDev()->proc.ota);
     if(run->runSec > sec) {
         sec = run->runSec;
         mSsdp->ssdpClose();

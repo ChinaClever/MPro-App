@@ -45,8 +45,8 @@ void App_Start::startThreadSlot()
     Integr_Core::bulid(this);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    OP_Core::bulid(this);
     Agent_Core::bulid(this);
-    //OP_Core::bulid(this);
     Cascade_Core::bulid(this);
 #endif
 }

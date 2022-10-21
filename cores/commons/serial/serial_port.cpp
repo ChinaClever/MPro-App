@@ -17,9 +17,9 @@
 #include <sys/ioctl.h>
 
 static int speed_arr[14] = { B38400, B19200, B9600, B4800, B2400, B1200, B300,
-                      B38400, B19200, B9600, B4800, B2400, B1200, B300, };
+                             B38400, B19200, B9600, B4800, B2400, B1200, B300, };
 static int name_arr[14] = {38400,  19200,  9600,  4800,  2400,  1200,  300,
-                    38400,  19200,  9600, 4800, 2400, 1200,  300, };
+                           38400,  19200,  9600, 4800, 2400, 1200,  300, };
 
 Serial_Port:: Serial_Port()
 {
@@ -30,7 +30,7 @@ bool Serial_Port::OpenPort(const char * dev)
 {
     char* _dev=new char[32];
     strcpy(_dev,dev);
-    fd = open(_dev, O_RDWR);         //| O_NOCTTY | O_NDELAY
+    fd = open(_dev, O_RDWR | O_NOCTTY | O_NDELAY);         //| O_NOCTTY | O_NDELAY
     if (-1 == fd) {
         perror("Can't Open Serial Port");
         return false;
@@ -43,7 +43,7 @@ bool Serial_Port::OpenPort(const char * dev)
 }
 
 
-int Serial_Port::setup(int speed,int flow_ctrl,int databits,int stopbits,int parity)
+int Serial_Port::setup(int speed,int databits,int stopbits,int parity,int flow_ctrl)
 {
     int   i;
     //int   status;
@@ -66,6 +66,7 @@ int Serial_Port::setup(int speed,int flow_ctrl,int databits,int stopbits,int par
         }
     }
 
+    cfmakeraw(&options);
     //修改控制模式，保证程序不会占用串口
     options.c_cflag |= CLOCAL;
     //修改控制模式，使得能够从串口中读取输入数据
@@ -86,6 +87,7 @@ int Serial_Port::setup(int speed,int flow_ctrl,int databits,int stopbits,int par
         options.c_cflag |= IXON | IXOFF | IXANY;
         break;
     }
+
     //设置数据位
     //屏蔽其他标志位
     options.c_cflag &= ~CSIZE;
@@ -149,13 +151,13 @@ int Serial_Port::setup(int speed,int flow_ctrl,int databits,int stopbits,int par
 
     //修改输出模式，原始数据输出
     options.c_oflag &= ~OPOST;
-
     options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-    //options.c_lflag &= ~(ISIG | ICANON);
+//    options.c_lflag &= ~(ISIG | ICANON);
 
     //设置等待时间和最小接收字符
-    options.c_cc[VTIME] = 1; /* 读取一个字符等待1*(1/10)s */
+    options.c_cc[VTIME] = 2; /* 读取一个字符等待1*(1/10)s */
     options.c_cc[VMIN] = 0; /* 读取字符的最少个数为1 */
+
     //如果发生数据溢出，接收数据，但是不再读取 刷新收到的数据但是不读
     tcflush(fd,TCIFLUSH);
 
@@ -203,7 +205,7 @@ bool Serial_Port::isOpen()
 void Serial_Port::flush()
 {
     if(fd >= 0) {
-        //flush(fd);
+        fsync(fd);
         //tcflush(fd, TCIFLUSH);    //清空输入缓存
         //tcflush(fd, TCOFLUSH);    //清空输出缓存
         //tcflush(fd, TCIOFLUSH);   //清空输入输出缓存

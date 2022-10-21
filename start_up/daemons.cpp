@@ -31,8 +31,8 @@ void Daemons::start_proc()
     mdelay(152); initFun();
     proc_start(mProcs->core, "cores");
     proc_start(mProcs->awtk, "awtk");
+    proc_start(mProcs->ota, "ota_net");
     proc_start(mProcs->web, "web_server");
-    proc_start(mProcs->ota, "ota_updater");
     QtConcurrent::run(this,&Daemons::workDown);
 }
 
@@ -54,25 +54,20 @@ void Daemons::initFun()
     sRunTime *run = &(mProcs->daemon);
     qstrcpy(run->start, t.toLatin1().data());
 
-    QString dateTime;
+    QString dateTime; proc_log("daemon_startup");
     dateTime += __DATE__; dateTime += __TIME__;
     dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
     QDateTime dt = QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
     QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(run->compileTime, str.toUtf8().data());
+    qstrcpy(run->compileTime, str.toUtf8().data());    
 }
 
-bool Daemons::resetProc(sRunTime &proc, const QString &name)
+void Daemons::resetProc(sRunTime &proc, const QString &name)
 {
-    bool ret = proc_isRun(name);
-    if(ret) {
-        QString cmd = "killall " + name;
-        system(cmd.toLatin1().data()); mdelay(100);
-    }
+//    QString cmd = "killall " + name;
+//    system(cmd.toLatin1().data()); mdelay(100);
     proc_log(name +"_exit"); mdelay(100);
     proc_start(proc, name); mdelay(5000);
-
-    return ret;
 }
 
 
@@ -81,13 +76,12 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
     bool ret = true;
     if(proc.runSec > proc.daemonSec) {
         proc.daemonSec = proc.runSec;
-    } else {
+    } else if(!proc_isRun(name)){
         resetProc(proc, name);
         ret = false;
     } mdelay(100);
     return ret;
 }
-
 
 void Daemons::workDown()
 {
@@ -95,9 +89,9 @@ void Daemons::workDown()
     while(1) {
         mdelay(1800);
         procRunStatus(mProcs->core, "cores");
-        procRunStatus(mProcs->awtk, "awtk");
+        //procRunStatus(mProcs->awtk, "awtk");
         procRunStatus(mProcs->web, "web_server");
-        procRunStatus(mProcs->ota, "ota_updater");
+        procRunStatus(mProcs->ota, "ota_net");
         mProcs->daemon.runSec += 1;
     }
 }

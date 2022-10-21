@@ -7,7 +7,7 @@
 
 Agent_Get::Agent_Get(QObject *parent) : Agent_Obj{parent}
 {
-    QTimer::singleShot(255,this,SLOT(addOidSlot()));
+    QTimer::singleShot(3255,this,SLOT(addOidSlot()));
 }
 
 void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)

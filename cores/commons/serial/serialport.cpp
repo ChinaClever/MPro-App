@@ -29,8 +29,9 @@ bool SerialPort::openSerial(const QString &name,qint32 baudRate, QSerialPort::Pa
         case QSerialPort::EvenParity: p = 'E'; break;
         case QSerialPort::OddParity: p = 'O'; break;
         default: p = 'N'; break;
-        } ret = mSerial->setup(baudRate, 0, 8, 1, p);
-        if(!ret) cout << "serial setup err" << name << baudRate;
+        } ret = mSerial->setup(baudRate, 8, 1, p);
+        if(ret) qDebug() << "serial setup 0k" << name << baudRate;
+        else cout << "serial setup err" << name << baudRate;
     } else cout << name;
     return ret;
 }
@@ -91,7 +92,7 @@ QByteArray SerialPort::readSerial(int msecs)
         }
 
         do{
-            //cm::mdelay(msecs/10);
+            cm::mdelay(msecs/7);
             array = mSerial->readAll();
             rcv.append(array);
         } while (array.size());

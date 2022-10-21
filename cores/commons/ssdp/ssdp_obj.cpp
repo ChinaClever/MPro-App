@@ -83,6 +83,7 @@ bool Ssdp_Obj::udpSend(const sSdpIt &it)
     return mUdp->writeDatagram(array, mHost, mPort+1);
 }
 
+
 void Ssdp_Obj::recvMsg(const QByteArray &array)
 {
     sSdpIt it; if(toItem(array, it)) {

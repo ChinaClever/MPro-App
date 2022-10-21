@@ -20,6 +20,7 @@ protected:
     bool ota_updates();
 
 private:
+    void ota_reboot();
     bool initOta(int id);
     void throwMessage(const QString &msg);
     bool ota_update(int addr, const QString &fn);

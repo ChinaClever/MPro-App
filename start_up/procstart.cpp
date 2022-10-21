@@ -25,25 +25,31 @@ void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
 
 void ProcStart::proc_start(sRunTime &proc, const QString &app)
 {
-    QString path;// = "/usr/data/clever/app/";
-    QString fn = path + app;
-    if(QFile::exists(fn)) {
+    QString path = "./"; //"/usr/data/clever/app/";
+    QString fn = path + app;    
+    if(proc_isRun(app)) return;
+    if(QFile::exists(app)) {
         proc_time(proc);
         proc_md5(proc, fn);
-
         QString cmd = fn + " &";
         system(cmd.toLatin1().data());
+        qDebug() << "proc start " +cmd;
         proc_log(app +"_startup");
     } else qDebug() << "proc start err:" << fn;
 }
 
 void ProcStart::proc_log(const QString &arg)
 {
-    QString fn = "proc_log";
-    if(QFile::exists(fn)) {
-        QString cmd = fn + " " + arg + " &";
-        system(cmd.toLatin1().data()); mdelay(2);
-    } else qDebug() << "proc log err:" << fn << arg;
+    QString fn = "/usr/data/clever/cfg/proc_log.txt";
+#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
+    fn = "proc_log.txt";
+#endif
+
+    QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
+    QString str = t + arg;
+    QString fmd = "echo %1 >> %2 ";
+    QString cmd = fmd.arg(str, fn);
+    system(cmd.toLatin1().data());
 }
 
 
@@ -71,10 +77,10 @@ QString ProcStart::md5(const QString &fn)
 
 bool ProcStart::proc_isRun(const QString &p)
 {
-    QString cmd = "proc_run " + p;
+    QString cmd = "./proc_run " + p; //system("killall proc_run");
     QProcess pro; pro.start(cmd); pro.waitForFinished();
     QByteArray bs = pro.readAllStandardOutput();
-    bs +=  pro.readAllStandardError();
+    bs +=  pro.readAllStandardError(); mdelay(2);
     return QString::fromLocal8Bit(bs).toInt();
 }
 

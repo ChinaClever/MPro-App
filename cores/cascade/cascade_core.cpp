@@ -22,7 +22,7 @@ void Cascade_Core::initFunSlot()
 {
     if(cm::masterDev()->cfg.param.devMode < DevMode::DM_Rtu) {
         qint32 baudRate = QSerialPort::Baud57600; cm::mdelay(1000);
-        openSerial("/dev/ttyS5", baudRate, QSerialPort::EvenParity);
+        openSerial("/dev/ttyS1", baudRate, QSerialPort::EvenParity);
     }
 }
 

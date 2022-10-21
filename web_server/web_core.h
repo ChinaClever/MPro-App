@@ -20,6 +20,7 @@ private:
     void init_webCfg(sWebCfg &web);
 
 private slots:
+    void initFunSlot();
     void web_onTimeoutDone();
 
 private:

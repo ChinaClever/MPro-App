@@ -160,6 +160,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
     if(ptr) {
         qstrcpy(ptr, array.data());
+        ptr[array.size()] = 0;
         Cfg_Core *cfg = Cfg_Core::bulid();
         cfg->devParamWrite(key, v, prefix);
     }
@@ -213,7 +214,7 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
 {
-    int s = 5; char *ptr = cm::masterDev()->cfg.uut.qrcode;
+    int s = 10; char *ptr = cm::masterDev()->cfg.uut.qrcode;
     QString fn = "/usr/data/clever/cfg/qrcode.png";
     QString cmd = "qrencode -o %1 -s %2 '%3'";
     QString qr = cmd.arg(fn).arg(s).arg(msg);

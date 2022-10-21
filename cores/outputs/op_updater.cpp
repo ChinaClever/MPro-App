@@ -38,6 +38,19 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
     throwMessage(str.arg(addr));
 }
 
+void OP_Updater::ota_reboot()
+{
+    QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
+    throwMessage(cm::execute(cmd));
+
+    cm::execute("rm -rf /usr/data/clever/outlet/*");
+    cmd = "rm -rf /usr/data/updater/clever";
+    throwMessage(cm::execute(cmd));
+
+    cm::execute("rm -rf /usr/data/clever/upload/*");
+    cm::execute("sync"); system("reboot");
+}
+
 bool OP_Updater::ota_updates()
 {
     bool ret = false;
@@ -52,7 +65,7 @@ bool OP_Updater::ota_updates()
         clrbit(cm::dataPacket()->ota.work, 4);
 
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
-        if(!cm::dataPacket()->ota.work) system("reboot");
+        if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 
     return ret;
@@ -125,7 +138,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
     data.append(array);
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
-    Crc::AppendCrc(data); QByteArray recv = transmit(data, 3000);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 4000);
     if(recv.contains("success")) ret = true;
     emit otaSig(addr, recv);
     return ret;
