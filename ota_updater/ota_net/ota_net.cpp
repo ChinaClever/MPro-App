@@ -65,6 +65,8 @@ void Ota_Net::rebootSlot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
     throwMessage(cm::execute(cmd));
+    system("chmod +x /usr/data/clever/bin/*");
+    system("chmod +x /usr/data/clever/app/*");
     cmd = "rm -rf /usr/data/updater/clever";
     throwMessage(cm::execute(cmd));
 
