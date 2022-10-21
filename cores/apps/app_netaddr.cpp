@@ -20,8 +20,8 @@ void App_NetAddr::inet_initFunSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
-    //QString mac = mInetCfg->readCfg("mac", "", "Mac").toString();
-    //qstrcpy(net->mac, mac.toLocal8Bit().data());
+    QString mac = cm::execute("cat /usr/data/clever/cfg/mac.ini");
+    qstrcpy(net->mac, mac.toLocal8Bit().data());
 
     if(!strlen(net->mac)) {
         sNetAddr *inet = &net->inet;
@@ -32,6 +32,7 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(net->mac, "00:00:00:00:00:01");
     } inet_setInterface();
 }
+
 
 void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
 {
@@ -75,13 +76,11 @@ void App_NetAddr::inet_setInterface()
 }
 
 void App_NetAddr::inet_setInterfaceSlot()
-{    
+{
+    inet_setIpV4();
     sNetInterface *net = &(cm::dataPacket()->net);
-    //inet_setMac();
-    if(strlen(net->name)) {
-        inet_setIpV4(); if(net->inet6.en) inet_setIpV6();
-        else mInetCfg->writeCfg("en", 0, "IPV6");
-    }
+    if(net->inet6.en) inet_setIpV6();
+    else mInetCfg->writeCfg("en", 0, "IPV6");
     inet_isRun = false;
 }
 
@@ -171,25 +170,11 @@ void App_NetAddr::inet_setIpV6()
 void App_NetAddr::inet_saveCfg()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
-    //mInetCfg->writeCfg("mac", net->mac, "Mac");
     QString cmdMac = "echo > %1 /usr/data/clever/cfg/mac.ini";
     system(cmdMac.arg(net->mac).toLocal8Bit().data());
 
     inet_writeCfg(net->inet6, "IPV6");
     inet_writeCfg(net->inet, "IPV4");
-}
-
-void App_NetAddr::inet_setMac()
-{
-    QString mac = cm::dataPacket()->net.mac;
-    //system("ip link set eth0 down"); cm::mdelay(1);
-    mInetCfg->writeCfg("mac", mac, "Mac");
-
-    QString cmd = "ip link set eth0 address " +mac;
-    system(cmd.toStdString().c_str()); qDebug() << cmd;
-    system("ip link set eth0 up"); //cm::mdelay(1);
-    system("ip link set eth0 multicast on");
-    //system("ip a flush dev eth0"); //　清掉所有IP地址
 }
 
 void App_NetAddr::inet_dnsCfg()

@@ -16,7 +16,6 @@ private slots:
     void inet_setInterfaceSlot();
 
 private:
-    void inet_setMac();
     void inet_setIpV4();
     void inet_setIpV6();
     void inet_dnsCfg();

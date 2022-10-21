@@ -54,12 +54,12 @@ void Daemons::initFun()
     sRunTime *run = &(mProcs->daemon);
     qstrcpy(run->start, t.toLatin1().data());
 
-    QString dateTime;
+    QString dateTime; proc_log("daemon_startup");
     dateTime += __DATE__; dateTime += __TIME__;
     dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
     QDateTime dt = QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
     QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(run->compileTime, str.toUtf8().data());
+    qstrcpy(run->compileTime, str.toUtf8().data());    
 }
 
 void Daemons::resetProc(sRunTime &proc, const QString &name)
