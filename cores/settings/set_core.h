@@ -1,8 +1,8 @@
 #ifndef SET_CORE_H
 #define SET_CORE_H
-#include "set_service.h"
+#include "set_updater.h"
 
-class Set_Core : public Set_Service
+class Set_Core : public Set_Updater
 {
     Set_Core();
 public:

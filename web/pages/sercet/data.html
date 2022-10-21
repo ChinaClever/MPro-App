@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>integrate</title>
+		<title>sercet</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -21,15 +21,21 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">Modbus设置</span>
+								<span id="lang_1"></span>
 							</div>
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left rtu_mode"></table>
+						<table class="table table-border-none text-left sw"></table>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left tcp_mode"></table>
+						<table class="table table-border-none text-left aes"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left rsa"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left sm4"></table>
 					</div>
 				</div>
 			</div>
@@ -41,177 +47,194 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_modbus_data(0);
-		var mode_set = new Array("禁用","启用");
-		var baud_name = new Array("9600","19200","38400","57600","115200");
-		var databits_name = new Array("5","6","7","8");
-		var parity_name = new Array("None","Even","Odd");
-		var stopbits_name = new Array("1","2");
-		var select_name = new Array("rtu","addr","baud","parity","databits","stopbits","tcp","tcp_port");
-		var modbus_data = new Array();
+		read_encrpty_data(0);
+		let mode_set = new Array("ECB","CBC","CFB","OFB");
+		let encrpty_set = new Array("","AES","RSA","SM4");
+		var filling = new Array("ZERO","PKCS7","ISO");
+		var key_length = new Array("AES_128","AES_192","AES_256");
+		var encrpty_data = new Array();
+		let lang = new Array();
+		let language = 1;
 		function read_data(){
-			for(var j = 1;j<13;j++){
-				if(j < 7 || j > 10){
-					modbus_data[j] = parseInt(sessionStorage.getItem(type_name[15]+ modbus_info[j]));
+			for(var j = 1;j<35;j++){
+				if(j == 1 || (j>10 && j<16)|| (j>20 && j< 24)||(j>30 && j<35)){
+					encrpty_data[j] = sessionStorage.getItem(encrpty_name[j]);
 				}
 			}
 		}
-		$('.rtu_mode').html(buildTableRtu());
-		$('.tcp_mode').html(buildTableTcp());
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<14;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","数据加密","","","",""];
+			lang[2] = ["","是否启用加密功能","","","",""];
+			lang[3] = ["","AES加密","","","",""];
+			lang[4] = ["","AES加密模式:","","","",""];
+			lang[5] = ["","填充方法:","","","",""];
+			lang[6] = ["","AES密钥长度:","","","",""];
+			lang[7] = ["","AES密钥:","","","",""];
+			lang[8] = ["","AES偏移量:","","","",""];
+			lang[9] = ["","RSA加密","","","",""];
+			lang[10] = ["","RSA密钥长度:","","","",""];
+			lang[11] = ["","RSA填充格式:","","","",""];
+			lang[12] = ["","RSA公钥:","","","",""];
+			lang[13] = ["","SM4加密","","","",""];
+			lang[14] = ["","SM4加密格式:","","","",""];
+			lang[15] = ["","SM4填充格式:","","","",""];
+			lang[16] = ["","SM4密钥:","","","",""];
+			lang[17] = ["","SM4偏移量:","","","",""];
+			lang[18] = ["","禁用","","","",""];
+
+			encrpty_set[0] = lang[18][language];
+		}
+		function lang_fun(){
+			for(let j = 1;j<18;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+		}
+		$('.sw').html(buildTableSw());
+		$('.aes').html(buildTableAes());
+		$('.rsa').html(buildTableRsa());
+		$('.sm4').html(buildTableSm4());
+		lang_fun();
 		setTimeout(function(){
 			read_data();
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0,setbtn =0;
-			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[6]);
-			setbtn =  document.getElementById('save1');
-			for(var i = 1; i < (select_name.length-2);i++){
-				lab = document.getElementById(select_name[i]);
-				if(modbus_data[1] == 0){
-					lab.disabled = true;
-					setbtn.disabled = true;
-					btn1[modbus_data[1]].selected = true;
+			let i = 0;
+			for(var j = 1;j<35;j++){
+				if(j == 1 || (j>10 && j<16)|| (j>20 && j< 24)||(j>30 && j<35)){
+					if(j>20 && j<33){
+						document.getElementById(encrpty_name[j]).innerHTML = encrpty_data[j];
+					}else{
+						document.getElementById(encrpty_name[j]).value = encrpty_data[j];
+						document.getElementById(encrpty_name[j]).disabled = false;
+					}
 				}
-				else{
-					lab.disabled = false;
-					setbtn.disabled = false;
-					btn1[modbus_data[1]].selected = true;
-				}
-				lab.value = modbus_data[i + 1];
 			}
-			lab = document.getElementById(select_name[7]);
-			setbtn =  document.getElementById('save2');
-			lab.value = modbus_data[12];
-			if(modbus_data[11] == 0){
-				lab.disabled = true;
-				setbtn.disabled = true;
-				btn2[modbus_data[11]].selected = true;
-			}else{
-				lab.disabled = false;
-				setbtn.disabled = false;
-				btn2[modbus_data[11]].selected = true;
+			switch(parseInt(encrpty_data[1])){
+				case 0:
+					for(i = 10;i<35;i++){
+						if((i>10 && i<16) || (i>32 && i<35)){
+							document.getElementById(encrpty_name[i]).disabled = true;
+						}
+					}
+				break;
+				case 1:
+				for(i = 10;i<35;i++){
+						if(i>32 && i<35){
+							document.getElementById(encrpty_name[i]).disabled = true;
+						}
+					}
+				break;
+				case 2:
+					for(i = 10;i<35;i++){
+						if((i>10 && i<16) || (i>32 && i<35)){
+							document.getElementById(encrpty_name[i]).disabled = true;
+						}
+					}
+				break;
+				case 3:
+				for(i = 10;i<35;i++){
+						if((i>10 && i<16)){
+							document.getElementById(encrpty_name[i]).disabled = true;
+						}
+					}
+				break;
+				default:
+				break;
 			}
 		}
 		function SetData(btn){
-			let mds_data = 0, setbtn = 0 ,lab = 0;
-			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否开启此功能。")){
-				if(btn.id =="rtu"){
-					setbtn =  document.getElementById('save1');
-					for(var i = 1; i < (select_name.length-2);i++){
-						lab = document.getElementById(select_name[i]);
-						if(mds_data == 0){
-							lab.disabled = true;
-							setbtn.disabled = true;
-						}
-						else{
-							lab.disabled = false;
-							setbtn.disabled = false;
-						}
+				for(var j = 1;j<35;j++){
+					if(encrpty_name[j] == btn.id){
+						rpc.call('pduSetParam',[0,31,j,0,0,btn.value]);
 					}
-					rpc.call('pduSetParam',[0,modbus,1,0,0,mds_data]);
-				}else{
-					setbtn =  document.getElementById('save2');
-					lab = document.getElementById(select_name[7]);
-					if(mds_data == 0){
-						lab.disabled = true;
-						setbtn.disabled = true;
-					}
-					else{
-						lab.disabled = false;
-						setbtn.disabled = false;
-					}
-					rpc.call('pduSetParam',[0,modbus,11,0,0,mds_data]);
 				}
 				flash_html();
-			}else{}
+			}else{
+				showdata();
+			}
 		}
 		function flash_html(){
-			read_modbus_data(0);
+			read_encrpty_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();
 			},800);
 		}
-		function rtuSet(){
-			var sel =0;
-			if(confirm("请确认是否保存此次修改？")){
-				for(var i = 1 ;i<(select_name.length -2);i++){
-					sel = parseInt(document.getElementById(select_name[i]).value);
-					if(sel != modbus_data[i+1]){
-						rpc.call('pduSetParam',[0,modbus,(i+1),0,0,sel]);
-					}
-				}
-				flash_html();
-			}else{}
+		function buildTableSw() {
+			var tbody = '';
+			tbody += '<tr><td width ="15%" id="lang_2" ></td>';
+			tbody += '<td><select id ="Encrptyen" onchange ="SetData(this)">';
+			for(var i = 0; i<encrpty_set.length;i++){
+				tbody +='<option value ="'+i+'">'+encrpty_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			return tbody;
 		}
-		function tcpSet(){
-			if(confirm("请确认是否保存此次修改？")){
-				var sel = parseInt(document.getElementById(select_name[select_name.length -1]).value);
-				if(sel != modbus_data[12]){
-					rpc.call('pduSetParam',[0,modbus,12,0,0,sel]);
-				}
-				flash_html();
-			}else{}
-		}
-		function buildTableRtu() {
+		function buildTableAes() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">Modbus RTU设置</td>\
+			thead = '<tr><td width ="15%" id="lang_3" ></td>\
 			<td width ="85%"></td></tr>';
-			tbody += '<tr><td>ModbusRtu启用：</td>';
-			tbody += '<td><select id ="rtu" onchange ="SetData(this)">';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><select id ="AESmode" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>Modbus地址：</td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><select id ="AESfilling" onchange ="SetData(this)">';
+			for(var i = 0; i<filling.length;i++){
+				tbody +='<option value ="'+i+'">'+filling[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td><select id ="AESlength" onchange ="SetData(this)">';
+			for(var i = 0; i<key_length.length;i++){
+				tbody +='<option value ="'+i+'">'+key_length[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<td><input id = "AESkey" onchange ="SetData(this) style ="width:46.5%" type = "text" ></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td>波特率：</td>';
-			tbody += '<td><select id ="baud">';
-			for(var i = 0; i<baud_name.length;i++){
-				tbody +='<option value ="'+i+'">'+baud_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td>校验位：</td>';
-			tbody += '<td><select id ="parity">';
-			for(var i = 0; i<parity_name.length;i++){
-				tbody +='<option value ="'+i+'">'+parity_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td>数据位：</td>';
-			tbody += '<td><select id ="databits">';
-			for(var i = 0; i<databits_name.length;i++){
-				tbody +='<option value ="'+i+'">'+databits_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td>停止位：</td>';
-			tbody += '<td><select id ="stopbits">';
-			for(var i = 0; i<stopbits_name.length;i++){
-				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id = "save1" type = "button" style ="width:60%" value = "保存" onclick = "rtuSet()"></input></td></tr>';
+			tbody += '<tr><td id="lang_8" ></td>';
+			tbody += '<td><input id = "AESoffset" onchange ="SetData(this) style ="width:46.5%" type = "text"></input>';
+			tbody += '</td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		function buildTableTcp() {
+		function buildTableRsa() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%">Modbus TCP设置</td>\
+			thead = '<tr><td width ="15%" id="lang_9" ></td>\
 				<td width ="85%"></td></tr>';
-			tbody += '<tr><td>ModbusTcp启用：</td>';
-			tbody += '<td><select id ="tcp" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td>Modbus端口号：</td>';
-			tbody += '<td><input id = "tcp_port" value = "" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "save2" style ="width:60%" type = "button" value = "保存" onclick = "tcpSet()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td id="lang_10" ></td>';
+			tbody += '<td id = "RSAlength"></td></tr>';
+			tbody += '<tr><td id="lang_11" ></td>';
+			tbody += '<td id = "RSAfilling"></td></tr>';
+			tbody += '<tr><td id="lang_12" ></td>';
+			tbody += '<td "><textarea id = "RSAkey"  style="height:90px;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+		}
+
+		function buildTableSm4() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_13" ></td>\
+				<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_14" ></td>';
+			tbody += '<td id = "SM4mode"></td></tr>';
+			tbody += '<tr><td id="lang_15" ></td>';
+			tbody += '<td id = "SM4filling" ></td></tr>';
+			tbody += '<tr><td id="lang_16" ></td>';
+			tbody += '<td><input id = "SM4key" onchange ="SetData(this) style ="width:46.5%" type = "text" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_17" ></td>';
+			tbody += '<td><input id = "SM4offset" onchange ="SetData(this) style ="width:46.5%" type = "text"></input>';
+			tbody += '</td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}

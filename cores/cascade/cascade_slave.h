@@ -5,7 +5,6 @@
 
 class Cascade_Slave : public Cascade_Fill
 {
-    Q_OBJECT
 public:
     explicit Cascade_Slave(QObject *parent = nullptr);
 

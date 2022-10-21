@@ -1,9 +1,9 @@
 #ifndef SSHRPCCLIENT_H
 #define SSHRPCCLIENT_H
 
-#include "jsonrpcclient.h"
+#include "jsonrpc_client.h"
 
-class SshRpcClient : public JsonRpcClient
+class SshRpcClient : public JsonRpc_Client
 {
     explicit SshRpcClient(QObject *parent = nullptr);
 public:

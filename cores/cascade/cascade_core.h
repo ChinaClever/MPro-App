@@ -10,20 +10,14 @@ class Cascade_Core : public Cascade_Slave
 public:
     static Cascade_Core *bulid(QObject *parent = nullptr);
     ~Cascade_Core(){isRun = false;}
-    void startFun();
-    void stopFun();
-
-public slots:
     void run();
-    void initFunSlot();
-    void initThreadSlot(){mThread->init(this, SLOT(run()));}
 
 private:
     void workFun();
+    void initFunSlot();
 
 private:
-    bool isRun=false;
-    CThread *mThread;
+    bool isRun=true;
 };
 
 #endif // CASCADE_CORE_H

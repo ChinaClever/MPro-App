@@ -43,7 +43,7 @@ double Rpc_Method::getDecimal(const sDataItem &it)
     case DTopic::ReactivePow: res = COM_RATE_POW; break;
     case DTopic::Tem: res = COM_RATE_TEM; break;
     case DTopic::Hum: res = COM_RATE_HUM; break;
-    default: cout << Q_FUNC_INFO; break;
+    //default: cout << it.topic; break;
     }
 
     if((DSub::Size==it.subtopic) || (DSub::Alarm==it.subtopic) || (DSub::EnAlarm==it.subtopic)) res = 1;
@@ -57,6 +57,7 @@ double Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, u
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0; Set_Core::bulid()->upMetaData(mIt);
+    //qDebug() << addr << type << topic << sub << id << mIt.value << mIt.value / getDecimal(mIt);
     return mIt.value / getDecimal(mIt);
 }
 

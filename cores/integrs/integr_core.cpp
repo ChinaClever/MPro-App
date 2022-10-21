@@ -26,7 +26,6 @@ Integr_Core *Integr_Core::bulid(QObject *parent)
     static Integr_Core* sington = NULL;
     if(sington == NULL) {
         sington = new Integr_Core(parent);
-        sington->startSlot();
     }
     return sington;
 }

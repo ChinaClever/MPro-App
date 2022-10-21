@@ -7,7 +7,6 @@
 
 Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 {
-    setAddress();
     mCData = new c_sDevData;
     mDataStream = new c_DataStream(mCData);
     memset((void *)mCData, 0, sizeof(c_sDevData));
@@ -16,7 +15,7 @@ Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 void Cascade_Object::setAddress()
 {
     sParameter *p = &(cm::masterDev()->cfg.param);
-    uchar addr = 0; if(p->devMode > 1) addr = p->cascadeAddr;
+    uchar addr = 1; if(p->devMode < DevMode::DM_Rtu) addr = p->cascadeAddr;
     mSelfAddr = addr;
 }
 
@@ -87,7 +86,7 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    array = transmit(qCompress(array), 2500);
+    array = transmit(qCompress(array), 1654);
     if(array.size()) array = qUncompress(array);
     return replyData(array, addr, fc);
 }

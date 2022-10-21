@@ -5,7 +5,6 @@
 
 class Mb_Setting : public Mb_Env
 {
-    Q_OBJECT
 public:
     explicit Mb_Setting(QObject *parent = nullptr);
 

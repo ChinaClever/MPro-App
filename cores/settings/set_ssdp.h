@@ -4,7 +4,7 @@
 #include "ssdp_search.h"
 #include "set_core.h"
 
-class Set_Ssdp : public Ssdp_Search
+class Set_Ssdp : public Ssdp_Obj
 {
     Q_OBJECT
     explicit Set_Ssdp(QObject *parent = nullptr);
@@ -15,6 +15,7 @@ public:
     bool setJson(const QByteArray &data, const QString &room, const QString &ip);
 
 private:
+    void recvSwVersion();
     bool checkInput(const sSdpIt &it);
 
 private slots:

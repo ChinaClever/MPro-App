@@ -8,7 +8,13 @@
 OP_Core::OP_Core(QObject *parent)
     : OP_ZRtu{parent}
 {
-    mThread = new CThread(parent);
+    qint32 baudRate = QSerialPort::Baud19200;
+#if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
+    bool ret = openSerial("/dev/ttyUSB0", baudRate);
+#else
+    bool ret = openSerial("/dev/ttyS5", baudRate);
+#endif
+    if(ret) QtConcurrent::run(this,&OP_Core::run);
 }
 
 OP_Core *OP_Core::bulid(QObject *parent)
@@ -18,18 +24,14 @@ OP_Core *OP_Core::bulid(QObject *parent)
     return sington;
 }
 
-void OP_Core::initFunSlot()
+void OP_Core::run()
 {
-    qint32 baudRate = QSerialPort::Baud19200;
-    openSerial("/dev/ttyS1", baudRate);
+    while (isRun) {
+        int size = mDev->cfg.nums.boardNum; // cout << size;
+        for(int i=0; i<size; ++i) {
+            cmsWrite(175);
+            ota_updates();
+            readData(i+1);
+        } cm::mdelay(10);
+    }
 }
-
-void OP_Core::startFun()
-{
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QTimer::singleShot(1,this,SLOT(initFunSlot()));
-    mThread->init(this, SLOT(run()));
-    cm::mdelay(3); mThread->start();
-#endif
-}
-

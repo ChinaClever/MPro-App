@@ -15,12 +15,24 @@ Ssdp_Obj::Ssdp_Obj(QObject *parent) : QObject(parent)
     mAddress = QHostAddress("239.255.43.21");
 }
 
+Ssdp_Obj::~Ssdp_Obj()
+{
+    ssdpClose();
+}
+
+void Ssdp_Obj::ssdpClose()
+{
+    if(isOpen) mSocket->close();
+}
+
 bool Ssdp_Obj::ssdpBind()
 {
+    if(isOpen) return isOpen; //else cout << "ssdp bind port";
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
     if(ok) connect(mSocket,SIGNAL(readyRead()),this,SLOT(readMsgSlot()));
     else cout << mSocket->errorString();
+    isOpen = ok;
     return ok;
 }
 
@@ -70,6 +82,7 @@ bool Ssdp_Obj::udpSend(const sSdpIt &it)
     QByteArray array = toArray(it);
     return mUdp->writeDatagram(array, mHost, mPort+1);
 }
+
 
 void Ssdp_Obj::recvMsg(const QByteArray &array)
 {

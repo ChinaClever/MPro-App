@@ -13,12 +13,9 @@ struct sWhiteListCfg
 
 class App_WhiteList : public App_Start
 {
-    Q_OBJECT
 public:
     explicit App_WhiteList(QObject *parent = nullptr);
     static sWhiteListCfg whiteListCfg;
-
-
 };
 
 #endif // APP_WHITELIST_H

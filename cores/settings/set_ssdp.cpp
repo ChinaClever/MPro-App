@@ -7,7 +7,7 @@
 #include "integr_jsonrecv.h"
 
 Set_Ssdp::Set_Ssdp(QObject *parent)
-    : Ssdp_Search{parent}
+    : Ssdp_Obj{parent}
 {
     Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
@@ -61,6 +61,25 @@ bool Set_Ssdp::checkInput(const sSdpIt &it)
     return ret;
 }
 
+void Set_Ssdp::recvSwVersion()
+{
+    sSdpIt item; item.fc = 11;
+    item.ip = cm::dataPacket()->net.inet.ip;
+    item.room = cm::masterDev()->cfg.uut.room;
+    QString fmt = "ver:%1; date:%2; usr:%3; md5:%4; Outlet:";
+
+    int num = cm::masterDev()->cfg.nums.slaveNum;
+    for(int i=0; i<=num; i++) {
+        sVersions *ver = &(cm::devData(i)->cfg.vers);
+        QString str = fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
+        for (int k = 0; k < 6; ++k) {
+            str += QString::number(ver->opVers[k]/10.0, 'f',1) +"; ";
+        }
+        item.data = str.toUtf8();
+        udpSend(item);
+    }
+}
+
 void Set_Ssdp::recvSlot(const sSdpIt &it)
 {
     if(!checkInput(it)) return;
@@ -76,6 +95,8 @@ void Set_Ssdp::recvSlot(const sSdpIt &it)
         out >> array >> value;
         sCfgItem unit = cm::toStruct<sCfgItem>(array);
         Set_Core::bulid()->setCfg(unit, value);
+    } else if(it.fc == 11) {
+        recvSwVersion();
     } else cout << it.fc;
 }
 
@@ -98,7 +119,8 @@ bool Set_Ssdp::rplySearchTarget(const sSdpIt &it)
         sSdpIt item; item.fc = 0;
         item.ip = cm::dataPacket()->net.inet.ip;
         item.room = cm::masterDev()->cfg.uut.room;
-        item.data = "ok"; ret = udpSend(item);
+        item.data = QByteArray::number(cm::masterDev()->cfg.nums.slaveNum);
+        ret = udpSend(item);
     }
     return ret;
 }

@@ -5,18 +5,17 @@
 
 class OP_Core : public OP_ZRtu
 {
-    Q_OBJECT
     explicit OP_Core(QObject *parent = nullptr);
 public:
     static OP_Core *bulid(QObject *parent = nullptr);
     ~OP_Core(){isRun = false;}
-    void startFun();
+    void run();
 
-private slots:
+private:
     void initFunSlot();
 
 private:
-    CThread *mThread;
+    bool isRun=true;
 };
 
 #endif // OP_CORE_H

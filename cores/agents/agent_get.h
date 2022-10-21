@@ -17,7 +17,6 @@ private:
     void addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev);
     void addDevVer(uchar addr, const QString &oidPrefix, sVersions &dev);
     void addDevParam(uchar addr, const QString &oidPrefix, sParameter &dev);
-
     void addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev);
 
     void addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);

@@ -5,14 +5,16 @@
  */
 #include "app_core.h"
 #include "cfg_core.h"
+#include "cfg_app.h"
 
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
 {
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();
+#else
+    initVer();
 #endif
-    compileTime();
     Cfg_Core::bulid();
 }
 
@@ -28,6 +30,21 @@ App_Core *App_Core::bulid(QObject *parent)
 void App_Core::compileTime()
 {
     sVersions *vers = &(cm::masterDev()->cfg.vers);
-    QString str = cm::buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    qstrcpy(vers->coreCompileTime, str.toLatin1().data());
+    cm::buildDateTime(vers->compileDate);
 }
+
+void App_Core::initVer()
+{
+    sVersions *ver = &(cm::masterDev()->cfg.vers);
+    sAppVerIt it; Cfg_App cfg("/usr/data/clever/");
+    bool ret = cfg.app_unpack(it); if(ret) {
+        cm::buildDateTime(ver->compileDate);
+        qstrcpy(ver->ver, it.ver.toUtf8().data());
+        qstrcpy(ver->md5, it.md5.toUtf8().data());
+        qstrcpy(ver->usr, it.usr.toUtf8().data());
+        qstrcpy(ver->remark, it.remark.toUtf8().data());
+        qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
+        qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
+    } else cout << CFG_APP << "error";
+}
+

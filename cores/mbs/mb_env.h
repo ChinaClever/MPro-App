@@ -5,7 +5,6 @@
 
 class Mb_Env : public Mb_Loop
 {
-    Q_OBJECT
 public:
     explicit Mb_Env(QObject *parent = nullptr);
 

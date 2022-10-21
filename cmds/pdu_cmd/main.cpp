@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QObject *p = a.parent();
     SshRpcClient *rpc = SshRpcClient::bulid(p);
+
     if(argc > 1) {
         QStringList cmd;
         for(int i=1; i<argc; i++) cmd << argv[i];

@@ -149,3 +149,9 @@ const QDateTime cm::buildDateTime()
    dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
    return QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
 }
+
+void cm::buildDateTime(char *ptr)
+{
+    QString str = buildDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    qstrcpy(ptr, str.toUtf8().data());
+}

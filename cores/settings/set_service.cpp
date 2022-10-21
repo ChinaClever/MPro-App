@@ -4,7 +4,6 @@
  *      Author: Lzy
  */
 #include "set_service.h"
-#include "web_server/web_core.h"
 #include "app_core.h"
 
 Set_Service::Set_Service()
@@ -96,7 +95,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
 int Set_Service::webCfg(int fc)
 {
     int ret = 0;
-    sWebCfg *it = &Web_Core::cfg;
+    sWebCfg *it = &cm::dataPacket()->web;
     switch (fc) {
     case 1: ret = it->http_en; break;
     case 2: ret = it->http_port; break;
@@ -112,7 +111,7 @@ int Set_Service::webCfg(int fc)
 bool Set_Service::webSet(int fc, const QVariant &v)
 {
     bool ret = true;
-    sWebCfg *it = &Web_Core::cfg;
+    sWebCfg *it = &cm::dataPacket()->web;
     QString prefix = "web"; QString key;
 
     switch (fc) {

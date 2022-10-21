@@ -36,6 +36,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
+    case SFnCode::EOta: res = otaStatus(it.fc, it.id); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
 
     case SFnCode::EOutput: case SFnCode::EGroup:
@@ -79,6 +80,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EPush: ret = pushSet(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
+    case SFnCode::EOta: ret = ota_updater(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::ETlsCert: ret = setTlsCert(it.fc, v); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;

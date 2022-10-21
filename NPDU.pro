@@ -3,14 +3,17 @@ TEMPLATE = subdirs
 unix {
 SUBDIRS += \
     cores \
+    start_up \
+    web_server \
     cmds/pdu_cmd \
     cmds/proc_log \
-    starts/start_up
+    cmds/proc_run \
+    ota_updater/ota_net \
+    ota_updater/ota_usb
 }
 
-contains(TARGET_ARCH, x86_64) {
-    SUBDIRS += \
-#        tools/app_pack \
-        tools/ota_updater
-}
+
+
+
+
 

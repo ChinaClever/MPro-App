@@ -17,7 +17,6 @@ struct sSmtpCfg {
 
 class App_Smtp : public App_Ntp
 {
-    Q_OBJECT
 public:
     explicit App_Smtp(QObject *parent = nullptr);
     void smtp_sendMail(const QString &content);

@@ -26,10 +26,7 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left rtu_mode"></table>
-					</div>
-					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left tcp_mode"></table>
+						<table class="table table-border-none text-left ntp"></table>
 					</div>
 				</div>
 			</div>
@@ -41,21 +38,37 @@
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_modbus_data(0);
+		read_ntp_data(0);
+		let timezone_arr = new Array("(UTC-12:00)International Date Line West","(UTC-11:00)Coordinated Universal Time-11","(UTC-10:00)Hawaii","(UTC-9:00)Alasks",
+									"(UTC-8:00)Baja California","(UTC-8:00)Pacific Time(US & Canada)","(UTC-7:00)Arizona","(UTC-7:00)Chihuahua,La Oaz,Mazatlan",
+									"(UTC-7:00)Mountain Time(US & Canada)","(UTC-6:00)Central America","(UTC-6:00)Central Time(US & Canada)",
+									"(UTC-6:00)Guadalajara,Mexico City,Monterrey","(UTC-6:00)Saskatchewan","(UTC-5:00)Bogota,Lima,Quito,Rio Branco","(UTC-5:00)Chetumal",
+									"(UTC-5:00)Eastern Time(US & Canada)","(UTC-5:00)Indiana (East)","(UTC-4:00)Asuncion","(UTC-4:00)Caracas","(UTC-4:00)Cuiaba",
+									"(UTC-4:00)Georgetown","(UTC-4:00)La Paz","(UTC-4:00)Manaus","(UTC-4:00)Santiago","(UTC-3:30)Newfoundland","(UTC-3:00)Brasilia",
+									"(UTC-3:00)Buenos Aires","(UTC-3:00)Cayenne,Fortaleza","(UTC-3:00)Greenland","(UTC-3:00)Montevideo","(UTC-3:00)Salvador","(UTC-2:00)Coordinated Universal Time-02",
+									"(UTC-1:00)Azores","(UTC-1:00)Cape Verde Is","(UTC)Coordinated Universal Time","(UTC)Dublin,Edinburgh,Lisbon,London",
+									"(UTC+1:00)Amsterdam,Berlin,Bern,Rome,Stockholm,Vienna","(UTC+1:00)Belgrade,Bratislave,BUdapest,Ljubljana,Prague",
+									"(UTC+1:00)Bussels,Copenhagen,Madrid,Paris","(UTC+1:00)Casablance","(UTC+1:00)Sarajevo,Skopje,Warsaw,Zagreb","(UTC+1:00)West Central Africa",
+									"(UTC+2:00)Amman","(UTC+2:00)Athens,Bucharest,Istanbul","(UTC+2:00)Beirut","(UTC+2:00)Cairo","(UTC+2:00)Damascus","(UTC+2:00)Harare,Pretoria",
+									"(UTC+2:00)Helsinki,Kyiv,Riga,Sofia,Tallinn,Vilnius","(UTC+2:00)Jerusalem","(UTC+2:00)Kaliningrad","(UTC+2:00)Tripoli","(UTC+2:00)Windhoek",
+									"(UTC+3:00)Baghdad","(UTC+3:00)kuwait,Riyadh","(UTC+3:00)Minsk","(UTC+3:00)Moscow,St.Petersburg,volgograd","(UTC+3:00)Nairobi","(UTC+3:00)Tehran",
+									"(UTC+4:00)Abu Dhabi,Muscat","(UTC+4:00)Baku","(UTC+4:00)Caucasus Standard Time","(UTC+4:00)Izhevsk,Samara","(UTC+4:00)Port Louis","(UTC+4:00)Tbilisi","(UTC+4:00)Jerusalem",
+									"(UTC+4:30)Kabul","(UTC+5:00)Ashgabat,Tashkent","(UTC+5:00)Ekaterinburg","(UTC+5:00)islamabad,Karachi","(UTC+5:30)Chennai,KolKata,Mumbai,New Delhi",
+									"(UTC+5:30)Sri jayawadenepura","(UTC+5:45)Kathmandu","(UTC+6:00)Almaty,Astana,Urumqi","(UTC+6:00)Dhaka","(UTC+6:30)Yangon(Rangoon)",
+									"(UTC+7:00)Bangkok,Hanoi,Jakarta","(UTC+7:00)Krasnoyarsk","(UTC+7:00)Nocosibirsk","(UTC+8:00)Beijing,Chongqing,Hong Kong","(UTC+8:00)Irkutsk",
+									"(UTC+8:00)Kuala Lumpur,Singapore","(UTC+8:00)Perth","(UTC+8:00)Taipei","(UTC+8:00)Ulaanbataar","(UTC+9:00)Osaka,Sapporo,Tokyo","(UTC+9:00)Seoul",
+									"(UTC+9:00)Yakutsk","(UTC+9:30)Adelaide","(UTC+9:30)Darwin","(UTC+10:00)Brisbane","(UTC+10:00)Canberra,Melbourne,Sydney","(UTC+10:00)Guam,Port Moresby",
+									"(UTC+10:00)Hobart","(UTC+10:00)Vladivostok","(UTC+11:00)Chokurtakh,Srednekolymsk","(UTC+11:00)Magadan","(UTC+11:00)Solomon Is.,New Caledonia",
+									"(UTC+12:00)Anadyr,Petropavlovsk-Kamchatsky","(UTC+12:00)Auckland,wellington","(UTC+12:00)Coordinated Universal Time+12","(UTC+12:00)Fiji",
+									"(UTC+13:00)Nuku'alofa","(UTC+13:00)Samoa","(UTC+14:00)kiritimati Island",
+									);
 		var mode_set = new Array("","");
-		var baud_name = new Array("9600","19200","38400","57600","115200");
-		var databits_name = new Array("5","6","7","8");
-		var parity_name = new Array("None","Even","Odd");
-		var stopbits_name = new Array("1","2");
-		var select_name = new Array("rtu","addr","baud","parity","databits","stopbits","","","","","tcp","tcp_port");
-		var modbus_data = new Array();
+		var ntp_data = new Array();
 		let lang = new Array();
 		let language = 1;
 		function read_data(){
-			for(var j = 1;j<13;j++){
-				if(j < 7 || j > 10){
-					modbus_data[j] = parseInt(sessionStorage.getItem(type_name[15]+ modbus_info[j]));
-				}
+			for(var j = 1;j<5;j++){
+				ntp_data[j] = sessionStorage.getItem(ntp_info[j]);
 			}
 		}
 		lang_init();
@@ -63,157 +76,101 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","Modbus设置","","","",""];
-			lang[2] = ["","Modbus RTU设置","","","",""];
-			lang[3] = ["","ModbusRtu启用:","","","",""];
-			lang[4] = ["","Modbus地址:","","","",""];
-			lang[5] = ["","波特率:","","","",""];
-			lang[6] = ["","校验位:","","","",""];
-			lang[7] = ["","数据位:","","","",""];
-			lang[8] = ["","停止位:","","","",""];
-			lang[9] = ["","立即生效","","","",""];
-			lang[10] = ["","Modbus TCP设置","","","",""];
-			lang[11] = ["","ModbusTcp启用:","","","",""];
-			lang[12] = ["","Modbus端口号:","","","",""];
-			lang[13] = ["","立即生效","","","",""];
-			lang[14] = ["","禁用","","","",""];
-			lang[15] = ["","启用","","","",""];
+			lang[1] = ["","NTP服务","","","",""];
+			lang[2] = ["","NTP设置","","","",""];
+			lang[3] = ["","设备时间:","","","",""];
+			lang[4] = ["","启用Udp设置时间:","","","",""];
+			lang[5] = ["","NTP服务器:","","","",""];
+			lang[6] = ["","时区:","","","",""];
+			lang[7] = ["","NTP同步","","","",""];
+			lang[8] = ["","禁用","","","",""];
+			lang[9] = ["","启用","","","",""];
 
-			mode_set[0] = lang[14][language];
-			mode_set[1] = lang[15][language];
+			mode_set[0] = lang[8][language];
+			mode_set[1] = lang[9][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<14;j++){
-				if(j ==9 || j == 13){
+			for(let j = 1;j<8;j++){
+				if(j ==7){
 					document.getElementById("lang_" + j).value  = lang[j][language];
 				}else{
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
 		}
-		$('.rtu_mode').html(buildTableRtu());
-		$('.tcp_mode').html(buildTableTcp());
+		$('.ntp').html(buildTable());
 		lang_fun();
 		setTimeout(function(){
 			read_data();
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0;
-			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[10]);
-			for(var i = 1; i < (select_name.length-2);i++){
-				if(select_name[i] != ""){
-					lab = document.getElementById(select_name[i]);
-					if(modbus_data[1] == 0){
-						lab.disabled = true;
-						btn1[modbus_data[1]].selected = true;
-					}
-					else{
-						lab.disabled = false;
-						btn1[modbus_data[1]].selected = true;
-					}
-					lab.value = modbus_data[i + 1];
+			for(var i = 1; i < (ntp_info.length);i++){
+				if(i == 1){
+					document.getElementById(ntp_info[i]).innerHTML = ntp_data[i];
+				}else{
+					document.getElementById(ntp_info[i]).value = ntp_data[i];
+					document.getElementById(ntp_info[i]).disabled = false;
 				}
+				document.getElementById("lang_7").disabled = false;
 			}
-			lab = document.getElementById(select_name[11]);
-			lab.value = modbus_data[12];
-			if(modbus_data[11] == 0){
-				lab.disabled = true;
-				btn2[modbus_data[11]].selected = true;
-			}else{
-				lab.disabled = false;
-				btn2[modbus_data[11]].selected = true;
+			if(parseInt(ntp_data[2]) == 0){
+				document.getElementById(ntp_info[3]).disabled = true;
+				document.getElementById(ntp_info[4]).disabled = true;
+				document.getElementById("lang_7").disabled = true;
 			}
 		}
 		function SetData(btn){
-			let mds_data = 0, setbtn = 0 ,lab = 0;
-			mds_data = parseInt();
 			if(confirm("请确认是否开启此功能。")){
-				for(let i = 0;i<select_name.length;i++){
-					if(select_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,modbus,(i + 1),0,0,btn.value]);
+				for(let i = 1;i<ntp_info.length;i++){
+					if(ntp_info[i] == btn.id){
+						rpc.call('pduSetParam',[0,43,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_modbus_data(0);
+			read_ntp_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();
 			},800);
 		}
-		function Set(btn){
+		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
-				if(btn.id == "lang_9"){
-					rpc.call('pduSetParam',[0,modbus,7,0,0,0]);
-				}else{
-					rpc.call('pduSetParam',[0,modbus,13,0,0,0]);
-				}
+				rpc.call('pduSetParam',[0,43,5,0,0,0]);
 				flash_html();
-			}else{}
+			}else{
+				showdata();
+			}
 		}
-		function buildTableRtu() {
+		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
-			tbody += '<td><select id ="rtu" onchange ="SetData(this)">';
+			tbody += '<td  id ="DevTime" ></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><select id ="TimeSetEn" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "addr" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
-			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><select id ="baud" onchange ="SetData(this)">';
-			for(var i = 0; i<baud_name.length;i++){
-				tbody +='<option value ="'+i+'">'+baud_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
+			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:46.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><select id ="parity" onchange ="SetData(this)">';
-			for(var i = 0; i<parity_name.length;i++){
-				tbody +='<option value ="'+i+'">'+parity_name[i] +'</option>';
+			tbody += '<td><select id ="TimeZone" onchange ="SetData(this)">';
+			for(var i = 0; i<timezone_arr.length;i++){
+				tbody +='<option value ="'+i+'">'+timezone_arr[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><select id ="databits" onchange ="SetData(this)" >';
-			for(var i = 0; i<databits_name.length;i++){
-				tbody +='<option value ="'+i+'">'+databits_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_8" onchange ="SetData(this)" ></td>';
-			tbody += '<td><select id ="stopbits">';
-			for(var i = 0; i<stopbits_name.length;i++){
-				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id="lang_9" type = "button" style ="width:60%"  onclick = "Set(this)"></input></td></tr>';
+			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
-		}
-		function buildTableTcp() {
-			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_10" ></td>\
-				<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_11" ></td>';
-			tbody += '<td><select id ="tcp" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_12" ></td>';
-			tbody += '<td><input id = "tcp_port" onchange ="SetData(this)" value = "" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id="lang_13" style ="width:60%" type = "button"  onclick = "Set(this)"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
-			return '<thead>' + thead + '</thead>'
-				+ '<tbody>' + tbody + '</tbody>';
 		}
     </script>
 </body>

@@ -6,9 +6,9 @@
 #include "sshrpcclient.h"
 
 SshRpcClient::SshRpcClient(QObject *parent)
-    : JsonRpcClient{parent}
+    : JsonRpc_Client{parent}
 {
-    bool ret = startClient("127.0.0.1", 9224);
+    bool ret = startLocalClient(9224);
     if(!ret) qDebug() << "SSH Client connected err";
 }
 

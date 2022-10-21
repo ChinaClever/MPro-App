@@ -3,7 +3,6 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "web_server/web_core.h"
 #include "cfg_service.h"
 #include "rpc_service.h"
 #include "integr_core.h"
@@ -83,9 +82,9 @@ void Cfg_Service::snmp()
 
 void Cfg_Service::web()
 {
-    int *ptr = nullptr; int value = 0;
+    ushort *ptr = nullptr; int value = 0;
     QString prefix = "web"; QString key;
-    sWebCfg *cfg = &Web_Core::cfg;
+    sWebCfg *cfg = &cm::dataPacket()->web;
 
     for(int i=1; i<6; ++i) {
         switch (i) {

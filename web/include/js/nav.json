@@ -1,39 +1,39 @@
 [
   {
-    "name": "设备监测",
+    "name": "输入",
     "icon": "homepage_fill",
-    "base": "pages/dashboard/",
+    "base": "pages/inlet/",
     "subNav": [
       {
         "name": "首页",
         "url": "home.html"
       },
       {
-        "name": "单元监测",
-        "url": "output_monitoring.html"
-      },
-      {
-        "name": "分组监测",
-        "url": "group_monitoring.html"
-      },
-      {
-        "name": "机架监测",
-        "url": "dual_monitoring.html"
+        "name": "相设置",
+        "url": "inlet_set.html"
       }
     ]
   },
   {
-    "name": "阈值设置",
+    "name": "回路",
     "icon": "flag_fill",
-    "base": "pages/alarmset/",
+    "base": "pages/loop/",
     "subNav": [
-      {
-        "name": "相设置",
-        "url": "inlet_set.html"
-      },
       {
         "name": "回路设置",
         "url": "loop_set.html"
+      }
+    ]
+  },
+
+  {
+    "name": "输出",
+    "icon": "info",
+    "base": "pages/outlet/",
+    "subNav": [ 
+      {
+        "name": "单元监测",
+        "url": "output_monitoring.html"
       },
       {
         "name": "单元电流",
@@ -42,19 +42,112 @@
       {
         "name": "单元功率",
         "url": "outlet_pow.html"
+      },  
+      {
+        "name": "单元名称",
+        "url": "output_name.html"
+      }, 
+      {
+        "name": "单元控制",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "单元定时",
+        "url": "relay_timing.html"
+      }    
+    ]
+  },
+  {
+    "name": "分组",
+    "icon": "info",
+    "base": "pages/group/",
+    "subNav": [
+
+      {
+        "name": "分组监测",
+        "url": "group_monitoring.html"
       },
       {
         "name": "分组阈值",
         "url": "group_alarm.html"
       },
       {
+        "name": "分组名称",
+        "url": "group_name.html"
+      },
+      {
+        "name": "分组定时",
+        "url": "group_timing.html"
+      },
+      {
+        "name": "分组设置",
+        "url": "group_set.html"
+      },
+      {
+        "name": "分组控制",
+        "url": "group_ctrl.html"
+      } 
+    ]
+  }, 
+  {
+    "name": "机架",
+    "icon": "info",
+    "base": "pages/dual/",
+    "subNav": [
+      {
+        "name": "机架监测",
+        "url": "dual_monitoring.html"
+      },
+      {
         "name": "机架功率",
         "url": "dual_pow.html"
-      },      
+      },
+      {
+        "name": "机架名称",
+        "url": "dual_name.html"
+      },
+      {
+        "name": "机架控制",
+        "url": "dual_ctrl.html"
+      },
+      {
+        "name": "机架定时",
+        "url": "dual_timing.html"
+      }      
+    ]
+  },
+  {
+    "name": "环境参数",
+    "icon": "flag_fill",
+    "base": "pages/envir/",
+    "subNav": [    
       {
         "name": "环控设置",
         "url": "envir_ctrl.html"
       }
+    ]
+  },
+  {
+    "name": "设备设置",
+    "icon": "info",
+    "base": "pages/devset/",
+    "subNav": [
+      {
+        "name": "模式设置",
+        "url": "mode_set.html"
+      },
+      {
+        "name": "位置设置",
+        "url": "place_set.html"
+      },     
+      {
+        "name": "超限断电",
+        "url": "overrun.html"
+      },
+      {
+        "name": "电能清零",
+        "url": "energe_clr.html"
+      }      
     ]
   },
   {
@@ -87,77 +180,7 @@
         "url": "modbus.html"
       }
     ]
-  },
-  {
-    "name": "开关控制",
-    "icon": "info",
-    "base": "pages/swctrl/",
-    "subNav": [      
-      {
-        "name": "单元控制",
-        "url": "relay_ctrl.html"
-      },
-      {
-        "name": "分组控制",
-        "url": "group_ctrl.html"
-      },
-      {
-        "name": "机架控制",
-        "url": "dual_ctrl.html"
-      },
-      {
-        "name": "单元定时",
-        "url": "relay_timing.html"
-      },
-      {
-        "name": "分组定时",
-        "url": "group_timing.html"
-      },
-      {
-        "name": "机架定时",
-        "url": "dual_timing.html"
-      }     
-    ]
-  },
-  {
-    "name": "设备设置",
-    "icon": "info",
-    "base": "pages/devset/",
-    "subNav": [
-      {
-        "name": "模式设置",
-        "url": "mode_set.html"
-      },
-      {
-        "name": "位置设置",
-        "url": "place_set.html"
-      },
-      {
-        "name": "分组设置",
-        "url": "group_set.html"
-      },
-      {
-        "name": "单元名称",
-        "url": "output_name.html"
-      },
-      {
-        "name": "分组名称",
-        "url": "group_name.html"
-      },
-      {
-        "name": "机架名称",
-        "url": "dual_name.html"
-      },      
-      {
-        "name": "超限断电",
-        "url": "overrun.html"
-      },
-      {
-        "name": "电能清零",
-        "url": "energe_clr.html"
-      }      
-    ]
-  },  
+  }, 
   {
     "name": "安全加密",
     "icon": "collection_fill",

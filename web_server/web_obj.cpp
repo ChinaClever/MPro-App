@@ -1,0 +1,86 @@
+/*
+ *
+ *  Created on: 2022年10月1日
+ *      Author: Pmd
+ */
+#include "web_obj.h"
+//#include "integr_core.h"
+
+Web_Obj::Web_Obj(QObject *parent)
+    : QObject{parent}
+{
+    mRpc = new JsonRpc_Client(this);
+    bool ret = mRpc->startLocalClient(9225);
+    if(!ret) qDebug() << "web rpc start local client" << ret;
+}
+
+Web_Obj *Web_Obj::bulid(QObject *parent)
+{
+    static Web_Obj* sington = nullptr;
+    if(sington == nullptr) sington = new Web_Obj(parent);
+    return sington;
+}
+
+QString Web_Obj::getString(mg_str &r, int id)
+{
+    QString res;
+    char buffer[10] = {0};
+    sprintf(buffer, "$[%d]", id);
+    char *ptr = mg_json_get_str(r, buffer);
+    if(ptr) {res = ptr; free(ptr);}
+    return res;
+}
+
+uint Web_Obj::getNumber(mg_str &r, int id)
+{
+    uint num =0; double res=0; char buffer[10] = {0};  sprintf(buffer , "$[%d]" , id);
+    bool ret = mg_json_get_num(r, buffer, &res);
+    if(ret) num = res; else qDebug() << "Error: JsonRpc Get Number" << ret << r.ptr << id;
+    return num;
+}
+
+QVector<uint> Web_Obj::getNumbers(mg_str &r, int num)
+{
+    QVector<uint> res;
+    for(int i=0; i<num; ++i) {
+        uint ret = getNumber(r, i);
+        res.append(ret);
+    }
+    return res;
+}
+
+double Web_Obj::getValue(uint addr, uint type, uint topic, uint sub, uint id)
+{
+    double res = mRpc->pduDataGet(addr, type, topic, sub, id);
+    return res;
+}
+
+bool Web_Obj::setting(uint addr, uint type, uint topic, uint sub, uint id, double value)
+{
+    return mRpc->pduDataSet(addr, type, topic, sub, id, value);
+}
+
+bool Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint id, uint addr)
+{
+    return mRpc->pduCfgSet(type, fc, value, id, addr);
+}
+
+QString Web_Obj::getCfg(uint type, uint fc, uint id, uint addr)
+{
+    return mRpc->pduCfgGet(type, fc, id, addr).toString();
+}
+
+QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
+{
+    return mRpc->pduLogFun(type, fc, id, cnt);
+}
+
+QString Web_Obj::metaData(uint addr)
+{
+    return mRpc->pduMetaData(addr);
+}
+
+QString Web_Obj::execute(const QString &cmd)
+{
+    return mRpc->execute(cmd);
+}

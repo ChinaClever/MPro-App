@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>devset</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
+		<style>
+			.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+			}
+			.panel-default > .panel-heading{
+				color: #222;
+				font-size:13px;
+				background-color: #fff;
+				border-color: #e6e6e6;
+				padding: 10px 12px;
+			}
+		</style>
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" onclick ="readonlyset(this);"></button></span>
+								<span style = "float:right;"><span style = "padding-right: 5px;" id = "lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-striped text-center"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../doc-lib/highlight.pack.js"></script>
+	<script src="../../doc-lib/doc.js"></script>
+    <script>
+		function read_group_param_data(addr){
+			for(let i = 1;i<= group_num;i++){
+				rpc.call('pduReadParam',[addr,23,1,i,i]);
+			}
+		}
+		let read = 0;
+		let lang = new Array();
+		let group_name =new Array();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		function lang_init(){
+			for(let i = 1;i<7;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","分组名称","","","",""];
+			lang[2] = ["","阅读模式","","","",""];
+			lang[3] = ["","设备选择","","","",""];
+			lang[4] = ["","序号","","","",""];
+			lang[5] = ["","分组名称","","","",""];
+			lang[6] = ["","设置模式","","","",""];
+		}
+		function lang_fun(){
+			for(let j = 1;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+			}
+		}
+		function lang_fun_(){
+			for(let j = 4;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+			}
+		}
+		function modeset(modesel){
+			var ms = document.getElementById("sel");
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+		}
+		function readonlyset(ros){
+			if(read === 0){
+				read = 1;
+				ros.style.backgroundColor = 'red';
+				ros.innerHTML = lang[6][1];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = false;
+				}
+			}
+			else{
+				read = 0;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = lang[2][1];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = true;
+				}
+			}
+		}
+		read_data();
+		function read_data(){
+			for(var i = 1 ;i < group_num + 1;i++){
+				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
+			}
+			for(var i = 0;i<slave_num;i++){
+				dev_name[i] = sessionStorage.getItem("DevName" + i);
+			}
+		}
+		$('.table-striped').html(buildTable(group_num));
+		$('.devname').html(buildSel(slave_num));
+		lang_init();
+		lang_fun();
+		modeset();
+		function setdata(ipt)
+		{
+			var opt_val = parseInt(document.getElementById("ms").value);
+			var addr_ = addr + 0 * 256;
+			var number = parseInt(ipt.id.slice(1))+1;
+			let val = ipt.value;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				rpc.call('pduSetParam',[addr_,23,1,number,number,val]);
+				flash_html(ipt);
+			}else{}
+		}
+
+		function flash_html(par)
+		{
+			read_group_param_data(0);
+			setTimeout(function(){
+				par.parentNode.parentNode.parentNode.remove();
+				read_data();
+				$('.table-striped').html(buildTable(group_num));
+				lang_fun_();
+			},500);
+		}
+		function buildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+			}
+			return tbody;
+		}
+		function buildTable(rows) {
+			var thead = '',
+				tbody = '';
+
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+					thead = '<tr><td width ="10%" id ="lang_4"></td>\
+					<td width ="50%"></td>\
+					<td width ="40%" id ="lang_5"></td>';
+				}
+				tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+				tbody += '<td ></td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+group_name[i + 1]+'"></input></td>';
+				tbody += '</tr>';
+			}
+
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+    </script>
+</body>
+</html>

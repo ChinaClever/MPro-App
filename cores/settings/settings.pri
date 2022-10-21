@@ -14,7 +14,8 @@ HEADERS += \
     $$PWD/set_sercret.h \
     $$PWD/set_service.h \
     $$PWD/set_ssdp.h \
-    $$PWD/set_tlscert.h
+    $$PWD/set_tlscert.h \
+    $$PWD/set_updater.h
 
 SOURCES += \
     $$PWD/set_alarm.cpp \
@@ -27,4 +28,5 @@ SOURCES += \
     $$PWD/set_sercret.cpp \
     $$PWD/set_service.cpp \
     $$PWD/set_ssdp.cpp \
-    $$PWD/set_tlscert.cpp
+    $$PWD/set_tlscert.cpp \
+    $$PWD/set_updater.cpp

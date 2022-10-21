@@ -3,7 +3,11 @@
 #include "db_op.h"
 
 struct sOtaItem : public Db_ObjItem{
-    QString module, content;
+    QString md5; // 校验码
+    QString ver; // 版本号
+    QString remark; // 发布说明
+    QString oldVersion; // 旧版本号
+    QString releaseDate; // 发布时间
 };
 
 class Db_Ota : public Db_Obj<sOtaItem>

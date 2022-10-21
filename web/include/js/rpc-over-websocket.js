@@ -26,6 +26,14 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
+let ip_mode = new Array("Ipv4","Ipv6");
+let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
+var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
+"RSAlength","RSAfilling","RSAkey","","","","","","","","SM4mode","SM4filling","SM4key","SM4offset");
+let web_service = new Array("","HttpEn","HttpPort","Redirect","HttpsEn","HttpsPort");
+let smtp_name = new Array("","SmtpEn","SmtpServer","SmtpSendUsr","SmtpSendPsd","SmtpRecvUsr","SmtpPort","SmtpMode","SmtpState");
+let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
+let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -155,6 +163,9 @@ var jsonrpc = function()
       case 30:
         sessionStorage.setItem(ver_name[topic] + addr_, parseInt(JSON.parse(evt.data).result[5]));
       break;
+      case 31:
+        sessionStorage.setItem(encrpty_name[topic], JSON.parse(evt.data).result[5]);
+      break;
       case 32:
         if(topic < 5){
           sessionStorage.setItem("Tls"+tls_info[topic], JSON.parse(evt.data).result[5]);
@@ -165,6 +176,21 @@ var jsonrpc = function()
             sessionStorage.setItem("Issue"+tls_info1[topic % 10], JSON.parse(evt.data).result[5]);
           }
         }
+      break;
+      case 33:
+        sessionStorage.setItem(white_list[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 41:
+        sessionStorage.setItem(ip_mode[subtopic]+ip_addr[topic] , JSON.parse(evt.data).result[5]);
+      break;
+      case 42:
+        sessionStorage.setItem(web_service[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 43:
+        sessionStorage.setItem(ntp_info[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 44:
+        sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -617,5 +643,83 @@ function read_monitoring_data(addr){
       rpc.call('pduReadData',[addr+1,output,switch_,8,i]);
     }
     i++;
+  },3);
+}
+function read_ip_addr_data(addr){
+  let j = 0,i =0;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(11 +1)){
+      clearInterval(time1);
+    }
+    if(j < 11 +1 && (j<7 || j>9)){
+      rpc.call('pduReadParam',[addr,41,j,i,0]);
+    }
+    j++;
+    if(j>=12 && i < 1){
+      j = 0;
+      i++;
+    }
+  },3);
+}
+function read_encrpty_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(34 +1)){
+      clearInterval(time1);
+    }
+    if(j < 34 +1){
+      if(j == 1 || (j>10 && j<16)|| (j>20 && j< 25)||(j>30 && j<35)){
+        rpc.call('pduReadParam',[addr,31,j,0,0]);
+      }
+    }
+    j++;
+  },3);
+}
+function read_web_service_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(5 +1)){
+      clearInterval(time1);
+    }
+    if(j < 5 +1){
+      rpc.call('pduReadParam',[addr,42,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_smtp_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(8 +1)){
+      clearInterval(time1);
+    }
+    if(j < 8 +1){
+      rpc.call('pduReadParam',[addr,44,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_net_ctrl_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(5 +1)){
+      clearInterval(time1);
+    }
+    if(j < 5 +1){
+      rpc.call('pduReadParam',[addr,33,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_ntp_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(4 +1)){
+      clearInterval(time1);
+    }
+    if(j < 4 +1){
+      rpc.call('pduReadParam',[addr,43,j,0,0]);
+    }
+    j++;
   },3);
 }

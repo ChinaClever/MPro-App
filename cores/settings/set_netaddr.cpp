@@ -49,9 +49,13 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 6: ptr = inet->dns;  break;
     case 7: ptr = inet->dns2; break;
     case 11: ptr = net->mac; break;
-    case 15: App_Core::bulid()->inet_setInterface();
+    case 15: App_Core::bulid()->inet_saveCfg();
     default: res = false; cout << it.fc; break;
-    } if(ptr) qstrcpy(ptr, v.toByteArray().data());
+    }
+    if(ptr) {
+        qstrcpy(ptr, v.toByteArray().data());
+        ptr[v.toByteArray().size()] = 0;
+    }
 
     return res;
 }
