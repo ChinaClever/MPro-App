@@ -16,7 +16,7 @@ private:
     void initFun();
     void start_proc();
     void init_share_mem();
-    bool resetProc(sRunTime &proc, const QString &name);
+    void resetProc(sRunTime &proc, const QString &name);
     bool procRunStatus(sRunTime &proc, const QString &name);
 
 private:

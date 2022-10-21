@@ -7,7 +7,7 @@ class Serial_Port
 public:
     Serial_Port();
     bool OpenPort(const char * dev);
-    int setup(int speed,int flow_ctrl,int databits,int stopbits,int parity);
+    int setup(int speed, int databits, int stopbits, int parity, int flow_ctrl=0);
     //int set_Parity(int databits,int stopbits,int parity);
     //void setBaudRate(int speed);
 

@@ -19,22 +19,28 @@ __attribute__((destructor)) void app_exit()
 }
 
 
-/***
- * 在/usr/data/目录下，建立 启动脚本 start_up.sh
- * 必须得先 执行升级命令 cp -rf /usr/data/updater/clever/ *  /usr/data/clever/
- * 再清空升级目录　rm -rf /usr/data/updater/clever/ *
- */
-
 static void initSystem()
 {
-    system("chmod 777 /usr/data/clever/app/*");
-    system("chmod 777 /usr/data/clever/awtk/release/bin/*");
+    system("chmod +x -R /usr/data/clever/awtk/release/bin/");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
-    system("ln -s /usr/data/clever/awtk/release/bin/demo /usr/data/clever/app/awtk");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
     system("ifconfig eth0 up"); //system("dhclient");
-    //system("mount -t nfs 192.168.1.130:/home/lzy/work/nfs /usr/data/nfs");
+    //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
+}
+
+static void init_netWork()
+{
+
+//        QString mac = cm::dataPacket()->net.mac;
+//        //system("ip link set eth0 down"); cm::mdelay(1);
+//        //mInetCfg->writeCfg("mac", mac, "Mac");
+
+//        QString cmd = "ip link set eth0 address " +mac;
+//        system(cmd.toStdString().c_str()); qDebug() << cmd;
+//        system("ip link set eth0 up"); //cm::mdelay(1);
+//        system("ip link set eth0 multicast on");
+        //system("ip a flush dev eth0"); //　清掉所有IP地址
 }
 
 static void startSnmpd()
@@ -82,7 +88,7 @@ int main(int argc, char *argv[])
     initSystem();
     startSnmpd();
 
-    // Daemons::bulid();
+    Daemons::bulid();
 #endif
     return a.exec();
 }

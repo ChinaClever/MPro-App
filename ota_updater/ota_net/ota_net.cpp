@@ -26,12 +26,13 @@ QString Ota_Net::unzip(const QString &fn)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dst = "/usr/data/";
+    system("mkdir -p /usr/data/updater/clever/");
 #else
     QString dst = "/home/lzy/work/";
-#endif
+#endif    
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
-    throwMessage(str); str = cm::execute(str.arg(fn));
-    throwMessage(str);
+    throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
+    throwMessage(str); system("rm -rf /usr/data/clever/upload/*");
     return dst;
 }
 
@@ -62,6 +63,7 @@ void Ota_Net::workDown(const QString &fn)
 
 void Ota_Net::rebootSlot()
 {
+    throwMessage("start now reboot"); cm::mdelay(1);
     //system("rm -rf /usr/data/clever/upload/*");
     system("sync"); system("reboot");
 }

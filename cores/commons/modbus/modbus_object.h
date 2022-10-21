@@ -6,7 +6,7 @@
 #include <QModbusRtuSerialSlave>
 #include <QHostAddress>
 
-#define MB_NAME  "/dev/ttyS5"
+#define MB_NAME  "/dev/ttyS1"
 
 struct sModbusSetting {
     int enRtu = false;

@@ -21,7 +21,7 @@ static struct mg_mgr g_mgr;
 Web_Http::Web_Http(QObject *parent) : Web_Rpc{parent}
 {
     mgr_init(g_mgr);
-    QTimer::singleShot(155,this,SLOT(run()));
+    QTimer::singleShot(255,this,SLOT(run()));
 }
 
 Web_Http::~Web_Http()

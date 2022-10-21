@@ -13,9 +13,7 @@
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
-    init_share_mem(); if(mRun)web_initFun();
-    timer = new QTimer(this); timer->start(1000);
-    connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
+    QTimer::singleShot(150,this,SLOT(initFunSlot()));
 }
 
 Web_Core *Web_Core::bulid(QObject *parent)
@@ -23,6 +21,13 @@ Web_Core *Web_Core::bulid(QObject *parent)
     static Web_Core* sington = nullptr;
     if(sington == nullptr) sington = new Web_Core(parent);
     return sington;
+}
+
+void Web_Core::initFunSlot()
+{
+    init_share_mem(); if(mRun) web_initFun();
+    timer = new QTimer(this); timer->start(1000);
+    connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
 }
 
 void Web_Core::init_webCfg(sWebCfg &web)

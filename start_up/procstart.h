@@ -9,7 +9,7 @@ class ProcStart
 public:
     explicit ProcStart();
 
-    void mdelay(int msec);
+    static void mdelay(int msec);
     void proc_log(const QString &arg);
     static bool proc_isRun(const QString &p);
     void proc_start(sRunTime &proc, const QString &app);

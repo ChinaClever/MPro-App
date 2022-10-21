@@ -41,12 +41,13 @@ void App_Start::initFunSlot()
 void App_Start::startThreadSlot()
 {
     Data_Core::bulid();
-    Mb_Core::bulid(this);
+    //Mb_Core::bulid(this);
+    OP_Core::bulid(this);
     Integr_Core::bulid(this);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     Agent_Core::bulid(this);
-    //OP_Core::bulid(this);
+
     Cascade_Core::bulid(this);
 #endif
 }

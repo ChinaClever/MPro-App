@@ -125,7 +125,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
     data.append(array);
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
-    Crc::AppendCrc(data); QByteArray recv = transmit(data, 3000);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 4000);
     if(recv.contains("success")) ret = true;
     emit otaSig(addr, recv);
     return ret;

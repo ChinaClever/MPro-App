@@ -44,6 +44,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
 
     if(ptr) {
         qstrcpy(ptr, str);
+        ptr[v.toByteArray().size()] = 0;
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
 

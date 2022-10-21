@@ -8,17 +8,18 @@ class App_NetAddr: public App_Led
 public:
     explicit App_NetAddr(QObject *parent = nullptr);
     void inet_setInterface();
-
-public slots:
-    void inet_updateInterface();
+    void inet_saveCfg();
 
 private slots:
     void inet_initFunSlot();
+    void inet_updateInterface();
     void inet_setInterfaceSlot();
 
 private:
+    void inet_setMac();
     void inet_setIpV4();
-    void inet_dhcp(const QString &n);
+    void inet_setIpV6();
+    void inet_dnsCfg();
     void inet_readCfg(sNetAddr &inet, const QString &g);
     void inet_writeCfg(sNetAddr &inet, const QString &g);
 

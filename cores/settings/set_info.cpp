@@ -160,6 +160,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
     if(ptr) {
         qstrcpy(ptr, array.data());
+        ptr[array.size()] = 0;
         Cfg_Core *cfg = Cfg_Core::bulid();
         cfg->devParamWrite(key, v, prefix);
     }
