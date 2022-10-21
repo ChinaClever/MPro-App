@@ -13,7 +13,7 @@
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
-    QTimer::singleShot(150,this,SLOT(initFunSlot()));
+    QTimer::singleShot(840,this,SLOT(initFunSlot()));
 }
 
 Web_Core *Web_Core::bulid(QObject *parent)
@@ -26,7 +26,7 @@ Web_Core *Web_Core::bulid(QObject *parent)
 void Web_Core::initFunSlot()
 {
     init_share_mem(); if(mRun) web_initFun();
-    timer = new QTimer(this); timer->start(1000);
+    timer = new QTimer(this); timer->start(1000); mgr_init();
     connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
 }
 

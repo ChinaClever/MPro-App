@@ -20,8 +20,7 @@ sWeb_Cfg Web_Http::cfg;
 static struct mg_mgr g_mgr;
 Web_Http::Web_Http(QObject *parent) : Web_Rpc{parent}
 {
-    mgr_init(g_mgr);
-    QTimer::singleShot(255,this,SLOT(run()));
+    QTimer::singleShot(1255,this,SLOT(run()));
 }
 
 Web_Http::~Web_Http()
@@ -196,24 +195,24 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
     (void) fn_data;
 }
 
-
-
-void Web_Http::mgr_init(mg_mgr &mgr)
+void Web_Http::mgr_init()
 {
-    mg_mgr_init(&mgr);  // Init event manager
+    mg_mgr *mgr = &g_mgr;
+    mg_mgr_init(mgr);  // Init event manager
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     printf("Starting WS listener on %s/websocket\n", s_listen_on);
-    mg_http_listen(&mgr, s_listen_on, fn, NULL);  // Create HTTP listener
-    mg_http_listen(&mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
+    mg_http_listen(mgr, s_listen_on, fn, NULL);  // Create HTTP listener
+    mg_http_listen(mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
 #else
+
     if(cfg.http_en) {
         QString url = s_listen_on + QString::number(cfg.http_port);
-        mg_http_listen(&mgr, url.toStdString().c_str(), fn, NULL);
+        mg_http_listen(mgr, url.toStdString().c_str(), fn, NULL);
     }
 
     if(cfg.https_en) {
         QString url = s_https_addr + QString::number(cfg.https_port);
-        mg_http_listen(&mgr, url.toStdString().c_str(), fn, (void *) 1);
+        mg_http_listen(mgr, url.toStdString().c_str(), fn, (void *) 1);
     }
 #endif
 }
@@ -223,7 +222,7 @@ void Web_Http::run()
 {
     mg_mgr *mgr = &g_mgr;   // Event manager
     mg_mgr_poll(mgr, 1000); // Infinite event loop
-    QTimer::singleShot(25,this,SLOT(run()));
+    QTimer::singleShot(15,this,SLOT(run()));
     //qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
 }
 
