@@ -28,6 +28,9 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left ntp"></table>
 					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left custom"></table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -83,26 +86,32 @@
 			lang[5] = ["","NTP服务器:","","","",""];
 			lang[6] = ["","时区:","","","",""];
 			lang[7] = ["","NTP同步","","","",""];
-			lang[8] = ["","禁用","","","",""];
-			lang[9] = ["","启用","","","",""];
+			lang[8] = ["","自定义设置","","","",""];
+			lang[9] = ["","日期/时间:","","","",""];
+			lang[10] = ["","获取本地时间","","","",""];
+			lang[11] = ["","设置时间","","","",""];
+			lang[12] = ["","禁用","","","",""];
+			lang[13] = ["","启用","","","",""];
 
-			mode_set[0] = lang[8][language];
-			mode_set[1] = lang[9][language];
+			mode_set[0] = lang[12][language];
+			mode_set[1] = lang[13][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<8;j++){
-				if(j ==7){
+			for(let j = 1;j<12;j++){
+				if(j ==7 || j ==10 || j ==11){
 					document.getElementById("lang_" + j).value  = lang[j][language];
 				}else{
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
 		}
-		$('.ntp').html(buildTable());
+		$('.ntp').html(buildTableNtp());
+		$('.custom').html(buildTable());
 		lang_fun();
 		setTimeout(function(){
 			read_data();
 			showdata();
+			datetime();
 		},500);
 		function showdata(){
 			for(var i = 1; i < (ntp_info.length);i++){
@@ -137,6 +146,29 @@
 				showdata();
 			},800);
 		}
+		function checkTime(i) {
+			if (i < 10) {
+				i = "0" + i;
+			}
+			return i;
+		}
+		function datetime(){
+			var today = new Date();
+			var yyyy = today.getFullYear();
+			var MM = today.getMonth() + 1;
+			var dd = today.getDate();
+			var hh = today.getHours();
+			var mm = today.getMinutes();
+			var ss = today.getSeconds();
+			MM = checkTime(MM);
+			dd = checkTime(dd);
+			hh = checkTime(hh);
+			mm = checkTime(mm);
+			ss = checkTime(ss);
+			var time =yyyy+"-"+MM+"-"+dd+"T"+ hh + ":" + mm+ ":" + ss;
+
+			document.getElementById('DateTime').value = time;
+		}
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
@@ -146,7 +178,18 @@
 				showdata();
 			}
 		}
-		function buildTable() {
+		function SetTime(){
+			var sel =0;
+			let val = document.getElementById('DateTime').value;
+			if(confirm("请确认是否保存此次修改？")){
+				val = val.replace("T"," ");
+				rpc.call('pduSetParam',[0,43,1,0,0,val]);
+				flash_html();
+			}else{
+				showdata();
+			}
+		}
+		function buildTableNtp() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
@@ -159,15 +202,27 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:46.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><select id ="TimeZone" onchange ="SetData(this)">';
+			tbody += '<td><select id ="TimeZone" style ="width:46.5%" onchange ="SetData(this)">';
 			for(var i = 0; i<timezone_arr.length;i++){
 				tbody +='<option value ="'+i+'">'+timezone_arr[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_8" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "DateTime" style ="width:17%" type = "datetime-local" step ="1"></td></tr>';
+			tbody += '<tr><td><input id="lang_10" type = "button" style ="width:60%"  onclick = "datetime()"></td>';
+			tbody += '<td><input id="lang_11" type = "button" style ="width:12.5%"  onclick = "SetTime()"></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
