@@ -63,9 +63,14 @@ void Ota_Net::workDown(const QString &fn)
 
 void Ota_Net::rebootSlot()
 {
+    QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
+    throwMessage(cm::execute(cmd));
+    cmd = "rm -rf /usr/data/updater/clever";
+    throwMessage(cm::execute(cmd));
+
     throwMessage("start now reboot"); cm::mdelay(1);
-    //system("rm -rf /usr/data/clever/upload/*");
-    system("sync"); system("reboot");
+    cm::execute("rm -rf /usr/data/clever/upload/*");
+    cm::execute("sync"); system("reboot");
 }
 
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
