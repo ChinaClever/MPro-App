@@ -24,8 +24,9 @@ App_Led::App_Led(QObject *parent)
     : App_Buzzer{parent}
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    if(QFile::exists("/sys/clever/led/red/switch")) {
-        QTimer::singleShot(1,this,SLOT(led_initFunSlot()));
+    if(QFile::exists("/sys/clever/led/red/switch")) {        
+        QtConcurrent::run(this,&App_Led::led_run);
+        //QTimer::singleShot(1,this,SLOT(led_initFunSlot()));
     } else cout << "led err";
 #endif
 }
@@ -38,7 +39,7 @@ App_Led::~App_Led()
     }
 }
 
-void App_Led::led_initFunSlot()
+void App_Led::led_initFun()
 {
     int *rgb = mRgb; mLedIsRun = true;
     rgb[RGB_RED] = open("/sys/clever/led/red/switch", O_RDWR);
@@ -47,7 +48,6 @@ void App_Led::led_initFunSlot()
     if(rgb[RGB_GREEN] < 0) perror("open green");
     rgb[RGB_BLUE] = open("/sys/clever/led/blue/switch", O_RDWR);
     if(rgb[RGB_BLUE] < 0) perror("open blue");
-    QtConcurrent::run(this,&App_Led::led_run);
 }
 
 void App_Led::led_delayOff()
@@ -79,5 +79,6 @@ void App_Led::led_workDown()
 
 void App_Led::led_run()
 {
+    cm::mdelay(10); led_initFun();
     while(mLedIsRun) led_workDown();
 }

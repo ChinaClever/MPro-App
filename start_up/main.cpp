@@ -41,14 +41,20 @@ static void init_netWork()
         system("touch /usr/data/clever/cfg/mac.ini");
     }
 
-    //system("ip link set eth0 down");　/////////=============
-    QString cmd = "ip link set eth0 address " +mac;
-    system(cmd.toStdString().c_str()); qDebug() << cmd;
+    //system("ip link set eth0 down");
+    if(QFile::exists("netcfg")) {
+        QString cmd = QString("netcfg -w %1 eth0").arg(mac);
+        system(cmd.toStdString().c_str()); qDebug() << cmd;
+    } else {
+        QString cmd = "ip link set eth0 address " +mac;
+        system(cmd.toStdString().c_str()); qDebug() << cmd;
+    }
+
     system("ip link set eth0 up");
     system("ip link set eth0 multicast on");
-    //system("ip a flush dev eth0"); //　清掉所有IP地址　　//////==========
-    system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
-    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    //system("ip a flush dev eth0"); //　清掉所有IP地址
+    //system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
+    //system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
     //system("dhclient");
 }
 

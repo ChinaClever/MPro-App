@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 App_NetAddr::App_NetAddr(QObject *parent)
-    : App_Led{parent}
+    : App_Sensor{parent}
 {
     QTimer::singleShot(4,this,SLOT(inet_initFunSlot()));
 }
@@ -102,26 +102,33 @@ void App_NetAddr::inet_setIpV4()
         system(str.toStdString().c_str());
 
         if(gw.size()) {
-            cmd = "ip route replace default via %1 dev %2";
-            str = cmd.arg(gw, fn); //qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -g %1 eth0";
+                str = cmd.arg(gw);
+            } else {
+                cmd = "ip route replace default via %1 dev %2";
+                str = cmd.arg(gw, fn);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
-
-        if(!QFile::exists("/tmp/resolv.conf"))
-            system("touch /tmp/resolv.conf");
-        cm::mdelay(1);
 
         if(dns.size()) {
-            cmd = "sed -i '1cnameserver %1' /tmp/resolv.conf";
-            str = cmd.arg(dns); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -d %1";
+                str = cmd.arg(dns);
+            } else {
+                if(!QFile::exists("/tmp/resolv.conf")) {system("touch /tmp/resolv.conf");cm::mdelay(1);}
+                cmd = "sed -i '1cnameserver %1' /tmp/resolv.conf";
+                str = cmd.arg(dns);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //        if(dns2.size()) {
+        //            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
+        //            str = cmd.arg(dns); qDebug() << str;
+        //            system(str.toStdString().c_str());
+        //        }
     }
 
     inet_writeCfg(net->inet, "IPV4");
@@ -139,29 +146,45 @@ void App_NetAddr::inet_setIpV6()
         QString ip = net->inet6.ip;
         QString gw = net->inet6.gw;
         QString dns = net->inet6.dns;
-        QString dns2 = net->inet6.dns2;
+// QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
-        QString cmd = "ip -6 addr add %1/%2 dev %3";
-        QString str = cmd.arg(ip).arg(mask).arg(fn);
-        qDebug() << str << system(str.toStdString().c_str());
+        QString cmd, str;
+        if(QFile::exists("netcfg")) {
+            cmd = "inetcfg -i %1/%2 eth0";
+            str = cmd.arg(ip).arg(mask);
+        } else {
+            cmd = "ip -6 addr add %1/%2 dev %3";
+            str = cmd.arg(ip).arg(mask).arg(fn);
+        } qDebug() << str;
+        system(str.toStdString().c_str());
 
         if(gw.size()) {
-            cmd = "ip -6 route replace default via %1 dev %2";
-            str = cmd.arg(gw, fn); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -g %1 eth0";
+                str = cmd.arg(gw);
+            } else {
+                cmd = "ip -6 route replace default via %1 dev %2";
+                str = cmd.arg(gw, fn);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
 
         if(dns.size()) {
-            cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -d %1/%2 eth0";
+                str = cmd.arg(dns).arg(mask);
+            } else {
+                cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
+                str = cmd.arg(dns);
+            }qDebug() << str;
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+//        if(dns2.size()) {
+//            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+//            str = cmd.arg(dns); qDebug() << str;
+//            system(str.toStdString().c_str());
+//        }
     }
 
     inet_writeCfg(net->inet6, "IPV6");

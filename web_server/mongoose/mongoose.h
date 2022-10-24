@@ -691,7 +691,7 @@ int sscanf(const char *, const char *, ...);
 #endif
 
 #ifndef MG_SOCK_LISTEN_BACKLOG_SIZE
-#define MG_SOCK_LISTEN_BACKLOG_SIZE 3
+#define MG_SOCK_LISTEN_BACKLOG_SIZE 1
 #endif
 
 #ifndef MG_DIRSEP
