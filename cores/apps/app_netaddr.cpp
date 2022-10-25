@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_Sensor{parent}
 {
-    QTimer::singleShot(4,this,SLOT(inet_initFunSlot()));
+    //QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }
 
 void App_NetAddr::inet_initFunSlot()
@@ -81,7 +81,7 @@ void App_NetAddr::inet_setInterfaceSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
-    inet_isRun = false;
+    cm::mdelay(1); inet_isRun = false;
 }
 
 void App_NetAddr::inet_setIpV4()
@@ -96,7 +96,7 @@ void App_NetAddr::inet_setIpV4()
         QString gw = net->inet.gw;
         QString mask = net->inet.mask;
         QString dns = net->inet.dns;
-        QString dns2 = net->inet.dns2;
+        // QString dns2 = net->inet.dns2;
         QString cmd = "ifconfig %1 %2 netmask %3";
         QString str = cmd.arg(fn, ip, mask);
         system(str.toStdString().c_str());

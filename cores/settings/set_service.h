@@ -16,6 +16,8 @@ public:
     QVariant smtpCfg(int fc);
     bool smtpSet(int fc, const QVariant &v);
 
+    QVariant sshCfg(int fc);
+    bool sshSet(int fc, const QVariant &v);
 
 };
 

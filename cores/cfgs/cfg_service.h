@@ -10,6 +10,7 @@ public:
     void readCfgParams();
 
 private:
+    void ssh();
     void ntp();
     void web();
     void rpc();
