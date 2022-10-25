@@ -1,8 +1,8 @@
 #ifndef APP_NETADDR_H
 #define APP_NETADDR_H
-#include "app_led.h"
+#include "app_sensor.h"
 
-class App_NetAddr: public App_Led
+class App_NetAddr: public App_Sensor
 {
     Q_OBJECT
 public:
@@ -16,7 +16,6 @@ private slots:
     void inet_setInterfaceSlot();
 
 private:
-    void inet_setMac();
     void inet_setIpV4();
     void inet_setIpV6();
     void inet_dnsCfg();

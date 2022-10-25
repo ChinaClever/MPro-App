@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 App_NetAddr::App_NetAddr(QObject *parent)
-    : App_Led{parent}
+    : App_Sensor{parent}
 {
     QTimer::singleShot(4,this,SLOT(inet_initFunSlot()));
 }
@@ -20,8 +20,8 @@ void App_NetAddr::inet_initFunSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
-    //QString mac = mInetCfg->readCfg("mac", "", "Mac").toString();
-    //qstrcpy(net->mac, mac.toLocal8Bit().data());
+    QString mac = cm::execute("cat /usr/data/clever/cfg/mac.ini");
+    qstrcpy(net->mac, mac.toLocal8Bit().data());
 
     if(!strlen(net->mac)) {
         sNetAddr *inet = &net->inet;
@@ -32,6 +32,7 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(net->mac, "00:00:00:00:00:01");
     } inet_setInterface();
 }
+
 
 void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
 {
@@ -75,13 +76,11 @@ void App_NetAddr::inet_setInterface()
 }
 
 void App_NetAddr::inet_setInterfaceSlot()
-{    
+{
+    inet_setIpV4();
     sNetInterface *net = &(cm::dataPacket()->net);
-    //inet_setMac();
-    if(strlen(net->name)) {
-        inet_setIpV4(); if(net->inet6.en) inet_setIpV6();
-        else mInetCfg->writeCfg("en", 0, "IPV6");
-    }
+    if(net->inet6.en) inet_setIpV6();
+    else mInetCfg->writeCfg("en", 0, "IPV6");
     inet_isRun = false;
 }
 
@@ -103,26 +102,33 @@ void App_NetAddr::inet_setIpV4()
         system(str.toStdString().c_str());
 
         if(gw.size()) {
-            cmd = "ip route replace default via %1 dev %2";
-            str = cmd.arg(gw, fn); //qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -g %1 eth0";
+                str = cmd.arg(gw);
+            } else {
+                cmd = "ip route replace default via %1 dev %2";
+                str = cmd.arg(gw, fn);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
-
-        if(!QFile::exists("/tmp/resolv.conf"))
-            system("touch /tmp/resolv.conf");
-        cm::mdelay(1);
 
         if(dns.size()) {
-            cmd = "sed -i '1cnameserver %1' /tmp/resolv.conf";
-            str = cmd.arg(dns); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -d %1";
+                str = cmd.arg(dns);
+            } else {
+                if(!QFile::exists("/tmp/resolv.conf")) {system("touch /tmp/resolv.conf");cm::mdelay(1);}
+                cmd = "sed -i '1cnameserver %1' /tmp/resolv.conf";
+                str = cmd.arg(dns);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //        if(dns2.size()) {
+        //            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
+        //            str = cmd.arg(dns); qDebug() << str;
+        //            system(str.toStdString().c_str());
+        //        }
     }
 
     inet_writeCfg(net->inet, "IPV4");
@@ -140,29 +146,45 @@ void App_NetAddr::inet_setIpV6()
         QString ip = net->inet6.ip;
         QString gw = net->inet6.gw;
         QString dns = net->inet6.dns;
-        QString dns2 = net->inet6.dns2;
+// QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
-        QString cmd = "ip -6 addr add %1/%2 dev %3";
-        QString str = cmd.arg(ip).arg(mask).arg(fn);
-        qDebug() << str << system(str.toStdString().c_str());
+        QString cmd, str;
+        if(QFile::exists("netcfg")) {
+            cmd = "inetcfg -i %1/%2 eth0";
+            str = cmd.arg(ip).arg(mask);
+        } else {
+            cmd = "ip -6 addr add %1/%2 dev %3";
+            str = cmd.arg(ip).arg(mask).arg(fn);
+        } qDebug() << str;
+        system(str.toStdString().c_str());
 
         if(gw.size()) {
-            cmd = "ip -6 route replace default via %1 dev %2";
-            str = cmd.arg(gw, fn); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -g %1 eth0";
+                str = cmd.arg(gw);
+            } else {
+                cmd = "ip -6 route replace default via %1 dev %2";
+                str = cmd.arg(gw, fn);
+            } qDebug() << str;
             system(str.toStdString().c_str());
         }
 
         if(dns.size()) {
-            cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
+            if(QFile::exists("netcfg")) {
+                cmd = "netcfg -d %1/%2 eth0";
+                str = cmd.arg(dns).arg(mask);
+            } else {
+                cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
+                str = cmd.arg(dns);
+            }qDebug() << str;
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+//        if(dns2.size()) {
+//            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+//            str = cmd.arg(dns); qDebug() << str;
+//            system(str.toStdString().c_str());
+//        }
     }
 
     inet_writeCfg(net->inet6, "IPV6");
@@ -171,25 +193,11 @@ void App_NetAddr::inet_setIpV6()
 void App_NetAddr::inet_saveCfg()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
-    //mInetCfg->writeCfg("mac", net->mac, "Mac");
     QString cmdMac = "echo > %1 /usr/data/clever/cfg/mac.ini";
     system(cmdMac.arg(net->mac).toLocal8Bit().data());
 
     inet_writeCfg(net->inet6, "IPV6");
     inet_writeCfg(net->inet, "IPV4");
-}
-
-void App_NetAddr::inet_setMac()
-{
-    QString mac = cm::dataPacket()->net.mac;
-    //system("ip link set eth0 down"); cm::mdelay(1);
-    mInetCfg->writeCfg("mac", mac, "Mac");
-
-    QString cmd = "ip link set eth0 address " +mac;
-    system(cmd.toStdString().c_str()); qDebug() << cmd;
-    system("ip link set eth0 up"); //cm::mdelay(1);
-    system("ip link set eth0 multicast on");
-    //system("ip a flush dev eth0"); //　清掉所有IP地址
 }
 
 void App_NetAddr::inet_dnsCfg()

@@ -40,11 +40,16 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
 
 void ProcStart::proc_log(const QString &arg)
 {
-    QString fn = "./proc_log";
-    if(QFile::exists(fn)) {
-        QString cmd = fn + " " + arg + " &";
-        system(cmd.toLatin1().data()); mdelay(2);
-    } else qDebug() << "proc log err:" << fn << arg;
+    QString fn = "/usr/data/clever/cfg/proc_log.txt";
+#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
+    fn = "proc_log.txt";
+#endif
+
+    QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
+    QString str = t + arg;
+    QString fmd = "echo %1 >> %2 ";
+    QString cmd = fmd.arg(str, fn);
+    system(cmd.toLatin1().data());
 }
 
 

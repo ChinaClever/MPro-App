@@ -57,15 +57,24 @@ void Ota_Net::workDown(const QString &fn)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
     if(ret) ret = cmd_updater(fn);
-    if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    if(!ret && !mOta->work) {
+        QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    }
 #endif
 }
 
 void Ota_Net::rebootSlot()
 {
+    QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
+    throwMessage(cm::execute(cmd));
+    system("chmod +x /usr/data/clever/bin/*");
+    system("chmod +x /usr/data/clever/app/*");
+    cmd = "rm -rf /usr/data/updater/clever";
+    throwMessage(cm::execute(cmd));
+
     throwMessage("start now reboot"); cm::mdelay(1);
-    //system("rm -rf /usr/data/clever/upload/*");
-    system("sync"); system("reboot");
+    cm::execute("rm -rf /usr/data/clever/upload/*");
+    cm::execute("sync"); system("reboot");
 }
 
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)

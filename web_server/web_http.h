@@ -19,8 +19,8 @@ public:
     ~Web_Http();
     static sWeb_Cfg cfg;
 
+    static void mgr_init();
 private:
-    static void mgr_init(mg_mgr &mgr);
     static void process_json_message(mg_connection *c, mg_str &frame);
     static void fn(mg_connection *c, int ev, void *ev_data, void *fn_data);
     static void process_json_reply(mg_connection *c, const mg_str &frame, char *result);

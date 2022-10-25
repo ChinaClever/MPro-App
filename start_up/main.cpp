@@ -8,39 +8,54 @@
 
 __attribute__((constructor)) void startup()
 {
-    std::system("./proc_log daemon_startup");
     //printf("Constructor is called.\n");
 }
 
 __attribute__((destructor)) void app_exit()
 {
-    std::system("./proc_log daemon_exit");
-    //printf("destructor is called.\n");
+    //std::system("./proc_log daemon_exit");
+    printf("destructor is called.\n");
 }
 
 
 static void initSystem()
 {
     system("chmod +x -R /usr/data/clever/awtk/release/bin/");
-    system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
-    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
-    system("ifconfig eth0 up"); //system("dhclient");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
 }
 
 static void init_netWork()
 {
+    QString mac = "00:00:00:00:00:01";
+    QString fn =  "/usr/data/clever/cfg/mac.ini";
+    if(QFile::exists(fn)) {
+        QFile file(fn);
+        if(file.open(QIODevice::ReadOnly)) {
+            QByteArray array=file.readAll();
+            if(array.size() == 17) mac = array;
+            else qDebug() << "mac error" << array;
+        }
 
-//        QString mac = cm::dataPacket()->net.mac;
-//        //system("ip link set eth0 down"); cm::mdelay(1);
-//        //mInetCfg->writeCfg("mac", mac, "Mac");
+    } else {
+        system("touch /usr/data/clever/cfg/mac.ini");
+    }
 
-//        QString cmd = "ip link set eth0 address " +mac;
-//        system(cmd.toStdString().c_str()); qDebug() << cmd;
-//        system("ip link set eth0 up"); //cm::mdelay(1);
-//        system("ip link set eth0 multicast on");
-        //system("ip a flush dev eth0"); //　清掉所有IP地址
+    //system("ip link set eth0 down");
+    if(QFile::exists("netcfg")) {
+        QString cmd = QString("netcfg -w %1 eth0").arg(mac);
+        system(cmd.toStdString().c_str()); qDebug() << cmd;
+    } else {
+        QString cmd = "ip link set eth0 address " +mac;
+        system(cmd.toStdString().c_str()); qDebug() << cmd;
+    }
+
+    system("ip link set eth0 up");
+    system("ip link set eth0 multicast on");
+    //system("ip a flush dev eth0"); //　清掉所有IP地址
+    system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
+    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    //system("dhclient");
 }
 
 static void startSnmpd()
@@ -76,7 +91,7 @@ static void createDirectory()
     //system("mkdir -p /usr/data/clever/outlet");
     system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/drivers");
-    system("mkdir -p /usr/data/clever/download");    
+    system("mkdir -p /usr/data/clever/download");
     //system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 
@@ -85,6 +100,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     createDirectory();
+    init_netWork();
     initSystem();
     startSnmpd();
 

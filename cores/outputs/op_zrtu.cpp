@@ -88,7 +88,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         cout << addr;
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
-        cout << addr << recv.size(); //
+        cout << addr << recv.size();
         sSysItem it; it.module = tr("执行板通讯");
         it.content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
         rtuThrowMessage(it.module + it.content + cm::byteArrayToHexStr(recv));
