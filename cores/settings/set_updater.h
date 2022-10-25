@@ -8,7 +8,7 @@ public:
     Set_Updater();
 
     QVariant otaStatus(int type, int fc);
-    bool ota_updater(int fc, const QVariant &v);
+    int ota_updater(int fc, const QVariant &v);
 
 private:
     void ota_log();

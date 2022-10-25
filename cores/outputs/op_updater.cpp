@@ -27,7 +27,7 @@ bool OP_Updater::ota_start(const QString &fn)
 void OP_Updater::throwMessage(const QString &msg)
 {
     QString str = "updater outlet " + msg;
-    QString ip = cm::dataPacket()->ota.host;
+    QString ip = cm::dataPacket()->ota.host;  //qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
@@ -64,7 +64,6 @@ bool OP_Updater::ota_updates()
         } cm::mdelay(220); isOta = false;
         cm::dataPacket()->ota.outlet.isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, 4);
-
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
@@ -91,7 +90,7 @@ void OP_Updater::onOtaProgress(uchar addr, int v)
 {
     sOtaUpIt *it = &cm::dataPacket()->ota.outlet;
     it->subId = addr; it->progress = v;
-    QString str = "addr=%1 pro=%2";
+    QString str = "addr=%1 progress=%2";
     throwMessage(str.arg(addr).arg(v));
 }
 
@@ -104,9 +103,9 @@ bool OP_Updater::ota_update(int addr, const QString &fn)
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data); len += data.size();
             int v = (len*100.0)/size; emit otaProgress(addr, v);
-            if(ret) cm::mdelay(225); else break;
+            if(ret) cm::mdelay(325); else break;
         } file.close();
-    }
+    } else cout << addr << fn;
 
     return ret;
 }
@@ -119,14 +118,16 @@ void OP_Updater::onOtaSig(int addr, const QString &msg)
 
 bool OP_Updater::initOta(int id)
 {
-    isOta = true; waitForLock(); cm::mdelay(200);
+    isOta = true; waitForLock(); cm::mdelay(600);
     uchar cmd[] = {0x7B, 0xA5, 0x01, 0x10, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 5000);
-    if(!recv.contains("Start Updat")) isOta = false;
-    emit otaSig(id, recv);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 11*1000);
+    if(!recv.contains("Start Updat")) {
+        recv = transmit(cmd, sizeof(cmd), 15*1000);
+        if(!recv.contains("Start Updat")) isOta = false;
+    } emit otaSig(id, recv);
     return isOta;
 }
 
@@ -139,7 +140,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
     data.append(array);
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
-    Crc::AppendCrc(data); QByteArray recv = transmit(data, 4000);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 11*1000);
     if(recv.contains("success")) ret = true;
     emit otaSig(addr, recv);
     return ret;

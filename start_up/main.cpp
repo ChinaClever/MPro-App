@@ -53,8 +53,8 @@ static void init_netWork()
     system("ip link set eth0 up");
     system("ip link set eth0 multicast on");
     //system("ip a flush dev eth0"); //　清掉所有IP地址
-    //system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
-    //system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
+    system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
+    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
     //system("dhclient");
 }
 

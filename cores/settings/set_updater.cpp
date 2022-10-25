@@ -86,22 +86,22 @@ bool Set_Updater::ota_outlet()
     foreach (const auto &fn, fns) {
         if((fn == ".") || (fn == "..")) continue;
         setbit(cm::dataPacket()->ota.work, 4);
-        OP_Core::bulid()->ota_start(fn);
+        OP_Core::bulid()->ota_start(dir+fn);
         ret = true; break;
     }
 
     return ret;
 }
 
-bool Set_Updater::ota_updater(int fc, const QVariant &v)
+int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
-    bool ret = false; cout << fc << v;
+    bool ret = false;
     QString fn = v.toString();
     if(fn.size()) {
         ret |= ota_cascade(fn);
         ret |= ota_outlet();
         ota_log();
     }
-
+    cout << fc << v << (ret?1:0);
     return ret?1:0;
 }

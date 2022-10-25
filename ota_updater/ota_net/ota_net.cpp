@@ -57,7 +57,9 @@ void Ota_Net::workDown(const QString &fn)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
     if(ret) ret = cmd_updater(fn);
-    if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    if(!ret && !mOta->work) {
+        QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    }
 #endif
 }
 
