@@ -21,7 +21,7 @@ Rpc_Method *Rpc_Method::bulid(QObject *parent)
     return sington;
 }
 
-QString Rpc_Method::pduMetaData(uchar addr)
+QString Rpc_Method::pduMetaData(int addr)
 {
     return Integr_JsonBuild::bulid()->getJson(addr);
 }
@@ -51,7 +51,7 @@ double Rpc_Method::getDecimal(const sDataItem &it)
     return res;
 }
 
-double Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id)
+double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
 {
     //jcon::JsonRpcServer::clientEndpoint()->peerAddress().toString();
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
@@ -61,7 +61,7 @@ double Rpc_Method::pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, u
     return mIt.value / getDecimal(mIt);
 }
 
-bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value)
+bool Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value)
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
@@ -69,20 +69,20 @@ bool Rpc_Method::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uch
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id, uchar addr)
+bool Rpc_Method::pduCfgSet(int type, int fc, const QVariant &value, int id, int addr)
 {
     sCfgItem it; it.addr = addr; it.type = type;
     it.txType = mTxType; it.fc = fc; it.id = id;
     return Set_Core::bulid()->setCfg(it, value);
 }
 
-QString Rpc_Method::pduCfgGet(uchar type, uchar fc, uchar id, uchar addr)
+QString Rpc_Method::pduCfgGet(int type, int fc, int id, int addr)
 {
     sCfgItem it; it.addr = addr; it.type = type; it.fc = fc; it.id = id;
     return Set_Core::bulid()->getCfg(it).toString();
 }
 
-QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int cnt)
+QString Rpc_Method::pduLogFun(int type, int fc, int id, int cnt)
 {
     sLogFcIt it;
     it.type = type; it.fc = fc;
@@ -90,7 +90,7 @@ QString Rpc_Method::pduLogFun(uchar type, uchar fc, int id, int cnt)
     return Log_Core::bulid()->log_readFun(it);
 }
 
-bool Rpc_Method::pduRelaysCtrl(int addr, int start, int num, uchar on)
+bool Rpc_Method::pduRelaysCtrl(int addr, int start, int num, int on)
 {
     uchar topic = DTopic::Relay;
     uchar sub = DSub::Relays;

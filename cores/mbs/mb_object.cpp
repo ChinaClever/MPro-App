@@ -48,7 +48,7 @@ bool Mb_Object::setReg(ushort reg, const char *str)
 vshort Mb_Object::strToShort(const char *str)
 {
     vshort res; ushort buf[32] = {0};
-    int size = (strlen(str) + 1) / 2;
+    int size = strlen(str) + 1;
     memcpy(buf, str, size);
 
     for(int i=0; i<size; ++i) {
