@@ -5,7 +5,6 @@
 
 class App_Led : public App_Buzzer
 {
-    Q_OBJECT
 public:
     explicit App_Led(QObject *parent = nullptr);
     ~App_Led();
@@ -13,9 +12,7 @@ public:
 private:
     void led_delayOff();
     void led_workDown();
-
-private slots:
-    void led_initFunSlot();
+    void led_initFun();
     void led_run();
 
 private:
