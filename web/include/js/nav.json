@@ -1,12 +1,18 @@
 [
   {
-    "name": "输入",
+    "name": "首页",
     "icon": "homepage_fill",
+    "base": "",
+    "url": "home.html"
+  },
+  {
+    "name": "输入",
+    "icon": "flashlight_fill",
     "base": "pages/inlet/",
     "subNav": [
       {
-        "name": "首页",
-        "url": "home.html"
+        "name": "回路设置",
+        "url": "loop_set.html"
       },
       {
         "name": "相设置",
@@ -15,20 +21,8 @@
     ]
   },
   {
-    "name": "回路",
-    "icon": "flag_fill",
-    "base": "pages/loop/",
-    "subNav": [
-      {
-        "name": "回路设置",
-        "url": "loop_set.html"
-      }
-    ]
-  },
-
-  {
     "name": "输出",
-    "icon": "info",
+    "icon": "subtraction",
     "base": "pages/outlet/",
     "subNav": [ 
       {
@@ -59,7 +53,7 @@
   },
   {
     "name": "分组",
-    "icon": "info",
+    "icon": "tasklist_fill",
     "base": "pages/group/",
     "subNav": [
 
@@ -91,7 +85,7 @@
   }, 
   {
     "name": "机架",
-    "icon": "info",
+    "icon": "createtask_fill",
     "base": "pages/dual/",
     "subNav": [
       {
@@ -183,7 +177,7 @@
   }, 
   {
     "name": "安全加密",
-    "icon": "collection_fill",
+    "icon": "lock_fill",
     "base": "pages/sercet/",
     "subNav": [      
       {
