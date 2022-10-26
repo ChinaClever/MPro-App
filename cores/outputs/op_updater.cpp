@@ -7,9 +7,8 @@
 
 
 OP_Updater::OP_Updater(QObject *parent) : OP_Object{parent}
-{
-    isOta = false;
-    mNet = new Net_Udp(this);
+{    
+    mNet = new Net_Udp(this); isOta = false;
     connect(this, &OP_Updater::otaSig, this, &OP_Updater::onOtaSig);
     connect(this, &OP_Updater::otaFinish, this, &OP_Updater::onOtaFinish);
     connect(this, &OP_Updater::otaProgress, this, &OP_Updater::onOtaProgress);

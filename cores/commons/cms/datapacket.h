@@ -387,7 +387,7 @@ struct sDataItem
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh,
              ELog=81, EPro, EOta, ECmd=111};
 
 struct sCfgItem {

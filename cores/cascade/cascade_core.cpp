@@ -44,9 +44,11 @@ void Cascade_Core::workFun()
 
 void Cascade_Core::run()
 {
-    while(isRun) {
+    cm::mdelay(210);while(isRun) {
+        cm::masterDev()->cfg.param.devMode = DevMode::DM_Dual; ///////////=================
+
         int mode = cm::masterDev()->cfg.param.devMode;
-        if(mode && (mode < DevMode::DM_Rtu)) {
+        if(mode < DevMode::DM_Rtu) {
             if(isOpened()) workFun(); else initFunSlot();
         } else if(isOpened()) closeSerial();
         else cm::mdelay(1);

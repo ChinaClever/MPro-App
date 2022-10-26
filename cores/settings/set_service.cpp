@@ -53,6 +53,43 @@ bool Set_Service::smtpSet(int fc, const QVariant &v)
     return ret;
 }
 
+QVariant Set_Service::sshCfg(int fc)
+{
+    QVariant ret;
+    sSshCfg *cfg = &App_Ssh::sshCfg;
+    switch (fc) {
+    case 1: ret = cfg->ssh_en; break;
+    case 2: ret = cfg->telnet_en; break;
+    case 3: ret = cfg->usr; break;
+    case 4: ret = cfg->pwd; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+bool Set_Service::sshSet(int fc, const QVariant &v)
+{
+    bool ret = true;
+    sSshCfg *cfg = &App_Ssh::sshCfg;
+    App_Core *obj = App_Core::bulid();
+    QString prefix = "ssh"; QString key;
+
+    switch (fc) {
+    case 1: key = "ssh_en"; cfg->ssh_en = v.toInt(); break;
+    case 2: key = "telnet_en";  cfg->telnet_en = v.toInt(); break;
+    case 3: key = "usr";  cfg->usr = v.toString();  break;
+    case 4: key = "pwd";  cfg->pwd = v.toString();  break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}
+
 QVariant Set_Service::ntpCfg(int fc)
 {
     QVariant ret;
@@ -62,7 +99,7 @@ QVariant Set_Service::ntpCfg(int fc)
     case 1: ret = obj->ntp_time(); break;
     case 2: ret = it->udp_en; break;
     case 3: ret = it->ntp_host; break;
-    case 4: ret = obj->ntp_timeZone(); break;
+    case 4: ret = it->time_zone; break;
     case 5: ret = obj->ntpdate(); break;
     default: cout << fc; break;
     }
@@ -80,7 +117,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     case 1: ret = obj->ntp_time(v.toString()); break;
     case 2: key = "udp_en";  obj->ntp_udpEn(v.toBool()); break;
     case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
-    case 4: key = "time_zone";  it->time_zone =v.toString();  break;
+    case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
     case 5: obj->ntpdate(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
