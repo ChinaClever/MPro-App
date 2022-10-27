@@ -203,12 +203,16 @@
 					document.getElementById(ntp_info[i]).value = ntp_data[i];
 					document.getElementById(ntp_info[i]).disabled = false;
 				}
-				document.getElementById("lang_7").disabled = false;
+				for(let i = 10;i<12;i++){
+					document.getElementById("lang_" + i).disabled = false;
+				}
+				document.getElementById("DateTime").disabled = false;
 			}
 			if(parseInt(ntp_data[2]) == 0){
-				document.getElementById(ntp_info[3]).disabled = true;
-				document.getElementById(ntp_info[4]).disabled = true;
-				document.getElementById("lang_7").disabled = true;
+				for(let i = 10;i<12;i++){
+					document.getElementById("lang_" + i).disabled = true;
+				}
+				document.getElementById("DateTime").disabled = true;
 			}
 		}
 		function SetData(btn){
@@ -278,12 +282,6 @@
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td  id ="DevTime" ></td></tr>';
-			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><select id ="TimeSetEn" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
@@ -307,6 +305,12 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_8" ></td>\
 			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><select id ="TimeSetEn" style ="width:17%"  onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
 			tbody += '<td><input id = "DateTime" style ="width:17%" type = "datetime-local" step ="1"></td></tr>';
 			tbody += '<tr><td><input id="lang_10" type = "button" style ="width:60%"  onclick = "datetime()"></td>';
