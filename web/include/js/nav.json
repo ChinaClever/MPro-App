@@ -224,10 +224,6 @@
         "url": "smtp.html"
       },
       {
-        "name": "Telnet服务",
-        "url": "telnet.html"
-      },
-      {
         "name": "Radius服务",
         "url": "radius.html"
       },
