@@ -16,7 +16,11 @@ public:
     QVariant smtpCfg(int fc);
     bool smtpSet(int fc, const QVariant &v);
 
+    QVariant sshCfg(int fc);
+    bool sshSet(int fc, const QVariant &v);
 
+    QVariant syslogCfg(int fc);
+    bool syslogSet(int fc, const QVariant &v);
 };
 
 #endif // SET_SERVICE_H

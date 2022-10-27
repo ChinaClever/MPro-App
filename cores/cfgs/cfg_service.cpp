@@ -14,12 +14,13 @@
 
 Cfg_Service::Cfg_Service()
 {
-    mCfg = Cfg_Com::bulid();    
+    mCfg = Cfg_Com::bulid();
     readCfgParams();
 }
 
 void Cfg_Service::readCfgParams()
 {
+    ssh();
     ntp();
     web();
     rpc();
@@ -28,6 +29,7 @@ void Cfg_Service::readCfgParams()
     smtp();
     mqtt();
     login();
+    syslog();
     modbus();
     sercret();
     whiteList();
@@ -102,6 +104,35 @@ void Cfg_Service::web()
     }
 }
 
+void Cfg_Service::ssh()
+{
+    sSshCfg *cfg = &App_Ssh::sshCfg;
+    QString prefix = "ssh"; QString key;
+
+    for(int i=1; i<5; ++i)  {
+        switch (i) {
+        case 1: key = "ssh_en";  cfg->ssh_en = mCfg->readCfg(key, 1, prefix).toInt(); break;
+        case 2: key = "telnet_en";  cfg->telnet_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 3: key = "usr";  cfg->usr = mCfg->readCfg(key, "", prefix).toString();  break;
+        case 4: key = "pwd";  cfg->pwd =mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
+void Cfg_Service::syslog()
+{
+    sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
+    QString prefix = "syslog"; QString key;
+
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "port";  cfg->port = mCfg->readCfg(key, 514, prefix).toInt(); break;
+        case 3: key = "host";  cfg->host = mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
 void Cfg_Service::ntp()
 {
     sNtpCfg *it = &App_Ntp::ntpCfg;
@@ -111,7 +142,7 @@ void Cfg_Service::ntp()
         switch (i) {
         case 2: key = "udp_en";  it->udp_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 3: key = "ntp_host";  it->ntp_host = mCfg->readCfg(key, "", prefix).toString();  break;
-        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "", prefix).toString();  break;
+        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "Asia/Shanghai", prefix).toString();  break;
         }
     }
 }

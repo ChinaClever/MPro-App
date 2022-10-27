@@ -5,11 +5,10 @@
 
 class App_Nftables : public App_NetAddr
 {
-    Q_OBJECT
 public:
     explicit App_Nftables(QObject *parent = nullptr);
 
-private slots:
+private:
     void nft_initSlot();
 };
 

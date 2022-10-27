@@ -17,11 +17,11 @@ public:
     explicit App_Ntp(QObject *parent = nullptr);
     static sNtpCfg ntpCfg;
 
+    void ntp_timeZone(const QString &zone);
     bool ntp_time(const QString &t);
-    QString ntp_time();
-    QString ntp_timeZone();
-    bool ntpdate();
     bool ntp_udpEn(bool en);
+    QString ntp_time();
+    bool ntpdate();
 
 private slots:
     void ntp_initSlot();

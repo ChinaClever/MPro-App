@@ -5,7 +5,6 @@
 
 class App_Core : public App_Start
 {
-    Q_OBJECT
     explicit App_Core(QObject *parent = nullptr);
 public:
     static App_Core *bulid(QObject *parent = nullptr);

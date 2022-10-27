@@ -1,9 +1,9 @@
 #ifndef APP_RUNTIME_H
 #define APP_RUNTIME_H
 
-#include "app_smtp.h"
+#include "app_ssh.h"
 
-class App_RunTime : public App_Smtp
+class App_RunTime : public App_Ssh
 {
     Q_OBJECT
 public:

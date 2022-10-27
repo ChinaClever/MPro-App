@@ -34,6 +34,7 @@ let web_service = new Array("","HttpEn","HttpPort","Redirect","HttpsEn","HttpsPo
 let smtp_name = new Array("","SmtpEn","SmtpServer","SmtpSendUsr","SmtpSendPsd","SmtpRecvUsr","SmtpPort","SmtpMode","SmtpState");
 let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
 let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
+let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -191,6 +192,9 @@ var jsonrpc = function()
       break;
       case 44:
         sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 45:
+        sessionStorage.setItem(ssh_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -719,6 +723,18 @@ function read_ntp_data(addr){
     }
     if(j < 4 +1){
       rpc.call('pduReadParam',[addr,43,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_ssh_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(4 +1)){
+      clearInterval(time1);
+    }
+    if(j < 4 +1){
+      rpc.call('pduReadParam',[addr,45,j,0,0]);
     }
     j++;
   },3);

@@ -10,7 +10,8 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
     mNet = new Net_Udp(this);
     isOta = false; mFile = new QFile;
     qRegisterMetaType<sOtaFile>("sOtaFile");
-    connect(this, &Cascade_Updater::otaReplyFinishSig, this, &Cascade_Updater::otaRecvFinishSlot);
+    connect(this, &Cascade_Updater::otaReplyFinishSig,
+            this, &Cascade_Updater::otaRecvFinishSlot);
 }
 
 void Cascade_Updater::throwMessage(const QString &msg)
@@ -152,6 +153,8 @@ void Cascade_Updater::otaReboot()
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
     throwMessage(cm::execute(cmd));
 
+    system("chmod +x /usr/data/clever/bin/*");
+    system("chmod +x /usr/data/clever/app/*");
     cmd = "rm -rf /usr/data/updater/clever";
     throwMessage(cm::execute(cmd));
     cm::execute("rm -rf /usr/data/clever/upload/*");

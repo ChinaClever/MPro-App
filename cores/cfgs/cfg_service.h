@@ -10,6 +10,7 @@ public:
     void readCfgParams();
 
 private:
+    void ssh();
     void ntp();
     void web();
     void rpc();
@@ -19,6 +20,7 @@ private:
     void mqtt();
     void login();
     void modbus();
+    void syslog();
     void sercret();
     void whiteList();
     void dualName();
