@@ -47,6 +47,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
+    case SFnCode::ESysLog: res = syslogCfg(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
@@ -83,6 +84,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::EOta: ret = ota_updater(it.fc, v); break;
+    case SFnCode::ESysLog: ret = syslogSet(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::ETlsCert: ret = setTlsCert(it.fc, v); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;

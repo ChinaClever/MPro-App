@@ -29,6 +29,7 @@ void Cfg_Service::readCfgParams()
     smtp();
     mqtt();
     login();
+    syslog();
     modbus();
     sercret();
     whiteList();
@@ -114,6 +115,20 @@ void Cfg_Service::ssh()
         case 2: key = "telnet_en";  cfg->telnet_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 3: key = "usr";  cfg->usr = mCfg->readCfg(key, "", prefix).toString();  break;
         case 4: key = "pwd";  cfg->pwd =mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
+void Cfg_Service::syslog()
+{
+    sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
+    QString prefix = "syslog"; QString key;
+
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "port";  cfg->port = mCfg->readCfg(key, 514, prefix).toInt(); break;
+        case 3: key = "host";  cfg->host = mCfg->readCfg(key, "", prefix).toString();  break;
         }
     }
 }

@@ -20,6 +20,7 @@ private:
     void mqtt();
     void login();
     void modbus();
+    void syslog();
     void sercret();
     void whiteList();
     void dualName();

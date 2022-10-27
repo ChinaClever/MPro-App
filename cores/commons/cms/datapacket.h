@@ -352,7 +352,8 @@ struct sWebCfg{
  */
 struct sDataPacket
 {
-    struct sWebCfg web;
+    uint mem_size; // 共享内存大小
+    struct sWebCfg web; // 网页配置信息
     struct sOtaUpdater ota; // 升级信息
     struct sNetInterface net; //设备IP
     struct sDevData data[DEV_NUM]; //设备数据
@@ -387,7 +388,7 @@ struct sDataItem
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog,
              ELog=81, EPro, EOta, ECmd=111};
 
 struct sCfgItem {

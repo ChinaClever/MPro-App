@@ -29,6 +29,7 @@ App_Core *App_Core::bulid(QObject *parent)
 
 void App_Core::compileTime()
 {
+    cm::dataPacket()->mem_size = sizeof(sDataPacket);
     sVersions *vers = &(cm::masterDev()->cfg.vers);
     cm::buildDateTime(vers->compileDate);
 }

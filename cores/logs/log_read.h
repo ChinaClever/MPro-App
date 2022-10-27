@@ -1,8 +1,7 @@
 #ifndef LOG_READ_H
 #define LOG_READ_H
 
-#include "db_alarm.h"
-#include "datapacket.h"
+#include "log_sys.h"
 
 enum eLogs{
     eUserLog,
@@ -30,7 +29,7 @@ struct sLogFcIt {
 };
 
 
-class Log_Read : public QObject
+class Log_Read : public Log_Sys
 {
 public:
     explicit Log_Read(QObject *parent = nullptr);

@@ -21,15 +21,15 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
 void Cascade_Core::initFunSlot()
 {
     if(cm::masterDev()->cfg.param.devMode < DevMode::DM_Rtu) {
-        qint32 baudRate = QSerialPort::Baud57600; cm::mdelay(1000);
-        openSerial("/dev/ttyS1", baudRate, QSerialPort::EvenParity);
+        qint32 baudRate = QSerialPort::Baud115200; cm::mdelay(200);
+        openSerial("/dev/ttyS1", baudRate , QSerialPort::EvenParity);
     }
 }
 
 void Cascade_Core::workFun()
 {
     uchar addr = getAddress();
-    cmsWrite(); if(addr) {
+    cmsWrite(95); if(addr) {
         QByteArray rcv = readSerial();
         if(rcv.size() > 6) {
             rcv = qUncompress(rcv);
@@ -45,8 +45,6 @@ void Cascade_Core::workFun()
 void Cascade_Core::run()
 {
     cm::mdelay(210);while(isRun) {
-        cm::masterDev()->cfg.param.devMode = DevMode::DM_Dual; ///////////=================
-
         int mode = cm::masterDev()->cfg.param.devMode;
         if(mode < DevMode::DM_Rtu) {
             if(isOpened()) workFun(); else initFunSlot();

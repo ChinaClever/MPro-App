@@ -11,6 +11,42 @@ Set_Service::Set_Service()
 
 }
 
+QVariant Set_Service::syslogCfg(int fc)
+{
+    QVariant ret;
+    sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
+    switch (fc) {
+    case 1: ret = cfg->en; break;
+    case 2: ret = cfg->host; break;
+    case 3: ret = cfg->port; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+
+
+bool Set_Service::syslogSet(int fc, const QVariant &v)
+{
+    bool ret = true;
+    sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
+    QString prefix = "syslog"; QString key;
+
+    switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "port";  cfg->port = v.toInt(); break;
+    case 3: key = "host";  cfg->host = v.toString();  break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}
+
 QVariant Set_Service::smtpCfg(int fc)
 {
     QVariant ret;

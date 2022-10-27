@@ -10,7 +10,8 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
     mNet = new Net_Udp(this);
     isOta = false; mFile = new QFile;
     qRegisterMetaType<sOtaFile>("sOtaFile");
-    connect(this, &Cascade_Updater::otaReplyFinishSig, this, &Cascade_Updater::otaRecvFinishSlot);
+    connect(this, &Cascade_Updater::otaReplyFinishSig,
+            this, &Cascade_Updater::otaRecvFinishSlot);
 }
 
 void Cascade_Updater::throwMessage(const QString &msg)
