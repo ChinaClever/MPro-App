@@ -122,9 +122,9 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 11*1000);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
     if(!recv.contains("Start Updat")) {
-        recv = transmit(cmd, sizeof(cmd), 15*1000);
+        recv = transmit(cmd, sizeof(cmd), 5000);
         if(!recv.contains("Start Updat")) isOta = false;
     } emit otaSig(id, recv);
     return isOta;
@@ -139,7 +139,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
     data.append(array);
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
-    Crc::AppendCrc(data); QByteArray recv = transmit(data, 11*1000);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 3000);
     if(recv.contains("success")) ret = true;
     emit otaSig(addr, recv);
     return ret;

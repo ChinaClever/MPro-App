@@ -16,10 +16,8 @@
 #include <stdint.h>
 #include <sys/ioctl.h>
 
-static int speed_arr[14] = { B38400, B19200, B9600, B4800, B2400, B1200, B300,
-                             B38400, B19200, B9600, B4800, B2400, B1200, B300, };
-static int name_arr[14] = {38400,  19200,  9600,  4800,  2400,  1200,  300,
-                           38400,  19200,  9600, 4800, 2400, 1200,  300, };
+static int speed_arr[] = {B115200, B57600, B38400, B19200, B9600, B4800, B2400, B1200, B300};
+static int name_arr[] = {115200, 57600, 38400,  19200,  9600,  4800,  2400,  1200,  300};
 
 Serial_Port:: Serial_Port()
 {

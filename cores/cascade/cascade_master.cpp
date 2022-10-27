@@ -18,8 +18,8 @@ bool Cascade_Master::masterRead(uchar addr)
     for(auto &it: its) {
         if((it.fc == fc_readDev) && it.srcAddr){
             deDataStream(it.data); ret = unSequence(it.srcAddr);
-        } else qCritical() << "Error: Cascade Master fc" << it.fc;
-    } cout << addr << ret;
+        } else cout << "Error: Cascade Master fc" << it.fc << it.srcAddr;
+    } if(ret) cmsWrite(155); else cout << addr << ret;
 
     return ret;
 }
@@ -29,14 +29,13 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm; int t = 100;
     uint size = masterDev()->cfg.nums.slaveNum;
-    size = 1; ///////=========
     for(uint i=0; i<size; ++i) {
         bool ret = masterRead(i+1);
         setEndisable(i, ret, devData(i+1)->offLine);
     }
 
     if(runTime() > 48*60*60) t = 500;
-    t = QRandomGenerator::global()->bounded(t); mdelay(320+t);
+    t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
 }
 
 void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
@@ -53,7 +52,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
             it.content = tr("副机 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(255);
+    } cm::mdelay(355);
 }
 
 bool Cascade_Master::masterSeting(const sDataItem &unit)

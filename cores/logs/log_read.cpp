@@ -6,7 +6,7 @@
 #include "log_read.h"
 
 Log_Read::Log_Read(QObject *parent)
-    : QObject{parent}
+    : Log_Sys{parent}
 {
 
 }

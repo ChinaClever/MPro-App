@@ -14,11 +14,9 @@ Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 
 void Cascade_Object::setAddress()
 {
-    sParameter *p = &(cm::masterDev()->cfg.param);
-    uchar addr = 1; if(p->devMode < DevMode::DM_Rtu) addr = p->cascadeAddr;
+    uchar addr = 1; sParameter *p = &(cm::masterDev()->cfg.param);
+    if(p->devMode < DevMode::DM_Rtu) addr = p->cascadeAddr;
     mSelfAddr = addr;
-
-    mSelfAddr = 0;   ///////////=================
 }
 
 QByteArray Cascade_Object::frameToArray(const c_sFrame &it)
@@ -70,14 +68,8 @@ QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr; it.len=0;
     QByteArray array = frameToArray(it);
-    qDebug() << "AAAAAAAA" << array.size();
-    array = transmit(qCompress(array), 5000);
-    qDebug() << "BBBBBBBB" << array.size();
-
+    array = transmit(qCompress(array));
     if(array.size()) array = qUncompress(array);
-
-    qDebug() << "CCCCCCCCCC" << array.size();
-
     return arrayToFrames(array);
 }
 
@@ -94,7 +86,7 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    array = transmit(qCompress(array), 1654);
+    array = transmit(qCompress(array), 2654);
     if(array.size()) array = qUncompress(array);
     return replyData(array, addr, fc);
 }

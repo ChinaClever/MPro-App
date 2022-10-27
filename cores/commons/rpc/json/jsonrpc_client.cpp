@@ -157,7 +157,7 @@ bool JsonRpc_Client::startLocalClient(int port)
 {
     mPort = port; timer->start(3500 + rand()%100);
     bool ret = startClient("127.0.0.1", port);
-    if(!ret) qDebug() << Q_FUNC_INFO <<  "start Local Client" << port << ret;
+    //if(!ret) qDebug() << Q_FUNC_INFO <<  "start Local Client" << port << ret;
     return ret;
 }
 

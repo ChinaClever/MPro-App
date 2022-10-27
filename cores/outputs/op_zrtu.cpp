@@ -85,7 +85,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
-        //cout << addr;
+        cout << addr;
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size();

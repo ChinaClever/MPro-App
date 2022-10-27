@@ -33,6 +33,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 void Log_Core::initFunSlot()
 {
+    sys_initfun();
     mOp = Db_Op::bulid();
     mEle = Db_Ele::bulid();
     mOta = Db_Ota::bulid();
