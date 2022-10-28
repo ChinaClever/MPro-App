@@ -29,12 +29,12 @@ public:
     static sAmqpCfg amqpCfg;
 
 signals:
-    void sendMsgSig(const QString &msg);
-    void recvMsgSig(const QString &msg);
+    void sendMsgSig(const QByteArray &msg);
+    void recvMsgSig(const QByteArray &msg);
 
 public slots:
     void start();
-    void sendMsg(const QString &msg);
+    void sendMsg(const QByteArray &msg);
 
 private slots:
     void clientConnected();

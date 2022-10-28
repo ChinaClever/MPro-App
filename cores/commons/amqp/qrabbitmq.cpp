@@ -85,10 +85,10 @@ void QRabbitMQ::messageReceived()
     QAmqpMessage message = temporaryQueue->dequeue();
     QString msg = "Recv: [x] " + message.routingKey() + ":" + message.payload();
     //qDebug() << msg;
-    emit recvMsgSig(msg);
+    emit recvMsgSig(msg.toUtf8());
 }
 
-void QRabbitMQ::sendMsg(const QString &msg)
+void QRabbitMQ::sendMsg(const QByteArray &msg)
 {
     sAmqpCfg *cfg = &amqpCfg;
     QAmqpExchange *exchange = m_client->createExchange(cfg->name);
