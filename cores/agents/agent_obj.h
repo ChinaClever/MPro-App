@@ -9,6 +9,9 @@ class Agent_Obj : public QObject
 public:
     explicit Agent_Obj(QObject *parent = nullptr);
 
+private slots:
+    void initAgentSlot();
+
 protected:
     bool addOid(uchar addr, uint oid, const QString &oidPrefix,
                 const QString &name, char *ptr, bool isWrite=true);

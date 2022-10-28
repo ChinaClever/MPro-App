@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "ota_net.h"
+#include "cfg_app.h"
 
 Ota_Net::Ota_Net(QObject *parent)
     : Ota_Obj{parent}
@@ -33,7 +34,7 @@ QString Ota_Net::unzip(const QString &fn)
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
     throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
     throwMessage(str); system("rm -rf /usr/data/clever/upload/*");
-    return dst;
+    return dst+"updater/clever/";
 }
 
 bool Ota_Net::coreRuning()
@@ -57,7 +58,8 @@ void Ota_Net::workDown(const QString &fn)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
     if(ret) ret = cmd_updater(fn);
-    if(!ret && !mOta->work) {
+    if(!ret) {
+        clrbit(mOta->work, 2); if(!mOta->work)
         QTimer::singleShot(3555,this,SLOT(rebootSlot()));
     }
 #endif
@@ -66,21 +68,57 @@ void Ota_Net::workDown(const QString &fn)
 void Ota_Net::rebootSlot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     cmd = "rm -rf /usr/data/updater/clever";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
 
     throwMessage("start now reboot"); cm::mdelay(1);
     cm::execute("rm -rf /usr/data/clever/upload/*");
     cm::execute("sync"); system("reboot");
 }
 
+bool Ota_Net::versionCheck(const QString &dir)
+{
+    sAppVerIt it;
+    Cfg_App app(dir, this);
+    bool ret = app.app_unpack(it);
+    throwMessage(dir); if(ret) {
+        throwMessage("version check ok");
+        QString str = cm::masterDev()->cfg.vers.releaseDate;
+        if(str.size()) {
+            QDate ct = QDate::fromString(str, "yyyy-MM-dd");
+            QDate date = QDate::fromString(it.releaseDate, "yyyy-MM-dd");
+            throwMessage("version release date " +it.releaseDate); if(date < ct) {
+                QString msg = "version release date err: currnet date %1 up date:%2";
+                throwMessage(msg.arg(str, it.releaseDate)); ret = false;
+            } else {
+                throwMessage("version dev type "+it.dev);
+                str = cm::masterDev()->cfg.vers.dev;if(str.size()) {
+                    if(str != it.dev) {
+                        QString msg = "version dev type err: currnet type %1 up type:%2";
+                        throwMessage(msg.arg(str, it.dev)); ret = false;
+                    }
+                }
+            }
+        }
+    } else {
+        QString msg = "version check err %1 %2 %3 %4";
+        throwMessage(msg.arg(it.usr, it.dev, it.releaseDate, it.md5));
+    }
+
+    return ret;
+}
+
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
 {
+    QString dir; if(ok) {
+        dir = unzip(it.path+it.file);
+        ok = versionCheck(dir);
+    }
+
     sOtaUpdater *ota = mOta; if(ok) {
-        QString dir = unzip(it.path+it.file);
         if(QFile::exists(dir+"auto.sh")) {
             QString str = "sh %1/auto.sh ";
             str = cm::execute(str.arg(dir));

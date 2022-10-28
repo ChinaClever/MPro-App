@@ -203,7 +203,9 @@ void Cfg_Service::modbus()
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
-    } cm::masterDev()->cfg.param.modbusRtuAddr = cfg->addr;
+    } sParameter *param = &(cm::masterDev()->cfg.param);
+    param->modbusRtuAddr = cfg->addr;
+    param->modbusRtuBr = cfg->baud;
 }
 
 void Cfg_Service::rpc()

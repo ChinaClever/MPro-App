@@ -11,8 +11,9 @@ public:
 
 private:
     bool coreRuning();
-    void workDown(const QString &fn);
+    bool versionCheck(const QString &dir);
     bool cmd_updater(const QString &fn);
+    void workDown(const QString &fn);
     QString unzip(const QString &fn);
 
 private slots:

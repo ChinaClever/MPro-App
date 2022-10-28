@@ -40,7 +40,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     bool ret = true; switch (fc) {
     case 1: key = "enRtu"; cfg->enRtu = value; break;
     case 2: key = "addr"; cfg->addr = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
-    case 3: key = "baud"; value = toBaud(value); cfg->baud = value; /*mb->setRtu(2, value);*/break;
+    case 3: key = "baud"; value = toBaud(value); cm::masterDev()->cfg.param.modbusRtuBr = cfg->baud = value; break;
     case 4: key = "parity"; value = toParity(value); cfg->parity = value;  /*mb->setRtu(1, value);*/ break;
     case 5: key = "dataBits"; value = toDataBits(value); cfg->dataBits = value; /*mb->setRtu(3, value);*/ break;
     case 6: key = "stopBits"; value = toStopBits(value); cfg->stopBits = value; /*mb->setRtu(4, value);*/ break;

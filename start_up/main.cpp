@@ -58,26 +58,6 @@ static void init_netWork()
     //system("dhclient");
 }
 
-static void startSnmpd()
-{
-    QString fn = "snmpd.conf";
-    QString cmd = "snmpd -f -Lo -C -c ";
-    bool ret = ProcStart::proc_isRun("snmpd"); if(ret) return ;
-
-    QString custom = "/usr/data/clever/cfg/";
-    if(QFile::exists(custom + fn)) {
-        cmd += custom + fn + " &";
-    } else if(QFile::exists("/etc/"+fn)) {
-        cmd += "/etc/"+ fn + " &";
-    } else {
-        cmd.clear();
-    }
-
-    qDebug() << cmd;
-    if(cmd.size()) system(cmd.toLatin1().data());
-    else qDebug() << "Error: start snmpd error";
-}
-
 static void createDirectory()
 {
     system("mkdir -p /usr/data/etc/ssl");
@@ -102,7 +82,6 @@ int main(int argc, char *argv[])
     createDirectory();
     init_netWork();
     initSystem();
-    startSnmpd();
 
     Daemons::bulid();
 #endif
