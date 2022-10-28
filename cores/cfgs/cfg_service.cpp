@@ -11,6 +11,7 @@
 #include "agent_core.h"
 #include "app_core.h"
 #include "mb_core.h"
+#include "qrabbitmq.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -28,6 +29,7 @@ void Cfg_Service::readCfgParams()
     snmp();
     smtp();
     mqtt();
+    amqp();
     login();
     syslog();
     modbus();
@@ -162,6 +164,27 @@ void Cfg_Service::mqtt()
         case 7: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toByteArray(); break;
         case 8: key = "keepAlive"; cfg->keepAlive = mCfg->readCfg(key, 60, prefix).toInt();break;
         case 9: key = "qos"; cfg->qos = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
+    }
+}
+
+void Cfg_Service::amqp()
+{
+    QString prefix = "amqp"; QString key;
+    sAmqpCfg *cfg = &QRabbitMQ::amqpCfg;
+    for(int i=1; i<11; ++i) {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 15672, prefix).toInt(); break;
+        case 4: key = "virtualHost"; cfg->virtualHost = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 5: key = "username"; cfg->username = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 6: key = "password"; cfg->password = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 7: key = "name"; cfg->name = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 8: key = "routingKey"; cfg->routingKey = mCfg->readCfg(key, "", prefix).toString();break;
+        case 9: key = "bindingKey"; cfg->bindingKey = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 10: key = "ssl"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
