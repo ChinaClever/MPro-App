@@ -66,6 +66,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");
+    system("mkdir -p /usr/data/clever/doc");
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
     //system("mkdir -p /usr/data/clever/outlet");
