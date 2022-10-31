@@ -9,6 +9,7 @@
 #include "rpc_service.h"
 #include "integr_core.h"
 #include "mqtt_client.h"
+#include "qrabbitmq.h"
 
 Set_Integr::Set_Integr()
 {
@@ -40,7 +41,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     bool ret = true; switch (fc) {
     case 1: key = "enRtu"; cfg->enRtu = value; break;
     case 2: key = "addr"; cfg->addr = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
-    case 3: key = "baud"; value = toBaud(value); cfg->baud = value; /*mb->setRtu(2, value);*/break;
+    case 3: key = "baud"; value = toBaud(value); cm::masterDev()->cfg.param.modbusRtuBr = cfg->baud = value; break;
     case 4: key = "parity"; value = toParity(value); cfg->parity = value;  /*mb->setRtu(1, value);*/ break;
     case 5: key = "dataBits"; value = toDataBits(value); cfg->dataBits = value; /*mb->setRtu(3, value);*/ break;
     case 6: key = "stopBits"; value = toStopBits(value); cfg->stopBits = value; /*mb->setRtu(4, value);*/ break;
@@ -52,7 +53,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, value, prefix);
     }
@@ -91,7 +92,7 @@ bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }
@@ -128,7 +129,7 @@ bool Set_Integr::rpcSet(uchar fc, int value)
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, value, prefix);
     }
@@ -173,7 +174,7 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
         //Mqtt_Client::bulid()->set(fc, v);
@@ -183,7 +184,53 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
 }
 
 
+QVariant Set_Integr::amqpCfg(uchar fc)
+{
+    sAmqpCfg *cfg = &QRabbitMQ::amqpCfg;
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->en; break;
+    case 2: res = cfg->host; break;
+    case 3: res = cfg->port; break;
+    case 4: res = cfg->virtualHost; break;
+    case 5: res = cfg->username; break;
+    case 6: res = cfg->password; break;
+    case 7: res = cfg->name; break;
+    case 8: res = cfg->routingKey; break;
+    case 9: res = cfg->bindingKey; break;
+    case 10: res = cfg->ssl; break;
+    case 11: res = cfg->isConnected; break;
+    default: qDebug() << Q_FUNC_INFO << fc; break;
+    }
+    return res;
+}
 
+
+bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
+{
+    sAmqpCfg *cfg = &(QRabbitMQ::amqpCfg);
+    QString prefix = "amqp";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
+    case 3: key = "port"; cfg->port = v.toInt(); break;
+    case 4: key = "virtualHost"; cfg->virtualHost =v.toString(); break;
+    case 5: key = "username"; cfg->username = v.toString(); break;
+    case 6: key = "password"; cfg->password = v.toString(); break;
+    case 7: key = "name"; cfg->name = v.toString(); break;
+    case 8: key = "routingKey"; cfg->routingKey = v.toString(); break;
+    case 9: key = "bindingKey"; cfg->bindingKey = v.toString(); break;
+    case 10: key = "ssl"; cfg->ssl = v.toInt(); break;
+    case 20: QRabbitMQ::bulid()->start(); break;
+    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    }
+
+    if(ret && key.size()) {
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+
+    return ret;
+}
 
 QVariant Set_Integr::pushCfg(uchar fc)
 {
@@ -238,7 +285,7 @@ bool Set_Integr::pushSet(uchar fc, const QVariant &v)
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
     }

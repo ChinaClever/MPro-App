@@ -21,6 +21,10 @@ public:
     static sAgentCfg snmpCfg;
 
 private:
+     void startSnmpd();
+     void startSnmpdV3();
+
+private:
     sAgentCfg *mCfg;
 };
 

@@ -18,6 +18,7 @@ private:
     void push();
     void snmp();
     void mqtt();
+    void amqp();
     void login();
     void modbus();
     void syslog();

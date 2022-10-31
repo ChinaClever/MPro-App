@@ -186,6 +186,7 @@ struct sVersions
     char usr[NAME_SIZE]; // 客户名称
     char md5[NAME_SIZE]; // 校验码
     char ver[NAME_SIZE]; // 版本号
+    char dev[NAME_SIZE]; // 设备类型
     char remark[4*NAME_SIZE]; // 发布说明
     char oldVersion[NAME_SIZE]; // 旧版本号
     char compileDate[NAME_SIZE]; // 编译时间
@@ -207,6 +208,7 @@ struct sParameter {
     uchar language; // 0 中文 1 英文
     uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uchar cascadeAddr; // 级联地址
+    uint  modbusRtuBr; // Modbus-Rtu 波特率
     uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
     uchar drySw; // 报警干接点开关
@@ -275,7 +277,7 @@ struct sDevData
     struct sObjData group; //组数据
     struct sObjData output; //位数据
     struct sObjData dual; //双电源
-    struct sTgObjData tg; // 回路数据
+    struct sTgObjData tg; // 统计数据
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
@@ -386,7 +388,7 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt,             
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog,
              ELog=81, EPro, EOta, ECmd=111};
