@@ -1,7 +1,7 @@
 QT += network
 INCLUDEPATH += $$PWD
 
-CM_PATH = ../../../cores/commons
+CM_PATH = ../../cores/commons
 include($$CM_PATH/cfg/cfg.pri)
 include($$CM_PATH/cms/cms.pri)
 include($$CM_PATH/ipc/ipc.pri)

@@ -1,9 +1,9 @@
 #ifndef OTA_CORE_H
 #define OTA_CORE_H
 
-#include "ota_net.h"
+#include "ota_usb.h"
 
-class Ota_Core : public Ota_Net
+class Ota_Core : public Ota_Usb
 {
     explicit Ota_Core(QObject *parent = nullptr);
 public:

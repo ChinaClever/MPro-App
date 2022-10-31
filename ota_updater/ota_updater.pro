@@ -12,13 +12,15 @@ include(common/common.pri)
 HEADERS += \
     ota_core.h \
     ota_net.h \
-    ota_obj.h
+    ota_obj.h \
+    ota_usb.h
 
 SOURCES += \
     main.cpp \
     ota_core.cpp \
     ota_net.cpp \
-    ota_obj.cpp
+    ota_obj.cpp \
+    ota_usb.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
