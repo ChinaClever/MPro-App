@@ -52,7 +52,7 @@ void Cfg_Service::smtp()
         case 2: key = "host"; str = &cfg->host; break;
         case 3: key = "from"; str = &cfg->from; break;
         case 4: key = "pwd"; str = &cfg->pwd; break;
-        case 5: key = "to"; str = &cfg->to; break;
+        //case 5: key = "to"; str = &cfg->to; break;
         case 6: key = "port"; ptr = &cfg->port; break;
         case 7: key = "ct"; ptr = &cfg->ct; break;
         default: ptr = nullptr; str = nullptr; break;
@@ -61,26 +61,36 @@ void Cfg_Service::smtp()
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
         else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
     }
+
+    for(int i=0; i<SMTP_TO_SIZE; ++i) {
+        key = "to_" + QString::number(i); str = &cfg->to[i];
+        *str = mCfg->readCfg(key, "", prefix).toString();
+    }
 }
 
 void Cfg_Service::snmp()
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
-    QString *ptr = nullptr;
+    QString *str = nullptr; int *ptr = nullptr;
     for(int i=1; i<7; ++i) {
         switch (i) {
-        case 1: key = "trap1"; ptr = &cfg->trap1; break;
-        case 2: key = "trap2"; ptr = &cfg->trap2; break;
-        case 3: key = "enV3"; break;
-        case 4: key = "usr"; ptr = &cfg->usr; break;
-        case 5: key = "pwd"; ptr = &cfg->pwd; break;
-        case 6: key = "key"; ptr = &cfg->key; break;
+        case 1: key = "enV2"; ptr = &cfg->enV2; break;
+        //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+        case 3: key = "enV3"; ptr = &cfg->enV3; break;
+        case 4: key = "usr"; str = &cfg->usr; break;
+        case 5: key = "pwd"; str = &cfg->pwd; break;
+        case 6: key = "key"; str = &cfg->key; break;
         default: ptr = nullptr; break;
         }
 
-        if(ptr) *ptr = mCfg->readCfg(key, "", prefix).toString();
-        else cfg->enV3 = mCfg->readCfg(key, "", prefix).toInt();
+        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+    }
+
+    for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
+        key = "trap_" + QString::number(i); str = &cfg->trap[i];
+        *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 

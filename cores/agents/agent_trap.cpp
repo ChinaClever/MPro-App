@@ -77,13 +77,13 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 
     if(value) {
         QString doid = toString(dstOid << 11);
-        sAgentCfg *cfg = &Agent_Core::snmpCfg;
+//        sAgentCfg *cfg = &Agent_Core::snmpCfg;
 
-        QString ip = cfg->trap1;
-        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
+//        QString ip = cfg->trap1;
+//        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
 
-        ip = cfg->trap2;
-        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
+//        ip = cfg->trap2;
+//        if(ip.size()) sendTrap(ip, doid, toString(oid), msg);
         //mSnmp->sendTrap(oid);
 
         sendTrap("192.168.1.196", doid, toString(oid), msg);

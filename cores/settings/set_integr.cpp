@@ -61,13 +61,13 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     return ret;
 }
 
-QString Set_Integr::snmpCfg(uchar fc)
+QVariant Set_Integr::snmpCfg(uchar fc, int id)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
-    QString res; switch (fc) {
-    case 1: res = cfg->trap1; break;
-    case 2: res = cfg->trap2; break;
-    case 3: res = QString::number(cfg->enV3); break;
+    QVariant res; switch (fc) {
+    case 1: res = cfg->enV2; break;
+    case 2: res = cfg->trap[id]; break;
+    case 3: res = cfg->enV3; break;
     case 4: res = cfg->usr; break;
     case 5: res = cfg->pwd; break;
     case 6: res = cfg->key; break;
@@ -78,13 +78,13 @@ QString Set_Integr::snmpCfg(uchar fc)
 
 }
 
-bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
+bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "trap1"; cfg->trap1 = v.toString(); break;
-    case 2: key = "trap2"; cfg->trap2 = v.toString(); break;
+    case 1: key = "enV2"; cfg->enV2 = v.toInt(); break;
+    case 2: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); break;
     case 3: key = "enV3"; cfg->enV3 = v.toInt(); break;
     case 4: key = "usr"; cfg->usr = v.toString(); break;
     case 5: key = "pwd"; cfg->pwd = v.toString(); break;
