@@ -9,7 +9,7 @@
  *      Author: Lzy
  */
 #include "agent_obj.h"
-
+sAgentCfg Agent_Obj::snmpCfg;
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {

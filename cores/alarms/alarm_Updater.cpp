@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "alarm_Updater.h"
+#include "cfg_core.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
@@ -37,6 +38,16 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
     return ret;
 }
 
+void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
+{
+    if(index.addr) return ;
+    if((it.value[i] > it.peakMax[i]) && (it.value[i] < 5*it.max[i])){
+        it.peakStamp[i] = QDateTime::currentSecsSinceEpoch();
+        it.peakMax[i] = it.value[i];
+        Cfg_Core::bulid()->writeAlarms();
+    }
+}
+
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 {
     bool ret = false;
@@ -46,8 +57,15 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-    if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
-    it.alarm[i] = alarm; ret |= alarm;
+
+    if(it.alarm[i] != alarm)  {
+        if(++it.cnt[i] > 3) {
+            emit alarmSig(index, alarm);
+            it.alarm[i] = alarm;
+            ret |= alarm;
+        }
+    } else it.cnt[i] = 0;
+
     return ret;
 }
 

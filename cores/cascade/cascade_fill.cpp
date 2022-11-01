@@ -21,6 +21,8 @@ void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 
     it.crMin = unit.crMin[id];
     it.crMax = unit.crMax[id];
+    it.peakMax = unit.peakMax[id];
+    it.peakStamp = unit.peakStamp[id];
     it.reserve = unit.reserve[id];
 }
 

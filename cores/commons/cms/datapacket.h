@@ -48,9 +48,10 @@ struct sAlarmUnit
     sAlarmUnit() {size=0;}
 #endif
     uchar size;
-    uint en[PACK_ARRAY_SIZE];
-    uint value[PACK_ARRAY_SIZE];
-    uint rated[PACK_ARRAY_SIZE];
+    uint en[PACK_ARRAY_SIZE]; // 报警开启
+    uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
+    uint value[PACK_ARRAY_SIZE]; // 当前值
+    uint rated[PACK_ARRAY_SIZE]; // 额定值
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
@@ -58,6 +59,8 @@ struct sAlarmUnit
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
+    uint peakMax[PACK_ARRAY_SIZE]; // 最大峰值
+    uint peakStamp[PACK_ARRAY_SIZE]; // 峰值的时间戳
     uint reserve[PACK_ARRAY_SIZE]; // 预留
 };
 
@@ -191,6 +194,7 @@ struct sVersions
     char oldVersion[NAME_SIZE]; // 旧版本号
     char compileDate[NAME_SIZE]; // 编译时间
     char releaseDate[NAME_SIZE]; // 发布时间
+    char upgradeDate[NAME_SIZE]; // 升级时间
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
@@ -214,6 +218,8 @@ struct sParameter {
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
+    uint backlightType; // 屏幕显示模式 0 常亮 1 节能
+    uint backlightTime; // 节能 时长 小时数
     uint groupEn; // 组开关使能
     uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
     uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
@@ -365,7 +371,7 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};

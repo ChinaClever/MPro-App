@@ -19,6 +19,8 @@ void Cfg_AlarmUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmI
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
     unit.rated[id] = it.rated;
+    unit.peakMax[id] = it.peakMax;
+    unit.peakStamp[id] = it.peakStamp;
     unit.reserve[id] = it.reserve;
 }
 

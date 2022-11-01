@@ -13,8 +13,8 @@ public:
     QVariant ntpCfg(int fc);
     bool ntpSet(int fc, const QVariant &v);
 
-    QVariant smtpCfg(int fc);
-    bool smtpSet(int fc, const QVariant &v);
+    QVariant smtpCfg(int fc, int id);
+    bool smtpSet(int fc, int id, const QVariant &v);
 
     QVariant sshCfg(int fc);
     bool sshSet(int fc, const QVariant &v);

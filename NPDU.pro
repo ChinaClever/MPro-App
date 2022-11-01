@@ -5,10 +5,9 @@ SUBDIRS += \
     cores \
     start_up \
     web_server \
+    ota_updater \
     cmds/pdu_cmd \
-    cmds/proc_run \
-    ota_updater/ota_net \
-#    ota_updater/ota_usb
+    cmds/proc_run
 }
 
 

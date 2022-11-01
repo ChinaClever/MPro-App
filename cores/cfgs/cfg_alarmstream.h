@@ -13,6 +13,8 @@ struct _sAlarmIt
 
     uint crMin; // 最小值
     uint crMax; // 最大值
+    uint peakMax; // 峰值
+    uint peakStamp; // 峰值的时间戳
     uint reserve; // 预留
 };
 

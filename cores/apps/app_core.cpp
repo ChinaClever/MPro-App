@@ -47,6 +47,7 @@ void App_Core::initVer()
         qstrcpy(ver->remark, it.remark.toUtf8().data());
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
+        qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
     } else cout << CFG_APP << "error";
 }
 

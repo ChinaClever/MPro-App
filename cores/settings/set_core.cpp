@@ -33,11 +33,11 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ESsh: res = sshCfg(it.fc); break;
     case SFnCode::ENtp: res = ntpCfg(it.fc); break;
     case SFnCode::EWeb: res = webCfg(it.fc); break;
-    case SFnCode::ESmtp: res = smtpCfg(it.fc); break;
-    case SFnCode::ESnmp: res = snmpCfg(it.fc); break;
-    case SFnCode::EPush: res = pushCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EAmqp: res = amqpCfg(it.fc); break;
+    case SFnCode::EPush: res = pushCfg(it.fc, it.id); break;
+    case SFnCode::ESnmp: res = snmpCfg(it.fc, it.id); break;
+    case SFnCode::ESmtp: res = smtpCfg(it.fc, it.id); break;
     case SFnCode::EOta: res = otaStatus(it.fc, it.id); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
 
@@ -79,10 +79,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
-    case SFnCode::ESmtp: ret = smtpSet(it.fc, v); break;
     case SFnCode::EINet: ret = netAddrSet(it, v); break;
-    case SFnCode::EPush: ret = pushSet(it.fc, v); break;
-    case SFnCode::ESnmp: ret = snmpSet(it.fc, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::EAmqp: ret = amqpSet(it.fc, v); break;
     case SFnCode::EOta: ret = ota_updater(it.fc, v); break;
@@ -91,8 +88,11 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ETlsCert: ret = setTlsCert(it.fc, v); break;
     case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
-    case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
+    case SFnCode::ESnmp: ret = snmpSet(it.fc, it.id, v); break;
+    case SFnCode::ESmtp: ret = smtpSet(it.fc, it.id, v); break;
+    case SFnCode::EPush: ret = pushSet(it.fc, it.id, v); break;
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
+    case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
     default: qDebug() << Q_FUNC_INFO << it.type; break;

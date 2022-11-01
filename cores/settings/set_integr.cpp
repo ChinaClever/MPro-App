@@ -61,13 +61,13 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     return ret;
 }
 
-QString Set_Integr::snmpCfg(uchar fc)
+QVariant Set_Integr::snmpCfg(uchar fc, int id)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
-    QString res; switch (fc) {
-    case 1: res = cfg->trap1; break;
-    case 2: res = cfg->trap2; break;
-    case 3: res = QString::number(cfg->enV3); break;
+    QVariant res; switch (fc) {
+    case 1: res = cfg->enV2; break;
+    case 2: res = cfg->trap[id]; break;
+    case 3: res = cfg->enV3; break;
     case 4: res = cfg->usr; break;
     case 5: res = cfg->pwd; break;
     case 6: res = cfg->key; break;
@@ -78,13 +78,13 @@ QString Set_Integr::snmpCfg(uchar fc)
 
 }
 
-bool Set_Integr::snmpSet(uchar fc, const QVariant &v)
+bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "trap1"; cfg->trap1 = v.toString(); break;
-    case 2: key = "trap2"; cfg->trap2 = v.toString(); break;
+    case 1: key = "enV2"; cfg->enV2 = v.toInt(); break;
+    case 2: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); break;
     case 3: key = "enV3"; cfg->enV3 = v.toInt(); break;
     case 4: key = "usr"; cfg->usr = v.toString(); break;
     case 5: key = "pwd"; cfg->pwd = v.toString(); break;
@@ -232,16 +232,16 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
     return ret;
 }
 
-QVariant Set_Integr::pushCfg(uchar fc)
+QVariant Set_Integr::pushCfg(uchar fc, int id)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
     QVariant res = 0; switch (fc) {
-    case 1: res = cfg->udp[0].en; break;
-    case 2: res = cfg->udp[0].host; break;
-    case 3: res = cfg->udp[0].port; break;
-    case 4: res = cfg->udp[1].en; break;
-    case 5: res = cfg->udp[1].host; break;
-    case 6: res = cfg->udp[1].port; break;
+    case 1: res = cfg->udp[id].en; break;
+    case 2: res = cfg->udp[id].host; break;
+    case 3: res = cfg->udp[id].port; break;
+    //case 4: res = cfg->udp[1].en; break;
+    //case 5: res = cfg->udp[1].host; break;
+    //case 6: res = cfg->udp[1].port; break;
     case 7: res = cfg->sec; break;
     case 8: res = cfg->recvEn; break;
     case 9: res = cfg->recvPort; break;
@@ -258,19 +258,16 @@ QVariant Set_Integr::pushCfg(uchar fc)
 }
 
 
-bool Set_Integr::pushSet(uchar fc, const QVariant &v)
+bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
     QString prefix = "push";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "udpEn"; cfg->udp[0].en = v.toInt(); break;
-    case 2: key = "ddpHost"; cfg->udp[0].host = v.toString(); break;
-    case 3: key = "udpPort"; cfg->udp[0].port = v.toInt(); break;
-    case 4: key = "udp2En"; cfg->udp[1].en = v.toInt(); break;
-    case 5: key = "ddp2Host"; cfg->udp[1].host = v.toString(); break;
-    case 6: key = "udp2Port"; cfg->udp[1].port = v.toInt(); break;
-    case 7: key = "sec"; cfg->sec = v.toInt(); break;
+    case 1: key = "udpEn_" + QString::number(id); cfg->udp[id].en = v.toInt(); break;
+    case 2: key = "udpHost_" + QString::number(id); cfg->udp[id].host = v.toString(); break;
+    case 3: key = "udpPort_" + QString::number(id); cfg->udp[id].port = v.toInt(); break;
 
+    case 7: key = "sec"; cfg->sec = v.toInt(); break;
     case 8: key = "recvEn"; cfg->recvEn = v.toInt(); break;
     case 9: key = "recvPort"; cfg->recvPort = v.toInt(); break;
     case 10: Integr_Core::bulid()->initRecvFun(); break;

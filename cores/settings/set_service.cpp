@@ -47,7 +47,7 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
     return ret;
 }
 
-QVariant Set_Service::smtpCfg(int fc)
+QVariant Set_Service::smtpCfg(int fc, int id)
 {
     QVariant ret;
     sSmtpCfg *it = &App_Smtp::smtpCfg;
@@ -56,7 +56,7 @@ QVariant Set_Service::smtpCfg(int fc)
     case 2: ret = it->host; break;
     case 3: ret = it->from; break;
     case 4: ret = it->pwd; break;
-    case 5: ret = it->to; break;
+    case 5: ret = it->to[id]; break;
     case 6: ret = it->port; break;
     case 7: ret = it->ct; break;
     case 8: ret = it->lastErr; break;
@@ -65,7 +65,7 @@ QVariant Set_Service::smtpCfg(int fc)
     return ret;
 }
 
-bool Set_Service::smtpSet(int fc, const QVariant &v)
+bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
 {
     bool ret = true;
     sSmtpCfg *it = &App_Smtp::smtpCfg;
@@ -76,7 +76,7 @@ bool Set_Service::smtpSet(int fc, const QVariant &v)
     case 2: key = "host";  it->host = v.toString(); break;
     case 3: key = "from";  it->from = v.toString();  break;
     case 4: key = "pwd";  it->pwd =v.toString();  break;
-    case 5: key = "to";  it->to =v.toString();  break;
+    case 5: key = "to_"+QString::number(id); it->to[id] =v.toString();  break;
     case 6: key = "port";  it->port =v.toInt();  break;
     case 7: key = "ct";  it->ct =v.toInt();  break;
     default: ret = false; cout << fc << v; break;

@@ -21,7 +21,7 @@ Data_Core *Data_Core::bulid()
 void Data_Core::upAlarm()
 {
     static uint cnt = 1;
-    if(!(++cnt % 5)) {
+    if(!(++cnt % 3)) {
         Alarm_Updater::bulid()->run();
     }
 }

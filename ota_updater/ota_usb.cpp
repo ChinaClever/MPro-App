@@ -3,7 +3,7 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include <QCoreApplication>
+#include "ota_usb.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,9 +47,8 @@ static void usb_run()
     close(CppLive);
 }
 
-int main(int argc, char *argv[])
+Ota_Usb::Ota_Usb(QObject *parent)
+    : Ota_Net{parent}
 {
-    QCoreApplication a(argc, argv);
 
-    return a.exec();
 }

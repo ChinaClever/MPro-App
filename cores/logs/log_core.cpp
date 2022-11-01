@@ -70,4 +70,5 @@ void Log_Core::timeoutDone()
     mUser->countsRemove(cnt);
     mAlarm->countsRemove(cnt);
     mEle->countsRemove(10*cnt);
+    system("echo 3 > /proc/sys/vm/drop_caches");
 }
