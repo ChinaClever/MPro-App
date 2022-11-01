@@ -55,5 +55,7 @@ void App_Start::startThreadSlot()
 
 void App_Start::initSysSlot()
 {
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     system("echo 3 > /proc/sys/vm/drop_caches");
+#endif
 }
