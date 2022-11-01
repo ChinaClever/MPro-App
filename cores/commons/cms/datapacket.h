@@ -194,6 +194,7 @@ struct sVersions
     char oldVersion[NAME_SIZE]; // 旧版本号
     char compileDate[NAME_SIZE]; // 编译时间
     char releaseDate[NAME_SIZE]; // 发布时间
+    char upgradeDate[NAME_SIZE]; // 升级时间
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
 };
 

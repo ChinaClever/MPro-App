@@ -18,6 +18,7 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     QVariant res;
 
     switch (type) {
+    case 0: res = it->dev; break;
     case 1: res = it->ver; break;
     case 2: res = it->md5; break;
     case 3: res = it->usr; break;
@@ -25,12 +26,17 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 5: res = it->oldVersion; break;
     case 6: res = it->compileDate; break;
     case 7: res = it->releaseDate; break;
+    case 8: res = it->upgradeDate; break;
     case 11: res = it->opVers[0]; break;
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
     case 14: res = it->opVers[3]; break;
     case 15: res = it->opVers[4]; break;
     case 16: res = it->opVers[5]; break;
+    case 21: res = cm::execute("uname -a"); break;
+    case 22: res = cm::execute("free"); break;
+    case 23: res = cm::execute("df -h /usr/data/"); break;
+    case 24: res = cm::execute("ssh -V"); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return res;

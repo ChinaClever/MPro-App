@@ -13,6 +13,7 @@ struct sAppVerIt {
     QStringList apps; // 程序名称
     QString oldVersion; // 旧版本号
     QString releaseDate; // 发布时间
+    QString upgradeDate; // 升级日期
 };
 
 
