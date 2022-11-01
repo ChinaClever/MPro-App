@@ -21,6 +21,8 @@ void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &
     unit.max[id] = it.max;
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
+    unit.peakMax[id] = it.peakMax;
+    unit.peakStamp[id] = it.peakStamp;
     unit.reserve[id] = it.reserve;
 }
 

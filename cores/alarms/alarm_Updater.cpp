@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "alarm_Updater.h"
+#include "cfg_core.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
@@ -35,6 +36,16 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
     }
 
     return ret;
+}
+
+void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
+{
+    if(index.addr) return ;
+    if(it.value[i] > it.peakMax[i]) {
+        it.peakMax[i] = it.value[i];
+        it.peakStamp[i] = QDateTime::currentSecsSinceEpoch();
+        Cfg_Core::bulid()->writeAlarms();
+    }
 }
 
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)

@@ -134,6 +134,8 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::VCrMin: ptr = unit->crMin; break;
         case DSub::VCrMax: ptr = unit->crMax; break;
         case DSub::EnAlarm: ptr = unit->en; break;
+        case DSub::DPeak: ptr = unit->peakMax; break;
+        case DSub::DStamp: ptr = unit->peakStamp; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -145,12 +147,12 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         } else index.value = ptr[index.id];
 
 
-         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
-         //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
-         //}
-//         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
-//            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
-//         }
+        //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
+        //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
+        //}
+        //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
+        //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
+        //         }
     }
 
     return ret;

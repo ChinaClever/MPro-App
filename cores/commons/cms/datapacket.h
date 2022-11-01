@@ -59,6 +59,8 @@ struct sAlarmUnit
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
+    uint peakMax[PACK_ARRAY_SIZE]; // 最大峰值
+    uint peakStamp[PACK_ARRAY_SIZE]; // 峰值的时间戳
     uint reserve[PACK_ARRAY_SIZE]; // 预留
 };
 
@@ -368,7 +370,7 @@ struct sDataPacket
 
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm,
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};

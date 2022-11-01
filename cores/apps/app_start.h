@@ -11,6 +11,7 @@ public:
     ~App_Start();
 
 private slots:
+    void initSysSlot();
     void initFunSlot();
     void startThreadSlot();
 };

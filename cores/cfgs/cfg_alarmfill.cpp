@@ -20,7 +20,9 @@ void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
     it.max = unit.max[id];
 
     it.crMin = unit.crMin[id];
-    it.crMax = unit.crMax[id];    
+    it.crMax = unit.crMax[id];
+    it.peakMax = unit.peakMax[id];
+    it.peakStamp = unit.peakStamp[id];
     it.reserve = unit.reserve[id];
 }
 

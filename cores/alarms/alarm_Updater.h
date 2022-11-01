@@ -19,6 +19,7 @@ public slots:
 private:
     bool upRelayUnit(sDataItem &index, sRelayUnit &it);
     bool upAlarmItem(sDataItem &index, int i, sAlarmUnit &it);
+    void upPeakValue(sDataItem &index, int i, sAlarmUnit &it);
 
     bool upAlarmUnit(sDataItem &index, sAlarmUnit &it);
     bool upObjData(sDataItem &index, sObjData &it);

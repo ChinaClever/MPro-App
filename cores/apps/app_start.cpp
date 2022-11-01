@@ -19,6 +19,7 @@ App_Start::App_Start(QObject *parent)
 {
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
     QTimer::singleShot(35,this,SLOT(startThreadSlot()));
+    QTimer::singleShot(15145,this,SLOT(initSysSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -52,3 +53,7 @@ void App_Start::startThreadSlot()
 }
 
 
+void App_Start::initSysSlot()
+{
+    system("echo 3 > /proc/sys/vm/drop_caches");
+}
