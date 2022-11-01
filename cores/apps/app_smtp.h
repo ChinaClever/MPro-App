@@ -2,7 +2,7 @@
 #define APP_SMTP_H
 
 #include "app_ntp.h"
-
+#define SMTP_TO_SIZE 4
 struct sSmtpCfg {
     int en;
     QString host; //发件箱服务器
@@ -11,7 +11,7 @@ struct sSmtpCfg {
 
     QString from; // 发件箱账号:
     QString pwd; // 发件箱密码:
-    QString to; // 收件用户账号:
+    QString to[SMTP_TO_SIZE]; // 收件用户账号:
     QString lastErr;
 };
 

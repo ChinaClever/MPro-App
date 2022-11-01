@@ -18,7 +18,7 @@ App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
 {
     QTimer::singleShot(5,this,SLOT(initFunSlot()));
-    QTimer::singleShot(15,this,SLOT(startThreadSlot()));
+    QTimer::singleShot(35,this,SLOT(startThreadSlot()));
     QThreadPool::globalInstance()->setMaxThreadCount(20);
 }
 
@@ -46,7 +46,7 @@ void App_Start::startThreadSlot()
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     OP_Core::bulid(this);
-    //Agent_Core::bulid(this);
+    Agent_Core::bulid(this);
     Cascade_Core::bulid(this);
 #endif
 }

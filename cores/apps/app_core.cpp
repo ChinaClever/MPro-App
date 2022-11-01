@@ -43,6 +43,7 @@ void App_Core::initVer()
         qstrcpy(ver->ver, it.ver.toUtf8().data());
         qstrcpy(ver->md5, it.md5.toUtf8().data());
         qstrcpy(ver->usr, it.usr.toUtf8().data());
+        qstrcpy(ver->dev, it.dev.toUtf8().data());
         qstrcpy(ver->remark, it.remark.toUtf8().data());
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());

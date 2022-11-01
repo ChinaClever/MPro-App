@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_Sensor{parent}
 {
-    //QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
+    QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }
 
 void App_NetAddr::inet_initFunSlot()
@@ -202,6 +202,7 @@ void App_NetAddr::inet_saveCfg()
 
 void App_NetAddr::inet_dnsCfg()
 {
+    if(!QFile::exists("/tmp/resolv.conf")) return ;
     sNetInterface *net = &(cm::dataPacket()->net);
     QString str = cm::execute("cat /tmp/resolv.conf");
     if(str.isEmpty()) return; else str.remove("\n");

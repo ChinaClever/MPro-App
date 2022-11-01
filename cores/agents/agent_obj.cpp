@@ -9,9 +9,14 @@
  *      Author: Lzy
  */
 #include "agent_obj.h"
-
+sAgentCfg Agent_Obj::snmpCfg;
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
+{
+    QTimer::singleShot(1355,this,SLOT(initAgentSlot()));
+}
+
+void Agent_Obj::initAgentSlot()
 {
     mSnmp = SnmpAgent::bulid(this);
 }

@@ -13,10 +13,12 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
     mWs = new WS_Server(this);
     mWss = new WS_Server(parent);
     mTcp = new Net_TcpServer(this);
+    mAmqp = QRabbitMQ::bulid(parent);
     mMqtt = Mqtt_Client::bulid(parent); initRecvFun();
     connect(mUdp, &Net_Udp::recvSig, this, &Integr_Receiver::recvUdpSlot);
     connect(mTcp, &Net_TcpServer::recvSig, this, &Integr_Receiver::recvSlot);
     connect(mMqtt, &Mqtt_Client::received, this, &Integr_Receiver::recvSlot);
+    connect(mAmqp, &QRabbitMQ::recvMsgSig, this, &Integr_Receiver::recvSlot);
     connect(mWs, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
     connect(mWss, &WS_Server::binaryMessageSig, this, &Integr_Receiver::recvSlot);
     QtConcurrent::run(this,&Integr_Receiver::workDown);

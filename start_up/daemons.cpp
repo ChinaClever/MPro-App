@@ -31,8 +31,8 @@ void Daemons::start_proc()
     mdelay(152); initFun();
     proc_start(mProcs->core, "cores");
     proc_start(mProcs->awtk, "awtk");
-    proc_start(mProcs->ota, "ota_net");
     proc_start(mProcs->web, "web_server");
+    proc_start(mProcs->ota, "ota_updater");
     QtConcurrent::run(this,&Daemons::workDown);
 }
 
@@ -91,7 +91,7 @@ void Daemons::workDown()
         procRunStatus(mProcs->core, "cores");
         //procRunStatus(mProcs->awtk, "awtk");
         procRunStatus(mProcs->web, "web_server");
-        procRunStatus(mProcs->ota, "ota_net");
+        procRunStatus(mProcs->ota, "ota_updater");
         mProcs->daemon.runSec += 1;
     }
 }

@@ -11,6 +11,7 @@
 #include "agent_core.h"
 #include "app_core.h"
 #include "mb_core.h"
+#include "qrabbitmq.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -28,6 +29,7 @@ void Cfg_Service::readCfgParams()
     snmp();
     smtp();
     mqtt();
+    amqp();
     login();
     syslog();
     modbus();
@@ -50,7 +52,7 @@ void Cfg_Service::smtp()
         case 2: key = "host"; str = &cfg->host; break;
         case 3: key = "from"; str = &cfg->from; break;
         case 4: key = "pwd"; str = &cfg->pwd; break;
-        case 5: key = "to"; str = &cfg->to; break;
+        //case 5: key = "to"; str = &cfg->to; break;
         case 6: key = "port"; ptr = &cfg->port; break;
         case 7: key = "ct"; ptr = &cfg->ct; break;
         default: ptr = nullptr; str = nullptr; break;
@@ -59,26 +61,36 @@ void Cfg_Service::smtp()
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
         else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
     }
+
+    for(int i=0; i<SMTP_TO_SIZE; ++i) {
+        key = "to_" + QString::number(i); str = &cfg->to[i];
+        *str = mCfg->readCfg(key, "", prefix).toString();
+    }
 }
 
 void Cfg_Service::snmp()
 {
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
-    QString *ptr = nullptr;
+    QString *str = nullptr; int *ptr = nullptr;
     for(int i=1; i<7; ++i) {
         switch (i) {
-        case 1: key = "trap1"; ptr = &cfg->trap1; break;
-        case 2: key = "trap2"; ptr = &cfg->trap2; break;
-        case 3: key = "enV3"; break;
-        case 4: key = "usr"; ptr = &cfg->usr; break;
-        case 5: key = "pwd"; ptr = &cfg->pwd; break;
-        case 6: key = "key"; ptr = &cfg->key; break;
+        case 1: key = "enV2"; ptr = &cfg->enV2; break;
+        //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+        case 3: key = "enV3"; ptr = &cfg->enV3; break;
+        case 4: key = "usr"; str = &cfg->usr; break;
+        case 5: key = "pwd"; str = &cfg->pwd; break;
+        case 6: key = "key"; str = &cfg->key; break;
         default: ptr = nullptr; break;
         }
 
-        if(ptr) *ptr = mCfg->readCfg(key, "", prefix).toString();
-        else cfg->enV3 = mCfg->readCfg(key, "", prefix).toInt();
+        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+    }
+
+    for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
+        key = "trap_" + QString::number(i); str = &cfg->trap[i];
+        *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 
@@ -167,6 +179,27 @@ void Cfg_Service::mqtt()
     }
 }
 
+void Cfg_Service::amqp()
+{
+    QString prefix = "amqp"; QString key;
+    sAmqpCfg *cfg = &QRabbitMQ::amqpCfg;
+    for(int i=1; i<11; ++i) {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 15672, prefix).toInt(); break;
+        case 4: key = "virtualHost"; cfg->virtualHost = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 5: key = "username"; cfg->username = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 6: key = "password"; cfg->password = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 7: key = "name"; cfg->name = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 8: key = "routingKey"; cfg->routingKey = mCfg->readCfg(key, "", prefix).toString();break;
+        case 9: key = "bindingKey"; cfg->bindingKey = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 10: key = "ssl"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
+    }
+}
+
 void Cfg_Service::login()
 {
     QString prefix = "login";
@@ -203,7 +236,9 @@ void Cfg_Service::modbus()
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
-    } cm::masterDev()->cfg.param.modbusRtuAddr = cfg->addr;
+    } sParameter *param = &(cm::masterDev()->cfg.param);
+    param->modbusRtuAddr = cfg->addr;
+    param->modbusRtuBr = cfg->baud;
 }
 
 void Cfg_Service::rpc()
