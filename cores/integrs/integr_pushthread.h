@@ -4,7 +4,7 @@
 #include "net_tcpserver.h"
 #include "integr_jsonrecv.h"
 #include "qrabbitmq.h"
-#define INTEGR_UDP_SIZE  2
+#define INTEGR_UDP_SIZE  4
 
 struct sPushUdpCfg{
     int en = 0;

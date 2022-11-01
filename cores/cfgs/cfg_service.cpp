@@ -310,22 +310,16 @@ void Cfg_Service::push()
     QString prefix = "push"; QString key;
     sPushCfg *cfg = &Integr_Core::pushCfg;
 
-    for(int i=1; i<16; ++i) {
-        switch (i) {
-        case 1: key = "udpEn"; ptr = &cfg->udp[0].en; value = 0; break;
-        case 2: key = "ddpHost"; str = &cfg->udp[0].host; break;
-        case 3: key = "udpPort"; ptr = &cfg->udp[0].port; value = 1124; break;
-        case 4: key = "udp2En"; ptr = &cfg->udp[1].en; value = 0; break;
-        case 5: key = "ddp2Host"; str = &cfg->udp[1].host; break;
-        case 6: key = "udp2Port"; ptr = &cfg->udp[1].port; value = 1125; break;
-        case 7: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
-        case 8: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
-        case 9: key = "sec"; ptr = &cfg->sec; value = 5; break;
-        case 11: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
-        case 12: key = "httpUrl"; str = &cfg->http.url; break;
-        case 13: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 14: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
-        case 15: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
+    for(int i=1; i<9; ++i) {
+        switch (i) {       
+        case 1: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
+        case 2: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
+        case 3: key = "sec"; ptr = &cfg->sec; value = 5; break;
+        case 4: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
+        case 5: key = "httpUrl"; str = &cfg->http.url; break;
+        case 6: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
+        case 7: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
+        case 8: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }
 
@@ -334,6 +328,17 @@ void Cfg_Service::push()
             else *str = mCfg->readCfg(key, "", prefix).toString();
             ptr = nullptr;
         }
+    }
+
+    for(int i=0; i<INTEGR_UDP_SIZE; ++i) {
+        key = "udpEn_" + QString::number(i);
+        cfg->udp[i].en = mCfg->readCfg(key, 0, prefix).toInt();
+
+        key = "udpHost_" + QString::number(i);
+        cfg->udp[i].host = mCfg->readCfg(key, "", prefix).toString();
+
+        key = "udpPort_" + QString::number(i);
+        cfg->udp[i].port = mCfg->readCfg(key, 1124+i, prefix).toInt();
     }
 }
 

@@ -16,8 +16,8 @@ protected:
     int rpcCfg(uchar fc);
     bool rpcSet(uchar fc, int value);
 
-    QVariant pushCfg(uchar fc);
-    bool pushSet(uchar fc, const QVariant &v);
+    QVariant pushCfg(uchar fc, int id);
+    bool pushSet(uchar fc, int id, const QVariant &v);
 
     QVariant mqttCfg(uchar fc);
     bool mqttSet(uchar fc, const QVariant &v);
