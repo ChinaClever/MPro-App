@@ -22,9 +22,10 @@ QVariant Set_Updater::otaStatus(int type, int fc)
     case 1: res = ota->work;  break;
     case 2: it = &ota->usb;  break;
     case 3: it = &ota->net;  break;
-    case 4: it = &ota->slave;  break;
-    case 5: it = &ota->outlet; break;
-    case 6: res = ota->host;  break;
+    case 4: it = &ota->web;  break;
+    case 6: it = &ota->slave;  break;
+    case 7: it = &ota->outlet; break;
+    case 8: res = ota->host;  break;
     default: cout << type; break;
     }
 
