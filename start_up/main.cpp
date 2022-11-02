@@ -43,7 +43,7 @@ static void init_netWork()
 
     //system("ip link set eth0 down");
     if(QFile::exists("netcfg")) {
-        QString cmd = QString("netcfg -w %1 eth0").arg(mac);
+        QString cmd = QString("./netcfg -w %1 eth0").arg(mac);
         system(cmd.toStdString().c_str()); qDebug() << cmd;
     } else {
         QString cmd = "ip link set eth0 address " +mac;

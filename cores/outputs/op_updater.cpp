@@ -18,7 +18,7 @@ bool OP_Updater::ota_start(const QString &fn)
 {
     bool ret = true; // File::CheckCrc(fn); //////////==========
     if(ret) { mOtaFile=fn;
-        setbit(cm::dataPacket()->ota.work, 4);
+        setbit(cm::dataPacket()->ota.work, DOta_Outlet);
     } else qDebug() << "Error: OP Updater ota crc" << Q_FUNC_INFO;
     return ret;
 }
@@ -62,7 +62,7 @@ bool OP_Updater::ota_updates()
             emit otaFinish(i+1, ret);
         } cm::mdelay(220); isOta = false;
         cm::dataPacket()->ota.outlet.isRun = ret?0:2;
-        clrbit(cm::dataPacket()->ota.work, 4);
+        clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }

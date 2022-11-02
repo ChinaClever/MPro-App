@@ -18,7 +18,7 @@ Ota_Net::Ota_Net(QObject *parent)
 
 void Ota_Net::startSlot(const QString &host)
 {
-    sOtaUpdater *ota = mOta; setbit(ota->work, 2);
+    sOtaUpdater *ota = mOta; setbit(ota->work, DOta_Net);
     qstrcpy(ota->host, host.toUtf8().data());
     ota->net.isRun = 1;
 }
@@ -30,7 +30,7 @@ QString Ota_Net::unzip(const QString &fn)
     system("mkdir -p /usr/data/updater/clever/");
 #else
     QString dst = "/home/lzy/work/";
-#endif    
+#endif
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
     throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
     throwMessage(str); system("rm -rf /usr/data/clever/upload/*");
@@ -43,26 +43,58 @@ bool Ota_Net::coreRuning()
     return cm::execute(cmd).toInt();
 }
 
-bool Ota_Net::cmd_updater(const QString &fn)
+int Ota_Net::cmd_updater(const QString &fn, int bit)
 {
     QString cmd = "pdu_cmd";
-    cmd += " pduCfgSet 83 11 " + fn;
-    bool ret = cm::execute(cmd).toInt();
+    cmd += " pduCfgSet 83 %1 " + fn;
+    int ret = cm::execute(cmd.arg(10+bit)).toInt();
     cmd += " res:" + QString::number(ret);
     throwMessage(cmd);
     return ret;
 }
 
-void Ota_Net::workDown(const QString &fn)
+void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     bool ret = coreRuning();
-    if(ret) ret = cmd_updater(fn);
-    if(!ret) {
-        clrbit(mOta->work, 2); if(!mOta->work)
+    if(ret) ret = cmd_updater(fn, bit);
+    clrbit(mOta->work, bit); if(!ret && !mOta->work) {
         QTimer::singleShot(3555,this,SLOT(rebootSlot()));
     }
 #endif
+}
+
+void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
+{
+    setbit(mOta->work, bit);
+    sOtaUpIt *up = nullptr; switch (bit) {
+    case DOtaCode::DOta_Usb: up = &mOta->usb; break;
+    case DOtaCode::DOta_Net: up = &mOta->net; break;
+    case DOtaCode::DOta_Web: up = &mOta->web; break;
+    default: up = &mOta->net; break;
+    } up->isRun = 1;
+
+    QString dir; if(ok) {
+        if(it.fc == 21) dir = it.path; // 21时为U盘升级
+        else dir = unzip(it.path+it.file);
+        ok = versionCheck(dir);
+    }
+
+    if(ok) {
+        if(QFile::exists(dir+"auto.sh")) {
+            QString str = "sh %1/auto.sh ";
+            str = cm::execute(str.arg(dir));
+            throwMessage(str);
+        } else workDown(it.path+it.file, bit);
+        up->isRun = 0;
+    } else {
+        up->isRun = 2;
+        QString fn = it.path + it.file;
+        QString cmd = "rm -f " + fn;
+        cm::execute(cmd);
+        cm::execute("sync");
+        system("reboot");
+    } clrbit(mOta->work, bit);
 }
 
 void Ota_Net::rebootSlot()
@@ -113,22 +145,5 @@ bool Ota_Net::versionCheck(const QString &dir)
 
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
 {
-    QString dir; if(ok) {
-        dir = unzip(it.path+it.file);
-        ok = versionCheck(dir);
-    }
-
-    sOtaUpdater *ota = mOta; if(ok) {
-        if(QFile::exists(dir+"auto.sh")) {
-            QString str = "sh %1/auto.sh ";
-            str = cm::execute(str.arg(dir));
-            throwMessage(str);
-        } else workDown(it.path+it.file);
-        ota->net.isRun = 0;
-    } else {
-        ota->net.isRun = 2;
-        QString fn = it.path + it.file;
-        QString cmd = "rm -f " + fn;
-        system(cmd.toUtf8().data());
-    } clrbit(ota->work, 2);
+    ota_updater(it, DOta_Net, ok);
 }

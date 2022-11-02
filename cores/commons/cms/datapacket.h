@@ -338,9 +338,10 @@ struct sOtaUpIt
 
 struct sOtaUpdater
 {
-    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　网页升级 4 级联升级 5　执行板升级
     sOtaUpIt usb; // USB升级状态
     sOtaUpIt net; // 网络升级状态
+    sOtaUpIt web; // 网页升级状态
     sOtaUpIt slave; // 级联升级状态
     sOtaUpIt outlet; // 执行板升级状态
     char host[NAME_SIZE]; // 服务端地址
@@ -374,6 +375,7 @@ enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, D
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
+enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};

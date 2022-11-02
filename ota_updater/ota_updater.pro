@@ -13,14 +13,16 @@ HEADERS += \
     ota_core.h \
     ota_net.h \
     ota_obj.h \
-    ota_usb.h
+    ota_usb.h \
+    ota_web.h
 
 SOURCES += \
     main.cpp \
     ota_core.cpp \
     ota_net.cpp \
     ota_obj.cpp \
-    ota_usb.cpp
+    ota_usb.cpp \
+    ota_web.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -8,13 +8,14 @@ class Ota_Net : public Ota_Obj
     Q_OBJECT
 public:
     explicit Ota_Net(QObject *parent = nullptr);
+    void ota_updater(const sOtaFile &it, int bit, bool ok);
 
 private:
     bool coreRuning();
-    bool versionCheck(const QString &dir);
-    bool cmd_updater(const QString &fn);
-    void workDown(const QString &fn);
     QString unzip(const QString &fn);
+    bool versionCheck(const QString &dir);
+    void workDown(const QString &fn, int bit);
+    int cmd_updater(const QString &fn, int bit);
 
 private slots:
     void rebootSlot();
@@ -23,8 +24,10 @@ private slots:
     void throwMessage(const QString &msg) {mDtls->throwMessage(msg);}
 
 private:
-    sOtaUpdater *mOta;
     Dtls_Recver *mDtls;
+
+protected:
+    sOtaUpdater *mOta;
 };
 
 #endif // OTA_NET_H
