@@ -302,7 +302,7 @@
     "subNav": [
       {
         "name": "系统信息",
-        "url": "relay_ctrl.html"
+        "url": "sys_info.html"
       },
       {
         "name": "更新固件",
