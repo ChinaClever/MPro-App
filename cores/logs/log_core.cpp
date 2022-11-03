@@ -4,7 +4,8 @@
  *      Author: Lzy
  */
 #include "log_core.h"
-#include "commons.h"
+//#include "commons.h"
+#include "app_core.h"
 
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
@@ -16,6 +17,15 @@ Log_Core::Log_Core(QObject *parent)
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
 }
 
+void Log_Core::append(const sAlarmItem &it)
+{
+    QString fmd = "addr:%1 state:%2 module:%3 content:%4";
+    QString str = fmd.arg(it.addr, it.state, it.module, it.content);
+    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
+    mAlarmIts << it;
+    run();
+}
+
 
 Log_Core *Log_Core::bulid(QObject *parent)
 {
@@ -23,9 +33,9 @@ Log_Core *Log_Core::bulid(QObject *parent)
     if(!sington) {
         sington = new Log_Core(parent);
 
-        sSysItem it;
-        it.module = "core";
-        it.content = "Software startup ";
+        sEventItem it;
+        it.type = tr("系统事件");
+        it.content = tr("系统启动");;
         sington->append(it);
     }
     return sington;
@@ -34,13 +44,10 @@ Log_Core *Log_Core::bulid(QObject *parent)
 void Log_Core::initFunSlot()
 {
     sys_initfun();
-    mOp = Db_Op::bulid();
-    mEle = Db_Ele::bulid();
+    mEvent = Db_Event::bulid();
+    mHda = Db_Hda::bulid();
     mOta = Db_Ota::bulid();
-    mSys = Db_Sys::bulid();
-    mUser = Db_User::bulid();    
     mAlarm = Db_Alarm::bulid();
-    mHardware = Db_Hardware::bulid();
 }
 
 void Log_Core::run()
@@ -51,13 +58,10 @@ void Log_Core::run()
 void Log_Core::saveLogSlot()
 {
     Db_Tran t;
-    while(mOpIts.size()) mOp->insertItem(mOpIts.takeFirst());
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
-    while(mEleIts.size()) mEle->insertItem(mEleIts.takeFirst());
-    while(mSysIts.size()) mSys->insertItem(mSysIts.takeFirst());
-    while(mUserIts.size()) mUser->insertItem(mUserIts.takeFirst());
+    while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
+    while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    while(mHardwareIts.size()) mHardware->insertItem(mHardwareIts.takeFirst());
     isRun = false;
 }
 
@@ -65,10 +69,8 @@ void Log_Core::timeoutDone()
 {
     Db_Tran t;
     int cnt = 10000;
-    mOp->countsRemove(cnt);
-    mSys->countsRemove(cnt);
-    mUser->countsRemove(cnt);
+    mHda->countsRemove(cnt);
+    mEvent->countsRemove(cnt);
     mAlarm->countsRemove(cnt);
-    mEle->countsRemove(10*cnt);
     system("echo 3 > /proc/sys/vm/drop_caches");
 }

@@ -60,8 +60,8 @@ void Data_Group::groupOverrunOff()
         if(ret) {
             QList<int> ls = outletByGroup(i);
             OP_Core::bulid()->relaysCtrl(ls, 0);
-            sOpItem db;
-            db.op_src = QStringLiteral("超限断电");
+            sEventItem db;
+            db.type = QStringLiteral("超限断电");
             db.content =QStringLiteral("组继电器%1断开").arg(i+1);
             Log_Core::bulid()->append(db);
         }
@@ -76,8 +76,8 @@ void Data_Group::groupTiming()
         if(res) {
             QList<int> ls = outletByGroup(i);
             OP_Core::bulid()->relaysCtrl(ls, res-1);
-            sOpItem db;
-            db.op_src = QStringLiteral("定时开关"); res--;
+            sEventItem db;
+            db.type = QStringLiteral("定时开关"); res--;
             db.content = QStringLiteral("组继电器%1").arg(i+1);
             if(res) db.content += QStringLiteral("接通");
             else db.content += QStringLiteral("断开");

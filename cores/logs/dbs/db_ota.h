@@ -1,6 +1,6 @@
 #ifndef DB_OTA_H
 #define DB_OTA_H
-#include "db_op.h"
+#include "db_hda.h"
 
 struct sOtaItem : public Db_ObjItem{
     QString md5; // 校验码

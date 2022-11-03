@@ -1,7 +1,7 @@
 #ifndef LOG_SYS_H
 #define LOG_SYS_H
 
-#include "db_alarm.h"
+#include "db_ota.h"
 #include "datapacket.h"
 
 struct sSysLogCfg
@@ -16,7 +16,7 @@ class Log_Sys : public QObject
 public:
     explicit Log_Sys(QObject *parent = nullptr);
     static sSysLogCfg sysLogCfg;
-    void sys_log(const QString& msg);
+    void sys_logAlarm(const QString& msg);
 
 protected:
     void sys_initfun();

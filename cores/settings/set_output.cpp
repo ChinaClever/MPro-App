@@ -38,9 +38,9 @@ void Set_Output::relayOpLog(const sDataItem &it)
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    sOpItem db;
+    sEventItem db;
     db.content = str;
-    db.op_src =  QStringLiteral("继电器设置");//opSrc(it.txType);
+    db.type =  QStringLiteral("继电器设置");//opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 
@@ -160,9 +160,9 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     default: qDebug() << Q_FUNC_INFO; break;
     }
 
-    sOpItem db;
+    sEventItem db;
     db.content = str;
-    db.op_src = op; //opSrc(it.txType);
+    db.type = op; //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 

@@ -48,7 +48,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
 
-        sOpItem db; db.op_src = QStringLiteral("登陆信息"); //opSrc(txType);
+        sEventItem db; db.type = QStringLiteral("登陆信息"); //opSrc(txType);
         db.content = QStringLiteral("%1 修改为 %2").arg(key, str);
         Log_Core::bulid()->append(db);
     }
@@ -64,7 +64,7 @@ bool Set_Login::loginCheck(const QString &str)
         sDevLogin *it = &(cm::dataPacket()->login[0]);
         QString usr = it->user, pwd = it->pwd;
         if((ls.first() == usr) && (ls.last() == pwd)) {
-            sOpItem db; db.op_src = QStringLiteral("用户登陆"); //opSrc(txType);
+            sEventItem db; db.type = QStringLiteral("用户登陆"); //opSrc(txType);
             db.content = QStringLiteral("登陆登陆为 %1").arg(str);
             Log_Core::bulid()->append(db);
             ret = true;
