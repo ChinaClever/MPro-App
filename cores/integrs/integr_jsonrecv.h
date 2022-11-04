@@ -36,7 +36,6 @@ public:
     bool analyticalData(const QJsonObject &object);
 
 private:
-    double getDecimal(const sDataItem &it);
     bool cfgItem(const QString key, const QJsonObject &object, sCfgItem &it);
     bool dataItem(const QString key, const QJsonObject &object, sDataItem &it);
 };

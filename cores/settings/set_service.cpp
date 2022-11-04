@@ -11,6 +11,46 @@ Set_Service::Set_Service()
 
 }
 
+QVariant Set_Service::logCfg(int fc)
+{
+    QVariant ret;
+    sLogCfg *cfg = &Log_Core::cfg;
+    switch (fc) {
+    case 1: ret = cfg->eleTime; break;
+    case 2: ret = cfg->hdaTime; break;
+    case 3: ret = cfg->logCnt; break;
+    case 4: ret = cfg->hdaCnt; break;
+    case 5: ret = cfg->eventCnt; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+
+bool Set_Service::logSet(int fc, const QVariant &v)
+{
+    bool ret = true;
+    sLogCfg *cfg = &Log_Core::cfg;
+    QString prefix = "log"; QString key;
+
+    switch (fc) {
+    case 1: key = "eleTime"; cfg->eleTime = v.toInt(); break;
+    case 2: key = "hdaTime";  cfg->hdaTime = v.toInt(); break;
+    case 3: key = "logCnt";  cfg->logCnt = v.toInt();  break;
+    case 4: key = "hdaCnt";  cfg->hdaCnt = v.toInt();  break;
+    case 5: key = "eventCnt";  cfg->eventCnt = v.toInt();  break;
+    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}
+
+
 QVariant Set_Service::syslogCfg(int fc)
 {
     QVariant ret;

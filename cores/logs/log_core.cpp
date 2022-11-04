@@ -4,9 +4,8 @@
  *      Author: Lzy
  */
 #include "log_core.h"
-//#include "commons.h"
 #include "app_core.h"
-
+sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
 {
@@ -16,16 +15,6 @@ Log_Core::Log_Core(QObject *parent)
     connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
 }
-
-void Log_Core::append(const sAlarmItem &it)
-{
-    QString fmd = "addr:%1 state:%2 module:%3 content:%4";
-    QString str = fmd.arg(it.addr, it.state, it.module, it.content);
-    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
-    mAlarmIts << it;
-    run();
-}
-
 
 Log_Core *Log_Core::bulid(QObject *parent)
 {
@@ -41,12 +30,54 @@ Log_Core *Log_Core::bulid(QObject *parent)
     return sington;
 }
 
+
+void Log_Core::append(const sAlarmItem &it)
+{
+    QString fmd = "addr:%1 state:%2 module:%3 content:%4";
+    QString str = fmd.arg(it.addr, it.state, it.module, it.content);
+    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
+    mAlarmIts << it;
+    run();
+}
+
+void Log_Core::append(const sEventItem &it)
+{
+    QString fmd = "type:%1 content:%2";
+    QString str = fmd.arg(it.type, it.content);
+    sys_logInfo(str);
+    mEventIts << it;
+    run();
+}
+
+void Log_Core::append(const sDataItem &it)
+{
+    sHdaItem hda;
+    hda.index = it.id;
+    hda.addr = it.addr;
+    hda.type = it.type;
+    hda.topic = it.topic;
+    hda.value = it.value / cm::decimal(it);
+    mHdaIts << hda; run();
+}
+
+void Log_Core::log_hda(const sDataItem &it)
+{
+    uint sec = cfg.hdaTime * 60*60;
+    if(!mCnt % sec) append(it);
+}
+
+void Log_Core::log_hdaEle(const sDataItem &it)
+{
+    uint sec = cfg.eleTime * 24*60*60;
+    if(!mCnt % sec) append(it);
+}
+
 void Log_Core::initFunSlot()
 {
     sys_initfun();
-    mEvent = Db_Event::bulid();
     mHda = Db_Hda::bulid();
     mOta = Db_Ota::bulid();
+    mEvent = Db_Event::bulid();
     mAlarm = Db_Alarm::bulid();
 }
 
@@ -67,10 +98,9 @@ void Log_Core::saveLogSlot()
 
 void Log_Core::timeoutDone()
 {
-    Db_Tran t;
-    int cnt = 10000;
-    mHda->countsRemove(cnt);
-    mEvent->countsRemove(cnt);
-    mAlarm->countsRemove(cnt);
+    Db_Tran t; int cnt = 10000;
+    mHda->countsRemove(cfg.hdaCnt * cnt);
+    mAlarm->countsRemove(cfg.logCnt * cnt);
+    mEvent->countsRemove(cfg.eventCnt * cnt);
     system("echo 3 > /proc/sys/vm/drop_caches");
 }

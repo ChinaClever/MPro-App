@@ -12,6 +12,7 @@
 #include "app_core.h"
 #include "mb_core.h"
 #include "qrabbitmq.h"
+//#include "log_core.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -21,6 +22,7 @@ Cfg_Service::Cfg_Service()
 
 void Cfg_Service::readCfgParams()
 {
+    log();
     ssh();
     ntp();
     web();
@@ -52,7 +54,7 @@ void Cfg_Service::smtp()
         case 2: key = "host"; str = &cfg->host; break;
         case 3: key = "from"; str = &cfg->from; break;
         case 4: key = "pwd"; str = &cfg->pwd; break;
-        //case 5: key = "to"; str = &cfg->to; break;
+            //case 5: key = "to"; str = &cfg->to; break;
         case 6: key = "port"; ptr = &cfg->port; break;
         case 7: key = "ct"; ptr = &cfg->ct; break;
         default: ptr = nullptr; str = nullptr; break;
@@ -76,7 +78,7 @@ void Cfg_Service::snmp()
     for(int i=1; i<7; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
-        //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+            //case 2: key = "trap2"; ptr = &cfg->trap2; break;
         case 3: key = "enV3"; ptr = &cfg->enV3; break;
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;
@@ -141,6 +143,22 @@ void Cfg_Service::syslog()
         case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "port";  cfg->port = mCfg->readCfg(key, 514, prefix).toInt(); break;
         case 3: key = "host";  cfg->host = mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
+void Cfg_Service::log()
+{
+    sLogCfg *cfg = &Log_Core::cfg;
+    QString prefix = "log"; QString key;
+
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 1, prefix).toInt(); break;
+        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
+        case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
+        case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
+        case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         }
     }
 }
@@ -311,7 +329,7 @@ void Cfg_Service::push()
     sPushCfg *cfg = &Integr_Core::pushCfg;
 
     for(int i=1; i<9; ++i) {
-        switch (i) {       
+        switch (i) {
         case 1: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 2: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
         case 3: key = "sec"; ptr = &cfg->sec; value = 5; break;

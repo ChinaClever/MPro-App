@@ -17,6 +17,7 @@ public:
     explicit Log_Sys(QObject *parent = nullptr);
     static sSysLogCfg sysLogCfg;
     void sys_logAlarm(const QString& msg);
+    void sys_logInfo(const QString& msg);
 
 protected:
     void sys_initfun();

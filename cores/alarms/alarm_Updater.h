@@ -21,6 +21,7 @@ private:
     bool upAlarmItem(sDataItem &index, int i, sAlarmUnit &it);
     void upPeakValue(sDataItem &index, int i, sAlarmUnit &it);
 
+    void upEleHda(sDataItem &index, sObjData &it);
     bool upAlarmUnit(sDataItem &index, sAlarmUnit &it);
     bool upObjData(sDataItem &index, sObjData &it);
     bool upDevData(sDataItem &index, sDevData *it);
