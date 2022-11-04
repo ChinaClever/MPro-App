@@ -50,6 +50,7 @@ struct sAlarmUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE]; // 报警开启
     uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
+    uint hda[PACK_ARRAY_SIZE]; // 数据记录开关
     uint value[PACK_ARRAY_SIZE]; // 当前值
     uint rated[PACK_ARRAY_SIZE]; // 额定值
 
@@ -61,7 +62,7 @@ struct sAlarmUnit
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
     uint peakMax[PACK_ARRAY_SIZE]; // 最大峰值
     uint peakStamp[PACK_ARRAY_SIZE]; // 峰值的时间戳
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sRelayUnit
@@ -69,6 +70,7 @@ struct sRelayUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
+    uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
     uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE]; // 报警状态
     uint powerUpDelay[PACK_ARRAY_SIZE]; // 上电延时
@@ -77,7 +79,7 @@ struct sRelayUnit
     uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -100,9 +102,11 @@ struct sObjData
     uint pf[PACK_ARRAY_SIZE]; // 功率因数
 
     uint artPow[PACK_ARRAY_SIZE]; // 视在功率
+    uint hdaEle[PACK_ARRAY_SIZE]; // 电能数据记录开关
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -125,10 +129,11 @@ struct sEnvData
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
+    uint wind[SENOR_NUM]; // 风速
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
     uint smoke[SENOR_NUM]; // 烟雾
-    uint reserve[SENOR_NUM];
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sTgUnit
@@ -195,6 +200,7 @@ struct sVersions
     char compileDate[NAME_SIZE]; // 编译时间
     char releaseDate[NAME_SIZE]; // 发布时间
     char upgradeDate[NAME_SIZE]; // 升级时间
+    char reserve[3][NAME_SIZE]; // 预留
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
@@ -203,7 +209,7 @@ struct sUutInfo {
     char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[3*NAME_SIZE]; // 二维码
-    char reserve[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     char sn[NAME_SIZE];
 };
 
@@ -239,6 +245,7 @@ struct sRunTime
     char md5[NAME_SIZE]; // 运行程序的ＭＤ５值
     char start[NAME_SIZE]; // 启动时间
     char compileTime[NAME_SIZE]; // 编译时间
+    char reserve[3][NAME_SIZE];
 };
 
 struct sProcState
@@ -262,7 +269,7 @@ struct sFaultCode {
     uint fault; // 是否在故障
     uint cnt[4][PACK_ARRAY_SIZE];
     uint code[PACK_ARRAY_SIZE];
-    uint reserve;
+    uint reserve[10];
 };
 
 /**
@@ -293,7 +300,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
-    uint reserve;
+    uint reserve[10];
 };
 
 
@@ -308,7 +315,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
-    char reserve[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     uchar prefixLen;
 };
 
@@ -334,6 +341,7 @@ struct sOtaUpIt
     uchar isRun; // 0 完成 1 进行中  2 失败
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
+    uchar reserve;
 };
 
 struct sOtaUpdater
@@ -344,6 +352,7 @@ struct sOtaUpdater
     sOtaUpIt web; // 网页升级状态
     sOtaUpIt slave; // 级联升级状态
     sOtaUpIt outlet; // 执行板升级状态
+    sOtaUpIt reserve;
     char host[NAME_SIZE]; // 服务端地址
 };
 
