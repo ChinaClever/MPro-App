@@ -27,7 +27,7 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
-let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Psd","Swith","Routing","Binding","State");
+let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Swith","Routing","Binding","SslEn","State");
 let ip_mode = new Array("Ipv4","Ipv6");
 let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
@@ -153,7 +153,7 @@ var jsonrpc = function()
       case 19:
         sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
-      case 19:
+      case 20:
         sessionStorage.setItem(type_name[type]+ amqp_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:

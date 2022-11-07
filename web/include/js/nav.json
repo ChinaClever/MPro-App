@@ -162,6 +162,10 @@
         "url": "mqtt.html"
       },
       {
+        "name": "AMQP服务",
+        "url": "amqp.html"
+      },
+      {
         "name": "REST集成",
         "url": "rest.html"
       },
@@ -172,10 +176,6 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
-      },
-      {
-        "name": "AMQP服务",
-        "url": "amqp.html"
       }
     ]
   }, 
