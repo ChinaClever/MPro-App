@@ -49,16 +49,17 @@
 		var udp_sel = new Array("UDP1","UDP2","UDP3","UDP4");
 		var push_data = new Array();
 		let lang = new Array();
+		let udp_num = 0;
 		function read_data(){
 			var i = 0;
 			for(var i = 1;i<10;i++){
 				push_data[i] = new Array();
 				if(i < 4){
 					for(let j = 1;j<5;j++){
-						push_data[i] = sessionStorage.getItem(type_name[18]+ push_info[i]+j);
+						push_data[i][j] = sessionStorage.getItem(type_name[18]+ push_info[i]+j);
 					}
-				}else{
-					push_data[i] = sessionStorage.getItem(type_name[18]+ push_info[i]);
+				}else if(i>6){
+					push_data[i][1] = sessionStorage.getItem(type_name[18]+ push_info[i]);
 				}
 			}
 		}
@@ -102,40 +103,23 @@
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0,btn3 = 0,setbtn =0;
-			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[3]);
-			btn3 = document.getElementById(select_name[7]);
-			for(var i = 1; i < (select_name.length-2);i++){
-				lab = document.getElementById(select_name[i]);
-				if(i < 3){
-					if(push_data[1] == 0){
-						lab.disabled = true;
-						btn1[push_data[1]].selected = true;
-						}else{
-						lab.disabled = false;
-						btn1[push_data[1]].selected = true;
-					}
-				}else if(i > 3 && i < 7){
-					if(push_data[4] == 0){
-						lab.disabled = true;
-						btn2[push_data[4]].selected = true;
-					}
-					else{
-						lab.disabled = false;
-						btn2[push_data[4]].selected = true;
-					}
+			document.getElementById("udpSel").value = udp_num;
+			for(let i = 1;i < 10;i++){
+				if(i<4){
+					document.getElementById(select_name[i]).value = push_data[i][1 + udp_num];
+				}else if(i>6){
+					document.getElementById(select_name[i]).value = push_data[i][1];
 				}
-				lab.value = push_data[i + 1];
+				if(i<4 ||i>6){
+					document.getElementById(select_name[i]).disabled = false;
+				}
 			}
-			lab = document.getElementById(select_name[8]);
-			lab.value = push_data[9];
-			if(push_data[8] == 0){
-				btn3[push_data[8]].selected = true;
-				lab.disabled = true;
-			}else{
-				btn3[push_data[8]].selected = true;
-				lab.disabled = false;
+			if(parseInt(push_data[1][udp_num + 1]) == 0){
+				document.getElementById(select_name[2]).disabled = true;
+				document.getElementById(select_name[3]).disabled = true;
+			}
+			if(parseInt(push_data[8][1]) == 0){
+				document.getElementById(select_name[9]).disabled = true;
 			}
 		}
 		function SetData(btn){
