@@ -25,10 +25,11 @@ struct _sObjData {
 
     uint ele; // 电能
     uint pf; // 功率因数
+    uint hdaEle; // 电能数据记录开关
     uint ratedCur;
     uint activePow;
     uint reactivePow;
-    uint reserve;
+    uint reserve[10];
 };
 
 
@@ -38,10 +39,11 @@ struct _sEnvData
     uchar isInsert;
     _sAlarmUnit tem; // 温度
     _sAlarmUnit hum; // 湿度
+    uint wind;
     uchar door; // 门禁
     uchar water; // 水浸
     uchar smoke; // 烟雾
-    uchar reserve;
+    uint reserve[10];
 };
 
 struct _sDevData
@@ -77,7 +79,7 @@ struct _sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    uchar reserve;
+    uchar reserve[10];
 };
 
 struct _sFrame {

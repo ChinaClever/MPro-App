@@ -25,9 +25,6 @@ signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);
 
 private:
-    double getDecimal(const sDataItem &it);
-
-private:
     uchar mTxType=0;
     sDataItem mIt;
 };

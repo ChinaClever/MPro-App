@@ -2,6 +2,13 @@
 #define LOG_CORE_H
 
 #include "log_read.h"
+struct sLogCfg {
+    int eleTime; // 电能记录间隔时间　天为单位
+    int hdaTime; // 历史数据记录时间 单位小时
+    int logCnt; // 记录最大条数　默认为1
+    int hdaCnt;
+    int eventCnt;
+};
 
 class Log_Core : public Log_Read
 {
@@ -9,13 +16,14 @@ class Log_Core : public Log_Read
     explicit Log_Core(QObject *parent = nullptr);
 public:
     static Log_Core *bulid(QObject *parent = nullptr);
-    void append(const sOpItem &it) {mOpIts<<it; run();}
     void append(const sOtaItem &it) {mOtaIts<<it; run();}
-    void append(const sEleItem &it) {mEleIts<<it; run();}
-    void append(const sSysItem &it) {mSysIts<<it; run();}
-    void append(const sUserItem &it) {mUserIts<<it; run();}
-    void append(const sAlarmItem &it) {mAlarmIts<<it; run();}
-    void append(const sHardwareItem &it) {mHardwareIts<<it; run();}
+    void append(const sEventItem &it);
+    void append(const sAlarmItem &it);
+    void append(const sDataItem &it);
+    void log_hdaEle(const sDataItem &it);
+    void log_hda(const sDataItem &it);
+    void log_addCnt() {mCnt++;}
+    static sLogCfg cfg;
 
 private slots:
     void run();
@@ -26,27 +34,19 @@ private slots:
 private:
     bool isRun=false;
     QTimer *timer;
+    uint mCnt = 1;
 
-    Db_Op *mOp;
-    QList<sOpItem> mOpIts;
+    Db_Hda *mHda;
+    QList<sHdaItem> mHdaIts;
 
-    Db_User *mUser;
-    QList<sUserItem> mUserIts;
-
-    Db_Sys *mSys;
-    QList<sSysItem> mSysIts;
+    Db_Event *mEvent;
+    QList<sEventItem> mEventIts;
 
     Db_Alarm *mAlarm;
     QList<sAlarmItem> mAlarmIts;
 
-    Db_Ele *mEle;
-    QList<sEleItem> mEleIts;
-
     Db_Ota *mOta;
     QList<sOtaItem> mOtaIts;
-
-    Db_Hardware *mHardware;
-    QList<sHardwareItem> mHardwareIts;
 };
 
 #endif // LOG_CORE_H

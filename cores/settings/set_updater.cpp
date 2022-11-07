@@ -22,9 +22,10 @@ QVariant Set_Updater::otaStatus(int type, int fc)
     case 1: res = ota->work;  break;
     case 2: it = &ota->usb;  break;
     case 3: it = &ota->net;  break;
-    case 4: it = &ota->slave;  break;
-    case 5: it = &ota->outlet; break;
-    case 6: res = ota->host;  break;
+    case 4: it = &ota->web;  break;
+    case 6: it = &ota->slave;  break;
+    case 7: it = &ota->outlet; break;
+    case 8: res = ota->host;  break;
     default: cout << type; break;
     }
 
@@ -40,7 +41,7 @@ QVariant Set_Updater::otaStatus(int type, int fc)
     return res;
 }
 
-void Set_Updater::ota_log()
+void Set_Updater::ota_log(int fc)
 {
     sOtaItem it; sAppVerIt ver;
     Cfg_App cfg("/usr/data/updater/clever/");
@@ -72,20 +73,21 @@ bool Set_Updater::ota_cascade(const QString &fn)
                 it.size = File::size(fn);
                 if(it.md5 != 32) it.md5 = File::md5(fn);
                 Cascade_Core::bulid()->ota_start(it);
-                setbit(cm::dataPacket()->ota.work, 3);
+                setbit(cm::dataPacket()->ota.work, DOta_Slave);
             }
         }
     }
     return ret;
 }
 
-bool Set_Updater::ota_outlet()
+bool Set_Updater::ota_outlet(int fc)
 {    
     QString dir = "/usr/data/updater/clever/outlet/";
+    if(fc == DOta_Usb) dir = "";//////////////=============="
     QStringList fns = File::entryList(dir); bool ret = false;
     foreach (const auto &fn, fns) {
         if((fn == ".") || (fn == "..")) continue;
-        setbit(cm::dataPacket()->ota.work, 4);
+        setbit(cm::dataPacket()->ota.work, DOta_Outlet);
         OP_Core::bulid()->ota_start(dir+fn);
         ret = true; break;
     }
@@ -96,11 +98,17 @@ bool Set_Updater::ota_outlet()
 int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
     bool ret = false;
+    fc -= 10; switch (fc) {
+    case DOtaCode::DOta_Usb:  break;
+    case DOtaCode::DOta_Net:  break;
+    case DOtaCode::DOta_Web:  break;
+    default: break;
+    }
+
     QString fn = v.toString();
     if(fn.size()) {
-        ret |= ota_cascade(fn);
-        ret |= ota_outlet();
-        ota_log();
+        ota_log(fc); ret |= ota_outlet(fc);
+        if(fc != DOta_Usb) ret |= ota_cascade(fn);
     }
     cout << fc << v << (ret?1:0);
     return ret?1:0;

@@ -6,7 +6,7 @@
 #include "ota_core.h"
 
 Ota_Core::Ota_Core(QObject *parent)
-    : Ota_Usb{parent}
+    : Ota_Web{parent}
 {
 
 }

@@ -10,6 +10,7 @@ class Ota_Obj : public QObject
 public:
     explicit Ota_Obj(QObject *parent = nullptr);
 
+    virtual void web_workDown()=0;
 private:
     void onStartSsdp();
 

@@ -13,7 +13,7 @@ Mb_Core::Mb_Core(QObject *parent) : QThread{parent}
     connect(this, &Mb_Core::connectRtuSig, this, &Mb_Core::connectRtuSlot);
     mTimer = new QTimer(this); mTimer->start(1000);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(run()));
-    QTimer::singleShot(10, this, SLOT(initFunSlot()));
+    QTimer::singleShot(135, this, SLOT(initFunSlot()));
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)

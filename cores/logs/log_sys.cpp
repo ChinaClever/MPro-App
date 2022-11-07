@@ -25,11 +25,16 @@ Log_Sys::Log_Sys(QObject *parent)
 
 }
 
-
-void Log_Sys::sys_log(const QString& msg)
+void Log_Sys::sys_logInfo(const QString& msg)
 {
     char *str = msg.toUtf8().data();
-    CLEVER_INFO(str);
+    if(sysLogCfg.en==2) CLEVER_INFO(str);
+}
+
+void Log_Sys::sys_logAlarm(const QString& msg)
+{
+    char *str = msg.toUtf8().data();
+    if(sysLogCfg.en) CLEVER_WARNING(str);
 }
 
 void Log_Sys::sys_initfun()

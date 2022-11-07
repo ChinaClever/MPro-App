@@ -17,13 +17,14 @@ struct sSmtpCfg {
 
 class App_Smtp : public App_Ntp
 {
+    Q_OBJECT
 public:
     explicit App_Smtp(QObject *parent = nullptr);
     void smtp_sendMail(const QString &content);
     static sSmtpCfg smtpCfg;
-    void smtp_run();
 
-private:
+private slots:
+    void smtp_run();
     void sendMail();
 
 private:

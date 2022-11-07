@@ -50,6 +50,7 @@ struct sAlarmUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE]; // 报警开启
     uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
+    uint hda[PACK_ARRAY_SIZE]; // 数据记录开关
     uint value[PACK_ARRAY_SIZE]; // 当前值
     uint rated[PACK_ARRAY_SIZE]; // 额定值
 
@@ -61,7 +62,7 @@ struct sAlarmUnit
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
     uint peakMax[PACK_ARRAY_SIZE]; // 最大峰值
     uint peakStamp[PACK_ARRAY_SIZE]; // 峰值的时间戳
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sRelayUnit
@@ -69,6 +70,7 @@ struct sRelayUnit
     uchar size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
+    uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
     uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
     uint alarm[PACK_ARRAY_SIZE]; // 报警状态
     uint powerUpDelay[PACK_ARRAY_SIZE]; // 上电延时
@@ -77,7 +79,7 @@ struct sRelayUnit
     uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -100,9 +102,11 @@ struct sObjData
     uint pf[PACK_ARRAY_SIZE]; // 功率因数
 
     uint artPow[PACK_ARRAY_SIZE]; // 视在功率
+    uint hdaEle[PACK_ARRAY_SIZE]; // 电能数据记录开关
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -125,10 +129,11 @@ struct sEnvData
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
+    uint wind[SENOR_NUM]; // 风速
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
     uint smoke[SENOR_NUM]; // 烟雾
-    uint reserve[SENOR_NUM];
+    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sTgUnit
@@ -195,6 +200,7 @@ struct sVersions
     char compileDate[NAME_SIZE]; // 编译时间
     char releaseDate[NAME_SIZE]; // 发布时间
     char upgradeDate[NAME_SIZE]; // 升级时间
+    char reserve[3][NAME_SIZE]; // 预留
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
@@ -203,7 +209,7 @@ struct sUutInfo {
     char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[3*NAME_SIZE]; // 二维码
-    char reserve[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     char sn[NAME_SIZE];
 };
 
@@ -239,6 +245,7 @@ struct sRunTime
     char md5[NAME_SIZE]; // 运行程序的ＭＤ５值
     char start[NAME_SIZE]; // 启动时间
     char compileTime[NAME_SIZE]; // 编译时间
+    char reserve[3][NAME_SIZE];
 };
 
 struct sProcState
@@ -262,7 +269,7 @@ struct sFaultCode {
     uint fault; // 是否在故障
     uint cnt[4][PACK_ARRAY_SIZE];
     uint code[PACK_ARRAY_SIZE];
-    uint reserve;
+    uint reserve[10];
 };
 
 /**
@@ -293,7 +300,7 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
-    uint reserve;
+    uint reserve[10];
 };
 
 
@@ -308,7 +315,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
-    char reserve[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     uchar prefixLen;
 };
 
@@ -334,15 +341,18 @@ struct sOtaUpIt
     uchar isRun; // 0 完成 1 进行中  2 失败
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
+    uchar reserve;
 };
 
 struct sOtaUpdater
 {
-    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　级联升级 ４　执行板升级
+    uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　网页升级 4 级联升级 5　执行板升级
     sOtaUpIt usb; // USB升级状态
     sOtaUpIt net; // 网络升级状态
+    sOtaUpIt web; // 网页升级状态
     sOtaUpIt slave; // 级联升级状态
     sOtaUpIt outlet; // 执行板升级状态
+    sOtaUpIt reserve;
     char host[NAME_SIZE]; // 服务端地址
 };
 
@@ -370,10 +380,11 @@ struct sDataPacket
 
 
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
-enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, Tem=11, Hum, Door1=21, Door2, Water, Smoke};
-enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp,
-          UpDelay=4, ResetDelay, OverrunOff, TimingEn, Relays=11};
+enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
+enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
+          UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
+enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
@@ -396,8 +407,8 @@ struct sDataItem
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog,
-             ELog=81, EPro, EOta, ECmd=111};
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg,
+             ELog=81, EHda, EPro=91, EOta, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

@@ -38,5 +38,6 @@ void Ota_Obj::runing_initFunSlot()
 void Ota_Obj::runing_onTimeoutDone()
 {
     sRunTime *run = &(cm::masterDev()->proc.ota);
-    run->runSec += 1; onStartSsdp();
+    run->runSec += 1; onStartSsdp(); web_workDown();
 }
+

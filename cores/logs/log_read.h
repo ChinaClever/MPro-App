@@ -6,11 +6,9 @@
 enum eLogs{
     eUserLog,
     eAlarmLog,
-    eOpLog,
-    eSysLog,
-    eEleLog,
-    eHardwareLog,
+    eEventLog,
     eOtaLog,
+    eHdaLog,
 };
 
 enum eLogFc {

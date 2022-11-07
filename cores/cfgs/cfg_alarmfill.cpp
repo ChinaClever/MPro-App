@@ -14,6 +14,7 @@ Cfg_AlarmFill::Cfg_AlarmFill()
 void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
     it.en = unit.en[id];
+    it.hda = unit.hda[id];
     it.rated = unit.rated[id];
 
     it.min = unit.min[id];
@@ -23,13 +24,13 @@ void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
     it.crMax = unit.crMax[id];
     it.peakMax = unit.peakMax[id];
     it.peakStamp = unit.peakStamp[id];
-    it.reserve = unit.reserve[id];
+    it.reserve[0] = unit.reserve[0][id];
 }
 
 void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.en = unit.en[id];
-    it.reserve = unit.reserve[id];
+    it.cnt = unit.cnt[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.resetDelay = unit.resetDelay[id];
@@ -38,21 +39,25 @@ void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     it.timingOn[0] = it.timingOff[0] = 0;
     qstrcpy(it.timingOn, unit.timingOn[id]);
     qstrcpy(it.timingOff, unit.timingOff[id]);
+    it.reserve[0] = unit.reserve[0][id];
 }
 
 void Cfg_AlarmFill::upObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
     //qstrcpy(obj.name, data.name[id]);
+    obj.hdaEle = data.hdaEle[id];
     upAlarmUnit(id, data.vol, obj.vol);
     upAlarmUnit(id, data.cur, obj.cur);
     upAlarmUnit(id, data.pow, obj.pow);
     upRelayUnit(id, data.relay, obj.relay);
+    obj.reserve[0] = data.reserve[0][id];
 }
 
 void Cfg_AlarmFill::upEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 {
     upAlarmUnit(id, data.tem, obj.tem);
     upAlarmUnit(id, data.hum, obj.hum);
+    obj.reserve[0] = data.reserve[0][id];
 }
 
 void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)

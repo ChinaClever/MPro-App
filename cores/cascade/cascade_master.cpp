@@ -42,13 +42,13 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
-            sSysItem it; it.module = tr("级联");
+            sEventItem it; it.type = tr("级联");
             it.content = tr("副机 %1 连接正常").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
-            sSysItem it; it.module = tr("级联");
+            sEventItem it; it.type = tr("级联");
             it.content = tr("副机 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }

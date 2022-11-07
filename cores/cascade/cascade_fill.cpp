@@ -13,6 +13,7 @@ Cascade_Fill::Cascade_Fill(QObject *parent) : Cascade_Master{parent}
 void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 {
     it.en = unit.en[id];
+    it.hda = unit.hda[id];
     it.value = unit.value[id];
     it.rated = unit.rated[id];
 
@@ -23,14 +24,14 @@ void Cascade_Fill::upAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
     it.crMax = unit.crMax[id];
     it.peakMax = unit.peakMax[id];
     it.peakStamp = unit.peakStamp[id];
-    it.reserve = unit.reserve[id];
+    it.reserve[0] = unit.reserve[0][id];
 }
 
 void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     it.sw = unit.sw[id];
     it.en = unit.en[id];
-    it.reserve = unit.reserve[id];
+    it.cnt = unit.cnt[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.overrunOff = unit.overrunOff[id];
@@ -38,6 +39,7 @@ void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
     it.timingOn[0] = it.timingOff[0] = 0;
     qstrcpy(it.timingOn, unit.timingOn[id]);
     qstrcpy(it.timingOff, unit.timingOff[id]);
+    it.reserve[0] = unit.reserve[0][id];
 }
 
 void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
@@ -51,9 +53,10 @@ void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
 
     obj.pf = data.pf[id];
     obj.ele = data.ele[id];
+    obj.hdaEle = data.hdaEle[id];
     obj.activePow = data.artPow[id];
     obj.reactivePow = data.reactivePow[id];
-    obj.reserve = data.reserve[id];
+    obj.reserve[0] = data.reserve[0][id];
 }
 
 void Cascade_Fill::upEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
@@ -63,10 +66,11 @@ void Cascade_Fill::upEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
     upAlarmUnit(id, data.tem, obj.tem);
     upAlarmUnit(id, data.hum, obj.hum);
 
+    obj.wind = data.wind[id];
     obj.door = data.door[id];
     obj.water = data.water[id];
     obj.smoke = data.smoke[id];
-    obj.reserve = data.reserve[id];
+    obj.reserve[0] = data.reserve[0][id];
 }
 
 void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
@@ -97,7 +101,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     obj->dc = data->dc;
     obj->hz = data->hz;
     obj->proc = data->proc;
-    obj->reserve = data->reserve;
+    obj->reserve[0] = data->reserve[0];
 }
 
 void Cascade_Fill::fillData(uchar addr)

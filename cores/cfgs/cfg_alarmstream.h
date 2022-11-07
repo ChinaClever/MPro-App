@@ -6,27 +6,29 @@
 namespace cfg {
 struct _sAlarmIt
 {
-    uint rated;
     uchar en;
+    uint rated;
     uint min; // 最小值
     uint max; // 最大值
+    uchar hda; // 数据记录开关
 
     uint crMin; // 最小值
     uint crMax; // 最大值
     uint peakMax; // 峰值
     uint peakStamp; // 峰值的时间戳
-    uint reserve; // 预留
+    uint reserve[10]; // 预留
 };
 
 struct _sRelayIt
 {
     uchar en;
+    uint cnt; //继电器控制次数
     uchar offAlarm;
     uchar powerUpDelay;
     uchar resetDelay;
     uchar overrunOff;
     uchar timingEn;
-    uchar reserve; // 预留
+    uchar reserve[10]; // 预留
     char timingOn[NAME_SIZE];
     char timingOff[NAME_SIZE];
 };
@@ -37,6 +39,8 @@ struct _sObjData {
     _sAlarmIt cur;
     _sAlarmIt pow;
     _sRelayIt relay;
+    uint hdaEle;
+    uint reserve[10]; // 预留
 };
 
 
@@ -44,6 +48,7 @@ struct _sEnvData
 {
     _sAlarmIt tem; // 温度
     _sAlarmIt hum; // 湿度
+    uint reserve[10]; // 预留
 };
 
 struct _sDevData

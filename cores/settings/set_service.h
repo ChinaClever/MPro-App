@@ -21,6 +21,9 @@ public:
 
     QVariant syslogCfg(int fc);
     bool syslogSet(int fc, const QVariant &v);
+
+    QVariant logCfg(int fc);
+    bool logSet(int fc, const QVariant &v);
 };
 
 #endif // SET_SERVICE_H

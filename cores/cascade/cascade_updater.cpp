@@ -53,10 +53,10 @@ void Cascade_Updater::ota_updates()
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
         uint size = dev->cfg.nums.slaveNum;
-        if(size) setbit(cm::dataPacket()->ota.work, 3);
+        if(size) setbit(cm::dataPacket()->ota.work, DOta_Slave);
         for(uint i=0; i<size; ++i) {
             if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
-        } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, 3);
+        } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
         cm::dataPacket()->ota.slave.isRun = 0; cm::mdelay(255);
     }
@@ -104,7 +104,7 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
 bool Cascade_Updater::otaReplyStart(const QByteArray &data)
 {
     sOtaFile *it = &mIt; QByteArray rcv(data); cm::dataPacket()->ota.slave.isRun = 1;
-    QDataStream out(&rcv, QIODevice::ReadOnly); setbit(cm::dataPacket()->ota.work, 3);
+    QDataStream out(&rcv, QIODevice::ReadOnly); setbit(cm::dataPacket()->ota.work, DOta_Slave);
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
     else cout << it->file << it->md5 << it->crc;
@@ -138,7 +138,7 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
         QString str = "unzip -o %1 -d " + dst + "updater/clever/";
         qDebug() << cm::execute(str.arg(fn));
         cm::dataPacket()->ota.slave.isRun = 0;
-        clrbit(cm::dataPacket()->ota.work, 3);
+        clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         bool ret = Set_Core::bulid()->ota_updater(11, fn);
         if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
     } else {
