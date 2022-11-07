@@ -342,6 +342,7 @@ struct sOtaUpIt
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
     uchar reserve;
+    uchar results[DEV_NUM]; // 升级结果
 };
 
 struct sOtaUpdater

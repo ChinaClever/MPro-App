@@ -30,6 +30,7 @@ void Set_Core::writeAlarm()
 QVariant Set_Core::getCfg(sCfgItem &it)
 {
     QVariant res; switch (it.type) {
+    case SFnCode::EOta: res = otaStatus(it); break;
     case SFnCode::ESsh: res = sshCfg(it.fc); break;
     case SFnCode::ENtp: res = ntpCfg(it.fc); break;
     case SFnCode::EWeb: res = webCfg(it.fc); break;
@@ -38,7 +39,6 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPush: res = pushCfg(it.fc, it.id); break;
     case SFnCode::ESnmp: res = snmpCfg(it.fc, it.id); break;
     case SFnCode::ESmtp: res = smtpCfg(it.fc, it.id); break;
-    case SFnCode::EOta: res = otaStatus(it.fc, it.id); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
 
     case SFnCode::EOutput: case SFnCode::EGroup:

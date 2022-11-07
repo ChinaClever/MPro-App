@@ -78,7 +78,7 @@ void Cfg_Service::snmp()
     for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
-            //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+        //case 2: key = "trap2"; ptr = &cfg->trap2; break;
         case 3: key = "enV3"; ptr = &cfg->enV3; break;
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;

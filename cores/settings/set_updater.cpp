@@ -14,11 +14,11 @@ Set_Updater::Set_Updater()
 
 }
 
-QVariant Set_Updater::otaStatus(int type, int fc)
+QVariant Set_Updater::otaStatus(sCfgItem &cfg)
 {
     sOtaUpIt *it = nullptr;
     sOtaUpdater *ota = &(cm::dataPacket()->ota);
-    QVariant res; switch (type) {
+    QVariant res; switch (cfg.fc) {
     case 1: res = ota->work;  break;
     case 2: it = &ota->usb;  break;
     case 3: it = &ota->net;  break;
@@ -26,15 +26,16 @@ QVariant Set_Updater::otaStatus(int type, int fc)
     case 6: it = &ota->slave;  break;
     case 7: it = &ota->outlet; break;
     case 8: res = ota->host;  break;
-    default: cout << type; break;
+    default: cout << it; break;
     }
 
     if(it) {
-        switch (fc) {
+        switch (cfg.id) {
         case 1: res = it->isRun; break;
         case 2: res = it->subId; break;
         case 3: res = it->progress; break;
-        default: cout << fc; break;
+        case 4: res = it->results[cfg.addr]; break;
+        default: cout << cfg.id; break;
         }
     }
 
