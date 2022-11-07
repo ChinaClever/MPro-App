@@ -68,6 +68,8 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         result = pduSetParam(params);
     } else if (strcmp(method, "pduLogFun") == 0) {
         result = pduLogFun(params);
+    }else if (strcmp(method, "pduLogHda") == 0) {
+        result = pduLogHda(params);
     } else if (strcmp(method, "execute") == 0) {
         result = execute(params);
     }else {

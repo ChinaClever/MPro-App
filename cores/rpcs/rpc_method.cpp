@@ -31,6 +31,13 @@ QString Rpc_Method::execute(const QString &cmd)
     return cm::execute(cmd);
 }
 
+QString Rpc_Method::pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index)
+{
+    sLogHdaIt it; it.addr = addr; it.type = type;
+    it.topic = topic; it.index = index;
+    it.start = start; it.end = end;
+    return Log_Core::bulid()->log_readHda(it);
+}
 
 double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
 {

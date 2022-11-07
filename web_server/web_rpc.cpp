@@ -76,3 +76,18 @@ char* Web_Rpc::pduLogFun(mg_str &r)
     QString value = mObj->log_fun(its.at(2), its.at(3),its.at(0), its.at(4)).toString();
     return responRpcString(its, value);
 }
+
+char* Web_Rpc::pduLogHda(mg_str &r)
+{
+    QVector<uint> its = mObj->getNumbers(r, 2);
+    QString vs = mObj->getString(r, 2);
+    QString start = mObj->getString(r, 3);
+    QString end = mObj->getString(r, 4);
+
+    QStringList ls = vs.split(";"); int k = 0;
+    uchar type = 0; if(ls.size() > 0) type = ls.at(k++).toInt();
+    uchar topic = 0; if(ls.size() > 1) topic = ls.at(k++).toInt();
+    uchar index = 0; if(ls.size() > 2) index = ls.at(k++).toInt();
+    QString value = mObj->log_hda(start, end, its.at(0), type, topic, index);
+    return responRpcString(its, value);
+}

@@ -75,6 +75,11 @@ QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
     return mRpc->pduLogFun(type, fc, id, cnt);
 }
 
+QString Web_Obj::log_hda(const QString &start, const QString &end, int addr, int type, int topic, int index)
+{
+    return mRpc->pduLogHda(start, end, addr, type, topic, index);
+}
+
 QString Web_Obj::metaData(uint addr)
 {
     return mRpc->pduMetaData(addr);
