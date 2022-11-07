@@ -74,16 +74,39 @@ Sql_Statement *Log_Read::getSql(int type)
 
 
 QString Log_Read::log_readFun(const sLogFcIt &it)
-{
-    QString res;
+{    
     Sql_Statement *sql = getSql(it.type);
-    switch (it.fc) {
+    QString res; switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
     case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
     case eLogFc::eLog_read: res = log_readPage(it.type, it.id, it.cnt); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
+    return res;
+}
+
+QString Log_Read::log_readHda(const sLogHdaIt &it)
+{
+    QString cmd = "where ";
+    if(it.start.size()) {
+        QString endDateStr = it.end;
+        if(it.end.isEmpty()) endDateStr = QDate::currentDate().toString("yyyy-MM-dd");
+        cmd += QString("dtime between \'%1\' and  \'%2\' ").arg(it.start, endDateStr);
+    }
+
+    if(it.addr) cmd += QString(" and addr = \'%1\'").arg(it.addr);
+    if(it.type) cmd += QString(" and type = \'%1\'").arg(it.type);
+    if(it.topic) cmd += QString(" and topic = \'%1\'").arg(it.topic);
+    if(it.index) cmd += QString(" and index = \'%1\'").arg(it.index);
+
+    QString res; Db_Hda *db = Db_Hda::bulid();
+    QVector<sHdaItem> its = db->selectItems(cmd);
+    if(its.size()) {
+        int minId = its.first().id;
+        res = db->toPageJson(its, minId);
+    } else qDebug() << Q_FUNC_INFO << cmd;
+
     return res;
 }
 

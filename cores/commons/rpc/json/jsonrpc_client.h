@@ -19,6 +19,7 @@ public:
 
     double pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
     bool pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value);
+    QString pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index);
 
     QVariant pduCfgGet(uchar type, uchar fc, uchar id=0, uchar addr=0);
     bool pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id=0, uchar addr=0);

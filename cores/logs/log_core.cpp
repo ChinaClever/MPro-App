@@ -52,10 +52,10 @@ void Log_Core::append(const sEventItem &it)
 void Log_Core::append(const sDataItem &it)
 {
     sHdaItem hda;
-    hda.index = it.id;
     hda.addr = it.addr;
     hda.type = it.type;
     hda.topic = it.topic;
+    hda.index = it.id + 1;
     hda.value = it.value / cm::decimal(it);
     mHdaIts << hda; run();
 }

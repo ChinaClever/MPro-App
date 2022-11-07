@@ -20,6 +20,7 @@ public:
     bool setting(uint addr, uint type, uint topic, uint sub, uint id, double value);
     double getValue(uint addr, uint type, uint topic, uint sub, uint id);
     QVariant log_fun(uint type, uint fc, uint id, uint cnt);
+    QString log_hda(const QString &start, const QString &end, int addr, int type, int topic, int index);
 
 private:
     JsonRpc_Client *mRpc;
