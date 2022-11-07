@@ -154,7 +154,7 @@ void Cfg_Service::log()
 
     for(int i=1; i<4; ++i)  {
         switch (i) {
-        case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 1, prefix).toInt(); break;
+        case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
         case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
         case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
