@@ -75,7 +75,7 @@ void Cfg_Service::snmp()
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     QString *str = nullptr; int *ptr = nullptr;
-    for(int i=1; i<7; ++i) {
+    for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
             //case 2: key = "trap2"; ptr = &cfg->trap2; break;
@@ -83,6 +83,7 @@ void Cfg_Service::snmp()
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;
         case 6: key = "key"; str = &cfg->key; break;
+        case 7: key = "encrypt"; str = &cfg->encrypt; break;
         default: ptr = nullptr; break;
         }
 
@@ -92,6 +93,9 @@ void Cfg_Service::snmp()
 
     for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
         key = "trap_" + QString::number(i); str = &cfg->trap[i];
+        *str = mCfg->readCfg(key, "", prefix).toString();
+
+        key = "inform_" + QString::number(i); str = &cfg->inform[i];
         *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }

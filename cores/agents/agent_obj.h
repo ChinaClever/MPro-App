@@ -9,7 +9,9 @@ struct sAgentCfg {
     QString usr;
     QString pwd;
     QString key;
+    QString encrypt;
     QString trap[SNMP_TRAP_SIZE];
+    QString inform[SNMP_TRAP_SIZE];
 };
 
 class Agent_Obj : public QObject
