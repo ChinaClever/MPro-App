@@ -172,6 +172,10 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
+      },
+      {
+        "name": "AMQP服务",
+        "url": "amqp.html"
       }
     ]
   }, 
@@ -274,24 +278,12 @@
         "url": "alarm_log.html"
       },
       {
-        "name": "操作日志",
-        "url": "op_log.html"
+        "name": "事件记录",
+        "url": "event_log.html"
       },
       {
-        "name": "系统日志",
-        "url": "sys_log.html"
-      },
-      {
-        "name": "电能记录",
-        "url": "ele_log.html"
-      },
-      {
-        "name": "硬件故障",
-        "url": "hardware.html"
-      },
-      {
-        "name": "升级记录",
-        "url": "ota_log.html"
+        "name": "历史数据",
+        "url": "history.html"
       }
     ]
   },

@@ -9,7 +9,7 @@ let password = 'password';
 let identify = '';
 let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
-let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","","Content","Output","Group","Dual","GroupInfo","GroupSet");
+let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
@@ -27,6 +27,7 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
+let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Psd","Swith","Routing","Binding","State");
 let ip_mode = new Array("Ipv4","Ipv6");
 let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
@@ -151,6 +152,9 @@ var jsonrpc = function()
       break;
       case 19:
         sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 19:
+        sessionStorage.setItem(type_name[type]+ amqp_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:
         sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
@@ -629,6 +633,18 @@ function read_mqtt_data(addr){
     }
     if(j < 10 +1){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_amqp_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(11 +1)){
+      clearInterval(time1);
+    }
+    if(j < 11 +1){
+      rpc.call('pduReadParam',[addr,20,j,0,0]);
     }
     j++;
   },3);

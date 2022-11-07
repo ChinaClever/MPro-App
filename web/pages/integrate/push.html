@@ -124,9 +124,17 @@
 		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){
-				for(let i = 0;i<select_name.length;i++){
-					if(btn.id == select_name[i]){
-						rpc.call('pduSetParam',[0,push,(i + 1),0,0,btn.value]);
+				if(btn.id == "udpSel"){
+					udp_num = parseInt(btn.value);
+				}else{
+					for(let i = 0;i<select_name.length;i++){
+						if(btn.id == select_name[i]){
+							if(i < 4){
+								rpc.call('pduSetParam',[0,push,i,1 + udp_num,0,btn.value]);
+							}else if(i>6){
+								rpc.call('pduSetParam',[0,push,i,0,0,btn.value]);
+							}
+						}
 					}
 				}
 				flash_html();
