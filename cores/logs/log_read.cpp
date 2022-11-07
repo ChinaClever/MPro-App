@@ -8,7 +8,7 @@
 Log_Read::Log_Read(QObject *parent)
     : Log_Sys{parent}
 {
-
+    mRwLock = new QReadWriteLock;
 }
 
 template <typename T, typename U>
@@ -45,7 +45,6 @@ QString Log_Read::log_readOnce(int type, int id)
     return v.toString();
 }
 
-
 QString Log_Read::log_readPage(int type, int id, int cnt)
 {
     QVariant v; switch (type) {
@@ -61,8 +60,7 @@ QString Log_Read::log_readPage(int type, int id, int cnt)
 
 Sql_Statement *Log_Read::getSql(int type)
 {
-    Sql_Statement *sql = nullptr;
-    switch (type) {
+    Sql_Statement *sql = nullptr; switch (type) {
     case eLogs::eOtaLog: sql = Db_Ota::bulid(); break;
     case eLogs::eHdaLog: sql = Db_Hda::bulid(); break;
     case eLogs::eEventLog: sql = Db_Event::bulid(); break;
@@ -74,9 +72,9 @@ Sql_Statement *Log_Read::getSql(int type)
 
 
 QString Log_Read::log_readFun(const sLogFcIt &it)
-{    
-    Sql_Statement *sql = getSql(it.type);
-    QString res; switch (it.fc) {
+{
+    Sql_Statement *sql = getSql(it.type); if(!sql) return "";
+    QString res; QReadLocker locker(mRwLock); switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
     case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
@@ -100,6 +98,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     if(it.topic) cmd += QString(" and topic = \'%1\'").arg(it.topic);
     if(it.index) cmd += QString(" and index = \'%1\'").arg(it.index);
 
+    QReadLocker locker(mRwLock);
     QString res; Db_Hda *db = Db_Hda::bulid();
     QVector<sHdaItem> its = db->selectItems(cmd);
     if(its.size()) {
