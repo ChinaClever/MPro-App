@@ -43,13 +43,21 @@
     <script>
 		read_snmp_data(0);
 		var mode_set = new Array("","");
-		var snmp_name = new Array("addr1","addr2","enable","usr","psd","parity");
+		var snmp_name = new Array("","v2en","","v3en","usr","psd","parity");
+		var addr_name = new Array("","addr1","addr2","addr3","addr4");
 		var snmp_data = new Array();
 		let lang = new Array();
 		var language = 1;
 		function read_data(){
 			for(var j = 1;j<7;j++){
-					snmp_data[j] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
+					snmp_data[j] = new Array();
+					if(j !=2){
+						snmp_data[j][0] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
+					}else{
+						for(var i = 1;i<5;i++){
+							snmp_data[j][i] = sessionStorage.getItem(type_name[16]+ snmp_info[j] + i);
+						}
+					}
 				}
 		}function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -57,21 +65,22 @@
 			}
 			lang[1] = ["","SNMP设置","","","",""];
 			lang[2] = ["","SNMP(v1/v2c)代理设置","","","",""];
-			lang[3] = ["","立即生效","","","",""];
-			lang[4] = ["","SNMP(v3)代理设置","","","",""];
-			lang[5] = ["","SNMPv3启用:","","","",""];
-			lang[6] = ["","帐号:","","","",""];
-			lang[7] = ["","密码:","","","",""];
-			lang[8] = ["","密钥:","","","",""];
-			lang[9] = ["","立即生效","","","",""];
-			lang[10] = ["","禁用","","","",""];
-			lang[11] = ["","启用","","","",""];
-			mode_set[0] = lang[10][language];
-			mode_set[1] = lang[11][language];
+			lang[3] = ["","snmp v2启用","","","",""];
+			lang[4] = ["","立即生效","","","",""];
+			lang[5] = ["","SNMP(v3)代理设置","","","",""];
+			lang[6] = ["","SNMP v3启用:","","","",""];
+			lang[7] = ["","帐号:","","","",""];
+			lang[8] = ["","密码:","","","",""];
+			lang[9] = ["","密钥:","","","",""];
+			lang[10] = ["","立即生效","","","",""];
+			lang[11] = ["","禁用","","","",""];
+			lang[12] = ["","启用","","","",""];
+			mode_set[0] = lang[11][language];
+			mode_set[1] = lang[12][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<10;i++){
-				if(i ==3 || i == 9){
+			for(var i = 1;i<11;i++){
+				if(i ==4 || i == 10){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
@@ -87,24 +96,35 @@
 			showdata();
 		},500);
 		function showdata(){
-			for(let i = 0; i < snmp_name.length;i++){
-				document.getElementById(snmp_name[i]).value = snmp_data[i + 1];
+			for(let i = 1; i < snmp_name.length;i++){
+				if(i == 2){
+					for(var j = 1;j<5;j++){
+						document.getElementById(addr_name[j]).value = snmp_data[i][j];
+						document.getElementById(addr_name[j]).disabled = false;
+					}
+				}else{
+					document.getElementById(snmp_name[i]).value = snmp_data[i][0];
+					document.getElementById(snmp_name[i]).disabled = false;
+				}
 			}
-			if(parseInt(snmp_data[3]) == 0){
-				document.getElementById(snmp_name[3]).disabled = true;
-				document.getElementById(snmp_name[4]).disabled = true;
-				document.getElementById(snmp_name[5]).disabled = true;
-			}else{
-				document.getElementById(snmp_name[3]).disabled = false;
-				document.getElementById(snmp_name[4]).disabled = false;
-				document.getElementById(snmp_name[5]).disabled = false;
+			if(parseInt(snmp_data[1][0]) == 0){
+				for(var j = 1;j<5;j++){
+						document.getElementById(addr_name[j]).disabled = true;
+					}
+			}
+			if(snmp_data[3][0] == 0){
+				for(var j = 4;j<7;j++){
+					document.getElementById(snmp_name[j]).disabled = true;
+				}
 			}
 		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<snmp_name.length;i++){
 					if(snmp_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,snmp,(i + 1),0,0,btn.value]);
+						rpc.call('pduSetParam',[0,snmp,i,0,0,btn.value]);
+					}else if(addr_name[i] == btn.id){
+						rpc.call('pduSetParam',[0,snmp,2,i,0,btn.value]);
 					}
 				}
 				flash_html();
@@ -127,36 +147,39 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%" id ="lang_2"></td>\
 			<td width ="75%"></td></tr>';
-			tbody += '<tr><td>Get community:</td><td>public</td></tr>';
-			tbody += '<tr><td>Set community:</td><td>private</td></tr>';
-			tbody += '<tr><td>Trap1 ip:</td>';
-			tbody += '<td><input id = "addr1" style ="width:24.5%" type = "text"placeholder="255.255.255.255"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td>Trap2 ip:</td>';
-			tbody += '<td><input id = "addr2" style ="width:24.5%" type = "text" placeholder="255.255.255.255"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td><input id ="lang_3" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td id ="lang_3"></td>';
+			tbody += '<td><select id ="v2en" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			for(var j = 1;j<5;j++){
+				tbody += '<tr><td>Trap'+ j +' ip:</td>';
+				tbody += '<td><input id = "addr'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
+				tbody += '</td></tr>';
+			}
+			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function buildTableV3() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="25%" id ="lang_4"></td>\
+			thead = '<tr><td width ="25%" id ="lang_5"></td>\
 				<td width ="75%"></td></tr>';
-			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><select id ="enable" onchange ="SetData(this)">';
+			tbody += '<tr><td id ="lang_6"></td>';
+			tbody += '<td><select id ="v3en" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id ="lang_6"></td>';
-			tbody += '<td><input id = "usr" value = "" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
-			tbody += '<td><input id = "psd" value = "" style="width:24.5%"></td></tr>';
+			tbody += '<td><input id = "usr" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td id ="lang_8"></td>';
-			tbody += '<td><input id = "parity" value = "" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id ="lang_9" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
+			tbody += '<td><input id = "psd" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td id ="lang_9"></td>';
+			tbody += '<td><input id = "parity" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td><input id ="lang_10" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';

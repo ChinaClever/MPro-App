@@ -18,10 +18,11 @@ let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
-let snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
+let snmp_info = new Array("","V2Enable","Trap","V3Enable","Username","Password","Key");
 let rpc_info = new Array("","JsonMode","JsonPort","","XmlMode","XmlPort","");
-let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
-let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
+let push_info = new Array("","UdpEn","UdpAddr","UdpPort","","","","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
+let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","",
+"Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
@@ -132,14 +133,18 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 16:
-        sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        if(topic == 2){
+          sessionStorage.setItem(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
+        }else{
+          sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        }
       break;
       case 17:
         sessionStorage.setItem(type_name[type]+ rpc_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 18:
-        if(topic == 0){
-          sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
+        if(topic < 5){
+          sessionStorage.setItem(type_name[type]+ push_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
@@ -163,7 +168,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ addr_ +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
-        sessionStorage.setItem(ver_name[topic] + addr_, parseInt(JSON.parse(evt.data).result[5]));
+        sessionStorage.setItem(ver_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 31:
         sessionStorage.setItem(encrpty_name[topic], JSON.parse(evt.data).result[5]);
@@ -524,7 +529,7 @@ function read_rpc_data(addr){
       }
     }
     j++;
-  },1);
+  },3);
 }
 
 function read_snmp_data(addr){
@@ -534,10 +539,16 @@ function read_snmp_data(addr){
       clearInterval(time1);
     }
     if(j <= 6 ){
-      rpc.call('pduReadParam',[addr,snmp,j,0,0]);
+      if(j == 2){
+        for( i = 1;i<5;i++){
+          rpc.call('pduReadParam',[addr,snmp,j,i,0]);
+        }
+      }else{
+        rpc.call('pduReadParam',[addr,snmp,j,0,0]);
+      }
     }
     j++;
-  },1);
+  },3);
 }
 function read_log_data(type,name,start,num){
   rpc.call('pduLogFun',[start,log,type,name,num]);
@@ -549,7 +560,13 @@ function read_push_data(){
       clearInterval(time1);
     }
     if(j <= 9 ){
-      rpc.call('pduReadParam',[addr,push,j,0,0]);
+      if(j<4){
+        for(let i = 1;i< 5;i++){
+          rpc.call('pduReadParam',[addr,push,j,i,0]);
+        }
+      }else if(j>6){
+        rpc.call('pduReadParam',[addr,push,j,0,0]);
+      }
     }
     j++;
   },1);
@@ -569,12 +586,12 @@ function read_http_data(addr){
   },1);
 }
 function read_ver_info(addr){
-  let j = 1;
+  let j = 0;
   var time1 = setInterval(function(){
-    if(j >= parseInt(15)){
+    if(j >= parseInt(24)){
       clearInterval(time1);
     }
-    if(j != 10 && j < 15){
+    if(j < 9 || (j>10 && j < 15)|| (j>20 && j<24)){
       rpc.call('pduReadParam',[addr,ver_,j,0,0]);
     }
     j++;

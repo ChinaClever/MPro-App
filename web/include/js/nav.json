@@ -306,27 +306,27 @@
       },
       {
         "name": "更新固件",
-        "url": "relay_ctrl.html"
+        "url": "fw_update.html"
       },
       {
         "name": "固件历史",
-        "url": "relay_ctrl.html"
+        "url": "fw_history.html"
       },
       {
         "name": "批量配置",
-        "url": "relay_ctrl.html"
+        "url": "batch_setting.html"
       },
       {
         "name": "备份/恢复",
-        "url": "relay_ctrl.html"
+        "url": "backups.html"
       },
       {
         "name": "下载诊断",
-        "url": "relay_ctrl.html"
+        "url": "diagnosis.html"
       },
       {
         "name": "系统命令",
-        "url": "output_monitoring.html"
+        "url": "sys_command.html"
       }
     ]
   }
