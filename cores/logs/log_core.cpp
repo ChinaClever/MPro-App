@@ -88,7 +88,7 @@ void Log_Core::run()
 
 void Log_Core::saveLogSlot()
 {
-    Db_Tran t;
+    Db_Tran t; QWriteLocker locker(mRwLock);
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
