@@ -1,8 +1,8 @@
 #ifndef SET_CORE_H
 #define SET_CORE_H
-#include "set_updater.h"
+#include "set_diagnose.h"
 
-class Set_Core : public Set_Updater
+class Set_Core : public Set_Diagnose
 {
     Set_Core();
 public:

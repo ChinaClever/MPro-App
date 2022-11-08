@@ -40,6 +40,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ESnmp: res = snmpCfg(it.fc, it.id); break;
     case SFnCode::ESmtp: res = smtpCfg(it.fc, it.id); break;
     case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
+    case SFnCode::EDgsNet: res = net_diagnoseCfg(it.fc); break;
 
     case SFnCode::EOutput: case SFnCode::EGroup:
     case SFnCode::EDual: res = outputCfg(it); break;
@@ -75,6 +76,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EGrouping: ret = groupingSet(it, v); break;
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
     case SFnCode::EWhiteList: ret = setWhiteList(it.fc, v); break;
+    case SFnCode::EDgsNet: ret = net_diagnoseSet(it.fc, v); break;
 
     case SFnCode::ESsh: ret = sshSet(it.fc, v); break;
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
