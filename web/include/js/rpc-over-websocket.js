@@ -38,6 +38,7 @@ let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
 let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
 let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
+let logset_name = new Array("","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -201,13 +202,20 @@ var jsonrpc = function()
         sessionStorage.setItem(ntp_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 44:
-        sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+        if(topic == 5){
+          sessionStorage.setItem(smtp_name[topic] + subtopic, JSON.parse(evt.data).result[5]);
+        }else{
+          sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+        }
       break;
       case 45:
         sessionStorage.setItem(ssh_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 46:
         sessionStorage.setItem(syslog_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 47:
+        sessionStorage.setItem(logset_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -735,7 +743,14 @@ function read_smtp_data(addr){
       clearInterval(time1);
     }
     if(j < 8 +1){
-      rpc.call('pduReadParam',[addr,44,j,0,0]);
+      if(j == 5){
+        rpc.call('pduReadParam',[addr,44,j,1,0]);
+        rpc.call('pduReadParam',[addr,44,j,2,0]);
+        rpc.call('pduReadParam',[addr,44,j,3,0]);
+        rpc.call('pduReadParam',[addr,44,j,4,0]);
+      }else{
+        rpc.call('pduReadParam',[addr,44,j,0,0]);
+      }
     }
     j++;
   },3);
@@ -784,6 +799,18 @@ function read_syslog_data(addr){
     }
     if(j < 3 +1){
       rpc.call('pduReadParam',[addr,46,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_log_setting_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(5 +1)){
+      clearInterval(time1);
+    }
+    if(j < 5 +1){
+      rpc.call('pduReadParam',[addr,47,j,0,0]);
     }
     j++;
   },3);

@@ -36,7 +36,10 @@
 						</div><br/>
 						<div align = "center"><button onclick = 'upload_data()'>upload</button></div>
 					</div>
-					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:50px; background:#ffffff;">
+					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:20px; background:#ffffff;">
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left load" style="display: displayed;"></table>
 					</div>
 				</div>
 			</div>
@@ -66,6 +69,7 @@
 			}
 		}
 		lang_fun();
+		$('.load').html(buildTable());
 		function upload_data(){
 			let  key = document.getElementById("info").value;
 			if(key != ""){
@@ -87,6 +91,9 @@
 					});
 				};
 			}
+		}
+		function buildTable(){
+				
 		}
     </script>
 </body>

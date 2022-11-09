@@ -284,6 +284,10 @@
       {
         "name": "历史数据",
         "url": "history.html"
+      },
+      {
+        "name": "日志设置",
+        "url": "log_setting.html"
       }
     ]
   },
