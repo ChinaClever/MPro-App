@@ -1,6 +1,6 @@
 #ifndef SET_DIAGNOSE_H
 #define SET_DIAGNOSE_H
-#include "set_updater.h"
+#include "set_maintain.h"
 
 struct sNetDgsIt
 {
@@ -12,7 +12,7 @@ struct sNetDgsIt
     int timeout = 1;
 };
 
-class Set_Diagnose : public Set_Updater
+class Set_Diagnose : public Set_Maintain
 {
 public:
     Set_Diagnose();

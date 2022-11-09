@@ -22,7 +22,7 @@ QVariant Set_Diagnose::net_diagnoseCfg(int fc)
     case 6: res = it->routeHost;  break;
     case 7: res = it->timeout; break;
     case 8: res = cm::execute(QString("traceroute -w %1 %2").arg(it->timeout).arg(it->routeHost));  break;
-    default: cout << it; break;
+    default: cout << fc; break;
     }
 
     return res;

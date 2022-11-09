@@ -151,7 +151,7 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 void Cascade_Updater::otaReboot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
 
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");

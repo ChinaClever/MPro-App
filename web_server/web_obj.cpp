@@ -4,7 +4,7 @@
  *      Author: Pmd
  */
 #include "web_obj.h"
-//#include "integr_core.h"
+#include "web_core.h"
 
 Web_Obj::Web_Obj(QObject *parent)
     : QObject{parent}
@@ -88,4 +88,19 @@ QString Web_Obj::metaData(uint addr)
 QString Web_Obj::execute(const QString &cmd)
 {
     return mRpc->execute(cmd);
+}
+
+QString Web_Obj::backup(int fc)
+{
+    return mRpc->pduCfgGet(94, fc).toString();
+}
+
+bool Web_Obj::restores(int fc, const QString &fn)
+{
+    return mRpc->pduCfgSet(94, fc, fn);
+}
+
+bool Web_Obj::app_upgrade(const QString &fn)
+{
+    return Web_Core::bulid()->app_upgrade(fn);
 }
