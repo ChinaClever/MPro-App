@@ -93,7 +93,50 @@
 			}
 		}
 		function buildTable(){
-				
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_4" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<td><select id ="SmtpEn" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><input id = "SmtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><input id = "SmtpSendUsr" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td><input id = "SmtpSendPsd" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<td><input id = "SmtpRecvUsr1" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_8" ></td>';
+			tbody += '<td><input id = "SmtpRecvUsr2" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "SmtpRecvUsr3" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_10" ></td>';
+			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_11" ></td>';
+			tbody += '<td><input id = "SmtpPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_12"></td>';
+			tbody += '<td><select id ="SmtpMode" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_name.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_13"></td>';
+			tbody += '<td id = "SmtpState"></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
 		}
     </script>
 </body>
