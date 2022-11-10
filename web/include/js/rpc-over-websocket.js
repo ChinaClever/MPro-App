@@ -27,7 +27,7 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
-let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Psd","Swith","Routing","Binding","State");
+let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Swith","Routing","Binding","SslEn","State");
 let ip_mode = new Array("Ipv4","Ipv6");
 let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
@@ -38,6 +38,7 @@ let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
 let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
 let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
+let logset_name = new Array("","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -153,7 +154,7 @@ var jsonrpc = function()
       case 19:
         sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
-      case 19:
+      case 20:
         sessionStorage.setItem(type_name[type]+ amqp_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:
@@ -201,13 +202,20 @@ var jsonrpc = function()
         sessionStorage.setItem(ntp_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 44:
-        sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+        if(topic == 5){
+          sessionStorage.setItem(smtp_name[topic] + subtopic, JSON.parse(evt.data).result[5]);
+        }else{
+          sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+        }
       break;
       case 45:
         sessionStorage.setItem(ssh_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 46:
         sessionStorage.setItem(syslog_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 47:
+        sessionStorage.setItem(logset_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -735,7 +743,14 @@ function read_smtp_data(addr){
       clearInterval(time1);
     }
     if(j < 8 +1){
-      rpc.call('pduReadParam',[addr,44,j,0,0]);
+      if(j == 5){
+        rpc.call('pduReadParam',[addr,44,j,1,0]);
+        rpc.call('pduReadParam',[addr,44,j,2,0]);
+        rpc.call('pduReadParam',[addr,44,j,3,0]);
+        rpc.call('pduReadParam',[addr,44,j,4,0]);
+      }else{
+        rpc.call('pduReadParam',[addr,44,j,0,0]);
+      }
     }
     j++;
   },3);
@@ -784,6 +799,18 @@ function read_syslog_data(addr){
     }
     if(j < 3 +1){
       rpc.call('pduReadParam',[addr,46,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_log_setting_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(5 +1)){
+      clearInterval(time1);
+    }
+    if(j < 5 +1){
+      rpc.call('pduReadParam',[addr,47,j,0,0]);
     }
     j++;
   },3);

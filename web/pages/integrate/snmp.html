@@ -26,10 +26,13 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left rtu_mode"></table>
+						<table class="table table-border-none text-left v1_2"></table>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left tcp_mode"></table>
+						<table class="table table-border-none text-left v3"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left trap"></table>
 					</div>
 				</div>
 			</div>
@@ -73,14 +76,16 @@
 			lang[8] = ["","密码:","","","",""];
 			lang[9] = ["","密钥:","","","",""];
 			lang[10] = ["","立即生效","","","",""];
-			lang[11] = ["","禁用","","","",""];
-			lang[12] = ["","启用","","","",""];
-			mode_set[0] = lang[11][language];
-			mode_set[1] = lang[12][language];
+			lang[11] = ["","Trap地址设置","","","",""];
+			lang[12] = ["","立即生效","","","",""];
+			lang[13] = ["","禁用","","","",""];
+			lang[14] = ["","启用","","","",""];
+			mode_set[0] = lang[13][language];
+			mode_set[1] = lang[14][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<11;i++){
-				if(i ==4 || i == 10){
+			for(var i = 1;i<13;i++){
+				if(i ==4 || i == 10 || i ==12){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
@@ -88,8 +93,9 @@
 			}
 		}
 		lang_init();
-		$('.rtu_mode').html(buildTableV1_2());
-		$('.tcp_mode').html(buildTableV3());
+		$('.v1_2').html(buildTableV1_2());
+		$('.v3').html(buildTableV3());
+		$('.trap').html(buildTableTrap());
 		lang_fun();
 		setTimeout(function(){
 			read_data();
@@ -153,13 +159,10 @@
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			for(var j = 1;j<5;j++){
-				tbody += '<tr><td>Trap'+ j +' ip:</td>';
-				tbody += '<td><input id = "addr'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
-				tbody += '</td></tr>';
-			}
+			tbody += '<tr><td>Get Community</td><td>public</td></tr>';
+			tbody += '<tr><td>Set Community</td><td>private</td></tr>';
 			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -180,9 +183,24 @@
 			tbody += '<tr><td id ="lang_9"></td>';
 			tbody += '<td><input id = "parity" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td><input id ="lang_10" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
+		}
+
+		function buildTableTrap() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%" id ="lang_11"></td>\
+			<td width ="75%"></td></tr>';
+			for(var j = 1;j<5;j++){
+				tbody += '<tr><td>Trap'+ j +' ip:</td>';
+				tbody += '<td><input id = "addr'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
+				tbody += '</td></tr>';
+			}
+			tbody += '<tr><td><input id ="lang_12" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
 		}
     </script>
 </body>
