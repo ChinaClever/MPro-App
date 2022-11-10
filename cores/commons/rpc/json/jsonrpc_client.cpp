@@ -121,6 +121,18 @@ QString JsonRpc_Client::pduLogFun(uchar type, uchar fc, int id, int cnt)
     return str;
 }
 
+QString JsonRpc_Client::pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index)
+{
+    QString str; if(!isConnected()) return str;
+    auto result = rpc_client->call("pduLogHda", start, end, addr, type, topic, index);
+    if (result->isSuccess()) {
+        str = result->result().toString();
+    } else {
+        qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
+    }
+    return str;
+}
+
 void JsonRpc_Client::close()
 {
     if(rpc_client) rpc_client->disconnectFromServer();
@@ -157,7 +169,7 @@ bool JsonRpc_Client::startLocalClient(int port)
 {
     mPort = port; timer->start(3500 + rand()%100);
     bool ret = startClient("127.0.0.1", port);
-    if(!ret) qDebug() << Q_FUNC_INFO <<  "start Local Client" << port << ret;
+    //if(!ret) qDebug() << Q_FUNC_INFO <<  "start Local Client" << port << ret;
     return ret;
 }
 

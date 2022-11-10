@@ -4,7 +4,7 @@
  *      Author: Pmd
  */
 #include "web_obj.h"
-//#include "integr_core.h"
+#include "web_core.h"
 
 Web_Obj::Web_Obj(QObject *parent)
     : QObject{parent}
@@ -75,6 +75,11 @@ QVariant Web_Obj::log_fun(uint type, uint fc, uint id, uint cnt)
     return mRpc->pduLogFun(type, fc, id, cnt);
 }
 
+QString Web_Obj::log_hda(const QString &start, const QString &end, int addr, int type, int topic, int index)
+{
+    return mRpc->pduLogHda(start, end, addr, type, topic, index);
+}
+
 QString Web_Obj::metaData(uint addr)
 {
     return mRpc->pduMetaData(addr);
@@ -83,4 +88,19 @@ QString Web_Obj::metaData(uint addr)
 QString Web_Obj::execute(const QString &cmd)
 {
     return mRpc->execute(cmd);
+}
+
+QString Web_Obj::backup(int fc)
+{
+    return mRpc->pduCfgGet(94, fc).toString();
+}
+
+bool Web_Obj::restores(int fc, const QString &fn)
+{
+    return mRpc->pduCfgSet(94, fc, fn);
+}
+
+bool Web_Obj::app_upgrade(const QString &fn)
+{
+    return Web_Core::bulid()->app_upgrade(fn);
 }

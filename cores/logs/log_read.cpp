@@ -6,9 +6,9 @@
 #include "log_read.h"
 
 Log_Read::Log_Read(QObject *parent)
-    : QObject{parent}
+    : Log_Sys{parent}
 {
-
+    mRwLock = new QReadWriteLock;
 }
 
 template <typename T, typename U>
@@ -35,28 +35,23 @@ static QString log_read_once(U *db, int id)
 QString Log_Read::log_readOnce(int type, int id)
 {
     QVariant v; switch (type) {
-    case eLogs::eOpLog: v = log_read_once<sOpItem>(Db_Op::bulid(), id); break;
-    case eLogs::eSysLog: v = log_read_once<sSysItem>(Db_Sys::bulid(), id); break;
-    case eLogs::eEleLog: v = log_read_once<sEleItem>(Db_Ele::bulid(), id); break;
-    case eLogs::eUserLog: v = log_read_once<sUserItem>(Db_User::bulid(), id); break;
+    case eLogs::eOtaLog: v = log_read_once<sOtaItem>(Db_Ota::bulid(), id); break;
+    case eLogs::eHdaLog: v = log_read_once<sHdaItem>(Db_Hda::bulid(), id); break;
+    case eLogs::eEventLog: v = log_read_once<sEventItem>(Db_Event::bulid(), id); break;
     case eLogs::eAlarmLog: v = log_read_once<sAlarmItem>(Db_Alarm::bulid(), id); break;
-    case eLogs::eHardwareLog: v = log_read_once<sHardwareItem>(Db_Hardware::bulid(), id); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
     return v.toString();
 }
 
-
 QString Log_Read::log_readPage(int type, int id, int cnt)
 {
     QVariant v; switch (type) {
-    case eLogs::eOpLog: v = log_read_page<sOpItem>(Db_Op::bulid(), id, cnt); break;
-    case eLogs::eSysLog: v = log_read_page<sSysItem>(Db_Sys::bulid(), id, cnt); break;
-    case eLogs::eEleLog: v = log_read_page<sEleItem>(Db_Ele::bulid(), id, cnt); break;
-    case eLogs::eUserLog: v = log_read_page<sUserItem>(Db_User::bulid(), id, cnt); break;
+    case eLogs::eOtaLog: v = log_read_page<sOtaItem>(Db_Ota::bulid(), id, cnt); break;
+    case eLogs::eHdaLog: v = log_read_page<sHdaItem>(Db_Hda::bulid(), id, cnt); break;
+    case eLogs::eEventLog: v = log_read_page<sEventItem>(Db_Event::bulid(), id, cnt); break;
     case eLogs::eAlarmLog: v = log_read_page<sAlarmItem>(Db_Alarm::bulid(), id, cnt); break;
-    case eLogs::eHardwareLog: v = log_read_page<sHardwareItem>(Db_Hardware::bulid(), id, cnt); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
 
@@ -65,14 +60,11 @@ QString Log_Read::log_readPage(int type, int id, int cnt)
 
 Sql_Statement *Log_Read::getSql(int type)
 {
-    Sql_Statement *sql = nullptr;
-    switch (type) {
-    case eLogs::eOpLog: sql = Db_Op::bulid(); break;
-    case eLogs::eSysLog: sql = Db_Sys::bulid(); break;
-    case eLogs::eEleLog: sql = Db_Ele::bulid(); break;
-    case eLogs::eUserLog: sql = Db_User::bulid(); break;
+    Sql_Statement *sql = nullptr; switch (type) {
+    case eLogs::eOtaLog: sql = Db_Ota::bulid(); break;
+    case eLogs::eHdaLog: sql = Db_Hda::bulid(); break;
+    case eLogs::eEventLog: sql = Db_Event::bulid(); break;
     case eLogs::eAlarmLog: sql = Db_Alarm::bulid(); break;
-    case eLogs::eHardwareLog: sql = Db_Hardware::bulid(); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return sql;
@@ -81,15 +73,39 @@ Sql_Statement *Log_Read::getSql(int type)
 
 QString Log_Read::log_readFun(const sLogFcIt &it)
 {
-    QString res;
-    Sql_Statement *sql = getSql(it.type);
-    switch (it.fc) {
+    Sql_Statement *sql = getSql(it.type); if(!sql) return "";
+    QString res; QReadLocker locker(mRwLock); switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
     case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
     case eLogFc::eLog_read: res = log_readPage(it.type, it.id, it.cnt); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
     }
+    return res;
+}
+
+QString Log_Read::log_readHda(const sLogHdaIt &it)
+{
+    QString cmd = "where ";
+    if(it.start.size()) {
+        QString endDateStr = it.end;
+        if(it.end.isEmpty()) endDateStr = QDate::currentDate().toString("yyyy-MM-dd");
+        cmd += QString("dtime between \'%1\' and  \'%2\' ").arg(it.start, endDateStr);
+    }
+
+    if(it.addr) cmd += QString(" and addr = \'%1\'").arg(it.addr);
+    if(it.type) cmd += QString(" and type = \'%1\'").arg(it.type);
+    if(it.topic) cmd += QString(" and topic = \'%1\'").arg(it.topic);
+    if(it.index) cmd += QString(" and index = \'%1\'").arg(it.index);
+
+    QReadLocker locker(mRwLock);
+    QString res; Db_Hda *db = Db_Hda::bulid();
+    QVector<sHdaItem> its = db->selectItems(cmd);
+    if(its.size()) {
+        int minId = its.first().id;
+        res = db->toPageJson(its, minId);
+    } else qDebug() << Q_FUNC_INFO << cmd;
+
     return res;
 }
 

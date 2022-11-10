@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_Sensor{parent}
 {
-    QTimer::singleShot(4,this,SLOT(inet_initFunSlot()));
+    QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }
 
 void App_NetAddr::inet_initFunSlot()
@@ -81,7 +81,7 @@ void App_NetAddr::inet_setInterfaceSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
-    inet_isRun = false;
+    cm::mdelay(1); inet_isRun = false;
 }
 
 void App_NetAddr::inet_setIpV4()
@@ -96,14 +96,14 @@ void App_NetAddr::inet_setIpV4()
         QString gw = net->inet.gw;
         QString mask = net->inet.mask;
         QString dns = net->inet.dns;
-        QString dns2 = net->inet.dns2;
+        // QString dns2 = net->inet.dns2;
         QString cmd = "ifconfig %1 %2 netmask %3";
         QString str = cmd.arg(fn, ip, mask);
         system(str.toStdString().c_str());
 
         if(gw.size()) {
             if(QFile::exists("netcfg")) {
-                cmd = "netcfg -g %1 eth0";
+                cmd = "./netcfg -g %1 eth0";
                 str = cmd.arg(gw);
             } else {
                 cmd = "ip route replace default via %1 dev %2";
@@ -114,7 +114,7 @@ void App_NetAddr::inet_setIpV4()
 
         if(dns.size()) {
             if(QFile::exists("netcfg")) {
-                cmd = "netcfg -d %1";
+                cmd = "./netcfg -d %1";
                 str = cmd.arg(dns);
             } else {
                 if(!QFile::exists("/tmp/resolv.conf")) {system("touch /tmp/resolv.conf");cm::mdelay(1);}
@@ -150,7 +150,7 @@ void App_NetAddr::inet_setIpV6()
         int mask = net->inet6.prefixLen;
         QString cmd, str;
         if(QFile::exists("netcfg")) {
-            cmd = "inetcfg -i %1/%2 eth0";
+            cmd = "./netcfg -i %1/%2 eth0";
             str = cmd.arg(ip).arg(mask);
         } else {
             cmd = "ip -6 addr add %1/%2 dev %3";
@@ -160,7 +160,7 @@ void App_NetAddr::inet_setIpV6()
 
         if(gw.size()) {
             if(QFile::exists("netcfg")) {
-                cmd = "netcfg -g %1 eth0";
+                cmd = "./netcfg -g %1 eth0";
                 str = cmd.arg(gw);
             } else {
                 cmd = "ip -6 route replace default via %1 dev %2";
@@ -171,7 +171,7 @@ void App_NetAddr::inet_setIpV6()
 
         if(dns.size()) {
             if(QFile::exists("netcfg")) {
-                cmd = "netcfg -d %1/%2 eth0";
+                cmd = "./netcfg -d %1/%2 eth0";
                 str = cmd.arg(dns).arg(mask);
             } else {
                 cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
@@ -202,6 +202,7 @@ void App_NetAddr::inet_saveCfg()
 
 void App_NetAddr::inet_dnsCfg()
 {
+    if(!QFile::exists("/tmp/resolv.conf")) return ;
     sNetInterface *net = &(cm::dataPacket()->net);
     QString str = cm::execute("cat /tmp/resolv.conf");
     if(str.isEmpty()) return; else str.remove("\n");

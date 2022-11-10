@@ -1,12 +1,18 @@
 [
   {
-    "name": "输入",
+    "name": "首页",
     "icon": "homepage_fill",
+    "base": "",
+    "url": "home.html"
+  },
+  {
+    "name": "输入",
+    "icon": "flashlight_fill",
     "base": "pages/inlet/",
     "subNav": [
       {
-        "name": "首页",
-        "url": "home.html"
+        "name": "回路设置",
+        "url": "loop_set.html"
       },
       {
         "name": "相设置",
@@ -15,20 +21,8 @@
     ]
   },
   {
-    "name": "回路",
-    "icon": "flag_fill",
-    "base": "pages/loop/",
-    "subNav": [
-      {
-        "name": "回路设置",
-        "url": "loop_set.html"
-      }
-    ]
-  },
-
-  {
     "name": "输出",
-    "icon": "info",
+    "icon": "subtraction",
     "base": "pages/outlet/",
     "subNav": [ 
       {
@@ -59,7 +53,7 @@
   },
   {
     "name": "分组",
-    "icon": "info",
+    "icon": "tasklist_fill",
     "base": "pages/group/",
     "subNav": [
 
@@ -91,7 +85,7 @@
   }, 
   {
     "name": "机架",
-    "icon": "info",
+    "icon": "createtask_fill",
     "base": "pages/dual/",
     "subNav": [
       {
@@ -178,12 +172,16 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
+      },
+      {
+        "name": "AMQP服务",
+        "url": "amqp.html"
       }
     ]
   }, 
   {
     "name": "安全加密",
-    "icon": "collection_fill",
+    "icon": "lock_fill",
     "base": "pages/sercet/",
     "subNav": [      
       {
@@ -228,10 +226,6 @@
       {
         "name": "SMTP服务",
         "url": "smtp.html"
-      },
-      {
-        "name": "Telnet服务",
-        "url": "telnet.html"
       },
       {
         "name": "Radius服务",
@@ -284,24 +278,12 @@
         "url": "alarm_log.html"
       },
       {
-        "name": "操作日志",
-        "url": "op_log.html"
+        "name": "事件记录",
+        "url": "event_log.html"
       },
       {
-        "name": "系统日志",
-        "url": "sys_log.html"
-      },
-      {
-        "name": "电能记录",
-        "url": "ele_log.html"
-      },
-      {
-        "name": "硬件故障",
-        "url": "hardware.html"
-      },
-      {
-        "name": "升级记录",
-        "url": "ota_log.html"
+        "name": "历史数据",
+        "url": "history.html"
       }
     ]
   },
@@ -312,31 +294,31 @@
     "subNav": [
       {
         "name": "系统信息",
-        "url": "relay_ctrl.html"
+        "url": "sys_info.html"
       },
       {
         "name": "更新固件",
-        "url": "relay_ctrl.html"
+        "url": "fw_update.html"
       },
       {
         "name": "固件历史",
-        "url": "relay_ctrl.html"
+        "url": "fw_history.html"
       },
       {
         "name": "批量配置",
-        "url": "relay_ctrl.html"
+        "url": "batch_setting.html"
       },
       {
         "name": "备份/恢复",
-        "url": "relay_ctrl.html"
+        "url": "backups.html"
       },
       {
         "name": "下载诊断",
-        "url": "relay_ctrl.html"
+        "url": "diagnosis.html"
       },
       {
         "name": "系统命令",
-        "url": "output_monitoring.html"
+        "url": "sys_command.html"
       }
     ]
   }

@@ -13,22 +13,24 @@ Cascade_Unserialize::Cascade_Unserialize(QObject *parent) : Cascade_Updater{pare
 
 void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 {
-    unit.value[id] = it.value;
-    unit.rated[id] = it.rated;
     unit.en[id] = it.en;
-
+    unit.hda[id] = it.hda;
     unit.min[id] = it.min;
     unit.max[id] = it.max;
+    unit.value[id] = it.value;
+    unit.rated[id] = it.rated;
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
-    unit.reserve[id] = it.reserve;
+    unit.peakMax[id] = it.peakMax;
+    unit.peakStamp[id] = it.peakStamp;
+    unit.reserve[0][id] = it.reserve[0];
 }
 
 void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
     unit.sw[id] = it.sw;
     unit.en[id] = it.en;
-    unit.reserve[id] = it.reserve;
+    unit.cnt[id] = it.cnt;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.overrunOff[id] = it.overrunOff;
@@ -36,6 +38,7 @@ void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &
     unit.timingOn[id][0] = unit.timingOff[id][0] = 0;
     qstrcpy(unit.timingOn[id], it.timingOn);
     qstrcpy(unit.timingOff[id], it.timingOff);
+    unit.reserve[0][id] = it.reserve[0];
 }
 
 void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
@@ -49,9 +52,10 @@ void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
 
     data.pf[id] = obj.pf;
     data.ele[id] = obj.ele;
+    data.hdaEle[id] = obj.hdaEle;
     data.artPow[id] = obj.activePow;
     data.reactivePow[id] = obj.reactivePow;
-    data.reserve[id] = obj.reserve;
+    data.reserve[0][id] = obj.reserve[0];
 }
 
 void Cascade_Unserialize::unEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
@@ -61,10 +65,11 @@ void Cascade_Unserialize::unEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
 
+    data.wind[id] = obj.wind;
     data.door[id] = obj.door;
     data.water[id] = obj.water;
     data.smoke[id] = obj.smoke;
-    data.reserve[id] = obj.reserve;
+    data.reserve[0][id] = obj.reserve[0];
 }
 
 void Cascade_Unserialize::unDevSize(uchar size, sObjData &data)
@@ -107,7 +112,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->dc = obj->dc;
     data->hz = obj->hz;
     data->proc = obj->proc;
-    data->reserve = obj->reserve;
+    data->reserve[0] = obj->reserve[0];
 }
 
 bool Cascade_Unserialize::unSequence(uchar addr)

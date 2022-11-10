@@ -25,6 +25,7 @@ private:
     WS_Server *mWss;
     Net_TcpServer *mTcp;
     Mqtt_Client *mMqtt;
+    QRabbitMQ *mAmqp;
     QByteArrayList mList;
     bool isRun=true;
 };

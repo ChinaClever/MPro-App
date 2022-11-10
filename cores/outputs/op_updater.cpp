@@ -7,9 +7,8 @@
 
 
 OP_Updater::OP_Updater(QObject *parent) : OP_Object{parent}
-{
-    isOta = false;
-    mNet = new Net_Udp(this);
+{    
+    mNet = new Net_Udp(this); isOta = false;
     connect(this, &OP_Updater::otaSig, this, &OP_Updater::onOtaSig);
     connect(this, &OP_Updater::otaFinish, this, &OP_Updater::onOtaFinish);
     connect(this, &OP_Updater::otaProgress, this, &OP_Updater::onOtaProgress);
@@ -19,7 +18,7 @@ bool OP_Updater::ota_start(const QString &fn)
 {
     bool ret = true; // File::CheckCrc(fn); //////////==========
     if(ret) { mOtaFile=fn;
-        setbit(cm::dataPacket()->ota.work, 4);
+        setbit(cm::dataPacket()->ota.work, DOta_Outlet);
     } else qDebug() << "Error: OP Updater ota crc" << Q_FUNC_INFO;
     return ret;
 }
@@ -41,7 +40,7 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 void OP_Updater::ota_reboot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     cm::execute("rm -rf /usr/data/clever/outlet/*");
@@ -57,13 +56,15 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        cm::dataPacket()->ota.outlet.isRun = 1;
-        for(uint i=0; i< mDev->cfg.nums.boardNum; ++i) {
-            ret = ota_update(i+1, fn);
-            emit otaFinish(i+1, ret);
-        } cm::mdelay(220); isOta = false;
-        cm::dataPacket()->ota.outlet.isRun = ret?0:2;
-        clrbit(cm::dataPacket()->ota.work, 4);
+        sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
+        for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
+            up->results[i] = 1;
+            ret = ota_update(i, fn);
+            emit otaFinish(i, ret);
+            if(ret) up->results[i] = 2;
+            else up->results[i] = 3;
+        } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
+        clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
@@ -123,9 +124,9 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 11*1000);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
     if(!recv.contains("Start Updat")) {
-        recv = transmit(cmd, sizeof(cmd), 15*1000);
+        recv = transmit(cmd, sizeof(cmd), 5000);
         if(!recv.contains("Start Updat")) isOta = false;
     } emit otaSig(id, recv);
     return isOta;
@@ -140,7 +141,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
     data.append(array);
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
-    Crc::AppendCrc(data); QByteArray recv = transmit(data, 11*1000);
+    Crc::AppendCrc(data); QByteArray recv = transmit(data, 3000);
     if(recv.contains("success")) ret = true;
     emit otaSig(addr, recv);
     return ret;

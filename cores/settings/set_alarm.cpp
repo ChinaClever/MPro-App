@@ -72,8 +72,8 @@ void Set_Alarm::oplog(const sDataItem &it)
     content += Alarm_Log::bulid()->alarmType(it);
     content += opContent(it);
 
-    sOpItem db;
+    sEventItem db;
     db.content = content;
-    db.op_src = QStringLiteral("告警设置"); //opSrc(it.txType);
+    db.type = QStringLiteral("告警设置"); //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }

@@ -15,6 +15,7 @@ public slots:
     Q_INVOKABLE double pduDataGet(int addr, int type, int topic, int sub, int id);
     Q_INVOKABLE bool pduDataSet(int addr, int type, int topic, int sub, int id, double value);
     Q_INVOKABLE bool pduCfgSet(int type, int fc, const QVariant &value, int id=0, int addr=0);
+    Q_INVOKABLE QString pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index);
     Q_INVOKABLE QString pduCfgGet(int type, int fc, int id=0, int addr=0);
     Q_INVOKABLE QString pduLogFun(int type, int fc, int id=0, int cnt=0);
     Q_INVOKABLE bool pduRelaysCtrl(int addr, int start, int num, int on);
@@ -23,9 +24,6 @@ public slots:
 
 signals:
     void sendUnsolicitedNotification(const QString&, const QVariant&);
-
-private:
-    double getDecimal(const sDataItem &it);
 
 private:
     uchar mTxType=0;

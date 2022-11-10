@@ -9,7 +9,7 @@ let password = 'password';
 let identify = '';
 let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
-let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","","Content","Output","Group","Dual","GroupInfo","GroupSet");
+let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
@@ -18,14 +18,16 @@ let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
-let snmp_info = new Array("","Trap1","Trap2","V3Enable","Username","Password","Key");
+let snmp_info = new Array("","V2Enable","Trap","V3Enable","Username","Password","Key");
 let rpc_info = new Array("","JsonMode","JsonPort","","XmlMode","XmlPort","");
-let push_info = new Array("","Udp1En","Udp1Addr","Udp1Port","Udp2En","Udp2Addr","Udp2Port","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
-let ver_name = new Array("CoreVer","CoreCompile","ThreadVer","ThreadCompile","UIVer","UICompile","Borad2Ver","Borad3Ver","Borad4Ver");
+let push_info = new Array("","UdpEn","UdpAddr","UdpPort","","","","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
+let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","",
+"Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
+let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Psd","Swith","Routing","Binding","State");
 let ip_mode = new Array("Ipv4","Ipv6");
 let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
@@ -34,6 +36,8 @@ let web_service = new Array("","HttpEn","HttpPort","Redirect","HttpsEn","HttpsPo
 let smtp_name = new Array("","SmtpEn","SmtpServer","SmtpSendUsr","SmtpSendPsd","SmtpRecvUsr","SmtpPort","SmtpMode","SmtpState");
 let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
 let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
+let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
+let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -130,20 +134,27 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 16:
-        sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        if(topic == 2){
+          sessionStorage.setItem(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
+        }else{
+          sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
+        }
       break;
       case 17:
         sessionStorage.setItem(type_name[type]+ rpc_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 18:
-        if(topic == 0){
-          sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
+        if(topic < 5){
+          sessionStorage.setItem(type_name[type]+ push_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
       break;
       case 19:
         sessionStorage.setItem(type_name[type]+ mqtt_cfg[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 19:
+        sessionStorage.setItem(type_name[type]+ amqp_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:
         sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
@@ -161,7 +172,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ addr_ +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
       case 30:
-        sessionStorage.setItem(ver_name[topic] + addr_, parseInt(JSON.parse(evt.data).result[5]));
+        sessionStorage.setItem(ver_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 31:
         sessionStorage.setItem(encrpty_name[topic], JSON.parse(evt.data).result[5]);
@@ -191,6 +202,12 @@ var jsonrpc = function()
       break;
       case 44:
         sessionStorage.setItem(smtp_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 45:
+        sessionStorage.setItem(ssh_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 46:
+        sessionStorage.setItem(syslog_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -516,7 +533,7 @@ function read_rpc_data(addr){
       }
     }
     j++;
-  },1);
+  },3);
 }
 
 function read_snmp_data(addr){
@@ -526,10 +543,16 @@ function read_snmp_data(addr){
       clearInterval(time1);
     }
     if(j <= 6 ){
-      rpc.call('pduReadParam',[addr,snmp,j,0,0]);
+      if(j == 2){
+        for( i = 1;i<5;i++){
+          rpc.call('pduReadParam',[addr,snmp,j,i,0]);
+        }
+      }else{
+        rpc.call('pduReadParam',[addr,snmp,j,0,0]);
+      }
     }
     j++;
-  },1);
+  },3);
 }
 function read_log_data(type,name,start,num){
   rpc.call('pduLogFun',[start,log,type,name,num]);
@@ -541,7 +564,13 @@ function read_push_data(){
       clearInterval(time1);
     }
     if(j <= 9 ){
-      rpc.call('pduReadParam',[addr,push,j,0,0]);
+      if(j<4){
+        for(let i = 1;i< 5;i++){
+          rpc.call('pduReadParam',[addr,push,j,i,0]);
+        }
+      }else if(j>6){
+        rpc.call('pduReadParam',[addr,push,j,0,0]);
+      }
     }
     j++;
   },1);
@@ -561,12 +590,12 @@ function read_http_data(addr){
   },1);
 }
 function read_ver_info(addr){
-  let j = 1;
+  let j = 0;
   var time1 = setInterval(function(){
-    if(j >= parseInt(15)){
+    if(j >= parseInt(24)){
       clearInterval(time1);
     }
-    if(j != 10 && j < 15){
+    if(j < 9 || (j>10 && j < 15)|| (j>20 && j<24)){
       rpc.call('pduReadParam',[addr,ver_,j,0,0]);
     }
     j++;
@@ -604,6 +633,18 @@ function read_mqtt_data(addr){
     }
     if(j < 10 +1){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_amqp_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(11 +1)){
+      clearInterval(time1);
+    }
+    if(j < 11 +1){
+      rpc.call('pduReadParam',[addr,20,j,0,0]);
     }
     j++;
   },3);
@@ -719,6 +760,30 @@ function read_ntp_data(addr){
     }
     if(j < 4 +1){
       rpc.call('pduReadParam',[addr,43,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_ssh_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(4 +1)){
+      clearInterval(time1);
+    }
+    if(j < 4 +1){
+      rpc.call('pduReadParam',[addr,45,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_syslog_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(3 +1)){
+      clearInterval(time1);
+    }
+    if(j < 3 +1){
+      rpc.call('pduReadParam',[addr,46,j,0,0]);
     }
     j++;
   },3);

@@ -6,9 +6,11 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/set_alarm.h \
     $$PWD/set_core.h \
+    $$PWD/set_diagnose.h \
     $$PWD/set_info.h \
     $$PWD/set_integr.h \
     $$PWD/set_login.h \
+    $$PWD/set_maintain.h \
     $$PWD/set_netaddr.h \
     $$PWD/set_output.h \
     $$PWD/set_sercret.h \
@@ -20,9 +22,11 @@ HEADERS += \
 SOURCES += \
     $$PWD/set_alarm.cpp \
     $$PWD/set_core.cpp \
+    $$PWD/set_diagnose.cpp \
     $$PWD/set_info.cpp \
     $$PWD/set_integr.cpp \
     $$PWD/set_login.cpp \
+    $$PWD/set_maintain.cpp \
     $$PWD/set_netaddr.cpp \
     $$PWD/set_output.cpp \
     $$PWD/set_sercret.cpp \

@@ -45,8 +45,9 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     in << toByteArray(ptr->dtc);
     in << toByteArray(ptr->cfg);
     in << toByteArray(ptr->proc);
-    in << ptr->lps << ptr->dc << ptr->reserve;
+    in << ptr->lps << ptr->dc;
 
+    for(int i=0; i<6; ++i) in << ptr->reserve[i];
     for(int i=0; i<6; ++i) {size = 0; in << size; in << QByteArray();}
     for(int i=0; i<6; ++i) in << QByteArray();
 
@@ -82,8 +83,9 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     out >> v; ptr->dtc = toStruct<sFaultCode>(v);
     out >> v; ptr->cfg = toStruct<sDevCfg>(v);
     out >> v; ptr->proc = toStruct<sProcState>(v);
-    out >> ptr->lps >> ptr->dc >> ptr->reserve;
+    out >> ptr->lps >> ptr->dc;
 
+    for(int i=0; i<6; ++i) out >> ptr->reserve[i];
     for(int i=0; i<6; ++i) {out >> size; out >> v;}
     for(int i=0; i<6; ++i) out >> v;
 

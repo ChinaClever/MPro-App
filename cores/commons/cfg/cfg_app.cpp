@@ -39,6 +39,7 @@ bool Cfg_App::app_pack(sAppVerIt &it)
     writeCfg("usr", it.usr, g);
     writeCfg("md5", it.md5, g);
     writeCfg("ver", it.ver, g);
+    writeCfg("dev", it.dev, g);
     writeCfg("remark", it.remark, g);
     writeCfg("oldVersion", it.oldVersion, g);
     writeCfg("releaseDate", it.releaseDate, g);
@@ -52,10 +53,22 @@ bool Cfg_App::app_unpack(sAppVerIt &it)
     it.usr = readCfg("usr", "", g).toString();
     it.md5 = readCfg("md5", "", g).toString();
     it.ver = readCfg("ver", "", g).toString();
+    it.dev = readCfg("dev", "MPDU-Pro", g).toString();
     it.remark = readCfg("remark", "", g).toString();
     it.oldVersion = readCfg("oldVersion", "", g).toString();
-    it.releaseDate = readCfg("releaseDate", "", g).toString();
-    QString str = it.usr + it.ver + it.remark + it.oldVersion + it.releaseDate;
+
+    QDateTime dateTime = QDateTime::currentDateTime();
+    QString dt = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+
+    QString str = readCfg("releaseDate", "", g).toString();
+    if(str.isEmpty()) { str = dt; writeCfg("releaseDate", dt, g);}
+    it.releaseDate = str;
+
+    str = readCfg("upgradeDate", "", g).toString();
+    if(str.isEmpty()) { str = dt; writeCfg("upgradeDate", dt, g);}
+    it.upgradeDate = str;
+
+    str = it.dev + it.usr + it.ver + it.remark + it.oldVersion + it.releaseDate;
     str = QCryptographicHash::hash(str.toLatin1(),QCryptographicHash::Md5).toHex();
     return  it.md5 == str;
 }

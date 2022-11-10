@@ -45,16 +45,21 @@
 		let language = 1;
 		var mode_set = new Array();
 		var mode_name = new Array("","UDP","TCP","WebSocket");
-		var select_name = new Array("udp1En","udp1Addr","udp1Port","udp2En","udp2Addr","udp2Port","delay","mode","port");
+		var select_name = new Array("","udpEn","udpAddr","udpPort","","","","delay","mode","port");
+		var udp_sel = new Array("UDP1","UDP2","UDP3","UDP4");
 		var push_data = new Array();
 		let lang = new Array();
+		let udp_num = 0;
 		function read_data(){
 			var i = 0;
 			for(var i = 1;i<10;i++){
-				if(i == 1||i==4||i==8){
-					push_data[i] = parseInt(sessionStorage.getItem(type_name[18]+ push_info[i]));
-				}else{
-					push_data[i] = sessionStorage.getItem(type_name[18]+ push_info[i]);
+				push_data[i] = new Array();
+				if(i < 4){
+					for(let j = 1;j<5;j++){
+						push_data[i][j] = sessionStorage.getItem(type_name[18]+ push_info[i]+j);
+					}
+				}else if(i>6){
+					push_data[i][1] = sessionStorage.getItem(type_name[18]+ push_info[i]);
 				}
 			}
 		}
@@ -64,27 +69,25 @@
 			}
 			lang[1] = ["","主动推送","","","",""];
 			lang[2] = ["","主动推送服务","","","",""];
-			lang[3] = ["","启用推送1:","","","",""];
-			lang[4] = ["","推送1地址:","","","",""];
-			lang[5] = ["","推送1端口号:","","","",""];
-			lang[6] = ["","启用推送2:","","","",""];
-			lang[7] = ["","推送2地址:","","","",""];
-			lang[8] = ["","推送2端口号:","","","",""];
-			lang[9] = ["","时间间隔：","","","",""];
-			lang[10] = ["","立即生效","","","",""];
-			lang[11] = ["","设备反控设置","","","",""];
-			lang[12] = ["","模式设置：","","","",""];
-			lang[13] = ["","端口号：","","","",""];
-			lang[14] = ["","立即生效","","","",""];
-			lang[15] = ["","禁用","","","",""];
-			lang[16] = ["","启用","","","",""];
-			mode_set[0] = lang[15][language];
-			mode_set[1] = lang[16][language];
-			mode_name[0] = lang[15][language];
+			lang[3] = ["","推送地址:","","","",""];
+			lang[4] = ["","推送启用:","","","",""];
+			lang[5] = ["","地址:","","","",""];
+			lang[6] = ["","端口号:","","","",""];
+			lang[7] = ["","时间间隔：","","","",""];
+			lang[8] = ["","立即生效","","","",""];
+			lang[9] = ["","设备反控设置","","","",""];
+			lang[10] = ["","模式设置：","","","",""];
+			lang[11] = ["","端口号：","","","",""];
+			lang[12] = ["","立即生效","","","",""];
+			lang[13] = ["","禁用","","","",""];
+			lang[14] = ["","启用","","","",""];
+			mode_set[0] = lang[13][language];
+			mode_set[1] = lang[14][language];
+			mode_name[0] = lang[13][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<15;i++){
-				if(i ==10 || i == 14){
+			for(var i = 1;i<13;i++){
+				if(i ==8 || i == 12){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
@@ -100,47 +103,38 @@
 			showdata();
 		},500);
 		function showdata(){
-			var lab = 0,btn1 = 0,btn2 = 0,btn3 = 0,setbtn =0;
-			btn1 = document.getElementById(select_name[0]);
-			btn2 = document.getElementById(select_name[3]);
-			btn3 = document.getElementById(select_name[7]);
-			for(var i = 1; i < (select_name.length-2);i++){
-				lab = document.getElementById(select_name[i]);
-				if(i < 3){
-					if(push_data[1] == 0){
-						lab.disabled = true;
-						btn1[push_data[1]].selected = true;
-						}else{
-						lab.disabled = false;
-						btn1[push_data[1]].selected = true;
-					}
-				}else if(i > 3 && i < 7){
-					if(push_data[4] == 0){
-						lab.disabled = true;
-						btn2[push_data[4]].selected = true;
-					}
-					else{
-						lab.disabled = false;
-						btn2[push_data[4]].selected = true;
-					}
+			document.getElementById("udpSel").value = udp_num;
+			for(let i = 1;i < 10;i++){
+				if(i<4){
+					document.getElementById(select_name[i]).value = push_data[i][1 + udp_num];
+				}else if(i>6){
+					document.getElementById(select_name[i]).value = push_data[i][1];
 				}
-				lab.value = push_data[i + 1];
+				if(i<4 ||i>6){
+					document.getElementById(select_name[i]).disabled = false;
+				}
 			}
-			lab = document.getElementById(select_name[8]);
-			lab.value = push_data[9];
-			if(push_data[8] == 0){
-				btn3[push_data[8]].selected = true;
-				lab.disabled = true;
-			}else{
-				btn3[push_data[8]].selected = true;
-				lab.disabled = false;
+			if(parseInt(push_data[1][udp_num + 1]) == 0){
+				document.getElementById(select_name[2]).disabled = true;
+				document.getElementById(select_name[3]).disabled = true;
+			}
+			if(parseInt(push_data[8][1]) == 0){
+				document.getElementById(select_name[9]).disabled = true;
 			}
 		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){
-				for(let i = 0;i<select_name.length;i++){
-					if(btn.id == select_name[i]){
-						rpc.call('pduSetParam',[0,push,(i + 1),0,0,btn.value]);
+				if(btn.id == "udpSel"){
+					udp_num = parseInt(btn.value);
+				}else{
+					for(let i = 0;i<select_name.length;i++){
+						if(btn.id == select_name[i]){
+							if(i < 4){
+								rpc.call('pduSetParam',[0,push,i,1 + udp_num,0,btn.value]);
+							}else if(i>6){
+								rpc.call('pduSetParam',[0,push,i,0,0,btn.value]);
+							}
+						}
 					}
 				}
 				flash_html();
@@ -163,45 +157,41 @@
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
 			<td width ="85%"></td>/tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
-			tbody += '<td><select id ="udp1En" onchange ="SetData(this)">';
+			tbody += '<td><select id ="udpSel" onchange ="SetData(this)">';
+			for(var i = 0; i<udp_sel.length;i++){
+				tbody +='<option value ="'+i+'">'+udp_sel[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id = "lang_4"></td>';
+			tbody += '<td><select id ="udpEn" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id ="lang_4"></td>';
-			tbody += '<td><input id = "udp1Addr" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0.0.0.0"></input></td></tr>';
-			tbody += '<tr><td id ="lang_5" ></td>';
-			tbody += '<td><input id = "udp1Port" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td id ="lang_6"></td>';
-			tbody += '<td><select id ="udp2En" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
+			tbody += '<tr><td id ="lang_5"></td>';
+			tbody += '<td><input id = "udpAddr" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0.0.0.0"></input></td></tr>';
+			tbody += '<tr><td id ="lang_6" ></td>';
+			tbody += '<td><input id = "udpPort" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
-			tbody += '<td><input id = "udp2Addr" style ="width:24.5%" type = "text" onchange ="SetData(this)" placeholder="0.0.0.0"></input></td></tr>';
-			tbody += '<tr><td id ="lang_8"></td>';
-			tbody += '<td><input id = "udp2Port" style ="width:24.5%" type = "text" onchange ="SetData(this)" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td id ="lang_9"></td>';
 			tbody += '<td><input id = "delay" style ="width:24.5%" type = "text" onchange ="SetData(this)" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_10" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_8" onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 			
 		}
 		function buildTableCtl() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id ="lang_11"></td>\
+			thead = '<tr><td width ="15%" id ="lang_9"></td>\
 				<td width ="85%"></td></tr>';
-			tbody += '<tr><td id ="lang_12"></td>';
+			tbody += '<tr><td id ="lang_10"></td>';
 				tbody += '<td><select id ="mode" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_name.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id ="lang_13"></td>';
+			tbody += '<tr><td id ="lang_11"></td>';
 			tbody += '<td><input id = "port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
-			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_14" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_12" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

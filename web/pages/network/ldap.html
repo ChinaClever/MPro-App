@@ -35,12 +35,54 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="box">
+		<input type="text" id="ss">       
+		<input value="搜素" id="btn" type="button">    
+ 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
+		var arrs = ["小櫻魔法棒", "小明术士剑", "小颖天天乐", "天天向上", "巴卫帅锅", "夏目贵志是个暖男", 
+				"猫咪老师最爱吃", "金木研是个可怜的食尸鬼"];       
+		document.getElementById("ss").onkeyup = function () {
+					var text = this.value;
+					var list = [];            
+					function my$(id) {
+						return document.getElementById(id);
+					}
+					//加入已经存在这个dv盒子就删除
+					if(my$("dv")){
+							my$("box").removeChild(my$("dv"));
+							}       
+					//得到所有匹配的元素并push到这个list数组中 
+					for (var i = 0; i < arrs.length; i++) {      
+							if (arrs[i].indexOf(text) == 0 && text != "") {         
+										list.push(arrs[i]);           
+											}        
+								}           
+				//创建一个存放匹配到元素的盒子 
+				var dvObj = document.createElement("div"); 
+				dvObj.id = "dv"; 
+				document.getElementById("box").appendChild(dvObj);  
+					//循环list数组把每个匹配到的元素添加给创建的p标签
+				for (var j = 0; j < list.length; j++) {       
+							var inp = document.createElement("p"); 
+							inp.innerText = list[j]; 
+							document.getElementById("dv").appendChild(inp); 
+							inp.style.cursor="pointer";       
+								//添加高亮显示       
+							inp.onmousemove=function(){        
+										this.style.background="pink";   
+										}         
+								inp.onmouseout=function(){      
+										this.style.background="";         
+										}     
+					}   
+		}    
 		read_modbus_data(0);
 		var mode_set = new Array("","");
 		var baud_name = new Array("9600","19200","38400","57600","115200");

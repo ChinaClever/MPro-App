@@ -18,8 +18,8 @@ bool Cascade_Master::masterRead(uchar addr)
     for(auto &it: its) {
         if((it.fc == fc_readDev) && it.srcAddr){
             deDataStream(it.data); ret = unSequence(it.srcAddr);
-        } else qCritical() << "Error: Cascade Master fc" << it.fc;
-    } //qDebug() << Q_FUNC_INFO << addr << ret;
+        } else cout << "Error: Cascade Master fc" << it.fc << it.srcAddr;
+    } if(ret) cmsWrite(155); else cout << addr << ret;
 
     return ret;
 }
@@ -35,24 +35,24 @@ void Cascade_Master::masterReadDevs()
     }
 
     if(runTime() > 48*60*60) t = 500;
-    t = QRandomGenerator::global()->bounded(t); mdelay(320+t);
+    t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
 }
 
 void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
-            sSysItem it; it.module = tr("级联");
+            sEventItem it; it.type = tr("级联");
             it.content = tr("副机 %1 连接正常").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
-            sSysItem it; it.module = tr("级联");
+            sEventItem it; it.type = tr("级联");
             it.content = tr("副机 %1 掉线").arg(addr+1);
             Log_Core::bulid(this)->append(it);
         }
-    } cm::mdelay(255);
+    } cm::mdelay(355);
 }
 
 bool Cascade_Master::masterSeting(const sDataItem &unit)

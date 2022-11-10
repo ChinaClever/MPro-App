@@ -11,6 +11,59 @@
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../doc-lib/doc.css">
+		<style type="text/css">
+			.selectBox{
+				width: 40%;
+				height: 24px;
+				line-height: 24px;
+				background: #f72323;
+			}
+			.inputCase{
+				position: relative;
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+			}
+			.inputCase input.imitationSelect{
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+				border: 1px solid #ccc;
+				display: block;
+				text-indent: 20px;
+				cursor: default;
+			}
+			.inputCase i.fa{
+				position: absolute;
+				right: 10px;
+				top: 10px;
+				color: #007AFF;
+			}
+			.selectUl{
+				display: none;
+				padding: 0;
+				margin: 0;
+				border-bottom: 1px solid #ccc;
+				border-left: 1px solid #ccc;
+				border-right: 1px solid #ccc;
+                max-height: 150px;
+                overflow-y: auto;
+			}
+			.selectUl li{
+				height: 24px;
+				line-height: 24px;
+				list-style: none;
+				text-indent: 20px;
+				border-bottom: 1px solid #ccc;transition: all .5s ease 0s;
+
+			}
+			.selectUl li:hover{
+				background: #ddd;
+			}
+			.selectUl li:last-child{
+				border-bottom: 0 none;
+			}
+		</style>
 	</head>
 <body>
 	<div class="page-cont">
@@ -28,6 +81,9 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left ntp"></table>
 					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left custom"></table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -35,33 +91,62 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
+    <script src="../../include/js/timezone.js"></script>
 	<script src="../doc-lib/highlight.pack.js"></script>
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		read_ntp_data(0);
-		let timezone_arr = new Array("(UTC-12:00)International Date Line West","(UTC-11:00)Coordinated Universal Time-11","(UTC-10:00)Hawaii","(UTC-9:00)Alasks",
-									"(UTC-8:00)Baja California","(UTC-8:00)Pacific Time(US & Canada)","(UTC-7:00)Arizona","(UTC-7:00)Chihuahua,La Oaz,Mazatlan",
-									"(UTC-7:00)Mountain Time(US & Canada)","(UTC-6:00)Central America","(UTC-6:00)Central Time(US & Canada)",
-									"(UTC-6:00)Guadalajara,Mexico City,Monterrey","(UTC-6:00)Saskatchewan","(UTC-5:00)Bogota,Lima,Quito,Rio Branco","(UTC-5:00)Chetumal",
-									"(UTC-5:00)Eastern Time(US & Canada)","(UTC-5:00)Indiana (East)","(UTC-4:00)Asuncion","(UTC-4:00)Caracas","(UTC-4:00)Cuiaba",
-									"(UTC-4:00)Georgetown","(UTC-4:00)La Paz","(UTC-4:00)Manaus","(UTC-4:00)Santiago","(UTC-3:30)Newfoundland","(UTC-3:00)Brasilia",
-									"(UTC-3:00)Buenos Aires","(UTC-3:00)Cayenne,Fortaleza","(UTC-3:00)Greenland","(UTC-3:00)Montevideo","(UTC-3:00)Salvador","(UTC-2:00)Coordinated Universal Time-02",
-									"(UTC-1:00)Azores","(UTC-1:00)Cape Verde Is","(UTC)Coordinated Universal Time","(UTC)Dublin,Edinburgh,Lisbon,London",
-									"(UTC+1:00)Amsterdam,Berlin,Bern,Rome,Stockholm,Vienna","(UTC+1:00)Belgrade,Bratislave,BUdapest,Ljubljana,Prague",
-									"(UTC+1:00)Bussels,Copenhagen,Madrid,Paris","(UTC+1:00)Casablance","(UTC+1:00)Sarajevo,Skopje,Warsaw,Zagreb","(UTC+1:00)West Central Africa",
-									"(UTC+2:00)Amman","(UTC+2:00)Athens,Bucharest,Istanbul","(UTC+2:00)Beirut","(UTC+2:00)Cairo","(UTC+2:00)Damascus","(UTC+2:00)Harare,Pretoria",
-									"(UTC+2:00)Helsinki,Kyiv,Riga,Sofia,Tallinn,Vilnius","(UTC+2:00)Jerusalem","(UTC+2:00)Kaliningrad","(UTC+2:00)Tripoli","(UTC+2:00)Windhoek",
-									"(UTC+3:00)Baghdad","(UTC+3:00)kuwait,Riyadh","(UTC+3:00)Minsk","(UTC+3:00)Moscow,St.Petersburg,volgograd","(UTC+3:00)Nairobi","(UTC+3:00)Tehran",
-									"(UTC+4:00)Abu Dhabi,Muscat","(UTC+4:00)Baku","(UTC+4:00)Caucasus Standard Time","(UTC+4:00)Izhevsk,Samara","(UTC+4:00)Port Louis","(UTC+4:00)Tbilisi","(UTC+4:00)Jerusalem",
-									"(UTC+4:30)Kabul","(UTC+5:00)Ashgabat,Tashkent","(UTC+5:00)Ekaterinburg","(UTC+5:00)islamabad,Karachi","(UTC+5:30)Chennai,KolKata,Mumbai,New Delhi",
-									"(UTC+5:30)Sri jayawadenepura","(UTC+5:45)Kathmandu","(UTC+6:00)Almaty,Astana,Urumqi","(UTC+6:00)Dhaka","(UTC+6:30)Yangon(Rangoon)",
-									"(UTC+7:00)Bangkok,Hanoi,Jakarta","(UTC+7:00)Krasnoyarsk","(UTC+7:00)Nocosibirsk","(UTC+8:00)Beijing,Chongqing,Hong Kong","(UTC+8:00)Irkutsk",
-									"(UTC+8:00)Kuala Lumpur,Singapore","(UTC+8:00)Perth","(UTC+8:00)Taipei","(UTC+8:00)Ulaanbataar","(UTC+9:00)Osaka,Sapporo,Tokyo","(UTC+9:00)Seoul",
-									"(UTC+9:00)Yakutsk","(UTC+9:30)Adelaide","(UTC+9:30)Darwin","(UTC+10:00)Brisbane","(UTC+10:00)Canberra,Melbourne,Sydney","(UTC+10:00)Guam,Port Moresby",
-									"(UTC+10:00)Hobart","(UTC+10:00)Vladivostok","(UTC+11:00)Chokurtakh,Srednekolymsk","(UTC+11:00)Magadan","(UTC+11:00)Solomon Is.,New Caledonia",
-									"(UTC+12:00)Anadyr,Petropavlovsk-Kamchatsky","(UTC+12:00)Auckland,wellington","(UTC+12:00)Coordinated Universal Time+12","(UTC+12:00)Fiji",
-									"(UTC+13:00)Nuku'alofa","(UTC+13:00)Samoa","(UTC+14:00)kiritimati Island",
-									);
+		$(function(){
+			$(".selectBox .imitationSelect").on("click",function(){
+				$(this).parent().next().toggle();//ul弹窗展开
+				$(this).next().toggleClass("fa-caret-up");//点击input选择适合，小图标动态切换
+				$(this).select();
+				if(this.value == ""){
+					this.value = ntp_data[4];
+				}else{
+					for(let i = 0; i<timezone_arr.length;i++){
+						if(document.getElementById("TimeZone").value == timezone_arr[i] &&  document.getElementById("TimeZone").value != ntp_data[4]){
+							SetData(this);
+						}
+					}
+				}
+				if (event.stopPropagation) {   
+					// 针对 Mozilla 和 Opera   
+					event.stopPropagation();   
+				}else if (window.event) {   
+					// 针对 IE   
+					window.event.cancelBubble = true;   
+				}   /*阻止事件传播，事件从点击的元素出发，向外（window）传播，
+					如果不写个阻止事件，会导致下面的document点击函数一起执行，导致显示失败*/
+					
+			});
+			$(".selectUl li").click(function(event){
+				$(this).addClass("actived_li").siblings().removeClass("actived_li");//点击当前的添加。actived_li这个类；其他的移除这个类名
+				var data_val = $(this).data("val");//定义一个name属性，获取点击的元素属性赋值到当前，方便动态化传值
+				var data_id = $(this).data("id");//定义一个id属性，获取点击的元素属性赋值到当前，方便动态化传值
+				$(this).parent().prev().children().val(data_val); //把当前点击的name赋值到显示的input的val里面
+				$(this).parent().prev().children().data("val",data_val);//把当前点击的data-val赋值到显示的input的data-val里面
+				$(this).parent().prev().children().data("id",data_id);//把当前点击的data-id赋值到显示的input的data-id里面
+	
+			});
+			$(document).click(function(event){
+				$(".inputCase .fa").removeClass("fa-caret-up").addClass("fa-caret-down")//当点隐藏ul弹窗时候，把小图标恢复原状
+				$(".selectUl").hide();//当点击空白处，隐藏ul弹窗
+				$(".selectUl li").show();
+				if(document.getElementById("TimeZone").value != ntp_data[4]){
+					SetData(document.getElementById("TimeZone"));
+				}
+				// $(".selectBox .imitationSelect").val('');
+			});
+			$(".selectBox .imitationSelect").bind("input propertychange",()=>{
+				$(".selectUl li").hide()
+				let contain=$(".selectBox .imitationSelect").val();
+				// console.log($(this))
+				$(".selectUl li").filter(":contains('"+contain+"')").show();
+			})
+			
+		})
+		//用$(this)来代指当前的操作对象，这样可以减少误差
 		var mode_set = new Array("","");
 		var ntp_data = new Array();
 		let lang = new Array();
@@ -83,26 +168,32 @@
 			lang[5] = ["","NTP服务器:","","","",""];
 			lang[6] = ["","时区:","","","",""];
 			lang[7] = ["","NTP同步","","","",""];
-			lang[8] = ["","禁用","","","",""];
-			lang[9] = ["","启用","","","",""];
+			lang[8] = ["","自定义设置","","","",""];
+			lang[9] = ["","日期/时间:","","","",""];
+			lang[10] = ["","获取本地时间","","","",""];
+			lang[11] = ["","设置时间","","","",""];
+			lang[12] = ["","禁用","","","",""];
+			lang[13] = ["","启用","","","",""];
 
-			mode_set[0] = lang[8][language];
-			mode_set[1] = lang[9][language];
+			mode_set[0] = lang[12][language];
+			mode_set[1] = lang[13][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<8;j++){
-				if(j ==7){
+			for(let j = 1;j<12;j++){
+				if(j ==7 || j ==10 || j ==11){
 					document.getElementById("lang_" + j).value  = lang[j][language];
 				}else{
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
 		}
-		$('.ntp').html(buildTable());
+		$('.ntp').html(buildTableNtp());
+		$('.custom').html(buildTable());
 		lang_fun();
 		setTimeout(function(){
 			read_data();
 			showdata();
+			datetime();
 		},500);
 		function showdata(){
 			for(var i = 1; i < (ntp_info.length);i++){
@@ -112,12 +203,16 @@
 					document.getElementById(ntp_info[i]).value = ntp_data[i];
 					document.getElementById(ntp_info[i]).disabled = false;
 				}
-				document.getElementById("lang_7").disabled = false;
+				for(let i = 10;i<12;i++){
+					document.getElementById("lang_" + i).disabled = false;
+				}
+				document.getElementById("DateTime").disabled = false;
 			}
 			if(parseInt(ntp_data[2]) == 0){
-				document.getElementById(ntp_info[3]).disabled = true;
-				document.getElementById(ntp_info[4]).disabled = true;
-				document.getElementById("lang_7").disabled = true;
+				for(let i = 10;i<12;i++){
+					document.getElementById("lang_" + i).disabled = true;
+				}
+				document.getElementById("DateTime").disabled = true;
 			}
 		}
 		function SetData(btn){
@@ -137,6 +232,29 @@
 				showdata();
 			},800);
 		}
+		function checkTime(i) {
+			if (i < 10) {
+				i = "0" + i;
+			}
+			return i;
+		}
+		function datetime(){
+			var today = new Date();
+			var yyyy = today.getFullYear();
+			var MM = today.getMonth() + 1;
+			var dd = today.getDate();
+			var hh = today.getHours();
+			var mm = today.getMinutes();
+			var ss = today.getSeconds();
+			MM = checkTime(MM);
+			dd = checkTime(dd);
+			hh = checkTime(hh);
+			mm = checkTime(mm);
+			ss = checkTime(ss);
+			var time =yyyy+"-"+MM+"-"+dd+"T"+ hh + ":" + mm+ ":" + ss;
+
+			document.getElementById('DateTime').value = time;
+		}
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
@@ -146,28 +264,57 @@
 				showdata();
 			}
 		}
-		function buildTable() {
+		function SetTime(){
+			var sel =0;
+			let val = document.getElementById('DateTime').value;
+			if(confirm("请确认是否保存此次修改？")){
+				val = val.replace("T"," ");
+				rpc.call('pduSetParam',[0,43,1,0,0,val]);
+				flash_html();
+			}else{
+				showdata();
+			}
+		}
+		
+		function buildTableNtp() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td  id ="DevTime" ></td></tr>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td><div class="selectBox"><div class="inputCase"><input class="imitationSelect" type="text" id ="TimeZone"><i class="fa fa-caret-down"></i></div>';
+			tbody += '<ul class="selectUl">';
+			for(var i = 0; i<timezone_arr.length;i++){
+				if( i == 0){
+					tbody +='<li data-val="'+ timezone_arr[i]+'" data-id="'+(i+1)+'" class="actived_li">'+ timezone_arr[i]+'</li>';
+				}else{
+					tbody +='<li data-val="'+ timezone_arr[i]+'"  data-id="'+(i+1)+'">'+ timezone_arr[i]+'</li>';
+				}
+			}
+			tbody += '</ul></div></td></tr>';
+			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_8" ></td>\
+			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><select id ="TimeSetEn" onchange ="SetData(this)">';
+			tbody += '<td><select id ="TimeSetEn" style ="width:17%"  onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:46.5%" type = "text" placeholder="0.0.0.0"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><select id ="TimeZone" onchange ="SetData(this)">';
-			for(var i = 0; i<timezone_arr.length;i++){
-				tbody +='<option value ="'+i+'">'+timezone_arr[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "DateTime" style ="width:17%" type = "datetime-local" step ="1"></td></tr>';
+			tbody += '<tr><td><input id="lang_10" type = "button" style ="width:60%"  onclick = "datetime()"></td>';
+			tbody += '<td><input id="lang_11" type = "button" style ="width:12.5%"  onclick = "SetTime()"></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

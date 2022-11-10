@@ -134,6 +134,9 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::VCrMin: ptr = unit->crMin; break;
         case DSub::VCrMax: ptr = unit->crMax; break;
         case DSub::EnAlarm: ptr = unit->en; break;
+        case DSub::DPeak: ptr = unit->peakMax; break;
+        case DSub::DStamp: ptr = unit->peakStamp; break;
+        case DSub::DHda: ptr = unit->hda; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -145,12 +148,12 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         } else index.value = ptr[index.id];
 
 
-         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
-         //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
-         //}
-//         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
-//            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
-//         }
+        //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
+        //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
+        //}
+        //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
+        //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
+        //         }
     }
 
     return ret;
@@ -197,7 +200,8 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         case DSub::ResetDelay: ptr = unit->resetDelay; break;
         case DSub::OverrunOff: ptr = unit->overrunOff; break;
         case DSub::TimingEn: ptr = unit->timingEn; break;
-        case DSub::EnAlarm: ptr = unit->en; break;
+        case DSub::RelayCnt: ptr = unit->cnt; break;
+        case DSub::RelayEn: ptr = unit->en; break;
         default: ret = false; qDebug() << Q_FUNC_INFO; break;
         }
     }
@@ -222,6 +226,7 @@ bool Alarm_Object::sensorValue(sDataItem &index)
     case DTopic::Door2: index.value = env->door[1]; break;
     case DTopic::Water: index.value = env->water[0]; break;
     case DTopic::Smoke: index.value = env->smoke[0]; break;
+    case DTopic::Wind: index.value = env->wind[0]; break;
     default: ret = false; qDebug() << Q_FUNC_INFO << index.topic; break;
     }
 
@@ -249,14 +254,15 @@ bool Alarm_Object::eleValue(sDataItem &index)
     sObjData *obj = getObjData(index);
     switch (index.topic) {
     case DTopic::Ele: ptr = obj->ele; break;
+    case DTopic::HdaEle: ptr = obj->hdaEle; break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
     if(ptr) {
         if(index.rw){
-            OP_Core::bulid()->clearEle(index.id);
             if(index.id) ptr[index.id-1] = 0;
             else for(int i=0; i<obj->size; ++i) ptr[i] = 0;
+            if(DTopic::Ele == index.topic) OP_Core::bulid()->clearEle(index.id);
         } else index.value = ptr[index.id];
     }
     return ret;
@@ -288,8 +294,8 @@ bool Alarm_Object::upMetaData(sDataItem &index)
     }
 
     switch (index.topic) {
+    case DTopic::HdaEle: case DTopic::Ele: ret = eleValue(index); break;
     case DTopic::Relay: ret = relayUnitValue(index); break;
-    case DTopic::Ele: ret = eleValue(index); break;
     case DTopic::ArtPow: case DTopic::ReactivePow:
     case DTopic::PF: ret = powPfValue(index); break;
     default: ret = alarmUnitValue(index); break;

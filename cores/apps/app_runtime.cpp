@@ -7,7 +7,7 @@
 #include "set_core.h"
 
 App_RunTime::App_RunTime(QObject *parent)
-    : App_Smtp{parent}
+    : App_Ssh{parent}
 {
     QTimer::singleShot(75,this,SLOT(runing_initFunSlot()));
 }

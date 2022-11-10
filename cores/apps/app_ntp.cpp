@@ -16,7 +16,10 @@ App_Ntp::App_Ntp(QObject *parent)
 
 void App_Ntp::ntp_initSlot()
 {
+#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(ntpCfg.udp_en) mUdp->bind(123);
+    ntp_timeZone(ntpCfg.time_zone);
+#endif
 }
 
 bool App_Ntp::ntp_udpEn(bool en)
@@ -32,10 +35,11 @@ QString App_Ntp::ntp_time()
     return dateTime.toString("yyyy-MM-dd hh:mm:ss");
 }
 
-QString App_Ntp::ntp_timeZone()
+void App_Ntp::ntp_timeZone(const QString &zone)
 {
-    QTimeZone zone = QTimeZone::systemTimeZone();
-    return QLocale::countryToString(zone.country());
+    ntpCfg.time_zone = zone;
+    QString cmd = "export TZ='%1";
+    system(cmd.arg(zone).toLocal8Bit().data());
 }
 
 bool App_Ntp::ntp_time(const QString &t)

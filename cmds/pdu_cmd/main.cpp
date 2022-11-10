@@ -19,6 +19,7 @@ void usage()
     cout << "*    pduCfgSet       type  fc     value  [id]   [addr] " <<endl;
     cout << "*    pduCfgGet       type  fc     [id]   [addr]" <<endl;
     cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
+    cout << "*    pduLogHda       start [end]  [addr] [type] [topic] [id]"<<endl;
     cout << "*    pduMetaData     [addr]  " <<endl;
     cout << "*******************************************************" <<endl;
 }
@@ -98,13 +99,27 @@ void pduMetaData(const QStringList &ls)
 void pduLogFun(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() > 2) {
+    int k = 0; if(ls.size() > 1) {
         uchar type = ls.at(k++).toInt();
         uchar fc = ls.at(k++).toInt();
         uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
         std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
     } else qCritical() << "pduLogFun Parameter error";
+}
+
+void pduLogHda(const QStringList &ls)
+{
+    SshRpcClient *rpc = SshRpcClient::bulid();
+    int k = 0; if(ls.size()) {
+        QString start = ls.at(k++);
+        QString end; if(ls.size() > 1) end = ls.at(k++);
+        uchar addr = 0; if(ls.size() > 2) addr = ls.at(k++).toInt();
+        uchar type = 0; if(ls.size() > 3) type = ls.at(k++).toInt();
+        uchar topic = 0; if(ls.size() > 4) topic = ls.at(k++).toInt();
+        uchar index = 0; if(ls.size() > 5) index = ls.at(k++).toInt();
+        std::cout << rpc->pduLogHda(start, end, addr, type, topic, index).toStdString() << std::endl;
+    } else qCritical() << "pduLogHda Parameter error";
 }
 
 void pduRelaysCtrl(const QStringList &ls)
@@ -133,6 +148,7 @@ bool workDown(const QStringList &str)
         else if(fc == "pduCfgSet") pduCfgSet(cmds);
         else if(fc == "pduRelaysCtrl") pduRelaysCtrl(cmds);
         else if(fc == "pduLogFun") pduLogFun(cmds);
+        else if(fc == "pduLogHda") pduLogHda(cmds);
         else if(fc == "quit") ret = false;
         else usage();
     }

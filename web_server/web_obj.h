@@ -20,6 +20,11 @@ public:
     bool setting(uint addr, uint type, uint topic, uint sub, uint id, double value);
     double getValue(uint addr, uint type, uint topic, uint sub, uint id);
     QVariant log_fun(uint type, uint fc, uint id, uint cnt);
+    QString log_hda(const QString &start, const QString &end, int addr, int type, int topic, int index);
+
+    bool app_upgrade(const QString &fn); // 升级文件是绝对路径
+    bool restores(int fc, const QString &fn); // fc 1 配置文件 2 批量配置文件
+    QString backup(int fc); // fc 1 配置文件 2 批量配置文件
 
 private:
     JsonRpc_Client *mRpc;

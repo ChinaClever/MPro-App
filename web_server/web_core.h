@@ -13,10 +13,11 @@ class Web_Core : public Web_Http
     explicit Web_Core(QObject *parent = nullptr);
 public:
     static Web_Core *bulid(QObject *parent = nullptr);
+    bool app_upgrade(const QString &fn);
 
 private:
     void web_initFun();
-    void init_share_mem();
+    sDataPacket *init_share_mem();
     void init_webCfg(sWebCfg &web);
 
 private slots:

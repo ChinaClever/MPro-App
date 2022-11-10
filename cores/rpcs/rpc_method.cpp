@@ -31,24 +31,12 @@ QString Rpc_Method::execute(const QString &cmd)
     return cm::execute(cmd);
 }
 
-double Rpc_Method::getDecimal(const sDataItem &it)
+QString Rpc_Method::pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index)
 {
-    double res = 1; switch (it.topic) {
-    case DTopic::Vol: res = COM_RATE_VOL; break;
-    case DTopic::Cur: res = COM_RATE_CUR; break;
-    case DTopic::Pow: res = COM_RATE_POW; break;
-    case DTopic::Ele: res = COM_RATE_ELE; break;
-    case DTopic::PF: res = COM_RATE_PF; break;
-    case DTopic::ArtPow: res = COM_RATE_POW; break;
-    case DTopic::ReactivePow: res = COM_RATE_POW; break;
-    case DTopic::Tem: res = COM_RATE_TEM; break;
-    case DTopic::Hum: res = COM_RATE_HUM; break;
-    //default: cout << it.topic; break;
-    }
-
-    if((DSub::Size==it.subtopic) || (DSub::Alarm==it.subtopic) || (DSub::EnAlarm==it.subtopic)) res = 1;
-
-    return res;
+    sLogHdaIt it; it.addr = addr; it.type = type;
+    it.topic = topic; it.index = index;
+    it.start = start; it.end = end;
+    return Log_Core::bulid()->log_readHda(it);
 }
 
 double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
@@ -58,14 +46,14 @@ double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0; Set_Core::bulid()->upMetaData(mIt);
     //qDebug() << addr << type << topic << sub << id << mIt.value << mIt.value / getDecimal(mIt);
-    return mIt.value / getDecimal(mIt);
+    return mIt.value / cm::decimal(mIt);
 }
 
 bool Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value)
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
-    it.value = value * getDecimal(mIt); it.txType = mTxType;
+    it.value = value * cm::decimal(mIt); it.txType = mTxType;
     return Set_Core::bulid()->setting(it);
 }
 

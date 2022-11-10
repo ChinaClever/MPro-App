@@ -20,10 +20,7 @@ Data_Core *Data_Core::bulid()
 
 void Data_Core::upAlarm()
 {
-    static uint cnt = 1;
-    if(!(++cnt % 5)) {
-        Alarm_Updater::bulid()->run();
-    }
+    Alarm_Updater::bulid()->run();
 }
 
 void Data_Core::run()

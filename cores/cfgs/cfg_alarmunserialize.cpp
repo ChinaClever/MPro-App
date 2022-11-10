@@ -14,42 +14,49 @@ Cfg_AlarmUnserialize::Cfg_AlarmUnserialize()
 void Cfg_AlarmUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
     unit.en[id] = it.en;
+    unit.hda[id] = it.hda;
     unit.min[id] = it.min;
     unit.max[id] = it.max;
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
     unit.rated[id] = it.rated;
-    unit.reserve[id] = it.reserve;
+    unit.peakMax[id] = it.peakMax;
+    unit.peakStamp[id] = it.peakStamp;
+    unit.reserve[0][id] = it.reserve[0];
 }
 
 void Cfg_AlarmUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     unit.en[id] = it.en;
-    unit.reserve[id] = it.reserve;
+    unit.cnt[id] = it.cnt;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.resetDelay[id] = it.resetDelay;
 
-    unit.overrunOff[id] = it.overrunOff;
     unit.timingEn[id] = it.timingEn;
+    unit.overrunOff[id] = it.overrunOff;
     unit.timingOn[id][0] = unit.timingOff[id][0] = 0;
     qstrcpy(unit.timingOn[id], it.timingOn);
     qstrcpy(unit.timingOff[id], it.timingOff);
+    unit.reserve[0][id] = it.reserve[0];
 }
 
 void Cfg_AlarmUnserialize::unObjData(uchar id, sObjData &data, cfg::_sObjData &obj)
 {
     //qstrcpy(data.name[id], obj.name);
+    data.hdaEle[id] = obj.hdaEle;
     unAlarmUnit(id, data.vol, obj.vol);
     unAlarmUnit(id, data.cur, obj.cur);
     unAlarmUnit(id, data.pow, obj.pow);
     unRelayUnit(id, data.relay, obj.relay);
+    data.reserve[0][id] = obj.reserve[0];
 }
 
 void Cfg_AlarmUnserialize::unEnvData(uchar id, sEnvData &data, cfg::_sEnvData &obj)
 {
     unAlarmUnit(id, data.tem, obj.tem);
     unAlarmUnit(id, data.hum, obj.hum);
+    data.reserve[0][id] = obj.reserve[0];
 }
 
 void Cfg_AlarmUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)

@@ -14,6 +14,7 @@ protected:
     static char *pduReadParam(mg_str &r);
     static char *pduSetParam(mg_str &r);
     static char *pduLogFun(mg_str &r);
+    static char *pduLogHda(mg_str &r);
     static char *execute(mg_str &r);
 
 private:

@@ -45,11 +45,19 @@ void Integr_PushThread::mqttPush(const QByteArray &array)
     }
 }
 
+void Integr_PushThread::amqpPush(const QByteArray &array)
+{
+    if(QRabbitMQ::amqpCfg.isConnected) {
+        emit QRabbitMQ::bulid()->sendMsgSig(array);
+    }
+}
+
 void Integr_PushThread::onPushSlot()
 {
     udpPush(mArray);
     mqttPush(mArray);
     httpPush(mArray);
+    amqpPush(mArray);
 }
 
 void Integr_PushThread::workDown()
@@ -75,6 +83,7 @@ void Integr_PushThread::delay()
 bool Integr_PushThread::checkPush()
 {
     bool ret = false;
+    ret |= QRabbitMQ::amqpCfg.isConnected;
     ret |= Mqtt_Client::cfg.isConnected;
     ret |= mCfg->udp[0].en;
     ret |= mCfg->udp[1].en;

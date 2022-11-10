@@ -32,7 +32,7 @@ public:
          return selectBetween("dtime", start, end);
     }
 
-protected:
+//protected:
     virtual void selectItem(QSqlQuery &,T &) = 0;
     QVector<T> selectItems(const QString &condition="") {
         QVector<T> items; QSqlQuery query(mDb);

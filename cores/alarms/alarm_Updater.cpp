@@ -4,6 +4,8 @@
  *      Author: Lzy
  */
 #include "alarm_Updater.h"
+#include "cfg_core.h"
+#include "log_core.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
@@ -37,17 +39,35 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
     return ret;
 }
 
+void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
+{
+    if(index.addr) return ;
+    if((it.value[i] > it.peakMax[i]) && (it.value[i] < 5*it.max[i])){
+        it.peakStamp[i] = QDateTime::currentSecsSinceEpoch();
+        it.peakMax[i] = it.value[i];
+        Cfg_Core::bulid()->writeAlarms();
+    }
+}
+
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 {
     bool ret = false;
-    uint value = it.value[i];
+    uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
     if(value > it.max[i]) alarm = AlarmCode::Max;
     if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-    if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
-    it.alarm[i] = alarm; ret |= alarm;
+    if(it.hda[i]) Log_Core::bulid()->log_hda(index);
+    uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
+    if(it.alarm[i] != alarm)  {
+        if(it.cnt[i]++ > t) {
+            emit alarmSig(index, alarm);
+            it.alarm[i] = alarm;
+            ret |= alarm;
+        }
+    } else it.cnt[i] = 0;
+
     return ret;
 }
 
@@ -61,6 +81,17 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
     }
 
     return ret;
+}
+
+void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
+{
+    for(int i=0; i<it.size; ++i) {
+        if(it.hdaEle[i]) {
+            index.id = i;
+            index.value = it.ele[i];
+            Log_Core::bulid()->log_hdaEle(index);
+        }
+    }
 }
 
 bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
@@ -77,6 +108,9 @@ bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 
     index.topic = DTopic::Relay;
     ret |= upRelayUnit(index, it.relay);
+
+    index.topic = DTopic::Ele;
+    upEleHda(index, it);
 
     return ret;
 }
@@ -116,7 +150,6 @@ bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
     index.topic = DTopic::Tem;
-    //ret |= upAlarmUnit(index, it.tem);
     for(int i=0; i<SENOR_NUM; ++i) {
         if(it.tem.en[i] && it.isInsert[i]) {
             ret |= upAlarmItem(index, i, it.tem);
@@ -124,7 +157,6 @@ bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
     }
 
     index.topic = DTopic::Hum;
-    //ret |= upAlarmUnit(index, it.hum);
     for(int i=0; i<SENOR_NUM; ++i) {
         if(it.hum.en[i] && it.isInsert[i]) {
             ret |= upAlarmItem(index, i, it.hum);
@@ -212,4 +244,5 @@ void Alarm_Updater::run()
 {
     int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
+    Log_Core::bulid()->log_addCnt();
 }

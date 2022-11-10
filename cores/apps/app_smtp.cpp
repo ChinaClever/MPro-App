@@ -15,8 +15,11 @@ App_Smtp::App_Smtp(QObject *parent)
 
 void App_Smtp::smtp_sendMail(const QString &content)
 {
-    mList << content; if(!smtp_isRun)
-    QtConcurrent::run(this, &App_Smtp::smtp_run);
+    if(smtpCfg.en) {
+        mList << content;
+        // if(!smtp_isRun) QTimer::singleShot(1345,this,SLOT(smtp_run()));
+        if(!smtp_isRun) QtConcurrent::run(this, &App_Smtp::smtp_run);
+    }
 }
 
 void App_Smtp::sendMail()
@@ -28,9 +31,12 @@ void App_Smtp::sendMail()
     EmailAddress sender(cfg->from);
     message.setSender(sender);
 
-    EmailAddress to(cfg->to);
-    message.addRecipient(to);
-    message.setSubject("PDU Email");
+    for(int i=0; i<SMTP_TO_SIZE; ++i) {
+        if(cfg->to[i].size()) {
+            EmailAddress to(cfg->to[i]);
+            message.addRecipient(to);
+        }
+    } message.setSubject("PDU Email");
 
     QString contents;
     foreach(const auto &it, mList)
@@ -57,7 +63,8 @@ void App_Smtp::sendMail()
 
     smtp.login(cfg->from, cfg->pwd);
     if (!smtp.waitForAuthenticated()) {
-        cfg->lastErr = "Failed to login!" + cfg->from;
+        smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
+        if (!smtp.waitForAuthenticated()) cfg->lastErr = "Failed to login!" + cfg->from;
     }
 
     smtp.sendMail(message);

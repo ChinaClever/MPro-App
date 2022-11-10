@@ -43,7 +43,7 @@ static void init_netWork()
 
     //system("ip link set eth0 down");
     if(QFile::exists("netcfg")) {
-        QString cmd = QString("netcfg -w %1 eth0").arg(mac);
+        QString cmd = QString("./netcfg -w %1 eth0").arg(mac);
         system(cmd.toStdString().c_str()); qDebug() << cmd;
     } else {
         QString cmd = "ip link set eth0 address " +mac;
@@ -58,26 +58,6 @@ static void init_netWork()
     //system("dhclient");
 }
 
-static void startSnmpd()
-{
-    QString fn = "snmpd.conf";
-    QString cmd = "snmpd -f -Lo -C -c ";
-    bool ret = ProcStart::proc_isRun("snmpd"); if(ret) return ;
-
-    QString custom = "/usr/data/clever/cfg/";
-    if(QFile::exists(custom + fn)) {
-        cmd += custom + fn + " &";
-    } else if(QFile::exists("/etc/"+fn)) {
-        cmd += "/etc/"+ fn + " &";
-    } else {
-        cmd.clear();
-    }
-
-    qDebug() << cmd;
-    if(cmd.size()) system(cmd.toLatin1().data());
-    else qDebug() << "Error: start snmpd error";
-}
-
 static void createDirectory()
 {
     system("mkdir -p /usr/data/etc/ssl");
@@ -86,6 +66,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");
+    system("mkdir -p /usr/data/clever/doc");
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
     //system("mkdir -p /usr/data/clever/outlet");
@@ -102,7 +83,6 @@ int main(int argc, char *argv[])
     createDirectory();
     init_netWork();
     initSystem();
-    startSnmpd();
 
     Daemons::bulid();
 #endif

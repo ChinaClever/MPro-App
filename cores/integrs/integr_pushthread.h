@@ -3,7 +3,8 @@
 #include "mqtt_client.h"
 #include "net_tcpserver.h"
 #include "integr_jsonrecv.h"
-#define INTEGR_UDP_SIZE  2
+#include "qrabbitmq.h"
+#define INTEGR_UDP_SIZE  4
 
 struct sPushUdpCfg{
     int en = 0;
@@ -51,6 +52,7 @@ private:
     void udpPush(const QByteArray &array);
     void httpPush(const QByteArray &array);
     void mqttPush(const QByteArray &array);
+    void amqpPush(const QByteArray &array);
 
 private:
     QByteArray mArray;

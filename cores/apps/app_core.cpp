@@ -29,6 +29,7 @@ App_Core *App_Core::bulid(QObject *parent)
 
 void App_Core::compileTime()
 {
+    cm::dataPacket()->mem_size = sizeof(sDataPacket);
     sVersions *vers = &(cm::masterDev()->cfg.vers);
     cm::buildDateTime(vers->compileDate);
 }
@@ -42,9 +43,11 @@ void App_Core::initVer()
         qstrcpy(ver->ver, it.ver.toUtf8().data());
         qstrcpy(ver->md5, it.md5.toUtf8().data());
         qstrcpy(ver->usr, it.usr.toUtf8().data());
+        qstrcpy(ver->dev, it.dev.toUtf8().data());
         qstrcpy(ver->remark, it.remark.toUtf8().data());
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
+        qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
     } else cout << CFG_APP << "error";
 }
 
