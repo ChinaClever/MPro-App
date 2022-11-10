@@ -7,7 +7,7 @@
 
 Db_Hda::Db_Hda()
 {
-    mHeadList << "addr" << "type" << "topic" << "index" << "value";
+    mHeadList << "addr" << "type" << "topic" << "subindex" << "value";
 }
 
 Db_Hda *Db_Hda::bulid()
@@ -32,23 +32,22 @@ bool Db_Hda::modifyItem(const sHdaItem &item, const QString &cmd)
 {
     QSqlQuery query(mDb);
     query.prepare(cmd);
-    query.bindValue(":dtime",item.datetime);
     query.bindValue(":addr",item.addr);
     query.bindValue(":type",item.type);
     query.bindValue(":topic",item.topic);
-    query.bindValue(":index",item.index);
+    query.bindValue(":dtime",item.datetime);
+    query.bindValue(":subindex",item.index);
     query.bindValue(":value",item.value);
-
     return sqlQuery(query);
 }
 
 void Db_Hda::selectItem(QSqlQuery &query, sHdaItem &item)
 {
     item.id = query.value("id").toInt();
-    item.datetime = query.value("dtime").toString();
     item.addr = query.value("addr").toString();
     item.type = query.value("type").toString();
     item.topic = query.value("topic").toString();
-    item.index = query.value("index").toString();
+    item.datetime = query.value("dtime").toString();
+    item.index = query.value("subindex").toString();
     item.value = query.value("value").toString();
 }

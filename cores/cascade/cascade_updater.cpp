@@ -33,7 +33,7 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
             ret = otaSendPacket(addr, data);
             if(ret) {
                 i += data.size(); int v = (i*100.0)/it.size;
-                if(v > pro){ pro = v; up->results[addr] = 1;
+                if(v > pro){ pro = up->progs[addr] = v; up->results[addr] = 1;
                     throwMessage(tr("addr=%1: %2").arg(addr).arg(v));
                     up->subId = addr; up->progress = v; up->isRun = 1;                    
                 }
@@ -53,12 +53,14 @@ void Cascade_Updater::ota_updates()
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
         uint size = dev->cfg.nums.slaveNum;
+        sOtaUpIt *up = &(cm::dataPacket()->ota.slave);
         if(size) setbit(cm::dataPacket()->ota.work, DOta_Slave);
+        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=0; i<size; ++i) {
             if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
         } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
-        cm::dataPacket()->ota.slave.isRun = 0; cm::mdelay(255);
+        up->isRun = 0; cm::mdelay(255);
     }
 }
 
