@@ -10,6 +10,37 @@ Set_Maintain::Set_Maintain()
 
 }
 
+bool Set_Maintain::syscmd(int fc)
+{
+    bool ret=true; switch (fc) {
+    case 1: ret = system("reboot"); break;
+    case 2: ret = factoryRestore(); break;
+    default: ret = false; cout << fc; break;
+    }
+
+    return ret;
+}
+
+bool Set_Maintain::factoryRestore()
+{
+    sEventItem it;
+    it.type = QStringLiteral("恢复");
+    it.content = QStringLiteral("恢复出厂设置");
+    Log_Core::bulid()->append(it);
+
+    QStringList fns;
+    QString dir = "usr/data/clever/cfg/";
+    fns << "logs.db" << "proc_log.txt";
+    fns << "cfg.ini" << "inet.ini" << "alarm.cfg";
+
+    foreach (const auto &fn, fns) {
+        QString cmd = "rm -f %1%2";
+        cm::execute(cmd.arg(dir, fn));
+    } cm::mdelay(650);
+
+    return true;
+}
+
 QString Set_Maintain::backups(int fc)
 {
     QString res; switch (fc) {
@@ -60,14 +91,29 @@ QString Set_Maintain::batchBackup()
 
 bool Set_Maintain::batchRestore(const QString &fn)
 {
-    return profileRestore(fn);
+    sEventItem it;
+    it.type = QStringLiteral("恢复");
+    it.content = QStringLiteral("批量设置恢复");
+    Log_Core::bulid()->append(it);
+    return restory(fn);
 }
 
 bool Set_Maintain::profileRestore(const QString &fn)
 {
+    sEventItem it;
+    it.type = QStringLiteral("恢复");
+    it.content = QStringLiteral("设备配置恢复");
+    Log_Core::bulid()->append(it);
+    return restory(fn);
+}
+
+bool Set_Maintain::restory(const QString &fn)
+{
     bool ret = true; if(QFile::exists(fn)) {
         QString cmd = "unzip -o %1 -d /";
         cm::execute(cmd.arg(fn));
+        cm::mdelay(650);
+        system("reboot");
     } else ret = false;
     return ret;
 }
