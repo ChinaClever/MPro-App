@@ -33,16 +33,16 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
             ret = otaSendPacket(addr, data);
             if(ret) {
                 i += data.size(); int v = (i*100.0)/it.size;
-                if(v > pro){ pro = v; //emit otaProSig(addr, v);
+                if(v > pro){ pro = v; up->results[addr] = 1;
                     throwMessage(tr("addr=%1: %2").arg(addr).arg(v));
-                    up->subId = addr; up->progress = v; up->isRun = 1;
+                    up->subId = addr; up->progress = v; up->isRun = 1;                    
                 }
             } else {
-                up->isRun = 2;
+                up->isRun = 2; up->results[addr] = 3;
                 throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
             }
         } mFile->close(); ret = otaSendFinish(addr, ret?1:0);
-    } cm::mdelay(1200);
+    } cm::mdelay(1200); if(ret) up->results[addr] = 2;
 
     return ret;
 }
@@ -151,7 +151,7 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 void Cascade_Updater::otaReboot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
 
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");

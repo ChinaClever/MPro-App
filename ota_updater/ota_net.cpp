@@ -40,7 +40,9 @@ QString Ota_Net::unzip(const QString &fn)
 bool Ota_Net::coreRuning()
 {
     QString cmd = "proc_run cores";
-    return cm::execute(cmd).toInt();
+    bool ret = cm::execute(cmd).toInt();
+    if(!ret) rebootSlot();
+    return ret;
 }
 
 int Ota_Net::cmd_updater(const QString &fn, int bit)
@@ -56,11 +58,11 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    clrbit(mOta->work, bit);
     bool ret = coreRuning();
-    if(ret) ret = cmd_updater(fn, bit);
-    clrbit(mOta->work, bit); if(!ret && !mOta->work) {
-        QTimer::singleShot(3555,this,SLOT(rebootSlot()));
-    }
+    if(ret) cmd_updater(fn, bit);
+    if(mOta->work) system("cp -af /usr/data/updater/clever/  /usr/data/");
+    else QTimer::singleShot(3555,this,SLOT(rebootSlot()));
 #endif
 }
 

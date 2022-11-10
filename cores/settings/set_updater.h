@@ -7,7 +7,7 @@ class Set_Updater : public Set_Service
 public:
     Set_Updater();
 
-    QVariant otaStatus(int type, int fc);
+    QVariant otaStatus(sCfgItem &cfg);
     int ota_updater(int fc, const QVariant &v);
 
 private:

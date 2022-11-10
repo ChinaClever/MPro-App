@@ -40,7 +40,7 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 void OP_Updater::ota_reboot()
 {
     QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cm::execute(cmd));
+    throwMessage(cmd); throwMessage(cm::execute(cmd));
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     cm::execute("rm -rf /usr/data/clever/outlet/*");
@@ -56,12 +56,14 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        cm::dataPacket()->ota.outlet.isRun = 1;
-        for(uint i=0; i< mDev->cfg.nums.boardNum; ++i) {
-            ret = ota_update(i+1, fn);
-            emit otaFinish(i+1, ret);
-        } cm::mdelay(220); isOta = false;
-        cm::dataPacket()->ota.outlet.isRun = ret?0:2;
+        sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
+        for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
+            up->results[i] = 1;
+            ret = ota_update(i, fn);
+            emit otaFinish(i, ret);
+            if(ret) up->results[i] = 2;
+            else up->results[i] = 3;
+        } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
