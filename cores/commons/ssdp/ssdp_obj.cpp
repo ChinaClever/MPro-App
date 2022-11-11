@@ -23,17 +23,20 @@ Ssdp_Obj::~Ssdp_Obj()
 void Ssdp_Obj::ssdpClose()
 {
     if(isOpen) mSocket->close();
+    isOpen = false;
 }
 
-bool Ssdp_Obj::ssdpBind()
+bool Ssdp_Obj::ssdpBind(bool en)
 {
     if(isOpen) return isOpen; //else cout << "ssdp bind port";
+    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0"); cm::mdelay(1);
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
     else cout << "ssdp bind port error" << mSocket->errorString();
     if(ok) connect(mSocket,SIGNAL(readyRead()),this,SLOT(readMsgSlot()));
-    else cout << "ssdp joinMulticastGroup error" << mSocket->errorString();
-    isOpen = ok;
+    else {mSocket->close(); cout << "ssdp joinMulticastGroup error" << mSocket->errorString();}
+    isOpen = ok; if(!ok) QTimer::singleShot(1567,this,SLOT(reSsdpBindSlot()));
+    qDebug() << "ssdp bind port" << ok << en << mPort;
     return ok;
 }
 

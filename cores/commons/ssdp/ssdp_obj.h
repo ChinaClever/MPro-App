@@ -26,8 +26,8 @@ public:
     ~Ssdp_Obj();
     bool ssdpSend(const sSdpIt &it);
     bool udpSend(const sSdpIt &it);
+    bool ssdpBind(bool en=true);
     void ssdpClose();
-    bool ssdpBind();
 
 signals:
     void recvSig(const sSdpIt &it);
@@ -42,6 +42,7 @@ private:
 
 protected slots:
     virtual void readMsgSlot();
+    void reSsdpBindSlot() {ssdpBind();}
     void recvUdpSlot(const QByteArray &array){recvMsg(array);}
     virtual bool rplySearchTarget(const sSdpIt &){return false;}
 

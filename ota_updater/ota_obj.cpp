@@ -19,9 +19,9 @@ void Ota_Obj::onStartSsdp()
     if(run->runSec > sec) {
         sec = run->runSec;
         mSsdp->ssdpClose();
-    } else {
-        mSsdp->ssdpBind();
-        cout << "core stop";
+    } else if(!cm::execute("./proc_run cores").toInt()){
+        mSsdp->ssdpBind(false);
+        //cout << "core stop";
     }
 }
 
