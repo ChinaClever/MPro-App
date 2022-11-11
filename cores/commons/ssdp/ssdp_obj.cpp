@@ -30,8 +30,9 @@ bool Ssdp_Obj::ssdpBind()
     if(isOpen) return isOpen; //else cout << "ssdp bind port";
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
+    else cout << "ssdp bind port error" << mSocket->errorString();
     if(ok) connect(mSocket,SIGNAL(readyRead()),this,SLOT(readMsgSlot()));
-    else cout << mSocket->errorString();
+    else cout << "ssdp joinMulticastGroup error" << mSocket->errorString();
     isOpen = ok;
     return ok;
 }
