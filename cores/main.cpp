@@ -22,5 +22,6 @@ int main(int argc, char *argv[])
 //    qDebug() << "ODBC driver valid?" << db.isValid();
 
 
+
     return a.exec();
 }

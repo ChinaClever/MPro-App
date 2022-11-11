@@ -10,7 +10,8 @@ public:
     static Integr_JsonBuild *bulid();
     QByteArray getJson(uchar addr);
     QJsonObject getJsonObject(uchar addr);
-    bool saveJson(const QString &name, QJsonObject &json);
+    void saveJson(uchar addr);
+    void saveJsons();
 
 private:
     void strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json);

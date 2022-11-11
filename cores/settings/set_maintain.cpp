@@ -70,6 +70,12 @@ QString Set_Maintain::profileBackup()
     QString dst = "/usr/data/clever/download/cfg.zip";
     cm::execute("rm -rf /usr/data/clever/download/*");
     cm::execute(cmd.arg(dst, src));
+
+    sEventItem it;
+    it.type = QStringLiteral("备份");
+    it.content = QStringLiteral("设备设置备份");
+    Log_Core::bulid()->append(it);
+
     return dst;
 }
 
@@ -85,6 +91,11 @@ QString Set_Maintain::batchBackup()
         QString cmd = "zip -d %1 %2%3";
         cm::execute(cmd.arg(zip, dir, fn));
     }
+
+    sEventItem it;
+    it.type = QStringLiteral("备份");
+    it.content = QStringLiteral("批量设置备份");
+    Log_Core::bulid()->append(it);
 
     return zip;
 }

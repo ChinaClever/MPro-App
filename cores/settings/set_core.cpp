@@ -53,6 +53,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::ESysLog: res = syslogCfg(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
+    case SFnCode::EDgsDev: res = downDiagnostics(); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
