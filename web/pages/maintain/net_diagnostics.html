@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>maintain</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left ping"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left router"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		read_net_diagnostics_data();
+		let diagn_data = new Array();
+		let lang = new Array();
+		let language = 1;
+		let time1 = 0;
+		let time2 = 0;
+		function read_data(){
+			for(var j = 1;j<9;j++){
+				if(j < 4 || j > 5){
+					diagn_data[j] = sessionStorage.getItem(net_diagn[j]);
+				}
+			}
+		}
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<14;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","网络诊断","","","",""];
+			lang[2] = ["","ping","","","",""];
+			lang[3] = ["","网络主机:","","","",""];
+			lang[4] = ["","请求数:","","","",""];
+			lang[5] = ["","打开ping功能","","","",""];
+			lang[6] = ["","诊断结果:","","","",""];
+			lang[7] = ["","路由诊断","","","",""];
+			lang[8] = ["","主机名:","","","",""];
+			lang[9] = ["","超时(S):","","","",""];
+			lang[10] = ["","打开路由诊断","","","",""];
+			lang[11] = ["","诊断结果:","","","",""];
+			lang[12] = ["","正在诊断，请稍候...","","","",""];
+		}
+		function lang_fun(){
+			for(let j = 1;j<12;j++){
+				if(j ==5 || j == 10){
+					
+				}else{
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
+			}
+			document.getElementById("Ping").value  = lang[5][language];
+			document.getElementById("Router").value  = lang[10][language];
+		}
+		$('.ping').html(buildTableRtu());
+		$('.router').html(buildTableTcp());
+		lang_fun();
+		setTimeout(function(){
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			for(let i = 1;i<net_diagn.length - 2;i++){
+				if(i<3 || i>5){
+					document.getElementById(net_diagn[i]).value = diagn_data[i];
+				}
+			}
+		}
+		function SetData(btn){
+			if(confirm("请确认是否开启此功能。")){
+				for(let i = 1;i<net_diagn.length;i++){
+					if(net_diagn[i] == btn.id){
+						if(i == 3 || i == 8){
+							rpc.call('pduSetParam',[0,93,i,0,0,0]);
+							document.getElementById(net_diagn[i+1]).value  = lang[12][language];
+							diagn_read(i);
+						}else{
+							rpc.call('pduSetParam',[0,93,i,0,0,btn.value]);
+							flash_html();
+						}
+					}
+				}
+			}else{}
+		}
+		function flash_html(){
+			read_net_diagnostics_data();
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},800);
+		}
+		let diagn_num = 0,diagn_num1= 0;
+		function diagn_read(btn){
+			if(btn == 3){
+				time1 = setInterval(function(){
+					if(diagn_num == 10 || diagn_data[btn] != ""){
+						clearInterval(time1);
+					}
+					read_net_diagnostics_data();
+					setTimeout(function(){
+						read_data();
+						showdata();
+					},800);
+					diagn_num ++;
+				},1000);
+			}else{
+				time2 = setInterval(function(){
+					if(diagn_num1 == 10 || diagn_data[btn] != ""){
+						clearInterval(time2);
+					}
+					read_net_diagnostics_data();
+					setTimeout(function(){
+						read_data();
+						showdata();
+					},800);
+					diagn_num1 ++;
+				},1000);
+			}
+		}
+		function Set(btn){
+			var sel =0;
+			if(confirm("请确认是否保存此次修改？")){
+				if(btn.id == "lang_9"){
+					rpc.call('pduSetParam',[0,modbus,7,0,0,0]);
+				}else{
+					rpc.call('pduSetParam',[0,modbus,13,0,0,0]);
+				}
+				flash_html();
+			}else{}
+		}
+		function buildTableRtu() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_2" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<td><input id = "NetAddr" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><input id = "RequstNum" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>100){value=100};if(value<1)value=1" placeholder="1~100"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td><input id = "Ping" type = "button" onclick ="SetData(this)"></input>';
+			tbody += '</td><td></td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td "><textarea id = "Ping1"  style="height:90px;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableTcp() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_7" ></td>\
+				<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_8" ></td>';
+			tbody += '<td><input id = "Host" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "Timeout" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>60){value=60};if(value<1)value=1" placeholder="1~60"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td><input id = "Router" type = "button" onclick ="SetData(this)"></input>';
+			tbody += '</td><td></td></tr>';
+			tbody += '<tr><td id="lang_11" ></td>';
+			tbody += '<td "><textarea id = "Router1"  style="height:90px;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+		}
+    </script>
+</body>
+</html>

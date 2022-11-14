@@ -39,6 +39,9 @@ let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
 let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
 let logset_name = new Array("","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
+let Progress_name = new Array("","","","","","","Slave","Board");
+let Progress_info = new Array("","","","","State","Progress");
+let net_diagn = new Array("","NetAddr","RequstNum","Ping","Ping1","","Host","Timeout","Router","Router1");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -221,6 +224,12 @@ var jsonrpc = function()
       break;
       case 81:
         sessionStorage.setItem(log_info[subtopic] , JSON.parse(evt.data).result[5]);
+      break;
+      case 92:
+        sessionStorage.setItem(Progress_name[topic]+Progress_info[subtopic] +addr_, JSON.parse(evt.data).result[5]);
+      break;
+      case 93:
+        sessionStorage.setItem(net_diagn[topic], JSON.parse(evt.data).result[5]);
       break;
       default:
         break;
@@ -811,6 +820,37 @@ function read_log_setting_data(addr){
     }
     if(j < 5 +1){
       rpc.call('pduReadParam',[addr,47,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_update_progress_data(){
+  let j = 1;
+  let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+  let board_num = parseInt(sessionStorage.getItem("BoardNum" + addr));
+  var time1 = setInterval(function(){
+    if(j >= parseInt(2)){
+      clearInterval(time1);
+    }
+    if(j < 2){
+      for(let i = 1;i<slave_num +1;i++){
+        rpc.call('pduReadParam',[i,92,6,0,0]);
+      }
+      for(let i = 1;i<board_num +1;i++){
+        rpc.call('pduReadParam',[i,92,7,0,0]);
+      }
+    }
+    j++;
+  },3);
+}
+function read_net_diagnostics_data(){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(9)){
+      clearInterval(time1);
+    }
+    if(j < 3 || (j>5 && j<9)){
+        rpc.call('pduReadParam',[0,93,j,0,0]);
     }
     j++;
   },3);

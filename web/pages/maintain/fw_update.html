@@ -34,12 +34,12 @@
 							<input type = "text" value = "" id = "info" >
 							<label id  = "loading"></label>
 						</div><br/>
-						<div align = "center"><button onclick = 'upload_data()'>upload</button></div>
+						<div align = "center"><button  id = "lang_3" onclick = 'upload_data()'></button></div>
 					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:20px; background:#ffffff;">
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left load" style="display: displayed;"></table>
+						<table class="table table-border-none text-left load"></table>
 					</div>
 				</div>
 			</div>
@@ -52,24 +52,104 @@
 	<script src="../doc-lib/doc.js"></script>
     <script>
 		let lang = new Array();
+		let update_state = new Array(4);
+		let slave_name = new Array();
+		let board_name = new Array();
 		let language = 1;
+		let slave_data = new Array();
+		let board_data = new Array();
+		let time1 = 0;
+		let Slave_mark = 0;
+		let Board_mark = 0;
+		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		let board_num = parseInt(sessionStorage.getItem("BoardNum" + addr));
 		lang_init();
+		function read_data(){
+			let i = 0;
+			for(i = 1;i<slave_num+1;i++){
+				slave_data[i][0] = sessionStorage.getItem(Progress_name[6]+Progress_info[5] +i);
+				slave_data[i][1] = parseInt(sessionStorage.getItem(Progress_name[6]+Progress_info[4] +i));
+				if(slave_data[i][1] == 3 || slave_data[i][1] ==4){
+					Slave_mark += 1;
+				}
+			}
+			for(i = 1;i<board_num+1;i++){
+				board_data[i][0] = sessionStorage.getItem(Progress_name[7]+Progress_info[5] +i);
+				board_data[i][1] = parseInt(sessionStorage.getItem(Progress_name[7]+Progress_info[4] +i));
+				if(board_data[i][1] == 3 || board_data[i][1] ==4){
+					Board_mark += 1;
+				}
+			}
+		}
 		function lang_init(){
-			for(let i = 1;i<4;i++){
+			let i = 0;
+			for(i = 1;i<13;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","更新固件","","","",""];
 			lang[2] = ["","选择固件","","","",""];
 			lang[3] = ["","升级","","","",""];
-
+			lang[4] = ["","升级状态","","","",""];
+			lang[5] = ["","级联升级进度","","","",""];
+			lang[6] = ["","副机名称","","","",""];
+			lang[7] = ["","升级进度","","","",""];
+			lang[8] = ["","升级结果","","","",""];
+			lang[9] = ["","执行板升级进度","","","",""];
+			lang[10] = ["","执行板名称","","","",""];
+			lang[11] = ["","升级进度","","","",""];
+			lang[12] = ["","升级结果","","","",""];
+			lang[13] = ["","第","","","",""];
+			lang[14] = ["","副机","","","",""];
+			lang[15] = ["","块执行板","","","",""];
+			lang[16] = ["","一","","","",""];
+			lang[17] = ["","二","","","",""];
+			lang[18] = ["","三","","","",""];
+			lang[19] = ["","四","","","",""];
+			lang[20] = ["","五","","","",""];
+			lang[21] = ["","六","","","",""];
+			lang[22] = ["","七","","","",""];
+			lang[23] = ["","八","","","",""];
+			lang[24] = ["","九","","","",""];
+			lang[25] = ["","十","","","",""];
+			lang[26] = ["","未开始","","","",""];
+			lang[27] = ["","进行中","","","",""];
+			lang[28] = ["","已完成","","","",""];
+			lang[29] = ["","升级失败","","","",""];
+			for(i = 0;i<board_num;i++){
+				board_name[i] = lang[13] + lang[16 +i] + lang[15];
+			}
+			for(i = 0;i<slave_num;i++){
+				slave_name[i] = lang[14] + lang[16 +i];
+			}
+			for(i = 0;i<4;i++){
+				update_state[i] = lang[26 +i];
+			}
 		}
 		function lang_fun(){
-			for(let j = 1;j<4;j++){
+			for(let j = 1;j<13;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		lang_fun();
+		function show_data(){
+			let i = 0;
+			if(slave_num!=0){
+				for(i = 0;i<slave_num;i++){
+					document.getElementById('Sprogress'+i).innerHTML = slave_data[i+1][0];
+					document.getElementById('Sstate'+i).innerHTML = slave_data[i+1][1];
+				}
+			}
+			if(board_num!=0){
+				for(i = 0;i<board_num;i++){
+					document.getElementById('Bprogress'+i).innerHTML = board_data[i+1][0];
+					document.getElementById('Bstate'+i).innerHTML = board_data[i+1][1];
+				}
+			}
+			if(Board_mark == board_num && Slave_mark == slave_num){
+				clearInterval(time1);
+			}
+		}
 		$('.load').html(buildTable());
+		lang_fun();
 		function upload_data(){
 			let  key = document.getElementById("info").value;
 			if(key != ""){
@@ -88,53 +168,41 @@
 					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
 					document.getElementById('loading').style.color = 'green';
 					document.getElementById("info").value = '';
+					flash_data();
 					});
 				};
 			}
 		}
+		function flash_data(){
+			time1 = setInterval(function(){
+				read_update_progress_data();
+				setTimeout(function(){
+					read_data();
+					show_data();
+				},800);
+			},1500);
+
+		}
 		function buildTable(){
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_4" ></td>\
-			<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_3" ></td>';
-			tbody += '<td><select id ="SmtpEn" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			thead = '<tr><td width ="20%" id="lang_4" ></td>\
+			<td rowspan = "2"></td></tr>';
+			tbody += '<tr><td ></td><td width ="40%"></td>< width ="40%"td></td></tr>'
+			tbody += '<tr><td id="lang_5"></td><td></td><td></td></tr>';
+			tbody += '<tr><td id="lang_6"></td><td id="lang_7" ></td><td id="lang_8" ></td></tr>';
+			for(let i = 0;i<slave_num;i++){
+				tbody += '<tr><td id="'+slave_name[i]+'"></tr>';
+				tbody += '<td id="Sprogress'+ i+'" ></td>';
+				tbody += '<tr><td id="Sstate'+i+'" ></td></tr>';
 			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "SmtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "SmtpSendUsr" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "SmtpSendPsd" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><input id = "SmtpRecvUsr1" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_8" ></td>';
-			tbody += '<td><input id = "SmtpRecvUsr2" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_9" ></td>';
-			tbody += '<td><input id = "SmtpRecvUsr3" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_10" ></td>';
-			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_11" ></td>';
-			tbody += '<td><input id = "SmtpPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_12"></td>';
-			tbody += '<td><select id ="SmtpMode" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_name.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
+			tbody += '<tr><td></td><td></td><td></td></tr>'
+			tbody += '<tr><td id="lang_9"></td><td></td><td></td></tr>';
+			tbody += '<tr><td id="lang_10"></td><td id="lang_11" ></td><td id="lang_12" ></td></tr>';
+			for(let i = 0;i<board_num;i++){
+				tbody += '<tr><td id="'+board_name[i]+'"></td></td></tr>';
+				tbody += '<td id="Bprogress'+ i+'" ></td>';
+				tbody += '<td id="Bstate'+i+'" ></td></tr>';
 			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_13"></td>';
-			tbody += '<td id = "SmtpState"></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
