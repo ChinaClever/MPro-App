@@ -11,6 +11,12 @@ APP_compile_threads=8
 APP_module_driver=y
 MD_INIT_ORDER_FILE=package/default_driver_init_order.mk
 MD_INIT_START_FILE=package/S11module_driver_default
+CLEVER_SP706=y
+CLEVER_PCF8563=y
+CLEVER=y
+CLEVER_BEEP=y
+CLEVER_LED=y
+CLEVER_SHT30=y
 MD_KEYBOARD_GPIO=y
 MD_KEYBOARD_GPIO0=y
 # MD_KEYBOARD_GPIO0_WAKEUP is not set
@@ -76,11 +82,20 @@ MD_KEYBOARD_GPIO2_ACTIVE_LEVEL=0
 # MD_X2000_LCD_ILI9881D is not set
 # MD_X2000_LCD_OTM8018B is not set
 # MD_X2000_LCD_ST7785M is not set
-# MD_X1600_LCD_ST7789_4LINE_SPI is not set
+MD_X2000_LCD_SPI_ST7789=y
+MD_X2000_LCD_REGULATOR_NAME=-1
+MD_X2000_SPI_ST7789_CS=PB24
+MD_X2000_SPI_ST7789_RST=PB07
+MD_X2000_SPI_ST7789_POWER_EN=-1
 # MD_X1600_LCD_ST7701 is not set
 # MD_X1600_LCD_KWH035 is not set
 # MD_PWM_BACKLIGHT is not set
-# MD_GPIO_BACKLIGHT is not set
+MD_GPIO_BACKLIGHT=y
+MD_GPIO_BACKLIGHT0=y
+MD_GPIO_BACKLIGHT0_GPIO=PC27
+MD_GPIO_BACKLIGHT0_ACTIVE_LEVEL=1
+MD_GPIO_BACKLIGHT0_DEV_NAME="backlight_gpio0"
+MD_GPIO_BACKLIGHT0_ENABLE=y
 # MD_TOUCHSCREEN_FTS is not set
 # MD_TOUCHSCREEN_GT9XX is not set
 # MD_TOUCHSCREEN_CST3XX is not set
@@ -172,11 +187,11 @@ MD_KEYBOARD_GPIO2_ACTIVE_LEVEL=0
 # MD_UTILS_LOG is not set
 MD_UTILS_STRING=y
 MD_UTILS_GPIO=y
-# MD_UTILS_I2C is not set
+MD_UTILS_I2C=y
 # MD_UTILS_SPI is not set
-# MD_UTILS_CLOCK is not set
+MD_UTILS_CLOCK=y
 # MD_UTILS_RING_MEM is not set
-# MD_RMEM_MANAGER is not set
+MD_RMEM_MANAGER:=y
 # MD_SPI_GPIO is not set
 # MD_SPI_FB is not set
 # MD_I2C_GPIO is not set
@@ -210,7 +225,7 @@ MD_SOC_X2000:=y
 MD_SOC_DIR=soc/x2000
 # MD_X2000_ADC is not set
 MD_X2000_GPIO=y
-# MD_X2000_WATCHDOG is not set
+MD_X2000_WATCHDOG=y
 # MD_X2000_DTRNG is not set
 MD_X2000_I2C=y
 # MD_X2000_I2C0_BUS is not set
@@ -228,8 +243,26 @@ MD_X2000_SPI_CLK_RATE=100000000
 # MD_X2000_SPI0 is not set
 # MD_X2000_SPI1 is not set
 # MD_X2000_PWM is not set
-# MD_X2000_FB is not set
-# MD_X2000_FB_LAYER_MIXER is not set
+MD_X2000_FB:=y
+# MD_X2000_RTOS_BOOT_LOGO_FOR_KERNEL is not set
+MD_X2000_FB_PAN_DISPLAY_SYNC=y
+# MD_X2000_FB_ROTATOR is not set
+# MD_X2000_FB_USE_DEFAULT_ORDER is not set
+MD_X2000_FB_LAYER0_ENABLE=y
+MD_X2000_FB_LAYER0_FRAMES=1
+MD_X2000_FB_LAYER0_ALPHA=255
+# MD_X2000_FB_LAYER1_ENABLE is not set
+MD_X2000_FB_LAYER1_FRAMES=1
+MD_X2000_FB_LAYER1_ALPHA=128
+# MD_X2000_FB_LAYER2_ENABLE is not set
+MD_X2000_FB_LAYER2_FRAMES=1
+MD_X2000_FB_LAYER2_ALPHA=128
+# MD_X2000_FB_LAYER3_ENABLE is not set
+MD_X2000_FB_LAYER3_FRAMES=1
+MD_X2000_FB_LAYER3_ALPHA=128
+# MD_X2000_FB_MIXER_ENABLE is not set
+# MD_X2000_FB_ENABLE_USER_CONFIG is not set
+MD_X2000_FB_LAYER_MIXER:=y
 # MD_X2000_CAMERA_VIC is not set
 # MD_X2000_AUDIO_DMA is not set
 MD_X2000_MAC=y
@@ -260,7 +293,8 @@ MD_X2000_MAC0_CRYSTAL_CLK=y
 # MD_X2000_MCU is not set
 # MD_X2000_TCU is not set
 # MD_X2000_CONN is not set
-# MD_X2000_ROTATOR is not set
+MD_X2000_ROTATOR:=y
+# MD_X2000_NEMC is not set
 # MD_X2000_CONN_VIC is not set
 # MD_X2000_CONN_FB is not set
 # MD_X2000_CONN_ISP is not set
@@ -270,7 +304,7 @@ MD_X2000_MAC0_CRYSTAL_CLK=y
 # MD_SOC_X2000_510 is not set
 APP_br=y
 # APP_br_sh_utils_wait_file is not set
-# APP_br_sh_utils_mount_ubifs is not set
+APP_br_sh_utils_mount_ubifs=y
 # APP_br_sh_utils_mount_jffs2 is not set
 # APP_br_sh_utils_mount_mmc_ext4 is not set
 # APP_br_sh_utils_mount_mmc_fat is not set
@@ -279,11 +313,13 @@ APP_br_root_login=y
 # APP_br_root_login_keep_buildroot is not set
 APP_br_root_login_tty_port=console
 # APP_br_adb_server is not set
-# APP_br_ubi_setting is not set
+APP_br_ubi_setting=y
+APP_br_ubi_mount_usr_data=y
 # APP_br_jffs2_setting is not set
 # APP_br_mmc_setting is not set
 # APP_br_sdcard_setting is not set
-# APP_br_mass_storage_setting is not set
+APP_br_mass_storage_setting=y
+APP_br_mass_storage_automatic_mount=y
 # APP_br_h264_server is not set
 # APP_br_usb_storage is not set
 # APP_br_display_logo is not set
@@ -291,7 +327,10 @@ APP_br_root_login_tty_port=console
 # APP_br_asound_conf_dmix is not set
 # APP_ota_updater is not set
 APP_libhardware2=y
-# APP_libhardware2_fb is not set
+APP_libhardware2_fb=y
+APP_libhardware2_fb_cmd=y
+# APP_libhardware2_fb_rector_play is not set
+# APP_libhardware2_fb_scale_cmd is not set
 # APP_libhardware2_fb_layer_mixer is not set
 # APP_libhardware2_v4l2 is not set
 # APP_libhardware2_camera is not set
@@ -303,7 +342,9 @@ APP_libhardware2=y
 # APP_libhardware2_efuse is not set
 # APP_libhardware2_watchdog is not set
 # APP_libhardware2_dtrng is not set
-# APP_libhardware2_keyboard is not set
+APP_libhardware2_keyboard=y
+APP_libhardware2_keyboard_cmd=y
+APP_libhardware2_keyboard_cmd_test=y
 # APP_libhardware2_spi is not set
 # APP_libhardware2_sslv is not set
 APP_libhardware2_gpio=y
@@ -324,6 +365,8 @@ APP_libhardware2_gpio_cmd=y
 # APP_libhardware2_v4l2_camera is not set
 # APP_libhardware2_mdio_cmd is not set
 # APP_libhardware2_jpeg_decode_cmd is not set
+APP_libhardware2_nemc=y
+APP_libhardware2_nemc_cmd=y
 # APP_libmedia is not set
 # APP_libutils2 is not set
 # APP_libimpf is not set
