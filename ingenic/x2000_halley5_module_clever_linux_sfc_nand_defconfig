@@ -60,8 +60,7 @@ CONFIG_INGENIC_GPT_CHECK=y
 #
 # SOC Type Selection
 #
-# CONFIG_SOC_X2000 is not set
-CONFIG_SOC_X2000_V12=y
+CONFIG_SOC_X2000=y
 # CONFIG_SOC_X2100 is not set
 # CONFIG_SOC_M300 is not set
 # CONFIG_SOC_X2500 is not set
@@ -1758,7 +1757,16 @@ CONFIG_USB_STORAGE=y
 # CONFIG_USB_MUSB_HDRC is not set
 # CONFIG_USB_DWC3 is not set
 # CONFIG_USB_DWC2 is not set
-# CONFIG_USB_DWC2_NEW is not set
+CONFIG_USB_DWC2_NEW=y
+CONFIG_USB_DWC2_NEW_HOST=y
+
+#
+# Gadget/Dual-role mode requires USB Gadget support to be enabled
+#
+# CONFIG_USB_DWC2_NEW_TRACK_MISSED_SOFS is not set
+# CONFIG_USB_DWC2_NEW_FORCE_FULL_SPEED is not set
+CONFIG_USB_DWC2_NEW_EXT_ID_PIN=y
+# CONFIG_USB_DWC2_NEW_EXT_VBUS_DETECT is not set
 # CONFIG_USB_ISP1760 is not set
 
 #
@@ -1804,7 +1812,7 @@ CONFIG_USB_STORAGE=y
 # CONFIG_USB_GPIO_VBUS is not set
 # CONFIG_USB_ISP1301 is not set
 # CONFIG_USB_GADGET is not set
-# CONFIG_USB_ROLE_SWITCH is not set
+CONFIG_USB_ROLE_SWITCH=y
 # CONFIG_UWB is not set
 # CONFIG_MMC is not set
 # CONFIG_MMC_SDHCI_INGENIC is not set
@@ -1828,7 +1836,6 @@ CONFIG_RTC_INTF_PROC=y
 CONFIG_RTC_INTF_DEV=y
 # CONFIG_RTC_INTF_DEV_UIE_EMUL is not set
 # CONFIG_RTC_DRV_TEST is not set
-# CONFIG_RTC_DRV_INGENIC is not set
 
 #
 # I2C RTC drivers
@@ -2573,7 +2580,7 @@ CONFIG_CLKSRC_INGENIC_CORE_OST=y
 #
 # [CPM] clk Drivers
 #
-CONFIG_CLK_X2000_V12=y
+CONFIG_CLK_X2000=y
 
 #
 # [GPIO] Pinctroller Drivers
@@ -2676,10 +2683,13 @@ CONFIG_MTD_INGENIC_SFC_NANDFLASH=y
 #
 # [ISP] Drivers
 #
+# CONFIG_INGENIC_ISP_SENSOR_NO_AE is not set
+# CONFIG_INGENIC_ISP_V2_SENSOR_NO_AE is not set
 
 #
 # [CIM] Drivers
 #
+# CONFIG_VIDEO_INGENIC_CIM is not set
 
 #
 # [Rotator] Drivers
@@ -2702,7 +2712,7 @@ CONFIG_MTD_INGENIC_SFC_NANDFLASH=y
 #
 
 #
-# soc_camera sensor drivers
+# ingenic-cim sensor drivers
 #
 
 #
@@ -2741,10 +2751,20 @@ CONFIG_INGENIC_WDT=y
 # CONFIG_PWM_INGENIC_V2 is not set
 
 #
+# [RTC] drivers
+#
+# CONFIG_RTC_DRV_INGENIC is not set
+
+#
 # [CONN] drivers
 #
 # CONFIG_X2000_CONN is not set
 # CONFIG_X2000_CONN_BLK is not set
+
+#
+# [CPUFREQ] drivers
+#
+# CONFIG_X2000_CPUFREQ is not set
 # CONFIG_SND_ASOC_INGENIC is not set
 
 #
