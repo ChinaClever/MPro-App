@@ -6,8 +6,8 @@ class Set_Login : public Set_Info
 {
 public:
     Set_Login();
-    QString loginUsrPwd(int type, int id=0);
-    bool loginSet(uchar type, const QVariant &v, int id=0);
+    QVariant loginUsrPwd(int type, int id);
+    bool loginSet(uchar type, const QVariant &v, int id);
 
 private:
     bool loginCheck(const QString &str);

@@ -21,7 +21,7 @@ typedef unsigned int uint;
 #define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
-#define USER_NUM 5
+#define USER_NUM 10
 #define GROUP_NUM 8
 #define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
@@ -208,7 +208,8 @@ struct sUutInfo {
     char room[NAME_SIZE];
     char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
-    char qrcode[3*NAME_SIZE]; // 二维码
+    char qrcode[4*NAME_SIZE]; // 二维码
+    char devType[NAME_SIZE]; // 设备型号
     char reserve[3][NAME_SIZE];
     char sn[NAME_SIZE];
 };
@@ -329,7 +330,8 @@ struct sNetInterface
 
 struct sDevLogin
 {
-    char permit[3];
+    uchar permit; // 0 管理员  1 操作员  2 访客
+    long long ctrl; // 按位操作 0 有权限  1 没有权限
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];

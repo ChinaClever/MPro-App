@@ -10,15 +10,15 @@ Data_Dual::Data_Dual()
 
 }
 
-int Data_Dual::setDualSize()
+int Data_Dual::setDualSize(int id)
 {
     int size = 0;
     if(mDev->cfg.param.devMode == 3) {
         size = mDev->cfg.nums.outputNum;
-        mDev->cfg.nums.slaveNum = 1;
+        //mDev->cfg.nums.slaveNum = 1;
     }
 
-    sObjData *obj = &(mDev->dual);
+    sObjData *obj =  &(cm::devData(id)->dual); // &(mDev->dual);
     obj->vol.size = obj->cur.size = 0;
     obj->size = obj->pow.size = size;
     if(size & mDev->output.relay.size) size = mDev->cfg.nums.outputNum; else size = 0;
@@ -29,15 +29,21 @@ int Data_Dual::setDualSize()
 
 void Data_Dual::dualWork()
 {
-    int size = setDualSize();
-    if(size > 0) dualData();
-    //else disDualAlarm();
+    if(mDev->cfg.param.devMode == 3) {
+        int num = mDev->cfg.nums.slaveNum;
+        for (int i=0; i <= num; i += 2) {
+            int size = setDualSize(i);
+            if(size > 0) dualData(i);
+            //else disDualAlarm();
+        }
+    }
+
 }
 
 
-void Data_Dual::dualTiming()
+void Data_Dual::dualTiming(int id)
 {
-    sObjData *obj = &(mDev->dual);
+    sObjData *obj = &(cm::devData(id)->dual); //&(mDev->dual);
     for(int i=0; i<obj->relay.size; ++i) {
         int res = relayTiming(*obj, i);
         if(res) {
@@ -54,9 +60,9 @@ void Data_Dual::dualTiming()
 
 void Data_Dual::dualData(int id)
 {
-    sObjData *dest = &mDev->dual;
-    sObjData *src1 = &mDev->output;
-    sObjData *src2 = &(cm::devData(id)->dual);
+    sObjData *dest = &(cm::devData(id)->dual);
+    sObjData *src1 = &(cm::devData(id)->output);
+    sObjData *src2 = &(cm::devData(id+1)->dual);
     for(int i=0; i<dest->size; ++i) {
         dest->vol.value[i] = (src1->vol.value[i] + src2->vol.value[i])/2;
         dest->cur.value[i] = src1->cur.value[i] + src2->cur.value[i];
@@ -65,7 +71,7 @@ void Data_Dual::dualData(int id)
         dest->artPow[i] = src1->artPow[i] + src2->artPow[i];
         dest->ele[i] = src1->ele[i] + src2->ele[i];
         dest->pf[i] = calPf(i, *dest);
-    } dualTiming();
+    } dualTiming(id);
 }
 
 void Data_Dual::disDualAlarm()

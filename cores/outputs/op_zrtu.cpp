@@ -94,6 +94,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         rtuThrowMessage(it.type + it.content + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid(this)->append(it);
+
     }
 
     return res;

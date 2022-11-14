@@ -78,7 +78,7 @@ void Cfg_Service::snmp()
     for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
-        //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+            //case 2: key = "trap2"; ptr = &cfg->trap2; break;
         case 3: key = "enV3"; ptr = &cfg->enV3; break;
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;
@@ -228,15 +228,19 @@ void Cfg_Service::login()
     QString key; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login[0]);
 
-    for(int i=1; i<4; ++i) {
-        switch (i) {
-        case 1: key = "user";  ptr = it->user; break;
-        case 2: key = "pwd";  ptr = it->pwd; break;
-        case 3: key = "token";  ptr = it->token; break;
-        case 4: key = "permit";  ptr = it->permit; break;
+    for(int k=0; k<USER_NUM; ++k) {
+        for(int i=1; i<3; ++i) {
+            switch (i) {
+            case 1: key = "user_%1";  ptr = it->user; break;
+            case 2: key = "pwd_%1";  ptr = it->pwd; break;
+            case 3: key = "token_%1";  ptr = it->token; break;
+            }
+            QString res = mCfg->readCfg(key.arg(k), "", prefix).toString();
+            qstrcpy(ptr, res.toLatin1().data());
+
+            key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
+            key = "ctrl_%1"; it->ctrl = mCfg->readCfg(key.arg(k), "", prefix).toLongLong();
         }
-        QString res = mCfg->readCfg(key, "", prefix).toString();
-        qstrcpy(ptr, res.toLatin1().data());
     }
 }
 

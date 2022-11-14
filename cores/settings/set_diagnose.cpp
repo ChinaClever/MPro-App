@@ -31,6 +31,7 @@ void Set_Diagnose::diasCopy()
 
     QString fmd = "cp -af %1 " + dir +"/";
     cmd = fmd.arg("/usr/data/etc"); cm::execute(cmd);
+    cmd = fmd.arg("/usr/data/clever/bin"); cm::execute(cmd);
     cmd = fmd.arg("/usr/data/clever/cfg"); cm::execute(cmd);
     cmd = fmd.arg("/usr/data/clever/certs"); cm::execute(cmd);
     cmd = fmd.arg("/usr/data/clever/ver.ini"); cm::execute(cmd);
