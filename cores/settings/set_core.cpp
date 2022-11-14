@@ -53,6 +53,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::ESysLog: res = syslogCfg(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
+    case SFnCode::EDgsDev: res = downDiagnostics(); break;
     case SFnCode::ESercret: res = getSercret(it.fc); break;
     case SFnCode::ETlsCert: res = getTlsCert(it.fc); break;
     case SFnCode::EINet: res = netAddrCfg(it.fc, it.id); break;
@@ -79,6 +80,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EWhiteList: ret = setWhiteList(it.fc, v); break;
     case SFnCode::EDgsNet: ret = net_diagnoseSet(it.fc, v); break;
 
+    case SFnCode::ESys: ret = syscmd(it.fc); break;
     case SFnCode::EBR: ret = restores(it.fc, v); break;
     case SFnCode::ESsh: ret = sshSet(it.fc, v); break;
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;

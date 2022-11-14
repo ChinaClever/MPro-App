@@ -342,6 +342,7 @@ struct sOtaUpIt
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
     uchar reserve;
+    uchar progs[DEV_NUM]; // 升级进度
     uchar results[DEV_NUM]; // 升级结果
 };
 
@@ -406,10 +407,12 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp,
-             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
+             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC,
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
+             EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg,
-             ELog=81, EHda, EPro=91, EOta, EDgsNet, EBR, ECmd=111};
+             ELog=81, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

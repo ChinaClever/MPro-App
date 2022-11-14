@@ -49,7 +49,7 @@ protected:
     QString tableMarking();
 
 protected:
-    QSqlDatabase mDb;
+    static QSqlDatabase mDb;
 };
 
 #endif // SQL_STATEMENT_H

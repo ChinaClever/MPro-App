@@ -44,6 +44,18 @@ QString cm::execute(const QString &cmd)
     //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
+QString cm::executes(const QStringList &cmds)
+{
+    QProcess pro;
+    foreach (const auto &cmd, cmds) {
+        pro.start(cmd);
+        pro.waitForFinished();
+    }
+    QByteArray bs = pro.readAllStandardOutput();
+    bs +=  pro.readAllStandardError();
+    return QString::fromLocal8Bit(bs);
+}
+
 bool cm::pingNet(const QString& ip)
 {   
     bool bPingSuccess = false;

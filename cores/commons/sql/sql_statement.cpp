@@ -6,6 +6,7 @@
 #include "sql_statement.h"
 #include "cfg_com.h"
 
+QSqlDatabase Sql_Statement::mDb;
 Sql_Statement::Sql_Statement()
 {
     initDb();
@@ -51,7 +52,7 @@ bool Sql_Statement::sqlQuery(QSqlQuery &query, const QString &sql)
 {
     bool ret = query.prepare(sql);
     if(ret) ret = sqlQuery(query);
-    if(!ret) qDebug() << sql;
+    if(!ret) qDebug() << sql << throwError(query.lastError());
     return ret;
 }
 
@@ -251,9 +252,10 @@ bool Sql_Statement::createTable()
  */
 bool Sql_Statement::initDb()
 {
-    mDb = QSqlDatabase::database();
+    //mDb = QSqlDatabase::database();
     bool ret = mDb.isOpen(); if(!ret){
-        mDb = QSqlDatabase::addDatabase("QSQLITE");
+        qDebug() << "Available drivers:" << QSqlDatabase::drivers();
+        mDb = QSqlDatabase::addDatabase("QSQLITE"); // mDb.isValid();
         mDb.setDatabaseName(Cfg_Com::pathOfCfg("logs.db"));
         ret = mDb.open(); if(!ret) throwError(mDb.lastError());
     }

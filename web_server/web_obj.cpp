@@ -92,12 +92,12 @@ QString Web_Obj::execute(const QString &cmd)
 
 QString Web_Obj::backup(int fc)
 {
-    return mRpc->pduCfgGet(94, fc).toString();
+    return mRpc->pduCfgGet(95, fc).toString();
 }
 
 bool Web_Obj::restores(int fc, const QString &fn)
 {
-    return mRpc->pduCfgSet(94, fc, fn);
+    return mRpc->pduCfgSet(95, fc, fn);
 }
 
 bool Web_Obj::app_upgrade(const QString &fn)

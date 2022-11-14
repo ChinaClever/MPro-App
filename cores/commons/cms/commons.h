@@ -19,6 +19,7 @@ sDevData *masterDev();
 sDataPacket *dataPacket();
 sDevData *devData(uchar id);
 QString execute(const QString &cmd);
+QString executes(const QStringList &cmds);
 uint runTime(uchar id=0);
 
 void buildDateTime(char *ptr);
