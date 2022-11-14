@@ -40,12 +40,12 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPush: res = pushCfg(it.fc, it.id); break;
     case SFnCode::ESnmp: res = snmpCfg(it.fc, it.id); break;
     case SFnCode::ESmtp: res = smtpCfg(it.fc, it.id); break;
-    case SFnCode::EDevLogin: res = loginUsrPwd(it.fc); break;
     case SFnCode::EDgsNet: res = net_diagnoseCfg(it.fc); break;
 
     case SFnCode::EOutput: case SFnCode::EGroup:
     case SFnCode::EDual: res = outputCfg(it); break;
     case SFnCode::EGrouping: res = grouping(it.addr, it.fc); break;
+    case SFnCode::EDevLogin: res = loginUsrPwd(it.fc, it.id); break;
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
@@ -94,7 +94,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ESysLog: ret = syslogSet(it.fc, v); break;
     case SFnCode::ERpc: ret = rpcSet(it.fc, v.toInt()); break;
     case SFnCode::ETlsCert: ret = setTlsCert(it.fc, v); break;
-    case SFnCode::EDevLogin: ret = loginSet(it.fc, v); break;
+    case SFnCode::EDevLogin: ret = loginSet(it.fc, v, it.id); break;
     case SFnCode::ESercret: ret = setSercret(it.fc, v); break;
     case SFnCode::ESnmp: ret = snmpSet(it.fc, it.id, v); break;
     case SFnCode::ESmtp: ret = smtpSet(it.fc, it.id, v); break;

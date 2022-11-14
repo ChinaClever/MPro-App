@@ -33,8 +33,8 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 void Log_Core::append(const sAlarmItem &it)
 {
-    QString fmd = "addr:%1 state:%2 module:%3 content:%4";
-    QString str = fmd.arg(it.addr, it.state, it.module, it.content);
+    QString fmd = "alarm:%1 content:%2";
+    QString str = fmd.arg(it.state, it.content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     mAlarmIts << it;
     run();
