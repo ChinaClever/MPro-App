@@ -104,3 +104,8 @@ bool Web_Obj::app_upgrade(const QString &fn)
 {
     return Web_Core::bulid()->app_upgrade(fn);
 }
+
+QString Web_Obj::diag()
+{
+    return mRpc->pduCfgGet(94, 1).toString();
+}

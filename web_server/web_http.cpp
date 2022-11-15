@@ -115,16 +115,19 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
             char file_path[256], name[256];
             mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            //printf("%s \n", name);
+            printf("%s \n", name);
             if (name[0] == '\0') {
                 mg_http_reply(c, 400, "", "%s", "name required");
             } else {
                 if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
                     mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
+                else
+                    //mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/upload/%s", name);
+                    mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
             }
-            //printf("%s \n", name);
+            printf("%s \n", name);
             if((int) hm->query.len > 5){
-                //printf("%s \n", file_path);
+                printf("%s \n", file_path);
                 fp = fopen(file_path , "w+b");
             }
             fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
@@ -169,6 +172,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             } else {
                 if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
                     mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
+                else
+                    //mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/upload/%s", name);
+                    mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
             }
             if((int) hm->query.len > 5){
                 //printf("%s \n", file_path);

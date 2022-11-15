@@ -122,7 +122,8 @@ bool Set_Maintain::restory(const QString &fn)
 {
     bool ret = true; if(QFile::exists(fn)) {
         QString cmd = "unzip -o %1 -d /";
-        cm::execute(cmd.arg(fn));
+        cm::execute(cmd.arg(fn)); cm::mdelay(50);
+        cm::execute("rm -rf " + fn);
         cm::mdelay(650);
         system("reboot");
     } else ret = false;

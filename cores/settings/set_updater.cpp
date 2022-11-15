@@ -43,10 +43,10 @@ QVariant Set_Updater::otaStatus(sCfgItem &cfg)
     return res;
 }
 
-void Set_Updater::ota_log(int fc)
+void Set_Updater::ota_log()
 {
-    sOtaItem it; sAppVerIt ver;
-    Cfg_App cfg("/usr/data/updater/clever/");
+    QString dir = "/usr/data/clever/";
+    sOtaItem it; sAppVerIt ver; Cfg_App cfg(dir);
     bool ret = cfg.app_unpack(ver);
     if(ret) {
         it.ver = ver.ver;
@@ -82,10 +82,9 @@ bool Set_Updater::ota_cascade(const QString &fn)
     return ret;
 }
 
-bool Set_Updater::ota_outlet(int fc)
+bool Set_Updater::ota_outlet()
 {    
-    QString dir = "/usr/data/updater/clever/outlet/";
-    if(fc == DOta_Usb) dir = "";//////////////=============="
+    QString dir = "/usr/data/clever/outlet/";
     QStringList fns = File::entryList(dir); bool ret = false;
     foreach (const auto &fn, fns) {
         if((fn == ".") || (fn == "..")) continue;
@@ -109,7 +108,7 @@ int Set_Updater::ota_updater(int fc, const QVariant &v)
 
     QString fn = v.toString();
     if(fn.size()) {
-        ota_log(fc); ret |= ota_outlet(fc);
+        ota_log(); ret |= ota_outlet();
         if(fc != DOta_Usb) ret |= ota_cascade(fn);
     }
     cout << fc << v << (ret?1:0);

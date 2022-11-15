@@ -11,8 +11,8 @@ public:
     int ota_updater(int fc, const QVariant &v);
 
 private:
-    void ota_log(int fc);
-    bool ota_outlet(int fc);
+    void ota_log();
+    bool ota_outlet();
     bool ota_cascade(const QString &fn);
 };
 

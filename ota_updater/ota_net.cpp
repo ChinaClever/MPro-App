@@ -58,11 +58,14 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    if(DOtaCode::DOta_Usb == bit) {
+        QString cmd = "cp -af %1 /usr/data/"; cm::execute(cmd.arg(fn));
+    } else cm::execute("cp -af /usr/data/updater/clever/  /usr/data/");
+
     clrbit(mOta->work, bit);
     bool ret = coreRuning();
     if(ret) cmd_updater(fn, bit);
-    if(mOta->work) system("cp -af /usr/data/updater/clever/  /usr/data/");
-    else QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    if(!mOta->work) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
 #endif
 }
 
@@ -91,11 +94,13 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         up->isRun = 0;
     } else {
         up->isRun = 2;
-        QString fn = it.path + it.file;
-        QString cmd = "rm -f " + fn;
-        cm::execute(cmd);
-        cm::execute("sync");
-        system("reboot");
+        if(bit != DOtaCode::DOta_Usb) {
+            QString fn = it.path + it.file;
+            QString cmd = "rm -f " + fn;
+            cm::execute(cmd);
+            cm::execute("sync");
+            system("reboot");
+        }
     } clrbit(mOta->work, bit);
 }
 
@@ -107,7 +112,7 @@ void Ota_Net::rebootSlot()
     system("chmod +x /usr/data/clever/app/*");
     cmd = "rm -rf /usr/data/updater/clever";
     throwMessage(cmd); throwMessage(cm::execute(cmd));
-
+    cm::execute("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     cm::execute("rm -rf /usr/data/clever/upload/*");
     cm::execute("sync"); system("reboot");
@@ -133,6 +138,9 @@ bool Ota_Net::versionCheck(const QString &dir)
                     if(str != it.dev) {
                         QString msg = "version dev type err: currnet type %1 up type:%2";
                         throwMessage(msg.arg(str, it.dev)); ret = false;
+                    } else if(it.md5 == cm::masterDev()->cfg.vers.md5) {
+                        QString msg = "version dev md5 err: md5=%1";
+                        throwMessage(msg.arg(it.md5)); ret = false;
                     }
                 }
             }

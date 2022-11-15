@@ -76,7 +76,8 @@ void Set_Diagnose::diascmds()
 
     sys_cmd("ps", "processes");
     sys_cmd("top -bmn1", "processes");
-    sys_cmd("cat /sys/kernel/debug/usb/devices", "usb-devices");
+    sys_cmd("lsusb", "usb-devices");
+    sys_cmd("dmesg | grep 'usb'", "usb-devices");
 }
 
 
