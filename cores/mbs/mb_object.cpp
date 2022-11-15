@@ -50,8 +50,11 @@ vshort Mb_Object::strToShort(const char *str)
     vshort res; ushort buf[32] = {0};
     int size = strlen(str) + 1;
     memcpy(buf, str, size);
+    uchar *ptr = (uchar *)str;
 
-    for(int i=0; i<size; ++i) {
+    for(int i=0; i<size; i+=2) {
+        buf[i] = (ptr[i]<<8) + ptr[i+1];
+
         res.append(buf[i]);
     }
 
