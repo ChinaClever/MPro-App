@@ -19,13 +19,13 @@ Ota_Usb::Ota_Usb(QObject *parent)
     : Ota_Net{parent}
 {
     QTimer::singleShot(1678,this,SLOT(usb_initSlot()));
+    system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
 }
 
 void Ota_Usb::usb_initSlot()
 {
     QtConcurrent::run(this,&Ota_Usb::usb_run);
     connect(this, &Ota_Usb::usbSig, this, &Ota_Usb::usb_otaSlot);
-    system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
 }
 
 void Ota_Usb::usb_netSLot()
@@ -68,7 +68,7 @@ void Ota_Usb::usb_run()
 void Ota_Usb::usb_otaSlot()
 {
     QString dir = "/tmp/mass_storage/sda1/clever/";
-    cm::mdelay(10); if(QFile::exists(dir + "ver.ini")) {
+    cm::mdelay(234); if(QFile::exists(dir + "ver.ini")) {
         sOtaFile it; it.fc = 21; it.path = dir;
         ota_updater(it, DOta_Usb, true);
     } isUsbRun = false;
