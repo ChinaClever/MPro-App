@@ -30,12 +30,11 @@
 					</div>
 					<div>
 						<br/>
-						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;">页<input id = "page" style = "width:3%;text-align: center;" value="0">/页<span id  ="page_num"></span></span><span>
-							<input type ="button" style = "width:11%" id  = "jump" value="前往"  onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "last" value="上一页"  onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "next" value="下一页"  onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "del" value="删除日志"  onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "export" value="导出" onclick="saveArrayDataToExcel()">
+						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
+							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
+							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
 				</div>
@@ -50,6 +49,7 @@
     <script>
 		let lang = new Array();
 		let language = 1;
+		let btn_name = new Array("jump","last","next","export");
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
@@ -59,25 +59,29 @@
 			for(i = 1;i<31;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","告警日志","","","",""];
+			lang[1] = ["","固件历史","","","",""];
 			lang[2] = ["","序号","","","",""];
-			lang[3] = ["","时间","","","",""];
-			lang[4] = ["","问题描述","","","",""];
+			lang[3] = ["","升级时间","","","",""];
+			lang[4] = ["","版本信息","","","",""];
 			lang[5] = ["","详细信息","","","",""];
-			lang[6] = ["","日志大小：","","","",""];
+			lang[6] = ["","历史记录：","","","",""];
 			lang[7] = ["","页","","","",""];
 			lang[8] = ["","/页","","","",""];
 			lang[9] = ["","前往","","","",""];
 			lang[10] = ["","上一页","","","",""];
 			lang[11] = ["","下一页","","","",""];
-			lang[12] = ["","删除日志","","","",""];
-			lang[13] = ["","导出","","","",""];
+			lang[12] = ["","导出","","","",""];
+			lang[13] = ["","条","","","",""];
 		}
 		function lang_fun(){
-			for(let j = 1;j<14;j++){
+			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			for(let i = 0;i<btn_name.length;i++){
+				document.getElementById(btn_name[i]).value = lang[9+i][language];
+			}
 		}
+		lang_init();
 		function read_data(){
 			let stat = 0;
 			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
@@ -113,6 +117,7 @@
 		setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
+			lang_fun();
 			showdata();
 		},800);
 		function flash_html(par)
@@ -133,19 +138,20 @@
 			let size = document.getElementById("log_size");
 			let p = document.getElementById("page");
 			let p_n = document.getElementById("page_num");
-			size.innerHTML = log_num+"条";
+			size.innerHTML = log_num+lang[13][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
 
 		}
 		function saveArrayDataToExcel() {
 			var retVal = confirm("请确认是否导出此表单");
+			let str = '';
 			if(retVal == true)
 			{
-				let str = "序号,时间,主副机地址,告警类型,问题描述,详细信息\n";
-				for(let i = show_num;i > 0;i--){
+				str += lang[2][language]+','+lang[3][language]+','+lang[4][language]+','+lang[5][language]+'\n';
+				for(let i = 0;i < show_num;i++){
 					str+=(i+1)+',';
-					for(let j = 0;j < 5;j++){
+					for(let j = 0;j < 3;j++){
 						str+=log_data[i][j]+',';
 					}
 					str += '\n';
