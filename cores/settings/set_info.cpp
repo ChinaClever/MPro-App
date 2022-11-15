@@ -145,6 +145,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     case 3: ptr = it->devName; break;
     case 4: ptr = it->qrcode; break;
     case 5: ptr = it->sn; break;
+    case 6: ptr = it->devType; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -165,6 +166,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     case 3: key = "devName";  ptr = it->devName; break;
     case 4: key = "qrcode";  ptr = it->qrcode; qrcodeGenerator(array); break;
     case 5: key = "sn";  ptr = it->sn; break;
+    case 6: key = "devType";  ptr = it->devType; break;
     default: ret = false; cout << fc; break;
     }
 

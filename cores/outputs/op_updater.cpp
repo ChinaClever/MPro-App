@@ -57,6 +57,7 @@ bool OP_Updater::ota_updates()
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
         sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
+        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
             up->results[i] = 1;
             ret = ota_update(i, fn);
@@ -90,7 +91,7 @@ bool OP_Updater::ota_update(int addr, QByteArray &array)
 void OP_Updater::onOtaProgress(uchar addr, int v)
 {
     sOtaUpIt *it = &cm::dataPacket()->ota.outlet;
-    it->subId = addr; it->progress = v;
+    it->subId = addr; it->progress = it->progs[addr] = v;
     QString str = "addr=%1 progress=%2";
     throwMessage(str.arg(addr).arg(v));
 }

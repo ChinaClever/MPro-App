@@ -15,7 +15,14 @@
 #define UEVENT_BUFFER_SIZE 2048
 
 
-static void usb_run()
+Ota_Usb::Ota_Usb(QObject *parent)
+    : Ota_Net{parent}
+{
+    QtConcurrent::run(this,&Ota_Usb::usb_run);
+    system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
+}
+
+void Ota_Usb::usb_run()
 {
     struct sockaddr_nl client;
     struct timeval tv;
@@ -33,22 +40,26 @@ static void usb_run()
     while (1) {
         FD_ZERO(&fds);
         FD_SET(CppLive, &fds);
-        tv.tv_sec = 0;
-        tv.tv_usec = 100 * 1000;
+        tv.tv_usec = 100 * 1000; tv.tv_sec = 1;
         ret = select(CppLive + 1, &fds, NULL, NULL, &tv);
         if(ret < 0) continue;
         if(!(ret > 0 && FD_ISSET(CppLive, &fds))) continue;
         rcvlen = recv(CppLive, &buf, sizeof(buf), 0); /* receive data */
         if (rcvlen > 0) {
-            printf("USB = %s\n", buf);
+            qDebug() << buf;
+            if(!isUsbRun) {isUsbRun = true; emit usbSig();}
             /*You can do something here to make the program more perfect!!!*/
         }
     }
     close(CppLive);
 }
 
-Ota_Usb::Ota_Usb(QObject *parent)
-    : Ota_Net{parent}
-{
 
+void Ota_Usb::usbSlot()
+{
+    QString dir = "/tmp/mass_storage/sda1/clever/";
+    cm::mdelay(10); if(QFile::exists(dir + "ver.ini")) {
+        sOtaFile it; it.fc = 21; it.path = dir;
+        ota_updater(it, DOta_Usb, true);
+    } isUsbRun = false;
 }

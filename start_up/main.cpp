@@ -27,16 +27,15 @@ static void initSystem()
 
 static void init_netWork()
 {
-    QString mac = "00:00:00:00:00:01";
+    QString mac = "00:00:00:00:00:21";
     QString fn =  "/usr/data/clever/cfg/mac.ini";
     if(QFile::exists(fn)) {
         QFile file(fn);
         if(file.open(QIODevice::ReadOnly)) {
-            QByteArray array=file.readAll();
-            if(array.size() == 17) mac = array;
+            QByteArray array = file.readAll().replace("\n", "");
+            if(array.size() == mac.size()) mac = array;
             else qDebug() << "mac error" << array;
         }
-
     } else {
         system("touch /usr/data/clever/cfg/mac.ini");
     }

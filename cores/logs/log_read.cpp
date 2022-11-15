@@ -74,7 +74,7 @@ Sql_Statement *Log_Read::getSql(int type)
 QString Log_Read::log_readFun(const sLogFcIt &it)
 {
     Sql_Statement *sql = getSql(it.type); if(!sql) return "";
-    QString res; QReadLocker locker(mRwLock); switch (it.fc) {
+    QString res; QWriteLocker locker(mRwLock); switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
     case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
@@ -98,7 +98,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     if(it.topic) cmd += QString(" and topic = \'%1\'").arg(it.topic);
     if(it.index) cmd += QString(" and index = \'%1\'").arg(it.index);
 
-    QReadLocker locker(mRwLock);
+    QWriteLocker locker(mRwLock);
     QString res; Db_Hda *db = Db_Hda::bulid();
     QVector<sHdaItem> its = db->selectItems(cmd);
     if(its.size()) {

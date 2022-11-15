@@ -14,13 +14,14 @@ Ota_Obj::Ota_Obj(QObject *parent)
 
 void Ota_Obj::onStartSsdp()
 {
-    static uint sec = 1; if(++sec%5) return ;
-    sRunTime *run = &(cm::masterDev()->proc.ota);
+    static uint cnt=1, sec=0; if(++cnt%5) return ;
+    sRunTime *run = &(cm::masterDev()->proc.core);
     if(run->runSec > sec) {
         sec = run->runSec;
         mSsdp->ssdpClose();
-    } else {
-        mSsdp->ssdpBind();
+    } else if(!cm::execute("./proc_run cores").toInt()){
+        mSsdp->ssdpBind(false);
+        //cout << "core stop";
     }
 }
 

@@ -162,6 +162,10 @@
         "url": "mqtt.html"
       },
       {
+        "name": "AMQP服务",
+        "url": "amqp.html"
+      },
+      {
         "name": "REST集成",
         "url": "rest.html"
       },
@@ -172,10 +176,6 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
-      },
-      {
-        "name": "AMQP服务",
-        "url": "amqp.html"
       }
     ]
   }, 
@@ -284,6 +284,10 @@
       {
         "name": "历史数据",
         "url": "history.html"
+      },
+      {
+        "name": "日志设置",
+        "url": "log_setting.html"
       }
     ]
   },
@@ -309,12 +313,16 @@
         "url": "batch_setting.html"
       },
       {
+        "name": "网络诊断",
+        "url": "net_diagnostics.html"
+      },
+      {
         "name": "备份/恢复",
         "url": "backups.html"
       },
       {
         "name": "下载诊断",
-        "url": "diagnosis.html"
+        "url": "download_diagnosis.html"
       },
       {
         "name": "系统命令",

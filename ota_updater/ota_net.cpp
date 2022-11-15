@@ -58,11 +58,14 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    if(DOtaCode::DOta_Usb == bit) {
+        QString cmd = "cp -af %1 /usr/data/"; cm::execute(cmd.arg(fn));
+    } else cm::execute("cp -af /usr/data/updater/clever/  /usr/data/");
+
     clrbit(mOta->work, bit);
     bool ret = coreRuning();
     if(ret) cmd_updater(fn, bit);
-    if(mOta->work) system("cp -af /usr/data/updater/clever/  /usr/data/");
-    else QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    if(!mOta->work) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
 #endif
 }
 
@@ -107,7 +110,7 @@ void Ota_Net::rebootSlot()
     system("chmod +x /usr/data/clever/app/*");
     cmd = "rm -rf /usr/data/updater/clever";
     throwMessage(cmd); throwMessage(cm::execute(cmd));
-
+    cm::execute("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     cm::execute("rm -rf /usr/data/clever/upload/*");
     cm::execute("sync"); system("reboot");

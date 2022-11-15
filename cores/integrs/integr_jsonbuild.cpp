@@ -47,26 +47,31 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
-        //saveJson("cc", json);
     } else {
 
     }
     return json;
 }
 
-bool Integr_JsonBuild::saveJson(const QString &name, QJsonObject &json)
+void Integr_JsonBuild::saveJson(uchar addr)
 {
-    QFile file("/home/lzy/" + name+".json");
+    QJsonObject json = getJsonObject(addr);
+    QString dir = "/usr/data/clever/download/dia/metadata/";
+    QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QJsonDocument jsonDoc(json);
         QByteArray ba = jsonDoc.toJson(QJsonDocument::Indented);
         file.write(ba); file.close();
     } else {
-        qDebug() << "write json file failed";
+        cout << "write json file failed";
     }
+}
 
-    return ret;
+void Integr_JsonBuild::saveJsons()
+{
+    int size = cm::masterDev()->cfg.nums.slaveNum;
+    for(int i=0; i<size; ++i) saveJson(i);
 }
 
 void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,

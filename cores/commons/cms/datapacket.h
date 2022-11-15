@@ -21,7 +21,7 @@ typedef unsigned int uint;
 #define NAME_SIZE 48
 #define DEV_NUM 10
 #define ARRAY_SIZE 255    //一包数据最长
-#define USER_NUM 5
+#define USER_NUM 10
 #define GROUP_NUM 8
 #define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
@@ -208,7 +208,8 @@ struct sUutInfo {
     char room[NAME_SIZE];
     char location[NAME_SIZE]; // 位置
     char devName[NAME_SIZE]; // 设备名称
-    char qrcode[3*NAME_SIZE]; // 二维码
+    char qrcode[4*NAME_SIZE]; // 二维码
+    char devType[NAME_SIZE]; // 设备型号
     char reserve[3][NAME_SIZE];
     char sn[NAME_SIZE];
 };
@@ -329,7 +330,8 @@ struct sNetInterface
 
 struct sDevLogin
 {
-    char permit[3];
+    uchar permit; // 0 管理员  1 操作员  2 访客
+    long long ctrl; // 按位操作 0 有权限  1 没有权限
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
@@ -342,6 +344,7 @@ struct sOtaUpIt
     uchar subId; // 升级子对象 第几个副机，或者第几块执板
     uchar progress; // 升级进度 百分之几十
     uchar reserve;
+    uchar progs[DEV_NUM]; // 升级进度
     uchar results[DEV_NUM]; // 升级结果
 };
 
@@ -406,10 +409,12 @@ struct sDataItem
     uint value;
 };
 
-enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin, EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp,
-             EOutput=22, EGroup, EDual, EGrouping, EGroupSet, EVersion=30, ESercret, ETlsCert, EWhiteList,
+enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
+             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC,
+             EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
+             EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg,
-             ELog=81, EHda, EPro=91, EOta, EDgsNet, EBR, ECmd=111};
+             ELog=81, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

@@ -22,7 +22,7 @@ App_Buzzer::App_Buzzer(QObject *parent)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(QFile::exists("/sys/clever/beep/switch")) {
         QTimer::singleShot(1,this,SLOT(beep_initFunSlot()));
-    } else cout << "beep err";
+    } else cout << "beep error";
 #endif
 }
 
