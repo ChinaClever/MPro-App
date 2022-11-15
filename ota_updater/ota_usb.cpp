@@ -18,7 +18,13 @@
 Ota_Usb::Ota_Usb(QObject *parent)
     : Ota_Net{parent}
 {
+    QTimer::singleShot(1678,this,SLOT(usb_initFunSlot()));
+}
+
+void Ota_Usb::usb_initFunSlot()
+{
     QtConcurrent::run(this,&Ota_Usb::usb_run);
+    connect(this, &Ota_Usb::usbSig, this, &Ota_Usb::usbSlot);
     system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
 }
 

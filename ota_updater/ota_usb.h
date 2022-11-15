@@ -14,6 +14,7 @@ signals:
     void usbSig();
 
 private slots:
+    void usb_initFunSlot();
     void usbSlot();
 
 private:
