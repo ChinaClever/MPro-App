@@ -14,8 +14,9 @@ signals:
     void usbSig();
 
 private slots:
-    void usb_initFunSlot();
-    void usbSlot();
+    void usb_initSlot();
+    void usb_netSLot();
+    void usb_otaSlot();
 
 private:
     bool isUsbRun=false;

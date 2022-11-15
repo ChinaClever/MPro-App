@@ -18,14 +18,19 @@
 Ota_Usb::Ota_Usb(QObject *parent)
     : Ota_Net{parent}
 {
-    QTimer::singleShot(1678,this,SLOT(usb_initFunSlot()));
+    QTimer::singleShot(1678,this,SLOT(usb_initSlot()));
 }
 
-void Ota_Usb::usb_initFunSlot()
+void Ota_Usb::usb_initSlot()
 {
     QtConcurrent::run(this,&Ota_Usb::usb_run);
-    connect(this, &Ota_Usb::usbSig, this, &Ota_Usb::usbSlot);
+    connect(this, &Ota_Usb::usbSig, this, &Ota_Usb::usb_otaSlot);
     system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
+}
+
+void Ota_Usb::usb_netSLot()
+{
+    system("echo none > /sys/class/usb_role/13500000.otg_new-role-switch/role");
 }
 
 void Ota_Usb::usb_run()
@@ -51,9 +56,8 @@ void Ota_Usb::usb_run()
         if(ret < 0) continue;
         if(!(ret > 0 && FD_ISSET(CppLive, &fds))) continue;
         rcvlen = recv(CppLive, &buf, sizeof(buf), 0); /* receive data */
-        if (rcvlen > 0) {
-            qDebug() << buf;
-            if(!isUsbRun) {isUsbRun = true; emit usbSig();}
+        if (rcvlen > 0) {            
+            if(!isUsbRun) {isUsbRun = true; emit usbSig();} qDebug() << buf;
             /*You can do something here to make the program more perfect!!!*/
         }
     }
@@ -61,7 +65,7 @@ void Ota_Usb::usb_run()
 }
 
 
-void Ota_Usb::usbSlot()
+void Ota_Usb::usb_otaSlot()
 {
     QString dir = "/tmp/mass_storage/sda1/clever/";
     cm::mdelay(10); if(QFile::exists(dir + "ver.ini")) {
