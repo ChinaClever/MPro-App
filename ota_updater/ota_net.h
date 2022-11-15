@@ -21,7 +21,7 @@ private slots:
     void rebootSlot();
     void startSlot(const QString &host);
     void finishSlot(const sOtaFile &it, bool ok);
-    void throwMessage(const QString &msg) {mDtls->throwMessage(msg);}
+    void throwMessage(const QString &msg) {qDebug() << msg; mDtls->throwMessage(msg);}
 
 private:
     Dtls_Recver *mDtls;

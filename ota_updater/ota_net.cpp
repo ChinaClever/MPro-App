@@ -94,11 +94,13 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         up->isRun = 0;
     } else {
         up->isRun = 2;
-        QString fn = it.path + it.file;
-        QString cmd = "rm -f " + fn;
-        cm::execute(cmd);
-        cm::execute("sync");
-        system("reboot");
+        if(bit != DOtaCode::DOta_Usb) {
+            QString fn = it.path + it.file;
+            QString cmd = "rm -f " + fn;
+            cm::execute(cmd);
+            cm::execute("sync");
+            system("reboot");
+        }
     } clrbit(mOta->work, bit);
 }
 
@@ -136,6 +138,9 @@ bool Ota_Net::versionCheck(const QString &dir)
                     if(str != it.dev) {
                         QString msg = "version dev type err: currnet type %1 up type:%2";
                         throwMessage(msg.arg(str, it.dev)); ret = false;
+                    } else if(it.md5 == cm::masterDev()->cfg.vers.md5) {
+                        QString msg = "version dev md5 err: md5=%1";
+                        throwMessage(msg.arg(it.md5)); ret = false;
                     }
                 }
             }

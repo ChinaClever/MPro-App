@@ -226,9 +226,10 @@ void Cfg_Service::login()
 {
     QString prefix = "login";
     QString key; char *ptr=nullptr;
-    sDevLogin *it = &(cm::dataPacket()->login[0]);
+    sDataPacket *packet = cm::dataPacket();
 
     for(int k=0; k<USER_NUM; ++k) {
+        sDevLogin *it = &(packet->login[k]);
         for(int i=1; i<3; ++i) {
             switch (i) {
             case 1: key = "user_%1";  ptr = it->user; break;
