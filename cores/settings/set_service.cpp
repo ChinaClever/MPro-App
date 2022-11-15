@@ -177,6 +177,7 @@ QVariant Set_Service::ntpCfg(int fc)
     case 3: ret = it->ntp_host; break;
     case 4: ret = it->time_zone; break;
     case 5: ret = obj->ntpdate(); break;
+    case 6: ret = cm::pingNet(it->ntp_host); break;
     default: cout << fc; break;
     }
     return ret;

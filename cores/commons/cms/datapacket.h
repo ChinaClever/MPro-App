@@ -222,6 +222,7 @@ struct sParameter {
     uint  modbusRtuBr; // Modbus-Rtu 波特率
     uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
+    uint  buzzerSec; // 消音时间
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
