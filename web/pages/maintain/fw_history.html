@@ -53,7 +53,7 @@
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
-		read_log_data(1,1,0,0);
+		read_log_data(3,1,0,0);
 		function lang_init(){
 			let i = 0;
 			for(i = 1;i<31;i++){
@@ -112,7 +112,7 @@
 				show_num = log_num;
 				stat= 0;
 			}
-			read_log_data(1,2,stat,show_num);
+			read_log_data(3,2,stat,show_num);
 		},600);
 		setTimeout(function(){
 			read_data();
@@ -126,6 +126,7 @@
 				par.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
 				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
 				showdata();
 			},800);
 		}
@@ -184,14 +185,14 @@
 							show_num = 20;
 							stat = (log_num-(page_num * 20));
 						}
-						read_log_data(1,2,stat,show_num);
+						read_log_data(3,2,stat,show_num);
 						flash_html(btn);
 					}
 				}else if(btn.id == "last"){ 
 					if((page_num - 1) > 0){
 						page_num -= 1;
 						show_num = 20;
-						read_log_data(1,2,(log_num-(page_num * 20)),show_num);
+						read_log_data(3,2,(log_num-(page_num * 20)),show_num);
 						flash_html(btn);
 					}else{
 
@@ -206,7 +207,7 @@
 							show_num = 20;
 							stat = (log_num-(page_num * 20));
 						}
-						read_log_data(1,2,stat,show_num);
+						read_log_data(3,2,stat,show_num);
 						flash_html(btn);
 					}else{
 						//read_log_data(1,3,0,0);
