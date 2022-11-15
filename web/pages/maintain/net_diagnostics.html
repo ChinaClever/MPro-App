@@ -58,7 +58,7 @@
 				lang[i] = new Array();
 			}
 			lang[1] = ["","网络诊断","","","",""];
-			lang[2] = ["","ping","","","",""];
+			lang[2] = ["","网络诊断","","","",""];
 			lang[3] = ["","网络主机:","","","",""];
 			lang[4] = ["","请求数:","","","",""];
 			lang[5] = ["","打开ping功能","","","",""];
@@ -95,13 +95,16 @@
 				}
 			}
 		}
+		function showdata_(btn){
+			document.getElementById(net_diagn[parseInt(btn) +1]).innerHTML = diagn_data[parseInt(btn)];
+		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
 						if(i == 3 || i == 8){
-							rpc.call('pduSetParam',[0,93,i,0,0,0]);
-							document.getElementById(net_diagn[i+1]).value  = lang[12][language];
+							rpc.call('pduReadParam',[0,93,i,0,0]);
+							document.getElementById(net_diagn[i+1]).innerHTML  = lang[12][language];
 							diagn_read(i);
 						}else{
 							rpc.call('pduSetParam',[0,93,i,0,0,btn.value]);
@@ -118,44 +121,18 @@
 				showdata();
 			},800);
 		}
-		let diagn_num = 0,diagn_num1= 0;
 		function diagn_read(btn){
 			if(btn == 3){
-				time1 = setInterval(function(){
-					if(diagn_num == 10 || diagn_data[btn] != ""){
-						clearInterval(time1);
-					}
-					read_net_diagnostics_data();
-					setTimeout(function(){
-						read_data();
-						showdata();
-					},800);
-					diagn_num ++;
-				},1000);
+				time1 = setTimeout(function(){
+					read_data();
+					showdata_(btn);
+				},12000);
 			}else{
-				time2 = setInterval(function(){
-					if(diagn_num1 == 10 || diagn_data[btn] != ""){
-						clearInterval(time2);
-					}
-					read_net_diagnostics_data();
-					setTimeout(function(){
-						read_data();
-						showdata();
-					},800);
-					diagn_num1 ++;
-				},1000);
+				time2 = setTimeout(function(){
+					read_data();
+					showdata_(btn);
+				},12000);
 			}
-		}
-		function Set(btn){
-			var sel =0;
-			if(confirm("请确认是否保存此次修改？")){
-				if(btn.id == "lang_9"){
-					rpc.call('pduSetParam',[0,modbus,7,0,0,0]);
-				}else{
-					rpc.call('pduSetParam',[0,modbus,13,0,0,0]);
-				}
-				flash_html();
-			}else{}
 		}
 		function buildTableRtu() {
 			var thead = '',tbody = '';
@@ -165,7 +142,7 @@
 			tbody += '<td><input id = "NetAddr" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "RequstNum" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>100){value=100};if(value<1)value=1" placeholder="1~100"></input>';
+			tbody += '<td><input id = "RequstNum" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>10){value=10};if(value<1)value=1" placeholder="1~10"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td><input id = "Ping" type = "button" onclick ="SetData(this)"></input>';
 			tbody += '</td><td></td></tr>';

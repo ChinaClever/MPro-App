@@ -849,7 +849,7 @@ function read_net_diagnostics_data(){
     if(j >= parseInt(9)){
       clearInterval(time1);
     }
-    if(j < 3 || (j>5 && j<9)){
+    if(j < 3 || (j>5 && j<8)){
         rpc.call('pduReadParam',[0,93,j,0,0]);
     }
     j++;
