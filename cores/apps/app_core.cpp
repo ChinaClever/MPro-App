@@ -17,6 +17,14 @@ App_Core::App_Core(QObject *parent)
     initVer();
 #endif
     Cfg_Core::bulid();
+
+    sOtaItem ota;
+    ota.md5 = "dm5";
+    ota.ver = "ver";
+    ota.oldVersion = "old";
+    ota.releaseDate = "releaseDate";
+    ota.remark = "remark";
+    Log_Core::bulid()->append(ota);
 }
 
 App_Core *App_Core::bulid(QObject *parent)
@@ -50,14 +58,5 @@ void App_Core::initVer()
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
     } else cout << CFG_APP << "error";
-
-    sOtaItem ota;
-    ota.md5 = "dm5";
-    ota.ver = "ver";
-    ota.oldVersion = "old";
-    ota.releaseDate = "releaseDate";
-    ota.remark = "remark";
-    Log_Core::bulid()->append(ota);
-
 }
 

@@ -834,10 +834,12 @@ function read_update_progress_data(){
     }
     if(j < 2){
       for(let i = 1;i<slave_num +1;i++){
-        rpc.call('pduReadParam',[i,92,6,0,0]);
+        rpc.call('pduReadParam',[i,92,6,4,0]);
+        rpc.call('pduReadParam',[i,92,6,5,0]);
       }
       for(let i = 1;i<board_num +1;i++){
-        rpc.call('pduReadParam',[i,92,7,0,0]);
+        rpc.call('pduReadParam',[i,92,7,4,0]);
+        rpc.call('pduReadParam',[i,92,7,5,0]);
       }
     }
     j++;
