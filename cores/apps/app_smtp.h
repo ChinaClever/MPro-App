@@ -1,7 +1,7 @@
 #ifndef APP_SMTP_H
 #define APP_SMTP_H
 
-#include "app_ntp.h"
+#include "app_radius.h"
 #define SMTP_TO_SIZE 4
 struct sSmtpCfg {
     int en;
@@ -15,7 +15,7 @@ struct sSmtpCfg {
     QString lastErr;
 };
 
-class App_Smtp : public App_Ntp
+class App_Smtp : public App_Radius
 {
     Q_OBJECT
 public:

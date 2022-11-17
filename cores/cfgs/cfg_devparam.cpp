@@ -87,6 +87,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
+    if(it.buzzerSw) it.buzzerSw = 1;
 }
 
 void Cfg_devParam::runTimeWrite()

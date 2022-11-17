@@ -222,6 +222,7 @@ struct sParameter {
     uint  modbusRtuBr; // Modbus-Rtu 波特率
     uchar modbusRtuAddr; // Modbus-Rtu 地址
     uchar buzzerSw; // 蜂鸣器开关
+    uint  buzzerSec; // 消音时间
     uchar drySw; // 报警干接点开关
     uchar isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
@@ -413,7 +414,7 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
              EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius,
              ELog=81, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
 
 struct sCfgItem {
