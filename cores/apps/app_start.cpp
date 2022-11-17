@@ -13,6 +13,7 @@
 #include "set_ssdp.h"
 #include "mb_core.h"
 #include "op_core.h"
+#include "odbc_core.h"
 
 App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
@@ -50,6 +51,8 @@ void App_Start::startThreadSlot()
     Agent_Core::bulid(this);
     Cascade_Core::bulid(this);
 #endif
+
+    Odbc_Core::bulid();
 }
 
 

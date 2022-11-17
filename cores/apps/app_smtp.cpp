@@ -8,7 +8,7 @@
 
 sSmtpCfg App_Smtp::smtpCfg;
 App_Smtp::App_Smtp(QObject *parent)
-    : App_Ntp{parent}
+    : App_Radius{parent}
 {
 
 }

@@ -14,6 +14,7 @@ include(logs/logs.pri)
 include(apps/apps.pri)
 #include(ipcs/ipcs.pri)
 include(rpcs/rpcs.pri)
+include(odbc/odbc.pri)
 include(datas/datas.pri)
 include(agents/agents.pri)
 include(alarms/alarms.pri)
@@ -22,8 +23,6 @@ include(outputs/outputs.pri)
 include(commons/commons.pri)
 include(integrs/integrs.pri)
 include(settings/settings.pri)
-include(updaters/updaters.pri)
-#include(web_server/web_server.pri)
 
 SOURCES += \
         main.cpp

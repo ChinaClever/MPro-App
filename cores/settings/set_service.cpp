@@ -13,9 +13,8 @@ Set_Service::Set_Service()
 
 QVariant Set_Service::logCfg(int fc)
 {
-    QVariant ret;
     sLogCfg *cfg = &Log_Core::cfg;
-    switch (fc) {
+    QVariant ret; switch (fc) {
     case 1: ret = cfg->eleTime; break;
     case 2: ret = cfg->hdaTime; break;
     case 3: ret = cfg->logCnt; break;
@@ -148,7 +147,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
 {
     bool ret = true;
     sSshCfg *cfg = &App_Ssh::sshCfg;
-    App_Core *obj = App_Core::bulid();
+    //App_Core *obj = App_Core::bulid();
     QString prefix = "ssh"; QString key;
 
     switch (fc) {
@@ -235,6 +234,44 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}
+
+QVariant Set_Service::raduisCfg(int fc)
+{
+    sRadiusCfg *cfg = &App_Radius::radiusCfg;
+    QVariant ret; switch (fc) {
+    case 1: ret = cfg->en; break;
+    case 2: ret = cfg->local; break;
+    case 3: ret = cfg->host; break;
+    case 4: ret = cfg->key; break;
+    case 5: ret = cfg->authPort; break;
+    case 6: ret = cfg->acctPort; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+bool Set_Service::raduisSet(int fc, const QVariant &v)
+{
+    QString prefix = "raduis"; QString key;
+    sRadiusCfg *cfg = &App_Radius::radiusCfg;
+
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "local";  cfg->local = v.toInt(); break;
+    case 3: key = "host";  cfg->host = v.toString();  break;
+    case 4: key = "key";  cfg->key = v.toString();  break;
+    case 5: key = "authPort";  cfg->authPort = v.toInt();  break;
+    case 6: key = "acctPort";  cfg->acctPort = v.toInt();  break;
+    default: ret = false; cout << fc;  break;
     }
 
     if(key.size()){
