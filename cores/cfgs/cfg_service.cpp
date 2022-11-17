@@ -245,7 +245,7 @@ void Cfg_Service::amqp()
 void Cfg_Service::odbc()
 {
     QString prefix = "odbc"; QString key;
-     sOdbcCfg *cfg = &(Odbc_Obj::cfg);
+    sOdbcCfg *cfg = &(Odbc_Obj::cfg);
     for(int i=1; i<10; ++i) {
         switch (i) {
         case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
