@@ -20,8 +20,15 @@ __attribute__((destructor)) void app_exit()
 
 static void initSystem()
 {
+    system("cmd_fb enable /dev/fb0");
+    system("cmd_fb display /dev/fb0");
     system("chmod +x -R /usr/data/clever/awtk/release/bin/");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
+    system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
+
+    QString cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
+    cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
+    system(cmd.toLocal8Bit().data());
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
 }
 
