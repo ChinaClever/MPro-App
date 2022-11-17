@@ -72,7 +72,7 @@
 		var Sensor_state = new Array("","","");
     	var sensor_name = new Array("","","","","","","","");
     	var head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
-		var end = new Array("Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","HisEn");
+		var end = new Array("Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","","","HisEn");
     	var data = new Array();
 		var  read  = 1;
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
@@ -114,6 +114,8 @@
 			lang[25] = ["","门禁2","","","",""];
 			lang[26] = ["","水禁","","","",""];
 			lang[27] = ["","烟雾","","","",""];
+			lang[28] = ["","设置模式","","","",""];
+			lang[29] = ["","阅读模式","","","",""];
 			for(let i =0;i<Sensor_state.length;i++){
 				Sensor_state[i] = lang[17 + i][language];
 			}
@@ -136,9 +138,10 @@
 					data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_1");
 				}
 				else{
-					for(var j = 0; j<head.length;j++){
+					for(var j = 0; j<end.length;j++){
 						type_num = 6;
-					data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
+						if(j!= 8 || j!= 9)
+						data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
 					}
 				}
 			}
@@ -164,12 +167,19 @@
 		function showdata(){
 			for(var i = 1 ;i < table_len+ 1;i++){
 				var ss = document.getElementById('c'+(i-1));
+				var he = document.getElementById('l'+(i-1));
 				var cs = document.getElementById('b'+(i-1));
 				if(data[i - 1][7] == 1){
 					ss.checked = true;
 				}
 				else{
 					ss.checked = false;
+				}
+				if(data[i - 1][10] == 1){
+					he.checked = true;
+				}
+				else{
+					he.checked = false;
 				}
 				if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
 					cs.bgColor = 'red';
@@ -195,7 +205,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = "设置模式";
+				ros.innerHTML = lang[28][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -207,7 +217,7 @@
 				// ms.style.display = "none";
 				read = 1;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = "阅读模式";
+				ros.innerHTML = lang[29][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -222,19 +232,27 @@
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.tmp_hum_table').html(buildTableTH(table_len));
+				lang_fun();
 				showdata();
 			},800);
 		}
 		function cked(ckd)
 		{
 			let stat = 0,id = 0;
+			let type1 = ckd.id.substr(0,1);
 			let number = parseInt(ckd.id.slice(1))+1;
 			let number1  = 0;
-			let opt_val = parseInt(document.getElementById("opt_").value);
+			let type = 0;
+			// let opt_val = parseInt(document.getElementById("opt_").value);
 			let addr_ = addr + 0 * 256;
 			let retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
+				if(type1 == "c"){
+					type = 8;
+				}else{
+					type = 11;
+				}
 				if(number <= 2){
 					number1  = tmp_;
 				}else{
@@ -246,7 +264,7 @@
 				}else{
 					stat = 0;
 				}
-				rpc.call('pduSetData',[addr_,envir,number1,8,id,stat]);
+				rpc.call('pduSetData',[addr_,envir,number1,type,id,stat]);
 				flash_html(ckd);
 			}else{}
 		}
@@ -348,11 +366,11 @@
 		}
 		setInterval(function(){
 			read_sensor_data(addr);
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+			// setTimeout(function(){
+			// 	read_data();
+			// 	putdata();
+			// 	showdata();
+			// },800);
 		},2000);
     </script>
 </body>
