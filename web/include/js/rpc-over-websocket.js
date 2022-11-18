@@ -42,6 +42,7 @@ let logset_name = new Array("","EnergeDelay","HistoryDelay","AlarmMaxNum","Event
 let Progress_name = new Array("","","","","","","Slave","Board");
 let Progress_info = new Array("","","","","State","Progress");
 let net_diagn = new Array("","NetAddr","RequstNum","Ping","Ping1","","Host","Timeout","Router","Router1");
+let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -70,7 +71,8 @@ var jsonrpc = function()
     pro = "ws://";
   }else if(pro_ == "https:"){
     pro = "wss://";
-  }url = pro + url_ +'/websocket';
+  }
+  let url = pro + url_ +'/websocket';
   ws = new WebSocket(url);
   if (!ws) return null;
   let type = 0,topic = 0,subtopic = 0,num = 0;
@@ -220,6 +222,9 @@ var jsonrpc = function()
       case 47:
         sessionStorage.setItem(logset_name[topic], JSON.parse(evt.data).result[5]);
       break;
+      case 48:
+        sessionStorage.setItem(radius_name[topic], JSON.parse(evt.data).result[5]);
+      break;
       case 51:
       break;
       case 81:
@@ -242,15 +247,15 @@ var jsonrpc = function()
     close:() => ws.close(),
     call:function(method,params){
       const id = rpcid++,request = {id, method, params};
-      ws.send(JSON.stringify(request));
-      return new Promise(function(resolve, reject) {
-        setTimeout(JSONRPC_TIMEOUT_MS, function() {
-          if (pending[id] === undefined) return;
-          delete (pending[id]);
-          reject();
-        });
-        pending[id] = x => resolve(x);
-      });
+       ws.send(JSON.stringify(request));
+      // return new Promise(function(resolve, reject) {
+      //   // setTimeout(JSONRPC_TIMEOUT_MS, function() {
+      //   //   if (pending[id] === undefined) return;
+      //   //   delete (pending[id]);
+      //   //   reject();
+      //   // });
+      //   pending[id] = x => resolve(x);
+      // });
     },
   };
 }
@@ -258,7 +263,7 @@ var jsonrpc = function()
 
 var rpc = jsonrpc();
 var start  = 0;
-var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 12;
+var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
@@ -470,9 +475,9 @@ function read_output_data(addr)
 }
 function read_sensor_data(addr)
 {
-  var j = 1;var i = 1;
-  var time1 = setInterval(function(){
-    if(j >= parseInt(sub_num + 1)){
+  let j = 1, i = 1;
+  let time1 = setInterval(function(){
+    if(i >= parseInt(hum_num + 1)){
       clearInterval(time1);
     }
     if(i <= hum_num && j <= sub_num){
@@ -486,13 +491,13 @@ function read_sensor_data(addr)
         rpc.call('pduReadData',[addr,envir,tmp_,j,i]);
         rpc.call('pduReadData',[addr,envir,hum_,j,i]);
       }
-      i++;
-      if(i >= parseInt(hum_num + 1)){
-        i = 1;
-        j++;
+      j++;
+      if(j >= parseInt(sub_num + 1)){
+        j = 1;
+        i++;
       }
     }
-  },1);
+  },3);
 }
 function read_num_info(addr){
   var j = 1;
@@ -856,6 +861,16 @@ function read_net_diagnostics_data(){
     if(j < 3 || (j>5 && j<8)){
         rpc.call('pduReadParam',[0,93,j,0,0]);
     }
+    j++;
+  },3);
+}
+function read_radius_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(7)){
+      clearInterval(time1);
+    }
+    rpc.call('pduReadParam',[addr,48,j,0,0]);
     j++;
   },3);
 }
