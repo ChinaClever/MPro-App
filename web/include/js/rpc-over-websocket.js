@@ -11,7 +11,7 @@ let addr  = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
-let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
+let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","PowSwEn","BreakerEn","Direction","Angle");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
@@ -258,7 +258,7 @@ var jsonrpc = function()
 
 var rpc = jsonrpc();
 var start  = 0;
-var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 8;
+var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 12;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
@@ -482,8 +482,10 @@ function read_sensor_data(addr)
         rpc.call('pduReadData',[addr,sensor,water_,j,i]);
         rpc.call('pduReadData',[addr,sensor,smoke_,j,i]);
       }
-      rpc.call('pduReadData',[addr,envir,tmp_,j,i]);
-      rpc.call('pduReadData',[addr,envir,hum_,j,i]);
+      if(j!= 9 || j!= 10){
+        rpc.call('pduReadData',[addr,envir,tmp_,j,i]);
+        rpc.call('pduReadData',[addr,envir,hum_,j,i]);
+      }
       i++;
       if(i >= parseInt(hum_num + 1)){
         i = 1;
@@ -834,10 +836,12 @@ function read_update_progress_data(){
     }
     if(j < 2){
       for(let i = 1;i<slave_num +1;i++){
-        rpc.call('pduReadParam',[i,92,6,0,0]);
+        rpc.call('pduReadParam',[i,92,6,4,0]);
+        rpc.call('pduReadParam',[i,92,6,5,0]);
       }
       for(let i = 1;i<board_num +1;i++){
-        rpc.call('pduReadParam',[i,92,7,0,0]);
+        rpc.call('pduReadParam',[i,92,7,4,0]);
+        rpc.call('pduReadParam',[i,92,7,5,0]);
       }
     }
     j++;
