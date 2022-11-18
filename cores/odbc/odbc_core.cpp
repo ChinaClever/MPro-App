@@ -8,7 +8,7 @@
 
 Odbc_Core::Odbc_Core()
 {
-    QtConcurrent::run(this,&Odbc_Core::run);
+    //QtConcurrent::run(this,&Odbc_Core::run);
 }
 
 Odbc_Core *Odbc_Core::bulid()
