@@ -229,11 +229,9 @@
 		{
 			read_sensor_data(addr);
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
 				read_data();
-				$('.tmp_hum_table').html(buildTableTH(table_len));
-				lang_fun();
 				showdata();
+				lang_fun();
 			},800);
 		}
 		function cked(ckd)
@@ -243,7 +241,6 @@
 			let number = parseInt(ckd.id.slice(1))+1;
 			let number1  = 0;
 			let type = 0;
-			// let opt_val = parseInt(document.getElementById("opt_").value);
 			let addr_ = addr + 0 * 256;
 			let retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
@@ -366,11 +363,11 @@
 		}
 		setInterval(function(){
 			read_sensor_data(addr);
-			// setTimeout(function(){
-			// 	read_data();
-			// 	putdata();
-			// 	showdata();
-			// },800);
+			setTimeout(function(){
+				read_data();
+				putdata();
+				showdata();
+			},800);
 		},2000);
     </script>
 </body>
