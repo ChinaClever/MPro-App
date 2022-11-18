@@ -32,7 +32,7 @@ void Cfg_Service::readCfgParams()
     smtp();
     mqtt();
     amqp();
-    odbc();
+    //odbc();
     login();
     syslog();
     modbus();

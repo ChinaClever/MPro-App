@@ -8,7 +8,7 @@
 
 Odbc_Core::Odbc_Core()
 {
-    //QtConcurrent::run(this,&Odbc_Core::run);
+    QtConcurrent::run(this,&Odbc_Core::run);
 }
 
 Odbc_Core *Odbc_Core::bulid()
@@ -22,5 +22,6 @@ Odbc_Core *Odbc_Core::bulid()
 
 void Odbc_Core::run()
 {
-    db_open();
+
+    qDebug() << db_open() << event_createTable();
 }
