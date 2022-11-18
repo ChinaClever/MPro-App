@@ -25,6 +25,9 @@ protected:
     QVariant amqpCfg(uchar fc);
     bool amqpSet(uchar fc, const QVariant &v);
 
+    QVariant odbcCfg(uchar fc);
+    bool odbcSet(uchar fc, const QVariant &v);
+
 private:
     int toBaud(int value);
     int baudTo(int value);

@@ -48,6 +48,7 @@ bool Sql_Statement::sqlQuery(QSqlQuery &query)
     if(!ret) ret = throwError(query.lastError());
     return ret;
 }
+
 bool Sql_Statement::sqlQuery(QSqlQuery &query, const QString &sql)
 {
     bool ret = query.prepare(sql);

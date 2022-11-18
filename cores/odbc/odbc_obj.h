@@ -17,11 +17,12 @@ struct sOdbcCfg
 
     bool en;
     int port;
+    bool status=0;
     QString host;
     QString user;
     QString pwd;
     QString db;
-    bool status;
+    QString pdukey;
     int dataPoll;
     int hdaPoll;
 };

@@ -6,6 +6,8 @@ class Odbc_Event : public Odbc_Hda
 {
 public:
     Odbc_Event();
+
+    bool event_createTable();
 };
 
 #endif // ODBC_EVENT_H

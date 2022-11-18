@@ -22,7 +22,7 @@ bool Odbc_Obj::throwError(const QSqlError &err)
         case QSqlError::StatementError: str = "StatementError"; break;
         case QSqlError::TransactionError: str = "TransactionError"; break;
         }
-    } if(!ret) qCritical() << "odbc sql rrror: " << str << err.text();
+    } if(!ret) qCritical() << "odbc sql error: " << str << err.text();
     return ret;
 }
 
@@ -31,8 +31,8 @@ bool Odbc_Obj::db_open()
     mDb = QSqlDatabase::addDatabase("QMYSQL", ODBC_NAME);
     bool ret = false; QSqlDatabase *db = &mDb;
     if(db->isValid() && cfg.en) {
-        db->setHostName(cfg.host);
         db->setPort(cfg.port);
+        db->setHostName(cfg.host);
         db->setDatabaseName(cfg.db);
         db->setUserName(cfg.user);
         db->setPassword(cfg.pwd);

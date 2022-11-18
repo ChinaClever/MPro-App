@@ -22,5 +22,6 @@ Odbc_Core *Odbc_Core::bulid()
 
 void Odbc_Core::run()
 {
-    db_open();
+
+    qDebug() << db_open() << event_createTable();
 }
