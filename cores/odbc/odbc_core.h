@@ -1,8 +1,8 @@
 #ifndef ODBC_CORE_H
 #define ODBC_CORE_H
-#include "odbc_data.h"
+#include "odbc_alarm.h"
 
-class Odbc_Core : public Odbc_Data
+class Odbc_Core : public Odbc_Alarm
 {
     Odbc_Core();
 public:

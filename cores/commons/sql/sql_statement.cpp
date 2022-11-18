@@ -30,15 +30,14 @@ bool Sql_Statement::throwError(const QSqlError &err)
     bool ret = false;
     if(err.isValid()) {     //发生错误时isValid()返回true
         switch (err.type()) {
-        case QSqlError::NoError: str = QStringLiteral("无错误"); ret = true; break;
-        case QSqlError::UnknownError: str = QStringLiteral("未知错误"); break;
-        case QSqlError::ConnectionError: str = QStringLiteral("连接错误");break;
-        case QSqlError::StatementError: str = QStringLiteral("SQL语句错误"); break;
-        case QSqlError::TransactionError: str = QStringLiteral("事务错误"); break;
+        case QSqlError::NoError: str = "NoError"; ret = true; break;
+        case QSqlError::UnknownError: str = "UnknownError"; break;
+        case QSqlError::ConnectionError: str = "ConnectionError";break;
+        case QSqlError::StatementError: str = "StatementError"; break;
+        case QSqlError::TransactionError: str = "TransactionError"; break;
         }
     }
-    if(!ret) qCritical() << "Sql_Error: " << QStringLiteral("数据库名：")
-                         << tableName() << str << err.text();
+    if(!ret) qCritical() << "sqlite error: "  << tableName() << str << err.text();
     return ret;
 }
 

@@ -48,8 +48,8 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     if(ptr) {
         qstrcpy(ptr, str);
         ptr[v.toByteArray().size()] = 0;
-        sEventItem db; db.type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.content = QStringLiteral("%1 修改为 %2").arg(key, str);
+        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, str);
         Log_Core::bulid()->append(db);
     }
 
@@ -87,8 +87,8 @@ bool Set_Login::loginCheck(const QString &str)
             ret = loginAuth(ls);
         }
 
-        sEventItem db; db.type = QStringLiteral("用户登陆"); //opSrc(txType);
-        db.content = QStringLiteral("登陆登陆为 %1").arg(str);
+        sEventItem db; db.event_type = QStringLiteral("用户登陆"); //opSrc(txType);
+        db.event_content = QStringLiteral("登陆登陆为 %1").arg(str);
         Log_Core::bulid()->append(db);
     }
 

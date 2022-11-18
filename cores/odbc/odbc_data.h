@@ -2,10 +2,28 @@
 #define ODBC_DATA_H
 #include "odbc_event.h"
 
+struct sOdbcDataIt {
+    int addr;
+    int type;
+    int topic;
+    int subindex;
+    double value;
+};
+
 class Odbc_Data : public Odbc_Event
 {
 public:
     Odbc_Data();
+
+protected:
+    bool data_createTable();
+    bool data_poll(const sOdbcDataIt &it);
+
+private:
+    int data_counts(const sOdbcDataIt &it);
+    bool data_update(const sOdbcDataIt &it);
+    bool data_insert(const sOdbcDataIt &it);
+    bool data_modifyItem(const sOdbcDataIt &it, const QString &fmd);
 };
 
 #endif // ODBC_DATA_H

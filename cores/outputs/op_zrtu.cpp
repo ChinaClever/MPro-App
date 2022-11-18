@@ -66,9 +66,9 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
-        m_array[addr] = cmd; sEventItem it; it.type = tr("执行板通讯");
-        it.content = tr("执行板无响应 addr:%1 ").arg(addr+1);
-        rtuThrowMessage(it.type + it.content);
+        m_array[addr] = cmd; sEventItem it; it.event_type = tr("执行板通讯");
+        it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
+        rtuThrowMessage(it.event_type + it.event_content);
         Log_Core::bulid(this)->append(it);
     }
 }
@@ -89,9 +89,9 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size();
-        sEventItem it; it.type = tr("执行板通讯");
-        it.content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
-        rtuThrowMessage(it.type + it.content + cm::byteArrayToHexStr(recv));
+        sEventItem it; it.event_type = tr("执行板通讯");
+        it.event_content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
+        rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid(this)->append(it);
 
@@ -104,14 +104,14 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
-            sEventItem it; it.type = tr("Output");
-            it.content = tr("执行板 %1 连接正常").arg(addr);
+            sEventItem it; it.event_type = tr("Output");
+            it.event_content = tr("执行板 %1 连接正常").arg(addr);
             Log_Core::bulid(this)->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
-            sEventItem it; it.type = tr("Output");
-            it.content = tr("执行板 %1 掉线").arg(addr);
+            sEventItem it; it.event_type = tr("Output");
+            it.event_content = tr("执行板 %1 掉线").arg(addr);
             Log_Core::bulid(this)->append(it);
 
             int size = sizeof(mOpData->vol);

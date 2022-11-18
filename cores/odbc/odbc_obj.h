@@ -37,6 +37,7 @@ public:
     bool throwError(const QSqlError &err);
 
 protected:
+    int m_pdu_id = 1;
     QSqlDatabase mDb;
 };
 

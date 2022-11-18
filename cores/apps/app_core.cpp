@@ -18,13 +18,13 @@ App_Core::App_Core(QObject *parent)
 #endif
     Cfg_Core::bulid();
 
-    sOtaItem ota;
-    ota.md5 = "dm5";
-    ota.ver = "ver";
-    ota.oldVersion = "old";
-    ota.releaseDate = "releaseDate";
-    ota.remark = "remark";
-    Log_Core::bulid()->append(ota);
+//    sOtaItem ota;
+//    ota.md5 = "dm5";
+//    ota.ver = "ver";
+//    ota.oldVersion = "old";
+//    ota.releaseDate = "releaseDate";
+//    ota.remark = "remark";
+//    Log_Core::bulid()->append(ota);
 }
 
 App_Core *App_Core::bulid(QObject *parent)
