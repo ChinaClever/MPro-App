@@ -3,7 +3,8 @@
 #include "db_alarm.h"
 
 struct sEventItem : public Db_ObjItem{
-    QString type, content;
+    QString event_type;
+    QString event_content;
 };
 
 class Db_Event : public Db_Obj<sEventItem>

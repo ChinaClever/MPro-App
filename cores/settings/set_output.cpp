@@ -39,8 +39,8 @@ void Set_Output::relayOpLog(const sDataItem &it)
     }
 
     sEventItem db;
-    db.content = str;
-    db.type =  QStringLiteral("继电器设置");//opSrc(it.txType);
+    db.event_content = str;
+    db.event_type =  QStringLiteral("继电器设置");//opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 
@@ -161,8 +161,8 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     }
 
     sEventItem db;
-    db.content = str;
-    db.type = op; //opSrc(it.txType);
+    db.event_content = str;
+    db.event_type = op; //opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
 

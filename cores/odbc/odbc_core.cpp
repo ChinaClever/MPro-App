@@ -8,7 +8,7 @@
 
 Odbc_Core::Odbc_Core()
 {
-    //QtConcurrent::run(this,&Odbc_Core::run);
+    QtConcurrent::run(this,&Odbc_Core::run);
 }
 
 Odbc_Core *Odbc_Core::bulid()
@@ -22,6 +22,13 @@ Odbc_Core *Odbc_Core::bulid()
 
 void Odbc_Core::run()
 {
+    qDebug() << db_open() << data_createTable();
 
-    qDebug() << db_open() << event_createTable();
+    sOdbcDataIt it;
+    it.addr = 12;
+    it.type = 3;
+    it.topic = 4;
+    it.subindex = 5;
+    it.value = 26.9;
+    qDebug() << data_poll(it);
 }

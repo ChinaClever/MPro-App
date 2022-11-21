@@ -31,3 +31,12 @@ bool Odbc_Sql::sqlQuery(const QString &sql)
     QSqlQuery query(mDb);
     return sqlQuery(query, sql);
 }
+
+int Odbc_Sql::cntBySql(const QString &sql)
+{
+    int id = 0; QSqlQuery query(mDb);
+    if(sqlQuery(query, sql)) {
+        if(query.next()) id = query.value(0).toInt();
+    }
+    return id;
+}

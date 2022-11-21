@@ -10,6 +10,7 @@ public:
     bool sqlQuery(QSqlQuery &query);
     bool sqlQuery(const QString &sql);
     bool sqlQuery(QSqlQuery &query, const QString &sql);
+    int cntBySql(const QString &sql);
 };
 
 #endif // ODBC_SQL_H

@@ -9,7 +9,9 @@
 Agent_Set::Agent_Set(QObject *parent)
     : Agent_Get{parent}
 {
-    QTimer::singleShot(3550,this,SLOT(initSetSlot()));
+    if((snmpCfg.enV3) || (snmpCfg.enV2)) {
+        QTimer::singleShot(3550,this,SLOT(initSetSlot()));
+    }
 }
 
 void Agent_Set::initSetSlot()

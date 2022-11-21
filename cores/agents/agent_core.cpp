@@ -12,7 +12,7 @@ Agent_Core::Agent_Core(QObject *parent)
     mCfg = &snmpCfg;
     if(mCfg->enV3) {
         startSnmpdV3();
-    } else if(mCfg->enV2) {
+    } else {
         startSnmpd();
     }
 }

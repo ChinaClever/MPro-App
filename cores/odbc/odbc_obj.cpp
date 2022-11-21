@@ -28,7 +28,7 @@ bool Odbc_Obj::throwError(const QSqlError &err)
 
 bool Odbc_Obj::db_open()
 {
-    mDb = QSqlDatabase::addDatabase("QMYSQL", ODBC_NAME);
+    mDb = QSqlDatabase::addDatabase("QMYSQL3", ODBC_NAME);
     bool ret = false; QSqlDatabase *db = &mDb;
     if(db->isValid() && cfg.en) {
         db->setPort(cfg.port);
@@ -36,9 +36,12 @@ bool Odbc_Obj::db_open()
         db->setDatabaseName(cfg.db);
         db->setUserName(cfg.user);
         db->setPassword(cfg.pwd);
-        ret = cfg.status = db->open();
+
+        ret = db->open();
+        if(!ret) ret = db->open();
         if(ret) qDebug() << "odbc connect ok";
         else throwError(db->lastError());
+        cfg.status = ret;
     }
 
     return ret;

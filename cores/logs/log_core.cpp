@@ -23,8 +23,8 @@ Log_Core *Log_Core::bulid(QObject *parent)
         sington = new Log_Core(parent);
 
         sEventItem it;
-        it.type = tr("系统事件");
-        it.content = tr("系统启动");;
+        it.event_type = tr("系统事件");
+        it.event_content = tr("系统启动");;
         sington->append(it);
     }
     return sington;
@@ -34,7 +34,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
 void Log_Core::append(const sAlarmItem &it)
 {
     QString fmd = "alarm:%1 content:%2";
-    QString str = fmd.arg(it.state, it.content);
+    QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     mAlarmIts << it;
     run();
@@ -43,7 +43,7 @@ void Log_Core::append(const sAlarmItem &it)
 void Log_Core::append(const sEventItem &it)
 {
     QString fmd = "type:%1 content:%2";
-    QString str = fmd.arg(it.type, it.content);
+    QString str = fmd.arg(it.event_type, it.event_content);
     sys_logInfo(str);
     mEventIts << it;
     run();

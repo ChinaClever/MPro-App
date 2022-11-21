@@ -2,6 +2,7 @@ INCLUDEPATH += $$PWD
 
 
 HEADERS +=  \
+    $$PWD/odbc_alarm.h \
     $$PWD/odbc_core.h \
     $$PWD/odbc_data.h \
     $$PWD/odbc_event.h \
@@ -10,6 +11,7 @@ HEADERS +=  \
     $$PWD/odbc_sql.h
 
 SOURCES +=  \
+    $$PWD/odbc_alarm.cpp \
     $$PWD/odbc_core.cpp \
     $$PWD/odbc_data.cpp \
     $$PWD/odbc_event.cpp \
