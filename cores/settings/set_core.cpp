@@ -115,12 +115,15 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {
     bool ret = false;
+    if(it.addr==0 || it.addr==0xff) {
+         ret = setParam(it, v);
+    }
+
     if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
-    } else {
-        ret = setParam(it, v);
     }
+
     return ret;
 }
 
