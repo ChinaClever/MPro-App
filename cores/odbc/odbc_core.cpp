@@ -160,7 +160,6 @@ void Odbc_Core::workDown()
     } db_close();
 }
 
-
 void Odbc_Core::run()
 {
     if(!isRun) {

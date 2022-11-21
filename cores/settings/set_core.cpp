@@ -137,11 +137,10 @@ bool Set_Core::setting(sDataItem &it)
                 if(ret) writeAlarm();
             }
         }
-
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-        } setAlarmLog(it);
+        }setAlarmLog(it);
     } else {
         ret = false;
         cout << it.rw;
