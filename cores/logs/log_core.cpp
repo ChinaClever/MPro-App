@@ -5,6 +5,8 @@
  */
 #include "log_core.h"
 #include "app_core.h"
+#include "odbc_core.h"
+
 sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
@@ -36,17 +38,16 @@ void Log_Core::append(const sAlarmItem &it)
     QString fmd = "alarm:%1 content:%2";
     QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
-    mAlarmIts << it;
-    run();
+    Odbc_Core::bulid()->alarm(it);
+    mAlarmIts << it; run();
 }
 
 void Log_Core::append(const sEventItem &it)
 {
     QString fmd = "type:%1 content:%2";
     QString str = fmd.arg(it.event_type, it.event_content);
-    sys_logInfo(str);
-    mEventIts << it;
-    run();
+    sys_logInfo(str); mEventIts << it; run();
+    Odbc_Core::bulid()->event(it);
 }
 
 void Log_Core::append(const sDataItem &it)
@@ -62,15 +63,15 @@ void Log_Core::append(const sDataItem &it)
 
 void Log_Core::log_hda(const sDataItem &it)
 {
-    if(cfg.hdaEn) return ;
     uint sec = cfg.hdaTime * 60*60;
+    if(!cfg.hdaEn || !sec) return ;
     if(!mCnt % sec) append(it);
 }
 
 void Log_Core::log_hdaEle(const sDataItem &it)
 {
-    if(cfg.hdaEn) return ;
     uint sec = cfg.eleTime * 24*60*60;
+    if(!cfg.hdaEn || !sec) return ;
     if(!mCnt % sec) append(it);
 }
 
@@ -85,12 +86,16 @@ void Log_Core::initFunSlot()
 
 void Log_Core::run()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot()));}
+    if(!isRun) {
+        isRun = true;
+        QtConcurrent::run(this, &Log_Core::saveLogSlot);
+        //QTimer::singleShot(350,this, SLOT(saveLogSlot()));
+    }
 }
 
 void Log_Core::saveLogSlot()
 {
-    Db_Tran t; QWriteLocker locker(mRwLock);
+    cm::mdelay(350); Db_Tran t; QWriteLocker locker(mRwLock);
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());

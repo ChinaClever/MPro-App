@@ -11,7 +11,8 @@ public:
 
 protected:
     bool setAlarm(sDataItem &unit);
-    QString opSrc(uchar txType);
+    void setAlarmLog(sDataItem &unit);
+    QString opSrc(uchar addr);
 
 private:
     QString opContent(const sDataItem &index);

@@ -1,16 +1,16 @@
 #ifndef ODBC_HDA_H
 #define ODBC_HDA_H
-#include "odbc_sql.h"
+#include "odbc_threshold.h"
 
 struct sOdbcHdaIt {
-    int addr;
-    int type;
-    int topic;
-    int subindex;
+    uchar addr;
+    uchar type;
+    uchar topic;
+    uchar indexes;
     double value;
 };
 
-class Odbc_Hda : public Odbc_Sql
+class Odbc_Hda : public Odbc_Threshold
 {
 public:
     Odbc_Hda();

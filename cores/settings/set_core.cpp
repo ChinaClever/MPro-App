@@ -113,7 +113,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 
 
 bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
-{    
+{
     bool ret = false;
     if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
@@ -126,19 +126,25 @@ bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 
 bool Set_Core::setting(sDataItem &it)
 {
-    bool ret = true; if(it.rw) {
+    bool ret = true;
+
+    if(it.rw) {
+        if(it.addr==0 || it.addr==0xff) {
+            if(it.topic == DTopic::Relay) {
+                ret = relaySet(it);
+            } else {
+                ret = setAlarm(it);
+                if(ret) writeAlarm();
+            }
+        }
+
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-        } else if(it.topic == DTopic::Relay) {
-            ret = relaySet(it);
-        } else {
-            ret = setAlarm(it);
-            if(ret) writeAlarm();
-        }
+        } setAlarmLog(it);
     } else {
         ret = false;
-        qDebug() << Q_FUNC_INFO;
+        cout << it.rw;
     }
 
     return ret;

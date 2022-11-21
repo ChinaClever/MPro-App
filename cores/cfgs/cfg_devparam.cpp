@@ -24,7 +24,7 @@ void Cfg_devParam::uutInfoRead(sUutInfo &uut)
     str = cfg->readCfg("devName", "", g).toString();
     qstrcpy(uut.devName, str.toLatin1().data());
 
-    str = cfg->readCfg("devType", "", g).toString();
+    str = cfg->readCfg("devType", "MPDU-Pro", g).toString();
     qstrcpy(uut.devType, str.toLatin1().data());
 
     str = cfg->readCfg("qrcode", "", g).toString();

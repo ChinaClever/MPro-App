@@ -39,10 +39,17 @@ bool Odbc_Obj::db_open()
 
         ret = db->open();
         if(!ret) ret = db->open();
-        if(ret) qDebug() << "odbc connect ok";
-        else throwError(db->lastError());
+        if(ret) {cfg.okCnt++; qDebug() << "odbc connect ok";}
+        else {cfg.errCnt++, throwError(db->lastError());}
         cfg.status = ret;
     }
 
     return ret;
+}
+
+void Odbc_Obj::db_close()
+{
+    mDb.commit();
+    cm::mdelay(150);
+    mDb.close();
 }

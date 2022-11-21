@@ -15,7 +15,7 @@ public:
     sAlarmUnit *getAlarmUnit(const sDataItem &index);
 
     sRelayUnit *getRelayUnit(const sDataItem &index);
-    bool upMetaData(sDataItem &index);
+    bool upMetaData(sDataItem &it);
 
 private:
     sObjData *getObjData(const sDataItem &index);

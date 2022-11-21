@@ -18,11 +18,13 @@
 #define CLEVER_DEBUG(__fmt, args...) syslog (LOG_DEBUG, "%s:%d function(%s):" __fmt, __FILE__, __LINE__, __func__,  ##args)
 #define CLEVER_CLOSE() closelog()
 
+static QReadWriteLock *gLogLock = new QReadWriteLock;
+QReadWriteLock *log_rwLock() {return  gLogLock;}
 sSysLogCfg Log_Sys::sysLogCfg;
 Log_Sys::Log_Sys(QObject *parent)
     : QObject{parent}
 {
-
+    mRwLock = log_rwLock();
 }
 
 void Log_Sys::sys_logInfo(const QString& msg)

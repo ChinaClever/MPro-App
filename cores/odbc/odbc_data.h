@@ -3,10 +3,10 @@
 #include "odbc_event.h"
 
 struct sOdbcDataIt {
-    int addr;
-    int type;
-    int topic;
-    int subindex;
+    uchar addr;
+    uchar type;
+    uchar topic;
+    uchar indexes;
     double value;
 };
 

@@ -285,7 +285,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：告警 2：故障
+    uchar status; // 0：正常 1：告警 2：故障 3: 离线
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
@@ -397,9 +397,8 @@ enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 struct sDataItem
 {
 #ifndef SUPPORT_C
-    sDataItem():addr(0),rw(0),value(0){}
+    sDataItem():addr(0),txType(0),rw(0),value(0){}
 #endif
-    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  11温度 12湿度

@@ -1,7 +1,7 @@
 #ifndef ODBC_OBJ_H
 #define ODBC_OBJ_H
-#include <QtCore>
 #include <QtSql>
+#include "commons.h"
 #define ODBC_NAME "mysql"
 
 struct sOdbcCfg
@@ -13,6 +13,7 @@ struct sOdbcCfg
         db = "pdu";
         user = "pdu";
         pwd = "123456";
+        pdukey = "pdu";
     }
 
     bool en;
@@ -25,6 +26,8 @@ struct sOdbcCfg
     QString pdukey;
     int dataPoll;
     int hdaPoll;
+    uint okCnt=0;
+    uint errCnt=0;
 };
 
 class Odbc_Obj
@@ -34,10 +37,12 @@ public:
     static sOdbcCfg cfg;
 
     bool db_open();
+    void db_close();
+    void addCnt() {mCnt++;}
     bool throwError(const QSqlError &err);
 
 protected:
-    int m_pdu_id = 1;
+    uint mCnt = 1;
     QSqlDatabase mDb;
 };
 

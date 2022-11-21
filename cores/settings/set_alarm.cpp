@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_alarm.h"
-#include "cascade_core.h"
+#include "odbc_core.h"
 
 Set_Alarm::Set_Alarm()
 {
@@ -12,28 +12,25 @@ Set_Alarm::Set_Alarm()
 }
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
-{
-    bool ret = false;
-    if(unit.rw) {
-        ret = upMetaData(unit);
-        if(ret) oplog(unit);
-    }
-    return ret;
+{   
+    return upMetaData(unit);
 }
 
-QString Set_Alarm::opSrc(uchar txType)
+void Set_Alarm::setAlarmLog(sDataItem &unit)
+{
+    oplog(unit);
+    Odbc_Core::bulid()->threshold(unit);
+}
+
+QString Set_Alarm::opSrc(uchar addr)
 {
     QString str;
-    switch (txType) {
-    case TxWeb: str = "WEB"; break;
-    case TxModbus: str = "Modbus"; break;
-    case TxSnmp: str = "SNMP"; break;
-    case TxRpc: str = "RPC"; break;
-    case TxJson: str = "JSON"; break;
-    case TxSsh: str = "SSH"; break;
-    case TxWebocket: str = "WebSocket"; break;
-    default: cout << txType; break;
-    }
+    if(addr == 0xff) {
+        str = QStringLiteral("所有级联设备");
+    } if(addr) {
+        str = QStringLiteral("副机%1").arg(addr);
+    } else str = QStringLiteral("本机");
+
     return str;
 }
 
@@ -73,7 +70,9 @@ void Set_Alarm::oplog(const sDataItem &it)
     content += opContent(it);
 
     sEventItem db;
+    db.addr = it.addr;
     db.event_content = content;
-    db.event_type = QStringLiteral("告警设置"); //opSrc(it.txType);
+    db.event_type = QStringLiteral("告警设置:");
+    db.event_type += opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }

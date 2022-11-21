@@ -6,6 +6,7 @@
 #include "alarm_Updater.h"
 #include "cfg_core.h"
 #include "log_core.h"
+#include "odbc_core.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
@@ -58,7 +59,12 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-    if(it.hda[i]) Log_Core::bulid()->log_hda(index);
+
+    if(it.hda[i]) {
+        Odbc_Core::bulid()->data(index);
+        Log_Core::bulid()->log_hda(index);
+    }
+
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
@@ -236,6 +242,8 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         dev->alarm = ret ? 1:0;
         dev->status = dev->alarm;
         if(dev->dtc.fault) dev->status = 2;
+        if(dev->offLine <= 1) dev->status = 3;
+        if(addr == 0) dev->offLine = 2;
     }
     return ret;
 }
@@ -245,4 +253,5 @@ void Alarm_Updater::run()
     int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
     Log_Core::bulid()->log_addCnt();
+    Odbc_Core::bulid()->addCnt();
 }

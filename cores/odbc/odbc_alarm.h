@@ -5,6 +5,7 @@
 struct sOdbcAlarmIt
 {
     sOdbcAlarmIt() {}
+    int addr = -1;
     QString alarm_status;
     QString alarm_content;
 };

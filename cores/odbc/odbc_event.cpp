@@ -28,18 +28,15 @@ bool Odbc_Event::event_insert(const sOdbcEventIt &it)
     QString cmd = "INSERT INTO `pdu_event` "
                   "(`id`, `pdu_id`, `event_type`, `event_content`, `create_time`) "
                   "VALUES (NULL, '%1', '%2', '%3', CURRENT_TIMESTAMP)";
-   return event_modifyItem(it, cmd);
+    return event_modifyItem(it, cmd);
 }
 
 
 bool Odbc_Event::event_modifyItem(const sOdbcEventIt &it, const QString &fmd)
 {
-    QSqlQuery query(mDb);
-    QString cmd = fmd.arg(m_pdu_id)
-            .arg(it.event_type)
-            .arg(it.event_content);
-    query.prepare(cmd);
-    bool ret = query.exec();
+    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
+    QString cmd = fmd.arg(pdu_id) .arg(it.event_type, it.event_content);
+    query.prepare(cmd); bool ret = query.exec();
     if(!ret) throwError(query.lastError());
     return ret;
 }
