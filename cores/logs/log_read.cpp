@@ -8,7 +8,7 @@
 Log_Read::Log_Read(QObject *parent)
     : Log_Sys{parent}
 {
-    mRwLock = new QReadWriteLock;
+
 }
 
 template <typename T, typename U>

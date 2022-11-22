@@ -251,6 +251,8 @@ QVariant Set_Integr::odbcCfg(uchar fc)
     case 8: res = cfg->dataPoll; break;
     case 9: res = cfg->hdaPoll; break;
     case 10: res = cfg->status; break;
+    case 11: res = cfg->okCnt; break;
+    case 12: res = cfg->errCnt; break;
     default: cout << fc; break;
     }
     return res;

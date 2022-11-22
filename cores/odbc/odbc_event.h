@@ -5,6 +5,7 @@
 struct sOdbcEventIt
 {
     sOdbcEventIt() {}
+    int addr = -1;
     QString event_type;
     QString event_content;
 };

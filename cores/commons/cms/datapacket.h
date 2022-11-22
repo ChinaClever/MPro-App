@@ -285,7 +285,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：告警 2：故障
+    uchar status; // 0：正常 1：告警 2：故障 3: 离线
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
@@ -352,12 +352,12 @@ struct sOtaUpIt
 struct sOtaUpdater
 {
     uint work; // 按位操作：0 无升级 １Ｕ盘升级 2 网络升级 ３　网页升级 4 级联升级 5　执行板升级
-    sOtaUpIt usb; // USB升级状态
-    sOtaUpIt net; // 网络升级状态
-    sOtaUpIt web; // 网页升级状态
-    sOtaUpIt slave; // 级联升级状态
-    sOtaUpIt outlet; // 执行板升级状态
-    sOtaUpIt reserve;
+    struct sOtaUpIt usb; // USB升级状态
+    struct sOtaUpIt net; // 网络升级状态
+    struct sOtaUpIt web; // 网页升级状态
+    struct sOtaUpIt slave; // 级联升级状态
+    struct sOtaUpIt outlet; // 执行板升级状态
+    struct sOtaUpIt reserve;
     char host[NAME_SIZE]; // 服务端地址
 };
 
@@ -397,9 +397,8 @@ enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 struct sDataItem
 {
 #ifndef SUPPORT_C
-    sDataItem():addr(0),rw(0),value(0){}
+    sDataItem():addr(0),txType(0),rw(0),value(0){}
 #endif
-    //uchar soi; // 0 本机 1 级联组 2 本机房 3 所有
     uchar addr; // 地址
     uchar type; // 1 相数据  2 回路数据 ３　输出位数据 4组数据 6 环境 7 传感器
     uchar topic; // 1 开关  2 电压  3 电流  4 功率  11温度 12湿度

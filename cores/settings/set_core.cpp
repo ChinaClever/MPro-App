@@ -49,6 +49,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::EODBC: res = odbcCfg(it.fc); break;
     case SFnCode::ELogCfg: res = logCfg(it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
     case SFnCode::ERadius: res = raduisCfg(it.fc); break;
@@ -87,6 +88,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
+    case SFnCode::EODBC: ret = odbcSet(it.fc, v); break;
     case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::EAmqp: ret = amqpSet(it.fc, v); break;
@@ -113,32 +115,40 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 
 
 bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
-{    
+{
     bool ret = false;
+    if(it.addr==0 || it.addr==0xff) {
+        ret = setParam(it, v);
+    }
+
     if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
-    } else {
-        ret = setParam(it, v);
     }
+
     return ret;
 }
 
 bool Set_Core::setting(sDataItem &it)
 {
-    bool ret = true; if(it.rw) {
+    bool ret = true;
+
+    if(it.rw) {
+        if(it.addr==0 || it.addr==0xff) {
+            if(it.topic == DTopic::Relay) {
+                ret = relaySet(it);
+            } else {
+                ret = setAlarm(it);
+                if(ret) writeAlarm();
+            }
+        }
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-        } else if(it.topic == DTopic::Relay) {
-            ret = relaySet(it);
-        } else {
-            ret = setAlarm(it);
-            if(ret) writeAlarm();
-        }
+        }setAlarmLog(it);
     } else {
         ret = false;
-        qDebug() << Q_FUNC_INFO;
+        cout << it.rw;
     }
 
     return ret;

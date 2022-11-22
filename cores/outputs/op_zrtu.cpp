@@ -69,7 +69,7 @@ void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
         m_array[addr] = cmd; sEventItem it; it.event_type = tr("执行板通讯");
         it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
         rtuThrowMessage(it.event_type + it.event_content);
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 
@@ -93,7 +93,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         it.event_content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
         rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
 
     }
 
@@ -106,13 +106,13 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         if(v == 1) {
             sEventItem it; it.event_type = tr("Output");
             it.event_content = tr("执行板 %1 连接正常").arg(addr);
-            Log_Core::bulid(this)->append(it);
+            Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Output");
             it.event_content = tr("执行板 %1 掉线").arg(addr);
-            Log_Core::bulid(this)->append(it);
+            Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);
             memset(mOpData->vol, 0, size);

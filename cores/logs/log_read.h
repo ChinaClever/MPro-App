@@ -46,9 +46,6 @@ private:
     Sql_Statement *getSql(int type);
     QString log_readOnce(int type, int id);
     QString log_readPage(int type, int id, int cnt);
-
-protected:
-    QReadWriteLock *mRwLock;
 };
 
 #endif // LOG_READ_H

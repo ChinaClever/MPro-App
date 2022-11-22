@@ -31,7 +31,7 @@ void Data_Outlet::outletOverrunOff()
         bool ret = relayOverrunOff(*obj, i);
         if(ret) {
             OP_Core::bulid()->relayCtrl(i+1, 0);
-            sEventItem db;
+            sEventItem db; //db.addr = i;
             db.event_type = QStringLiteral("超限断电");
             db.event_content = QStringLiteral("继电器%1断开").arg(i+1);
             Log_Core::bulid()->append(db);

@@ -40,7 +40,8 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
     sEventItem db;
     db.event_content = str;
-    db.event_type =  QStringLiteral("继电器设置");//opSrc(it.txType);
+    db.event_type = QStringLiteral("继电器设置");
+    db.event_type += opSrc(it.addr);
     Log_Core::bulid()->append(db);
 }
 
@@ -91,25 +92,29 @@ bool Set_Output::groupCtrl(sDataItem &unit)
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
-    if(unit.rw) {
-        if(unit.type == DType::Group) groupCtrl(unit);
-        else {
-            switch (unit.subtopic) {
-            case DSub::Value:  ret = outputCtrl(unit); break;
-            case DSub::Relays: ret = outputsCtrl(unit); break;
-            case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-            default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
-            } } relayOpLog(unit);
-    } else if(unit.type == DType::Dual) {
-        unit.addr = 1; ret = Cascade_Core::bulid()->masterSeting(unit);
-    } else {ret = false; qDebug() << Q_FUNC_INFO;}
+    if(unit.type == DType::Group) {
+        groupCtrl(unit);
+    } else {
+        switch (unit.subtopic) {
+        case DSub::Value:  ret = outputCtrl(unit); break;
+        case DSub::Relays: ret = outputsCtrl(unit); break;
+        case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+        default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
+        }
+    } relayOpLog(unit);
+    if(unit.type == DType::Dual) {
+        sDataItem it = unit; it.addr += 1;
+        ret = Cascade_Core::bulid()->masterSeting(it);
+    }
 
     return ret;
 }
 
 QString Set_Output::outputCfg(sCfgItem &it)
 {
-    sDevData *dev = cm::devData(it.addr);
+    uint addr = it.addr;
+    if(addr==0xff) addr = 0;
+    sDevData *dev = cm::devData(addr);
     QString res; int id = it.id; if(id) id--;
     sObjData *obj = nullptr;
 
@@ -133,7 +138,7 @@ QString Set_Output::outputCfg(sCfgItem &it)
 
 QString Set_Output::grouping(int addr, int id)
 {
-    QString res;
+    QString res; if(addr == 0xff) addr = 0;
     QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
     foreach(auto &i, ids) res += QString::number(i) +";";
     return res;
@@ -162,7 +167,8 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 
     sEventItem db;
     db.event_content = str;
-    db.event_type = op; //opSrc(it.txType);
+    db.event_type = opSrc(it.addr);
+    db.event_type += op;
     Log_Core::bulid()->append(db);
 }
 
@@ -175,8 +181,8 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 {
-    bool ret = true;
-    sDevData *dev = cm::devData(it.addr);
+    bool ret = true; uint addr = it.addr; if(addr==0xff) addr = 0;
+    sDevData *dev = cm::devData(addr);
     uchar *ptr = dev->cfg.nums.group[it.fc];
     if(it.id < OUTPUT_NUM) ptr[it.id] = v.toInt();
     else {cout << it.id; ret = false;}
@@ -186,8 +192,9 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
+    uint addr = it.addr; if(addr==0xff) addr = 0;
     QStringList strs = v.toString().simplified().split(";");
-    sDevData *dev = cm::devData(it.addr); bool ret = true;
+    sDevData *dev = cm::devData(addr); bool ret = true;
     uchar *ptr = dev->cfg.nums.group[it.fc];
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
@@ -198,9 +205,10 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 {
+    uint addr = it.addr; if(addr==0xff) addr = 0;
     QString prefix; bool res=true; int id = it.id;
     sObjData *obj = nullptr; char *ptr = nullptr;
-    sDevData *dev = cm::devData(it.addr);
+    sDevData *dev = cm::devData(addr);
 
     switch (it.type) {
     case SFnCode::EOutput: obj = &(dev->output); prefix = "OutputName"; break;
@@ -235,7 +243,8 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
         it.id--; ret = outputSetById(it, v);
     } else {
         sObjData *obj = nullptr;
-        sDevData *dev = cm::devData(it.addr);
+        uint addr = it.addr; if(addr==0xff) addr = 0;
+        sDevData *dev = cm::devData(addr);
         switch (it.type) {
         case SFnCode::EOutput: obj = &(dev->output); break;
         case SFnCode::EGroup: obj = &(dev->group); break;
@@ -250,7 +259,8 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
     if(it.fc == 1){it.id = id; opNameLog(it, v); }
     else Cfg_Core::bulid()->writeAlarms();
     if(it.type == DType::Dual) {
-        it.addr = 1; ret = Cascade_Core::bulid()->masterSetCfg(it, v);
+        sCfgItem unit = it; unit.addr += 1;
+        ret = Cascade_Core::bulid()->masterSetCfg(unit, v);
     }
 
     return ret;

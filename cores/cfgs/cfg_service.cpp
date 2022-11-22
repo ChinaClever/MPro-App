@@ -32,7 +32,7 @@ void Cfg_Service::readCfgParams()
     smtp();
     mqtt();
     amqp();
-    //odbc();
+    odbc();
     login();
     syslog();
     modbus();
@@ -255,8 +255,8 @@ void Cfg_Service::odbc()
         case 5: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
         case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
         case 7: key = "pdukey"; cfg->pdukey = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, "", prefix).toInt();break;
-        case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, "", prefix).toInt(); break;
+        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 10, prefix).toInt();break;
+        case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, 30, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }

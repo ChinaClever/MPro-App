@@ -23,19 +23,15 @@ bool Odbc_Alarm::alarm_insert(const sOdbcAlarmIt &it)
     QString cmd = "INSERT INTO `pdu_alarm` "
                   "(`id`, `pdu_id`, `alarm_status`, `alarm_content`, `create_time`) "
                   "VALUES (NULL, '%1', '%2', '%3', CURRENT_TIMESTAMP)";
-
-   return alarm_modifyItem(it,cmd);
+    return alarm_modifyItem(it,cmd);
 }
 
 
 bool Odbc_Alarm::alarm_modifyItem(const sOdbcAlarmIt &it, const QString &fmd)
 {
-    QSqlQuery query(mDb);
-    QString cmd = fmd.arg(m_pdu_id)
-            .arg(it.alarm_status)
-            .arg(it.alarm_content);
-    query.prepare(cmd);
-    bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
+    QString cmd = fmd.arg(pdu_id).arg(it.alarm_status, it.alarm_content);
+    query.prepare(cmd); bool ret = query.exec();
+    if(!ret) throwError("pdu_alarm", query.lastError());
     return ret;
 }

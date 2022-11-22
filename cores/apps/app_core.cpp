@@ -6,7 +6,6 @@
 #include "app_core.h"
 #include "cfg_core.h"
 #include "cfg_app.h"
-#include "log_core.h"
 
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
@@ -17,14 +16,6 @@ App_Core::App_Core(QObject *parent)
     initVer();
 #endif
     Cfg_Core::bulid();
-
-//    sOtaItem ota;
-//    ota.md5 = "dm5";
-//    ota.ver = "ver";
-//    ota.oldVersion = "old";
-//    ota.releaseDate = "releaseDate";
-//    ota.remark = "remark";
-//    Log_Core::bulid()->append(ota);
 }
 
 App_Core *App_Core::bulid(QObject *parent)
