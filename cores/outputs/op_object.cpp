@@ -50,7 +50,7 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
             it.event_content = tr("Output %1 fault ELE:%2Kwh, %3Kwh").arg(id+1)
                     .arg(mDev->output.ele[id]/COM_RATE_ELE).arg(value/COM_RATE_ELE);
         } else cout << dtc[id];
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 
@@ -70,7 +70,7 @@ void OP_Object::recoveryLog(int id, uint *cnt)
             it.event_content = tr("Output %1 recovery CUR=%2A").arg(id+1)
                     .arg(mDev->output.vol.value[id]/COM_RATE_CUR);;
         }  else {cout << dtc[id]; return ;}
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 
@@ -137,7 +137,7 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
         cout << value/COM_RATE_PF;
         sEventItem it; it.event_type = tr("PF");
         it.event_content = tr("输出位 %1 功率因素错误％2").arg(id+1).arg(value/COM_RATE_PF);
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 

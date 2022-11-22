@@ -147,7 +147,6 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
 
-
         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
         //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
         //}
@@ -284,10 +283,10 @@ bool Alarm_Object::tgValue(sDataItem &index)
     return ret;
 }
 
-bool Alarm_Object::upMetaData(sDataItem &it)
+bool Alarm_Object::upMetaData(sDataItem &index)
 {
-    bool  ret = false; sDataItem index = it;
-    if(it.addr == 0xff) index.addr = 0;
+    bool  ret = false; uchar addr = index.addr;
+    if(addr >= 0xff) index.addr = 0;
 
     if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
     switch (index.type) {
@@ -301,7 +300,7 @@ bool Alarm_Object::upMetaData(sDataItem &it)
     case DTopic::ArtPow: case DTopic::ReactivePow:
     case DTopic::PF: ret = powPfValue(index); break;
     default: ret = alarmUnitValue(index); break;
-    }
+    } index.addr = addr;
 
     return ret;
 }

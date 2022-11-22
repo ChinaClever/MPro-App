@@ -38,7 +38,7 @@ void Odbc_Core::append(const sOdbcDataIt &it)
 {
     uint sec = cfg.dataPoll;
     if(!cfg.en || !sec) return;
-    if(!mCnt % sec) {mDataIts << it; run();}
+    if(! mCnt%sec){mDataIts << it; run();}
 }
 
 void Odbc_Core::append(const sOdbcEventIt &it)
@@ -51,7 +51,7 @@ void Odbc_Core::append(const sOdbcHdaIt &it)
 {
     uint sec = cfg.hdaPoll * 60;
     if(!cfg.en || !sec) return;
-    if(!mCnt % sec) { mHdaIts << it; run();}
+    if(!(mCnt%sec)) { mHdaIts << it; run();}
 }
 
 void Odbc_Core::hda(const sDataItem &item)
@@ -71,7 +71,7 @@ void Odbc_Core::hda(const sDataItem &item)
 void Odbc_Core::data(const sDataItem &item)
 {
     uint sec = cfg.dataPoll;
-    if(!cfg.en || !sec) return;
+    if(!cfg.en || !sec || isDbRun) return;
 
     sOdbcDataIt it;
     it.addr = item.addr;
@@ -81,12 +81,12 @@ void Odbc_Core::data(const sDataItem &item)
     it.value = item.value / cm::decimal(item);
     append(it); hda(item);
 
-    if(1 == cfg.okCnt && item.type != DTopic::Relay) {
+    if(cfg.okCnt<2  && cfg.status && item.type != DTopic::Relay) {
         sDataItem dt = item;
-        for(int i=DSub::Rated; i<DSub::EnAlarm; ++i) {
-            dt.subtopic = i; dt.id += 1;
+        for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
+            dt.subtopic = i;
             Set_Core::bulid()->upMetaData(dt);
-            threshold(dt);
+            dt.id = item.id + 1; threshold(dt);
         }
     }
 }
@@ -141,7 +141,7 @@ void Odbc_Core::createTables()
 
 void Odbc_Core::insertItems()
 {
-    QWriteLocker locker(mLock);
+    QWriteLocker locker(mLock); db_transaction();
     while(mThIts.size()) th_poll(mThIts.takeFirst());
     while(mHdaIts.size()) hda_insert(mHdaIts.takeFirst());
     while(mDataIts.size()) data_poll(mDataIts.takeFirst());
@@ -151,13 +151,14 @@ void Odbc_Core::insertItems()
 
 void Odbc_Core::workDown()
 {
-    cm::mdelay(550);
+    cm::mdelay(650);
     bool ret = db_open();
     if(ret) {
         createTables();
         dev_polls();
         insertItems();
     } db_close();
+    isRun = false;
 }
 
 void Odbc_Core::run()

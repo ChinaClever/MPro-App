@@ -24,6 +24,9 @@ private:
     bool data_update(const sOdbcDataIt &it);
     bool data_insert(const sOdbcDataIt &it);
     bool data_modifyItem(const sOdbcDataIt &it, const QString &fmd);
+
+private:
+    bool mDataInit=false;
 };
 
 #endif // ODBC_DATA_H

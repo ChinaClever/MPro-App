@@ -19,7 +19,7 @@ bool Odbc_Hda::hda_createTable()
                   "`type` TINYINT(3) UNSIGNED NOT NULL , "
                   "`topic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
-                  "`value` DECIMAL(7,2) UNSIGNED NOT NULL , "
+                  "`value` DECIMAL(9,2) UNSIGNED NOT NULL , "
                   "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
                   " PRIMARY KEY (`id`)) ENGINE = MyISAM";
     return sqlQuery(sql.arg(cfg.db));
@@ -41,6 +41,6 @@ bool Odbc_Hda::hda_modifyItem(const sOdbcHdaIt &it, const QString &fmd)
     QString cmd = fmd.arg(pdu_id).arg(it.addr).arg(it.type)
             .arg(it.topic).arg(it.indexes).arg(it.value);
     query.prepare(cmd); bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    if(!ret) throwError("pdu_hda", query.lastError());
     return ret;
 }

@@ -59,12 +59,6 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-
-    if(it.hda[i]) {
-        Odbc_Core::bulid()->data(index);
-        Log_Core::bulid()->log_hda(index);
-    }
-
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
@@ -81,9 +75,11 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
-        if(it.en[i]) {
-            ret |= upAlarmItem(index, i, it);
-        } else it.alarm[i] = AlarmCode::Ok;
+        index.value = it.value[i]; index.id = i;
+        if(it.hda[i]) Log_Core::bulid()->log_hda(index);
+        if(it.en[i]) ret |= upAlarmItem(index, i, it);
+        else it.alarm[i] = AlarmCode::Ok;
+        Odbc_Core::bulid()->data(index);
     }
 
     return ret;

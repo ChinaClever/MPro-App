@@ -21,7 +21,7 @@ bool Odbc_Threshold::th_createTable()
                   "`topic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`subtopic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
-                  "`value` DECIMAL(4,2) UNSIGNED NOT NULL , "
+                  "`value` DECIMAL(6,2) UNSIGNED NOT NULL , "
                   "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
@@ -49,7 +49,10 @@ bool Odbc_Threshold::th_modifyItem(const sOdbcThIt &it, const QString &cmd)
     if(it.indexes) query.bindValue(":indexes",it.indexes-1);
 
     bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    if(!ret) {
+        throwError("pdu_threshold",query.lastError());
+        qDebug() << it.type <<it.topic << it.subtopic << it.indexes-1 << it.value;
+    }
     return ret;
 }
 

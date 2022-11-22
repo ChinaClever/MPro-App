@@ -37,6 +37,6 @@ bool Odbc_Event::event_modifyItem(const sOdbcEventIt &it, const QString &fmd)
     uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
     QString cmd = fmd.arg(pdu_id) .arg(it.event_type, it.event_content);
     query.prepare(cmd); bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    if(!ret) throwError("pdu_event", query.lastError());
     return ret;
 }

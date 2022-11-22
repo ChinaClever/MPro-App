@@ -14,6 +14,8 @@ struct sOdbcCfg
         user = "pdu";
         pwd = "123456";
         pdukey = "pdu";
+        dataPoll = 15;
+        hdaPoll = 1;
     }
 
     bool en;
@@ -39,11 +41,13 @@ public:
     bool db_open();
     void db_close();
     void addCnt() {mCnt++;}
-    bool throwError(const QSqlError &err);
+    bool db_transaction();
+    bool throwError(const QString &db, const QSqlError &err);
 
 protected:
     uint mCnt = 1;
     QSqlDatabase mDb;
+    bool isDbRun=false;
 };
 
 #endif // ODBC_OBJ_H

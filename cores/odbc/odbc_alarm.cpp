@@ -32,6 +32,6 @@ bool Odbc_Alarm::alarm_modifyItem(const sOdbcAlarmIt &it, const QString &fmd)
     uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
     QString cmd = fmd.arg(pdu_id).arg(it.alarm_status, it.alarm_content);
     query.prepare(cmd); bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    if(!ret) throwError("pdu_alarm", query.lastError());
     return ret;
 }

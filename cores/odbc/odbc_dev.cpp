@@ -85,7 +85,7 @@ bool Odbc_Dev::dev_modifyItem(const sOdbcDevIt &item, const QString &cmd)
     query.bindValue(":qrcode",item.qrcode);
 
     bool ret = query.exec();
-    if(!ret) throwError(query.lastError());
+    if(!ret) throwError("pdu_dev", query.lastError());
     return ret;
 }
 
@@ -127,7 +127,7 @@ bool Odbc_Dev::dev_polls()
         mKeys.clear(); if(cfg.okCnt==1) mDb.transaction();
         int num = cm::masterDev()->cfg.nums.slaveNum;
         for(int i=0; i<=num; ++i) ret = dev_poll(i);
-        if(cfg.okCnt==1) {mDb.commit(); cm::mdelay(100); mDb.transaction();}
+        if(cfg.okCnt==1) mDb.commit();
     }
     return ret;
 }

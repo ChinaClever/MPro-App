@@ -8,7 +8,7 @@ struct sOdbcThIt {
     uchar topic;
     uchar subtopic;
     uchar indexes;
-    double value;
+    float value;
 };
 
 class Odbc_Threshold : public Odbc_Dev

@@ -14,7 +14,7 @@ Odbc_Sql::Odbc_Sql()
 bool Odbc_Sql::sqlQuery(QSqlQuery &query)
 {
     query.setForwardOnly(true); bool ret = query.exec();
-    if(!ret) ret = throwError(query.lastError());
+    if(!ret) ret = throwError("",query.lastError());
     return ret;
 }
 
@@ -22,7 +22,7 @@ bool Odbc_Sql::sqlQuery(QSqlQuery &query, const QString &sql)
 {
     bool ret = query.prepare(sql);
     if(ret) ret = sqlQuery(query);
-    if(!ret) qDebug() << sql << throwError(query.lastError());
+    if(!ret) qDebug() << sql << throwError("",query.lastError());
     return ret;
 }
 
