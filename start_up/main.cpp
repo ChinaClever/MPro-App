@@ -34,7 +34,7 @@ static void initSystem()
 
 static void init_netWork()
 {
-    QString mac = "00:00:00:00:00:21";
+    QString mac = "00:00:00:00:00:01";
     QString fn =  "/usr/data/clever/cfg/mac.ini";
     if(QFile::exists(fn)) {
         QFile file(fn);

@@ -99,7 +99,7 @@ QString File::keyFile()
     QString key = "/usr/data/clever/certs/client-key.pem";
     QString cert = "/usr/data/clever/certs/client-cert.pem";
     if(QFile::exists(key) && QFile::exists(cert)) fn = key;
-    else fn = "/etc/ssl/certs/key.pem";
+    else fn = "/usr/data/etc/ssl/certs/key.pem";
 #endif
     return fn;
 }
@@ -116,7 +116,7 @@ QString File::certFile()
     QString key = "/usr/data/clever/certs/client-key.pem";
     QString cert = "/usr/data/clever/certs/client-cert.pem";
     if(QFile::exists(key) && QFile::exists(cert)) fn = cert;
-    else fn = "/etc/ssl/certs/cert.pem";
+    else fn = "/usr/data/etc/ssl/certs/cert.pem";
 #endif
     return fn;
 }
