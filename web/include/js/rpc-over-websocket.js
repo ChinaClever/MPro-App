@@ -43,6 +43,7 @@ let Progress_name = new Array("","","","","","","Slave","Board");
 let Progress_info = new Array("","","","","State","Progress");
 let net_diagn = new Array("","NetAddr","RequstNum","Ping","Ping1","","Host","Timeout","Router","Router1");
 let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
+let odbc_cfg = new Array("","OdbcEn","OdbcServer","OdbcPort","OdbcUsr","OdbcPsd","OdbcName","OdbcKey","OdbcUpdate","OdbcRecord","OdbcState");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -163,7 +164,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ amqp_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 21:
-        sessionStorage.setItem(type_name[type] + topic, JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(odbc_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 22:
         sessionStorage.setItem(type_name[type]+ info_info[topic] + addr_ +'_'+subtopic, JSON.parse(evt.data).result[5]);
@@ -871,6 +872,18 @@ function read_radius_data(addr){
       clearInterval(time1);
     }
     rpc.call('pduReadParam',[addr,48,j,0,0]);
+    j++;
+  },3);
+}
+function read_odbc_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10 +1)){
+      clearInterval(time1);
+    }
+    if(j < 10 +1){
+      rpc.call('pduReadParam',[addr,21,j,0,0]);
+    }
     j++;
   },3);
 }
