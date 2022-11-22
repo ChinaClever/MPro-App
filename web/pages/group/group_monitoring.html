@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>dashboard</title>
+		<title>group</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -27,8 +27,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_2">分组监测</span>
-								<span style = "float:right;"><span style = "padding-right: 5px;">设备选择</span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="lang_1"></span>
+								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
 							</div>
 						</div>
 					</div>
@@ -45,12 +45,14 @@
 		var pow_alarm = new Array();
 		var AVpow_val = new Array();
 		var dev_name =new Array();
+		let lang = new Array();
+		let language = 1;
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		read_data();
 		function read_data(){
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				AVpow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[cur_]+data_name[1]+addr+'_'+i));
+				AVpow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
 				pow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
 				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[3]+addr+'_'+i));
 				energe_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
@@ -59,8 +61,27 @@
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<8;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","分组监测","","","",""];
+			lang[2] = ["","设备选择","","","",""];
+			lang[3] = ["","序号","","","",""];
+			lang[4] = ["","名称","","","",""];
+			lang[5] = ["","有功功率(KW)","","","",""];
+			lang[6] = ["","视在功率(AV)","","","",""];
+			lang[7] = ["","电能消耗(kWh)","","","",""];
+		}
+		function lang_fun(){
+			for(let j = 1;j<8;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+		}
 		$('.table-striped').html(buildTable(group_num));
 		$('.devname').html(buildSel(slave_num));
+		lang_fun();
 		function buildSel(rows)
 		{
 			var tbody = '';
@@ -101,18 +122,18 @@
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="8%">序号</td>\
-					<td width ="32%">名称</td>\
-					<td width ="20%">有功功率(KW)</td>\
-					<td width ="20%">视在功率(AV)</td>\
-					<td width ="20%">电能消耗(kWh)</td>';
+					thead = '<tr><td width ="8%" id="lang_3"></td>\
+					<td width ="32%" id="lang_4"></td>\
+					<td width ="20%" id="lang_5"></td>\
+					<td width ="20%" id="lang_6"></td>\
+					<td width ="20%" id="lang_7"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ group_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">' + parseFloat(pow_val[i+1]/1000).toFixed(2) + '</td>';
-				tbody += '<td id = "d'+ i + '">'+ parseFloat(AVpow_val[i + 1]/1000).toFixed(2) +'</td>';
-				tbody += '<td id = "e'+ i + '">' + parseFloat(energe_val[i + 1]/10).toFixed(1) + '</td>';
+				tbody += '<td id = "c'+ i + '">' + parseFloat(pow_val[i+1]).toFixed(2) + '</td>';
+				tbody += '<td id = "d'+ i + '">'+ parseFloat(AVpow_val[i + 1]).toFixed(2) +'</td>';
+				tbody += '<td id = "e'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(1) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
@@ -124,9 +145,9 @@
 				state1_ = document.getElementById('c'+i);
 				state2_ = document.getElementById('d'+i);
 				state3_ = document.getElementById('e'+i);
-				state1_.innerHTML = (parseFloat(pow_val[i + 1])/1000).toFixed(2);
-				state2_.innerHTML = (parseFloat(AVpow_val[i + 1])/100).toFixed(2);
-				state3_.innerHTML = (parseFloat(energe_val[i + 1])/10).toFixed(2);
+				state1_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(2);
+				state2_.innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(2);
+				state3_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
 			}
 		}
 		setInterval(function(){

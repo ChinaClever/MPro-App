@@ -57,7 +57,7 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+data_name[1]+addr+'_'+i));
+				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
 				cur_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
 				pow_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
 				cur_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[3]+addr+'_'+i));
@@ -142,7 +142,7 @@
 					rpc.call('pduReadData',[addr,output,pow_,3,i]);
 				}
 				i++;
-			},1);
+			},5);
 		}
 		function buildTable(rows) {
 			var thead = '',tbody = '';
@@ -176,10 +176,12 @@
 				state2_ = document.getElementById('e'+i);
 				state3_ = document.getElementById('f'+i);
 				state4_ = document.getElementById('g'+i);
+				state5_ = document.getElementById('c'+i);
 				state1_.innerHTML = (parseFloat(cur_val[i + 1])).toFixed(2);
 				state2_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(2);
 				state3_.innerHTML = (parseFloat(pf_val[i + 1])).toFixed(2);
 				state4_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
+				state5_.innerHTML = State[swtich_state[i + 1]];
 			}
 		}
 		setInterval(function(){
