@@ -25,6 +25,7 @@ private:
     bool th_update(const sOdbcThIt &it);
     bool th_insert(const sOdbcThIt &it);
     bool th_modifyItem(const sOdbcThIt &it, const QString &cmd);
+    bool th_duplicate(const sOdbcThIt &it);
 };
 
 #endif // ODBC_THRESHOLD_H

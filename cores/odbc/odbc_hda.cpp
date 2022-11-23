@@ -21,7 +21,7 @@ bool Odbc_Hda::hda_createTable()
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
                   "`value` DECIMAL(9,2) UNSIGNED NOT NULL , "
                   "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
-                  " PRIMARY KEY (`id`)) ENGINE = MyISAM";
+                  " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }
 

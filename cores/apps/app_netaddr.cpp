@@ -21,7 +21,7 @@ void App_NetAddr::inet_initFunSlot()
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
     QString mac = cm::execute("cat /usr/data/clever/cfg/mac.ini");
-    qstrcpy(net->mac, mac.toLocal8Bit().data());
+    qstrcpy(net->mac, mac.remove("\n").toLocal8Bit().data());
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;

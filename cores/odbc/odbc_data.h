@@ -23,10 +23,8 @@ private:
     int data_counts(const sOdbcDataIt &it);
     bool data_update(const sOdbcDataIt &it);
     bool data_insert(const sOdbcDataIt &it);
-    bool data_modifyItem(const sOdbcDataIt &it, const QString &fmd);
-
-private:
-    bool mDataInit=false;
+    bool data_duplicate(const sOdbcDataIt &it);
+    bool data_modifyItem(const sOdbcDataIt &it, const QString &cmd);
 };
 
 #endif // ODBC_DATA_H

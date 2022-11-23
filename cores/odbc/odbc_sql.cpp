@@ -40,3 +40,6 @@ int Odbc_Sql::cntBySql(const QString &sql)
     }
     return id;
 }
+
+
+

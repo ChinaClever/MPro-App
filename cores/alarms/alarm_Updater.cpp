@@ -75,6 +75,7 @@ bool Alarm_Updater::upAlarmUnit(sDataItem &index, sAlarmUnit &it)
 {
     bool ret = false;
     for(int i=0; i<it.size; ++i) {
+        index.subtopic = DSub::Value;
         index.value = it.value[i]; index.id = i;
         if(it.hda[i]) Log_Core::bulid()->log_hda(index);
         if(it.en[i]) ret |= upAlarmItem(index, i, it);

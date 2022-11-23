@@ -39,9 +39,10 @@ public:
     static sOdbcCfg cfg;
 
     bool db_open();
-    void db_close();
-    void addCnt() {mCnt++;}
+    bool db_commit();
     bool db_transaction();
+    void addCnt() {mCnt++;}
+    void db_close(){db_commit(); mDb.close();}
     bool throwError(const QString &db, const QSqlError &err);
 
 protected:
