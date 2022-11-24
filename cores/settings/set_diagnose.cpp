@@ -13,16 +13,16 @@ Set_Diagnose::Set_Diagnose()
 
 void Set_Diagnose::sys_cmd(const QString &cmd, const QString &fn)
 {
-    QString fmd = "echo '\n%1:' >> /usr/data/clever/download/dia/%2";
+    QString fmd = "echo '\n%1:' >> /usr/data/download/dia/%2";
     cm::execute(fmd.arg(cmd, fn));
 
-    fmd = "%1 >> /usr/data/clever/download/dia/%2";
+    fmd = "%1 >> /usr/data/download/dia/%2";
     cm::execute(fmd.arg(cmd, fn));
 }
 
 void Set_Diagnose::diasCopy()
 {
-    QString dir = "/usr/data/clever/download/dia";
+    QString dir = "/usr/data/download/dia";
     QString cmd = "mkdir -p " + dir; cm::execute(cmd);
     cmd = "rm -rf %1/*"; cm::execute(cmd.arg(dir));
     cmd = "mkdir -p " + dir +"/metadata";
@@ -83,7 +83,7 @@ void Set_Diagnose::diascmds()
 
 QString Set_Diagnose::diasZip()
 {
-    QString dir = "/usr/data/clever/download";
+    QString dir = "/usr/data/download";
     QString cmd = "zip -vr %1/dias.zip %1/dias";
     cm::execute(cmd.arg(dir));
     return dir+"/dias.zip";

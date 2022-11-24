@@ -55,7 +55,8 @@ QString Set_Alarm::opContent(const sDataItem &index)
     case DSub::VCrMax: str = QStringLiteral("预警最大值"); break;
     case DSub::VCrMin: str = QStringLiteral("预警最小值"); break;
     case DSub::EnAlarm: str = QStringLiteral("报警开关"); rate = 1; break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    case DSub::DHda: str = QStringLiteral("历史记录"); rate = 1; break;
+    default: cout << index.subtopic; break;
     }
 
     str += QStringLiteral("修改为:%1 %2").arg(index.value/rate).arg(suffix);

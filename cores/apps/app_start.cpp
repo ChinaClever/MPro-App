@@ -36,7 +36,7 @@ void App_Start::initFunSlot()
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
     Set_Ssdp::bulid(this);
-    Log_Core::bulid(this);
+    Log_Core::bulid();
     Set_Core::bulid();
 }
 

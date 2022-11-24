@@ -87,8 +87,8 @@ void Log_Core::run()
 {
     if(!isRun) {
         isRun = true;
-        QTimer::singleShot(350,this, SLOT(saveLogSlot()));
-        //QtConcurrent::run(this, &Log_Core::saveLogSlot);
+        //QTimer::singleShot(350,this, SLOT(saveLogSlot()));
+        QtConcurrent::run(this, &Log_Core::saveLogSlot);
     }
 }
 

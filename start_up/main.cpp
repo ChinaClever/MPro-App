@@ -70,6 +70,9 @@ static void init_netWork()
 
 static void createDirectory()
 {
+    system("mkdir -p /tmp/updater");
+    system("mkdir -p /usr/data/upload");
+    system("mkdir -p /usr/data/download");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
@@ -80,9 +83,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
     system("mkdir -p /usr/data/clever/outlet");
-    system("mkdir -p /usr/data/clever/upload");
     system("mkdir -p /usr/data/clever/drivers");
-    system("mkdir -p /usr/data/clever/download");
     //system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 
