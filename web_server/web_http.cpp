@@ -124,12 +124,14 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_download_file(c , hm , "/index.html/cfg_backup.zip");
         }else if(mg_http_match_uri(hm, "/index.html/diagnosis.zip")){
             mgr_download_file(c , hm , "/index.html/diagnosis.zip");
+        }else if(mg_http_match_uri(hm, "/upload")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
-            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/upload/%s" , file_path);
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             Web_Obj::bulid()->restores(2,file_path);
         }
         else if(mg_http_match_uri(hm, "/upload_backup")){
-            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/upload/%s" , file_path);
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             Web_Obj::bulid()->restores(1,file_path);
         }
         else {
@@ -141,13 +143,13 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         if(mg_http_match_uri(hm, "/upload"))
             mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/certs/%s",file_path);
         else if(mg_http_match_uri(hm, "/upload_fw")){
-            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
         }
         else if(mg_http_match_uri(hm, "/upload_batch")){
-            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
         }
         else if(mg_http_match_uri(hm, "/upload_backup")){
-            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
         }
     }
     else if (ev == MG_EV_WS_MSG) {
