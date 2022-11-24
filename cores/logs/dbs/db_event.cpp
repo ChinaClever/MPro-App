@@ -8,7 +8,7 @@
 
 Db_Event::Db_Event()
 {
-    mHeadList << "type"<< "content";
+    mHeadList << "event_type"<< "event_content";
 }
 
 Db_Event *Db_Event::bulid()
@@ -24,8 +24,8 @@ Db_Event *Db_Event::bulid()
 QJsonArray Db_Event::itemJson(const sEventItem &it)
 {
     QJsonArray  var;
-    var << it.datetime << it.type;
-    var << it.content;
+    var << it.datetime << it.event_type;
+    var << it.event_content;
     return var;
 }
 
@@ -34,8 +34,8 @@ bool Db_Event::modifyItem(const sEventItem &item, const QString &cmd)
     QSqlQuery query(mDb);
     query.prepare(cmd);
     query.bindValue(":dtime",item.datetime);
-    query.bindValue(":type",item.type);
-    query.bindValue(":content",item.content);
+    query.bindValue(":event_type",item.event_type);
+    query.bindValue(":event_content",item.event_content);
     return sqlQuery(query);
 }
 
@@ -43,6 +43,6 @@ void Db_Event::selectItem(QSqlQuery &query,sEventItem &item)
 {
     item.id = query.value("id").toInt();
     item.datetime = query.value("dtime").toString();
-    item.type = query.value("type").toString();
-    item.content = query.value("content").toString();
+    item.event_type = query.value("event_type").toString();
+    item.event_content = query.value("event_content").toString();
 }

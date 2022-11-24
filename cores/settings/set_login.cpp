@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "set_login.h"
+#include "app_core.h"
 
 Set_Login::Set_Login()
 {
@@ -47,8 +48,8 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     if(ptr) {
         qstrcpy(ptr, str);
         ptr[v.toByteArray().size()] = 0;
-        sEventItem db; db.type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.content = QStringLiteral("%1 修改为 %2").arg(key, str);
+        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, str);
         Log_Core::bulid()->append(db);
     }
 
@@ -60,21 +61,35 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     return ret;
 }
 
+bool Set_Login::loginAuth(const QStringList &ls)
+{
+    bool ret = false;
+    for(int i=0; i<USER_NUM; ++i) {
+        sDevLogin *it = &(cm::dataPacket()->login[i]);
+        QString usr = it->user, pwd = it->pwd;
+        if((ls.first() == usr) && (ls.last() == pwd)) {
+            ret = true; break;
+        }
+    }
+    return ret;
+}
 
 bool Set_Login::loginCheck(const QString &str)
 {
     QStringList ls = str.split("; ");
     bool ret = false; if(ls.size() == 2) {
-        for(int i=0; i<USER_NUM; ++i) {
-            sDevLogin *it = &(cm::dataPacket()->login[i]);
-            QString usr = it->user, pwd = it->pwd;
-            if((ls.first() == usr) && (ls.last() == pwd)) {
-                sEventItem db; db.type = QStringLiteral("用户登陆"); //opSrc(txType);
-                db.content = QStringLiteral("登陆登陆为 %1").arg(str);
-                Log_Core::bulid()->append(db);
-                ret = true;
-            }
+        sRadiusCfg *cfg = &App_Radius::radiusCfg;
+        if(cfg->en) {
+            int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
+            if((res == -1) && cfg->local) ret = loginAuth(ls);
+            else ret = res;
+        } else {
+            ret = loginAuth(ls);
         }
+
+        sEventItem db; db.event_type = QStringLiteral("用户登陆"); //opSrc(txType);
+        db.event_content = QStringLiteral("登陆登陆为 %1").arg(str);
+        Log_Core::bulid()->append(db);
     }
 
     return ret;

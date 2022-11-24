@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>swctrl</title>
+		<title>group</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -98,7 +98,6 @@
 			for(var i = 1;i<11;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			document.getElementById("b" + group_num).innerHTML  = lang[14][language];
 			if(read == 1){
 				document.getElementById("lang_2").innerHTML = lang[13][language];
 			}
@@ -260,7 +259,7 @@
 					i++;
 					tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-					tbody += '<td id = "b'+ i + '">统一设置</td>';
+					tbody += '<td id = "b'+ i + '">'+lang[14][language]+'</td>';
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';

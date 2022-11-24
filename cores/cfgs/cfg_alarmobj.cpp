@@ -42,9 +42,9 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
         if(array.size()) {
             ret = deDataStream(array); if(ret) unSequence();
             else {
-                sEventItem it; it.type = QStringLiteral("参数异常");
-                it.content = QStringLiteral("设备报警数据读取异常");
-                it.content += file.errorString();
+                sEventItem it; it.event_type = QStringLiteral("参数异常");
+                it.event_content = QStringLiteral("设备报警数据读取异常");
+                it.event_content += file.errorString();
                 Log_Core::bulid()->append(it);
                 cout << Cfg_Com::pathOfCfg(fn);
             }

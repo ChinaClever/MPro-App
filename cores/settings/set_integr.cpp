@@ -10,6 +10,7 @@
 #include "integr_core.h"
 #include "mqtt_client.h"
 #include "qrabbitmq.h"
+#include "odbc_obj.h"
 
 Set_Integr::Set_Integr()
 {
@@ -234,6 +235,54 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
 
     return ret;
 }
+
+
+QVariant Set_Integr::odbcCfg(uchar fc)
+{
+    sOdbcCfg *cfg = &Odbc_Obj::cfg;
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->en; break;
+    case 2: res = cfg->host; break;
+    case 3: res = cfg->port; break;
+    case 4: res = cfg->db; break;
+    case 5: res = cfg->user; break;
+    case 6: res = cfg->pwd; break;
+    case 7: res = cfg->pdukey; break;
+    case 8: res = cfg->dataPoll; break;
+    case 9: res = cfg->hdaPoll; break;
+    case 10: res = cfg->status; break;
+    case 11: res = cfg->okCnt; break;
+    case 12: res = cfg->errCnt; break;
+    default: cout << fc; break;
+    }
+    return res;
+}
+
+bool Set_Integr::odbcSet(uchar fc, const QVariant &v)
+{
+    sOdbcCfg *cfg = &(Odbc_Obj::cfg);
+    QString prefix = "odbc";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
+    case 3: key = "port"; cfg->port = v.toInt(); break;
+    case 4: key = "db"; cfg->db =v.toString(); break;
+    case 5: key = "user"; cfg->user = v.toString(); break;
+    case 6: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 7: key = "pdukey"; cfg->pdukey = v.toString(); break;
+    case 8: key = "dataPoll"; cfg->dataPoll = v.toInt(); break;
+    case 9: key = "hdaPoll"; cfg->hdaPoll = v.toInt(); break;
+    default: ret = false; cout << fc; break;
+    }
+
+    if(ret && key.size()) {
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+
+    return ret;
+}
+
 
 QVariant Set_Integr::pushCfg(uchar fc, int id)
 {

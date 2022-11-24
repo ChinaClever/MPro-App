@@ -8,7 +8,7 @@
 struct sAmqpCfg
 {
     sAmqpCfg() {}
-    int en; int ssl;
+    int en; int ssl=0;
     int port = 15672;
     QString host = "http://localhost";
     QString name; // 交换机名称
@@ -17,7 +17,7 @@ struct sAmqpCfg
     QString routingKey;
     QString bindingKey;
     QString virtualHost;
-    int isConnected;
+    int isConnected=0;
 };
 
 class QRabbitMQ : public QObject

@@ -137,7 +137,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::DPeak: ptr = unit->peakMax; break;
         case DSub::DStamp: ptr = unit->peakStamp; break;
         case DSub::DHda: ptr = unit->hda; break;
-        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        default: ret = false; cout << index.subtopic; break;
         }
     }
 
@@ -147,14 +147,13 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
             else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
         } else index.value = ptr[index.id];
 
-
         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
         //   qDebug() << index.type << index.topic << index.subtopic << index.id << index.value;
         //}
         //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
         //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
         //         }
-    }
+    } else cout  << index.type << index.topic << index.subtopic << index.id << index.value;
 
     return ret;
 }
@@ -286,7 +285,9 @@ bool Alarm_Object::tgValue(sDataItem &index)
 
 bool Alarm_Object::upMetaData(sDataItem &index)
 {
-    bool  ret = false;
+    bool  ret = false; uchar addr = index.addr;
+    if(addr >= 0xff) index.addr = 0;
+
     if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
     switch (index.type) {
     case DType::Tg: return tgValue(index);
@@ -299,7 +300,7 @@ bool Alarm_Object::upMetaData(sDataItem &index)
     case DTopic::ArtPow: case DTopic::ReactivePow:
     case DTopic::PF: ret = powPfValue(index); break;
     default: ret = alarmUnitValue(index); break;
-    }
+    } index.addr = addr;
 
     return ret;
 }

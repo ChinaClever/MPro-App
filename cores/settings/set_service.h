@@ -24,6 +24,9 @@ public:
 
     QVariant logCfg(int fc);
     bool logSet(int fc, const QVariant &v);
+
+    QVariant raduisCfg(int fc);
+    bool raduisSet(int fc, const QVariant &v);
 };
 
 #endif // SET_SERVICE_H

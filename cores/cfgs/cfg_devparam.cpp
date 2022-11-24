@@ -24,7 +24,7 @@ void Cfg_devParam::uutInfoRead(sUutInfo &uut)
     str = cfg->readCfg("devName", "", g).toString();
     qstrcpy(uut.devName, str.toLatin1().data());
 
-    str = cfg->readCfg("devType", "", g).toString();
+    str = cfg->readCfg("devType", "MPDU-Pro", g).toString();
     qstrcpy(uut.devType, str.toLatin1().data());
 
     str = cfg->readCfg("qrcode", "", g).toString();
@@ -87,6 +87,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
+    if(it.buzzerSw) it.buzzerSw = 1;
 }
 
 void Cfg_devParam::runTimeWrite()

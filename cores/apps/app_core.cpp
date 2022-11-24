@@ -6,7 +6,6 @@
 #include "app_core.h"
 #include "cfg_core.h"
 #include "cfg_app.h"
-#include "log_core.h"
 
 App_Core::App_Core(QObject *parent)
     : App_Start{parent}
@@ -50,14 +49,5 @@ void App_Core::initVer()
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
     } else cout << CFG_APP << "error";
-
-    sOtaItem ota;
-    ota.md5 = "dm5";
-    ota.ver = "ver";
-    ota.oldVersion = "old";
-    ota.releaseDate = "releaseDate";
-    ota.remark = "remark";
-    Log_Core::bulid()->append(ota);
-
 }
 

@@ -26,14 +26,14 @@ void Ota_Net::startSlot(const QString &host)
 QString Ota_Net::unzip(const QString &fn)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dst = "/usr/data/";
-    system("mkdir -p /usr/data/updater/clever/");
+    QString dst = "/tmp/";   //////============== /usr/data/
+    system("mkdir -p /tmp/updater/clever/");  ///////////////////============ /usr/data/updater/clever/
 #else
     QString dst = "/home/lzy/work/";
 #endif
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
     throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
-    throwMessage(str); system("rm -rf /usr/data/clever/upload/*");
+    throwMessage(str); //system("rm -rf /usr/data/upload/*"); ///==========
     return dst+"updater/clever/";
 }
 
@@ -55,12 +55,24 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
     return ret;
 }
 
+bool Ota_Net::up_rootfs(const QString &dir)
+{
+
+}
+
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    if(DOtaCode::DOta_Usb == bit) {
-        QString cmd = "cp -af %1 /usr/data/"; cm::execute(cmd.arg(fn));
-    } else cm::execute("cp -af /usr/data/updater/clever/  /usr/data/");
+    QString dir = "/tmp/updater/clever/";
+    QString fmd = "rsync -av --exclude clever/rootfs  %1 /usr/data/";
+    if(DOtaCode::DOta_Usb == bit) dir = fn; // QString cmd = "cp -af %1 /usr/data/"; cm::execute(cmd.arg(fn));
+    //else cmd = fmd.arg("/usr/data/updater/clever/"); //cm::execute("cp -af /usr/data/updater/clever/  /usr/data/");
+
+    up_rootfs(dir);
+    QString cmd = fmd.arg(dir);
+    throwMessage(cmd);
+    cmd = cm::execute(cmd);
+    throwMessage(cmd);
 
     clrbit(mOta->work, bit);
     bool ret = coreRuning();
@@ -106,15 +118,15 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
 
 void Ota_Net::rebootSlot()
 {
-    QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cmd); throwMessage(cm::execute(cmd));
+    //QString cmd = "cp -af /tmp/updater/clever/  /usr/data/";
+    //throwMessage(cmd); throwMessage(cm::execute(cmd));
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    cmd = "rm -rf /usr/data/updater/clever";
+    QString cmd = "rm -rf /tmp/updater/clever";
     throwMessage(cmd); throwMessage(cm::execute(cmd));
     cm::execute("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
-    cm::execute("rm -rf /usr/data/clever/upload/*");
+    cm::execute("rm -rf /usr/data/upload/*");
     cm::execute("sync"); system("reboot");
 }
 

@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>chart</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/index.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../../doc-lib/doc.css">
+
+		<script src="../../include/js/jquery-1.11.3.min.js"></script>
+		<script src="../../include/js/rpc-over-websocket.js"></script>
+		<script src="../../include/js/public.min.js"></script>
+		<script src="../../include/js/fn_public.js"></script>
+		<script src="../../doc-lib/highlight.pack.js"></script>
+		<script src="../../doc-lib/doc.js"></script>
+		<script src="../../include/js/chart.min.js"></script>
+		<style>
+			.box{
+				border: 1px solid #C4C2C3;
+				background-color: #fff;
+			}
+			tr{
+				height: 30px;
+			}
+		</style>
+	</head>
+<body>
+	<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
+		<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
+			<div align="center" style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
+				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_35"></div>
+				
+					<br>
+					<ul style="padding-right:70%; font-family:courier;" ><span id=""></span><select id="sel1" style="width:100px;" onChange="change_mode(this);"></select></ul> 
+					<div  id="container" style="width:90%; height:500px;">
+						<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
+					</div>
+					<script type="text/javascript">
+						let sel_name =new Array("功率","电流","电压");
+						let sample_num = 50;
+						let data_total = new Array(50);
+						let data_inlet1 = new Array(50);
+						let data_inlet2 = new Array(50);
+						let data_inlet3 = new Array(50);
+						let data_view = new Array(50);
+						let date  = new Date();
+						let time1 = 0;
+						let chart = 0;
+						let ctx = 0;
+						let chart_type = 0;
+						let total_name = "total_pow";
+						let Hou= 0, Minu = 0,Seco = 0;
+						Seco = date.getSeconds();
+						Minu = date.getMinutes();
+						Hou = date.getHours();
+						let dataLabels = new Array();
+						function set_data_show(num){
+							for(let j = 0;j < sample_num;j++){
+								data_total[j] = total_data[num][j];
+								data_inlet1[j] = inletA_data[num][j];
+								data_inlet2[j] = inletB_data[num][j];
+								data_inlet3[j] = inletC_data[num][j];
+							}
+						}
+						set_data_show(0);
+						for(let k = sample_num;k>0;k--){
+
+							data_view[k] =0;
+							Seco -=  3;
+							if(Seco < 0){
+								Seco = 60 + Seco -3;
+								Minu -= 1;
+								if(Minu < 0){
+									Minu =  59;
+									Hou -= 1;
+								}
+								if(Hou < 0){
+									Hou = 23;
+								}
+							}
+							dataLabels[k-1] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+						}
+						for(let i=0;i<3;i++)
+						{
+							document.getElementById("sel1").options.add( new Option(sel_name[i] ,i));
+						}
+
+						let config = {
+							type: 'line',
+							data: {
+								labels: dataLabels,
+								datasets: [
+									{
+										label: total_name,
+										data: data_total,
+										backgroundColor: 'rgb(255, 99, 132)',
+										borderColor: 'rgb(255, 99, 132)',
+										fill: false,
+										borderWidth:1.5,
+										pointRadius: 2,
+									},
+									{
+										label: 'inletA',
+										data: data_inlet1,
+										backgroundColor: 'rgb(75, 192, 192)',
+										borderColor: 'rgb(75, 192, 192)',
+										fill: false, 
+										borderWidth:1.5,
+										pointRadius: 2,
+									},
+									{
+										label: 'inletB',
+										data: data_inlet2,
+										backgroundColor: 'rgb(128, 128, 128)',
+										borderColor: 'rgb(128, 128, 128)',
+										fill: false,
+										borderWidth:1.5,
+										pointRadius: 2,
+									},
+									{
+										label: 'inletC',
+										data: data_inlet3,
+										backgroundColor: 'rgb(70, 130, 180)',
+										borderColor: 'rgb(70, 130, 180)',
+										fill: false,
+										borderWidth:1.5,
+										pointRadius: 2,
+									}
+								]
+							},
+							options: {
+								responsive: true,
+								title: {
+									display: true,
+									text: '功率信息实时统计'
+								},
+								scales: {
+									xAxes: [{
+										ticks: {
+											min: 50,
+										}
+									}]
+  							  	}
+							}
+						};
+						function create_new_chart(){
+							document.getElementById('chart').remove();
+							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
+							let e = document.createElement("canvas"); 
+							e.id = "chart";
+							e.style.display = "block";
+							e.style.width = "90%";
+							e.style.height = "410px";
+							document.getElementById('container').appendChild(e);
+
+							ctx = document.getElementById('chart').getContext('2d');
+							chart = new Chart(ctx, config);
+							time1 = setInterval(flash_chart, 3000);
+						}
+						function change_mode(obj){
+							chart_type =parseInt(obj.value);
+							clearInterval(time1);
+							if(obj.value == 0){
+								total_name = "total_pow";
+							}else if(obj.value == 1){
+								total_name ="total_cur";
+							}else{
+								total_name ="total_vol";
+							}
+							create_new_chart();
+							set_data_show(chart_type);
+							config.data.datasets[0].label = total_name;
+							config.data.datasets[0].data = data_total;
+							config.data.datasets[1].data = data_inlet1;
+							config.data.datasets[2].data = data_inlet2;
+							config.data.datasets[3].data = data_inlet3;
+							chart.update();
+						}
+						function flash_chart() {
+							if (config.data.datasets.length > 0) {
+								date  = new Date();
+								Seco = date.getSeconds();
+								Minu = date.getMinutes();
+								Hou = date.getHours();
+								label_ = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
+
+								dataLabels.push(label_);
+								data_total.push(total_data[chart_type][49]);
+								data_inlet1.push(inletA_data[chart_type][49]);
+								data_inlet2.push(inletB_data[chart_type][49]);
+								data_inlet3.push(inletC_data[chart_type][49]);
+								// total_name.push(total_name);
+				
+								dataLabels.shift();
+								data_total.shift();
+								data_inlet1.shift();
+								data_inlet2.shift();
+								data_inlet3.shift();
+								// total_name.shift();
+
+								chart.update();
+							}
+						}
+						ctx = document.getElementById('chart').getContext('2d');
+						chart = new Chart(ctx, config);
+						time1 = setInterval(flash_chart, 3000);
+						function getRandomNum(min, max) {
+							var range = max - min;
+							var rand = Math.random();
+							return(min + Math.round(rand * range));
+						}
+				
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script>
+    </script>
+</body>
+</html>

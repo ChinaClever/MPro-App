@@ -20,7 +20,9 @@ private:
     void snmp();
     void mqtt();
     void amqp();
+    void odbc();
     void login();
+    void radius();
     void modbus();
     void syslog();
     void sercret();

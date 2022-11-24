@@ -24,8 +24,8 @@ bool Set_Maintain::syscmd(int fc)
 bool Set_Maintain::factoryRestore()
 {
     sEventItem it;
-    it.type = QStringLiteral("恢复");
-    it.content = QStringLiteral("恢复出厂设置");
+    it.event_type = QStringLiteral("恢复");
+    it.event_content = QStringLiteral("恢复出厂设置");
     Log_Core::bulid()->append(it);
 
     QStringList fns;
@@ -72,8 +72,8 @@ QString Set_Maintain::profileBackup()
     cm::execute(cmd.arg(dst, src));
 
     sEventItem it;
-    it.type = QStringLiteral("备份");
-    it.content = QStringLiteral("设备设置备份");
+    it.event_type = QStringLiteral("备份");
+    it.event_content = QStringLiteral("设备设置备份");
     Log_Core::bulid()->append(it);
 
     return dst;
@@ -93,8 +93,8 @@ QString Set_Maintain::batchBackup()
     }
 
     sEventItem it;
-    it.type = QStringLiteral("备份");
-    it.content = QStringLiteral("批量设置备份");
+    it.event_type = QStringLiteral("备份");
+    it.event_content = QStringLiteral("批量设置备份");
     Log_Core::bulid()->append(it);
 
     return zip;
@@ -103,8 +103,8 @@ QString Set_Maintain::batchBackup()
 bool Set_Maintain::batchRestore(const QString &fn)
 {
     sEventItem it;
-    it.type = QStringLiteral("恢复");
-    it.content = QStringLiteral("批量设置恢复");
+    it.event_type = QStringLiteral("恢复");
+    it.event_content = QStringLiteral("批量设置恢复");
     Log_Core::bulid()->append(it);
     return restory(fn);
 }
@@ -112,8 +112,8 @@ bool Set_Maintain::batchRestore(const QString &fn)
 bool Set_Maintain::profileRestore(const QString &fn)
 {
     sEventItem it;
-    it.type = QStringLiteral("恢复");
-    it.content = QStringLiteral("设备配置恢复");
+    it.event_type = QStringLiteral("恢复");
+    it.event_content = QStringLiteral("设备配置恢复");
     Log_Core::bulid()->append(it);
     return restory(fn);
 }

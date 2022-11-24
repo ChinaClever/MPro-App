@@ -45,7 +45,7 @@ double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
     sDataItem *it = &mIt; it->addr = addr; it->type = type; if(id) id--;
     it->topic = topic; it->subtopic = sub; it->id = id;
     it->rw = 0; it->value = 0; Set_Core::bulid()->upMetaData(mIt);
-    //qDebug() << addr << type << topic << sub << id << mIt.value << mIt.value / getDecimal(mIt);
+    //cout << addr << type << topic << sub << id << mIt.value << mIt.value / cm::decimal(mIt);
     return mIt.value / cm::decimal(mIt);
 }
 
@@ -53,7 +53,8 @@ bool Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, dou
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
-    it.value = value * cm::decimal(mIt); it.txType = mTxType;
+    it.value = value * cm::decimal(it); it.txType = mTxType;
+    //cout << addr << type << topic << sub << id << it.value << it.value * cm::decimal(it);
     return Set_Core::bulid()->setting(it);
 }
 

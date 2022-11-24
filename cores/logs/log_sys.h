@@ -21,6 +21,8 @@ public:
 
 protected:
     void sys_initfun();
+    QReadWriteLock *mRwLock;
 };
 
+QReadWriteLock *log_rwLock();
 #endif // LOG_SYS_H

@@ -10,6 +10,7 @@ public:
     bool loginSet(uchar type, const QVariant &v, int id);
 
 private:
+    bool loginAuth(const QStringList &ls);
     bool loginCheck(const QString &str);
 };
 

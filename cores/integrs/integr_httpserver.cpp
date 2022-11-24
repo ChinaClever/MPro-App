@@ -154,7 +154,7 @@ void Integr_HttpServer::initHttpServer(bool en, int port)
     static JQHttpServer::TcpServerManage *tcpServerManage=nullptr; // 设置最大处理线程数，默认2个
     if(tcpServerManage) {delete tcpServerManage; tcpServerManage=nullptr;}
     if(en) {
-        tcpServerManage = new JQHttpServer::TcpServerManage(2);
+        tcpServerManage = new JQHttpServer::TcpServerManage(1);
         tcpServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ));
         const auto listenSucceed = tcpServerManage->listen(QHostAddress::Any, port);
         qDebug() << "HTTP server listen:" << port << listenSucceed;
@@ -167,7 +167,7 @@ void Integr_HttpServer::initHttpsServer(bool en, int port)
     static JQHttpServer::SslServerManage *sslServerManage=nullptr; // 设置最大处理线程数，默认2个
     if(sslServerManage) {delete sslServerManage; sslServerManage=nullptr;}
     if(en) {
-        sslServerManage = new JQHttpServer::SslServerManage(2);
+        sslServerManage = new JQHttpServer::SslServerManage(1);
         sslServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
         const auto listenSucceed = sslServerManage->listen( QHostAddress::Any, port,
                                                            File::certFile(), File::keyFile()

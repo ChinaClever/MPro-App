@@ -1,6 +1,0 @@
-INCLUDEPATH += $$PWD
-
-
-HEADERS += 
-
-SOURCES += 

@@ -5,6 +5,8 @@
  */
 #include "log_core.h"
 #include "app_core.h"
+#include "odbc_core.h"
+
 sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
@@ -23,30 +25,28 @@ Log_Core *Log_Core::bulid(QObject *parent)
         sington = new Log_Core(parent);
 
         sEventItem it;
-        it.type = tr("系统事件");
-        it.content = tr("系统启动");;
+        it.event_type = tr("系统事件");
+        it.event_content = tr("系统启动");;
         sington->append(it);
     }
     return sington;
 }
 
-
 void Log_Core::append(const sAlarmItem &it)
 {
     QString fmd = "alarm:%1 content:%2";
-    QString str = fmd.arg(it.state, it.content);
+    QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
-    mAlarmIts << it;
-    run();
+    Odbc_Core::bulid()->alarm(it);
+    mAlarmIts << it; run();
 }
 
 void Log_Core::append(const sEventItem &it)
 {
     QString fmd = "type:%1 content:%2";
-    QString str = fmd.arg(it.type, it.content);
-    sys_logInfo(str);
-    mEventIts << it;
-    run();
+    QString str = fmd.arg(it.event_type, it.event_content);
+    sys_logInfo(str); mEventIts << it; run();
+    Odbc_Core::bulid()->event(it);
 }
 
 void Log_Core::append(const sDataItem &it)
@@ -63,13 +63,15 @@ void Log_Core::append(const sDataItem &it)
 void Log_Core::log_hda(const sDataItem &it)
 {
     uint sec = cfg.hdaTime * 60*60;
-    if(!mCnt % sec) append(it);
+    if(!cfg.hdaEn || !sec) return ;
+    if(!(mCnt%sec)) append(it);
 }
 
 void Log_Core::log_hdaEle(const sDataItem &it)
 {
     uint sec = cfg.eleTime * 24*60*60;
-    if(!mCnt % sec) append(it);
+    if(!cfg.hdaEn || !sec) return ;
+    if(!(mCnt%sec)) append(it);
 }
 
 void Log_Core::initFunSlot()
@@ -83,12 +85,16 @@ void Log_Core::initFunSlot()
 
 void Log_Core::run()
 {
-    if(!isRun) {isRun = true; QTimer::singleShot(350,this, SLOT(saveLogSlot()));}
+    if(!isRun) {
+        isRun = true;
+        //QTimer::singleShot(350,this, SLOT(saveLogSlot()));
+        QtConcurrent::run(this, &Log_Core::saveLogSlot);
+    }
 }
 
 void Log_Core::saveLogSlot()
 {
-    Db_Tran t; QWriteLocker locker(mRwLock);
+    QWriteLocker locker(mRwLock); Db_Tran t; //cm::mdelay(350);
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
@@ -98,7 +104,7 @@ void Log_Core::saveLogSlot()
 
 void Log_Core::timeoutDone()
 {
-    Db_Tran t; int cnt = 10000;
+    int cnt = 10000; Db_Tran t;
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);

@@ -113,13 +113,8 @@
   {
     "name": "环境参数",
     "icon": "flag_fill",
-    "base": "pages/envir/",
-    "subNav": [    
-      {
-        "name": "环控设置",
-        "url": "envir_ctrl.html"
-      }
-    ]
+    "base": "",
+    "url": "pages/envir/envir_ctrl.html"
   },
   {
     "name": "设备设置",
@@ -176,6 +171,10 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
+      },
+      {
+        "name": "ODBC服务",
+        "url": "odbc.html"
       }
     ]
   }, 
@@ -244,29 +243,8 @@
   {
     "name": "图表信息",
     "icon": "dynamic_fill",
-    "base": "pages/chart/",
-    "subNav": [
-      {
-        "name": "温度查询",
-        "url": "relay_ctrl.html"
-      },
-      {
-        "name": "湿度查询",
-        "url": "output_monitoring.html"
-      },
-      {
-        "name": "相电流查询",
-        "url": "unit_control.html"
-      },
-      {
-        "name": "相电压查询",
-        "url": "customize.html"
-      },
-      {
-        "name": "总有功功率",
-        "url": "customize.html"
-      }
-    ]
+    "base": "",
+    "url": "pages/chart/chart.html"
   },
   {
     "name": "日志查询",

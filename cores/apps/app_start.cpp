@@ -13,6 +13,7 @@
 #include "set_ssdp.h"
 #include "mb_core.h"
 #include "op_core.h"
+#include "odbc_core.h"
 
 App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
@@ -34,8 +35,8 @@ void App_Start::initFunSlot()
 {
     Rpc_Service::bulid(this);
     Alarm_Log::bulid(this);
-    Log_Core::bulid(this);
     Set_Ssdp::bulid(this);
+    Log_Core::bulid();
     Set_Core::bulid();
 }
 
@@ -46,10 +47,12 @@ void App_Start::startThreadSlot()
     Integr_Core::bulid(this);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    Odbc_Core::bulid();
     OP_Core::bulid(this);
     Agent_Core::bulid(this);
     Cascade_Core::bulid(this);
 #endif
+
 }
 
 

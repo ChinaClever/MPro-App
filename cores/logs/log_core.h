@@ -3,6 +3,7 @@
 
 #include "log_read.h"
 struct sLogCfg {
+    int hdaEn; // 历史数据是否记录
     int eleTime; // 电能记录间隔时间　天为单位
     int hdaTime; // 历史数据记录时间 单位小时
     int logCnt; // 记录最大条数　默认为1

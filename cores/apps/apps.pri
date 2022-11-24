@@ -8,6 +8,7 @@ HEADERS += \
     $$PWD/app_netaddr.h \
     $$PWD/app_nftables.h \
     $$PWD/app_ntp.h \
+    $$PWD/app_radius.h \
     $$PWD/app_runtime.h \
     $$PWD/app_sensor.h \
     $$PWD/app_smtp.h \
@@ -22,6 +23,7 @@ SOURCES += \
     $$PWD/app_netaddr.cpp \
     $$PWD/app_nftables.cpp \
     $$PWD/app_ntp.cpp \
+    $$PWD/app_radius.cpp \
     $$PWD/app_runtime.cpp \
     $$PWD/app_sensor.cpp \
     $$PWD/app_smtp.cpp \

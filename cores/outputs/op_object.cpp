@@ -36,21 +36,21 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
             if(value == 16*COM_RATE_VOL) {
-                it.type = tr("Chip fault");
-                it.content = tr("Metering chip error %1").arg(id+1);
+                it.event_type = tr("Chip fault");
+                it.event_content = tr("Metering chip error %1").arg(id+1);
             } else {
-                it.type = tr("Vol fault");
-                it.content = tr("Output %1 fault VOL=%2V").arg(id+1).arg(value/COM_RATE_VOL);
+                it.event_type = tr("Vol fault");
+                it.event_content = tr("Output %1 fault VOL=%2V").arg(id+1).arg(value/COM_RATE_VOL);
             }
         } else if(dtc[id] & FaultCode::DTC_CUR){
-            it.type = tr("Cur fault");
-            it.content = tr("Output %1 fault CUR=%2A").arg(id+1).arg(value/COM_RATE_CUR);
+            it.event_type = tr("Cur fault");
+            it.event_content = tr("Output %1 fault CUR=%2A").arg(id+1).arg(value/COM_RATE_CUR);
         } else if(dtc[id] & FaultCode::DTC_ELE) {
-            it.type = tr("ele fault");
-            it.content = tr("Output %1 fault ELE:%2Kwh, %3Kwh").arg(id+1)
+            it.event_type = tr("ele fault");
+            it.event_content = tr("Output %1 fault ELE:%2Kwh, %3Kwh").arg(id+1)
                     .arg(mDev->output.ele[id]/COM_RATE_ELE).arg(value/COM_RATE_ELE);
         } else cout << dtc[id];
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 
@@ -62,15 +62,15 @@ void OP_Object::recoveryLog(int id, uint *cnt)
     if((cnt[id] > num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
-            it.type = tr("Vol recovery");
-            it.content = tr("Output %1 recovery VOL=%2V").arg(id+1)
+            it.event_type = tr("Vol recovery");
+            it.event_content = tr("Output %1 recovery VOL=%2V").arg(id+1)
                     .arg(mDev->output.vol.value[id]/COM_RATE_VOL);
         } else if(dtc[id] & FaultCode::DTC_CUR){
-            it.type = tr("Cur recovery");
-            it.content = tr("Output %1 recovery CUR=%2A").arg(id+1)
+            it.event_type = tr("Cur recovery");
+            it.event_content = tr("Output %1 recovery CUR=%2A").arg(id+1)
                     .arg(mDev->output.vol.value[id]/COM_RATE_CUR);;
         }  else {cout << dtc[id]; return ;}
-        Log_Core::bulid(this)->append(it);
+        Log_Core::bulid()->append(it);
     }
 }
 
@@ -135,9 +135,9 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
         obj->reactivePow[id] = obj->artPow[id] - obj->pow.value[id];
     } else {
         cout << value/COM_RATE_PF;
-        sEventItem it; it.type = tr("PF");
-        it.content = tr("输出位 %1 功率因素错误％2").arg(id+1).arg(value/COM_RATE_PF);
-        Log_Core::bulid(this)->append(it);
+        sEventItem it; it.event_type = tr("PF");
+        it.event_content = tr("输出位 %1 功率因素错误％2").arg(id+1).arg(value/COM_RATE_PF);
+        Log_Core::bulid()->append(it);
     }
 }
 

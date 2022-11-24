@@ -48,11 +48,11 @@ void Data_Dual::dualTiming(int id)
         int res = relayTiming(*obj, i);
         if(res) {
             OP_Core::bulid()->relayCtrl(i+1, res-1);
-            sEventItem db;
-            db.type = QStringLiteral("机架定时开关"); res--;
-            db.content = QStringLiteral("继电器%1").arg(i+1);
-            if(res) db.content += QStringLiteral("接通");
-            else db.content += QStringLiteral("断开");
+            sEventItem db; db.addr = id;
+            db.event_type = QStringLiteral("机架定时开关"); res--;
+            db.event_content = QStringLiteral("继电器%1").arg(i+1);
+            if(res) db.event_content += QStringLiteral("接通");
+            else db.event_content += QStringLiteral("断开");
             Log_Core::bulid()->append(db);
         }
     }

@@ -3,7 +3,9 @@
 #include "db_obj.h"
 
 struct sAlarmItem : public Db_ObjItem{
-    QString state, content;
+    int addr;
+    QString alarm_status;
+    QString alarm_content;
 };
 
 class Db_Alarm : public Db_Obj<sAlarmItem>

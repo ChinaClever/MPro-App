@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_alarm.h"
-#include "cascade_core.h"
+#include "odbc_core.h"
 
 Set_Alarm::Set_Alarm()
 {
@@ -12,28 +12,25 @@ Set_Alarm::Set_Alarm()
 }
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
-{
-    bool ret = false;
-    if(unit.rw) {
-        ret = upMetaData(unit);
-        if(ret) oplog(unit);
-    }
-    return ret;
+{   
+    return upMetaData(unit);
 }
 
-QString Set_Alarm::opSrc(uchar txType)
+void Set_Alarm::setAlarmLog(sDataItem &unit)
+{
+    oplog(unit);
+    Odbc_Core::bulid()->threshold(unit);
+}
+
+QString Set_Alarm::opSrc(uchar addr)
 {
     QString str;
-    switch (txType) {
-    case TxWeb: str = "WEB"; break;
-    case TxModbus: str = "Modbus"; break;
-    case TxSnmp: str = "SNMP"; break;
-    case TxRpc: str = "RPC"; break;
-    case TxJson: str = "JSON"; break;
-    case TxSsh: str = "SSH"; break;
-    case TxWebocket: str = "WebSocket"; break;
-    default: cout << txType; break;
-    }
+    if(addr == 0xff) {
+        str = QStringLiteral("所有级联设备");
+    } if(addr) {
+        str = QStringLiteral("副机%1").arg(addr);
+    } else str = QStringLiteral("本机");
+
     return str;
 }
 
@@ -58,7 +55,8 @@ QString Set_Alarm::opContent(const sDataItem &index)
     case DSub::VCrMax: str = QStringLiteral("预警最大值"); break;
     case DSub::VCrMin: str = QStringLiteral("预警最小值"); break;
     case DSub::EnAlarm: str = QStringLiteral("报警开关"); rate = 1; break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    case DSub::DHda: str = QStringLiteral("历史记录"); rate = 1; break;
+    default: cout << index.subtopic; break;
     }
 
     str += QStringLiteral("修改为:%1 %2").arg(index.value/rate).arg(suffix);
@@ -73,7 +71,9 @@ void Set_Alarm::oplog(const sDataItem &it)
     content += opContent(it);
 
     sEventItem db;
-    db.content = content;
-    db.type = QStringLiteral("告警设置"); //opSrc(it.txType);
+    db.addr = it.addr;
+    db.event_content = content;
+    db.event_type = QStringLiteral("告警设置:");
+    db.event_type += opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
