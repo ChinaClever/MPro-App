@@ -33,6 +33,7 @@ private:
     bool otaSendFinish(int addr, uint state);
     bool otaSendPacket(int addr, const QByteArray &array);
     bool otaSendData(uchar fn, int addr, const QByteArray &array);
+    void otaRootfs(const QString &path);
     void otaReboot();
 
 private slots:

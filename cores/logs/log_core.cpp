@@ -38,14 +38,14 @@ void Log_Core::append(const sAlarmItem &it)
     QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     Odbc_Core::bulid()->alarm(it);
-    mAlarmIts << it; start();
+    mAlarmIts << it; run();
 }
 
 void Log_Core::append(const sEventItem &it)
 {
     QString fmd = "type:%1 content:%2";
     QString str = fmd.arg(it.event_type, it.event_content);
-    sys_logInfo(str); mEventIts << it; start();
+    sys_logInfo(str); mEventIts << it; run();
     Odbc_Core::bulid()->event(it);
 }
 
@@ -57,7 +57,7 @@ void Log_Core::append(const sDataItem &it)
     hda.topic = it.topic;
     hda.index = it.id + 1;
     hda.value = it.value / cm::decimal(it);
-    mHdaIts << hda; start();
+    mHdaIts << hda; run();
 }
 
 void Log_Core::log_hda(const sDataItem &it)
@@ -87,9 +87,7 @@ void Log_Core::run()
 {
     if(!isRun) {
         isRun = true;
-        saveLogSlot();
-        //start();
-        //QTimer::singleShot(350,this, SLOT(saveLogSlot()));
+        QTimer::singleShot(350,this, SLOT(saveLogSlot()));
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
     }
 }

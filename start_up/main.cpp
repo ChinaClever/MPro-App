@@ -71,8 +71,8 @@ static void init_netWork()
 static void createDirectory()
 {
     system("mkdir -p /tmp/updater");
+    system("mkdir -p /tmp/download");
     system("mkdir -p /usr/data/upload");
-    system("mkdir -p /usr/data/download");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");

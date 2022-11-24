@@ -136,12 +136,19 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
 void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
+        QString dir = "/tmp/updater/clever/";
         QString dst = "/tmp/", fn = it.path + it.file;
         QString str = "unzip -o %1 -d " + dst + "updater/clever/";
         qDebug() << cm::execute(str.arg(fn));
+
+        QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
+        QString cmd = fmd.arg(dir); throwMessage(cmd);
+        str = cm::execute(cmd); throwMessage(str);
+        Set_Core::bulid()->ota_updater(11, fn);
+        otaRootfs(dir);
+
         cm::dataPacket()->ota.slave.isRun = 0;
         clrbit(cm::dataPacket()->ota.work, DOta_Slave);
-        Set_Core::bulid()->ota_updater(11, fn);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
         //if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
     } else {
@@ -151,19 +158,32 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
     }
 }
 
+void Cascade_Updater::otaRootfs(const QString &path)
+{
+    QString dir = path + "rootfs";
+    QStringList fns = File::entryList(dir); cout << dir << fns;
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) {
+        QString fmd = "system-update %1/xImage %1/rootfs.squashfs";
+        sOtaUpdater *ota = &cm::dataPacket()->ota;
+        setbit(ota->work, DOta_Rootfs);
+        throwMessage(fmd.arg(dir));
+        ota->rootfs.progress = 0;
+        ota->rootfs.isRun = 1;
+        QString str = fmd.arg(dir);
+        system(str.toLocal8Bit().data());
+        throwMessage(str);
+        ota->rootfs.isRun = 0;
+        ota->rootfs.progress = 100;
+        clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
+    }
+}
+
 void Cascade_Updater::otaReboot()
 {
-    // 升级文件系统；//////////===========
-
-    QString dir = "/tmp/updater/clever/";
-    QString fmd = "rsync -av --exclude clever/rootfs  %1 /usr/data/";
-    QString cmd = fmd.arg(dir); throwMessage(cmd);
-    throwMessage(cm::execute(cmd));
-
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    cmd = "rm -rf /tmp/updater/clever";
+    QString cmd = "rm -rf /tmp/updater/clever";
     throwMessage(cm::execute(cmd));
     cm::execute("rm -rf /usr/data/upload/*");
     cm::execute("sync"); system("reboot");

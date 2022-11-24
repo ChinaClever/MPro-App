@@ -25,7 +25,7 @@ bool OP_Updater::ota_start(const QString &fn)
 
 void OP_Updater::throwMessage(const QString &msg)
 {
-    QString str = "updater outlet " + msg;
+    QString str = "ota updater outlet " + msg;
     QString ip = cm::dataPacket()->ota.host;  //qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
@@ -39,18 +39,10 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 
 void OP_Updater::ota_reboot()
 {
-    // 升级文件系统；//////////===========
-
-
-    QString dir = "/tmp/updater/clever/";
-    QString fmd = "rsync -av --exclude clever/rootfs  %1 /usr/data/";
-    QString cmd = fmd.arg(dir); throwMessage(cmd);
-    throwMessage(cm::execute(cmd));
-
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     cm::execute("rm -rf /usr/data/clever/outlet/*");
-    cmd = "rm -rf /tmp/updater/clever";
+    QString cmd = "rm -rf /tmp/updater/clever";
     throwMessage(cm::execute(cmd));
 
     cm::execute("rm -rf /usr/data/upload/*");
