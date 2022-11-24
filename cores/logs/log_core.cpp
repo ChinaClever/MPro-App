@@ -38,14 +38,14 @@ void Log_Core::append(const sAlarmItem &it)
     QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     Odbc_Core::bulid()->alarm(it);
-    mAlarmIts << it; run();
+    mAlarmIts << it; start();
 }
 
 void Log_Core::append(const sEventItem &it)
 {
     QString fmd = "type:%1 content:%2";
     QString str = fmd.arg(it.event_type, it.event_content);
-    sys_logInfo(str); mEventIts << it; run();
+    sys_logInfo(str); mEventIts << it; start();
     Odbc_Core::bulid()->event(it);
 }
 
@@ -57,7 +57,7 @@ void Log_Core::append(const sDataItem &it)
     hda.topic = it.topic;
     hda.index = it.id + 1;
     hda.value = it.value / cm::decimal(it);
-    mHdaIts << hda; run();
+    mHdaIts << hda; start();
 }
 
 void Log_Core::log_hda(const sDataItem &it)
@@ -87,14 +87,16 @@ void Log_Core::run()
 {
     if(!isRun) {
         isRun = true;
+        saveLogSlot();
+        //start();
         //QTimer::singleShot(350,this, SLOT(saveLogSlot()));
-        QtConcurrent::run(this, &Log_Core::saveLogSlot);
+        //QtConcurrent::run(this, &Log_Core::saveLogSlot);
     }
 }
 
 void Log_Core::saveLogSlot()
 {
-    QWriteLocker locker(mRwLock); Db_Tran t; //cm::mdelay(350);
+    cm::mdelay(350); QWriteLocker locker(mRwLock); Db_Tran t; //cm::mdelay(350);
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());

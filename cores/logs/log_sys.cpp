@@ -22,7 +22,7 @@ static QReadWriteLock *gLogLock = new QReadWriteLock;
 QReadWriteLock *log_rwLock() {return  gLogLock;}
 sSysLogCfg Log_Sys::sysLogCfg;
 Log_Sys::Log_Sys(QObject *parent)
-    : QObject{parent}
+    : QThread{parent}
 {
     mRwLock = log_rwLock();
 }
