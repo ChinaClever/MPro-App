@@ -84,9 +84,9 @@ void Set_Diagnose::diascmds()
 QString Set_Diagnose::diasZip()
 {
     QString dir = "/usr/data/clever/download";
-    QString cmd = "zip -vr %1/dias.zip %1/dias";
+    QString cmd = "zip -vr %1/diagnosis.zip %1/dia";
     cm::execute(cmd.arg(dir));
-    return dir+"/dias.zip";
+    return dir+"/diagnosis.zip";
 }
 
 QString Set_Diagnose::downDiagnostics()
