@@ -25,12 +25,8 @@ void Ota_Net::startSlot(const QString &host)
 
 QString Ota_Net::unzip(const QString &fn)
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dst = "/tmp/";   //////============== /usr/data/
     system("mkdir -p /tmp/updater/clever/");  ///////////////////============ /usr/data/updater/clever/
-#else
-    QString dst = "/home/lzy/work/";
-#endif
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
     throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
     throwMessage(str); //system("rm -rf /usr/data/upload/*"); ///==========

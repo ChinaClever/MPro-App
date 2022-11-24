@@ -11,7 +11,7 @@ struct sSysLogCfg
     int port;
 };
 
-class Log_Sys : public QObject
+class Log_Sys : public QThread
 {
 public:
     explicit Log_Sys(QObject *parent = nullptr);
