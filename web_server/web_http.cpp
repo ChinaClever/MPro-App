@@ -15,6 +15,7 @@ static const char *s_listen_on = "ws://0.0.0.0:";
 static const char *s_https_addr = "wss://0.0.0.0:";  // HTTPS port
 static const char *s_web_root = "/usr/data/clever/web";
 #endif
+#define FILE_LEN 256
 
 sWeb_Cfg Web_Http::cfg;
 static struct mg_mgr g_mgr;
@@ -92,6 +93,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
 {
     char keyFile[126]={0}, certFile[126]={0};
     static FILE* fp = nullptr; static int state = 0;
+    static char file_path[FILE_LEN]={0};
     qstrcpy(keyFile, File::keyFile().toLatin1().data());
     qstrcpy(certFile, File::certFile().toLatin1().data());
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
@@ -107,92 +109,45 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         opts.certkey = keyFile;
         mg_tls_init(c, &opts);
     } else if (ev == MG_EV_HTTP_MSG) {
+        memset(file_path , 0 , sizeof(file_path));
         if (mg_http_match_uri(hm, "/websocket")) {
             mg_ws_upgrade(c, hm, NULL);
-        } else if(mg_http_match_uri(hm, "/upload")){
-            MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
-            MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-            MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
-            char file_path[256], name[256];
-            mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            printf("%s \n", name);
-            if (name[0] == '\0') {
-                mg_http_reply(c, 400, "", "%s", "name required");
-            } else {
-                if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
-                    mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
-                else
-                    //mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/upload/%s", name);
-                    mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
-            }
-            printf("%s \n", name);
-            if((int) hm->query.len > 5){
-                printf("%s \n", file_path);
-                fp = fopen(file_path , "w+b");
-            }
-            fwrite(hm->body.ptr ,(int) hm->body.len, 1 , fp);
-            fclose(fp);//
-            fp = NULL;//
-            mg_http_reply(c, 200, "", "ok (%lu)\n", (unsigned long) hm->body.len);
-        } else if(mg_http_match_uri(hm, "/index.html/client-cert.pem")){
-            struct mg_http_serve_opts opts;
-
-            memset(&opts , 0 , sizeof(opts));
-            //opts.mime_types = "foo=a/b,pem=c/d";
-            opts.mime_types = "foo=a/b,txt=c/d";
-            //mg_http_serve_file(c , hm , "/etc/ssl/certs/cert.pem" , &opts);
-            mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
-            //mg_http_serve_file(c , hm , "/usr/data/clever/app/json_server_log.txt" , &opts);
+        }else if(mg_http_match_uri(hm, "/index.html/client-cert.pem")){
+            mgr_download_file(c , hm , "/index.html/client-cert.pem");
         }else if(mg_http_match_uri(hm, "/index.html/client-key.pem")){
-            struct mg_http_serve_opts opts;
-
-            memset(&opts , 0 , sizeof(opts));
-            //opts.mime_types = "foo=a/b,pem=c/d";
-            opts.mime_types = "foo=a/b,txt=c/d";
-            //mg_http_serve_file(c , hm , "/etc/ssl/certs/key.pem" , &opts);
-            mg_http_serve_file(c , hm , File::keyFile().toLatin1().data() , &opts);
+            mgr_download_file(c , hm , "/index.html/client-key.pem");
+        }
+        else if(mg_http_match_uri(hm, "/index.html/cfg_batch.zip")){
+            mgr_download_file(c , hm , "/index.html/cfg_batch.zip");
+        }
+        else if(mg_http_match_uri(hm, "/index.html/cfg_backup.zip")){
+            mgr_download_file(c , hm , "/index.html/cfg_backup.zip");
+        }else if(mg_http_match_uri(hm, "/index.html/diagnosis.zip")){
+            mgr_download_file(c , hm , "/index.html/diagnosis.zip");
+        }else if(mg_http_match_uri(hm, "/upload_batch")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/upload/%s" , file_path);
+            Web_Obj::bulid()->restores(2,file_path);
+        }
+        else if(mg_http_match_uri(hm, "/upload_backup")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/upload/%s" , file_path);
+            Web_Obj::bulid()->restores(1,file_path);
         }
         else {
             // Serve static files
             struct mg_http_serve_opts opts={.root_dir = s_web_root};
             mg_http_serve_dir(c, hm, &opts);
         }
-    }else if (ev == MG_EV_HTTP_CHUNK && mg_http_match_uri(hm, "/upload")) {
-        MG_INFO(("Got chunk len %lu", (unsigned long) hm->chunk.len));
-        MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
-        MG_INFO(("Chunk data:\n%.*s", (int) hm->chunk.len, hm->chunk.ptr));
-
-
-        if(state == 0){
-            char file_path[256], name[256];
-            mg_http_get_var(&hm->query, "name", name, sizeof(name));
-            //printf("%s \n", name);
-            if (name[0] == '\0') {
-                mg_http_reply(c, 400, "", "%s", "name required");
-            } else {
-                if( 0 == strcmp(name , "client-cert.pem") ||  0 == strcmp(name , "client-key.pem") )
-                    mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/certs/%s", name);
-                else
-                    //mg_snprintf(file_path, sizeof(file_path), "/usr/data/clever/upload/%s", name);
-                    mg_snprintf(file_path, sizeof(file_path), "/tmp/%s", name);
-            }
-            if((int) hm->query.len > 5){
-                //printf("%s \n", file_path);
-                fp = fopen(file_path , "w+b");
-                state = 1;
-            }
+    }else if (ev == MG_EV_HTTP_CHUNK) {
+        if(mg_http_match_uri(hm, "/upload"))
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/certs/%s",file_path);
+        else if(mg_http_match_uri(hm, "/upload_fw")){
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
         }
-        if(state == 1 && hm->chunk.len != 0){
-            fwrite(hm->chunk.ptr ,(int) hm->chunk.len, 1 , fp);
+        else if(mg_http_match_uri(hm, "/upload_batch")){
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
         }
-
-        mg_http_delete_chunk(c, hm);
-        if (hm->chunk.len == 0) {
-            state = 0;//
-            fclose(fp);//
-            fp = NULL;//
-            MG_INFO(("Last chunk received, sending response"));
-            mg_http_reply(c, 200, "", "ok (chunked)\n");
+        else if(mg_http_match_uri(hm, "/upload_backup")){
+            mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/upload/%s",file_path);
         }
     }
     else if (ev == MG_EV_WS_MSG) {
@@ -201,6 +156,90 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         process_json_message(c, wm->data);
     }
     (void) fn_data;
+}
+
+void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message *hm,const char *path)
+{
+    struct mg_http_serve_opts opts;
+    memset(&opts , 0 , sizeof(opts));
+    opts.mime_types = "foo=a/b,txt=c/d";
+    if(0 == strcmp("/index.html/client-cert.pem" , path)){
+        mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
+    }else if(0 == strcmp("/index.html/client-key.pem" , path)){
+        mg_http_serve_file(c , hm , File::keyFile().toLatin1().data() , &opts);
+    }else if(0 == strcmp("/index.html/cfg_batch.zip" , path)){
+        mg_http_serve_file(c , hm , Web_Obj::bulid()->backup(2).toLatin1().data() , &opts);
+    }else if(0 == strcmp("/index.html/cfg_backup.zip" , path)){
+        mg_http_serve_file(c , hm , Web_Obj::bulid()->backup(1).toLatin1().data() , &opts);
+    }else if(0 == strcmp("/index.html/diagnosis.zip" , path)){
+        mg_http_serve_file(c , hm , Web_Obj::bulid()->diag().toLatin1().data() , &opts);
+    }
+}
+
+void Web_Http::mgr_upload_small_file(struct mg_connection **c , struct mg_http_message **hm , FILE **fp, const char *path, char *file_path)
+{
+    //MG_INFO(("Got all %lu bytes!", (unsigned long) hm->body.len));
+    //MG_INFO(("Query string: [%.*s]", (int) hm->query.len, hm->query.ptr));
+    //MG_INFO(("Body:\n%.*s", (int) hm->body.len, hm->body.ptr));
+    char name[FILE_LEN];
+    mg_http_get_var(&(*hm)->query, "name", name, sizeof(name));
+//    printf("%s \n", name);
+    if (name[0] == '\0') {
+        mg_http_reply(*c, 400, "", "%s", "name required");
+    } else {
+        mg_snprintf(file_path, sizeof(file_path)*FILE_LEN, path, name);
+    }
+    if((int) (*hm)->query.len > 5){
+//        printf("%s \n", file_path);
+        *fp = fopen(file_path , "w+b");
+    }
+    fwrite((*hm)->body.ptr ,(int) (*hm)->body.len, 1 , *fp);
+    fclose(*fp);//
+    *fp = NULL;//
+    mg_http_reply(*c, 200, "", "ok (%lu)\n", (unsigned long) (*hm)->body.len);
+}
+
+void Web_Http::mgr_upload_big_file(struct mg_connection **c,struct mg_http_message **hm ,int *state ,FILE **fp,const char *path , char *file_path)
+{
+    //MG_INFO(("Got chunk len %lu", (unsigned long) (*hm)->chunk.len));
+    //MG_INFO(("Query string: [%.*s]", (int) (*hm)->query.len, (*hm)->query.ptr));
+    //MG_INFO(("Chunk data:\n%.*s", (int) (*hm)->chunk.len, (*hm)->chunk.ptr));
+
+    //printf("mgr_upload_big_file \n");
+    if(*state == 0){
+        char name[FILE_LEN];
+        mg_http_get_var(&(*hm)->query, "name", name, sizeof(name));
+//        printf("%s \n", name);
+        if (name[0] == '\0') {
+            mg_http_reply(*c, 400, "", "%s", "name required");
+        } else {
+            mg_snprintf(file_path, sizeof(file_path)*FILE_LEN, path, name);
+        }
+        if((int) (*hm)->query.len > 5){
+            //printf("%s \n", file_path);
+            *fp = fopen(file_path , "w+b");
+            *state = 1;
+        }
+    }
+    if(*state == 1 && (*hm)->chunk.len != 0){
+        fwrite((*hm)->chunk.ptr ,(int) (*hm)->chunk.len, 1 , *fp);
+    }
+    mg_http_delete_chunk(*c, *hm);
+    if ((int) (*hm)->chunk.len == 0) {
+        *state = 0;//
+        fclose(*fp);//
+        *fp = NULL;//
+        //MG_INFO(("Last chunk received, sending response"));
+        mg_http_reply(*c, 200, "", "ok (chunked)\n");
+        if(mg_http_match_uri(*hm, "/upload_fw")) {
+            Web_Obj::bulid()->app_upgrade(file_path);
+        }else if(mg_http_match_uri(*hm , "/upload_batch")){
+            Web_Obj::bulid()->restores(2,file_path);
+        }else if(mg_http_match_uri(*hm , "/upload_backup")){
+            Web_Obj::bulid()->restores(1,file_path);
+        }
+        memset(file_path , 0 , sizeof(file_path)*FILE_LEN);
+    }
 }
 
 void Web_Http::mgr_init()
