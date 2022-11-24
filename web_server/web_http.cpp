@@ -128,10 +128,12 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
+            printf("upload_batch: %s \n",file_path);
             Web_Obj::bulid()->restores(2,file_path);
         }
         else if(mg_http_match_uri(hm, "/upload_backup")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
+            printf("upload_backup: %s \n",file_path);
             Web_Obj::bulid()->restores(1,file_path);
         }
         else {
