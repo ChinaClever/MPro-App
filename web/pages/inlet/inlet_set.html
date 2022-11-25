@@ -462,7 +462,7 @@
 						<td width ="11.5%" id="lang_15"></td>';
 					}
 					tbody += '<tr id = "pow'+ i + '">';
-					tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language]+(1 + i) +'</td>';
+					tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
 					tbody += '<td id = "b'+ i + '">'+ parseFloat(phase_info[i + 1][22]) +'</td>';
 					tbody += '<td><input  name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input  name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
@@ -506,7 +506,7 @@
 					<td width ="11.5%" id="lang_24"></td>';
 				}
 				tbody += '<tr id = "cur'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language]+(1 + i) +'</td>';
+				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
 				tbody += '<td id = "b'+ i + '">'+ (parseFloat(phase_info[i + 1][11])).toFixed(2) +'</td>';
 				tbody += '<td><input  name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 				tbody += '<td><input  name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
@@ -546,11 +546,10 @@
 					<td width ="11.5%" id="lang_30"></td>\
 					<td width ="11.5%" id="lang_31"></td>\
 					<td width ="11.5%" id="lang_32"></td>\
-					<td width ="11.5%" id="lang_33"></td>\
-					<td width ="11.5%" id="lang_34"></td>';
+					<td width ="11.5%" id="lang_33"></td>';
 				}
 				tbody += '<tr id = "vol'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language]+(1 + i) +'</td>';
+				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
 				tbody += '<td id = "b'+ i + '">'+ (parseFloat(phase_info[i + 1][0])).toFixed(1) +'</td>';
 				tbody += '<td><input name = "vol" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 				tbody += '<td><input name = "vol" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';

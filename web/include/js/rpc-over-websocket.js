@@ -889,3 +889,6 @@ function read_odbc_data(addr){
     j++;
   },3);
 }
+function read_history_data(addr,satrt,end,fc){
+  rpc.call('pduReadParam',[addr,82,fc,satrt,end]);
+}
