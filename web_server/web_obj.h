@@ -26,6 +26,7 @@ public:
     bool restores(int fc, const QString &fn); // fc 1 配置文件 2 批量配置文件
     QString backup(int fc); // fc 1 配置文件 2 批量配置文件
     QString diag(); // 下载诊断功能
+    QString getIpv6En(); // ipv6标志
 
 private:
     JsonRpc_Client *mRpc;

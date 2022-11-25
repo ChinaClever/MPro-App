@@ -109,3 +109,8 @@ QString Web_Obj::diag()
 {
     return mRpc->pduCfgGet(94, 1).toString();
 }
+
+QString Web_Obj::getIpv6En()
+{
+    return mRpc->pduCfgGet(41, 0 , 1).toString();
+}

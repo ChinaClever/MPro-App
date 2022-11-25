@@ -14,6 +14,8 @@ static const char *s_web_root = "/home/lzy/work/NPDU/web";
 static const char *s_listen_on = "ws://0.0.0.0:";
 static const char *s_https_addr = "wss://0.0.0.0:";  // HTTPS port
 static const char *s_web_root = "/usr/data/clever/web";
+static const char *s_ipv6_listen_on = "ws://[::]:";
+static const char *s_ipv6_https_addr = "wss://[::]:";
 #endif
 #define FILE_LEN 256
 
@@ -128,10 +130,12 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
+            printf("upload_batch: %s \n",file_path);
             Web_Obj::bulid()->restores(2,file_path);
         }
         else if(mg_http_match_uri(hm, "/upload_backup")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
+            printf("upload_backup: %s \n",file_path);
             Web_Obj::bulid()->restores(1,file_path);
         }
         else {
@@ -253,15 +257,26 @@ void Web_Http::mgr_init()
     mg_http_listen(mgr, s_listen_on, fn, NULL);  // Create HTTP listener
     mg_http_listen(mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
 #else
-
+    QString en = Web_Obj::bulid()->getIpv6En();
+    printf("Ipv6 en: %s \n", en.toLatin1().data());
     if(cfg.http_en) {
-        QString url = s_listen_on + QString::number(cfg.http_port);
-        mg_http_listen(mgr, url.toStdString().c_str(), fn, NULL);
+        if(en == "0"){
+            QString url = s_listen_on + QString::number(cfg.http_port);
+            mg_http_listen(mgr, url.toStdString().c_str(), fn, NULL);
+        }else{
+            QString url = s_ipv6_listen_on + QString::number(cfg.http_port);
+            mg_http_listen(mgr, url.toStdString().c_str(), fn, NULL);
+        }
     }
 
     if(cfg.https_en) {
-        QString url = s_https_addr + QString::number(cfg.https_port);
-        mg_http_listen(mgr, url.toStdString().c_str(), fn, (void *) 1);
+        if(en == "0"){
+            QString url = s_https_addr + QString::number(cfg.https_port);
+            mg_http_listen(mgr, url.toStdString().c_str(), fn, (void *) 1);
+        }else{
+            QString url = s_ipv6_https_addr + QString::number(cfg.https_port);
+            mg_http_listen(mgr, url.toStdString().c_str(), fn, (void *) 1);
+        }
     }
 #endif
 }
