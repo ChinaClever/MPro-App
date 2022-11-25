@@ -177,7 +177,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = "设置模式";
+				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -189,7 +189,7 @@
 				// ms.style.display = "none";
 				read = 0;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = "阅读模式";
+				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -236,17 +236,21 @@
 					sub = 11;
 				}
 				if(ckd.checked == true){
-					if(sub ==8){
-						pow_mark[0] = 1;
-					}else{
-						pow_mark[1] = 1;
+					if(number == output_num +1){
+						if(sub ==8){
+							pow_mark[0] = 1;
+						}else{
+							pow_mark[1] = 1;
+						}
 					}
 					stat = 1;
 				}else{
-					if(sub ==8){
-						pow_mark[0] = 0;
-					}else{
-						pow_mark[1] = 0;
+					if(number == output_num +1){
+						if(sub ==8){
+							pow_mark[0] = 0;
+						}else{
+							pow_mark[1] = 0;
+						}
 					}
 					stat = 0;
 				}

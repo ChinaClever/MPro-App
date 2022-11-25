@@ -325,7 +325,14 @@ APP_br_mass_storage_automatic_mount=y
 # APP_br_display_logo is not set
 # APP_usb_mtp_server is not set
 # APP_br_asound_conf_dmix is not set
-# APP_ota_updater is not set
+APP_ota_updater=y
+APP_ota_updater_storage_medium=mtd
+APP_ota_updater_version=0
+App_ota_updater_site=http://192.168.254.254
+App_ota_updater_block_size=41943040
+App_ota_updater_kernel_img_path=../build/output/xImage
+App_ota_updater_rootfs_img_path=../build/output/rootfs.squashfs
+# App_ota_updater_rtos is not set
 APP_libhardware2=y
 APP_libhardware2_fb=y
 APP_libhardware2_fb_cmd=y
