@@ -1,6 +1,6 @@
 #ifndef APP_RADIUS_H
 #define APP_RADIUS_H
-#include "app_ntp.h"
+#include "app_ldap.h"
 struct sRadiusCfg
 {
     sRadiusCfg() {}
@@ -11,7 +11,7 @@ struct sRadiusCfg
     int acctPort; // 账号端口
 };
 
-class App_Radius : public App_Ntp
+class App_Radius : public App_Ldap
 {
 public:
     App_Radius(QObject *parent = nullptr);

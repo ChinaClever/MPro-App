@@ -21,6 +21,7 @@ private:
     void mqtt();
     void amqp();
     void odbc();
+    void ldap();
     void login();
     void radius();
     void modbus();

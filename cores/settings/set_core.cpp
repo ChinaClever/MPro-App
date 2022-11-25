@@ -49,6 +49,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::ELdap: res =
     case SFnCode::EODBC: res = odbcCfg(it.fc); break;
     case SFnCode::ELogCfg: res = logCfg(it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it); break;

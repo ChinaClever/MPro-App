@@ -27,6 +27,9 @@ public:
 
     QVariant raduisCfg(int fc);
     bool raduisSet(int fc, const QVariant &v);
+
+    QVariant ldapCfg(int fc);
+    bool ldapSet(int fc, const QVariant &v);
 };
 
 #endif // SET_SERVICE_H

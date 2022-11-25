@@ -27,6 +27,7 @@ void Cfg_Service::readCfgParams()
     ntp();
     web();
     rpc();
+    ldap();
     push();
     snmp();
     smtp();
@@ -165,6 +166,19 @@ void Cfg_Service::radius()
         case 4: key = "key";  cfg->key = mCfg->readCfg(key, "", prefix).toString();  break;
         case 5: key = "authPort";  cfg->authPort = mCfg->readCfg(key, 1813, prefix).toInt(); break;
         case 6: key = "acctPort";  cfg->acctPort = mCfg->readCfg(key, 1812, prefix).toInt(); break;
+        }
+    }
+}
+
+void Cfg_Service::ldap()
+{
+    QString prefix = "openldap"; QString key;
+    sLdapCfg *cfg = &App_Ldap::ldapCfg;
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "url";  cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "user";  cfg->user = mCfg->readCfg(key, "", prefix).toString();  break;
         }
     }
 }

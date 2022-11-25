@@ -76,8 +76,10 @@ bool Set_Login::loginAuth(const QStringList &ls)
 
 bool Set_Login::loginCheck(const QString &str)
 {
+    bool ret = false;
     QStringList ls = str.split("; ");
-    bool ret = false; if(ls.size() == 2) {
+
+    if(ls.size() == 2) {
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
         if(cfg->en) {
             int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
@@ -86,11 +88,17 @@ bool Set_Login::loginCheck(const QString &str)
         } else {
             ret = loginAuth(ls);
         }
+    } else if(App_Ldap::ldapCfg.en && ls.size()) {
+        bool res = App_Core::bulid()->ldap_work(ls.last());
+        if(res) ls.insert(0, "ldap:"+App_Ldap::ldapCfg.user);
+    }
 
-        sEventItem db; db.event_type = QStringLiteral("用户登陆"); //opSrc(txType);
-        db.event_content = QStringLiteral("登陆登陆为 %1").arg(str);
+    if(ret) {
+        sEventItem db; db.event_type = QStringLiteral("用户登陆");
+        db.event_content = QStringLiteral("登陆登陆为 %1").arg(ls.first());
         Log_Core::bulid()->append(db);
     }
+
 
     return ret;
 }

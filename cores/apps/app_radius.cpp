@@ -7,7 +7,7 @@
 
 sRadiusCfg App_Radius::radiusCfg;
 App_Radius::App_Radius(QObject *parent)
-    : App_Ntp{parent}
+    : App_Ldap{parent}
 {
 
 }
