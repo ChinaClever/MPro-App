@@ -8,7 +8,7 @@
 sOdbcCfg Odbc_Obj::cfg;
 Odbc_Obj::Odbc_Obj()
 {
-    mDb = QSqlDatabase::addDatabase("QMYSQL3", ODBC_NAME);
+    mDb = QSqlDatabase::addDatabase("QMYSQL", ODBC_NAME);
 }
 
 bool Odbc_Obj::throwError(const QString &db, const QSqlError &err)
@@ -47,18 +47,28 @@ bool Odbc_Obj::db_open()
     return ret;
 }
 
+
 bool Odbc_Obj::db_transaction()
 {
-    isDbRun = true;
+    bool ret = true; isDbRun = true;
     //qDebug() << "odbc transaction" << QTime::currentTime().toString("hh:mm:ss zzz");
-    return mDb.transaction();
+    if (mDb.driver()->hasFeature(QSqlDriver::Transactions)) {
+        ret = mDb.transaction(); //qDebug() << "odbc transaction" << ret;
+    } else {
+        mDb.exec("START TRANSACTION");
+        qDebug() << "odbc not transaction" << ret;
+    }
+    return ret;
 }
 
-void Odbc_Obj::db_close()
+bool Odbc_Obj::db_commit()
 {
-    //qDebug() << "odbc commit" << QTime::currentTime().toString("hh:mm:ss zzz"); mDb.commit();
+    // qDebug() << "odbc commit" << QTime::currentTime().toString("hh:mm:ss zzz"); mDb.commit();
     //qDebug() << "odbc close" << QTime::currentTime().toString("hh:mm:ss zzz"); mDb.close();
-    mDb.commit();
-    mDb.close();
-    isDbRun = false;
+    bool ret = true; if (mDb.driver()->hasFeature(QSqlDriver::Transactions)) {
+        ret = mDb.commit(); if(!ret) mDb.rollback();
+    } else {
+        //ret = mDb.exec("COMMIT"); if(!ret) sqlQuery("ROLLBACK");
+    } isDbRun = false;
+    return ret;
 }

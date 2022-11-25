@@ -28,6 +28,18 @@ Log_Core *Log_Core::bulid(QObject *parent)
         it.event_type = tr("系统事件");
         it.event_content = tr("系统启动");;
         sington->append(it);
+
+
+
+        ///////////====================
+        sDataItem hda;
+        hda.addr = 0;
+        hda.type = 1;
+        hda.topic = 2;
+        hda.subtopic =1;
+        hda.id = 0;
+        hda.value = 2000 + QRandomGenerator::global()->bounded(500);
+        sington->append(hda);
     }
     return sington;
 }
@@ -52,11 +64,11 @@ void Log_Core::append(const sEventItem &it)
 void Log_Core::append(const sDataItem &it)
 {
     sHdaItem hda;
-    hda.addr = it.addr;
-    hda.type = it.type;
-    hda.topic = it.topic;
-    hda.index = it.id + 1;
-    hda.value = it.value / cm::decimal(it);
+    hda.addr = QString::number(it.addr);
+    hda.type = QString::number(it.type);
+    hda.topic = QString::number(it.topic);
+    hda.indexes = QString::number(it.id + 1);
+    hda.value = QString::number(it.value / cm::decimal(it));
     mHdaIts << hda; run();
 }
 
@@ -94,12 +106,12 @@ void Log_Core::run()
 
 void Log_Core::saveLogSlot()
 {
-    QWriteLocker locker(mRwLock); Db_Tran t; //cm::mdelay(350);
+    QWriteLocker locker(mRwLock); Db_Tran t;
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    isRun = false;
+    cm::mdelay(10); isRun = false;
 }
 
 void Log_Core::timeoutDone()

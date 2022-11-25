@@ -67,8 +67,8 @@ QString Set_Maintain::profileBackup()
 {
     QString cmd = "zip -vr %1 %2";
     QString src = "/usr/data/clever/cfg";
-    QString dst = "/usr/data/clever/download/cfg.zip";
-    cm::execute("rm -rf /usr/data/clever/download/*");
+    QString dst = "/tmp/download/cfg.zip";
+    cm::execute("rm -rf /tmp/download/*");
     cm::execute(cmd.arg(dst, src));
 
     sEventItem it;

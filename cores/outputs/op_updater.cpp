@@ -25,7 +25,7 @@ bool OP_Updater::ota_start(const QString &fn)
 
 void OP_Updater::throwMessage(const QString &msg)
 {
-    QString str = "updater outlet " + msg;
+    QString str = "ota updater outlet " + msg;
     QString ip = cm::dataPacket()->ota.host;  //qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
@@ -39,15 +39,13 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 
 void OP_Updater::ota_reboot()
 {
-    QString cmd = "cp -af /usr/data/updater/clever/  /usr/data/";
-    throwMessage(cmd); throwMessage(cm::execute(cmd));
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     cm::execute("rm -rf /usr/data/clever/outlet/*");
-    cmd = "rm -rf /usr/data/updater/clever";
+    QString cmd = "rm -rf /tmp/updater/clever";
     throwMessage(cm::execute(cmd));
 
-    cm::execute("rm -rf /usr/data/clever/upload/*");
+    cm::execute("rm -rf /usr/data/upload/*");
     cm::execute("sync"); system("reboot");
 }
 
@@ -66,7 +64,7 @@ bool OP_Updater::ota_updates()
             else up->results[i] = 3;
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
+        if(ret) system("rm -rf /tmp/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 

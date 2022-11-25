@@ -8,8 +8,8 @@
 Ota_Obj::Ota_Obj(QObject *parent)
     : QObject{parent}
 {
-    system("mkdir -p /usr/data/updater/clever");
-    QTimer::singleShot(155,this,SLOT(runing_initFunSlot()));
+    system("mkdir -p /tmp/updater/clever");
+    QTimer::singleShot(1155,this,SLOT(runing_initFunSlot()));
 }
 
 void Ota_Obj::onStartSsdp()

@@ -21,13 +21,13 @@ void App_NetAddr::inet_initFunSlot()
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
     QString mac = cm::execute("cat /usr/data/clever/cfg/mac.ini");
-    qstrcpy(net->mac, mac.toLocal8Bit().data());
+    qstrcpy(net->mac, mac.remove("\n").toLocal8Bit().data());
 
-    if(!strlen(net->mac)) {
+    if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
         inet->en = 1; inet->dhcp = 0;
         qstrcpy(inet->gw, "192.168.1.1");
-        qstrcpy(inet->ip, "192.168.1.89");
+        qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
         qstrcpy(net->mac, "00:00:00:00:00:01");
     } inet_setInterface();
@@ -69,7 +69,7 @@ void App_NetAddr::inet_setInterface()
     if(!inet_isRun) {
         inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(1,this,SLOT(inet_setInterfaceSlot()));
+        QTimer::singleShot(10,this,SLOT(inet_setInterfaceSlot()));
 #endif
         QTimer::singleShot(350,this,SLOT(inet_updateInterface()));
     }
@@ -77,8 +77,8 @@ void App_NetAddr::inet_setInterface()
 
 void App_NetAddr::inet_setInterfaceSlot()
 {
-    inet_setIpV4();
     sNetInterface *net = &(cm::dataPacket()->net);
+    inet_setIpV4(); inet_saveCfg();
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
     cm::mdelay(1); inet_isRun = false;
@@ -100,6 +100,7 @@ void App_NetAddr::inet_setIpV4()
         QString cmd = "ifconfig %1 %2 netmask %3";
         QString str = cmd.arg(fn, ip, mask);
         system(str.toStdString().c_str());
+        qDebug() << str;
 
         if(gw.size()) {
             if(QFile::exists("netcfg")) {
@@ -134,7 +135,6 @@ void App_NetAddr::inet_setIpV4()
     inet_writeCfg(net->inet, "IPV4");
 }
 
-
 void App_NetAddr::inet_setIpV6()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
@@ -146,7 +146,7 @@ void App_NetAddr::inet_setIpV6()
         QString ip = net->inet6.ip;
         QString gw = net->inet6.gw;
         QString dns = net->inet6.dns;
-// QString dns2 = net->inet6.dns2;
+        // QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
         QString cmd, str;
         if(QFile::exists("netcfg")) {
@@ -180,11 +180,11 @@ void App_NetAddr::inet_setIpV6()
             system(str.toStdString().c_str());
         }
 
-//        if(dns2.size()) {
-//            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-//            str = cmd.arg(dns); qDebug() << str;
-//            system(str.toStdString().c_str());
-//        }
+        //        if(dns2.size()) {
+        //            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+        //            str = cmd.arg(dns); qDebug() << str;
+        //            system(str.toStdString().c_str());
+        //        }
     }
 
     inet_writeCfg(net->inet6, "IPV6");
@@ -193,11 +193,13 @@ void App_NetAddr::inet_setIpV6()
 void App_NetAddr::inet_saveCfg()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
-    QString cmdMac = "echo > %1 /usr/data/clever/cfg/mac.ini";
-    system(cmdMac.arg(net->mac).toLocal8Bit().data());
+    QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
+    QString cmd = fmd.arg(net->mac);
+    system(cmd.toLocal8Bit().data());
+    //qDebug() << cmd;
 
-    inet_writeCfg(net->inet6, "IPV6");
-    inet_writeCfg(net->inet, "IPV4");
+    //inet_writeCfg(net->inet6, "IPV6");
+    //inet_writeCfg(net->inet, "IPV4");
 }
 
 void App_NetAddr::inet_dnsCfg()

@@ -6,18 +6,6 @@
 #include <QCoreApplication>
 #include "daemons.h"
 
-__attribute__((constructor)) void startup()
-{
-    //printf("Constructor is called.\n");
-}
-
-__attribute__((destructor)) void app_exit()
-{
-    //std::system("./proc_log daemon_exit");
-    printf("destructor is called.\n");
-}
-
-
 static void initSystem()
 {
     system("cmd_fb enable /dev/fb0");
@@ -25,29 +13,45 @@ static void initSystem()
     system("chmod +x -R /usr/data/clever/awtk/release/bin/");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
+    //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
 
     QString cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
     system(cmd.toLocal8Bit().data());
-    //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
+}
+
+static QString mac_random()
+{
+    QList<uchar> vs; int k=0;
+    QString fmd = "EF:%1:%2:%3:%4:%5";
+    for(int i=0; i<6; ++i) vs << QRandomGenerator::global()->bounded(256);
+    QString mac = fmd.arg(vs.at(k++), 2, 16, QLatin1Char('0'))
+            .arg(vs.at(k++), 2, 16, QLatin1Char('0'))
+            .arg(vs.at(k++), 2, 16, QLatin1Char('0'))
+            .arg(vs.at(k++), 2, 16, QLatin1Char('0'))
+            .arg(vs.at(k++), 2, 16, QLatin1Char('0'));
+    return mac;
 }
 
 static void init_netWork()
 {
-    QString mac = "00:00:00:00:00:21";
+    QString mac = "00:00:00:00:00:01";
     QString fn =  "/usr/data/clever/cfg/mac.ini";
     if(QFile::exists(fn)) {
         QFile file(fn);
         if(file.open(QIODevice::ReadOnly)) {
             QByteArray array = file.readAll().replace("\n", "");
-            if(array.size() == mac.size()) mac = array;
-            else qDebug() << "mac error" << array;
+            if(array.size() == mac.size()) {
+                if(mac != array) mac = array;
+                else mac = mac_random();
+            } else qDebug() << "mac error" << array;
         }
     } else {
-        system("touch /usr/data/clever/cfg/mac.ini");
+        mac = mac_random();
+        //system("touch /usr/data/clever/cfg/mac.ini");
     }
 
-    //system("ip link set eth0 down");
+    system("ip link set eth0 down");
     if(QFile::exists("netcfg")) {
         QString cmd = QString("./netcfg -w %1 eth0").arg(mac);
         system(cmd.toStdString().c_str()); qDebug() << cmd;
@@ -66,6 +70,9 @@ static void init_netWork()
 
 static void createDirectory()
 {
+    system("mkdir -p /tmp/updater");
+    system("mkdir -p /tmp/download");
+    system("mkdir -p /usr/data/upload");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
@@ -75,10 +82,8 @@ static void createDirectory()
     system("mkdir -p /usr/data/clever/doc");
     system("mkdir -p /usr/data/clever/awtk");
     system("mkdir -p /usr/data/clever/certs");
-    //system("mkdir -p /usr/data/clever/outlet");
-    system("mkdir -p /usr/data/clever/upload");
+    system("mkdir -p /usr/data/clever/outlet");
     system("mkdir -p /usr/data/clever/drivers");
-    system("mkdir -p /usr/data/clever/download");
     //system("touch /usr/data/etc/snmp/snmpd.conf");
 }
 

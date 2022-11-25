@@ -137,7 +137,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         case DSub::DPeak: ptr = unit->peakMax; break;
         case DSub::DStamp: ptr = unit->peakStamp; break;
         case DSub::DHda: ptr = unit->hda; break;
-        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        default: ret = false; cout << index.subtopic; break;
         }
     }
 
@@ -153,7 +153,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
         //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
         //         }
-    }
+    } else cout  << index.type << index.topic << index.subtopic << index.id << index.value;
 
     return ret;
 }

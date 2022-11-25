@@ -30,25 +30,31 @@ bool Odbc_Data::data_insert(const sOdbcDataIt &it)
 {
     QString cmd = "INSERT INTO `pdu_data` "
                   "(`id`, `pdu_id`, `addr`, `type`, `topic`, `indexes`, `value`, `update_time`) "
-                  "VALUES (NULL, '%1', '%2', '%3', '%4', '%5', '%6', CURRENT_TIMESTAMP)";
+                  "VALUES (NULL, :pdu_id, :addr, :type, :topic, :indexes, :value, CURRENT_TIMESTAMP)";
     return data_modifyItem(it,cmd);
 }
 
-bool Odbc_Data::data_modifyItem(const sOdbcDataIt &it, const QString &fmd)
+bool Odbc_Data::data_modifyItem(const sOdbcDataIt &it, const QString &cmd)
 {
-    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
-    QString cmd = fmd.arg(pdu_id).arg(it.addr).arg(it.type)
-            .arg(it.topic).arg(it.indexes).arg(it.value);
-    query.prepare(cmd); bool ret = query.exec();
+    uint pdu_id = devKey(it.addr);
+    QSqlQuery query(mDb); query.prepare(cmd);
+    query.bindValue(":pdu_id",pdu_id);
+    query.bindValue(":addr",it.addr);
+    query.bindValue(":type",it.type);
+    query.bindValue(":topic",it.topic);
+    query.bindValue(":value",it.value);
+    query.bindValue(":indexes",it.indexes);
+
+    bool ret = query.exec();
     if(!ret) throwError("pdu_data", query.lastError());
     return ret;
 }
 
 bool Odbc_Data::data_update(const sOdbcDataIt &it)
 {
-    QString fmd = "update pdu_data set value=%6 "
-                  "where pdu_id=%1 and addr=%2 and type=%3 "
-                  "and topic=%4 and indexes=%5";
+    QString fmd = "update pdu_data set value=:value "
+                  "where pdu_id=:pdu_id and addr=:addr and type=:type "
+                  "and topic=:topic and indexes=:indexes";
     return data_modifyItem(it, fmd);;
 }
 
@@ -64,16 +70,25 @@ int Odbc_Data::data_counts(const sOdbcDataIt &it)
     return cntBySql(cmd);
 }
 
+bool Odbc_Data::data_duplicate(const sOdbcDataIt &it)
+{
+    QString fmd =  "INSERT INTO `pdu_data` "
+                   "(`id`, `pdu_id`, `addr`, `type`, `topic`, `indexes`, `value`, `update_time`) "
+                   "VALUES (NULL, :pdu_id, :addr, :type, :topic, :indexes, :value, CURRENT_TIMESTAMP) "
+                   "ON DUPLICATE KEY UPDATE "
+                   "pdu_id=:pdu_id, addr=:addr, type=:type, topic=:topic,indexes=:indexes";
+    return data_modifyItem(it,fmd);
+}
+
 bool Odbc_Data::data_poll(const sOdbcDataIt &it)
 {
-    bool ret = true;
-    if(mDataInit) {
+    bool ret = true; //data_duplicate(it);
+    if(cfg.okCnt > 1) {
         ret = data_update(it);
     } else {
         ret = data_counts(it);
         if(ret) ret = data_update(it);
         else ret = data_insert(it);
-        mDataInit = ret;
     }
     return ret;
 }

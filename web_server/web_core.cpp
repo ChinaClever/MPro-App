@@ -75,7 +75,7 @@ bool Web_Core::app_upgrade(const QString &fn)
 {
     sDataPacket *shm = init_share_mem();
     bool ret = true; sOtaUpdater *ota = &(shm->ota);
-    if(fn.contains("/usr/data/clever/upload/")) {
+    if(fn.contains("/usr/data/upload/")) {
         setbit(ota->work, DOta_Web);
     } else ret = false;
     return ret;

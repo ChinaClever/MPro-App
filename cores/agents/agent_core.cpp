@@ -41,8 +41,8 @@ void Agent_Core::startSnmpd()
     QString custom = "/usr/data/clever/cfg/";
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";
-    } else if(QFile::exists("/etc/"+fn)) {
-        cmd += "/etc/"+ fn + " &";
+    } else if(QFile::exists("/usr/data/etc/"+fn)) {
+        cmd += "/usr/data/etc/"+ fn + " &";
     } else {
         cmd.clear();
     }

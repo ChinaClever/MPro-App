@@ -13,16 +13,16 @@ Set_Diagnose::Set_Diagnose()
 
 void Set_Diagnose::sys_cmd(const QString &cmd, const QString &fn)
 {
-    QString fmd = "echo '\n%1:' >> /usr/data/clever/download/dia/%2";
-    cm::execute(fmd.arg(cmd, fn));
+    QString fmd = "echo '\n%1:' >> /tmp/download/dia/%2";
+    system(fmd.arg(cmd, fn).toLocal8Bit().data());
 
-    fmd = "%1 >> /usr/data/clever/download/dia/%2";
-    cm::execute(fmd.arg(cmd, fn));
+    fmd = "%1 >> /tmp/download/dia/%2";
+    system(fmd.arg(cmd, fn).toLocal8Bit().data());
 }
 
 void Set_Diagnose::diasCopy()
 {
-    QString dir = "/usr/data/clever/download/dia";
+    QString dir = "/tmp/download/dia";
     QString cmd = "mkdir -p " + dir; cm::execute(cmd);
     cmd = "rm -rf %1/*"; cm::execute(cmd.arg(dir));
     cmd = "mkdir -p " + dir +"/metadata";
@@ -30,11 +30,7 @@ void Set_Diagnose::diasCopy()
     Integr_JsonBuild::bulid()->saveJsons();
 
     QString fmd = "cp -af %1 " + dir +"/";
-    cmd = fmd.arg("/usr/data/etc"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/bin"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/cfg"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/certs"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/ver.ini"); cm::execute(cmd);
+    cmd = fmd.arg("/usr/data/"); cm::execute(cmd);
 }
 
 void Set_Diagnose::diascmds()
@@ -83,10 +79,10 @@ void Set_Diagnose::diascmds()
 
 QString Set_Diagnose::diasZip()
 {
-    QString dir = "/usr/data/clever/download";
-    QString cmd = "zip -vr %1/dias.zip %1/dias";
+    QString dir = "/tmp/download";
+    QString cmd = "zip -vr %1/diagnosis.zip %1/dia";
     cm::execute(cmd.arg(dir));
-    return dir+"/dias.zip";
+    return dir+"/diagnosis.zip";
 }
 
 QString Set_Diagnose::downDiagnostics()

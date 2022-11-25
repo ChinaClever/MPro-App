@@ -36,9 +36,8 @@ void Odbc_Core::append(const sOdbcAlarmIt &it)
 
 void Odbc_Core::append(const sOdbcDataIt &it)
 {
-    uint sec = cfg.dataPoll;
-    if(!cfg.en || !sec) return;
-    if(! mCnt%sec){mDataIts << it; run();}
+    uint sec = cfg.dataPoll; if(!cfg.en || !sec) return;
+    if(!(mCnt%sec) || 1 == cfg.okCnt){mDataIts << it; run();}
 }
 
 void Odbc_Core::append(const sOdbcEventIt &it)
@@ -81,7 +80,7 @@ void Odbc_Core::data(const sDataItem &item)
     it.value = item.value / cm::decimal(item);
     append(it); hda(item);
 
-    if(cfg.okCnt<2  && cfg.status && item.type != DTopic::Relay) {
+    if(1 == cfg.okCnt  && cfg.status && item.type != DTopic::Relay) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
             dt.subtopic = i;
@@ -143,7 +142,7 @@ void Odbc_Core::insertItems()
 {
     QWriteLocker locker(mLock); db_transaction();
     while(mThIts.size()) th_poll(mThIts.takeFirst());
-    while(mHdaIts.size()) hda_insert(mHdaIts.takeFirst());
+    while(mHdaIts.size())  hda_insert(mHdaIts.takeFirst());
     while(mDataIts.size()) data_poll(mDataIts.takeFirst());
     while(mEventIts.size()) event_insert(mEventIts.takeFirst());
     while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());

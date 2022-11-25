@@ -66,7 +66,7 @@ void Set_Ssdp::recvSwVersion()
     sSdpIt item; item.fc = 11;
     item.ip = cm::dataPacket()->net.inet.ip;
     item.room = cm::masterDev()->cfg.uut.room;
-    QString fmt = "ver:%1; date:%2; usr:%3; md5:%4; Outlet:";
+    QString fmt = "sw_version:%1; date:%2; usr:%3; md5:%4; Outlet:";
 
     int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<=num; i++) {

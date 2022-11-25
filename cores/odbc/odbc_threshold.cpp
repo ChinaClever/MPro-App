@@ -77,11 +77,26 @@ int Odbc_Threshold::th_counts(const sOdbcThIt &it)
     return cntBySql(cmd);
 }
 
+bool Odbc_Threshold::th_duplicate(const sOdbcThIt &it)
+{
+    QString fmd =  "INSERT INTO `pdu_threshold` "
+                   "(`id`, `pdu_id`, `addr`, `type`, `topic`, `subtopic`, `indexes`, `value`, `update_time`) "
+                   "VALUES (NULL, :pdu_id, :addr, :type, :topic, :subtopic, :indexes, :value, CURRENT_TIMESTAMP) "
+                   "ON DUPLICATE KEY UPDATE "
+                   "pdu_id=:pdu_id, addr=:addr, type=:type, topic=:topic,subtopic=:subtopic,indexes=:indexes";
+    return th_modifyItem(it,fmd);
+}
+
 bool Odbc_Threshold::th_poll(const sOdbcThIt &it)
 {
-    bool ret = th_counts(it);
-    if(ret) ret = th_update(it);
-    else if(it.addr < 255) ret = th_insert(it);
+    bool ret = true; if(cfg.okCnt > 1) {
+        ret = th_update(it);
+    } else {
+        ret = th_counts(it);
+        if(ret) ret = th_update(it);
+        else if(it.addr < 255) ret = th_insert(it);
+    }
+
     return ret;
 }
 
