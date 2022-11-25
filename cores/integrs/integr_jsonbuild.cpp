@@ -56,7 +56,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 void Integr_JsonBuild::saveJson(uchar addr)
 {
     QJsonObject json = getJsonObject(addr);
-    QString dir = "/tmp/download/dia/metadata/"; cm::execute("mkdir -p "+dir);
+    QString dir = "/tmp/download/dia/metadata/"; //cm::execute("mkdir -p "+dir);
     QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
@@ -71,7 +71,7 @@ void Integr_JsonBuild::saveJson(uchar addr)
 void Integr_JsonBuild::saveJsons()
 {
     int size = cm::masterDev()->cfg.nums.slaveNum;
-    for(int i=0; i<size; ++i) saveJson(i);
+    for(int i=0; i<=size; ++i) saveJson(i);
 }
 
 void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,

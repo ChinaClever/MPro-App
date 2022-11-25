@@ -7,7 +7,7 @@
 
 Db_Hda::Db_Hda()
 {
-    mHeadList << "addr" << "type" << "topic" << "subindex" << "value";
+    mHeadList << "addr" << "type" << "topic" << "indexes" << "value";
 }
 
 Db_Hda *Db_Hda::bulid()
@@ -24,7 +24,7 @@ QJsonArray Db_Hda::itemJson(const sHdaItem &it)
 {
     QJsonArray  var;
     var << it.datetime << it.addr << it.type;
-    var << it.topic << it.index << it.value;
+    var << it.topic << it.indexes << it.value;
     return var;
 }
 
@@ -36,7 +36,7 @@ bool Db_Hda::modifyItem(const sHdaItem &item, const QString &cmd)
     query.bindValue(":type",item.type);
     query.bindValue(":topic",item.topic);
     query.bindValue(":dtime",item.datetime);
-    query.bindValue(":subindex",item.index);
+    query.bindValue(":indexes",item.indexes);
     query.bindValue(":value",item.value);
     return sqlQuery(query);
 }
@@ -48,6 +48,6 @@ void Db_Hda::selectItem(QSqlQuery &query, sHdaItem &item)
     item.type = query.value("type").toString();
     item.topic = query.value("topic").toString();
     item.datetime = query.value("dtime").toString();
-    item.index = query.value("subindex").toString();
+    item.indexes = query.value("indexes").toString();
     item.value = query.value("value").toString();
 }

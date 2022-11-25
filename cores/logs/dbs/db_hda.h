@@ -3,7 +3,7 @@
 #include "db_event.h"
 
 struct sHdaItem : public Db_ObjItem{
-    QString addr, type, topic, index, value;
+    QString addr, type, topic, indexes, value;
 };
 
 class Db_Hda : public Db_Obj<sHdaItem>
