@@ -131,14 +131,14 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
 
 void Ota_Net::rebootSlot()
 {
+    system("rm -rf /usr/data/upload");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
     QString cmd = "rm -rf /tmp/updater/clever";
     throwMessage(cmd); throwMessage(cm::execute(cmd));
-    cm::execute("rm -rf /usr/data/clever/outlet/*");
+    system("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
-    cm::execute("rm -rf /usr/data/upload/*");
-    cm::execute("sync"); system("reboot");
+    system("sync"); system("reboot");
 }
 
 bool Ota_Net::versionCheck(const QString &dir)

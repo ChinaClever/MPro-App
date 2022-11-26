@@ -20,6 +20,7 @@ private:
 
     void initEnvData(sEnvData &it);
     void initDevData(sDevData *dev);
+    void initObjHda(sObjData &it, uchar size);
     void initRelayUnit(sRelayUnit &it, uchar size);
 };
 

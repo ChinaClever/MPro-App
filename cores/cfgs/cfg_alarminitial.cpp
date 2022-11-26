@@ -74,6 +74,7 @@ void Cfg_AlarmInitial::initEnvData(sEnvData &it)
 
 void Cfg_AlarmInitial::initDevData(sDevData *dev)
 {
+    initObjHda(dev->line, LINE_NUM);
     initObjData(dev->line, LINE_NUM, 32);
     initObjData(dev->loop, LOOP_NUM, 16);
     initObjData(dev->dual, OUTPUT_NUM, 20);
@@ -91,5 +92,14 @@ void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
         it.resetDelay[i] = 5;
+    }
+}
+
+void Cfg_AlarmInitial::initObjHda(sObjData &it, uchar size)
+{
+    for(int i=0; i<size; ++i) {
+        it.hdaEle[i] = 1;
+        it.vol.hda[i] = 1;
+        it.cur.hda[i] = 1;
     }
 }

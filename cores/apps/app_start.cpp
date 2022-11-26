@@ -14,6 +14,7 @@
 #include "mb_core.h"
 #include "op_core.h"
 #include "odbc_core.h"
+#include "redis_core.h"
 
 App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
@@ -50,6 +51,7 @@ void App_Start::startThreadSlot()
     Odbc_Core::bulid();
     OP_Core::bulid(this);
     Agent_Core::bulid(this);
+    Redis_Core::bulid(this);
     Cascade_Core::bulid(this);
 #endif
 
