@@ -12,7 +12,7 @@ struct sRedisCfg
         key = "pdu";
         db = 0;
         sec = 5;
-        en = 1;
+        en = 0;
         alive = 60;
         subscribe = "set";
         isConnect = false;

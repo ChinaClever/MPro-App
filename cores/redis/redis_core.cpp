@@ -30,14 +30,12 @@ void Redis_Core::workDown()
 
 void Redis_Core::run()
 {
-    cm::mdelay(1234);
     while(isRun) {
+        int sec = redisCfg.sec;
+        cm::mdelay(sec*1000+1);
         if(redisCfg.en) {
             connectServer();
             workDown();
         }
-
-        int sec = redisCfg.sec;
-        cm::mdelay(sec*1000+1);
     }
 }
