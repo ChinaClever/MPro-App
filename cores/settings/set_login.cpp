@@ -33,7 +33,6 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     QString key; bool ret = true;
     QString prefix = "login"; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login[id]);
-    char *str = v.toByteArray().data();
 
     switch (type) {
     case 1: key = "user_%1"; ptr = it->user; break;
@@ -41,13 +40,13 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
     case 5: key = "ctrl_%1"; it->ctrl = v.toLongLong(); break;
-    case 11: ret = loginCheck(str); break;
+    case 11: ret = loginCheck(v.toString()); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) {
-        qstrcpy(ptr, str);
-        ptr[v.toByteArray().size()] = 0;
+        QByteArray str = v.toByteArray();
+        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
         sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
         db.event_content = QStringLiteral("%1 修改为 %2").arg(key, str);
         Log_Core::bulid()->append(db);

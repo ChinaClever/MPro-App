@@ -17,7 +17,7 @@ let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcma
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","PowSwEn","BreakerEn","Direction","Angle");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
-let user_info = new Array("","UserName","Password","Identify","","","","","","","","Verfity");
+let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
 let snmp_info = new Array("","V2Enable","Trap","V3Enable","Username","Password","Key");
@@ -137,7 +137,7 @@ var jsonrpc = function()
         {
           verfity = 1;
         }
-        sessionStorage.setItem(user_info[topic] , JSON.parse(evt.data).result[5]);
+        sessionStorage.setItem(user_info[topic] + subtopic , JSON.parse(evt.data).result[5]);
       break;
       case 15:
         sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
@@ -233,6 +233,9 @@ var jsonrpc = function()
       case 81:
         sessionStorage.setItem(log_info[subtopic] , JSON.parse(evt.data).result[5]);
       break;
+      case 82:
+        sessionStorage.setItem("LogData" , JSON.parse(evt.data).result[5]);
+      break;
       case 92:
         sessionStorage.setItem(Progress_name[topic]+Progress_info[subtopic] +addr_, JSON.parse(evt.data).result[5]);
       break;
@@ -276,10 +279,10 @@ window.addr = 0;
 function read_user_info(){
   var j = 1;
   var time1 = setInterval(function(){
-    if(j >= 4){
+    if(j >= 6){
       clearInterval(time1);
     }
-    if(j < 4 ){
+    if(j < 6 ){
       rpc.call('pduReadParam',[0,user,j,0,0]);
     }
     j++;
@@ -891,4 +894,18 @@ function read_odbc_data(addr){
 }
 function read_history_data(addr,satrt,end,fc){
   rpc.call('pduReadParam',[addr,82,fc,satrt,end]);
+}
+function read_usrs_data(){
+  let j = 1, i = 0;
+  let time1 = setInterval(function(){
+    if(i >= parseInt(4 + 1)){
+      clearInterval(time1);
+    }
+    rpc.call('pduReadParam',[0,user,j,i,0]);
+    j++;
+    if(j >= parseInt(5 + 1)){
+      j = 1;
+      i++;
+    }
+  },3);
 }
