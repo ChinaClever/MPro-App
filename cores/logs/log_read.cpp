@@ -105,6 +105,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
         int minId = its.first().id;
         res = db->toPageJson(its, minId);
     } else qDebug() << Q_FUNC_INFO << cmd;
+    //qDebug() << its.size() << cmd  << res;
 
     return res;
 }

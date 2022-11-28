@@ -279,6 +279,10 @@
         "url": "sys_info.html"
       },
       {
+        "name": "用户信息",
+        "url": "usr_info.html"
+      },
+      {
         "name": "更新固件",
         "url": "fw_update.html"
       },

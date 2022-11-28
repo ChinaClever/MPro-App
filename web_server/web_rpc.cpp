@@ -89,5 +89,6 @@ char* Web_Rpc::pduLogHda(mg_str &r)
     uchar topic = 0; if(ls.size() > 1) topic = ls.at(k++).toInt();
     uchar index = 0; if(ls.size() > 2) index = ls.at(k++).toInt();
     QString value = mObj->log_hda(start, end, its.at(0), type, topic, index);
+    its << type << topic << index;
     return responRpcString(its, value);
 }

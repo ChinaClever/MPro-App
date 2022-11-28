@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>maintain</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
+		<link rel="stylesheet" href="../doc-lib/doc.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left usr"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none" id = "out_ctrl" style="display: none;">
+						<table class="table table-border-none text-left out_ctrl"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../doc-lib/highlight.pack.js"></script>
+	<script src="../doc-lib/doc.js"></script>
+    <script>
+		read_usrs_data();
+		let usr_mark = 0;
+		let language = 1;
+		var opt_set = new Array();
+		var usrs_data = new Array();
+		var usrs_name_ = new Array("","","","","");
+		var jurisdiction = new Array();
+		let lang = new Array();
+		function read_data(){
+			for(var i = 0;i<5;i++){
+				usrs_name_[i] =  sessionStorage.getItem(user_info[1] + i);
+				usrs_data[i+1] = new Array();
+				for(let j = 0; j<5;j++){
+					usrs_data[i+1][j] = sessionStorage.getItem(user_info[i+1] + j);
+				}
+			}
+			for(let i = 0;i<5;i++){
+				if(parseInt(usrs_data[4][i]) != 0){
+					usrs_data[4][i] = 1;
+				}
+			}
+		}
+		function lang_init(){
+			for(let i = 0;i<19;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["","用户管理","","","",""];
+			lang[2] = ["","用户设置","","","",""];
+			lang[3] = ["","用户列表:","","","",""];
+			lang[4] = ["","用户名:","","","",""];
+			lang[5] = ["","密码:","","","",""];
+			lang[6] = ["","确认密码:","","","",""];
+			lang[7] = ["","权限:","","","",""];
+			lang[8] = ["","输出位控制","","","",""];
+			lang[9] = ["","输出位","","","",""];
+			lang[10] = ["","权限设置","","","",""];
+			lang[11] = ["","输出位","","","",""];
+			lang[12] = ["","权限设置","","","",""];
+			lang[13] = ["","管理员","","","",""];
+			lang[14] = ["","访客","","","",""];
+			lang[15] = ["","用户名","","","",""];
+			lang[16] = ["","密码","","","",""];
+			lang[17] = ["","确认密码","","","",""];
+			lang[18] = ["","提交","","","",""];
+			jurisdiction[0] = lang[13][language];
+			jurisdiction[1] = lang[14][language];
+		}
+		function lang_fun(){
+			for(var i = 1;i<8;i++){
+				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
+			}
+			document.getElementById("lang_18").value  = lang[18][language];
+		}
+		lang_init();
+		setTimeout(function(){
+			read_data();
+			$('.usr').html(buildTable());
+			lang_fun();
+			showdata();
+		},1000);
+		function validataForm(opt){
+
+		}
+		function showdata(){
+			for(let i = 1;i<5;i++){
+				if(i!= 3){
+					document.getElementById(user_info[i]).value = usrs_data[i][0];
+				}
+			}
+			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
+		}
+		function Set_(opt){
+			for(let i = 1;i<5;i++){
+				if(i!= 3){
+					document.getElementById(user_info[i]).value = usrs_data[i][parseInt(opt)];
+				}
+			}
+			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
+		}
+		function SetVal(){
+			if(confirm("您已更改表单，请确认提交！")){
+				let val =  parseInt(document.getElementById("usrSel").value);
+				let usr_ = document.getElementById("UserName").value;
+				let psd_ = document.getElementById("Password").value;
+				let conpsd_ = document.getElementById("conpsd").value;
+				let jur_ = parseInt(document.getElementById("Jurisdiction").value);
+				for(let i = 0;i<5;i++){
+					if(usrs_data[1][i] == usr_){
+						alert("该用户已存在，请重新输入！");
+						return ;
+					}
+				}
+				if(jur_ != 0){
+					jur_ = 2;
+				}
+				if(usr_!= "" && psd_ !="" && conpsd_ != "" && psd_ == conpsd_){
+					rpc.call('pduSetParam',[0,14,1,val,0,usr_]);
+					rpc.call('pduSetParam',[0,14,2,val,0,psd_]);
+					rpc.call('pduSetParam',[0,14,4,val,0,jur_]);
+					usr_mark = val;
+					flash_html();
+				}else{
+					alert("username or password error!");
+				}
+			}
+		}
+
+		function flash_html(){
+			read_usrs_data();
+			setTimeout(function(){
+				read_data();
+				$('.usr').html(buildTable());
+				lang_fun();
+				showdata();
+				document.getElementById("usrSel").value = usr_mark;
+				Set_(usr_mark);
+			},800);
+		}
+		function buildTable(){
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id ="lang_2"></td>\
+			<td width ="85%"></td>/tr>';
+			tbody += '<tr><td id = "lang_3"></td>';
+			tbody += '<td><select id ="usrSel" onchange ="Set_(this.value)">';
+			for(var i = 0; i<usrs_name_.length;i++){
+				tbody +='<option value ="'+i+'">'+usrs_name_[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id = "lang_4"></td>';
+			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
+			tbody += '<tr><td id ="lang_5"></td>';
+			tbody += '<td><input id ="Password" type="password"  style ="width:24.5%" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></td></tr>';
+			tbody += '<tr><td id ="lang_6" ></td>';
+			tbody += '<td><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></td></tr>';
+			tbody += '<tr><td id ="lang_7"></td>';
+			tbody += '<td><select id ="Jurisdiction">';
+			for(var i = 0; i<jurisdiction.length;i++){
+				tbody +='<option value ="'+i+'">'+jurisdiction[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<td><input id="lang_18" type = "button" style ="width:50%"  onclick = "SetVal()"></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				+ '<tbody>' + tbody + '</tbody>';
+			
+		}
+    </script>
+</body>
+</html>

@@ -53,7 +53,8 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     default: res = false; cout << it.fc; break;
     }
     if(ptr) {
-        qstrcpy(ptr, v.toByteArray().data());
+        QByteArray array = v.toByteArray();
+        qstrcpy(ptr, array.data());
         ptr[v.toByteArray().size()] = 0;
     }
 

@@ -27,9 +27,9 @@
     console.log("1");
     var time = setTimeout(function (){
       console.log("2");
-      user_name = sessionStorage.getItem(user_info[1]);
-      password = sessionStorage.getItem(user_info[2]);
-      identify = sessionStorage.getItem(user_info[3]);
+      user_name = sessionStorage.getItem(user_info[1] + 0);
+      password = sessionStorage.getItem(user_info[2] + 0);
+      identify = sessionStorage.getItem(user_info[3] + 0);
       if(user_name == '' && password ==''){
         register();
         }
@@ -45,7 +45,7 @@
           if(verfity == 1)
           {
             verfity = 0;
-            let ver = parseInt(sessionStorage.getItem(user_info[11]));
+            let ver = parseInt(sessionStorage.getItem(user_info[11] + 0));
             if(ver  == 1){
               sessionStorage.setItem(user_info[11],0);
               window.open('index.html','_self');
