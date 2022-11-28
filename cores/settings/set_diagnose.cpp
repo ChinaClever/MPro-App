@@ -30,7 +30,7 @@ void Set_Diagnose::diasCopy()
     Integr_JsonBuild::bulid()->saveJsons();
 
     QString fmd = "cp -af %1 " + dir +"/";
-    cmd = fmd.arg("/usr/data/"); cm::execute(cmd);
+    cmd = fmd.arg("/usr/data/*"); cm::execute(cmd);
 }
 
 void Set_Diagnose::diascmds()

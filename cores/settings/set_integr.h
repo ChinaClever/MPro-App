@@ -28,6 +28,9 @@ protected:
     QVariant odbcCfg(uchar fc);
     bool odbcSet(uchar fc, const QVariant &v);
 
+    QVariant redisCfg(uchar fc);
+    bool redisSet(uchar fc, const QVariant &v);
+
 private:
     int toBaud(int value);
     int baudTo(int value);

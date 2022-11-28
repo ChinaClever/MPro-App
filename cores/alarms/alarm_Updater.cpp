@@ -90,8 +90,9 @@ void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
 {
     for(int i=0; i<it.size; ++i) {
         if(it.hdaEle[i]) {
-            index.id = i;
+            index.id = i;            
             index.value = it.ele[i];
+            index.subtopic = DSub::Value;
             Log_Core::bulid()->log_hdaEle(index);
         }
     }

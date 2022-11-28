@@ -280,3 +280,37 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
     }
     return ret;
 }
+
+
+QVariant Set_Service::ldapCfg(int fc)
+{
+    sLdapCfg *cfg = &App_Ldap::ldapCfg;
+    QVariant ret; switch (fc) {
+    case 1: ret = cfg->en; break;
+    case 2: ret = cfg->url; break;
+    case 3: ret = cfg->user; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+
+bool Set_Service::ldapSet(int fc, const QVariant &v)
+{
+    QString prefix = "openldap"; QString key;
+    sLdapCfg *cfg = &App_Ldap::ldapCfg;
+
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "url";  cfg->url = v.toString(); break;
+    case 3: key = "user";  cfg->user = v.toString();  break;
+    default: ret = false; cout << fc;  break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+    return ret;
+}

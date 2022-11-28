@@ -13,6 +13,7 @@
 #include "mb_core.h"
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
+#include "redis_obj.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -27,12 +28,14 @@ void Cfg_Service::readCfgParams()
     ntp();
     web();
     rpc();
+    ldap();
     push();
     snmp();
     smtp();
     mqtt();
     amqp();
     odbc();
+    redis();
     login();
     syslog();
     modbus();
@@ -169,6 +172,19 @@ void Cfg_Service::radius()
     }
 }
 
+void Cfg_Service::ldap()
+{
+    QString prefix = "openldap"; QString key;
+    sLdapCfg *cfg = &App_Ldap::ldapCfg;
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "url";  cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "user";  cfg->user = mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
 void Cfg_Service::log()
 {
     sLogCfg *cfg = &Log_Core::cfg;
@@ -177,11 +193,11 @@ void Cfg_Service::log()
     for(int i=1; i<4; ++i)  {
         switch (i) {
         case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
-        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
+        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 2, prefix).toInt(); break;
         case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
-        case 6: key = "hdaEn";  cfg->hdaEn = mCfg->readCfg(key, 0, prefix).toInt();  break;
+        case 6: key = "hdaEn";  cfg->hdaEn = mCfg->readCfg(key, 1, prefix).toInt();  break;
         }
     }
 }
@@ -241,6 +257,25 @@ void Cfg_Service::amqp()
     }
 }
 
+void Cfg_Service::redis()
+{
+    QString prefix = "redis"; QString key;
+    sRedisCfg *cfg = &Redis_Obj::redisCfg;
+    for(int i=1; i<10; ++i) {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 6379, prefix).toInt(); break;
+        case 4: key = "db"; cfg->db = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 5: key = "subscribe"; cfg->subscribe = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 7: key = "pdukey"; cfg->key = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 8: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt();break;
+        case 9: key = "alive"; cfg->alive = mCfg->readCfg(key, 60, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
+    }
+}
 
 void Cfg_Service::odbc()
 {

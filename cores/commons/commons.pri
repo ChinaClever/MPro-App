@@ -22,6 +22,7 @@ include(cthread/cthread.pri)
 include(network/network.pri)
 #include(mongoose/mongoose.pri)
 include(websocket/websocket.pri)
+include(qredisclient/qredisclient.pri)
 
 
 INCLUDEPATH += $$PWD
