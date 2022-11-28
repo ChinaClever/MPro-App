@@ -190,7 +190,7 @@ void Cfg_Service::log()
     sLogCfg *cfg = &Log_Core::cfg;
     QString prefix = "log"; QString key;
 
-    for(int i=1; i<4; ++i)  {
+    for(int i=1; i<7; ++i)  {
         switch (i) {
         case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
         case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 2, prefix).toInt(); break;
@@ -305,7 +305,7 @@ void Cfg_Service::login()
 
     for(int k=0; k<USER_NUM; ++k) {
         sDevLogin *it = &(packet->login[k]);
-        for(int i=1; i<3; ++i) {
+        for(int i=1; i<4; ++i) {
             switch (i) {
             case 1: key = "user_%1";  ptr = it->user; break;
             case 2: key = "pwd_%1";  ptr = it->pwd; break;
