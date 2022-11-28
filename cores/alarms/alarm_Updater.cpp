@@ -62,6 +62,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
+            Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;
             ret |= alarm;

@@ -24,8 +24,9 @@ auto Redis_Obj::initConnectionConfig()
 
 void Redis_Obj::disconnect()
 {
-    if(mRedis) {delete mRedis;  mRedis = nullptr;}
-    if(mSubscribe) {delete mSubscribe; mSubscribe = nullptr;}
+    //if(mRedis) {delete mRedis;  mRedis = nullptr;}
+    //if(mSubscribe) {delete mSubscribe; mSubscribe = nullptr;}
+    if(mRedis) mRedis->disconnect();
 }
 
 void Redis_Obj::subscribe()
@@ -46,9 +47,9 @@ void Redis_Obj::subscribe()
     if(mSubscribe->isConnected()) mSubscribe->command(command);
     else qDebug() << "redis subscribe error";
 
-//    RedisClient::Response r = mSubscribe->command(command);
-//    QString res = RedisClient::Response::valueToHumanReadString(r.value());
-//    qDebug() << "sssssssssssssssss" << res;
+    //    RedisClient::Response r = mSubscribe->command(command);
+    //    QString res = RedisClient::Response::valueToHumanReadString(r.value());
+    //    qDebug() << "sssssssssssssssss" << res;
 }
 
 bool Redis_Obj::set(const QByteArray &key, const QMap<QByteArray, QVariant> &map)
@@ -105,12 +106,14 @@ bool Redis_Obj::expipe(const QByteArray &key, int sec)
 
 bool Redis_Obj::connectServer()
 {
-    if(mRedis) return true;
-    auto cf = initConnectionConfig();
-    mRedis = new RedisClient::Connection(cf);
-    connect(mRedis, &RedisClient::Connection::error, this, &Redis_Obj::onError);
-    connect(mRedis, &RedisClient::Connection::connected, this, &Redis_Obj::onConnected);
-    connect(mRedis, &RedisClient::Connection::disconnected, this, &Redis_Obj::onDisconnected);
+    if(mRedis) if(mRedis->isConnected()) return true;
+    if(!mRedis) {
+        auto cf = initConnectionConfig();
+        mRedis = new RedisClient::Connection(cf);
+        connect(mRedis, &RedisClient::Connection::error, this, &Redis_Obj::onError);
+        connect(mRedis, &RedisClient::Connection::connected, this, &Redis_Obj::onConnected);
+        connect(mRedis, &RedisClient::Connection::disconnected, this, &Redis_Obj::onDisconnected);
+    }
     return mRedis->connect();
 }
 
