@@ -23,6 +23,7 @@ private:
     void odbc();
     void ldap();
     void login();
+    void redis();
     void radius();
     void modbus();
     void syslog();

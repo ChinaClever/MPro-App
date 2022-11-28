@@ -12,7 +12,7 @@ struct sRedisCfg
         key = "pdu";
         db = 0;
         sec = 5;
-        en = 0;
+        en = 1;
         alive = 60;
         subscribe = "set";
         isConnect = false;
@@ -25,8 +25,8 @@ struct sRedisCfg
     int db; // db编号
     int sec;
     int alive; // 过期时间
-    QString key; // 设备key
-    QString subscribe; // 订阅频道
+    QByteArray key; // 设备key
+    QByteArray subscribe; // 订阅频道
 
 
     bool isConnect;
@@ -46,8 +46,10 @@ public:
 
 protected:
     void subscribe();
+    void disconnect();
     bool connectServer();
-    void initConnectionConfig();
+    auto initConnectionConfig();
+    virtual void redisHandleMessage(const QStringList &msg)=0;
 
 private slots:
     void onConnected();
@@ -57,7 +59,6 @@ private slots:
 private:
     RedisClient::Connection *mRedis;
     RedisClient::Connection *mSubscribe;
-    RedisClient::ConnectionConfig *mConfig;
 };
 
 #endif // REDIS_OBJ_H

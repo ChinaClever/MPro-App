@@ -5,6 +5,7 @@
  */
 #include "redis_core.h"
 #include "commons.h"
+#include "integr_core.h"
 
 Redis_Core::Redis_Core(QObject *parent)
     : Redis_Obj{parent}
@@ -21,11 +22,24 @@ Redis_Core *Redis_Core::bulid(QObject *parent)
     return sington;
 }
 
+void Redis_Core::redisHandleMessage(const QStringList &msg)
+{
+    if(msg.at(1) == redisCfg.subscribe) {
+        Integr_JsonRecv::bulid()->recv(msg.last().toUtf8());
+    } else qDebug() << "error redisHandleMessage" << msg;
+}
+
 void Redis_Core::workDown()
 {
-    qDebug() << set("lzy", "luozhiyong", "123456789");
-    qDebug() << expipe("lzy", redisCfg.alive);
-    //cout << "AAAAAAAAA";
+    sRedisCfg *cfg = &redisCfg;
+    QMap<QByteArray, QVariant> map;
+    int size = cm::masterDev()->cfg.nums.slaveNum;
+    for(int i=0; i<=size; ++i) {
+        QByteArray array = Integr_JsonBuild::bulid()->getJson(i);
+        map[QByteArray::number(i)] = array;
+    }
+    bool ret = set(cfg->key, map);
+    if(ret) expipe(cfg->key, cfg->alive);
 }
 
 void Redis_Core::run()
@@ -33,9 +47,10 @@ void Redis_Core::run()
     while(isRun) {
         int sec = redisCfg.sec;
         cm::mdelay(sec*1000+1);
-        if(redisCfg.en) {
+        if(redisCfg.en && redisCfg.subscribe.size()) {
             connectServer();
+            subscribe();
             workDown();
-        }
+        } else disconnect();
     }
 }

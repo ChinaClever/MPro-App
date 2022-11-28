@@ -11,6 +11,7 @@
 #include "mqtt_client.h"
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
+#include "redis_core.h"
 
 Set_Integr::Set_Integr()
 {
@@ -236,6 +237,53 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
     return ret;
 }
 
+QVariant Set_Integr::redisCfg(uchar fc)
+{
+    sRedisCfg *cfg = &Redis_Obj::redisCfg;
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->en; break;
+    case 2: res = cfg->host; break;
+    case 3: res = cfg->port; break;
+    case 4: res = cfg->pwd; break;
+    case 5: res = cfg->db; break;
+    case 6: res = cfg->key; break;
+    case 7: res = cfg->subscribe; break;
+    case 8: res = cfg->sec; break;
+    case 9: res = cfg->alive; break;
+    case 10: res = cfg->isConnect?1:0; break;
+    case 11: res = cfg->error; break;
+    default: cout << fc; break;
+    }
+    return res;
+}
+
+
+bool Set_Integr::redisSet(uchar fc, const QVariant &v)
+{
+    sRedisCfg *cfg = &Redis_Obj::redisCfg;
+    QString prefix = "redis";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
+    case 3: key = "port"; cfg->port = v.toInt(); break;
+    case 4: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 5: key = "db"; cfg->db =v.toInt(); break;
+    case 6: key = "pdukey"; cfg->key = v.toByteArray(); break;
+    case 7: key = "subscribe"; cfg->subscribe = v.toByteArray(); break;
+    case 8: key = "sec"; cfg->sec = v.toInt(); break;
+    case 9: key = "alive"; cfg->alive = v.toInt(); break;
+    default: ret = false; cout << fc; break;
+    }
+
+    if(ret && key.size()) {
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+
+    return ret;
+}
+
+
 
 QVariant Set_Integr::odbcCfg(uchar fc)
 {
@@ -250,7 +298,7 @@ QVariant Set_Integr::odbcCfg(uchar fc)
     case 7: res = cfg->pdukey; break;
     case 8: res = cfg->dataPoll; break;
     case 9: res = cfg->hdaPoll; break;
-    case 10: res = cfg->status; break;
+    case 10: res = cfg->status?1:0; break;
     case 11: res = cfg->okCnt; break;
     case 12: res = cfg->errCnt; break;
     default: cout << fc; break;

@@ -12,6 +12,7 @@ public:
 private:
     void run();
     void workDown();
+    void redisHandleMessage(const QStringList &msg);
 
 private:
     bool isRun=true;

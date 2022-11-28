@@ -13,6 +13,7 @@
 #include "mb_core.h"
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
+#include "redis_obj.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -34,6 +35,7 @@ void Cfg_Service::readCfgParams()
     mqtt();
     amqp();
     odbc();
+    redis();
     login();
     syslog();
     modbus();
@@ -255,6 +257,25 @@ void Cfg_Service::amqp()
     }
 }
 
+void Cfg_Service::redis()
+{
+    QString prefix = "redis"; QString key;
+    sRedisCfg *cfg = &Redis_Obj::redisCfg;
+    for(int i=1; i<10; ++i) {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 6379, prefix).toInt(); break;
+        case 4: key = "db"; cfg->db = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 5: key = "subscribe"; cfg->subscribe = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 7: key = "pdukey"; cfg->key = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 8: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt();break;
+        case 9: key = "alive"; cfg->alive = mCfg->readCfg(key, 60, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
+    }
+}
 
 void Cfg_Service::odbc()
 {
