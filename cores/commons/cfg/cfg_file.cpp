@@ -47,6 +47,7 @@ bool File::CheckMd5(const sOtaFile &it)
     return it.md5 == crc;
 }
 
+
 bool File::CheckMd5(const QString &fn)
 {
     QString ret = fn.split(".").last();

@@ -24,8 +24,13 @@ SOURCES += \
 }
 
 HEADERS += \
-    $$PWD/sercret_core.h
+    $$PWD/pbkdf/pbkdf2_sha256.h \
+    $$PWD/pbkdf/sha256.h \
+    $$PWD/sercret_core.h \
+    $$PWD/sercret_pwd.h
 
 SOURCES += \
-    $$PWD/sercret_core.cpp
+    $$PWD/pbkdf/sha256.cpp \
+    $$PWD/sercret_core.cpp \
+    $$PWD/sercret_pwd.cpp
 

@@ -53,7 +53,7 @@ void Dtls_Recver::onTimeoutDone()
 
 void Dtls_Recver::throwError(const QString &message)
 {
-    bool ret = recvFinish();    
+    bool ret = recvFinish();
     if(ret) throwMessage(tr("%1 接收成功").arg(mDtls->clientHost().toString()));
     else {throwMessage(message);} emit finishSig(mIt, ret);
 }
@@ -66,7 +66,8 @@ void Dtls_Recver::throwMessage(const QString &message)
 
 bool Dtls_Recver::recvFinish()
 {
-    isFinshed = true; mSize = 0; mTimer->stop();
+    isFinshed = true;
+    mTimer->stop(); mSize = 0;
     if(mFile->isOpen()) mFile->close();
     return File::CheckMd5(mIt);
 }
@@ -75,7 +76,7 @@ bool Dtls_Recver::initFile(const QByteArray &array)
 {
     QByteArray rcv(array); bool ret = false; mTimer->start(1000);
     sOtaFile *it = &mIt; QDataStream out(&rcv, QIODevice::ReadOnly); mCnt = 0;
-    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
+    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->sig >> it->size >> it->crc;
     if(it->crc == END_CRC) ret = setFile(it->path + it->file);
     else throwMessage("Error: Dtls recver head");
     return ret;

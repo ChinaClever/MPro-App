@@ -1,13 +1,13 @@
 #ifndef SERCRET_CORE_H
 #define SERCRET_CORE_H
-#include "sercret_sm.h"
+#include "sercret_pwd.h"
 
 struct sSercretIt {
     sSercretIt(): type(0){}
     int type; // 加密模式
 };
 
-class Sercret_Core : public Sercret_SM
+class Sercret_Core : public Sercret_Pwd
 {
     Sercret_Core();
 public:
