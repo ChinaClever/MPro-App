@@ -173,7 +173,7 @@
         "url": "modbus.html"
       },
       {
-        "name": "ODBC服务",
+        "name": "数据库配置",
         "url": "odbc.html"
       }
     ]
@@ -227,16 +227,12 @@
         "url": "smtp.html"
       },
       {
-        "name": "Radius服务",
+        "name": "认证服务",
         "url": "radius.html"
       },
       {
         "name": "Syslog服务",
         "url": "syslog.html"
-      },
-      {
-        "name": "LDAP服务",
-        "url": "ldap.html"
       }
     ]
   },  

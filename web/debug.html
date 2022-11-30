@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>web</title>
+		<link rel="stylesheet" href="./include/css/public.min.css">
+		<link rel="stylesheet" href="./include/css/iconfont.min.css">
+		<link rel="stylesheet" href="./include/css/font-awesome.min.css">
+		<style>
+			.panel-default{
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+			}
+			.panel-default > .panel-heading{
+				color: #222;
+				font-size:13px;
+				background-color: #fff;
+				border-color: #e6e6e6;
+				padding: 10px 12px;
+			}
+		</style>
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1">后台管理设置</span>
+				
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 ">
+						<table class="table table-border-none_ text-left_ set_table"></table>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-border-none_ text-left_ threshold_table"></table>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-striped text-left set_table"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+    <script src="./include/js/jquery-1.11.3.min.js"></script>
+	<script src="./include/js/rpc-over-websocket.js"></script>
+    <script src="./include/js/public.min.js"></script>
+    <script>
+    	let name_phase_ = new Array("单相","双火线","三相");
+    	let id_name = new Array("phase_","board_num_","","","","","");
+    	$('.set_table').html(buildTable());
+    	$('.threshold_table').html(buildTablethreshold());
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
+			<td width ="75%"></td></tr>';
+			tbody += '<tr><td>相位数:</td>';
+			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text"></input>(1-单相,2-双火线,3-三相)</td></tr>';
+			tbody += '<tr><td>执行板数量:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td>每块执行板的输出位数量:</td>';
+			tbody += '<td><input id = "board_num1" style ="width:2.5%" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "board_num2" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "board_num3" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "board_num4" style ="width:2.5%;" type = "text"></input></td></tr>';
+			tbody += '<tr><td>回路数量:</td>';
+			tbody += '<td><input id = "loop_num_" style ="width:2.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td>每个回路的输出位数量:</td>';
+			tbody += '<td><input id = "out_num1" style ="width:2.5%" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "out_num2" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "out_num3" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "out_num4" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "out_num5" style ="width:2.5%;" type = "text"></input>';
+			tbody += '&nbsp&nbsp<input id = "out_num6" style ="width:2.5%;" type = "text"></input></td></tr>';
+			tbody += '<tr><td>带不带断路器:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input>(0-不带断路器,1-带断路器)</td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+
+
+			tbody += '<tr><td>屏幕方向角:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td>版本类型:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text">(0-标准,1-中性)</input></td></tr>';
+			tbody += '<tr><td>IN/OUT口级联方式:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text">(0-网络一带三,1-modbus)</input></td></tr>';
+			tbody += '<tr><td>带不带传感器盒子:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text">(0-不带,1-带)</input></td></tr>';
+			tbody += '<tr><td>设备系列选择:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+
+			tbody += '<tr><td>额定电压:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input>(115-低压,225-高压)</td></tr>';
+			tbody += '<tr><td>额定电流:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td>额定功率:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td>语言选择:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text"></input>(0-英文,1-中文)</td></tr>';
+			tbody += '<tr><td>MAC地址:</td>';
+			tbody += '<td><input id = "board_num_" style ="width:24.5%" type = "text"></input></td></tr>';
+			tbody += '<tr><td><input style ="width:40%" type = "button" onclick = "Set()" value="保存"></input></td><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTablethreshold() {
+			var thead = '',tbody = '';
+			thead = '<tr><td style="font-size:20px;" colspan = "3">阈值统一设置</td>\
+			<td width ="8%"></td>\
+			<td width ="8%"></td>\
+			<td width ="8%"></td><td width ="55%"></td></tr>';
+			tbody += '<tr width ="5%" ><td>序号</td><td width ="8%">数据类型</td><td width ="8%" >最小值</td><td>下临界值</td><td>上临界值</td><td>最大值</td><td></td></tr>';
+			tbody += '<tr><td>1</td><td>相电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>2</td><td>相电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>3</td><td>相功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>4</td><td>回路电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>5</td><td>回路电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>6</td><td>回路功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>8</td><td>温度(℃)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td>9</td><td>湿度(%)</td><td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text"></input></td><td></td></tr>';
+			tbody += '<tr><td colspan = "3" ><input style ="width:40%" type = "button" onclick = "Set()" value="保存"></input></td><td></td><td></td><td></td><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+    </script>
+</body>
+</html>

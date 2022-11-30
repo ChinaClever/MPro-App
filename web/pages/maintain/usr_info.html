@@ -9,8 +9,6 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -38,10 +36,10 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_usrs_data();
+		setTimeout(function(){
+			read_usrs_data();
+		},100);
 		let usr_mark = 0;
 		let language = 1;
 		var opt_set = new Array();
@@ -49,6 +47,8 @@
 		var usrs_name_ = new Array("","","","","");
 		var jurisdiction = new Array();
 		let lang = new Array();
+		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+		var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function read_data(){
 			for(var i = 0;i<5;i++){
 				usrs_name_[i] =  sessionStorage.getItem(user_info[1] + i);
@@ -121,18 +121,21 @@
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
 		}
 		function SetVal(){
-			if(confirm("您已更改表单，请确认提交！")){
-				let val =  parseInt(document.getElementById("usrSel").value);
-				let usr_ = document.getElementById("UserName").value;
-				let psd_ = document.getElementById("Password").value;
-				let conpsd_ = document.getElementById("conpsd").value;
-				let jur_ = parseInt(document.getElementById("Jurisdiction").value);
-				for(let i = 0;i<5;i++){
-					if(usrs_data[1][i] == usr_){
-						alert("该用户已存在，请重新输入！");
-						return ;
-					}
+			let val =  parseInt(document.getElementById("usrSel").value);
+			let usr_ = document.getElementById("UserName").value;
+			let psd_ = document.getElementById("Password").value;
+			let conpsd_ = document.getElementById("conpsd").value;
+			let jur_ = parseInt(document.getElementById("Jurisdiction").value);
+			for(let i = 0;i<5;i++){
+				if(usrs_data[1][i] == usr_){
+					alert("该用户已存在，请重新输入！");
+					return ;
 				}
+			}
+			if(!pattern.test(psd_) ||!pattern.test(conpsd_)){
+				alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+				return ;
+			}else{
 				if(jur_ != 0){
 					jur_ = 2;
 				}
@@ -170,11 +173,11 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
-			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
+			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><input id ="Password" type="password"  style ="width:24.5%" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></td></tr>';
+			tbody += '<td><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
-			tbody += '<td><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="20" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></td></tr>';
+			tbody += '<td><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
 			tbody += '<td><select id ="Jurisdiction">';
 			for(var i = 0; i<jurisdiction.length;i++){

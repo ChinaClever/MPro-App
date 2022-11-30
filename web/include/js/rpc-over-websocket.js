@@ -40,12 +40,14 @@ let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlIp1","WlIp2");
 let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
 let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
-let logset_name = new Array("","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
+let logset_name = new Array("","HistoryEn","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
 let Progress_name = new Array("","","","","","","Slave","Board");
 let Progress_info = new Array("","","","","State","Progress");
 let net_diagn = new Array("","NetAddr","RequstNum","Ping","Ping1","","Host","Timeout","Router","Router1");
 let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
+let ldap_name = new Array("","LdapEn","LdapServer","LdapArea");
 let odbc_cfg = new Array("","OdbcEn","OdbcServer","OdbcPort","OdbcUsr","OdbcPsd","OdbcName","OdbcKey","OdbcUpdate","OdbcRecord","OdbcState");
+let redis_cfg = new Array("","RedisEn","RedisServer","RedisPort","RedisPsd","RedisDbNum","RedisKey","RedisChannel","RedisUpdate","RedisTime","RedisState");
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -180,6 +182,9 @@ var jsonrpc = function()
       case 25:
         sessionStorage.setItem(type_name[type]+ addr_ +'_'+topic, JSON.parse(evt.data).result[5]);
       break;
+      case 28:
+        sessionStorage.setItem(redis_cfg[topic], JSON.parse(evt.data).result[5]);
+      break;
       case 30:
         sessionStorage.setItem(ver_name[topic], JSON.parse(evt.data).result[5]);
       break;
@@ -227,6 +232,9 @@ var jsonrpc = function()
       break;
       case 48:
         sessionStorage.setItem(radius_name[topic], JSON.parse(evt.data).result[5]);
+      break;
+      case 49:
+        sessionStorage.setItem(ldap_name[topic], JSON.parse(evt.data).result[5]);
       break;
       case 51:
       break;
@@ -828,10 +836,10 @@ function read_syslog_data(addr){
 function read_log_setting_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(5 +1)){
+    if(j >= parseInt(6 +1)){
       clearInterval(time1);
     }
-    if(j < 5 +1){
+    if(j < 6 +1){
       rpc.call('pduReadParam',[addr,47,j,0,0]);
     }
     j++;
@@ -880,6 +888,16 @@ function read_radius_data(addr){
     j++;
   },3);
 }
+function read_ldap_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(4)){
+      clearInterval(time1);
+    }
+    rpc.call('pduReadParam',[addr,49,j,0,0]);
+    j++;
+  },3);
+}
 function read_odbc_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
@@ -888,6 +906,18 @@ function read_odbc_data(addr){
     }
     if(j < 10 +1){
       rpc.call('pduReadParam',[addr,21,j,0,0]);
+    }
+    j++;
+  },3);
+}
+function read_redis_data(addr){
+  let j = 1;
+  var time1 = setInterval(function(){
+    if(j >= parseInt(10 +1)){
+      clearInterval(time1);
+    }
+    if(j < 10 +1){
+      rpc.call('pduReadParam',[addr,28,j,0,0]);
     }
     j++;
   },3);
