@@ -59,21 +59,21 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         // Invalid frame. Return error and include this frame as error message
         response = mg_mprintf("{%Q:{%Q:%d,%Q:%.*Q}", "error", "code", -32700,
                               "message", (int) frame.len, frame.ptr);
-    } else if (strcmp(method, "pduMetaData") == 0) {
+    }else if (strcmp(method, "pduMetaData") == 0) {
         result = pduMetaData(params);
-    } else if (strcmp(method, "pduReadData") == 0) {
+    }else if (strcmp(method, "pduReadData") == 0) {
         result = pduReadData(params);
-    } else if (strcmp(method, "pduSetData") == 0) {
+    }else if (strcmp(method, "pduSetData") == 0) {
         result = pduSetData(params);
-    } else if (strcmp(method, "pduReadParam") == 0) {
+    }else if (strcmp(method, "pduReadParam") == 0) {
         result = pduReadParam(params);
     }else if (strcmp(method, "pduSetParam") == 0) {
         result = pduSetParam(params);
-    } else if (strcmp(method, "pduLogFun") == 0) {
+    }else if (strcmp(method, "pduLogFun") == 0) {
         result = pduLogFun(params);
     }else if (strcmp(method, "pduLogHda") == 0) {
         result = pduLogHda(params);
-    } else if (strcmp(method, "execute") == 0) {
+    }else if (strcmp(method, "execute") == 0) {
         result = execute(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
@@ -118,27 +118,27 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_download_file(c , hm , "/index.html/client-cert.pem");
         }else if(mg_http_match_uri(hm, "/index.html/client-key.pem")){
             mgr_download_file(c , hm , "/index.html/client-key.pem");
-        }
-        else if(mg_http_match_uri(hm, "/index.html/cfg_batch.zip")){
+        }else if(mg_http_match_uri(hm, "/index.html/cfg_batch.zip")){
             mgr_download_file(c , hm , "/index.html/cfg_batch.zip");
-        }
-        else if(mg_http_match_uri(hm, "/index.html/cfg_backup.zip")){
+        }else if(mg_http_match_uri(hm, "/index.html/cfg_backup.zip")){
             mgr_download_file(c , hm , "/index.html/cfg_backup.zip");
         }else if(mg_http_match_uri(hm, "/index.html/diagnosis.zip")){
             mgr_download_file(c , hm , "/index.html/diagnosis.zip");
+        }else if(mg_http_match_uri(hm, "/index.html/modbus.docx")){
+            mgr_download_file(c , hm , "/index.html/modbus.docx");
+        }else if(mg_http_match_uri(hm, "/index.html/snmp.mib")){
+            mgr_download_file(c , hm , "/index.html/snmp.mib");
         }else if(mg_http_match_uri(hm, "/upload")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
-            printf("upload_batch: %s \n",file_path);
             Web_Obj::bulid()->restores(2,file_path);
-        }
-        else if(mg_http_match_uri(hm, "/upload_backup")){
+        }else if(mg_http_match_uri(hm, "/upload_backup")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
-            printf("upload_backup: %s \n",file_path);
             Web_Obj::bulid()->restores(1,file_path);
-        }
-        else {
+        }else if(mg_http_match_uri(hm, "/upload_logo")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/cfg/%s" , file_path);
+        }else {
             // Serve static files
             struct mg_http_serve_opts opts={.root_dir = s_web_root};
             mg_http_serve_dir(c, hm, &opts);
@@ -148,15 +148,14 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/clever/certs/%s",file_path);
         else if(mg_http_match_uri(hm, "/upload_fw")){
             mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
-        }
-        else if(mg_http_match_uri(hm, "/upload_batch")){
+        }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
-        }
-        else if(mg_http_match_uri(hm, "/upload_backup")){
+        }else if(mg_http_match_uri(hm, "/upload_backup")){
             mgr_upload_big_file(&c , &hm , &state ,&fp , "/usr/data/upload/%s",file_path);
+        }else if(mg_http_match_uri(hm, "/upload_logo")){
+            mgr_upload_big_file(&c , &hm , &state , &fp , "/usr/data/clever/cfg/%s" , file_path);
         }
-    }
-    else if (ev == MG_EV_WS_MSG) {
+    }else if (ev == MG_EV_WS_MSG) {
         // Got websocket frame. Received data is wm->data
         struct mg_ws_message *wm = (struct mg_ws_message *) ev_data;
         process_json_message(c, wm->data);
@@ -168,7 +167,7 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
 {
     struct mg_http_serve_opts opts;
     memset(&opts , 0 , sizeof(opts));
-    opts.mime_types = "foo=a/b,txt=c/d";
+    opts.mime_types = "mib=a/b,txt=c/d";
     if(0 == strcmp("/index.html/client-cert.pem" , path)){
         mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/client-key.pem" , path)){
@@ -179,6 +178,10 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
         mg_http_serve_file(c , hm , Web_Obj::bulid()->backup(1).toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/diagnosis.zip" , path)){
         mg_http_serve_file(c , hm , Web_Obj::bulid()->diag().toLatin1().data() , &opts);
+    }else if(0 == strcmp("/index.html/modbus.docx" , path)){
+        mg_http_serve_file(c , hm , "/usr/data/clever/doc/modbus.docx" , &opts);
+    }else if(0 == strcmp("/index.html/snmp.mib" , path)){
+        mg_http_serve_file(c , hm , "/usr/data/clever/doc/snmp.mib" , &opts);
     }
 }
 
@@ -192,7 +195,7 @@ void Web_Http::mgr_upload_small_file(struct mg_connection **c , struct mg_http_m
 //    printf("%s \n", name);
     if (name[0] == '\0') {
         mg_http_reply(*c, 400, "", "%s", "name required");
-    } else {
+    }else{
         mg_snprintf(file_path, sizeof(file_path)*FILE_LEN, path, name);
     }
     if((int) (*hm)->query.len > 5){
