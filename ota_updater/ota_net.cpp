@@ -25,7 +25,7 @@ void Ota_Net::startSlot(const QString &host)
 
 QString Ota_Net::unzip(const QString &fn)
 {
-    QString dst = "/tmp/"; system("mkdir -p /tmp/updater/clever/");
+    QString dst = "/usr/data/"; system("mkdir -p /usr/data/updater/clever/");
     QString str = "unzip -o %1 -d " + dst+"updater/clever/";
     throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
     throwMessage(str); //system("rm -rf /usr/data/upload/*");
@@ -77,7 +77,7 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dir = "/tmp/updater/clever/";
+    QString dir = "/usr/data/updater/clever/";
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
 
@@ -122,9 +122,9 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         if(bit != DOtaCode::DOta_Usb) {
             QString fn = it.path + it.file;
             QString cmd = "rm -f " + fn;
-            cm::execute(cmd);
-            cm::execute("sync");
-            system("reboot");
+            system(cmd.toLocal8Bit());
+            cmd_updater(fn, 400); cm::mdelay(10);
+            //system("sync"); system("reboot");
         }
     } clrbit(mOta->work, bit);
 }
@@ -134,8 +134,7 @@ void Ota_Net::rebootSlot()
     system("rm -rf /usr/data/upload");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    QString cmd = "rm -rf /tmp/updater/clever";
-    throwMessage(cmd); throwMessage(cm::execute(cmd));
+    system("rm -rf /usr/data/updater/clever");
     system("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot");
@@ -178,5 +177,9 @@ bool Ota_Net::versionCheck(const QString &dir)
 
 void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
 {
-    ota_updater(it, DOta_Net, ok);
+    if(ok && it.sig.size()) {
+        ok = sign_verify(it); QString msg = "RSA Verified ";
+        if(ok) msg += "ok"; else msg += "error";
+        throwMessage(msg);
+    } ota_updater(it, DOta_Net, ok);
 }

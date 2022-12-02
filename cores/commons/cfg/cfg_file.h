@@ -9,6 +9,7 @@ struct sOtaFile {
     QString path;
     QString file;
     QString md5;
+    QString sig;
     uint size;
     ushort crc;
 };

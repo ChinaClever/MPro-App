@@ -41,12 +41,10 @@ void OP_Updater::ota_reboot()
 {
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    cm::execute("rm -rf /usr/data/clever/outlet/*");
-    QString cmd = "rm -rf /tmp/updater/clever";
-    throwMessage(cm::execute(cmd));
-
-    cm::execute("rm -rf /usr/data/upload/*");
-    cm::execute("sync"); system("reboot");
+    system("rm -rf /usr/data/clever/outlet/*");
+    system("rm -rf /usr/data/updater/clever");
+    system("rm -rf /usr/data/upload/*");
+    system("sync"); system("reboot");
 }
 
 bool OP_Updater::ota_updates()
@@ -64,7 +62,7 @@ bool OP_Updater::ota_updates()
             else up->results[i] = 3;
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        if(ret) system("rm -rf /tmp/updater/clever/outlet/*");
+        if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 

@@ -68,7 +68,7 @@ bool Cascade_Updater::otaSendInit(int addr, const sOtaFile &it)
 {
     isOta = true; waitForLock(); cm::mdelay(200);
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << it.fc << it.dev <<it.path << it.file << it.md5 << it.size << END_CRC;
+    in << it.fc << it.dev <<it.path << it.file << it.md5 << it.sig << it.size << END_CRC;
     QByteArray recv = tranData(fc_otaStart, addr, array);
     if(!recv.contains("Start Updata")) isOta = false;
     return isOta;
@@ -107,9 +107,9 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
 {
     sOtaFile *it = &mIt; QByteArray rcv(data); cm::dataPacket()->ota.slave.isRun = 1;
     QDataStream out(&rcv, QIODevice::ReadOnly); setbit(cm::dataPacket()->ota.work, DOta_Slave);
-    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
+    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->sig >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
-    else cout << it->file << it->md5 << it->crc;
+    else cout << it->file << it->md5 << it->sig << it->crc;
     return writeData(fc_otaStart, 0, "Start Updata");
 }
 
@@ -136,8 +136,8 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
 void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
-        QString dir = "/tmp/updater/clever/";
-        QString dst = "/tmp/", fn = it.path + it.file;
+        QString dir = "/usr/data/updater/clever/";
+        QString dst = "/usr/data/", fn = it.path + it.file;
         QString str = "unzip -o %1 -d " + dst + "updater/clever/";
         qDebug() << cm::execute(str.arg(fn));
 
@@ -183,8 +183,7 @@ void Cascade_Updater::otaReboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    QString cmd = "rm -rf /tmp/updater/clever";
-    throwMessage(cm::execute(cmd));
-    cm::execute("rm -rf /usr/data/upload/*");
-    cm::execute("sync"); system("reboot");
+    system("rm -rf /usr/data/updater/clever");
+    system("rm -rf /usr/data/upload/*");
+    system("sync"); system("reboot");
 }

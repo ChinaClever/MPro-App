@@ -48,7 +48,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
         QByteArray str = v.toByteArray();
         qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
         sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, str);
+        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
         Log_Core::bulid()->append(db);
     }
 

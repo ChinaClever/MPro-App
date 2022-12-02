@@ -44,13 +44,14 @@ void Redis_Core::workDown()
 
 void Redis_Core::run()
 {
-    while(isRun) {
-        int sec = redisCfg.sec;
-        cm::mdelay(sec*1000+1);
+    while(isRun) {        
+        int t = QRandomGenerator::global()->bounded(100);
+        int sec = redisCfg.sec; cm::mdelay(sec*1000+t);
         if(redisCfg.en && redisCfg.subscribe.size()) {
             connectServer();
             subscribe();
             workDown();
-        } else disconnect();
+            disconnect();
+        }
     }
 }

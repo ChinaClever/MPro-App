@@ -100,6 +100,6 @@ void Cfg_AlarmInitial::initObjHda(sObjData &it, uchar size)
     for(int i=0; i<size; ++i) {
         it.hdaEle[i] = 1;
         it.vol.hda[i] = 1;
-        it.cur.hda[i] = 1;
+        it.pow.hda[i] = 1;
     }
 }
