@@ -20,7 +20,7 @@ public:
 private:
     sObjData *getObjData(const sDataItem &index);
     sAlarmUnit *getAlarmUnit(const sDataItem &index, sObjData *obj);
-
+    void setAll(uint *ptr, uint value, int size);
     bool alarmUnitValue(sDataItem &index);
     bool tgAlarmUnitValue(sDataItem &index);
     bool tgValue(sDataItem &index);
