@@ -127,6 +127,8 @@ var jsonrpc = function()
       case 12:
         if(topic>10){
           sessionStorage.setItem(type_info[topic]+ "Num" + subtopic  +'_'+ addr_ ,JSON.parse(evt.data).result[5]);
+        }else if(topic == 6){
+          sessionStorage.setItem(type_info[topic]+ "Num" + '_' + subtopic,JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_info[topic]+ "Num" + addr_ ,JSON.parse(evt.data).result[5]);
         }
@@ -518,8 +520,12 @@ function read_num_info(addr){
   var time1 = setInterval(function(){
     if(j >= parseInt(num_num + 1)){
       clearInterval(time1);
+      let board_num = parseInt(sessionStorage.getItem('BoardNum' + addr));
+      for(let i = 1;i<board_num+1;i++){
+        rpc.call('pduReadParam',[addr,num,6,i,0]);
+      }
     }
-    if((j < 7 || j > 10) && j <= num_num){
+    if((j < 6 || j > 10) && j <= num_num){
       if(j > 10){
        var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
         for(let i =0;i<loop_num;i++){

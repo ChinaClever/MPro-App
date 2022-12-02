@@ -153,6 +153,10 @@
         "url": "rpc.html"
       },
       {
+        "name": "REST集成",
+        "url": "rest.html"
+      },
+      {
         "name": "MQTT集成",
         "url": "mqtt.html"
       },
@@ -161,20 +165,16 @@
         "url": "amqp.html"
       },
       {
-        "name": "REST集成",
-        "url": "rest.html"
-      },
-      {
         "name": "SNMP服务",
         "url": "snmp.html"
+      },
+      {
+        "name": "数据库服务",
+        "url": "odbc.html"
       },      
       {
         "name": "Modbus协议",
         "url": "modbus.html"
-      },
-      {
-        "name": "数据库配置",
-        "url": "odbc.html"
       }
     ]
   }, 
@@ -305,6 +305,15 @@
       {
         "name": "系统命令",
         "url": "sys_command.html"
+      },{
+        "name": "",
+        "url": ""
+      },{
+        "name": "",
+        "url": ""
+      },{
+        "name": "",
+        "url": ""
       }
     ]
   }
