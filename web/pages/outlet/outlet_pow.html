@@ -75,7 +75,11 @@
 				output_info[i] =  new Array();
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				for(var j = 1;j <data_name.length;j++){
-					output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i));
+					if(j == 7 || j==8){
+						output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i));
+					}else{
+						output_info[i][j] = sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i);
+					}
 				}
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -92,14 +96,14 @@
 			lang[3] = ["","设备选择:","","","",""];
 			lang[4] = ["","序号","","","",""];
 			lang[5] = ["","单元名称","","","",""];
-			lang[6] = ["","有功功率(W)","","","",""];
+			lang[6] = ["","有功功率(KW)","","","",""];
 			lang[7] = ["","告警使能","","","",""];
 			lang[8] = ["","历史记录","","","",""];
-			lang[9] = ["","额定值(W)","","","",""];
-			lang[10] = ["","最小值(W)","","","",""];
-			lang[11] = ["","下临界(W)","","","",""];
-			lang[12] = ["","上临界(W)","","","",""];
-			lang[13] = ["","最大值(W)","","","",""];
+			lang[9] = ["","额定值(KW)","","","",""];
+			lang[10] = ["","最小值(KW)","","","",""];
+			lang[11] = ["","下临界(KW)","","","",""];
+			lang[12] = ["","上临界(KW)","","","",""];
+			lang[13] = ["","最大值(KW)","","","",""];
 			lang[14] = ["","设置模式","","","",""];
 			lang[15] = ["","阅读模式","","","",""];
 			lang[16] = ["","统一设置","","","",""];
@@ -124,7 +128,7 @@
 			return tbody;
 		}
 		function showdata(){
-			var cs = 0 ,ss = 0;
+			var cs = 0 ,ss = 0,hs=0;
 			for(var i = 1 ;i < output_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
 				cs = document.getElementById('c'+(i -1));
@@ -273,7 +277,7 @@
 			var type1 = ipt.id.substr(0,1);
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseInt(ipt.value);
+			var stat = parseFloat(ipt.value);
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{

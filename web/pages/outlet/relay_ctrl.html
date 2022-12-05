@@ -64,6 +64,7 @@
 		var switch_enable = new Array();
 		var switch_mode = new Array();
 		var swtich_state = new Array();
+		var swtich_alarm = new Array();
 		var output_name = new Array();
 		var seq_delay = new Array();
 		var reset_delay = new Array();
@@ -79,6 +80,7 @@
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
 				switch_mode[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[2]+addr+'_'+i));
+				swtich_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[3]+addr+'_'+i));
 				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
 				reset_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[5]+addr+'_'+i));
 				switch_enable[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
@@ -92,7 +94,7 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","单元功率","","","",""];
+			lang[1] = ["","单元控制","","","",""];
 			lang[2] = ["","阅读模式","","","",""];
 			lang[3] = ["","设备选择:","","","",""];
 			lang[4] = ["","序号","","","",""];
@@ -181,10 +183,12 @@
 			}
 		}
 		function showdata(){
+			var ss = 0,ms = 0,cs = 0;
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
-				var ss = document.getElementById('e'+(i -1));
-				var ms = document.getElementById('f'+(i -1));
+				cs = document.getElementById('c'+(i -1));
+				ss = document.getElementById('e'+(i -1));
+				ms = document.getElementById('f'+(i -1));
 				if(switch_enable[i] === 1){
 					ss.checked = true;
 				}
@@ -197,17 +201,14 @@
 				else{
 					ms.checked = false;
 				}
-			}
-		}
-		function read_sw_data(addr){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				rpc.call('pduReadData',[addr,output,switch_,1,i]);
-				rpc.call('pduReadData',[addr,output,switch_,2,i]);
-				rpc.call('pduReadData',[addr,output,switch_,4,i]);
-				rpc.call('pduReadData',[addr,output,switch_,5,i]);
-				rpc.call('pduReadData',[addr,output,switch_,8,i]);
-				rpc.call('pduReadParam',[addr,22,1,i,i]);
+				if(swtich_alarm[i] == 1 || swtich_alarm[i] == 8){
+					cs.bgColor = 'red';
+				}else if(swtich_alarm[i] == 2 || swtich_alarm[i] == 4){
+					cs.bgColor = 'yellow';
+				}
+				else{
+					cs.bgColor = '';
+				}
 			}
 		}
 		function flash_html(par)
@@ -218,6 +219,7 @@
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
 				showdata();
+				lang_fun();
 			},800);
 		}
 		function cked(ckd)
@@ -354,7 +356,27 @@
 			}
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
-		} 
+		}
+		var state_ = 0;
+		function putdata(){
+			for(let i = 0;i < dual_num;i++){
+				state_ = document.getElementById('c' + i);
+				state_.innerHTML = dual_info[i+1][0];
+			}
+		}
+		function read_state_data(addr){
+			for(let i = 1;i<output_num+1;i++){
+				rpc.call('pduReadData',[addr,output,switch_,3,i]);
+			}
+		}
+		setInterval(function(){
+			read_state_data(0);
+			setTimeout(function(){
+				read_data();
+				// putdata();
+				showdata();
+			},800);
+		},2000);
     </script>
 </body>
 </html>

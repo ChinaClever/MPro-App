@@ -945,3 +945,20 @@ function read_usrs_data(){
     }
   },3);
 }
+function read_sw_data(addr){
+  let i = 1;
+  var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
+  let time1 = setInterval(function(){
+    if(i >= parseInt(output_num + 1)){
+      clearInterval(time1);
+    }
+    if(i <= output_num){
+      rpc.call('pduReadData',[addr,output,switch_,1,i]);
+      rpc.call('pduReadData',[addr,output,switch_,2,i]);
+      rpc.call('pduReadData',[addr,output,switch_,4,i]);
+      rpc.call('pduReadData',[addr,output,switch_,5,i]);
+      rpc.call('pduReadData',[addr,output,switch_,8,i]);
+    }
+    i++;
+  },3);
+}
