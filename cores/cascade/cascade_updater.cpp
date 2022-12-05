@@ -136,9 +136,9 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
 void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
-        QString dir = "/usr/data/updater/clever/";
-        QString dst = "/usr/data/", fn = it.path + it.file;
-        QString str = "unzip -o %1 -d " + dst + "updater/clever/";
+        QString fn = it.path + it.file;
+        QString dir = "/tmp/updater/clever/";
+        QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
 
         QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
@@ -183,7 +183,7 @@ void Cascade_Updater::otaReboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    system("rm -rf /usr/data/updater/clever");
+    system("rm -rf /tmp/updater/clever");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
 }

@@ -25,11 +25,10 @@ void Ota_Net::startSlot(const QString &host)
 
 QString Ota_Net::unzip(const QString &fn)
 {
-    QString dst = "/usr/data/"; system("mkdir -p /usr/data/updater/clever/");
-    QString str = "unzip -o %1 -d " + dst+"updater/clever/";
-    throwMessage(str.arg(fn)); str = cm::execute(str.arg(fn));
-    throwMessage(str); //system("rm -rf /usr/data/upload/*");
-    return dst+"updater/clever/";
+    QString dst = "/tmp/updater/clever/"; cm::execute("mkdir -p " + dst);
+    QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
+    str = cm::execute(str.arg(fn)); throwMessage(str);
+    return dst;
 }
 
 bool Ota_Net::coreRuning()
@@ -77,7 +76,7 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dir = "/usr/data/updater/clever/";
+    QString dir = "/tmp/updater/clever/";
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
 
@@ -134,7 +133,7 @@ void Ota_Net::rebootSlot()
     system("rm -rf /usr/data/upload");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    system("rm -rf /usr/data/updater/clever");
+    system("rm -rf /tmp/updater/clever");
     system("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot");

@@ -32,14 +32,14 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 
         ///////////====================
-        sDataItem hda;
-        hda.addr = 0;
-        hda.type = 1;
-        hda.topic = 2;
-        hda.subtopic =1;
-        hda.id = 0;
-        hda.value = 2000 + QRandomGenerator::global()->bounded(500);
-        sington->append(hda);
+//        sDataItem hda;
+//        hda.addr = 0;
+//        hda.type = 1;
+//        hda.topic = 2;
+//        hda.subtopic =1;
+//        hda.id = 0;
+//        hda.value = 2000 + QRandomGenerator::global()->bounded(500);
+//        sington->append(hda);
     }
     return sington;
 }

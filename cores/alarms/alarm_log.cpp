@@ -54,16 +54,16 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     return str;
 }
 
-QString Alarm_Log::alarmStatus(uchar value, QString &state)
+QString Alarm_Log::alarmStatus(uchar value)
 {
-    QString str; switch (value) {
-    case AlarmCode::Ok: state = str = tr("恢复正常"); break;
-    case AlarmCode::Min: state = tr("告警"); str = tr("过低"); break;
-    case AlarmCode::CrMin: state = tr("预警"); str = tr("过低"); break;
-    case AlarmCode::CrMax: state = tr("预警"); str = tr("过高"); break;
-    case AlarmCode::Max: state = tr("告警"); str = tr("过高"); break;
+    QString state; switch (value) {
+    case AlarmCode::Ok: state = tr("恢复正常"); break;
+    case AlarmCode::Min: state = tr("过低告警");  break;
+    case AlarmCode::CrMin: state = tr("过低预警");  break;
+    case AlarmCode::CrMax: state = tr("过高预警"); break;
+    case AlarmCode::Max: state = tr("过高告警");  break;
     }
-    return str;
+    return state;
 }
 
 QString Alarm_Log::alarmContent(const sDataItem &index)
@@ -84,7 +84,7 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值=%1%6　告警最小值=%2%6 预警最小值=%3%6 预警最大值=%4%6 告警最大值=%5%6")
+            str  = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6")
                     .arg(unit->value[id]/rate)
                     .arg(unit->min[id] / rate)
                     .arg(unit->crMin[id] / rate)
@@ -95,7 +95,7 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     } else {
         sTgUnit *unit = obj.getTgAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值=%1%6　告警最小值=%2%6 预警最小值=%3%6 预警最大值=%4%6 告警最大值=%5%6")
+            str  = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6")
                     .arg(unit->value/rate)
                     .arg(unit->min / rate)
                     .arg(unit->crMin / rate)
@@ -138,7 +138,7 @@ void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
     }else if(index.type == DType::Sensor) {
         it.alarm_content = alarmSensor(value);
     }else {
-        it.alarm_status += alarmStatus(value, it.alarm_status);
+        it.alarm_status += alarmStatus(value);
         it.alarm_content = alarmContent(index);
     }
 

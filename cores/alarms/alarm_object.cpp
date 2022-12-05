@@ -54,7 +54,7 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
     case DType::Dual: obj = &(dev->dual); break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << index.type; break;
     }
     return obj;
 }
@@ -66,7 +66,7 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index, sObjData *obj)
     case DTopic::Vol: unit = &(obj->vol); break;
     case DTopic::Cur: unit = &(obj->cur); break;
     case DTopic::Pow: unit = &(obj->pow); break;
-    default: qDebug() << Q_FUNC_INFO << index.topic; break;
+    default: cout << index.topic; break;
     }
     return unit;
 }
@@ -84,7 +84,7 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index)
         switch (index.topic) {
         case DTopic::Tem: unit = &(dev->env.tem);break;
         case DTopic::Hum: unit = &(dev->env.hum);break;
-        default: qDebug() << Q_FUNC_INFO; break;
+        default: cout << index.topic; break;
         }
     }
 
@@ -100,7 +100,7 @@ sTgUnit *Alarm_Object::getTgAlarmUnit(const sDataItem &index)
         case DTopic::Vol: unit = &(obj->vol); break;
         case DTopic::Cur: unit = &(obj->cur); break;
         case DTopic::Pow: unit = &(obj->pow); break;
-        default: qDebug() << Q_FUNC_INFO; break;
+        default: cout << index.topic; break;
         }
     }
 
@@ -118,6 +118,11 @@ sRelayUnit *Alarm_Object::getRelayUnit(const sDataItem &index)
     return unit;
 }
 
+void Alarm_Object::setAll(uint *ptr, uint value, int size)
+{
+     if(0 == size) size = OUTPUT_NUM;
+     for(int i=0; i<size; ++i)  ptr[i] = value;
+}
 
 bool Alarm_Object::alarmUnitValue(sDataItem &index)
 {
@@ -144,7 +149,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
     if(ptr) {
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
-            else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
+            else setAll(ptr, index.value, unit->size);
         } else index.value = ptr[index.id];
 
         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
@@ -153,7 +158,8 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
         //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
         //         }
-    } else cout  << index.type << index.topic << index.subtopic << index.id << index.value;
+    } else if(!ret)
+        cout  << index.type << index.topic << index.subtopic << index.id << index.value;
 
     return ret;
 }
@@ -201,32 +207,31 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         case DSub::TimingEn: ptr = unit->timingEn; break;
         case DSub::RelayCnt: ptr = unit->cnt; break;
         case DSub::RelayEn: ptr = unit->en; break;
-        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        case DSub::DStamp: case DSub::DHda: break;
+        default: ret = false; break;
         }
     }
 
     if(ptr) {
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
-            else for(int i=0; i<unit->size; ++i) ptr[i] = index.value;
+            else setAll(ptr, index.value, unit->size);
         } else index.value = ptr[index.id];
-    }
+    }else if(!ret) cout  << index.type << index.topic << index.subtopic << index.id << index.value;
 
     return ret;
 }
 
 bool Alarm_Object::sensorValue(sDataItem &index)
-{
-    bool ret = true;
+{    
     sEnvData *env = &(cm::devData(index.addr)->env);
-
-    switch (index.topic) {
+    bool ret = true; switch (index.topic) {
     case DTopic::Door1: index.value = env->door[0]; break;
     case DTopic::Door2: index.value = env->door[1]; break;
     case DTopic::Water: index.value = env->water[0]; break;
     case DTopic::Smoke: index.value = env->smoke[0]; break;
     case DTopic::Wind: index.value = env->wind[0]; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << index.topic; break;
+    default: ret = false; cout << index.topic; break;
     }
 
     return ret;
@@ -240,7 +245,7 @@ bool Alarm_Object::powPfValue(sDataItem &index)
     case DTopic::PF: ptr = obj->pf; break;
     case DTopic::ArtPow: ptr = obj->artPow; break;
     case DTopic::ReactivePow: ptr = obj->reactivePow; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout << index.topic; break;
     }
 
     if(ptr) index.value = ptr[index.id];
@@ -254,13 +259,13 @@ bool Alarm_Object::eleValue(sDataItem &index)
     switch (index.topic) {
     case DTopic::Ele: ptr = obj->ele; break;
     case DTopic::HdaEle: ptr = obj->hdaEle; break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout << index.topic; break;
     }
 
     if(ptr) {
         if(index.rw){
             if(index.id) ptr[index.id-1] = 0;
-            else for(int i=0; i<obj->size; ++i) ptr[i] = 0;
+            else setAll(ptr, index.value, obj->size);
             if(DTopic::Ele == index.topic) OP_Core::bulid()->clearEle(index.id);
         } else index.value = ptr[index.id];
     }
@@ -277,7 +282,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
         case DTopic::Ele: index.value = tg->ele; break;
         case DTopic::ArtPow: index.value = tg->artPow; break;
         case DTopic::ReactivePow: index.value = tg->reactivePow; break;
-        default: ret = false; qDebug() << Q_FUNC_INFO; break;
+        default: ret = false; cout << index.topic; break;
         }
     } else ret = tgAlarmUnitValue(index);
     return ret;
