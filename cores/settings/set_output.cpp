@@ -139,8 +139,8 @@ QString Set_Output::outputCfg(sCfgItem &it)
 QString Set_Output::grouping(int addr, int id)
 {
     QString res; if(addr == 0xff) addr = 0;
-    QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
-    foreach(auto &i, ids) res += QString::number(i) +";";
+    QList<int> ids = Data_Core::bulid()->outletByGroup(id-1, addr);
+    foreach(auto &i, ids) res += QString::number(i+1) +";";
     return res;
 }
 
@@ -182,9 +182,9 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true; uint addr = it.addr; if(addr==0xff) addr = 0;
-    sDevData *dev = cm::devData(addr);
+    sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
     uchar *ptr = dev->cfg.nums.group[it.fc];
-    if(it.id < OUTPUT_NUM) ptr[it.id] = v.toInt();
+    if(it.id < OUTPUT_NUM) ptr[it.id-1] = v.toInt();
     else {cout << it.id; ret = false;}
     if(ret) Cfg_Core::bulid()->groupWrite();
     return ret;
@@ -194,11 +194,11 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     uint addr = it.addr; if(addr==0xff) addr = 0;
     QStringList strs = v.toString().simplified().split(";");
-    sDevData *dev = cm::devData(addr); bool ret = true;
-    uchar *ptr = dev->cfg.nums.group[it.fc];
+    sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
+    uchar *ptr = dev->cfg.nums.group[it.fc]; bool ret = true;
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
-        int id = str.toInt(); ptr[id] = 1;
+        int id = str.toInt(); if(id) id -= 1; ptr[id] = 1;
     } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
     return ret;
 }
