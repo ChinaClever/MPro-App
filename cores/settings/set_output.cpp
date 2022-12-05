@@ -32,10 +32,11 @@ void Set_Output::relayOpLog(const sDataItem &it)
     case DSub::ResetDelay: str += QStringLiteral("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
     case DSub::OverrunOff: str += QStringLiteral("输出位超限断电，修改为 %1s").arg(it.value); break;
     case DSub::TimingEn: str += QStringLiteral("输出位定时功能，修改为 %1s").arg(it.value); break;
+    case DSub::RelayEn: str += QStringLiteral("继电器使能状态，修改为 %1").arg(it.value); break;
     case DSub::Relays: {
         int start = it.type-1; int end = start + it.id; str = QStringLiteral("第%１至%2 ").arg(start, end);
         if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开"); break;}
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << it.subtopic; break;
     }
 
     sEventItem db;
@@ -92,20 +93,20 @@ bool Set_Output::groupCtrl(sDataItem &unit)
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
-    if(unit.type == DType::Group) {
-        groupCtrl(unit);
-    } else {
-        switch (unit.subtopic) {
-        case DSub::Value:  ret = outputCtrl(unit); break;
-        case DSub::Relays: ret = outputsCtrl(unit); break;
-        case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-        default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
-        }
+    switch (unit.subtopic) {
+    case DSub::Value:
+        if(unit.type == DType::Group) ret = groupCtrl(unit);
+        else ret = outputCtrl(unit);
+        break;
+    case DSub::Relays: ret = outputsCtrl(unit); break;
+    case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+    default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
     } relayOpLog(unit);
-    if(unit.type == DType::Dual) {
-        sDataItem it = unit; it.addr += 1;
-        ret = Cascade_Core::bulid()->masterSeting(it);
-    }
+
+    //if(unit.type == DType::Dual) {
+    //    sDataItem it = unit; it.addr += 1;
+    //    ret = Cascade_Core::bulid()->masterSeting(it);
+    //}
 
     return ret;
 }
