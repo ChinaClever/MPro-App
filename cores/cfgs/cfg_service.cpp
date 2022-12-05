@@ -452,7 +452,7 @@ void Cfg_Service::dualName()
         QString key = QString::number(i+1);
         QString v = "Server" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->dual.name[i], res.toLatin1().data());
+        qstrcpy(dev->dual.name[i], res.toUtf8().data());
     }
 }
 
@@ -464,7 +464,7 @@ void Cfg_Service::groupName()
         QString key = QString::number(i+1);
         QString v = "Group" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->group.name[i], res.toLatin1().data());
+        qstrcpy(dev->group.name[i], res.toUtf8().data());
     }
 }
 
@@ -476,6 +476,6 @@ void Cfg_Service::outputName()
         QString key = QString::number(i+1);
         QString v = "Output" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->output.name[i], res.toLatin1().data());
+        qstrcpy(dev->output.name[i], res.toUtf8().data());
     }
 }

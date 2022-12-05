@@ -162,7 +162,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     case SFnCode::EOutput: op += QStringLiteral("输出位名称"); break;
     case SFnCode::EGroup: op += QStringLiteral("组名称"); break;
     case SFnCode::EDual: op += QStringLiteral("机架名称"); break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << it.type; break;
     }
 
     sEventItem db;
@@ -214,14 +214,14 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     case SFnCode::EOutput: obj = &(dev->output); prefix = "OutputName"; break;
     case SFnCode::EGroup: obj = &(dev->group); prefix = "GroupName"; break;
     case SFnCode::EDual: obj = &(dev->dual); prefix = "DualName"; break;
-    default: res = false; qDebug() << Q_FUNC_INFO << it.type; return res;
+    default: res = false; cout << it.type; return res;
     }
 
     switch (it.fc) {
     case 1: ptr = obj->name[id]; break;
     case 2: ptr = obj->relay.timingOn[id]; break;
     case 3: ptr = obj->relay.timingOff[id]; break;
-    default: res = false; qDebug() << Q_FUNC_INFO << it.fc; break;
+    default: res = false; cout << it.fc; break;
     }
 
     if(ptr){
@@ -249,7 +249,7 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
         case SFnCode::EOutput: obj = &(dev->output); break;
         case SFnCode::EGroup: obj = &(dev->group); break;
         case SFnCode::EDual: obj = &(dev->dual); break;
-        default: qDebug() << Q_FUNC_INFO << it.type; return ret;
+        default: cout << it.type; return ret;
         }
         for(int i=0; i<obj->size; ++i) {
             it.id = i; ret = outputSetById(it, v);
