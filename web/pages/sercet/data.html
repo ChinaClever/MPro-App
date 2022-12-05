@@ -8,9 +8,7 @@
 		<title>sercet</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
-		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">>
 	</head>
 <body>
 	<div class="page-cont">
@@ -44,10 +42,8 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_encrpty_data(0);
+		setTimeout(function(){read_encrpty_data(0)},150);
 		let mode_set = new Array("ECB","CBC","CFB","OFB");
 		let encrpty_set = new Array("","AES","RSA","SM4");
 		var filling = new Array("ZERO","PKCS7","ISO");

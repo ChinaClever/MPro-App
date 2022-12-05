@@ -9,8 +9,6 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -44,8 +42,6 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
 		let lang = new Array();
 		let language = 1;
@@ -53,7 +49,9 @@
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
-		read_log_data(3,1,0,0);
+		setTimeout(function(){
+			read_log_data(3,1,0,0);
+		},100);
 		function lang_init(){
 			let i = 0;
 			for(i = 1;i<31;i++){
@@ -224,16 +222,22 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-
-			for (var i = 0; i < rows; i++) {
-				if (i === 0) {
-					thead = '<tr><td width ="5%" id = "lang_2"></td>\
-					<td width ="20%" id = "lang_3"></td>\
+				thead = '<tr><td width ="10%" id = "lang_2"></td>\
+					<td width ="15%" id = "lang_3"></td>\
 					<td width ="15%" id = "lang_4"></td>\
 					<td width ="15%" id = "lang_5"></td>\
 					<td width ="15%" id = "lang_6"></td>\
 					<td width ="15%" id = "lang_7"></td>\
-					<td width ="20%" id = "lang_8"></td>';
+					<td width ="15%" id = "lang_8"></td></tr>';
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+					thead = '<tr><td width ="10%" id = "lang_2"></td>\
+					<td width ="15%" id = "lang_3"></td>\
+					<td width ="15%" id = "lang_4"></td>\
+					<td width ="15%" id = "lang_5"></td>\
+					<td width ="15%" id = "lang_6"></td>\
+					<td width ="15%" id = "lang_7"></td>\
+					<td width ="15%" id = "lang_8"></td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';

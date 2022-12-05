@@ -9,8 +9,6 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -35,15 +33,14 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_log_setting_data(0);
+		setTimeout(function(){read_log_setting_data(0)},150);
 		var logset_data = new Array();
 		let lang = new Array();
 		let language = 1;
+		var enable = new Array("","");
 		function read_data(){
-			for(var j = 1;j<6;j++){
+			for(var j = 1;j<logset_name.length;j++){
 				logset_data[j] = sessionStorage.getItem(logset_name[j]);
 			}
 		}
@@ -54,14 +51,19 @@
 			}
 			lang[1] = ["","日志设置","","","",""];
 			lang[2] = ["","日志记录设置","","","",""];
-			lang[3] = ["","电能记录时间间隔(天):","","","",""];
-			lang[4] = ["","历史数据记录时间(小时):","","","",""];
-			lang[5] = ["","报警记录最大条数(万条):","","","",""];
-			lang[6] = ["","事件记录最大条数(万条):","","","",""];
-			lang[7] = ["","历史数据记录最大条数(万条):","","","",""];
+			lang[3] = ["","历史记录启用:","","","",""];
+			lang[4] = ["","电能记录时间间隔(天):","","","",""];
+			lang[5] = ["","历史数据记录时间(小时):","","","",""];
+			lang[6] = ["","报警记录最大条数(万条):","","","",""];
+			lang[7] = ["","事件记录最大条数(万条):","","","",""];
+			lang[8] = ["","历史数据记录最大条数(万条):","","","",""];
+			lang[9] = ["","启用","","","",""];
+			lang[10] = ["","禁用","","","",""];
+			enable[0] = lang[10][language];
+			enable[1] = lang[9][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<8;j++){
+			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
@@ -98,19 +100,25 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="20%" id="lang_2" ></td>\
 			<td width ="80%"></td></tr>';
-			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<tr><td id  = "lang_3"></td>';
+			tbody += '<td><select  id = "HistoryEn" style ="width:15%" onchange ="changed(this)">';
+			for(var i = 0; i<enable.length;i++){
+				tbody +='<option value ="'+i+'">'+enable[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td><input id = "EnergeDelay" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id = "HistoryDelay" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><input id = "AlarmMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<tr><td id="lang_7" ></td>';
 			tbody += '<td><input id = "EventMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<tr><td id="lang_8" ></td>';
 			tbody += '<td><input id = "HistoryMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
 			return '<thead>' + thead + '</thead>'

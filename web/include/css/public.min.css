@@ -351,6 +351,12 @@ blockquote {
     text-align: left;
     height: 35px;
 }
+.text-left_ td,
+.text-left_ th {
+    text-align: left;
+    height: 12px;
+    font-size: 13px;
+}
 .table th {
     background: #f6f6f6;
     border-bottom-width: 2px
@@ -374,6 +380,13 @@ blockquote {
 .table-border-none td,
 .table-border-none th {
     border: none
+}
+.table-border-none_ td,
+.table-border-none_ th {
+    border: none
+}
+.table-border-none_ tr:nth-child(odd) {
+    background: #f5f7fa
 }
 
 .tabs {

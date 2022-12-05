@@ -39,8 +39,9 @@
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
-      let userPsd = usr + "; " + psd;
-      rpc.call('pduSetParam',[0,user,11,0,0,userPsd]);
+      if(usr != "" && psd !=""){
+        let userPsd = usr + "; " + psd;
+        rpc.call('pduSetParam',[0,user,11,0,0,userPsd]);
         let time2 = setInterval(function(){
           if(verfity == 1)
           {
@@ -55,8 +56,10 @@
             window.clearInterval(time2);
           }
         },500);
-          
-      }
+      }else{
+        alert("user name or password error");
+      }    
+    }
     function submite(){
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){
