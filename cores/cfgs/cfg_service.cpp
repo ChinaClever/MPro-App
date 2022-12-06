@@ -231,6 +231,7 @@ void Cfg_Service::mqtt()
         case 7: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toByteArray(); break;
         case 8: key = "keepAlive"; cfg->keepAlive = mCfg->readCfg(key, 60, prefix).toInt();break;
         case 9: key = "qos"; cfg->qos = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 10: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
@@ -240,7 +241,7 @@ void Cfg_Service::amqp()
 {
     QString prefix = "amqp"; QString key;
     sAmqpCfg *cfg = &QRabbitMQ::amqpCfg;
-    for(int i=1; i<11; ++i) {
+    for(int i=1; i<12; ++i) {
         switch (i) {
         case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
@@ -251,7 +252,8 @@ void Cfg_Service::amqp()
         case 7: key = "name"; cfg->name = mCfg->readCfg(key, "", prefix).toString(); break;
         case 8: key = "routingKey"; cfg->routingKey = mCfg->readCfg(key, "", prefix).toString();break;
         case 9: key = "bindingKey"; cfg->bindingKey = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 10: key = "ssl"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 10: key = "ssl"; cfg->ssl = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 11: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
@@ -416,11 +418,11 @@ void Cfg_Service::push()
         switch (i) {
         case 1: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 2: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
-        case 3: key = "sec"; ptr = &cfg->sec; value = 5; break;
+        case 3: key = "httpSec"; ptr = &cfg->http.sec; value = 10; break;
         case 4: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 5: key = "httpUrl"; str = &cfg->http.url; break;
         case 6: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 7: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
+        case 7: key = "enServer"; ptr = &cfg->http.enServer; value = 0; break;
         case 8: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }
@@ -441,6 +443,9 @@ void Cfg_Service::push()
 
         key = "udpPort_" + QString::number(i);
         cfg->udp[i].port = mCfg->readCfg(key, 1124+i, prefix).toInt();
+
+        key = "udpSec_" + QString::number(i);
+        cfg->udp[i].en = mCfg->readCfg(key, 10, prefix).toInt();
     }
 }
 
