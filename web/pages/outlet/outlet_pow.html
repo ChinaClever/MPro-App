@@ -277,9 +277,17 @@
 			var type1 = ipt.id.substr(0,1);
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseFloat(ipt.value);
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
+			var stat = (ipt.value);
+			let data1 = ipt.parentNode.parentNode.childNodes[6].childNodes[0].value;
+			let data2 = ipt.parentNode.parentNode.childNodes[7].childNodes[0].value;
+			let data3 = ipt.parentNode.parentNode.childNodes[8].childNodes[0].value;
+			let data4 = ipt.parentNode.parentNode.childNodes[9].childNodes[0].value;
+			if(data1>data2 || data2>data3 || data3>data4){
+				alert("input data error");
+				showdata();
+				return ;
+			}
+			if(confirm("您已更改表单，请确认提交！"))
 			{
 				if(type1 === 'e'){
 					sub = 2;
@@ -321,14 +329,14 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseInt(output_info[i + 1][1]) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(output_info[i + 1][1]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td id = "e'+ i +'">' + parseInt(output_info[i + 1][2])+'</td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseInt(output_info[i + 1][5])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseInt(output_info[i + 1][6])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseInt(output_info[i + 1][7])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseInt(output_info[i + 1][4])  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + parseFloat(output_info[i + 1][2]).toFixed(3)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(output_info[i + 1][5]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(output_info[i + 1][6]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(output_info[i + 1][7]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(output_info[i + 1][4]).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -339,10 +347,10 @@
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
 					tbody += '<td id = "e'+ i + '"></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2816"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3520"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2.816"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3.520"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -354,7 +362,7 @@
 		function putdata(){
 			for(let i = 0;i < output_num;i++){
 				state_ = document.getElementById('c' + i);
-				state_.innerHTML = output_info[i+1][1];
+				state_.innerHTML = parseFloat(output_info[i+1][1]).toFixed(3);
 			}
 		}
 		setInterval(function(){

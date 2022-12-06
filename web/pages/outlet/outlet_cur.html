@@ -57,7 +57,7 @@
 				output_info[i] =  new Array();
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				for(var j = 1;j < data_name.length ;j++){
-					output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[j]+addr+'_'+i));
+					output_info[i][j] = (sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[j]+addr+'_'+i));
 				}
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -180,7 +180,7 @@
 				}
 			}
 		}
-		function read_output_pow_data(){
+		function read_output_cur_data(){
 			var j = 1;var i = 1;
 			var time1 = setInterval(function(){
 				if(i >= (output_num + 1)){
@@ -255,9 +255,17 @@
 			var type1 = ipt.id.substr(0,1);
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = (parseFloat(ipt.value) * 100).toFixed(0);
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
+			var stat = (ipt.value);
+			let data1 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
+			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
+			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
+			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[9].childNodes[0].value);
+			if(data1>data2 || data2>data3 || data3>data4){
+				alert("input data error");
+				showdata();
+				return ;
+			}
+			if(confirm("您已更改表单，请确认提交！"))
 			{
 				if(type1 === 'e'){
 					sub = 2;
@@ -276,7 +284,7 @@
 					number1 = number;
 				}
 				dt = sub;
-				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,parseInt(stat)]);
+				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
 				flash_html(ipt);
 			}else{}
 		}

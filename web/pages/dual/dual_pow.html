@@ -61,7 +61,7 @@
 		var  read  = 0,dt = 0;
 		var mode = 0;
 		let pow_mark = new Array();
-		var len  = data_name.length -1;
+		var len  = data_name.length;
 		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + dual_addr));
 		var dev_name =new Array();
 		var dual_name =new Array();
@@ -74,8 +74,8 @@
 			for(var i = 1 ;i < dual_num + 1;i++){
 				dual_info[i] =  new Array();
 				dual_name[i] = sessionStorage.getItem("DualName"+ dual_addr +'_'+i);
-				for(var j = 0;j <len;j++){
-					dual_info[i][j] = parseInt(sessionStorage.getItem(type_name[dual]+data_type[pow_]+data_name[j + 1]+dual_addr+'_'+i));
+				for(var j = 1;j <len;j++){
+					dual_info[i][j] = (sessionStorage.getItem(type_name[dual]+data_type[pow_]+data_name[j]+dual_addr+'_'+i));
 				}
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -91,14 +91,14 @@
 			lang[3] = ["","机柜选择","","","",""];
 			lang[4] = ["","序号","","","",""];
 			lang[5] = ["","机架名称","","","",""];
-			lang[6] = ["","有功功率(W)","","","",""];
+			lang[6] = ["","有功功率(KW)","","","",""];
 			lang[7] = ["","告警使能","","","",""];
 			lang[8] = ["","历史记录","","","",""];
-			lang[9] = ["","额定值(W)","","","",""];
-			lang[10] = ["","最小值(W)","","","",""];
-			lang[11] = ["","下临界(W)","","","",""];
-			lang[12] = ["","上临界(W)","","","",""];
-			lang[13] = ["","最大值(W)","","","",""];
+			lang[9] = ["","额定值(KW)","","","",""];
+			lang[10] = ["","最小值(KW)","","","",""];
+			lang[11] = ["","下临界(KW)","","","",""];
+			lang[12] = ["","上临界(KW)","","","",""];
+			lang[13] = ["","最大值(KW)","","","",""];
 			lang[14] = ["","设置模式","","","",""];
 			lang[15] = ["","统一设置","","","",""];
 			lang[16] = ["","机柜","","","",""];
@@ -214,11 +214,10 @@
 			var stat = 0,number1 = 0;
 			var type1 = ckd.id.substr(0,1);
 			let sub =0;
+			var number = parseInt(ckd.id.slice(1))+1;
 			// var opt_val = parseInt(document.getElementById("opt_").value);
 			// var addr_ = addr + 0 * 256;
-			var number = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
+			if( confirm("您已更改表单，请确认提交！"))
 			{
 				if(type1 === 'd'){
 					sub = 8;
@@ -264,7 +263,16 @@
 			// var opt_val = parseInt(document.getElementById("opt_").value);
 			// var addr_ = addr + opt_val * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseInt(ipt.value);
+			var stat = (ipt.value);
+			let data1 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
+			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
+			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
+			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[9].childNodes[0].value);
+			if(data1>data2 || data2>data3 || data3>data4){
+				alert("input data error");
+				showdata();
+				return ;
+			}
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
@@ -308,14 +316,14 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">' + dual_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseInt(dual_info[i + 1][0]) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(dual_info[i + 1][0]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td id = "e'+ i +'">' + parseInt(dual_info[i + 1][1])+'</td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseInt(dual_info[i + 1][4])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseInt(dual_info[i + 1][5])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseInt(dual_info[i + 1][6])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseInt(dual_info[i + 1][3])  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + parseFloat(dual_info[i + 1][1]).toFixed(3)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(dual_info[i + 1][4]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(dual_info[i + 1][5]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(dual_info[i + 1][6]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(dual_info[i + 1][3]).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -326,10 +334,10 @@
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
 					tbody += '<td id = "e'+ i + '"></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2816"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3520"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2.816"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3.52"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -341,7 +349,7 @@
 		function putdata(){
 			for(let i = 0;i < dual_num;i++){
 				state_ = document.getElementById('c' + i);
-				state_.innerHTML = dual_info[i+1][0];
+				state_.innerHTML = parseFloat(dual_info[i+1][0]).toFixed(3);
 			}
 		}
 		setInterval(function(){

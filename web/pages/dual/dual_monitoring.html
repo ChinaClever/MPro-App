@@ -96,16 +96,16 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_name[i] = sessionStorage.getItem("DualName"+ dual_addr +'_'+i);
-				PowValA[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+dual_addr+'_'+i));
-				PowValB[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+(dual_addr +1) +'_'+i));;
-				AlarmPowValA[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+dual_addr+'_'+i));
-				AlarmPowValB[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+(dual_addr +1)+'_'+i));
-				AVPowValA[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+dual_addr+'_'+i));
-				AVPowValB[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+(dual_addr +1)+'_'+i));
+				PowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+dual_addr+'_'+i));
+				PowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+(dual_addr +1) +'_'+i));;
+				AlarmPowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+dual_addr+'_'+i));
+				AlarmPowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+(dual_addr +1)+'_'+i));
+				AVPowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+dual_addr+'_'+i));
+				AVPowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+(dual_addr +1)+'_'+i));
 				TotalPowVal[i] = PowValA[i] + PowValB[i];
 				TotalAVPowVal[i] = AVPowValA[i] + AVPowValB[i];
-				EnergeValA[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+dual_addr+'_'+i));
-				EnergeValB[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+(dual_addr +1)+'_'+i));
+				EnergeValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+dual_addr+'_'+i));
+				EnergeValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+(dual_addr +1)+'_'+i));
 				TotalEnergeVal[i] = EnergeValA[i] + EnergeValB[i];
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -162,11 +162,11 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(PowValA[i + 1]).toFixed(2)  +'</td>';
-				tbody += '<td id = "d'+ i + '">' + parseFloat(PowValB[i + 1]).toFixed(2)  + '</td>';
-				tbody += '<td id = "e'+ i + '">'+ parseFloat(TotalPowVal[i + 1]).toFixed(2) +'</td>';
-				tbody += '<td id = "f'+ i + '">'+ parseFloat(TotalAVPowVal[i + 1]).toFixed(2) +'</td>';
-				tbody += '<td id = "g'+ i + '">' + parseFloat(TotalEnergeVal[i + 1]).toFixed(1) + '</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(PowValA[i + 1]).toFixed(3)  +'</td>';
+				tbody += '<td id = "d'+ i + '">' + parseFloat(PowValB[i + 1]).toFixed(3)  + '</td>';
+				tbody += '<td id = "e'+ i + '">'+ parseFloat(TotalPowVal[i + 1]).toFixed(3) +'</td>';
+				tbody += '<td id = "f'+ i + '">'+ parseFloat(TotalAVPowVal[i + 1]).toFixed(3) +'</td>';
+				tbody += '<td id = "g'+ i + '">' + parseFloat(TotalEnergeVal[i + 1]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
@@ -175,11 +175,11 @@
 		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
 		function putdata(){
 			for(let i = 0;i < output_num;i++){
-				document.getElementById('c'+i).innerHTML = (parseFloat(PowValA[i + 1])).toFixed(2);
-				document.getElementById('d'+i).innerHTML = (parseFloat(PowValB[i + 1])).toFixed(2);
-				document.getElementById('e'+i).innerHTML = (parseFloat(TotalPowVal[i + 1])).toFixed(2);
-				document.getElementById('f'+i).innerHTML = (parseFloat(TotalAVPowVal[i + 1])).toFixed(2);
-				document.getElementById('g'+i).innerHTML = (parseFloat(TotalEnergeVal[i + 1])).toFixed(1);
+				document.getElementById('c'+i).innerHTML = (parseFloat(PowValA[i + 1])).toFixed(3);
+				document.getElementById('d'+i).innerHTML = (parseFloat(PowValB[i + 1])).toFixed(3);
+				document.getElementById('e'+i).innerHTML = (parseFloat(TotalPowVal[i + 1])).toFixed(3);
+				document.getElementById('f'+i).innerHTML = (parseFloat(TotalAVPowVal[i + 1])).toFixed(3);
+				document.getElementById('g'+i).innerHTML = (parseFloat(TotalEnergeVal[i + 1])).toFixed(2);
 			}
 		}
 		setInterval(function(){

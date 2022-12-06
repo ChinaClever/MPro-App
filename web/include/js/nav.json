@@ -11,12 +11,12 @@
     "base": "pages/inlet/",
     "subNav": [
       {
-        "name": "回路设置",
-        "url": "loop_set.html"
-      },
-      {
         "name": "相设置",
         "url": "inlet_set.html"
+      },
+      {
+        "name": "回路设置",
+        "url": "loop_set.html"
       }
     ]
   },

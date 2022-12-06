@@ -342,33 +342,33 @@
 			}
 		}
 		function read_data(){
-			total_info[0] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[4] + data_name[1] + addr));
-			total_info[1] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[7] + data_name[1] + addr));
-			total_info[2] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[5] + data_name[1] + addr));
-			total_info[3] = parseInt(sessionStorage.getItem(cfg_name[6] + addr));
+			total_info[0] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[4] + data_name[1] + addr));
+			total_info[1] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[7] + data_name[1] + addr));
+			total_info[2] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[5] + data_name[1] + addr));
+			total_info[3] = parseFloat(sessionStorage.getItem(cfg_name[6] + addr));
 			total_info[4] = 50;
-			total_info[5] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[2] + data_name[1] + addr));
-			total_info[6] = parseInt(sessionStorage.getItem(type_name[0]+ data_type[3] + data_name[1] + addr));
+			total_info[5] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[2] + data_name[1] + addr));
+			total_info[6] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[3] + data_name[1] + addr));
 			for(let i = 1 ;i < phase_num + 1;i++){
 				phase_info[i] =  new Array();
 
-				phase_info[i][0] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[1] + addr + '_' + i));
-				phase_info[i][1] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[2] + data_name[1] + addr + '_' + i));
-				phase_info[i][2] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
-				phase_info[i][3] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[3] + addr + '_' + i));
-				phase_info[i][4] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
-				phase_info[i][5] = parseInt(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
+				phase_info[i][0] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[1] + addr + '_' + i));
+				phase_info[i][1] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[2] + data_name[1] + addr + '_' + i));
+				phase_info[i][2] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
+				phase_info[i][3] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[3] + addr + '_' + i));
+				phase_info[i][4] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
+				phase_info[i][5] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
 			}
 			for(let i = 1 ;i < loop_num + 1;i++){
 				loop_info[i] =  new Array();
 				loop_info[i][0] = "C" + (i);
-				loop_info[i][1] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[1]+data_name[1]+addr+'_'+i));
+				loop_info[i][1] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[1]+data_name[1]+addr+'_'+i));
 				loop_info[i][2] = sessionStorage.getItem(type_info[11]+ "Num" + (i-1)  +'_'+ addr) +'-'+ sessionStorage.getItem(type_info[12]+ "Num" + (i-1)  +'_'+ addr);
-				loop_info[i][3] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[1]+addr+'_'+i));
-				loop_info[i][4] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[4]+addr+'_'+i));
-				loop_info[i][5] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[2]+data_name[1]+addr+'_'+i));
-				loop_info[i][6] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[7]+data_name[1]+addr+'_'+i));
-				loop_info[i][7] = parseInt(sessionStorage.getItem(type_name[loop]+data_type[5]+data_name[1]+addr+'_'+i));
+				loop_info[i][3] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[1]+addr+'_'+i));
+				loop_info[i][4] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[4]+addr+'_'+i));
+				loop_info[i][5] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[2]+data_name[1]+addr+'_'+i));
+				loop_info[i][6] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[7]+data_name[1]+addr+'_'+i));
+				loop_info[i][7] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[5]+data_name[1]+addr+'_'+i));
 			}
 			let type_num_ = 0;
 			for(let i = 0; i<head.length;i++){
@@ -435,9 +435,12 @@
 			for(let i = 0;i<loop_num;i++){
 				for(j = 0;j<8;j++){
 					if(j>2 && j!= 5 && j != 7){
-						document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(2)+loop_unit[j];
+						if(j==6){
+							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(3)+loop_unit[j];
+						}else{
+							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(2)+loop_unit[j];
+						}
 					}else if(j == 5 || j == 7){
-
 						document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(1)+loop_unit[j];
 					}else{
 						if( j ==1){

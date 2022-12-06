@@ -35,8 +35,9 @@ char *Web_Rpc::execute(mg_str &r)
 
 char* Web_Rpc::pduSetData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 6);
-    bool ret = mObj->setting(its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), its.at(5));
+    QVector<uint> its = mObj->getNumbers(r, 5);
+    double value = mObj->getString(r, 5).toDouble();
+    bool ret = mObj->setting(its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value);
     return responRpcData(its, ret?1:0);
 }
 
