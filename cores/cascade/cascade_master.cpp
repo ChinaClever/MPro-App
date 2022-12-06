@@ -29,9 +29,9 @@ void Cascade_Master::masterReadDevs()
 {
     using namespace cm; int t = 100;
     uint size = masterDev()->cfg.nums.slaveNum;
-    for(uint i=0; i<size; ++i) {
-        bool ret = masterRead(i+1);
-        setEndisable(i, ret, devData(i+1)->offLine);
+    for(uint i=1; i<=size; ++i) {
+        bool ret = masterRead(i); //cout << ret;
+        setEndisable(i, ret, devData(i)->offLine);
     }
 
     if(runTime() > 48*60*60) t = 500;
@@ -42,14 +42,14 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
-            sEventItem it; it.event_type = tr("级联"); it.addr = addr+1;
-            it.event_content = tr("副机 %1 连接正常").arg(addr+1);
+            sEventItem it; it.event_type = tr("级联"); it.addr = addr;
+            it.event_content = tr("副机 %1 连接正常").arg(addr);
             Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
-            sEventItem it; it.event_type = tr("级联"); it.addr = addr+1;
-            it.event_content = tr("副机 %1 掉线").arg(addr+1);
+            sEventItem it; it.event_type = tr("级联"); it.addr = addr;
+            it.event_content = tr("副机 %1 掉线").arg(addr);
             Log_Core::bulid()->append(it);
         }
     } cm::mdelay(355);

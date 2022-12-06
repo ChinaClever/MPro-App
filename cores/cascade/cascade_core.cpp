@@ -35,7 +35,7 @@ void Cascade_Core::workFun()
             rcv = qUncompress(rcv);
             QVector<c_sFrame> its = replyData(rcv);
             for(auto &it: its) workDown(it);
-        }
+        } cout << rcv.size();
     } else {
         ota_updates();
         masterReadDevs();
@@ -44,6 +44,10 @@ void Cascade_Core::workFun()
 
 void Cascade_Core::run()
 {
+    cm::masterDev()->cfg.param.cascadeAddr = 0;
+    cm::masterDev()->cfg.param.devMode = DM_Dual;
+    cm::masterDev()->cfg.nums.slaveNum = 1;
+
     cm::mdelay(210);while(isRun) {
         int mode = cm::masterDev()->cfg.param.devMode;
         if(mode < DevMode::DM_Rtu) {

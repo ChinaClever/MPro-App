@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_Sensor{parent}
 {
-    QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
+    //QTimer::singleShot(1,this,SLOT(inet_initFunSlot())); /////////=======
 }
 
 void App_NetAddr::inet_initFunSlot()
