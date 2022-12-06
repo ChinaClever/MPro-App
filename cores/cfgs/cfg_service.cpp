@@ -312,7 +312,7 @@ void Cfg_Service::login()
             case 3: key = "token_%1";  ptr = it->token; break;
             }
             QString res = mCfg->readCfg(key.arg(k), "", prefix).toString();
-            qstrcpy(ptr, res.toLatin1().data());
+            qstrcpy(ptr, res.toUtf8().data());
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
             key = "ctrl_%1"; it->ctrl = mCfg->readCfg(key.arg(k), "", prefix).toLongLong();

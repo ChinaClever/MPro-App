@@ -16,22 +16,22 @@ void Cfg_devParam::uutInfoRead(sUutInfo &uut)
 {
     Cfg_Obj *cfg = mDevCfg; QString g = "uut";
     QString str = cfg->readCfg("room", "", g).toString();
-    qstrcpy(uut.room, str.toLatin1().data());
+    qstrcpy(uut.room, str.toUtf8().data());
 
     str = cfg->readCfg("location", "", g).toString();
-    qstrcpy(uut.location, str.toLatin1().data());
+    qstrcpy(uut.location, str.toUtf8().data());
 
     str = cfg->readCfg("devName", "", g).toString();
-    qstrcpy(uut.devName, str.toLatin1().data());
+    qstrcpy(uut.devName, str.toUtf8().data());
 
     str = cfg->readCfg("devType", "MPDU-Pro", g).toString();
-    qstrcpy(uut.devType, str.toLatin1().data());
+    qstrcpy(uut.devType, str.toUtf8().data());
 
     str = cfg->readCfg("qrcode", "", g).toString();
-    qstrcpy(uut.qrcode, str.toLatin1().data());
+    qstrcpy(uut.qrcode, str.toUtf8().data());
 
     str = cfg->readCfg("sn", "", g).toString();
-    qstrcpy(uut.sn, str.toLatin1().data());
+    qstrcpy(uut.sn, str.toUtf8().data());
 }
 
 void Cfg_devParam::devNumRead(sDevNums &it)
