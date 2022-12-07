@@ -339,14 +339,11 @@ bool Set_Integr::odbcSet(uchar fc, const QVariant &v)
 QVariant Set_Integr::pushCfg(uchar fc, int id)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
-    QVariant res = 0; switch (fc) {
+    QVariant res = 0; if(id) id -= 1; switch (fc) {
     case 1: res = cfg->udp[id].en; break;
     case 2: res = cfg->udp[id].host; break;
     case 3: res = cfg->udp[id].port; break;
     case 4: res = cfg->udp[id].sec; break;
-        //case 5: res = cfg->udp[1].host; break;
-        //case 6: res = cfg->udp[1].port; break;
-        //case 7: res = cfg->sec; break;
     case 8: res = cfg->recvEn; break;
     case 9: res = cfg->recvPort; break;
 
@@ -355,7 +352,8 @@ QVariant Set_Integr::pushCfg(uchar fc, int id)
     case 13: res = cfg->http.timeout; break;
     case 14: res = cfg->http.enServer; break;
     case 15: res = cfg->http.port; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    case 16: res = cfg->http.sec;
+    default: cout << fc; break;
     }
 
     return res;
@@ -366,7 +364,7 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
 {
     sPushCfg *cfg = &Integr_Core::pushCfg;
     QString prefix = "push";  QString key;
-    bool ret = true; switch (fc) {
+    bool ret = true; if(id) id -= 1; switch (fc) {
     case 1: key = "udpEn_" + QString::number(id); cfg->udp[id].en = v.toInt(); break;
     case 2: key = "udpHost_" + QString::number(id); cfg->udp[id].host = v.toString(); break;
     case 3: key = "udpPort_" + QString::number(id); cfg->udp[id].port = v.toInt(); break;
