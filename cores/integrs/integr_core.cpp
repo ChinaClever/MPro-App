@@ -15,7 +15,7 @@ void Integr_Core::httpServer()
 {
     bool en = pushCfg.http.en;
     int port = pushCfg.http.port;
-    switch (pushCfg.http.enServ) {
+    switch (pushCfg.http.enServer) {
     case 1: Integr_HttpServer::initHttpServer(en, port); break;
     case 2: Integr_HttpServer::initHttpsServer(en, port); break;
     }

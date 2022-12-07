@@ -156,6 +156,7 @@ QVariant Set_Integr::mqttCfg(uchar fc)
     case 8: res = cfg->keepAlive; break;
     case 9: res = cfg->qos; break;
     case 10: res = cfg->isConnected; break;
+    case 11: res = cfg->sec; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
     return res;
@@ -175,7 +176,8 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     case 7: key = "pwd"; cfg->pwd = v.toByteArray(); break;
     case 8: key = "keepAlive"; cfg->keepAlive = v.toInt(); break;
     case 9: key = "qos"; cfg->qos = v.toInt(); break;
-    case 11: Mqtt_Client::bulid()->startMqtt(); break;
+    case 11: key = "sec"; cfg->sec = v.toInt(); break;
+    case 20: Mqtt_Client::bulid()->startMqtt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
@@ -204,6 +206,7 @@ QVariant Set_Integr::amqpCfg(uchar fc)
     case 9: res = cfg->bindingKey; break;
     case 10: res = cfg->ssl; break;
     case 11: res = cfg->isConnected; break;
+    case 12: res = cfg->sec; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
     return res;
@@ -225,6 +228,7 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
     case 8: key = "routingKey"; cfg->routingKey = v.toString(); break;
     case 9: key = "bindingKey"; cfg->bindingKey = v.toString(); break;
     case 10: key = "ssl"; cfg->ssl = v.toInt(); break;
+    case 12: key = "sec"; cfg->sec = v.toInt(); break;
     case 20: QRabbitMQ::bulid()->start(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
@@ -339,17 +343,17 @@ QVariant Set_Integr::pushCfg(uchar fc, int id)
     case 1: res = cfg->udp[id].en; break;
     case 2: res = cfg->udp[id].host; break;
     case 3: res = cfg->udp[id].port; break;
-        //case 4: res = cfg->udp[1].en; break;
+    case 4: res = cfg->udp[id].sec; break;
         //case 5: res = cfg->udp[1].host; break;
         //case 6: res = cfg->udp[1].port; break;
-    case 7: res = cfg->sec; break;
+        //case 7: res = cfg->sec; break;
     case 8: res = cfg->recvEn; break;
     case 9: res = cfg->recvPort; break;
 
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;
-    case 14: res = cfg->http.enServ; break;
+    case 14: res = cfg->http.enServer; break;
     case 15: res = cfg->http.port; break;
     default: qDebug() << Q_FUNC_INFO << fc; break;
     }
@@ -366,19 +370,19 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
     case 1: key = "udpEn_" + QString::number(id); cfg->udp[id].en = v.toInt(); break;
     case 2: key = "udpHost_" + QString::number(id); cfg->udp[id].host = v.toString(); break;
     case 3: key = "udpPort_" + QString::number(id); cfg->udp[id].port = v.toInt(); break;
-
-    case 7: key = "sec"; cfg->sec = v.toInt(); break;
+    case 4: key = "udpSec_"+ QString::number(id); cfg->udp[id].sec = v.toInt(); break;
     case 8: key = "recvEn"; cfg->recvEn = v.toInt(); break;
     case 9: key = "recvPort"; cfg->recvPort = v.toInt(); break;
     case 10: Integr_Core::bulid()->initRecvFun(); break;
 
-        //    case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
+        // case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
     case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
     case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;
-    case 14: key = "enServ"; cfg->http.enServ = v.toInt(); break;
+    case 14: key = "enServer"; cfg->http.enServer = v.toInt(); break;
     case 15: key = "httpPort"; cfg->http.port = v.toInt(); break;
-    case 16: Integr_Core::bulid()->httpServer(); break;
+    case 16: key = "httpSec"; cfg->http.sec = v.toInt(); break;
+    case 19: Integr_Core::bulid()->httpServer(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
