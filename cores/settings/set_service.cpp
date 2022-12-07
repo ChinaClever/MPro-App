@@ -195,7 +195,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
     case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
     case 5: obj->ntpdate(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(key.size()){
@@ -206,10 +206,9 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
 }
 
 int Set_Service::webCfg(int fc)
-{
-    int ret = 0;
+{    
     sWebCfg *it = &cm::dataPacket()->web;
-    switch (fc) {
+    int ret = 0; switch (fc) {
     case 1: ret = it->http_en; break;
     case 2: ret = it->http_port; break;
     case 3: ret = it->http_redirect; break;
@@ -222,18 +221,16 @@ int Set_Service::webCfg(int fc)
 }
 
 bool Set_Service::webSet(int fc, const QVariant &v)
-{
-    bool ret = true;
+{   
     sWebCfg *it = &cm::dataPacket()->web;
     QString prefix = "web"; QString key;
-
-    switch (fc) {
+    bool ret = true; switch (fc) {
     case 1: key = "http_en";  it->http_en = v.toInt(); break;
     case 2: key = "http_port";  it->http_port = v.toInt(); break;
     case 3: key = "http_redirect";  it->http_port = v.toInt();  break;
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout<< fc; break;
     }
 
     if(key.size()){

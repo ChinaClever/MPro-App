@@ -422,7 +422,7 @@ void Cfg_Service::push()
         case 4: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 5: key = "httpUrl"; str = &cfg->http.url; break;
         case 6: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 7: key = "enServer"; ptr = &cfg->http.enServer; value = 0; break;
+        case 7: key = "enServer"; ptr = &cfg->http.enServer; value = 2; break;
         case 8: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }

@@ -8,7 +8,7 @@ class App_NetAddr: public App_Sensor
 public:
     explicit App_NetAddr(QObject *parent = nullptr);
     void inet_setInterface();
-    void inet_saveCfg();
+    void inet_saveCfg(int fc);
 
 private slots:
     void inet_initFunSlot();
