@@ -261,7 +261,6 @@ void Web_Http::mgr_init()
     mg_http_listen(mgr, s_https_addr, fn, (void *) 1);  // HTTPS listener
 #else
     QString en = Web_Obj::bulid()->getIpv6En();
-    printf("Ipv6 en: %s \n", en.toLatin1().data());
     if(cfg.http_en) {
         if(en == "0"){
             QString url = s_listen_on + QString::number(cfg.http_port);
