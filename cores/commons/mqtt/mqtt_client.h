@@ -15,6 +15,7 @@ struct sMqttCfg {
     bool isConnected;
     int keepAlive;
     int qos;
+    int sec;
 };
 
 class Mqtt_Client : public QObject

@@ -10,7 +10,7 @@ App_Sensor::App_Sensor(QObject *parent)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(QFile::exists("/sys/clever/tem_hum/th0/data")) {
-        //QtConcurrent::run(this, &App_Sensor::env_run);   //////==========
+        //QtConcurrent::run(this, &App_Sensor::env_run); /////========
     } else cout << "env err";
 #endif
 }

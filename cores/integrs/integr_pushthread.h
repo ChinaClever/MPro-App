@@ -10,14 +10,15 @@ struct sPushUdpCfg{
     int en = 0;
     QString host;
     int port=1124;
+    int sec = 5;
 };
 
 struct sPushHttpCfg{
     int en = 0; // 0 禁此 1 post 2 put
     QString url;
     int timeout=1;
-
-    int enServ =0;
+    int sec = 5;
+    int enServer =0;
     int port=3066;
 };
 
@@ -26,7 +27,6 @@ struct sPushCfg{
     sPushHttpCfg http;
     int recvPort=3096;
     int recvEn = 0; // 0 禁此 1 UDP 2 TCP 3
-    int sec = 5;
 };
 
 
@@ -46,17 +46,18 @@ public slots:
     void onPushSlot();
 
 private:
-    void delay();
     void workDown();
     bool checkPush();
+    void delay(int msec);
     void udpPush(const QByteArray &array);
     void httpPush(const QByteArray &array);
     void mqttPush(const QByteArray &array);
     void amqpPush(const QByteArray &array);
 
-private:
+private:    
+    uint mCnt = 0;
     QByteArray mArray;
-    bool isRun = false;
+    bool isRun = true;
     Net_Udp *mUdp = nullptr;
     Integr_JsonBuild *mJson;
     sPushCfg *mCfg = &pushCfg;

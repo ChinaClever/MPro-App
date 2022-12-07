@@ -19,35 +19,38 @@ Integr_PushThread::Integr_PushThread(QObject *parent)
 void Integr_PushThread::udpPush(const QByteArray &array)
 {
     for(int i=0; i<INTEGR_UDP_SIZE; ++i)  {
-        QString ip =mCfg->udp[i].host;
-        if(mCfg->udp[i].en && ip.size()) {
-            QHostAddress host(ip);
-            mUdp->writeDatagram(array, host, mCfg->udp[i].port);
+        sPushUdpCfg *cfg = &mCfg->udp[i]; if(!cfg->sec) return;
+        if(cfg->en && cfg->host.size() && (0 == mCnt%cfg->sec)) {
+            QHostAddress host(cfg->host); //cout << "udp" << ip << mCfg->udp[i].port;
+            mUdp->writeDatagram(array, host, cfg->port);
         }
     }
 }
 
 void Integr_PushThread::httpPush(const QByteArray &array)
 {
-    if(mCfg->http.url.isEmpty()) return ;
-    switch (mCfg->http.en) {
+    sPushHttpCfg *cfg = &mCfg->http; if(!cfg->sec) return;
+    if(cfg->url.isEmpty() && (0 == mCnt%cfg->sec)) return ;
+    switch (cfg->en) {
     case 0: break;
-    case 1: Http::post(mCfg->http.url, array, mCfg->http.timeout); break;
-    case 2: Http::put(mCfg->http.url, array, mCfg->http.timeout); break;
+    case 1: Http::post(cfg->url, array, cfg->timeout); break;
+    case 2: Http::put(cfg->url, array, cfg->timeout); break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
 }
 
 void Integr_PushThread::mqttPush(const QByteArray &array)
 {
-    if(Mqtt_Client::cfg.isConnected) {
+    sMqttCfg *cfg = &Mqtt_Client::cfg; if(!cfg->sec) return;
+    if(cfg->isConnected && (0 == mCnt%cfg->sec)) {
         emit Mqtt_Client::bulid()->publish(array);
     }
 }
 
 void Integr_PushThread::amqpPush(const QByteArray &array)
 {
-    if(QRabbitMQ::amqpCfg.isConnected) {
+    sAmqpCfg *cfg = &QRabbitMQ::amqpCfg; if(!cfg->sec) return;
+    if(cfg->isConnected && (0 == mCnt%cfg->sec)) {
         emit QRabbitMQ::bulid()->sendMsgSig(array);
     }
 }
@@ -67,26 +70,23 @@ void Integr_PushThread::workDown()
         if(dev->offLine || i==0) {
             mArray = mJson->getJson(i);
             emit pushSig();
-        } if(isRun) delay();
+        } if(isRun) delay(20);
     }
 }
 
-void Integr_PushThread::delay()
+void Integr_PushThread::delay(int msec)
 {
-    int t = QRandomGenerator::global()->bounded(10);
-    int sec = mCfg->sec; if(!sec) sec = 3;
-    for(int i=0; i<sec*100; i+=100) {
-        if(isRun) cm::mdelay(100); else break;
-    } cm::mdelay(t);
+    int v = 10; if(msec > 100) v = msec/10;
+    int t = QRandomGenerator::global()->bounded(v);
+    cm::mdelay(t + msec);
 }
 
 bool Integr_PushThread::checkPush()
 {
-    bool ret = false;
+    bool ret = false; mCnt += 1;  delay(1000);
+    for(int i=0; i<INTEGR_UDP_SIZE; ++i) ret |= mCfg->udp[i].en;
     ret |= QRabbitMQ::amqpCfg.isConnected;
     ret |= Mqtt_Client::cfg.isConnected;
-    ret |= mCfg->udp[0].en;
-    ret |= mCfg->udp[1].en;
     ret |= mCfg->http.en;
 
     return ret;
@@ -95,7 +95,6 @@ bool Integr_PushThread::checkPush()
 void Integr_PushThread::run()
 {
     while (isRun) {
-        int t = QRandomGenerator::global()->bounded(100);
-        cm::mdelay(t);delay(); if(checkPush()) workDown();
+        if(checkPush()) workDown();
     }
 }

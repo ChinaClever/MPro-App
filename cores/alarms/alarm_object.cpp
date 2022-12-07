@@ -158,8 +158,7 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         //         if((index.type == DType::Output) && (index.topic == DTopic::Pow) ) {
         //            qDebug() << index.addr << index.type << index.topic << index.subtopic << index.id << index.value;
         //         }
-    } else if(!ret)
-        cout  << index.type << index.topic << index.subtopic << index.id << index.value;
+    } else if(!ret) cout  << index.type << index.topic << index.subtopic << index.id << index.value << ret;
 
     return ret;
 }
@@ -264,11 +263,12 @@ bool Alarm_Object::eleValue(sDataItem &index)
 
     if(ptr) {
         if(index.rw){
-            if(index.id) ptr[index.id-1] = 0;
+            if(index.id) ptr[index.id-1] = index.value;
             else setAll(ptr, index.value, obj->size);
             if(DTopic::Ele == index.topic) OP_Core::bulid()->clearEle(index.id);
         } else index.value = ptr[index.id];
     }
+
     return ret;
 }
 

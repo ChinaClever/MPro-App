@@ -127,8 +127,8 @@ bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 
     if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
-        if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
-    }
+        if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);        
+    } if(it.type == SFnCode::EDual) { it.addr += 1; Cascade_Core::bulid()->masterSetCfg(it, v);}
 
     return ret;
 }
@@ -146,10 +146,12 @@ bool Set_Core::setting(sDataItem &it)
                 if(ret) writeAlarm();
             }
         }
+
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
         }setAlarmLog(it);
+        if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}
     } else {
         ret = false;
         cout << it.rw;
