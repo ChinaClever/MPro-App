@@ -9,8 +9,6 @@
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../doc-lib/doc.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -26,7 +24,12 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left amqp"></table>
+						<table class="table table-border-none text-left redis"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left odbc"></table>
+					</div>
+					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div>
 				</div>
 			</div>
@@ -35,22 +38,25 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_odbc_data(0);
+		setTimeout(function(){
+			read_odbc_data(0);
+			read_redis_data(0);
+		},300);
 		var enable = new Array("","");
 		var language = 1;
 		var odbc_data = new Array();
+		var redis_data = new Array();
 		let lang = new Array();
 		let id_name = new Array("enable","addr","port","usr","psd","database","localkey","update","record","state");
+		let red_name = new Array("enable_","addr_","port_","psd_","dbnum_","localkey_","channal_","update_","retime_","state_");
 		let ssl_en = new Array("","");
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<20;i++){
+			for(let i = 1;i<29;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","ODBC服务","","","",""];
+			lang[1] = ["","数据库配置","","","",""];
 			lang[2] = ["","ODBC配置","","","",""];
 			lang[3] = ["","ODBC启用:","","","",""];
 			lang[4] = ["","服务器地址:","","","",""];
@@ -62,17 +68,28 @@
 			lang[10] = ["","更新频率:","","","",""];
 			lang[11] = ["","记录频率:","","","",""];
 			lang[12] = ["","连接状态:","","","",""];
-			lang[13] = ["","立即生效","","","",""];
-			lang[14] = ["","启用","","","",""];
-			lang[15] = ["","禁用","","","",""];
-			lang[16] = ["","已连接","","","",""];
-			lang[17] = ["","未连接","","","",""];
+			lang[13] = ["","Redis配置","","","",""];
+			lang[14] = ["","Redis启用:","","","",""];
+			lang[15] = ["","服务器地址:","","","",""];
+			lang[16] = ["","端口:","","","",""];
+			lang[17] = ["","认证密码:","","","",""];
+			lang[18] = ["","DB编号:","","","",""];
+			lang[19] = ["","设备Key:","","","",""];
+			lang[20] = ["","订阅频道:","","","",""];
+			lang[21] = ["","更新频率:","","","",""];
+			lang[22] = ["","过期时间:","","","",""];
+			lang[23] = ["","连接状态:","","","",""];
+			lang[24] = ["","启用","","","",""];
+			lang[25] = ["","禁用","","","",""];
+			lang[26] = ["","已连接","","","",""];
+			lang[27] = ["","未连接","","","",""];
+			lang[28] = ["","立即生效","","","",""];
 
-			enable[0] = lang[15][language];
-			enable[1] = lang[14][language];
+			enable[0] = lang[25][language];
+			enable[1] = lang[24][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<13;j++){
+			for(let j = 1;j<24;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			// document.getElementById("lang_14").value  = lang[14][language];
@@ -83,12 +100,21 @@
 				odbc_data[j] = sessionStorage.getItem(odbc_cfg[j]);
 			}
 			if(odbc_data[10] == 'false' || odbc_data[10] == '0'){
-				odbc_data[10] = lang[17][language];
+				odbc_data[10] = lang[27][language];
 			}else{
-				odbc_data[10] = lang[16][language];
+				odbc_data[10] = lang[26][language];
+			}
+			for(var j = 1;j<11;j++){
+				redis_data[j] = sessionStorage.getItem(redis_cfg[j]);
+			}
+			if(redis_data[10] == 'false' || redis_data[10] == '0'){
+				redis_data[10] = lang[27][language];
+			}else{
+				redis_data[10] = lang[26][language];
 			}
 		}
-		$('.amqp').html(buildTable());
+		$('.odbc').html(buildTable());
+		$('.redis').html(buildTable_());
 		lang_fun();
 		setTimeout(function(){
 			read_data();
@@ -97,21 +123,36 @@
 		function showdata(){
 			for(var j = 0;j<id_name.length-2;j++){
 				if(j == 0){
-					document.getElementById(id_name[j]).selectrd = odbc_data[j +1];
+					document.getElementById(id_name[j]).selected = odbc_data[j +1];
 				}else{
 					document.getElementById(id_name[j]).value = odbc_data[j +1];
 				}
 				document.getElementById(id_name[j]).disabled = false;
 			}
-			if(odbc_data[1] == 0){
+			if(odbc_data[1] == 0 || odbc_data[1] == "false"){
 				for(var j = 1;j<id_name.length-2;j++){
 					document.getElementById(id_name[j]).disabled = true;
 				}
 			}
 			document.getElementById(id_name[id_name.length-1]).innerHTML = odbc_data[10];
+			for(var j = 0;j<red_name.length-2;j++){
+				if(j == 0){
+					document.getElementById(red_name[j]).selected = redis_data[j +1];
+				}else{
+					document.getElementById(red_name[j]).value = redis_data[j +1];
+				}
+				document.getElementById(red_name[j]).disabled = false;
+			}
+			if(redis_data[1] == 0 || redis_data[1] == "false"){
+				for(var j = 1;j<red_name.length-2;j++){
+					document.getElementById(red_name[j]).disabled = true;
+				}
+			}
+			document.getElementById(red_name[red_name.length-1]).innerHTML = redis_data[10];
 		}
 		function flash_html(){
 			read_odbc_data(0);
+			read_redis_data(0);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -122,6 +163,16 @@
 				for(var i = 0 ;i<(id_name.length -1);i++){
 					if(ipt.id == id_name[i]){
 						rpc.call('pduSetParam',[0,21,(i+1),0,0,ipt.value]);
+					}
+				}
+				flash_html();
+			}else{}
+		}
+		function changed_(ipt){
+			if(confirm("请确认是否保存此次修改？")){
+				for(var i = 0 ;i<(red_name.length -1);i++){
+					if(ipt.id == red_name[i]){
+						rpc.call('pduSetParam',[0,28,(i+1),0,0,ipt.value]);
 					}
 				}
 				flash_html();
@@ -162,6 +213,37 @@
 			tbody += '<td><input id = "'+ id_name[7] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_11"></td>';
 			tbody += '<td><input id = "'+ id_name[8] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTable_(){
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id  = "lang_13"></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id  = "lang_23"></td>';
+			tbody += '<td id = "'+ red_name[9] +'"></td></tr>';
+			tbody += '<tr><td id  = "lang_14"></td>';
+			tbody += '<td><select  id = "'+ red_name[0] +'" onchange ="changed_(this)">';
+			for(var i = 0; i<enable.length;i++){
+				tbody +='<option value ="'+i+'">'+enable[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id  = "lang_15"></td>';
+			tbody += '<td><input  id = "'+ red_name[1] +'" style ="width:24.5%" type = "text"  onchange ="changed_(this)" placeholder="0.0.0.0"></input></td></tr>';
+			tbody += '<tr><td id  = "lang_16"></td>';
+			tbody += '<td><input  id = "'+ red_name[2] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_17"></td>';
+			tbody += '<td><input  id = "'+ red_name[3] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_18"></td>';
+			tbody += '<td><input  id = "'+ red_name[4] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_19"></td>';
+			tbody += '<td><input  id = "'+ red_name[5] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_20"></td>';
+			tbody += '<td><input id = "'+ red_name[6] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_21"></td>';
+			tbody += '<td><input id = "'+ red_name[7] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_22"></td>';
+			tbody += '<td><input id = "'+ red_name[8] +'" style ="width:24.5%" onchange ="changed_(this)" type = "text" ></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

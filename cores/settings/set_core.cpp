@@ -49,9 +49,11 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::ELdap: res = ldapCfg(it.fc); break;
     case SFnCode::EODBC: res = odbcCfg(it.fc); break;
     case SFnCode::ELogCfg: res = logCfg(it.fc); break;
     case SFnCode::ECfgNum: res = devCfgNum(it); break;
+    case SFnCode::ERedis: res = redisCfg(it.fc); break;
     case SFnCode::ERadius: res = raduisCfg(it.fc); break;
     case SFnCode::ESysLog: res = syslogCfg(it.fc); break;
     case SFnCode::EModbus: res = modbusCfg(it.fc); break;
@@ -88,11 +90,13 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
     case SFnCode::EWeb: ret = webSet(it.fc, v); break;
     case SFnCode::Uuts: ret = setUut(it.fc, v); break;
+    case SFnCode::ELdap: ret = ldapSet(it.fc, v); break;
     case SFnCode::EODBC: ret = odbcSet(it.fc, v); break;
     case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
     case SFnCode::EAmqp: ret = amqpSet(it.fc, v); break;
     case SFnCode::EOta: ret = ota_updater(it.fc, v); break;
+    case SFnCode::ERedis: ret = redisSet(it.fc, v); break;
     case SFnCode::ELogCfg: ret = logSet(it.fc, v); break;
     case SFnCode::ERadius: ret = raduisSet(it.fc, v); break;
     case SFnCode::ESysLog: ret = syslogSet(it.fc, v); break;
@@ -106,7 +110,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
+    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break; //////========
     default: qDebug() << Q_FUNC_INFO << it.type; break;
     }
 
@@ -123,8 +127,8 @@ bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 
     if(it.addr) {
         int num = cm::masterDev()->cfg.nums.slaveNum;
-        if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);
-    }
+        if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);        
+    } if(it.type == SFnCode::EDual) { it.addr += 1; Cascade_Core::bulid()->masterSetCfg(it, v);}
 
     return ret;
 }
@@ -142,10 +146,12 @@ bool Set_Core::setting(sDataItem &it)
                 if(ret) writeAlarm();
             }
         }
+
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
         }setAlarmLog(it);
+        if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}
     } else {
         ret = false;
         cout << it.rw;

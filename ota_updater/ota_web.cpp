@@ -15,7 +15,7 @@ void Ota_Web::web_workDown()
 {
     if(mOta->web.isRun == 1) return;
     if(mOta->work & (1<<DOta_Web)) {
-        QString dir = "/usr/data/clever/upload/";
+        QString dir = "/usr/data/upload/";
         QStringList fns = File::entryList(dir);
         foreach (const auto &fn, fns) {
             if((fn == ".") || (fn == "..")) continue;

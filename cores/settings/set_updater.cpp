@@ -58,6 +58,21 @@ void Set_Updater::ota_log()
     }
 }
 
+void Set_Updater::ota_logErr(const QString &fn)
+{
+    QString file = fn.split("/").last().remove(".zip");
+    QStringList ls = file.split("_");
+    if(ls.size() == 3) {
+        sOtaItem it;
+        it.ver = ls.at(1);
+        it.md5 = "md5 error";
+        it.remark = "updater error";
+        it.oldVersion = "--- ---";
+        it.releaseDate = ls.last();
+        Log_Core::bulid()->append(it);
+    }
+}
+
 bool Set_Updater::ota_cascade(const QString &fn)
 {
     bool ret = false;
@@ -71,9 +86,8 @@ bool Set_Updater::ota_cascade(const QString &fn)
                 sOtaFile it; it.fc = 1; QString path = fn;
                 it.file = fn.split("/").last();
                 it.path = path.remove(it.file);
-                it.md5 = fn.split(".").last();
+                it.md5 = File::md5(fn);
                 it.size = File::size(fn);
-                if(it.md5 != 32) it.md5 = File::md5(fn);
                 Cascade_Core::bulid()->ota_start(it);
                 setbit(cm::dataPacket()->ota.work, DOta_Slave);
             }
@@ -103,7 +117,8 @@ int Set_Updater::ota_updater(int fc, const QVariant &v)
     case DOtaCode::DOta_Usb:  break;
     case DOtaCode::DOta_Net:  break;
     case DOtaCode::DOta_Web:  break;
-    default: break;
+    case DOtaCode::DOta_Rootfs:  break;
+    default: ota_logErr(v.toString()); return 0;
     }
 
     QString fn = v.toString();

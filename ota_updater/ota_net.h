@@ -16,7 +16,7 @@ private:
     bool versionCheck(const QString &dir);
     void workDown(const QString &fn, int bit);
     int cmd_updater(const QString &fn, int bit);
-    bool up_rootfs(const QString &dir);
+    bool up_rootfs(const QString &path);
 
 private slots:
     void rebootSlot();

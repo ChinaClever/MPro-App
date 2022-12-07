@@ -59,14 +59,16 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     if(value < it.min[i]) alarm = AlarmCode::Min;
+
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
+            Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;
-            ret |= alarm;
         }
     } else it.cnt[i] = 0;
+    ret |= alarm;
 
     return ret;
 }
@@ -90,8 +92,9 @@ void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
 {
     for(int i=0; i<it.size; ++i) {
         if(it.hdaEle[i]) {
-            index.id = i;
+            index.id = i;            
             index.value = it.ele[i];
+            index.subtopic = DSub::Value;
             Log_Core::bulid()->log_hdaEle(index);
         }
     }

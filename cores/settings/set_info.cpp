@@ -157,7 +157,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
-    QByteArray array = v.toByteArray();
+    QByteArray array = v.toString().toUtf8();
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     switch (fc) {
@@ -226,12 +226,12 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
 {
-    int s = 10; char *ptr = cm::masterDev()->cfg.uut.qrcode;
+    int s = 6; char *ptr = cm::masterDev()->cfg.uut.qrcode;
     QString fn = "/usr/data/clever/cfg/qrcode.png";
     QString cmd = "qrencode -o %1 -s %2 '%3'";
     QString qr = cmd.arg(fn).arg(s).arg(msg);
-    qstrcpy(ptr, msg.toLatin1().data());
-    system(qr.toLatin1().data());
+    qstrcpy(ptr, msg.toUtf8().data());
+    system(qr.toUtf8().data());
     if(msg.isEmpty()) ptr[0] = 0;
 
     return true;

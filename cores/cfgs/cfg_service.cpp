@@ -13,6 +13,7 @@
 #include "mb_core.h"
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
+#include "redis_obj.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -27,12 +28,14 @@ void Cfg_Service::readCfgParams()
     ntp();
     web();
     rpc();
+    ldap();
     push();
     snmp();
     smtp();
     mqtt();
     amqp();
     odbc();
+    redis();
     login();
     syslog();
     modbus();
@@ -169,19 +172,32 @@ void Cfg_Service::radius()
     }
 }
 
+void Cfg_Service::ldap()
+{
+    QString prefix = "openldap"; QString key;
+    sLdapCfg *cfg = &App_Ldap::ldapCfg;
+    for(int i=1; i<4; ++i)  {
+        switch (i) {
+        case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "url";  cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "user";  cfg->user = mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
 void Cfg_Service::log()
 {
     sLogCfg *cfg = &Log_Core::cfg;
     QString prefix = "log"; QString key;
 
-    for(int i=1; i<4; ++i)  {
+    for(int i=1; i<7; ++i)  {
         switch (i) {
         case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
-        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
+        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 2, prefix).toInt(); break;
         case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
         case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
-        case 6: key = "hdaEn";  cfg->hdaEn = mCfg->readCfg(key, 0, prefix).toInt();  break;
+        case 6: key = "hdaEn";  cfg->hdaEn = mCfg->readCfg(key, 1, prefix).toInt();  break;
         }
     }
 }
@@ -215,6 +231,7 @@ void Cfg_Service::mqtt()
         case 7: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toByteArray(); break;
         case 8: key = "keepAlive"; cfg->keepAlive = mCfg->readCfg(key, 60, prefix).toInt();break;
         case 9: key = "qos"; cfg->qos = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 10: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
@@ -224,7 +241,7 @@ void Cfg_Service::amqp()
 {
     QString prefix = "amqp"; QString key;
     sAmqpCfg *cfg = &QRabbitMQ::amqpCfg;
-    for(int i=1; i<11; ++i) {
+    for(int i=1; i<12; ++i) {
         switch (i) {
         case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
@@ -235,12 +252,32 @@ void Cfg_Service::amqp()
         case 7: key = "name"; cfg->name = mCfg->readCfg(key, "", prefix).toString(); break;
         case 8: key = "routingKey"; cfg->routingKey = mCfg->readCfg(key, "", prefix).toString();break;
         case 9: key = "bindingKey"; cfg->bindingKey = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 10: key = "ssl"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 10: key = "ssl"; cfg->ssl = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 11: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
 }
 
+void Cfg_Service::redis()
+{
+    QString prefix = "redis"; QString key;
+    sRedisCfg *cfg = &Redis_Obj::redisCfg;
+    for(int i=1; i<10; ++i) {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "port"; cfg->port = mCfg->readCfg(key, 6379, prefix).toInt(); break;
+        case 4: key = "db"; cfg->db = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 5: key = "subscribe"; cfg->subscribe = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 7: key = "pdukey"; cfg->key = mCfg->readCfg(key, "", prefix).toByteArray(); break;
+        case 8: key = "sec"; cfg->sec = mCfg->readCfg(key, 10, prefix).toInt();break;
+        case 9: key = "alive"; cfg->alive = mCfg->readCfg(key, 60, prefix).toInt(); break;
+        default: key.clear(); break;
+        }
+    }
+}
 
 void Cfg_Service::odbc()
 {
@@ -270,14 +307,14 @@ void Cfg_Service::login()
 
     for(int k=0; k<USER_NUM; ++k) {
         sDevLogin *it = &(packet->login[k]);
-        for(int i=1; i<3; ++i) {
+        for(int i=1; i<4; ++i) {
             switch (i) {
             case 1: key = "user_%1";  ptr = it->user; break;
             case 2: key = "pwd_%1";  ptr = it->pwd; break;
             case 3: key = "token_%1";  ptr = it->token; break;
             }
             QString res = mCfg->readCfg(key.arg(k), "", prefix).toString();
-            qstrcpy(ptr, res.toLatin1().data());
+            qstrcpy(ptr, res.toUtf8().data());
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
             key = "ctrl_%1"; it->ctrl = mCfg->readCfg(key.arg(k), "", prefix).toLongLong();
@@ -381,11 +418,11 @@ void Cfg_Service::push()
         switch (i) {
         case 1: key = "recvEn"; ptr = &cfg->recvEn; value = 0; break;
         case 2: key = "recvPort"; ptr = &cfg->recvPort; value = 3096; break;
-        case 3: key = "sec"; ptr = &cfg->sec; value = 5; break;
+        case 3: key = "httpSec"; ptr = &cfg->http.sec; value = 10; break;
         case 4: key = "httpEn"; ptr = &cfg->http.en; value = 0; break;
         case 5: key = "httpUrl"; str = &cfg->http.url; break;
         case 6: key = "httpTimeout"; ptr = &cfg->http.timeout; value = 1;break;
-        case 7: key = "enServ"; ptr = &cfg->http.enServ; value = 0; break;
+        case 7: key = "enServer"; ptr = &cfg->http.enServer; value = 0; break;
         case 8: key = "httpPort"; ptr = &cfg->http.port; value = 3166;break;
         default: key.clear(); break;
         }
@@ -406,6 +443,9 @@ void Cfg_Service::push()
 
         key = "udpPort_" + QString::number(i);
         cfg->udp[i].port = mCfg->readCfg(key, 1124+i, prefix).toInt();
+
+        key = "udpSec_" + QString::number(i);
+        cfg->udp[i].en = mCfg->readCfg(key, 10, prefix).toInt();
     }
 }
 
@@ -417,7 +457,7 @@ void Cfg_Service::dualName()
         QString key = QString::number(i+1);
         QString v = "Server" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->dual.name[i], res.toLatin1().data());
+        qstrcpy(dev->dual.name[i], res.toUtf8().data());
     }
 }
 
@@ -429,7 +469,7 @@ void Cfg_Service::groupName()
         QString key = QString::number(i+1);
         QString v = "Group" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->group.name[i], res.toLatin1().data());
+        qstrcpy(dev->group.name[i], res.toUtf8().data());
     }
 }
 
@@ -441,6 +481,6 @@ void Cfg_Service::outputName()
         QString key = QString::number(i+1);
         QString v = "Output" + key;
         QString res = mCfg->readCfg(key, v, prefix).toString();
-        qstrcpy(dev->output.name[i], res.toLatin1().data());
+        qstrcpy(dev->output.name[i], res.toUtf8().data());
     }
 }

@@ -357,7 +357,7 @@ struct sOtaUpdater
     struct sOtaUpIt web; // 网页升级状态
     struct sOtaUpIt slave; // 级联升级状态
     struct sOtaUpIt outlet; // 执行板升级状态
-    struct sOtaUpIt reserve;
+    struct sOtaUpIt rootfs; // 文件系统升级状态
     char host[NAME_SIZE]; // 服务端地址
 };
 
@@ -388,8 +388,8 @@ enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
-enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket,TxSsh};
-enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet};
+enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
+enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
@@ -410,10 +410,10 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
-             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC,
+             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap,
              ELog=81, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
 
 struct sCfgItem {

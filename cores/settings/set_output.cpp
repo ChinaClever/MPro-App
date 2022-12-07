@@ -32,10 +32,11 @@ void Set_Output::relayOpLog(const sDataItem &it)
     case DSub::ResetDelay: str += QStringLiteral("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
     case DSub::OverrunOff: str += QStringLiteral("输出位超限断电，修改为 %1s").arg(it.value); break;
     case DSub::TimingEn: str += QStringLiteral("输出位定时功能，修改为 %1s").arg(it.value); break;
+    case DSub::RelayEn: str += QStringLiteral("继电器使能状态，修改为 %1").arg(it.value); break;
     case DSub::Relays: {
         int start = it.type-1; int end = start + it.id; str = QStringLiteral("第%１至%2 ").arg(start, end);
         if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开"); break;}
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << it.subtopic; break;
     }
 
     sEventItem db;
@@ -92,20 +93,20 @@ bool Set_Output::groupCtrl(sDataItem &unit)
 bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
-    if(unit.type == DType::Group) {
-        groupCtrl(unit);
-    } else {
-        switch (unit.subtopic) {
-        case DSub::Value:  ret = outputCtrl(unit); break;
-        case DSub::Relays: ret = outputsCtrl(unit); break;
-        case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
-        default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
-        }
+    switch (unit.subtopic) {
+    case DSub::Value:
+        if(unit.type == DType::Group) ret = groupCtrl(unit);
+        else ret = outputCtrl(unit);
+        break;
+    case DSub::Relays: ret = outputsCtrl(unit); break;
+    case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
+    default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
     } relayOpLog(unit);
-    if(unit.type == DType::Dual) {
-        sDataItem it = unit; it.addr += 1;
-        ret = Cascade_Core::bulid()->masterSeting(it);
-    }
+
+    //if(unit.type == DType::Dual) {
+    //    sDataItem it = unit; it.addr += 1;
+    //    ret = Cascade_Core::bulid()->masterSeting(it);
+    //}
 
     return ret;
 }
@@ -139,8 +140,8 @@ QString Set_Output::outputCfg(sCfgItem &it)
 QString Set_Output::grouping(int addr, int id)
 {
     QString res; if(addr == 0xff) addr = 0;
-    QList<int> ids = Data_Core::bulid()->outletByGroup(id, addr);
-    foreach(auto &i, ids) res += QString::number(i) +";";
+    QList<int> ids = Data_Core::bulid()->outletByGroup(id-1, addr);
+    foreach(auto &i, ids) res += QString::number(i+1) +";";
     return res;
 }
 
@@ -162,7 +163,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     case SFnCode::EOutput: op += QStringLiteral("输出位名称"); break;
     case SFnCode::EGroup: op += QStringLiteral("组名称"); break;
     case SFnCode::EDual: op += QStringLiteral("机架名称"); break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << it.type; break;
     }
 
     sEventItem db;
@@ -182,9 +183,9 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 {
     bool ret = true; uint addr = it.addr; if(addr==0xff) addr = 0;
-    sDevData *dev = cm::devData(addr);
+    sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
     uchar *ptr = dev->cfg.nums.group[it.fc];
-    if(it.id < OUTPUT_NUM) ptr[it.id] = v.toInt();
+    if(it.id < OUTPUT_NUM) ptr[it.id-1] = v.toInt();
     else {cout << it.id; ret = false;}
     if(ret) Cfg_Core::bulid()->groupWrite();
     return ret;
@@ -194,11 +195,11 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     uint addr = it.addr; if(addr==0xff) addr = 0;
     QStringList strs = v.toString().simplified().split(";");
-    sDevData *dev = cm::devData(addr); bool ret = true;
-    uchar *ptr = dev->cfg.nums.group[it.fc];
+    sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
+    uchar *ptr = dev->cfg.nums.group[it.fc]; bool ret = true;
     memset(ptr, 0, OUTPUT_NUM);
     foreach(auto &str, strs) {
-        int id = str.toInt(); ptr[id] = 1;
+        int id = str.toInt(); if(id) id -= 1; ptr[id] = 1;
     } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
     return ret;
 }
@@ -214,19 +215,19 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     case SFnCode::EOutput: obj = &(dev->output); prefix = "OutputName"; break;
     case SFnCode::EGroup: obj = &(dev->group); prefix = "GroupName"; break;
     case SFnCode::EDual: obj = &(dev->dual); prefix = "DualName"; break;
-    default: res = false; qDebug() << Q_FUNC_INFO << it.type; return res;
+    default: res = false; cout << it.type; return res;
     }
 
     switch (it.fc) {
     case 1: ptr = obj->name[id]; break;
     case 2: ptr = obj->relay.timingOn[id]; break;
     case 3: ptr = obj->relay.timingOff[id]; break;
-    default: res = false; qDebug() << Q_FUNC_INFO << it.fc; break;
+    default: res = false; cout << it.fc; break;
     }
 
     if(ptr){
-        qstrcpy(ptr, v.toByteArray().data());
-        ptr[v.toByteArray().size()] = 0;
+        QByteArray array = v.toByteArray();
+        qstrcpy(ptr, array.data());
         if(it.fc == 1) {
             QString key = QString::number(id+1);
             Cfg_Com *cfg = Cfg_Com::bulid();
@@ -249,7 +250,7 @@ bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
         case SFnCode::EOutput: obj = &(dev->output); break;
         case SFnCode::EGroup: obj = &(dev->group); break;
         case SFnCode::EDual: obj = &(dev->dual); break;
-        default: qDebug() << Q_FUNC_INFO << it.type; return ret;
+        default: cout << it.type; return ret;
         }
         for(int i=0; i<obj->size; ++i) {
             it.id = i; ret = outputSetById(it, v);

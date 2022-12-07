@@ -12,10 +12,10 @@ include(mbs/mbs.pri)
 include(cfgs/cfgs.pri)
 include(logs/logs.pri)
 include(apps/apps.pri)
-#include(ipcs/ipcs.pri)
 include(rpcs/rpcs.pri)
 include(odbc/odbc.pri)
 include(datas/datas.pri)
+include(redis/redis.pri)
 include(agents/agents.pri)
 include(alarms/alarms.pri)
 include(cascade/cascade.pri)
@@ -31,7 +31,7 @@ SOURCES += \
 contains(TARGET_ARCH, x86_64) {
     # Default rules for deployment.
     qnx: target.path = /tmp/$${TARGET}/bin
-    else: unix:!android: target.path = /opt/$${TARGET}/bin
+    else: unix:!android: target.path = /tmp/$${TARGET}/bin
     !isEmpty(target.path): INSTALLS += target
 } else {
     target.path = /usr/data/clever/app

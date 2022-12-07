@@ -90,13 +90,13 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     if(it.start.size()) {
         QString endDateStr = it.end;
         if(it.end.isEmpty()) endDateStr = QDate::currentDate().toString("yyyy-MM-dd");
-        cmd += QString("dtime between \'%1\' and  \'%2\' ").arg(it.start, endDateStr);
+        cmd += QString("dtime between '%1 00:00:00' and '%2 23:59:59' ").arg(it.start, endDateStr);
     }
 
-    if(it.addr) cmd += QString(" and addr = \'%1\'").arg(it.addr);
-    if(it.type) cmd += QString(" and type = \'%1\'").arg(it.type);
-    if(it.topic) cmd += QString(" and topic = \'%1\'").arg(it.topic);
-    if(it.index) cmd += QString(" and index = \'%1\'").arg(it.index);
+    cmd += QString(" and addr = '%1'").arg(it.addr);
+    if(it.type) cmd += QString(" and type = '%1'").arg(it.type);
+    if(it.topic) cmd += QString(" and topic = '%1'").arg(it.topic);
+    if(it.index) cmd += QString(" and indexes = '%1'").arg(it.index);
 
     QWriteLocker locker(mRwLock);
     QString res; Db_Hda *db = Db_Hda::bulid();
@@ -105,6 +105,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
         int minId = its.first().id;
         res = db->toPageJson(its, minId);
     } else qDebug() << Q_FUNC_INFO << cmd;
+    //qDebug() << its.size() << cmd  << res;
 
     return res;
 }

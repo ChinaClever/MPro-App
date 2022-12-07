@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
 		<meta name="renderer" content="webkit">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>swctrl</title>
+		<title>dual</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
@@ -38,7 +38,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -62,17 +62,17 @@
 		let dual_data = new Array();
 		let dual_name = new Array();
 		var dev_name =new Array();
-		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + dual_addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + dual_addr));
 		read_data();
 		lang_init();
 		function read_data(){
 			for(var i = 1 ;i < dual_num + 1;i++)
 			{
 				dual_data[i] = new Array();
-				dual_name[i] = sessionStorage.getItem("DualName"+ addr +'_'+i);
-				dual_data[i][0] = sessionStorage.getItem(type_name[24]+ info_info[2] +addr +'_'+i);
-				dual_data[i][1] = sessionStorage.getItem(type_name[24]+ info_info[3] +addr +'_'+i);
+				dual_name[i] = sessionStorage.getItem("DualName"+ dual_addr +'_'+i);
+				dual_data[i][0] = sessionStorage.getItem(type_name[24]+ info_info[2] +dual_addr +'_'+i);
+				dual_data[i][1] = sessionStorage.getItem(type_name[24]+ info_info[3] +dual_addr +'_'+i);
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -84,7 +84,7 @@
 			}
 			lang[1] = ["","机架控制","","","",""];
 			lang[2] = ["","阅读模式","","","",""];
-			lang[3] = ["","设备选择","","","",""];
+			lang[3] = ["","机柜选择","","","",""];
 			lang[4] = ["","序号","","","",""];
 			lang[5] = ["","机架名称","","","",""];
 			lang[6] = ["","上次设置","","","",""];
@@ -96,6 +96,7 @@
 			lang[12] = ["","下电","","","",""];
 			lang[13] = ["","设置模式","","","",""];
 			lang[14] = ["","统一设置","","","",""];
+			lang[14] = ["","机柜","","","",""];
 		}
 		function lang_fun(){
 			for(var i = 1;i<11;i++){
@@ -107,7 +108,7 @@
 			}
 		}
 		$('.table-striped').html(buildTable(dual_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel(slave_num/2));
 		lang_fun();
 		modeset();
 		showdata();
@@ -117,8 +118,9 @@
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
 			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+ lang[15][language]+(i+1)+'</option>';
 			}
+			document.getElementById("ms").selected = slave_addr;
 			return tbody;
 		}
 		function modeset(){
@@ -207,7 +209,7 @@
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
-				$('.table-striped').html(buildTable(dual_num));
+				$('.table-striped').html(buildTable(dual_num/2));
 				lang_fun();
 				showdata();
 				datetime();
@@ -231,9 +233,13 @@
 					val += " ";
 				}
 				val += document.getElementById('f'+ (num -1)).value;
-				rpc.call('pduSetParam',[0,24,stat,num,0,val]);
+				rpc.call('pduSetParam',[dual_addr,24,stat,num,0,val]);
 				flash_html(btn);
 			}else{}
+		}
+		function change(opt){
+			slave_addr = parseInt(opt.value);
+			dual_addr = parseInt(opt.value) * 2;
 		}
 		function buildTable(rows) {
 			var thead = '',

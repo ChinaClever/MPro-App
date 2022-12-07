@@ -52,10 +52,10 @@
 		function read_data(){
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				AVpow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
-				pow_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
+				AVpow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
+				pow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
 				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[3]+addr+'_'+i));
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				energe_val[i] = (sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -131,9 +131,9 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ group_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">' + parseFloat(pow_val[i+1]).toFixed(2) + '</td>';
-				tbody += '<td id = "d'+ i + '">'+ parseFloat(AVpow_val[i + 1]).toFixed(2) +'</td>';
-				tbody += '<td id = "e'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(1) + '</td>';
+				tbody += '<td id = "c'+ i + '">' + parseFloat(pow_val[i+1]).toFixed(3) + '</td>';
+				tbody += '<td id = "d'+ i + '">'+ parseFloat(AVpow_val[i + 1]).toFixed(3) +'</td>';
+				tbody += '<td id = "e'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
@@ -145,8 +145,8 @@
 				state1_ = document.getElementById('c'+i);
 				state2_ = document.getElementById('d'+i);
 				state3_ = document.getElementById('e'+i);
-				state1_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(2);
-				state2_.innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(2);
+				state1_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
+				state2_.innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(3);
 				state3_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
 			}
 		}

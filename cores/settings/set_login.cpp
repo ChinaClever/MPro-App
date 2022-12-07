@@ -33,7 +33,6 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     QString key; bool ret = true;
     QString prefix = "login"; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login[id]);
-    char *str = v.toByteArray().data();
 
     switch (type) {
     case 1: key = "user_%1"; ptr = it->user; break;
@@ -41,15 +40,15 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
     case 5: key = "ctrl_%1"; it->ctrl = v.toLongLong(); break;
-    case 11: ret = loginCheck(str); break;
+    case 11: ret = loginCheck(v.toString()); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ptr) {
-        qstrcpy(ptr, str);
-        ptr[v.toByteArray().size()] = 0;
+        QByteArray str = v.toByteArray();
+        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
         sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, str);
+        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
         Log_Core::bulid()->append(db);
     }
 
@@ -76,8 +75,10 @@ bool Set_Login::loginAuth(const QStringList &ls)
 
 bool Set_Login::loginCheck(const QString &str)
 {
+    bool ret = false;
     QStringList ls = str.split("; ");
-    bool ret = false; if(ls.size() == 2) {
+
+    if(ls.size() == 2) {
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
         if(cfg->en) {
             int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
@@ -86,11 +87,17 @@ bool Set_Login::loginCheck(const QString &str)
         } else {
             ret = loginAuth(ls);
         }
+    } else if(App_Ldap::ldapCfg.en && ls.size()) {
+        bool res = App_Core::bulid()->ldap_work(ls.last());
+        if(res) ls.insert(0, "ldap:"+App_Ldap::ldapCfg.user);
+    }
 
-        sEventItem db; db.event_type = QStringLiteral("用户登陆"); //opSrc(txType);
-        db.event_content = QStringLiteral("登陆登陆为 %1").arg(str);
+    if(ret) {
+        sEventItem db; db.event_type = QStringLiteral("用户登陆");
+        db.event_content = QStringLiteral("登陆登陆为 %1").arg(ls.first());
         Log_Core::bulid()->append(db);
     }
+
 
     return ret;
 }

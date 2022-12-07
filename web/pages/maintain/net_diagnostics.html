@@ -36,10 +36,10 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../doc-lib/highlight.pack.js"></script>
-	<script src="../doc-lib/doc.js"></script>
     <script>
-		read_net_diagnostics_data();
+		setTimeout(function(){
+			read_net_diagnostics_data();
+		},100);
 		let diagn_data = new Array();
 		let lang = new Array();
 		let language = 1;

@@ -14,10 +14,10 @@ Set_Diagnose::Set_Diagnose()
 void Set_Diagnose::sys_cmd(const QString &cmd, const QString &fn)
 {
     QString fmd = "echo '\n%1:' >> /tmp/download/dia/%2";
-    cm::execute(fmd.arg(cmd, fn));
+    system(fmd.arg(cmd, fn).toLocal8Bit().data());
 
     fmd = "%1 >> /tmp/download/dia/%2";
-    cm::execute(fmd.arg(cmd, fn));
+    system(fmd.arg(cmd, fn).toLocal8Bit().data());
 }
 
 void Set_Diagnose::diasCopy()
@@ -30,11 +30,7 @@ void Set_Diagnose::diasCopy()
     Integr_JsonBuild::bulid()->saveJsons();
 
     QString fmd = "cp -af %1 " + dir +"/";
-    cmd = fmd.arg("/usr/data/etc"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/bin"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/cfg"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/certs"); cm::execute(cmd);
-    cmd = fmd.arg("/usr/data/clever/ver.ini"); cm::execute(cmd);
+    cmd = fmd.arg("/usr/data/*"); cm::execute(cmd);
 }
 
 void Set_Diagnose::diascmds()

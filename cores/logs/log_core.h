@@ -17,7 +17,7 @@ class Log_Core : public Log_Read
     explicit Log_Core(QObject *parent = nullptr);
 public:
     static Log_Core *bulid(QObject *parent = nullptr);
-    void append(const sOtaItem &it) {mOtaIts<<it; start();}
+    void append(const sOtaItem &it) {mOtaIts<<it; run();}
     void append(const sEventItem &it);
     void append(const sAlarmItem &it);
     void append(const sDataItem &it);

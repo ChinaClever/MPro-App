@@ -18,6 +18,7 @@ struct sAmqpCfg
     QString bindingKey;
     QString virtualHost;
     int isConnected=0;
+    int sec;
 };
 
 class QRabbitMQ : public QObject

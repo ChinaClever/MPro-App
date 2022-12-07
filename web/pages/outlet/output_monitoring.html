@@ -58,12 +58,12 @@
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
-				cur_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
-				pow_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
+				cur_val[i] = (sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
+				pow_val[i] = (sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
 				cur_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[3]+addr+'_'+i));
 				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+addr+'_'+i));
-				pf_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pf_]+data_name[1]+addr+'_'+i));
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				pf_val[i] = (sessionStorage.getItem(type_name[output]+data_type[pf_]+data_name[1]+addr+'_'+i));
+				energe_val[i] = (sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -161,9 +161,9 @@
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
 				tbody += '<td id = "d'+ i + '">' + parseFloat(cur_val[i+1]).toFixed(2) + '</td>';
-				tbody += '<td id = "e'+ i + '">'+ parseFloat(pow_val[i + 1]).toFixed(2) +'</td>';
+				tbody += '<td id = "e'+ i + '">'+ parseFloat(pow_val[i + 1]).toFixed(3) +'</td>';
 				tbody += '<td id = "f'+ i + '">'+ parseFloat(pf_val[i + 1]).toFixed(2) +'</td>';
-				tbody += '<td id = "g'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(1) + '</td>';
+				tbody += '<td id = "g'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
@@ -178,7 +178,7 @@
 				state4_ = document.getElementById('g'+i);
 				state5_ = document.getElementById('c'+i);
 				state1_.innerHTML = (parseFloat(cur_val[i + 1])).toFixed(2);
-				state2_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(2);
+				state2_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
 				state3_.innerHTML = (parseFloat(pf_val[i + 1])).toFixed(2);
 				state4_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
 				state5_.innerHTML = State[swtich_state[i + 1]];

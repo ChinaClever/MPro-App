@@ -38,6 +38,7 @@ void Data_Group::groupWork()
         QList<int> ls;
         if(dev->cfg.param.groupEn) ls = outletByGroup(i);
         sumObjData(i, mDev->group, mDev->output, ls);
+        //cout << i << ls << mDev->group.pow.value[i];
     } setGroupSize(); groupOverrunOff(); groupTiming();
 }
 

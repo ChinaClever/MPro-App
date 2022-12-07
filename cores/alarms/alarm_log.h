@@ -15,7 +15,7 @@ protected slots:
     void alarmSlot(const sDataItem &index, uchar value);
 
 private:
-    QString alarmStatus(uchar value, QString &state);
+    QString alarmStatus(uchar value);
     QString alarmContent(const sDataItem &index);
 
     QString alarmSensor(uchar value);

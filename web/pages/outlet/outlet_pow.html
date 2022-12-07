@@ -75,7 +75,11 @@
 				output_info[i] =  new Array();
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				for(var j = 1;j <data_name.length;j++){
-					output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i));
+					if(j == 7 || j==8){
+						output_info[i][j] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i));
+					}else{
+						output_info[i][j] = sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[j]+addr+'_'+i);
+					}
 				}
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -92,14 +96,14 @@
 			lang[3] = ["","设备选择:","","","",""];
 			lang[4] = ["","序号","","","",""];
 			lang[5] = ["","单元名称","","","",""];
-			lang[6] = ["","有功功率(W)","","","",""];
+			lang[6] = ["","有功功率(KW)","","","",""];
 			lang[7] = ["","告警使能","","","",""];
 			lang[8] = ["","历史记录","","","",""];
-			lang[9] = ["","额定值(W)","","","",""];
-			lang[10] = ["","最小值(W)","","","",""];
-			lang[11] = ["","下临界(W)","","","",""];
-			lang[12] = ["","上临界(W)","","","",""];
-			lang[13] = ["","最大值(W)","","","",""];
+			lang[9] = ["","额定值(KW)","","","",""];
+			lang[10] = ["","最小值(KW)","","","",""];
+			lang[11] = ["","下临界(KW)","","","",""];
+			lang[12] = ["","上临界(KW)","","","",""];
+			lang[13] = ["","最大值(KW)","","","",""];
 			lang[14] = ["","设置模式","","","",""];
 			lang[15] = ["","阅读模式","","","",""];
 			lang[16] = ["","统一设置","","","",""];
@@ -124,7 +128,7 @@
 			return tbody;
 		}
 		function showdata(){
-			var cs = 0 ,ss = 0;
+			var cs = 0 ,ss = 0,hs=0;
 			for(var i = 1 ;i < output_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
 				cs = document.getElementById('c'+(i -1));
@@ -177,7 +181,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = "设置模式";
+				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -189,7 +193,7 @@
 				// ms.style.display = "none";
 				read = 0;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = "阅读模式";
+				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -236,17 +240,21 @@
 					sub = 11;
 				}
 				if(ckd.checked == true){
-					if(sub ==8){
-						pow_mark[0] = 1;
-					}else{
-						pow_mark[1] = 1;
+					if(number == output_num +1){
+						if(sub ==8){
+							pow_mark[0] = 1;
+						}else{
+							pow_mark[1] = 1;
+						}
 					}
 					stat = 1;
 				}else{
-					if(sub ==8){
-						pow_mark[0] = 0;
-					}else{
-						pow_mark[1] = 0;
+					if(number == output_num +1){
+						if(sub ==8){
+							pow_mark[0] = 0;
+						}else{
+							pow_mark[1] = 0;
+						}
 					}
 					stat = 0;
 				}
@@ -269,9 +277,17 @@
 			var type1 = ipt.id.substr(0,1);
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			var stat = parseInt(ipt.value);
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
+			var stat = (ipt.value);
+			let data1 = ipt.parentNode.parentNode.childNodes[6].childNodes[0].value;
+			let data2 = ipt.parentNode.parentNode.childNodes[7].childNodes[0].value;
+			let data3 = ipt.parentNode.parentNode.childNodes[8].childNodes[0].value;
+			let data4 = ipt.parentNode.parentNode.childNodes[9].childNodes[0].value;
+			if(data1>data2 || data2>data3 || data3>data4){
+				alert("input data error");
+				showdata();
+				return ;
+			}
+			if(confirm("您已更改表单，请确认提交！"))
 			{
 				if(type1 === 'e'){
 					sub = 2;
@@ -313,14 +329,14 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseInt(output_info[i + 1][1]) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(output_info[i + 1][1]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td id = "e'+ i +'">' + parseInt(output_info[i + 1][2])+'</td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseInt(output_info[i + 1][5])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseInt(output_info[i + 1][6])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseInt(output_info[i + 1][7])  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseInt(output_info[i + 1][4])  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + parseFloat(output_info[i + 1][2]).toFixed(3)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(output_info[i + 1][5]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(output_info[i + 1][6]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(output_info[i + 1][7]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(output_info[i + 1][4]).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -331,10 +347,10 @@
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
 					tbody += '<td id = "e'+ i + '"></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2816"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3520){value=3520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3520"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="2.816"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="3.520"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -346,7 +362,7 @@
 		function putdata(){
 			for(let i = 0;i < output_num;i++){
 				state_ = document.getElementById('c' + i);
-				state_.innerHTML = output_info[i+1][1];
+				state_.innerHTML = parseFloat(output_info[i+1][1]).toFixed(3);
 			}
 		}
 		setInterval(function(){

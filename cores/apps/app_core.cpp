@@ -48,6 +48,6 @@ void App_Core::initVer()
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
-    } else cout << CFG_APP << "error";
+    } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
 }
 

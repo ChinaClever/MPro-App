@@ -4,6 +4,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/app_buzzer.h \
     $$PWD/app_core.h \
+    $$PWD/app_ldap.h \
     $$PWD/app_led.h \
     $$PWD/app_netaddr.h \
     $$PWD/app_nftables.h \
@@ -19,6 +20,7 @@ HEADERS += \
 SOURCES += \
     $$PWD/app_buzzer.cpp \
     $$PWD/app_core.cpp \
+    $$PWD/app_ldap.cpp \
     $$PWD/app_led.cpp \
     $$PWD/app_netaddr.cpp \
     $$PWD/app_nftables.cpp \

@@ -68,7 +68,7 @@ bool Cascade_Updater::otaSendInit(int addr, const sOtaFile &it)
 {
     isOta = true; waitForLock(); cm::mdelay(200);
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
-    in << it.fc << it.dev <<it.path << it.file << it.md5 << it.size << END_CRC;
+    in << it.fc << it.dev <<it.path << it.file << it.md5 << it.sig << it.size << END_CRC;
     QByteArray recv = tranData(fc_otaStart, addr, array);
     if(!recv.contains("Start Updata")) isOta = false;
     return isOta;
@@ -107,9 +107,9 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
 {
     sOtaFile *it = &mIt; QByteArray rcv(data); cm::dataPacket()->ota.slave.isRun = 1;
     QDataStream out(&rcv, QIODevice::ReadOnly); setbit(cm::dataPacket()->ota.work, DOta_Slave);
-    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->size >> it->crc;
+    out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->sig >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
-    else cout << it->file << it->md5 << it->crc;
+    else cout << it->file << it->md5 << it->sig << it->crc;
     return writeData(fc_otaStart, 0, "Start Updata");
 }
 
@@ -136,12 +136,19 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
 void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
-        QString dst = "/tmp/", fn = it.path + it.file;
-        QString str = "unzip -o %1 -d " + dst + "updater/clever/";
+        QString fn = it.path + it.file;
+        QString dir = "/tmp/updater/clever/";
+        QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
+
+        QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
+        QString cmd = fmd.arg(dir); throwMessage(cmd);
+        str = cm::execute(cmd); throwMessage(str);
+        Set_Core::bulid()->ota_updater(11, fn);
+        otaRootfs(dir);
+
         cm::dataPacket()->ota.slave.isRun = 0;
         clrbit(cm::dataPacket()->ota.work, DOta_Slave);
-        Set_Core::bulid()->ota_updater(11, fn);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
         //if(!ret) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
     } else {
@@ -151,20 +158,32 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
     }
 }
 
+void Cascade_Updater::otaRootfs(const QString &path)
+{
+    QString dir = path + "rootfs";
+    QStringList fns = File::entryList(dir); cout << dir << fns;
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) {
+        QString fmd = "system-update %1/xImage %1/rootfs.squashfs";
+        sOtaUpdater *ota = &cm::dataPacket()->ota;
+        setbit(ota->work, DOta_Rootfs);
+        throwMessage(fmd.arg(dir));
+        ota->rootfs.progress = 0;
+        ota->rootfs.isRun = 1;
+        QString str = fmd.arg(dir);
+        system(str.toLocal8Bit().data());
+        throwMessage(str);
+        ota->rootfs.isRun = 0;
+        ota->rootfs.progress = 100;
+        clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
+    }
+}
+
 void Cascade_Updater::otaReboot()
 {
-    // 升级文件系统；//////////===========
-
-    QString dir = "/tmp/updater/clever/";
-    QString fmd = "rsync -av --exclude clever/rootfs  %1 /usr/data/";
-    QString cmd = fmd.arg(dir); throwMessage(cmd);
-    throwMessage(cm::execute(cmd));
-
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    cmd = "rm -rf /tmp/updater/clever";
-    throwMessage(cm::execute(cmd));
-    cm::execute("rm -rf /usr/data/upload/*");
-    cm::execute("sync"); system("reboot");
+    system("rm -rf /tmp/updater/clever");
+    system("rm -rf /usr/data/upload/*");
+    system("sync"); system("reboot");
 }

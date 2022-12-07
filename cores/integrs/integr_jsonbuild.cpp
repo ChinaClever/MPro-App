@@ -56,7 +56,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 void Integr_JsonBuild::saveJson(uchar addr)
 {
     QJsonObject json = getJsonObject(addr);
-    QString dir = "/usr/data/clever/download/dia/metadata/";
+    QString dir = "/tmp/download/dia/metadata/"; cm::execute("mkdir -p "+dir);
     QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
@@ -71,7 +71,7 @@ void Integr_JsonBuild::saveJson(uchar addr)
 void Integr_JsonBuild::saveJsons()
 {
     int size = cm::masterDev()->cfg.nums.slaveNum;
-    for(int i=0; i<size; ++i) saveJson(i);
+    for(int i=0; i<=size; ++i) saveJson(i);
 }
 
 void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,
@@ -248,29 +248,28 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////==========
+    //it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////==========
     ObjData(it->line, "line_item_list", obj);
 
-    it->loop.size = 6;///////=============
-    it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
-
+    //it->loop.size = 6;///////=============
+    //it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
     ObjData(it->loop, "loop_item_list", obj, 2);
 
-    it->group.size = 8;/////////////////==============
-    it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
+    //it->group.size = 8;/////////////////==============
+    //it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
     ObjData(it->group, "group_item_list", obj);
 
-    it->dual.size = 48;/////////////////============
-    it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
+    //it->dual.size = 48;/////////////////============
+    //it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
     ObjData(it->dual, "dual_item_list", obj);
 
-    it->output.size = 48;///////////////==========
-    it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
+    //it->output.size = 48;///////////////==========
+    //it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
     ObjData(it->output, "output_item_list", obj, 1);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
-    it->env.tem.size = 2;////////////////===========
-    it->env.hum.size = 2;////////////////============
+    //it->env.tem.size = 2;////////////////===========
+    //it->env.hum.size = 2;////////////////============
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }
