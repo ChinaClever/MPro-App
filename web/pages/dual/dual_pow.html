@@ -61,7 +61,7 @@
 		var  read  = 0,dt = 0;
 		var mode = 0;
 		let pow_mark = new Array();
-		var len  = data_name.length;
+		var len  = data_name.length -1;
 		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + dual_addr));
 		var dev_name =new Array();
 		var dual_name =new Array();
@@ -74,8 +74,8 @@
 			for(var i = 1 ;i < dual_num + 1;i++){
 				dual_info[i] =  new Array();
 				dual_name[i] = sessionStorage.getItem("DualName"+ dual_addr +'_'+i);
-				for(var j = 1;j <len;j++){
-					dual_info[i][j] = (sessionStorage.getItem(type_name[dual]+data_type[pow_]+data_name[j]+dual_addr+'_'+i));
+				for(var j = 0;j <len;j++){
+					dual_info[i][j] = (sessionStorage.getItem(type_name[dual]+data_type[pow_]+data_name[j + 1]+dual_addr+'_'+i));
 				}
 			}
 			for(var i = 0;i<slave_num;i++){
@@ -200,14 +200,14 @@
 		}
 		function flash_html(par)
 		{
-			read_dual_data();
+			read_dual_data(0);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(dual_num));
 				showdata();
 				lang_fun();
-			},500);
+			},1000);
 		}
 		function cked(ckd)
 		{
@@ -353,7 +353,7 @@
 			}
 		}
 		setInterval(function(){
-			read_dual_data();
+			read_dual_data(0);
 			setTimeout(function(){
 				read_data();
 				putdata();
