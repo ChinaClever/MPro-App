@@ -20,7 +20,7 @@ let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
-let snmp_info = new Array("","V2Enable","Trap","V3Enable","Username","Password","Key");
+let snmp_info = new Array("","V2Enable","","","","","","","","","","V3Enable","Username","Password","Key","Encrpty","","","","","","Trap","");
 let rpc_info = new Array("","JsonMode","JsonPort","","XmlMode","XmlPort","");
 let push_info = new Array("","UdpEn","UdpAddr","UdpPort","","","","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
 let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","",
@@ -29,7 +29,7 @@ let info_info = new Array("","Name","PowerOn","PowerOff");
 let tls_info = new Array("","Before","After","SN","KeyLength");
 let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 let mqtt_cfg = new Array("","En","Addr","Port","Path","Id","Usr","Psd","Keep","Qos","State");
-let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Swith","Routing","Binding","SslEn","State");
+let amqp_cfg = new Array("","En","Addr","Port","Host","Usr","Psd","Swith","Routing","Binding","SslEn","State","Update");
 let ip_mode = new Array("Ipv4","Ipv6");
 let ip_addr = new Array("En","Mode","Addr","Mask","Gateway","Prefix","Dns","","","","Card","Mac");
 var encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","",
@@ -147,7 +147,7 @@ var jsonrpc = function()
         sessionStorage.setItem(type_name[type]+ modbus_info[topic], JSON.parse(evt.data).result[5]);
       break;
       case 16:
-        if(topic == 2){
+        if(topic == 21){
           sessionStorage.setItem(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
@@ -583,15 +583,15 @@ function read_rpc_data(addr){
 function read_snmp_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(7)){
+    if(j >= parseInt(22)){
       clearInterval(time1);
     }
-    if(j <= 6 ){
-      if(j == 2){
+    if(j <= 21 ){
+      if(j == 21){
         for( i = 1;i<5;i++){
           rpc.call('pduReadParam',[addr,snmp,j,i,0]);
         }
-      }else{
+      }else if((j>10 && j<16)|| j==1){
         rpc.call('pduReadParam',[addr,snmp,j,0,0]);
       }
     }
@@ -684,10 +684,10 @@ function read_mqtt_data(addr){
 function read_amqp_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(11 +1)){
+    if(j >= parseInt(12 +1)){
       clearInterval(time1);
     }
-    if(j < 11 +1){
+    if(j < 12 +1){
       rpc.call('pduReadParam',[addr,20,j,0,0]);
     }
     j++;

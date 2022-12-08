@@ -113,10 +113,18 @@
 				for(var j = 1;j<5;j++){
 						document.getElementById(addr_name[j]).disabled = true;
 					}
+			}else{
+				for(var j = 1;j<5;j++){
+						document.getElementById(addr_name[j]).disabled = false;
+					}
 			}
 			if(snmp_data[3][0] == 0){
 				for(var j = 4;j<7;j++){
 					document.getElementById(snmp_name[j]).disabled = true;
+				}
+			}else{
+				for(var j = 4;j<7;j++){
+					document.getElementById(snmp_name[j]).disabled = false;
 				}
 			}
 		}

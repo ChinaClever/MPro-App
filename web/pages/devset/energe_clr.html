@@ -162,8 +162,8 @@
 		}
 		modeset();
 		function modeset(modesel){
-			var btnname = document.getElementsByTagName("button");
-			for(var j = 1; j<btnname.length;j++)
+			var btnname = document.getElementsByTagName("input");
+			for(var j = 0; j<btnname.length;j++)
 			{
 				btnname[j].disabled = true;
 			}
@@ -173,8 +173,8 @@
 				read = 1;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML =  lang[9][lanuage];
-				var btnname = document.getElementsByTagName("button");
-				for(var j = 1; j<btnname.length;j++)
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length;j++)
 				{
 					btnname[j].disabled = false;
 				}
@@ -183,8 +183,8 @@
 				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML =  lang[2][lanuage];
-				var btnname = document.getElementsByTagName("button");
-				for(var j = 1; j<btnname.length;j++)
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length;j++)
 				{
 					btnname[j].disabled = true;
 				}
@@ -209,7 +209,7 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]/10).toFixed(1) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' +  lang[10][lanuage] + '</button></td>';
+				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "btn_click(this)" value="'+lang[10][lanuage]+'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -219,7 +219,7 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td id = "d'+ i + '"></td>';
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-					tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' +  lang[10][lanuage] + '</button></td>';
+					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = btn_click(this) value="'+lang[10][lanuage]+'"></input></td>';
 					tbody += '</tr>';
 				}
 			}

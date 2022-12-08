@@ -240,6 +240,14 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
+			if(rows == 0){
+					thead = '<tr><td width ="5%" id="lang_4"></td>\
+					<td width ="25%" id="lang_5"></td>\
+					<td width ="50%" id="lang_6"></td>\
+					<td width ="10%" id="lang_7"></td>\
+					<td width ="10%" colspan = "2" id="lang_8"></td>\
+					</tr>';
+			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" id="lang_4"></td>\

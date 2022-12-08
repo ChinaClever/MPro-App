@@ -38,7 +38,7 @@
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		var mqtt_data = new Array();
 		let lang = new Array();
-		let id_name = new Array("enable","addr","port","path","cid","usr","psd","keep","qos","state");
+		let id_name = new Array("enable","addr","port","path","cid","usr","psd","keep","qos","state","update");
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		let qos_ = new Array("","","");
 		var mqtt_data = new Array();
@@ -59,34 +59,36 @@
 			lang[10] = ["","KeepAlive(S):","","","",""];
 			lang[11] = ["","Qos:","","","",""];
 			lang[12] = ["","连接状态:","","","",""];
-			lang[13] = ["","立即生效","","","",""];
-			lang[14] = ["","禁用","","","",""];
-			lang[15] = ["","0 消息最多传递一次","","","",""];
-			lang[16] = ["","1 消息传递最少一次","","","",""];
-			lang[17] = ["","2 消息仅传递一次","","","",""];
-			lang[18] = ["","已连接","","","",""];
-			lang[19] = ["","未连接","","","",""];
+			lang[13] = ["","更新频率(S):","","","",""];
+			lang[14] = ["","立即生效","","","",""];
+			lang[15] = ["","禁用","","","",""];
+			lang[16] = ["","启用","","","",""];
+			lang[17] = ["","0 消息最多传递一次","","","",""];
+			lang[18] = ["","1 消息传递最少一次","","","",""];
+			lang[19] = ["","2 消息仅传递一次","","","",""];
+			lang[20] = ["","已连接","","","",""];
+			lang[21] = ["","未连接","","","",""];
 
-			enable[0] = lang[14][1];
-			qos_[0] = lang[15][1];
-			qos_[1] = lang[16][1];
-			qos_[2] = lang[17][1];
+			enable[0] = lang[15][1];
+			qos_[0] = lang[17][1];
+			qos_[1] = lang[18][1];
+			qos_[2] = lang[19][1];
 		}
 		function lang_fun(){
-			for(let j = 1;j<13;j++){
+			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
 			}
-			document.getElementById("lang_13").value  = lang[13][1];
+			document.getElementById("lang_14").value  = lang[14][1];
 		}
 
 		function read_data(){
-			for(var j = 1;j<11;j++){
+			for(var j = 1;j<12;j++){
 				mqtt_data[j] = sessionStorage.getItem(type_name[19]+ mqtt_cfg[j]);
 			}
 			if(mqtt_data[10] == 'false' || mqtt_data[10] == '0'){
-				mqtt_data[10] = lang[19][1];
+				mqtt_data[10] = lang[21][1];
 			}else{
-				mqtt_data[10] = lang[18][1];
+				mqtt_data[10] = lang[20][1];
 			}
 		}
 		$('.mqtt').html(buildTable());
@@ -96,20 +98,25 @@
 			showdata();
 		},500);
 		function showdata(){
-			for(var j = 0;j<id_name.length-1;j++){
+			for(var j = 0;j<id_name.length;j++){
 				if( j == 0 || j == 8){
 					document.getElementById(id_name[j])[parseInt(mqtt_data[j +1])].selected = true;
+					document.getElementById(id_name[j]).value = mqtt_data[j +1];
 					if(parseInt(mqtt_data[1]) == 0 && j != 0){
 						document.getElementById(id_name[j]).disabled = true;
+					}else{
+						document.getElementById(id_name[j]).disabled = false;	
 					}
 				}else{
 					if(parseInt(mqtt_data[1]) == 0){
 						document.getElementById(id_name[j]).disabled = true;
+					}else{
+						document.getElementById(id_name[j]).disabled = false;	
 					}
 					document.getElementById(id_name[j]).value = mqtt_data[j +1];
 				}
 			}
-			document.getElementById(id_name[id_name.length-1]).innerHTML = mqtt_data[10];
+			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
 		}
 		function flash_html(){
 			read_mqtt_data(0);
@@ -120,7 +127,7 @@
 		}
 		function changed(ipt){
 			if(confirm("请确认是否保存此次修改？")){
-				for(var i = 0 ;i<(id_name.length -1);i++){
+				for(var i = 0 ;i<(id_name.length);i++){
 					if(ipt.id == id_name[i]){
 						rpc.call('pduSetParam',[0,19,(i+1),0,0,ipt.value]);
 					}
@@ -160,13 +167,15 @@
 			tbody += '<td><input id = "'+ id_name[6] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_10"></td>';
 			tbody += '<td><input id = "'+ id_name[7] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_13"></td>';
+			tbody += '<td><input id = "'+ id_name[10] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_11"></td>';
 			tbody += '<td><select  id = "'+ id_name[8] +'" onchange ="changed(this)" >';
 			for(var i = 0; i<qos_.length;i++){
 				tbody +='<option value ="'+i+'">'+qos_[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id = "lang_13" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "lang_14" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
