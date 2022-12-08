@@ -129,9 +129,9 @@ void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
     sAlarmItem it; it.alarm_status = tr("本机"); it.addr = index.addr;
     if(index.addr) it.alarm_status = tr("副机%1").arg(index.addr);
-    if(value) it.alarm_status += tr("告警"); else it.alarm_status += tr("恢复正常");
+    //if(value) it.alarm_status += tr("告警"); else it.alarm_status += tr("恢复正常");
     if(index.type) it.alarm_status += tr("第%１").arg(index.id+1);
-    it.alarm_status += alarmType(index);
+    it.alarm_status += alarmType(index) +"; ";
 
     if(index.topic == DTopic::Relay) {
         it.alarm_content = alarmRelay(value);

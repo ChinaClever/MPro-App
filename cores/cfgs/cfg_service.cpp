@@ -72,7 +72,7 @@ void Cfg_Service::smtp()
     for(int i=0; i<SMTP_TO_SIZE; ++i) {
         key = "to_" + QString::number(i); str = &cfg->to[i];
         *str = mCfg->readCfg(key, "", prefix).toString();
-    }
+    } if(0==cfg->port) cfg->port = 25;
 }
 
 void Cfg_Service::snmp()
@@ -163,7 +163,7 @@ void Cfg_Service::radius()
     for(int i=1; i<7; ++i)  {
         switch (i) {
         case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
-        case 2: key = "local";  cfg->local = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "local";  cfg->local = mCfg->readCfg(key, 1, prefix).toInt(); break;
         case 3: key = "host";  cfg->host = mCfg->readCfg(key, "", prefix).toString();  break;
         case 4: key = "key";  cfg->key = mCfg->readCfg(key, "", prefix).toString();  break;
         case 5: key = "authPort";  cfg->authPort = mCfg->readCfg(key, 1813, prefix).toInt(); break;
