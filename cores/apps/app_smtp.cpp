@@ -30,6 +30,7 @@ void App_Smtp::sendMail()
     MimeMessage message;
     EmailAddress sender(cfg->from);
     message.setSender(sender);
+    cfg->lastErr.clear();
 
     for(int i=0; i<SMTP_TO_SIZE; ++i) {
         if(cfg->to[i].size()) {
@@ -58,21 +59,19 @@ void App_Smtp::sendMail()
     SmtpClient smtp(cfg->host, cfg->port, ct);
     smtp.connectToHost();
     if (!smtp.waitForReadyConnected()) {
-        cfg->lastErr = "Failed to connect to host!" + cfg->host;
+        cfg->lastErr += "Failed to connect to host!" + cfg->host;
     }
 
     smtp.login(cfg->from, cfg->pwd);
     if (!smtp.waitForAuthenticated()) {
         smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
-        if (!smtp.waitForAuthenticated()) cfg->lastErr = "Failed to login!" + cfg->from;
+        if (!smtp.waitForAuthenticated()) cfg->lastErr += " Failed to login!" + cfg->from;
     }
 
     smtp.sendMail(message);
     if (!smtp.waitForMailSent()) {
-        cfg->lastErr = "Failed to send mail!";
+        cfg->lastErr += " Failed to send mail!";
     }
-
-    cfg->lastErr.clear();
     smtp.quit();
 }
 
