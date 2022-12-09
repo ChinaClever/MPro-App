@@ -21,8 +21,10 @@ void App_WhiteList::internetFirewall()
         for(int i=0; i<WHITE_LIST_NUM; ++i) {
             QString ip = cfg->ip[i]; if(ip.isEmpty()) ip = "-";
             QString mac = cfg->mac[i]; if(mac.isEmpty()) mac = "-";
-            QString cmd = "netcfg -a '%1 - - %2'";
-            system(cmd.arg(ip, mac).toLocal8Bit().data());
+            QString fmd = "netcfg -a '%1 - - %2'";
+            QString cmd = fmd.arg(ip, mac);
+            system(cmd.toLocal8Bit().data());
+            qDebug() << cmd;
         }
     }
 }

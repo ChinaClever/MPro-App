@@ -26,7 +26,7 @@ static void init_netWork()
     QString fn =  "/usr/data/clever/cfg/mac.ini";
     if(QFile::exists(fn)) { QFile file(fn);
         if(file.open(QIODevice::ReadOnly)) mac = file.readAll();
-    }
+    } else system("echo '00:00:00:00:00:01' > /usr/data/clever/cfg/mac.ini");
 
     if(!mac.contains(deMac)) {
         system("ip link set eth0 down");

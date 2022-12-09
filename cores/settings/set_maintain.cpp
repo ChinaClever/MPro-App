@@ -34,8 +34,9 @@ bool Set_Maintain::factoryRestore()
     fns << "cfg.ini" << "inet.ini" << "alarm.cfg";
 
     foreach (const auto &fn, fns) {
-        QString cmd = "rm -f %1%2";
-        cm::execute(cmd.arg(dir, fn));
+        QString fmd = "rm -f %1%2";
+        QString cmd = fmd.arg(dir, fn);
+        system(cmd.toLocal8Bit().data());
     } cm::mdelay(650);
 
     return true;
@@ -65,11 +66,12 @@ bool Set_Maintain::restores(int fc, const QVariant &v)
 
 QString Set_Maintain::profileBackup()
 {
-    QString cmd = "zip -vr %1 %2";
+    QString fmd = "zip -vr %1 %2";
     QString src = "/usr/data/clever/cfg";
     QString dst = "/tmp/download/cfg.zip";
-    cm::execute("rm -rf /tmp/download/*");
-    cm::execute(cmd.arg(dst, src));
+    QString cmd = fmd.arg(dst, src);
+    system("rm -rf /tmp/download/*");
+    system(cmd.toLocal8Bit().data());
 
     sEventItem it;
     it.event_type = QStringLiteral("备份");
@@ -83,13 +85,14 @@ QString Set_Maintain::batchBackup()
 {
     QStringList fns;
     QString dir = "usr/data/clever/cfg/";
-    fns << "logs.db" << "proc_log.txt";
+    fns << "logs.db" << "proc_log.txt" << "qrcode.png";
     fns << "mac.ini" << "inet.ini" << "devParam.ini";
 
     QString zip = profileBackup();
     foreach (const auto &fn, fns) {
-        QString cmd = "zip -d %1 %2%3";
-        cm::execute(cmd.arg(zip, dir, fn));
+        QString fmd = "zip -d %1 %2%3";
+        QString cmd = fmd.arg(zip, dir, fn);
+        system(cmd.toLocal8Bit().data());
     }
 
     sEventItem it;
@@ -121,10 +124,11 @@ bool Set_Maintain::profileRestore(const QString &fn)
 bool Set_Maintain::restory(const QString &fn)
 {
     bool ret = true; if(QFile::exists(fn)) {
-        QString cmd = "unzip -o %1 -d /";
-        cm::execute(cmd.arg(fn)); cm::mdelay(50);
+        QString fmd = "unzip -o %1 -d /";
+        QString cmd = fmd.arg(fn); qDebug() << cmd;
+        system(cmd.toLatin1().data()); //cm::mdelay(50);
         cm::execute("rm -rf " + fn);
-        cm::mdelay(650);
+        cm::mdelay(1650);
         system("reboot");
     } else ret = false;
     return ret;

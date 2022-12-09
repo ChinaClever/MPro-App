@@ -67,7 +67,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPro: res = proStartupLog(it); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
-    default: qDebug() << Q_FUNC_INFO << it.type; break;
+    default: cout << it.type; break;
     }
 
     return res;
@@ -111,7 +111,7 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
     case SFnCode::ECmd: ret = system(v.toByteArray().data()); break; //////========
-    default: qDebug() << Q_FUNC_INFO << it.type; break;
+    default: cout << it.type; break;
     }
 
     return ret;

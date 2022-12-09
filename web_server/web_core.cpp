@@ -77,6 +77,7 @@ bool Web_Core::app_upgrade(const QString &fn)
     bool ret = true; sOtaUpdater *ota = &(shm->ota);
     if(fn.contains("/usr/data/upload/")) {
         setbit(ota->work, DOta_Web);
-    } else ret = false;
+    } else  ret = false;
+    qDebug() << ret << ota->work << DOta_Web <<fn;
     return ret;
 }

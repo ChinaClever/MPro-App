@@ -28,7 +28,8 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
 void Mb_Core::initFunSlot()
 {
     // mCfg->enTcp = 1;
-    // mCfg->port = 1502;
+    // mCfg->port = 1502;    
+
     emit connectTcpSig();
     emit connectRtuSig();
 }
