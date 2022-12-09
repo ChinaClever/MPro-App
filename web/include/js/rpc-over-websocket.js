@@ -149,6 +149,7 @@ var jsonrpc = function()
       case 16:
         if(topic == 21){
           sessionStorage.setItem(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
+          console.log(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
         }
@@ -890,7 +891,9 @@ function read_radius_data(addr){
     if(j >= parseInt(7)){
       clearInterval(time1);
     }
-    rpc.call('pduReadParam',[addr,48,j,0,0]);
+    if(j<7){
+      rpc.call('pduReadParam',[addr,48,j,0,0]);
+    }
     j++;
   },3);
 }
@@ -900,7 +903,9 @@ function read_ldap_data(addr){
     if(j >= parseInt(4)){
       clearInterval(time1);
     }
-    rpc.call('pduReadParam',[addr,49,j,0,0]);
+    if(j<4){
+      rpc.call('pduReadParam',[addr,49,j,0,0]);
+    }
     j++;
   },3);
 }

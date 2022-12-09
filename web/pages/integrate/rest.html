@@ -129,7 +129,7 @@
 			},800);
 		}
 		function Set(){
-			if(confirm("请确认是否保存此次修改？")){
+			if(confirm("请确认是否生效当前设置。")){
 				rpc.call('pduSetParam',[0,push,16,0,0,0]);
 				flash_html();
 			}else{}

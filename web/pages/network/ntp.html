@@ -316,6 +316,14 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+
+		setInterval(function(){
+			read_ntp_data(0);
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},600);
+		},1000);
     </script>
 </body>
 </html>
