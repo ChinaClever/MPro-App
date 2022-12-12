@@ -130,6 +130,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_download_file(c , hm , "/index.html/snmp.mib");
         }else if(mg_http_match_uri(hm, "/upload")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
+        }else if(mg_http_match_uri(hm, "/upload_fw")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s",file_path);
+            Web_Obj::bulid()->app_upgrade(file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             Web_Obj::bulid()->restores(2,file_path);
