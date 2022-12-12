@@ -182,7 +182,7 @@
         tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" onchange ="check()" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="20" autocomplete="off" onchange ="check()" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
-        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "登陆" onclick="sign_in()" disabled =""></p></input>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "登陆" onclick="sign_in()"></p></input>';
       }else if(Reg === 'submite'){
         tbody += '<p class="title"><span>重置密码</span></p><p class="error" id = "Errinfo"></p>';
         tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="用户名"></p>';

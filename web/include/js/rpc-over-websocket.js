@@ -22,7 +22,7 @@ let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
 let snmp_info = new Array("","V2Enable","","","","","","","","","","V3Enable","Username","Password","Key","Encrpty","","","","","","Trap","");
 let rpc_info = new Array("","JsonMode","JsonPort","","XmlMode","XmlPort","");
-let push_info = new Array("","UdpEn","UdpAddr","UdpPort","","","","Delay","CtrlMode","Ctrlport","","PushEn","HttpAddr","PushDelay","RecEncrypt","RecvProt");
+let push_info = new Array("","UdpEn","UdpAddr","UdpPort","UdpDelay","","","","CtrlMode","Ctrlport","","HttpEn","HttpAddr","HttpTimeout","RecEncrypt","RecvProt","HttpDelay");
 let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","",
 "Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 let info_info = new Array("","Name","PowerOn","PowerOff");
@@ -48,6 +48,8 @@ let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","Radius
 let ldap_name = new Array("","LdapEn","LdapServer","LdapArea");
 let odbc_cfg = new Array("","OdbcEn","OdbcServer","OdbcPort","OdbcUsr","OdbcPsd","OdbcName","OdbcKey","OdbcUpdate","OdbcRecord","OdbcState");
 let redis_cfg = new Array("","RedisEn","RedisServer","RedisPort","RedisPsd","RedisDbNum","RedisKey","RedisChannel","RedisUpdate","RedisTime","RedisState");
+// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -149,7 +151,6 @@ var jsonrpc = function()
       case 16:
         if(topic == 21){
           sessionStorage.setItem(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
-          console.log(type_name[type]+ snmp_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ snmp_info[topic], JSON.parse(evt.data).result[5]);
         }
@@ -605,15 +606,15 @@ function read_log_data(type,name,start,num){
 function read_push_data(){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(10)){
+    if(j >= parseInt(11)){
       clearInterval(time1);
     }
-    if(j <= 9 ){
-      if(j<4){
+    if(j <= 10 ){
+      if(j<5){
         for(let i = 1;i< 5;i++){
           rpc.call('pduReadParam',[addr,push,j,i,0]);
         }
-      }else if(j>6){
+      }else if(j>7){
         rpc.call('pduReadParam',[addr,push,j,0,0]);
       }
     }
@@ -625,10 +626,10 @@ function read_push_data(){
 function read_http_data(addr){
   let j = 11;
   var time1 = setInterval(function(){
-    if(j >= parseInt(16)){
+    if(j >= parseInt(17)){
       clearInterval(time1);
     }
-    if(j <= 15){
+    if(j <= 16){
       rpc.call('pduReadParam',[addr,push,j,0,0]);
     }
     j++;

@@ -47,8 +47,6 @@
 		var usrs_name_ = new Array("","","","","");
 		var jurisdiction = new Array();
 		let lang = new Array();
-		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
-		var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function read_data(){
 			for(var i = 0;i<5;i++){
 				usrs_name_[i] =  sessionStorage.getItem(user_info[1] + i);
