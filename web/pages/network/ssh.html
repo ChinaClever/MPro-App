@@ -57,15 +57,20 @@
 			lang[4] = ["","启用Telnet服务:","","","",""];
 			lang[5] = ["","账号:","","","",""];
 			lang[6] = ["","密码:","","","",""];
-			lang[7] = ["","禁用","","","",""];
-			lang[8] = ["","启用","","","",""];
+			lang[7] = ["","创建账户","","","",""];
+			lang[8] = ["","禁用","","","",""];
+			lang[9] = ["","启用","","","",""];
 
-			mode_set[0] = lang[7][language];
-			mode_set[1] = lang[8][language];
+			mode_set[0] = lang[8][language];
+			mode_set[1] = lang[9][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<7;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			for(let j = 1;j<8;j++){
+				if(j ==7){
+					document.getElementById("lang_" + j).value  = lang[j][language];
+				}else{
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
 			}
 		}
 		$('.ssh').html(buildTable());
@@ -78,11 +83,32 @@
 			for(var i = 1;i< ssh_name.length;i++){
 				document.getElementById(ssh_name[i]).value = ssh_data[i];
 			}
+			document.getElementById("SshPsd").focus();
+			document.getElementById("Test").focus();
+			document.getElementById("Test").style.display ="none";
+		}
+		function SetVal(){
+			if(confirm("是否创建此账户。")){
+				let ssh_name = document.getElementById("SshName").value;
+				let ssh_psd = document.getElementById("SshPsd").value;
+				if(ssh_name!= "" && ssh_psd !=""){
+					if(!pattern.test(ssh_psd)){
+						alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+						return ;
+					}else{
+						rpc.call('pduSetParam',[0,45,3,0,0,ssh_name]);
+						rpc.call('pduSetParam',[0,45,4,0,0,ssh_psd]);
+						rpc.call('pduSetParam',[0,45,5,0,0,0]);
+					}
+				}else {
+					alert("username or password error!");
+				}
+			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否开启此功能。")){
+			if(confirm("请确认是否保存此次修改。")){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
 						rpc.call('pduSetParam',[0,45,i,0,0,btn.value]);
@@ -97,6 +123,9 @@
 				read_data();
 				showdata();
 			},800);
+		}
+		function validataForm(opt){
+
 		}
 		function buildTable() {
 			var thead = '',tbody = '';
@@ -115,11 +144,11 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "SshName" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
+			tbody += '<td><input id ="SshName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "SshPsd" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input>';
-			tbody += '</td></tr>';
+			tbody += '<td><input id ="SshPsd" type="text" onfocus = \'this.type="password"\'  style ="width:24.5%" minlength="8" maxlength="16" autocomplete="off" onblur = "validataForm(this)" placeholder="密码"></td></tr>';
+			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:50%"  onclick = "SetVal()"></td></tr>';
+			tbody += '<tr><td><input type = "button" id  ="Test" ></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

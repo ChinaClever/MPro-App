@@ -40,6 +40,9 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		setTimeout(function(){
+			read_ver_info(0);
+		},100);
 		var mode_set = new Array("","");
 		var ver_data = new Array();
 		let lang = new Array();
@@ -75,7 +78,7 @@
 			lang[17] = ["","内核信息","","","",""];
 			lang[18] = ["","内核版本:","","","",""];
 			lang[19] = ["","内存信息:","","","",""];
-			lang[20] = ["","磁盘状态:","","","",""];
+			lang[20] = ["","存储状态:","","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<21;j++){

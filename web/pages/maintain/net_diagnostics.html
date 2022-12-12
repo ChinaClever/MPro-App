@@ -103,13 +103,21 @@
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
 						if(i == 3 || i == 8){
+							sessionStorage.setItem(net_diagn[btn],"");
 							rpc.call('pduReadParam',[0,93,i,0,0]);
 							document.getElementById(net_diagn[i+1]).innerHTML  = lang[12][language];
 							diagn_read(i);
-						}else{
-							rpc.call('pduSetParam',[0,93,i,0,0,btn.value]);
-							flash_html();
 						}
+					}
+				}
+			}else{}
+		}
+		function SetData_(btn){
+			if(confirm("请确认是否开启此功能。")){
+				for(let i = 1;i<net_diagn.length;i++){
+					if(net_diagn[i] == btn.id){
+						rpc.call('pduSetParam',[0,93,i,0,0,btn.value]);
+						flash_html();
 					}
 				}
 			}else{}
@@ -119,35 +127,35 @@
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},1000);
 		}
 		function diagn_read(btn){
-			if(btn == 3){
-				time1 = setTimeout(function(){
+			let text_info="";
+			let text_num = 0;
+			let time1 = setInterval(function(){
+				text_info = sessionStorage.getItem(net_diagn[btn]);
+				if(text_info !="" || text_num == 15){
+					clearInterval(time1);
 					read_data();
 					showdata_(btn);
-				},12000);
-			}else{
-				time2 = setTimeout(function(){
-					read_data();
-					showdata_(btn);
-				},12000);
-			}
+				}
+				text_num ++;
+			},1000);
 		}
 		function buildTableRtu() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
-			tbody += '<td><input id = "NetAddr" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "NetAddr" onchange ="SetData_(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "RequstNum" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>10){value=10};if(value<1)value=1" placeholder="1~10"></input>';
+			tbody += '<td><input id = "RequstNum" onchange ="SetData_(this)" style ="width:24.5%" type = "text" oninput = "if(value>10){value=10};if(value<1)value=1" placeholder="1~10"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td><input id = "Ping" type = "button" onclick ="SetData(this)"></input>';
 			tbody += '</td><td></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td "><textarea id = "Ping1"  style="height:90px;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
+			tbody += '<td "><textarea id = "Ping1"  style="height:90px;width:60%;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -156,15 +164,15 @@
 			thead = '<tr><td width ="15%" id="lang_7" ></td>\
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_8" ></td>';
-			tbody += '<td><input id = "Host" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "Host" onchange ="SetData_(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
-			tbody += '<td><input id = "Timeout" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>60){value=60};if(value<1)value=1" placeholder="1~60"></input>';
+			tbody += '<td><input id = "Timeout" onchange ="SetData_(this)" style ="width:24.5%" type = "text" oninput = "if(value>60){value=60};if(value<1)value=1" placeholder="1~60"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td><input id = "Router" type = "button" onclick ="SetData(this)"></input>';
 			tbody += '</td><td></td></tr>';
 			tbody += '<tr><td id="lang_11" ></td>';
-			tbody += '<td "><textarea id = "Router1"  style="height:90px;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
+			tbody += '<td "><textarea id = "Router1"  style="height:90px;width:60%;resize: none;" disabled="true" rows="4" cols="37" autofocus></textarea></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}

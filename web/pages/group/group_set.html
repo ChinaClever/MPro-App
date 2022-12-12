@@ -49,6 +49,7 @@
 		let group_data = new Array();
 		let lang = new Array();
 		let language = 1;
+		let group_mode = 0;
 		let en_state=new Array();
 		read_data();
 		lang_init();
@@ -90,6 +91,7 @@
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
 				group_info[i] = sessionStorage.getItem(type_name[25]+ addr +'_'+i);
 			}
+			group_mode = parseInt(sessionStorage.getItem(cfg_name[8] + addr));
 		}
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));
@@ -98,6 +100,11 @@
 		lang_fun();
 		show_data();
 		function show_data(){
+			if(!group_mode){
+				document.getElementById("lang_2").style.display = "none";
+			}else{
+				document.getElementById("lang_2").style.display = "";
+			}
 			for(let i=1;i<group_num+1;i++){
 				let num_ = 'b'.charCodeAt(0) +i;
 				group_data[i] = new Array();
@@ -108,11 +115,17 @@
 			}
 		}
 		function change(sel){
-			if(sel.id == "ms"){
+			if(sel.id == "lang_2"){
 
 			}else{
 				rpc.call("pduSetParam",[0,cfg,8,0,0,sel.value]);
-				// rpc.call("pduReadData",[0,group,8,0,0,sel.value]);
+				if(sel.value == 1){
+					group_mode =1;
+					document.getElementById("lang_2").style.display = "";
+				}else{
+					group_mode =1;
+					document.getElementById("lang_2").style.display = "none";
+				}
 			}
 		}
 		function buildSel(rows)

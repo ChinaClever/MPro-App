@@ -356,9 +356,9 @@
 		function putdata(){
 			for(let i = 0;i < 4;i++){
 				state_ = document.getElementById('b' + i);
-				state_.innerHTML = (data[i][0]).toFixed(1);
+				state_.innerHTML = parseFloat(data[i][0]).toFixed(1);
 				state1_ = document.getElementById('k' + i);
-				state_.innerHTML = (data[i+4][0]).toFixed(1);
+				state_.innerHTML = parseFloat(data[i+4][0]).toFixed(1);
 			}
 		}
 		setInterval(function(){
