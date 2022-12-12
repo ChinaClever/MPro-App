@@ -50,8 +50,11 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
     // Parse websocket message, which should be a JSON-RPC frame like this:
     // { "id": 3, "method": "sum", "params": [1,2] }
     char *method = mg_json_get_str(frame, "$.method");
-    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
-    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
+//    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
+//    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
+
+    int id_off = mg_json_get(frame, "$.id", &id_len);
+    int params_off = mg_json_get(frame, "$.params", &params_len);
     params = mg_str_n(frame.ptr + params_off, params_len);
     id = mg_str_n(frame.ptr + id_off, id_len);
 
