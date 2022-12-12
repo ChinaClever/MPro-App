@@ -73,11 +73,10 @@ void Web_Core::web_onTimeoutDone()
 
 bool Web_Core::app_upgrade(const QString &fn)
 {
-    sDataPacket *shm = init_share_mem();
+    sDataPacket *shm = init_share_mem(); qDebug() <<fn;
     bool ret = true; sOtaUpdater *ota = &(shm->ota);
     if(fn.contains("/usr/data/upload/")) {
         setbit(ota->work, DOta_Web);
-    } else  ret = false;
-    qDebug() << ret << ota->work << DOta_Web <<fn;
+    } else  ret = false;    
     return ret;
 }

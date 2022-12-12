@@ -27,13 +27,13 @@ void Data_Outlet::outletNums()
 void Data_Outlet::outletOverrunOff()
 {
     sObjData *obj = &(mDev->output);
-    for(int i=0; i<obj->relay.size; ++i) {
+    for(int i=1; i<=obj->relay.size; ++i) {
         bool ret = relayOverrunOff(*obj, i);
         if(ret) {
-            OP_Core::bulid()->relayCtrl(i+1, 0);
-            sEventItem db; //db.addr = i;
+            sEventItem db;
+            OP_Core::bulid()->relayCtrl(i, 0);
             db.event_type = QStringLiteral("超限断电");
-            db.event_content = QStringLiteral("继电器%1断开").arg(i+1);
+            db.event_content = QStringLiteral("继电器%1断开").arg(i);
             Log_Core::bulid()->append(db);
         }
     }
@@ -42,13 +42,13 @@ void Data_Outlet::outletOverrunOff()
 void Data_Outlet::outletTiming()
 {
     sObjData *obj = &(mDev->output);
-    for(int i=0; i<obj->relay.size; ++i) {
+    for(int i=1; i<=obj->relay.size; ++i) {
         int res = relayTiming(*obj, i);
         if(res) {
-            OP_Core::bulid()->relayCtrl(i+1, res-1);
-            sEventItem db;
-            db.event_type = QStringLiteral("定时开关"); res--;
-            db.event_content = QStringLiteral("继电器%1").arg(i+1);
+            sEventItem db; res -= 1;
+            OP_Core::bulid()->relayCtrl(i, res);
+            db.event_type = QStringLiteral("定时开关");
+            db.event_content = QStringLiteral("继电器%1").arg(i);
             if(res) db.event_content += QStringLiteral("接通");
             else db.event_content += QStringLiteral("断开");
             Log_Core::bulid()->append(db);

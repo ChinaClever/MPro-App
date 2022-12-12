@@ -36,21 +36,21 @@ void Data_Dual::dualWork()
             int size = setDualSize(i);
             if(size > 0) dualData(i);
             //else disDualAlarm();
-        }
+        } dualTiming(0);
     }
 }
 
 
 void Data_Dual::dualTiming(int id)
 {
-    sObjData *obj = &(cm::devData(id)->dual); //&(mDev->dual);
-    for(int i=0; i<obj->relay.size; ++i) {
+    sObjData *obj = &(cm::devData(id)->dual); // &(mDev->dual);
+    for(int i=1; i<=obj->relay.size; ++i) {
         int res = relayTiming(*obj, i);
         if(res) {
-            OP_Core::bulid()->relayCtrl(i+1, res-1);
-            sEventItem db; db.addr = id;
-            db.event_type = QStringLiteral("机架定时开关"); res--;
-            db.event_content = QStringLiteral("继电器%1").arg(i+1);
+            sEventItem db; res -=1; //db.addr = id;
+            OP_Core::bulid()->relayCtrl(i, res);
+            db.event_type = QStringLiteral("机架定时开关");
+            db.event_content = QStringLiteral("继电器%1").arg(i);
             if(res) db.event_content += QStringLiteral("接通");
             else db.event_content += QStringLiteral("断开");
             Log_Core::bulid()->append(db);
