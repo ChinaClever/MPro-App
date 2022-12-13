@@ -350,9 +350,9 @@ QVariant Set_Integr::pushCfg(uchar fc, int id)
     case 11: res = cfg->http.en; break;
     case 12: res = cfg->http.url; break;
     case 13: res = cfg->http.timeout; break;
-    case 14: res = cfg->http.enServer; break;
-    case 15: res = cfg->http.port; break;
-    case 16: res = cfg->http.sec;
+    case 15: res = cfg->http.enServer; break;
+    case 16: res = cfg->http.port; break;
+    case 14: res = cfg->http.sec; break;
     default: cout << fc; break;
     }
 
@@ -377,9 +377,9 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
     case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
     case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;
-    case 14: key = "enServer"; cfg->http.enServer = v.toInt(); break;
-    case 15: key = "httpPort"; cfg->http.port = v.toInt(); break;
-    case 16: key = "httpSec"; cfg->http.sec = v.toInt(); break;
+    case 15: key = "enServer"; cfg->http.enServer = v.toInt(); break;
+    case 16: key = "httpPort"; cfg->http.port = v.toInt(); break;
+    case 14: key = "httpSec"; cfg->http.sec = v.toInt(); break;
     case 19: Integr_Core::bulid()->httpServer(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
