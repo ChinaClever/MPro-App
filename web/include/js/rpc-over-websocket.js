@@ -253,6 +253,7 @@ var jsonrpc = function()
       break;
       case 93:
         sessionStorage.setItem(net_diagn[topic], JSON.parse(evt.data).result[5]);
+        console.log(net_diagn[topic], JSON.parse(evt.data).result[5]);
       break;
       default:
         break;
