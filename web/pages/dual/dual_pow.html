@@ -130,21 +130,21 @@
 				ss = document.getElementById('d'+(i -1));
 				hs = document.getElementById('j'+(i -1));
 				cs = document.getElementById('c'+(i -1));
-				if(dual_info[i][7] === 1){
+				if(dual_info[i][7] == 1){
 					ss.checked = true;
 				}
 				else{
 					ss.checked = false;
 				}
-				if(dual_info[i][10] === 1){
+				if(dual_info[i][10] == 1){
 					hs.checked = true;
 				}
 				else{
 					hs.checked = false;
 				}
-				if(dual_info[i][2] === 1 || dual_info[i][2] === 8){
+				if(dual_info[i][2] == 1 || dual_info[i][2] == 8){
 					cs.bgColor = 'red';
-				}else if(dual_info[i][2] === 2 ||dual_info[i][2] === 4){
+				}else if(dual_info[i][2] == 2 ||dual_info[i][2] == 4){
 					cs.bgColor = 'yellow';
 				}
 				else{
@@ -232,7 +232,7 @@
 							pow_mark[1] = 1;
 						}
 					}
-					stat = 1;
+					stat = '1';
 				}else{
 					if(number == dual_num +1){
 						if(sub ==8){
@@ -241,7 +241,7 @@
 							pow_mark[1] = 0;
 						}
 					}
-					stat = 0;
+					stat = '0';
 				}
 				if(number == dual_num +1){
 					number1 = 0;

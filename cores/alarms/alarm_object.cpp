@@ -216,7 +216,7 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
             if(index.id) ptr[index.id-1] = index.value;
             else setAll(ptr, index.value, unit->size);
         } else index.value = ptr[index.id];
-    }else if(!ret) cout  << index.type << index.topic << index.subtopic << index.id << index.value;
+    }else if(!ret) cout << index.type << index.topic << index.subtopic << index.id << index.value;
 
     return ret;
 }

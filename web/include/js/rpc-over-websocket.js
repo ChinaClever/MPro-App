@@ -12,7 +12,7 @@ let slave_addr = 0;
 let dual_addr = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
-let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
+let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","PowSwEn","BreakerEn","Direction","Angle");
@@ -22,7 +22,7 @@ let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
 let snmp_info = new Array("","V2Enable","","","","","","","","","","V3Enable","Username","Password","Key","Encrpty","","","","","","Trap","");
 let rpc_info = new Array("","JsonMode","JsonPort","","XmlMode","XmlPort","");
-let push_info = new Array("","UdpEn","UdpAddr","UdpPort","UdpDelay","","","","CtrlMode","Ctrlport","","HttpEn","HttpAddr","HttpTimeout","RecEncrypt","RecvProt","HttpDelay");
+let push_info = new Array("","UdpEn","UdpAddr","UdpPort","UdpDelay","","","","CtrlMode","Ctrlport","","HttpEn","HttpAddr","HttpTimeout","HttpDelay","RecEncrypt","RecvProt","HttpDelay");
 let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","",
 "Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 let info_info = new Array("","Name","PowerOn","PowerOff");
@@ -627,10 +627,10 @@ function read_push_data(){
 function read_http_data(addr){
   let j = 11;
   var time1 = setInterval(function(){
-    if(j >= parseInt(17)){
+    if(j >= parseInt(18)){
       clearInterval(time1);
     }
-    if(j <= 16){
+    if(j <= 17){
       rpc.call('pduReadParam',[addr,push,j,0,0]);
     }
     j++;

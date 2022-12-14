@@ -230,12 +230,12 @@
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
+				if(ckd.checked == true){
+					stat = '1';
+				}else{
+					stat = '0';
+				}
 				if(type1 === 'e'){
-					if(ckd.checked == true){
-						stat = 1;
-					}else{
-						stat = 0;
-					}
 					if(num !== output_num + 1){
 
 					}else{
@@ -244,12 +244,6 @@
 					rpc.call('pduSetData',[addr,output,switch_,8,num,stat]);
 				}
 				else if(type1 === 'f'){
-					if(ckd.checked == true){
-						stat = 1;
-					}else{
-						stat = 0;
-					}
-
 					if(num !== output_num + 1){
 					}else{
 						num = 0;

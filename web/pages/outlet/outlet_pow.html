@@ -209,6 +209,7 @@
 				}
 				if(i <= output_num){
 					rpc.call('pduReadData',[addr,output,pow_,dt,i]);
+					rpc.call('pduReadData',[addr,output,pow_,3,i]);
 				}
 				i++;
 			},10);
@@ -247,7 +248,7 @@
 							pow_mark[1] = 1;
 						}
 					}
-					stat = 1;
+					stat = '1';
 				}else{
 					if(number == output_num +1){
 						if(sub ==8){
@@ -256,7 +257,7 @@
 							pow_mark[1] = 0;
 						}
 					}
-					stat = 0;
+					stat = '0';
 				}
 				if(number == output_num +1){
 					number1 = 0;
@@ -368,6 +369,7 @@
 		setInterval(function(){
 			read_output_pow_data();
 			setTimeout(function(){
+				dt =1;
 				read_data();
 				putdata();
 				showdata();

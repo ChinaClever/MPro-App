@@ -40,12 +40,12 @@
 		setTimeout(function(){read_http_data(0)},150);
 		var mode_set = new Array("禁用","POST","PUT");
 		var mode_set1 = new Array("禁用","启用","加密");
-		var select_name = new Array("push","addr","delay","encrypt","port");
+		var select_name = new Array("push","addr","timeout","delay","encrypt","port");
 		var http_data = new Array();
 		let language = 1;
 		let lang = new Array();
 		function read_data(){
-			for(var j = 11; j<16;j++){
+			for(var j = 11; j<17;j++){
 				if(j ==12){
 					http_data[j] = sessionStorage.getItem(type_name[18]+ push_info[j]);
 				}else{
@@ -61,23 +61,24 @@
 			lang[2] = ["","HTTP推送设置","","","",""];
 			lang[3] = ["","推送服务启用:","","","",""];
 			lang[4] = ["","目的地址:","","","",""];
-			lang[5] = ["","时间间隔:","","","",""];
-			lang[6] = ["","立即生效","","","",""];
-			lang[7] = ["","REST API设置","","","",""];
-			lang[8] = ["","启用加密:","","","",""];
-			lang[9] = ["","端口号:","","","",""];
-			lang[10] = ["","立即生效","","","",""];
-			lang[11] = ["","禁用","","","",""];
-			lang[12] = ["","启用","","","",""];
-			lang[13] = ["","加密","","","",""];
-			mode_set[0] = lang[11][language];
-			mode_set1[0] = lang[11][language];
-			mode_set1[1] = lang[12][language];
-			mode_set1[2] = lang[13][language];
+			lang[5] = ["","超时时间:","","","",""];
+			lang[6] = ["","时间间隔:","","","",""];
+			lang[7] = ["","立即生效","","","",""];
+			lang[8] = ["","REST API设置","","","",""];
+			lang[9] = ["","启用加密:","","","",""];
+			lang[10] = ["","端口号:","","","",""];
+			lang[11] = ["","立即生效","","","",""];
+			lang[12] = ["","禁用","","","",""];
+			lang[13] = ["","启用","","","",""];
+			lang[14] = ["","加密","","","",""];
+			mode_set[0] = lang[12][language];
+			mode_set1[0] = lang[12][language];
+			mode_set1[1] = lang[13][language];
+			mode_set1[2] = lang[14][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<11;i++){
-				if(i ==6 || i == 10){
+			for(var i = 1;i<12;i++){
+				if(i ==7 || i == 11){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
@@ -98,15 +99,17 @@
 			}
 			if(http_data[11] == 0){
 				document.getElementById(select_name[1]).disabled = true; 
-				document.getElementById(select_name[2]).disabled = true; 
+				document.getElementById(select_name[2]).disabled = true;  
+				document.getElementById(select_name[3]).disabled = true;
 			}else{
 				document.getElementById(select_name[1]).disabled = false; 
 				document.getElementById(select_name[2]).disabled = false;
+				document.getElementById(select_name[3]).disabled = false;
 			}
-			if(http_data[14] == 0){
-				document.getElementById(select_name[4]).disabled = true; 
+			if(http_data[15] == 0){
+				document.getElementById(select_name[5]).disabled = true; 
 			}else{
-				document.getElementById(select_name[4]).disabled = false; 
+				document.getElementById(select_name[5]).disabled = false; 
 			}
 		}
 		function SetData(btn){
@@ -119,7 +122,9 @@
 					}
 				}
 				flash_html();
-			}else{}
+			}else{
+				showdata();
+			}
 		}
 		function flash_html(){
 			read_http_data(0);
@@ -130,7 +135,7 @@
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[0,push,16,0,0,0]);
+				rpc.call('pduSetParam',[0,push,19,0,0,0]);
 				flash_html();
 			}else{}
 		}
@@ -148,26 +153,29 @@
 			tbody += '<td><input id = "addr" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="http(s)://0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_5"></td>';
+			tbody += '<td><input id = "timeout" style ="width:24.5%" onchange ="SetData(this)" type = "text"  ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id = "lang_6"></td>';
 			tbody += '<td><input id = "delay" style ="width:24.5%" onchange ="SetData(this)" type = "text"  ></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id = "lang_6" type = "button" style ="width:60%" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "lang_7" type = "button" style ="width:60%" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function buildTableRecv() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id = "lang_7"></td>\
+			thead = '<tr><td width ="15%" id = "lang_8"></td>\
 				<td width ="85%"></td></tr>';
-			tbody += '<tr><td id = "lang_8"></td>';
+			tbody += '<tr><td id = "lang_9"></td>';
 			tbody += '<td><select id ="encrypt" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set1.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set1[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td id = "lang_9"></td>';
+			tbody += '<tr><td id = "lang_10"></td>';
 			tbody += '<td><input id = "port" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id = "lang_10" style ="width:60%" type = "button"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "lang_11" style ="width:60%" type = "button"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

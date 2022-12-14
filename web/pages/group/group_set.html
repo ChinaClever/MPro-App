@@ -186,9 +186,9 @@
 			if(retVal == true){
 				group = type1.charCodeAt() - 'c'.charCodeAt();
 				if(ckd.checked == true){
-					stat = 1;
+					stat = '1';
 				}else{
-					stat = 0;
+					stat = '0';
 				}
 				rpc.call('pduSetParam',[addr,26,group+1,num,0,stat]);
 				flash_html(ckd);
