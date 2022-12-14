@@ -49,10 +49,10 @@ bool Data_Relay::relayTimingCheck(const char (*str)[NAME_SIZE], int id)
 
     if(strlen(ptr) == 8) {
         QTime t = QTime::fromString(ptr, tcmd);
-        if(t == QTime::currentTime()) ret = true;
-    } else if(strlen(ptr) == 19) {
+        if(t.toString() == QTime::currentTime().toString()) ret = true;
+   } else if(strlen(ptr) == 19) {
         QDateTime t = QDateTime::fromString(ptr, dtcmd);
-        if(t == QDateTime::currentDateTime()) ret = true;
+        if(t.toString() == QDateTime::currentDateTime().toString()) ret = true;
     }
 
     return ret;

@@ -31,8 +31,8 @@ Dtls_Recver *Dtls_Recver::bulid(QObject *parent)
 
 bool Dtls_Recver::setFile(const QString &fn)
 {    
+    system("mkdir -p /usr/data/upload");
     mFile->setFileName(fn); isFinshed = false;
-    system("mkdir -p /usr/data/clever/upload");
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) mSize = 0; else throwMessage(tr("Error: Dtls Recver open file %1").arg(fn));
     emit startSig(mDtls->clientHost().toString().remove("::ffff:"));

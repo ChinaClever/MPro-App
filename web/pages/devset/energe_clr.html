@@ -53,6 +53,7 @@
     <script>
 		var read =0;
 		let energe_val = new Array();
+		let ckd_state = new Array();
 		let output_name = new Array();
 		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		let dev_name =new Array();
@@ -85,7 +86,8 @@
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				energe_val[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				energe_val[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
+				ckd_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[9]+data_name[11]+addr+'_'+i));
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -94,6 +96,20 @@
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));
 		lang_fun();
+		show_data();
+		var state_ = 0;
+		function show_data(){
+			for(let i = 0;i < output_num;i++){
+				state_ = document.getElementById('c' + i);
+				state_.innerHTML=parseFloat(energe_val[i + 1]).toFixed(2);
+				state_ = document.getElementById('f' + i);
+				if(ckd_state[i+1] ==  1){
+					state_.checked = true;
+				}else{
+					state_.checked = false;
+				}
+			}
+		}
 		function cked(ckd)
 		{
 			var stat = 0,number1 = 0;
@@ -107,12 +123,12 @@
 					if(number == output_num +1){
 						energe_mark = 1;
 					}
-					stat = 1;
+					stat = '1';
 				}else{
 					if(number == output_num +1){
 						energe_mark = 0;
 					}
-					stat = 0;
+					stat = '0';
 				}
 				if(number == output_num +1){
 					number1 = 0;
@@ -132,7 +148,7 @@
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
-				putdata();
+				show_data();
 				lang_fun();
 			},800);
 		}
@@ -162,8 +178,8 @@
 		}
 		modeset();
 		function modeset(modesel){
-			var btnname = document.getElementsByTagName("button");
-			for(var j = 1; j<btnname.length;j++)
+			var btnname = document.getElementsByTagName("input");
+			for(var j = 0; j<btnname.length;j++)
 			{
 				btnname[j].disabled = true;
 			}
@@ -173,8 +189,8 @@
 				read = 1;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML =  lang[9][lanuage];
-				var btnname = document.getElementsByTagName("button");
-				for(var j = 1; j<btnname.length;j++)
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length;j++)
 				{
 					btnname[j].disabled = false;
 				}
@@ -183,8 +199,8 @@
 				read = 0;
 				ros.style.backgroundColor = '';
 				ros.innerHTML =  lang[2][lanuage];
-				var btnname = document.getElementsByTagName("button");
-				for(var j = 1; j<btnname.length;j++)
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length;j++)
 				{
 					btnname[j].disabled = true;
 				}
@@ -206,10 +222,10 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]/10).toFixed(1) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-				tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' +  lang[10][lanuage] + '</button></td>';
+				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "btn_click(this)" value="'+lang[10][lanuage]+'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -219,7 +235,7 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td id = "d'+ i + '"></td>';
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-					tbody += '<td><button id = "e'+ i + '" onclick = btn_click(this) >' +  lang[10][lanuage] + '</button></td>';
+					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = btn_click(this) value="'+lang[10][lanuage]+'"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -227,24 +243,18 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0;
-		function putdata(){
-			for(let i = 0;i < output_num;i++){
-				state_ = document.getElementById('c' + i);
-				parseFloat(energe_val[i + 1]/10).toFixed(1)
-			}
-		}
 		function read_energe_data(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
 				rpc.call('pduReadData',[addr,output,energe_,1,i]);
+				rpc.call('pduReadData',[addr,output,9,11,i]);
 			}
 		}
 		setInterval(function(){
 			read_energe_data();
 			setTimeout(function(){
 				read_data();
-				putdata();
+				show_data();
 			},800);
 		},2000);
 		

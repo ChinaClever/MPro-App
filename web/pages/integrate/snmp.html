@@ -40,25 +40,28 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_snmp_data(0)},150);
+		setTimeout(function(){read_snmp_data(0)},200);
 		var mode_set = new Array("","");
-		var snmp_name = new Array("","v2en","","v3en","usr","psd","parity");
+		var snmp_name = new Array("","v2en","","","","","","","","","","v3en","usr","psd","parity","encrpty","","","","","","trap");
 		var addr_name = new Array("","addr1","addr2","addr3","addr4");
 		var snmp_data = new Array();
 		let lang = new Array();
+		let encrpty = new Array("AES","DES");
 		var language = 1;
 		function read_data(){
-			for(var j = 1;j<7;j++){
+			for(var j = 1;j<22;j++){
 					snmp_data[j] = new Array();
-					if(j !=2){
+					 if(j ==1 ||(j>10 && j<16)){
+
 						snmp_data[j][0] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
-					}else{
+					}else if(j ==21){
 						for(var i = 1;i<5;i++){
 							snmp_data[j][i] = sessionStorage.getItem(type_name[16]+ snmp_info[j] + i);
 						}
 					}
 				}
-		}function lang_init(){
+		}
+		function lang_init(){
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
@@ -71,17 +74,18 @@
 			lang[7] = ["","帐号:","","","",""];
 			lang[8] = ["","密码:","","","",""];
 			lang[9] = ["","密钥:","","","",""];
-			lang[10] = ["","立即生效","","","",""];
-			lang[11] = ["","Trap地址设置","","","",""];
-			lang[12] = ["","立即生效","","","",""];
-			lang[13] = ["","禁用","","","",""];
-			lang[14] = ["","启用","","","",""];
-			mode_set[0] = lang[13][language];
-			mode_set[1] = lang[14][language];
+			lang[10] = ["","加密方式:","","","",""];
+			lang[11] = ["","立即生效","","","",""];
+			lang[12] = ["","Trap地址设置","","","",""];
+			lang[13] = ["","立即生效","","","",""];
+			lang[14] = ["","禁用","","","",""];
+			lang[15] = ["","启用","","","",""];
+			mode_set[0] = lang[14][language];
+			mode_set[1] = lang[15][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<13;i++){
-				if(i ==4 || i == 10 || i ==12){
+			for(var i = 1;i<14;i++){
+				if(i ==4 || i == 11 || i ==13){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
@@ -99,23 +103,23 @@
 		},500);
 		function showdata(){
 			for(let i = 1; i < snmp_name.length;i++){
-				if(i == 2){
+				if(i == 21){
 					for(var j = 1;j<5;j++){
 						document.getElementById(addr_name[j]).value = snmp_data[i][j];
 						document.getElementById(addr_name[j]).disabled = false;
 					}
-				}else{
+				}else if(i ==1 ||(i>10 && i<16)){
 					document.getElementById(snmp_name[i]).value = snmp_data[i][0];
 					document.getElementById(snmp_name[i]).disabled = false;
 				}
 			}
-			if(parseInt(snmp_data[1][0]) == 0){
-				for(var j = 1;j<5;j++){
-						document.getElementById(addr_name[j]).disabled = true;
-					}
+			for(var j = 1;j<5;j++){
+				if(parseInt(snmp_data[11][0]) == 0 && parseInt(snmp_data[1][0])){
+					document.getElementById(addr_name[j]).disabled = true;
+				}
 			}
-			if(snmp_data[3][0] == 0){
-				for(var j = 4;j<7;j++){
+			for(var j = 12;j<16;j++){
+				if(snmp_data[11][0] == 0){
 					document.getElementById(snmp_name[j]).disabled = true;
 				}
 			}
@@ -126,7 +130,7 @@
 					if(snmp_name[i] == btn.id){
 						rpc.call('pduSetParam',[0,snmp,i,0,0,btn.value]);
 					}else if(addr_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,snmp,2,i,0,btn.value]);
+						rpc.call('pduSetParam',[0,snmp,21,i,0,btn.value]);
 					}
 				}
 				flash_html();
@@ -140,8 +144,8 @@
 			},800);
 		}
 		function Set(){
-			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[0,snmp,7,0,0,0]);
+			if(confirm("请确认是否生效当前设置。")){
+				rpc.call('pduSetParam',[0,snmp,17,0,0,0]);
 				flash_html();
 			}else{}
 		}
@@ -178,7 +182,13 @@
 			tbody += '<td><input id = "psd" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td id ="lang_9"></td>';
 			tbody += '<td><input id = "parity" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id ="lang_10" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td id ="lang_10"></td>';
+			tbody += '<td><select id ="encrpty" onchange ="SetData(this)">';
+			for(var i = 0; i<encrpty.length;i++){
+				tbody +='<option value ="'+i+'">'+encrpty[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td><input id ="lang_11" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
@@ -186,14 +196,14 @@
 
 		function buildTableTrap() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="25%" id ="lang_11"></td>\
+			thead = '<tr><td width ="25%" id ="lang_12"></td>\
 			<td width ="75%"></td></tr>';
 			for(var j = 1;j<5;j++){
 				tbody += '<tr><td>Trap'+ j +' ip:</td>';
 				tbody += '<td><input id = "addr'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
 				tbody += '</td></tr>';
 			}
-			tbody += '<tr><td><input id ="lang_12" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id ="lang_13" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

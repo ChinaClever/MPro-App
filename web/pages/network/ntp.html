@@ -199,22 +199,21 @@
 					document.getElementById(ntp_info[i]).innerHTML = ntp_data[i];
 				}else{
 					document.getElementById(ntp_info[i]).value = ntp_data[i];
-					document.getElementById(ntp_info[i]).disabled = false;
 				}
-				for(let i = 10;i<12;i++){
-					document.getElementById("lang_" + i).disabled = false;
-				}
-				document.getElementById("DateTime").disabled = false;
+				// for(let i = 10;i<12;i++){
+				// 	document.getElementById("lang_" + i).disabled = false;
+				// }
+				// document.getElementById("DateTime").disabled = false;
 			}
-			if(parseInt(ntp_data[2]) == 0){
-				for(let i = 10;i<12;i++){
-					document.getElementById("lang_" + i).disabled = true;
-				}
-				document.getElementById("DateTime").disabled = true;
-			}
+			// if(parseInt(ntp_data[2]) == 0){
+			// 	for(let i = 10;i<12;i++){
+			// 		document.getElementById("lang_" + i).disabled = true;
+			// 	}
+			// 	document.getElementById("DateTime").disabled = true;
+			// }
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(confirm("请确认是否选择此时区。")){
 				for(let i = 1;i<ntp_info.length;i++){
 					if(ntp_info[i] == btn.id){
 						rpc.call('pduSetParam',[0,43,i,0,0,btn.value]);
@@ -317,6 +316,14 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+
+		setInterval(function(){
+			read_ntp_data(0);
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},600);
+		},1000);
     </script>
 </body>
 </html>

@@ -227,12 +227,12 @@
         "url": "smtp.html"
       },
       {
-        "name": "认证服务",
-        "url": "radius.html"
-      },
-      {
         "name": "Syslog服务",
         "url": "syslog.html"
+      },
+      {
+        "name": "远程认证服务",
+        "url": "radius.html"
       }
     ]
   },  

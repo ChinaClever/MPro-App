@@ -70,7 +70,7 @@
 			lang[2] = ["","设备选择","","","",""];
 			lang[3] = ["","序号","","","",""];
 			lang[4] = ["","名称","","","",""];
-			lang[5] = ["","有功功率(KW)","","","",""];
+			lang[5] = ["","有功功率(kW)","","","",""];
 			lang[6] = ["","视在功率(AV)","","","",""];
 			lang[7] = ["","电能消耗(kWh)","","","",""];
 		}
@@ -120,6 +120,13 @@
 		}
 		function buildTable(rows) {
 			var thead = '',tbody = '';
+			if(rows == 0){
+					thead = '<tr><td width ="8%" id="lang_3"></td>\
+					<td width ="32%" id="lang_4"></td>\
+					<td width ="20%" id="lang_5"></td>\
+					<td width ="20%" id="lang_6"></td>\
+					<td width ="20%" id="lang_7"></td>';
+			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="8%" id="lang_3"></td>\

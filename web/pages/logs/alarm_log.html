@@ -212,6 +212,9 @@
 						//read_log_data(1,3,0,0);
 						flash_html(btn);
 					}
+				}else if(btn.id == "del"){
+					read_log_data(1,3,0,0);
+					flash_html(btn);
 				}else{
 
 				}
@@ -220,7 +223,10 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-
+				thead = '<tr><td width ="5%" id = "lang_2"></td>\
+					<td width ="15%" id = "lang_3"></td>\
+					<td width ="35%" id = "lang_4"></td>\
+					<td width ="45%" id = "lang_5"></td>';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" id = "lang_2"></td>\

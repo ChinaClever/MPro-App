@@ -25,9 +25,10 @@ void Data_Core::upAlarm()
 
 void Data_Core::run()
 {
+    cm::mdelay(4444);
     while(isRun) {
         outletWork();
-        cm::mdelay(400); tgWork();
+        cm::mdelay(399); tgWork();
         dualWork(); cm::mdelay(100);
         groupWork(); cm::mdelay(100);
         loopWork(); cm::mdelay(100);

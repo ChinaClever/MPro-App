@@ -88,7 +88,7 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
 
 QVariant Set_Service::smtpCfg(int fc, int id)
 {
-    QVariant ret;
+    QVariant ret; if(id) id -= 1;
     sSmtpCfg *it = &App_Smtp::smtpCfg;
     switch (fc) {
     case 1: ret = it->en; break;
@@ -106,11 +106,10 @@ QVariant Set_Service::smtpCfg(int fc, int id)
 
 bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
 {
-    bool ret = true;
+    if(id) id -= 1; // cout << id;
     sSmtpCfg *it = &App_Smtp::smtpCfg;
     QString prefix = "smtp"; QString key;
-
-    switch (fc) {
+    bool ret = true; switch (fc) {
     case 1: key = "en"; it->en = v.toInt(); break;
     case 2: key = "host";  it->host = v.toString(); break;
     case 3: key = "from";  it->from = v.toString();  break;
@@ -147,7 +146,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
 {
     bool ret = true;
     sSshCfg *cfg = &App_Ssh::sshCfg;
-    //App_Core *obj = App_Core::bulid();
+    App_Core *obj = App_Core::bulid();
     QString prefix = "ssh"; QString key;
 
     switch (fc) {
@@ -155,7 +154,8 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     case 2: key = "telnet_en";  cfg->telnet_en = v.toInt(); break;
     case 3: key = "usr";  cfg->usr = v.toString();  break;
     case 4: key = "pwd";  cfg->pwd = v.toString();  break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    case 5: ret = obj->ssh_save(); break;
+    default: ret = false; cout << fc; break;
     }
 
     if(key.size()){
@@ -191,11 +191,11 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
 
     switch (fc) {
     case 1: ret = obj->ntp_time(v.toString()); break;
-    case 2: key = "udp_en";  obj->ntp_udpEn(v.toBool()); break;
+    case 2: key = "udp_en";  obj->ntp_udpEn(v.toInt()); break;
     case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
     case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
     case 5: obj->ntpdate(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(key.size()){
@@ -206,10 +206,9 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
 }
 
 int Set_Service::webCfg(int fc)
-{
-    int ret = 0;
+{    
     sWebCfg *it = &cm::dataPacket()->web;
-    switch (fc) {
+    int ret = 0; switch (fc) {
     case 1: ret = it->http_en; break;
     case 2: ret = it->http_port; break;
     case 3: ret = it->http_redirect; break;
@@ -222,18 +221,16 @@ int Set_Service::webCfg(int fc)
 }
 
 bool Set_Service::webSet(int fc, const QVariant &v)
-{
-    bool ret = true;
+{   
     sWebCfg *it = &cm::dataPacket()->web;
     QString prefix = "web"; QString key;
-
-    switch (fc) {
+    bool ret = true; switch (fc) {
     case 1: key = "http_en";  it->http_en = v.toInt(); break;
     case 2: key = "http_port";  it->http_port = v.toInt(); break;
     case 3: key = "http_redirect";  it->http_port = v.toInt();  break;
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO; break;
+    default: ret = false; cout<< fc; break;
     }
 
     if(key.size()){

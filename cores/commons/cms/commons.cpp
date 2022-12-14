@@ -185,7 +185,7 @@ double cm::decimal(const sDataItem &it)
             case DTopic::Tem: res = COM_RATE_TEM; break;
             case DTopic::Hum: res = COM_RATE_HUM; break;
             //default: cout << it.topic; break;
-            }
+            } if(it.subtopic == DSub::Alarm) res = 1;
     }
 
     return res;

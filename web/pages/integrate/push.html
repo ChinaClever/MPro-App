@@ -41,8 +41,8 @@
 		let language = 1;
 		var mode_set = new Array();
 		var mode_name = new Array("","UDP","TCP","WebSocket");
-		var select_name = new Array("","udpEn","udpAddr","udpPort","","","","delay","mode","port");
-		var udp_sel = new Array("UDP1","UDP2","UDP3","UDP4");
+		var select_name = new Array("","udpEn","udpAddr","udpPort","delay","","","","mode","port");
+		var udp_sel = new Array("","","","");
 		var push_data = new Array();
 		let lang = new Array();
 		let udp_num = 0;
@@ -50,11 +50,11 @@
 			var i = 0;
 			for(var i = 1;i<10;i++){
 				push_data[i] = new Array();
-				if(i < 4){
+				if(i < 5){
 					for(let j = 1;j<5;j++){
 						push_data[i][j] = sessionStorage.getItem(type_name[18]+ push_info[i]+j);
 					}
-				}else if(i>6){
+				}else if(i>7){
 					push_data[i][1] = sessionStorage.getItem(type_name[18]+ push_info[i]);
 				}
 			}
@@ -65,9 +65,9 @@
 			}
 			lang[1] = ["","主动推送","","","",""];
 			lang[2] = ["","主动推送服务","","","",""];
-			lang[3] = ["","推送地址:","","","",""];
+			lang[3] = ["","推送通道:","","","",""];
 			lang[4] = ["","推送启用:","","","",""];
-			lang[5] = ["","地址:","","","",""];
+			lang[5] = ["","推送地址:","","","",""];
 			lang[6] = ["","端口号:","","","",""];
 			lang[7] = ["","时间间隔：","","","",""];
 			lang[8] = ["","立即生效","","","",""];
@@ -77,9 +77,14 @@
 			lang[12] = ["","立即生效","","","",""];
 			lang[13] = ["","禁用","","","",""];
 			lang[14] = ["","启用","","","",""];
+			lang[15] = ["","通道","","","",""];
 			mode_set[0] = lang[13][language];
 			mode_set[1] = lang[14][language];
 			mode_name[0] = lang[13][language];
+			udp_sel[0] = lang[15][language] + 1;
+			udp_sel[1] = lang[15][language] + 2;
+			udp_sel[2] = lang[15][language] + 3;
+			udp_sel[3] = lang[15][language] + 4;
 		}
 		function lang_fun(){
 			for(var i = 1;i<13;i++){
@@ -101,18 +106,19 @@
 		function showdata(){
 			document.getElementById("udpSel").value = udp_num;
 			for(let i = 1;i < 10;i++){
-				if(i<4){
+				if(i<5){
 					document.getElementById(select_name[i]).value = push_data[i][1 + udp_num];
-				}else if(i>6){
+				}else if(i>7){
 					document.getElementById(select_name[i]).value = push_data[i][1];
 				}
-				if(i<4 ||i>6){
+				if(i<5 ||i>7){
 					document.getElementById(select_name[i]).disabled = false;
 				}
 			}
 			if(parseInt(push_data[1][udp_num + 1]) == 0){
 				document.getElementById(select_name[2]).disabled = true;
 				document.getElementById(select_name[3]).disabled = true;
+				document.getElementById(select_name[4]).disabled = true;
 			}
 			if(parseInt(push_data[8][1]) == 0){
 				document.getElementById(select_name[9]).disabled = true;
@@ -125,16 +131,18 @@
 				}else{
 					for(let i = 0;i<select_name.length;i++){
 						if(btn.id == select_name[i]){
-							if(i < 4){
+							if(i < 5){
 								rpc.call('pduSetParam',[0,push,i,1 + udp_num,0,btn.value]);
-							}else if(i>6){
+							}else if(i>7){
 								rpc.call('pduSetParam',[0,push,i,0,0,btn.value]);
 							}
 						}
 					}
 				}
 				flash_html();
-			}else{}
+			}else{
+				showdata();
+			}
 		}
 		function flash_html(){
 			read_push_data(0);
@@ -144,7 +152,7 @@
 			},800);
 		}
 		function Set(){
-			if(confirm("请确认是否开启此功能。")){
+			if(confirm("请确认是否生效当前设置。")){
 				rpc.call('pduSetParam',[0,push,10,0,0,0]);
 			}else{}
 		}

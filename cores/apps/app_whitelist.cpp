@@ -9,23 +9,22 @@ sWhiteListCfg App_WhiteList::whiteListCfg;
 App_WhiteList::App_WhiteList(QObject *parent)
     : App_Start{parent}
 {
-    QTimer::singleShot(44,this,SLOT(internetFirewall()));
+    QTimer::singleShot(1,this,SLOT(internetFirewall()));
 }
 
 void App_WhiteList::internetFirewall()
 {
     sWhiteListCfg *cfg = &whiteListCfg;
     if(cfg->en && QFile::exists("netcfg")) {
-        system("./netcfg -s on");
+        system("netcfg -s on");
+        system("netcfg -a '127.0.0.1 - - -'");
         for(int i=0; i<WHITE_LIST_NUM; ++i) {
-            if(cfg->ip[i].size())  {
-                QString cmd = "./netcfg -a '%1 icmp - -'";
-                system(cmd.arg(cfg->ip[i]).toLocal8Bit().data());
-            }
-            if(cfg->mac[i].size())  {
-                QString cmd = "./netcfg -a '- - - %1'";
-                system(cmd.arg(cfg->mac[i]).toLocal8Bit().data());
-            }
+            QString ip = cfg->ip[i]; if(ip.isEmpty()) ip = "-";
+            QString mac = cfg->mac[i]; if(mac.isEmpty()) mac = "-";
+            QString fmd = "netcfg -a '%1 - - %2'";
+            QString cmd = fmd.arg(ip, mac);
+            system(cmd.toLocal8Bit().data());
+            qDebug() << cmd;
         }
     }
 }

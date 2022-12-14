@@ -51,7 +51,7 @@ void Set_Updater::ota_log()
     if(ret) {
         it.ver = ver.ver;
         it.md5 = ver.md5;
-        it.remark = ver.remark;
+        it.remark = "[OK] " + ver.remark;
         it.oldVersion = ver.oldVersion;
         it.releaseDate = ver.releaseDate;
         Log_Core::bulid()->append(it);
@@ -59,18 +59,27 @@ void Set_Updater::ota_log()
 }
 
 void Set_Updater::ota_logErr(const QString &fn)
-{
-    QString file = fn.split("/").last().remove(".zip");
-    QStringList ls = file.split("_");
-    if(ls.size() == 3) {
-        sOtaItem it;
-        it.ver = ls.at(1);
-        it.md5 = "md5 error";
-        it.remark = "updater error";
-        it.oldVersion = "--- ---";
-        it.releaseDate = ls.last();
-        Log_Core::bulid()->append(it);
-    }
+{    
+    QString dir = "/tmp/updater/clever/";
+    sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
+        sAppVerIt ver; Cfg_App cfg(dir);
+        cfg.app_unpack(ver);
+        it.ver = ver.ver;
+        it.md5 = ver.md5;
+        it.remark = "[error] " + ver.remark;
+        it.oldVersion = ver.oldVersion;
+        it.releaseDate = ver.releaseDate;
+    } else {
+        QString file = fn.split("/").last().remove(".zip");
+        QStringList ls = file.split("_");
+        if(ls.size() == 3) {
+            it.ver = ls.at(1);
+            it.md5 = "md5 error";
+            it.remark = "updater error";
+            it.oldVersion = "--- ---";
+            it.releaseDate = ls.last();
+        }
+    } Log_Core::bulid()->append(it);
 }
 
 bool Set_Updater::ota_cascade(const QString &fn)
@@ -112,8 +121,7 @@ bool Set_Updater::ota_outlet()
 
 int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
-    bool ret = false;
-    fc -= 10; switch (fc) {
+    bool ret = false; switch (fc) {
     case DOtaCode::DOta_Usb:  break;
     case DOtaCode::DOta_Net:  break;
     case DOtaCode::DOta_Web:  break;

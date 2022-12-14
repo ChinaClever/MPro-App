@@ -50,8 +50,11 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
     // Parse websocket message, which should be a JSON-RPC frame like this:
     // { "id": 3, "method": "sum", "params": [1,2] }
     char *method = mg_json_get_str(frame, "$.method");
-    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
-    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
+//    int id_off = mg_json_get(frame.ptr, (int) frame.len, "$.id", &id_len);
+//    int params_off = mg_json_get(frame.ptr, (int) frame.len, "$.params", &params_len);
+
+    int id_off = mg_json_get(frame, "$.id", &id_len);
+    int params_off = mg_json_get(frame, "$.params", &params_len);
     params = mg_str_n(frame.ptr + params_off, params_len);
     id = mg_str_n(frame.ptr + id_off, id_len);
 
@@ -130,6 +133,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_download_file(c , hm , "/index.html/snmp.mib");
         }else if(mg_http_match_uri(hm, "/upload")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
+        }else if(mg_http_match_uri(hm, "/upload_fw")){
+            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s",file_path);
+            Web_Obj::bulid()->app_upgrade(file_path);
         }else if(mg_http_match_uri(hm, "/upload_batch")){
             mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             Web_Obj::bulid()->restores(2,file_path);

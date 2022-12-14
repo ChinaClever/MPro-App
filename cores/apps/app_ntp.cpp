@@ -38,7 +38,7 @@ QString App_Ntp::ntp_time()
 void App_Ntp::ntp_timeZone(const QString &zone)
 {
     ntpCfg.time_zone = zone;
-    QString cmd = "export TZ='%1";
+    QString cmd = "export TZ='%1'";
     system(cmd.arg(zone).toLocal8Bit().data());
 }
 
@@ -48,15 +48,18 @@ bool App_Ntp::ntp_time(const QString &t)
     QDateTime dt = QDateTime::fromString(t, "yyyy-MM-dd hh:mm:ss");
     QDateTime localDate = QDateTime::fromString("2022-09-01 10:40:00", "yyyy-MM-dd hh:mm:ss");
     if(dt > localDate) {
-        QString qstrDateTime = QString("date -s %1").arg(t);
-        system(qstrDateTime.toStdString().c_str());
-        system("hwclock -w");
+        QString qstrDateTime = QString("date -s '%1'").arg(t); qDebug() << qstrDateTime;
+        system(qstrDateTime.toStdString().c_str()); system("hwclock -w"); system("sync");
     }else ret = false;
     return ret;
 }
 
 bool App_Ntp::ntpdate()
 {
-    QString cmd = QString("ntpdate %1").arg(ntpCfg.ntp_host);
-    return system(cmd.toStdString().c_str());
+    bool ret = true;
+    if(ntpCfg.ntp_host.size()) {
+        QString cmd = QString("ntpdate %1").arg(ntpCfg.ntp_host);
+        qDebug() << cmd; system(cmd.toStdString().c_str());
+    } else ret = false;
+    return ret;
 }

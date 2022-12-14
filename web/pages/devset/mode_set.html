@@ -42,8 +42,8 @@
 		let lang = new Array();
 		let mode_set = new Array();
 		let opt_val = new Array();
-		let id_val = new Array("","","","mode","addr","","","buz","group","energe","pow");
-		let id_val1 = new Array("mode","addr","buz","group","energe","pow");
+		let id_val = new Array("","","","mode","addr","","","buz");//,"group","energe","pow");
+		let id_val1 = new Array("mode","addr","buz");//,"group","energe","pow");
 		lang_init();
 		function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -72,7 +72,7 @@
 			opt_val[1] = lang[11][language];
 		}
 		function lang_fun(){
-			for(let i = 1;i < 10; i++){
+			for(let i = 1;i < 7; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
@@ -144,24 +144,6 @@
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td id = "lang_6"></td>';
 			tbody += '<td><select id ="buz" onchange ="SetData(this)">';
-			for(var i = 0; i<opt_val.length;i++){
-				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id = "lang_7"></td>';
-			tbody += '<td><select id ="group" onchange ="SetData(this)">';
-			for(var i = 0; i<opt_val.length;i++){
-				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id = "lang_8"></td>';
-			tbody += '<td><select id ="energe" onchange ="SetData(this)">';
-			for(var i = 0; i<opt_val.length;i++){
-				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id = "lang_9"></td>';
-			tbody += '<td><select id ="pow" onchange ="SetData(this)">';
 			for(var i = 0; i<opt_val.length;i++){
 				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
 			}

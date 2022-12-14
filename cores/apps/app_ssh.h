@@ -17,10 +17,14 @@ class App_Ssh : public App_Smtp
 public:
     explicit App_Ssh(QObject *parent = nullptr);
     static sSshCfg sshCfg;
+    bool ssh_save();
+
+private:
+    void ssh_delUser();
+    bool ssh_addrUser();
 
 private slots:
     void ssh_initFunSlot();
-
 };
 
 #endif // APP_SSH_H

@@ -28,7 +28,7 @@
 					</div>
 					<div>
 						<br/>
-						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_7"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_8"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_9"></span><span id  ="page_num"></span>
+						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
@@ -62,25 +62,24 @@
 			lang[1] = ["","事件记录","","","",""];
 			lang[2] = ["","序号","","","",""];
 			lang[3] = ["","时间","","","",""];
-			lang[4] = ["","用户名称","","","",""];
-			lang[5] = ["","操作类型","","","",""];
-			lang[6] = ["","详细信息","","","",""];
-			lang[7] = ["","日志大小：","","","",""];
-			lang[8] = ["","页","","","",""];
-			lang[9] = ["","/页","","","",""];
-			lang[10] = ["","前往","","","",""];
-			lang[11] = ["","上一页","","","",""];
-			lang[12] = ["","下一页","","","",""];
-			lang[13] = ["","删除日志","","","",""];
-			lang[14] = ["","导出","","","",""];
-			lang[15] = ["","条","","","",""];
+			lang[4] = ["","操作类型","","","",""];
+			lang[5] = ["","详细信息","","","",""];
+			lang[6] = ["","日志大小：","","","",""];
+			lang[7] = ["","页","","","",""];
+			lang[8] = ["","/页","","","",""];
+			lang[9] = ["","前往","","","",""];
+			lang[10] = ["","上一页","","","",""];
+			lang[11] = ["","下一页","","","",""];
+			lang[12] = ["","删除日志","","","",""];
+			lang[13] = ["","导出","","","",""];
+			lang[14] = ["","条","","","",""];
 		}
 		function lang_fun(){
-			for(let j = 1;j<10;j++){
+			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			for(let i = 0;i<btn_name.length;i++){
-				document.getElementById(btn_name[i]).value = lang[10+i][language];
+				document.getElementById(btn_name[i]).value = lang[9+i][language];
 			}
 		}
 		function read_data(){
@@ -139,7 +138,7 @@
 			let size = document.getElementById("log_size");
 			let p = document.getElementById("page");
 			let p_n = document.getElementById("page_num");
-			size.innerHTML = log_num+lang[15][language];
+			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
 
@@ -218,6 +217,9 @@
 						//read_log_data(2,3,0,0);
 						flash_html(btn);
 					}
+				}else if(btn.id == "del"){
+					read_log_data(2,3,0,0);
+					flash_html(btn);
 				}else{
 
 				}
@@ -226,24 +228,21 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-				thead = '<tr><td width ="6%" id="lang_2">序号</td>\
-					<td width ="26%" id="lang_3">时间</td>\
-					<td width ="12%" id="lang_4"></td>\
-					<td width ="12%" id="lang_5"></td>\
-					<td width ="40%" id="lang_6">详细描述</td></tr>';
+				thead = '<tr><td width ="6%" id="lang_2"></td>\
+					<td width ="26%" id="lang_3"></td>\
+					<td width ="24%" id="lang_4"></td>\
+					<td width ="40%" id="lang_5"></td></tr>';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%" id="lang_2">序号</td>\
-					<td width ="26%" id="lang_3">时间</td>\
+					thead = '<tr><td width ="6%" id="lang_2"></td>\
+					<td width ="26%" id="lang_3"></td>\
 					<td width ="12%" id="lang_4"></td>\
-					<td width ="12%" id="lang_5"></td>\
-					<td width ="40%" id="lang_6">详细描述</td></tr>';
+					<td width ="40%" id="lang_5"></td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ log_data[i][0] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ user_name +'</td>';
-				tbody += '<td id = "d'+ i + '">'+ log_data[i][1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ log_data[i][1] +'</td>';
 				tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
 				tbody += '</tr>';
 			}

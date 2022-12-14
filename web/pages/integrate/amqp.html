@@ -39,7 +39,7 @@
 		var language = 1;
 		var amqp_data = new Array();
 		let lang = new Array();
-		let id_name = new Array("enable","addr","port","host","usr","psd","switch","routing","binding","sslEn","state");
+		let id_name = new Array("enable","addr","port","host","usr","psd","switch","routing","binding","sslEn","state","update");
 		let ssl_en = new Array("","");
 		var amqp_data = new Array();
 		lang_init();
@@ -60,26 +60,27 @@
 			lang[11] = ["","Binding Key:","","","",""];
 			lang[12] = ["","SSL加密启用:","","","",""];
 			lang[13] = ["","连接状态:","","","",""];
-			lang[14] = ["","立即生效","","","",""];
-			lang[15] = ["","启用","","","",""];
-			lang[16] = ["","禁用","","","",""];
-			lang[17] = ["","已连接","","","",""];
-			lang[18] = ["","未连接","","","",""];
+			lang[14] = ["","更新频率(S):","","","",""];
+			lang[15] = ["","立即生效","","","",""];
+			lang[16] = ["","启用","","","",""];
+			lang[17] = ["","禁用","","","",""];
+			lang[18] = ["","已连接","","","",""];
+			lang[19] = ["","未连接","","","",""];
 
-			enable[0] = lang[15][language];
+			enable[0] = lang[17][language];
 			enable[1] = lang[16][language];
-			ssl_en[0] = lang[17][language];
-			ssl_en[1] = lang[18][language];
+			ssl_en[0] = lang[18][language];
+			ssl_en[1] = lang[19][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<14;j++){
+			for(let j = 1;j<15;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			document.getElementById("lang_14").value  = lang[14][language];
+			document.getElementById("lang_15").value  = lang[15][language];
 		}
 
 		function read_data(){
-			for(var j = 1;j<12;j++){
+			for(var j = 1;j<13;j++){
 				amqp_data[j] = sessionStorage.getItem(type_name[20]+ amqp_cfg[j]);
 			}
 			if(amqp_data[11] == 'false' || amqp_data[11] == '0'){
@@ -93,22 +94,27 @@
 		setTimeout(function(){
 			read_data();
 			showdata();
-		},500);
+		},800);
 		function showdata(){
-			for(var j = 0;j<id_name.length-1;j++){
+			for(var j = 0;j<id_name.length;j++){
 				if( j == 0 || j == 9){
-					document.getElementById(id_name[j]).selected = true;
+					document.getElementById(id_name[0]).selected = true;
+					document.getElementById(id_name[j]).value = amqp_data[j +1];
 					if(parseInt(amqp_data[1]) == 0 && j != 0){
 						document.getElementById(id_name[j]).disabled = true;
+					}else{
+						document.getElementById(id_name[j]).disabled = false;	
 					}
 				}else{
 					if(parseInt(amqp_data[1]) == 0){
 						document.getElementById(id_name[j]).disabled = true;
+					}else{
+						document.getElementById(id_name[j]).disabled = false;	
 					}
 					document.getElementById(id_name[j]).value = amqp_data[j +1];
 				}
 			}
-			document.getElementById(id_name[id_name.length-1]).innerHTML = amqp_data[11];
+			document.getElementById(id_name[id_name.length-2]).innerHTML = amqp_data[11];
 		}
 		function flash_html(){
 			read_amqp_data(0);
@@ -119,7 +125,7 @@
 		}
 		function changed(ipt){
 			if(confirm("请确认是否保存此次修改？")){
-				for(var i = 0 ;i<(id_name.length -1);i++){
+				for(var i = 0 ;i<(id_name.length);i++){
 					if(ipt.id == id_name[i]){
 						rpc.call('pduSetParam',[0,20,(i+1),0,0,ipt.value]);
 					}
@@ -129,7 +135,7 @@
 		}
 		function Set(){
 			var sel =0;
-			if(confirm("请确认是否保存此次修改？")){
+			if(confirm("请确认是否生效当前设置。")){
 				rpc.call('pduSetParam',[0,20,20,0,0,sel]);
 			}else{}
 		}
@@ -162,13 +168,15 @@
 			tbody += '<td><input id = "'+ id_name[7] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_11"></td>';
 			tbody += '<td><input id = "'+ id_name[8] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_14"></td>';
+			tbody += '<td><input id = "'+ id_name[11] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_12"></td>';
 			tbody += '<td><select  id = "'+ id_name[9] +'" onchange ="changed(this)" >';
 			for(var i = 0; i<enable.length;i++){
 				tbody +='<option value ="'+i+'">'+enable[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id = "lang_14" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "lang_15" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

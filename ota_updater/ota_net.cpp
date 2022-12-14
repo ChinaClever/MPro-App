@@ -41,11 +41,11 @@ bool Ota_Net::coreRuning()
 
 int Ota_Net::cmd_updater(const QString &fn, int bit)
 {
-    QString cmd = "pdu_cmd";
-    cmd += " pduCfgSet 83 %1 " + fn;
-    int ret = cm::execute(cmd.arg(10+bit)).toInt();
+    QString fmd = "pdu_cmd pduCfgSet %1 %2 " + fn;
+    QString cmd = fmd.arg(SFnCode::EOta).arg(bit);
+    int ret = cm::execute(cmd).toInt();
     cmd += " res:" + QString::number(ret);
-    throwMessage(cmd.arg(10+bit));
+    throwMessage(cmd);
     return ret;
 }
 
@@ -53,7 +53,7 @@ bool Ota_Net::up_rootfs(const QString &path)
 {
     bool ret = true;
     QString dir = path + "rootfs";
-    QStringList fns = File::entryList(dir); cout << dir << fns;
+    QStringList fns = File::entryList(dir); //cout << dir << fns;
     if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) {
         QString fmd = "system-update %1/xImage %1/rootfs.squashfs";
         sOtaUpdater *ota = &cm::dataPacket()->ota;
@@ -122,7 +122,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
             QString fn = it.path + it.file;
             QString cmd = "rm -f " + fn;
             system(cmd.toLocal8Bit());
-            cmd_updater(fn, 400); cm::mdelay(10);
+            cmd_updater(fn, 400); //cm::mdelay(10);
             //system("sync"); system("reboot");
         }
     } clrbit(mOta->work, bit);
@@ -131,9 +131,9 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
 void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
+    system("rm -rf /tmp/updater/clever");
     system("chmod +x /usr/data/clever/bin/*");
     system("chmod +x /usr/data/clever/app/*");
-    system("rm -rf /tmp/updater/clever");
     system("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot");

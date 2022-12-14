@@ -22,6 +22,7 @@ void Set_Diagnose::sys_cmd(const QString &cmd, const QString &fn)
 
 void Set_Diagnose::diasCopy()
 {
+    system("rm -rf /tmp/download/*");
     QString dir = "/tmp/download/dia";
     QString cmd = "mkdir -p " + dir; cm::execute(cmd);
     cmd = "rm -rf %1/*"; cm::execute(cmd.arg(dir));

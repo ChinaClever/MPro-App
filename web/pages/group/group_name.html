@@ -62,6 +62,7 @@
 		let read = 0;
 		let lang = new Array();
 		let group_name =new Array();
+		let group_data =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		function lang_init(){
 			for(let i = 1;i<7;i++){
@@ -71,16 +72,17 @@
 			lang[2] = ["","阅读模式","","","",""];
 			lang[3] = ["","设备选择","","","",""];
 			lang[4] = ["","序号","","","",""];
-			lang[5] = ["","分组名称","","","",""];
-			lang[6] = ["","设置模式","","","",""];
+			lang[5] = ["","分组信息(输出位)","","","",""];
+			lang[6] = ["","分组名称","","","",""];
+			lang[7] = ["","设置模式","","","",""];
 		}
 		function lang_fun(){
-			for(let j = 1;j<6;j++){
+			for(let j = 1;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
 			}
 		}
 		function lang_fun_(){
-			for(let j = 4;j<6;j++){
+			for(let j = 4;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
 			}
 		}
@@ -96,7 +98,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = lang[6][1];
+				ros.innerHTML = lang[7][1];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -118,6 +120,7 @@
 		function read_data(){
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
+				group_data[i]= sessionStorage.getItem(type_name[25]+ addr +'_'+i);
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -164,17 +167,21 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-
+			if(rows == 0){
+				thead = '<tr><td width ="10%" id ="lang_4"></td>\
+				<td width ="50%" id = "lang_5"></td>\
+				<td width ="40%" id ="lang_6"></td>';
+			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="10%" id ="lang_4"></td>\
-					<td width ="50%"></td>\
-					<td width ="40%" id ="lang_5"></td>';
+					<td width ="50%" id = "lang_5"></td>\
+					<td width ="40%" id ="lang_6"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td ></td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "b'+ i + '" value = "'+group_name[i + 1]+'"></input></td>';
+				tbody += '<td id = "b'+ i +'">'+group_data[i+1]+'</td>';
+				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "c'+ i + '" value = "'+group_name[i + 1]+'"></input></td>';
 				tbody += '</tr>';
 			}
 

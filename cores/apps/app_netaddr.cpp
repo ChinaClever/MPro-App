@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_Sensor{parent}
 {
-    //QTimer::singleShot(1,this,SLOT(inet_initFunSlot())); /////////=======
+    QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }
 
 void App_NetAddr::inet_initFunSlot()
@@ -29,7 +29,7 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(inet->gw, "192.168.1.1");
         qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
-        qstrcpy(net->mac, "00:00:00:00:00:01");
+        //qstrcpy(net->mac, "00:00:00:00:00:01");
     } inet_setInterface();
 }
 
@@ -46,6 +46,9 @@ void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
     qstrcpy(inet.mask, str.toStdString().c_str());
     str = cfg->readCfg("dns", "", g).toString();
     qstrcpy(inet.dns, str.toStdString().c_str());
+    str = cfg->readCfg("dns2", "", g).toString();
+    qstrcpy(inet.dns2, str.toStdString().c_str());
+
     inet.en = cfg->readCfg("en", 0, g).toInt();
     inet.dhcp = cfg->readCfg("dhcp", 0, g).toInt();
     inet.prefixLen = cfg->readCfg("prefixLen", 0, g).toInt();
@@ -58,6 +61,7 @@ void App_NetAddr::inet_writeCfg(sNetAddr &inet, const QString &g)
     cfg->writeCfg("ip", inet.ip, g);
     cfg->writeCfg("gw", inet.gw, g);
     cfg->writeCfg("dns", inet.dns, g);
+    cfg->writeCfg("dns2", inet.dns2, g);
     cfg->writeCfg("mask", inet.mask, g);
     cfg->writeCfg("dhcp", inet.dhcp, g);
     cfg->writeCfg("prefixLen", inet.prefixLen, g);
@@ -96,7 +100,7 @@ void App_NetAddr::inet_setIpV4()
         QString gw = net->inet.gw;
         QString mask = net->inet.mask;
         QString dns = net->inet.dns;
-        // QString dns2 = net->inet.dns2;
+        QString dns2 = net->inet.dns2;
         QString cmd = "ifconfig %1 %2 netmask %3";
         QString str = cmd.arg(fn, ip, mask);
         system(str.toStdString().c_str());
@@ -125,14 +129,14 @@ void App_NetAddr::inet_setIpV4()
             system(str.toStdString().c_str());
         }
 
-        //        if(dns2.size()) {
-        //            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-        //            str = cmd.arg(dns); qDebug() << str;
-        //            system(str.toStdString().c_str());
-        //        }
+        if(dns2.size()) {
+            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
+            str = cmd.arg(dns); qDebug() << str;
+            system(str.toStdString().c_str());
+        }
     }
 
-    inet_writeCfg(net->inet, "IPV4");
+    //inet_writeCfg(net->inet, "IPV4");
 }
 
 void App_NetAddr::inet_setIpV6()
@@ -146,7 +150,7 @@ void App_NetAddr::inet_setIpV6()
         QString ip = net->inet6.ip;
         QString gw = net->inet6.gw;
         QString dns = net->inet6.dns;
-        // QString dns2 = net->inet6.dns2;
+        QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
         QString cmd, str;
         if(QFile::exists("netcfg")) {
@@ -180,26 +184,25 @@ void App_NetAddr::inet_setIpV6()
             system(str.toStdString().c_str());
         }
 
-        //        if(dns2.size()) {
-        //            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-        //            str = cmd.arg(dns); qDebug() << str;
-        //            system(str.toStdString().c_str());
-        //        }
+        if(dns2.size()) {
+            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+            str = cmd.arg(dns); qDebug() << str;
+            system(str.toStdString().c_str());
+        }
     }
 
-    inet_writeCfg(net->inet6, "IPV6");
+    //inet_writeCfg(net->inet6, "IPV6");
 }
 
-void App_NetAddr::inet_saveCfg()
+void App_NetAddr::inet_saveCfg(int fc)
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
-    QString cmd = fmd.arg(net->mac);
+    QString cmd = fmd.arg(net->mac); //qDebug() << cmd;
     system(cmd.toLocal8Bit().data());
-    //qDebug() << cmd;
 
-    //inet_writeCfg(net->inet6, "IPV6");
-    //inet_writeCfg(net->inet, "IPV4");
+    if(fc) inet_writeCfg(net->inet6, "IPV6");
+    else inet_writeCfg(net->inet, "IPV4");
 }
 
 void App_NetAddr::inet_dnsCfg()
