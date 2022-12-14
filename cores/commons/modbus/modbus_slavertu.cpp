@@ -12,7 +12,7 @@ Modbus_SlaveRtu::Modbus_SlaveRtu(QObject *parent) : Modbus_SlaveTcp{parent}
 
 bool Modbus_SlaveRtu::connectRtu(const sModbusSetting &cfg)
 {
-    bool ret = true; if(mDev) {
+    bool ret = true; if(!mDev) {
         mDev = new QModbusRtuSerialSlave(this);
         ret = initUnitMap();
         if(ret) initConnects();

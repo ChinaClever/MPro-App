@@ -29,6 +29,9 @@ void Mb_Core::initFunSlot()
 {
     // mCfg->enTcp = 1;
     // mCfg->port = 1502;
+    //cm::masterDev()->cfg.param.devMode = DevMode::DM_Rtu;/////////////////
+    //mCfg->enRtu = 1;/////////////////
+
     emit connectTcpSig();
     emit connectRtuSig();
 }
@@ -72,7 +75,9 @@ void Mb_Core::connectRtuSlot()
     int res = cm::masterDev()->cfg.param.devMode;
     if(res == DevMode::DM_Rtu && mCfg->enRtu) {
         ret = mRtu->connectRtu(*mCfg);
-    } if(ret) mRtu->mbUpdates();
+        if(ret) mRtu->mbUpdates();
+        else cout << mCfg->addr << ret;
+    }
 }
 
 void Mb_Core::run()
