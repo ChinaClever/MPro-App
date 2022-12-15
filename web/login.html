@@ -122,9 +122,13 @@
     }
     function check(){
       let usr = document.getElementById('username').value;
-      var psd_val = document.getElementById("psd");
-      if(usr != "" && psd !=""){
-        document.getElementById("sign_in").style.backgroundColor = '#88AAAA';
+      var psd_val = document.getElementById("psd").value;
+      if(usr != "" && psd_val !=""){
+        document.getElementById("sign_in").removeAttribute('disabled');
+        document.getElementById("sign_in").style.backgroundColor ="#8AA";
+      }else{
+        document.getElementById("sign_in").setAttribute('disabled','');
+        document.getElementById("sign_in").style.backgroundColor ="#9CC";
       }
     }
     function validataForm(ipt)
@@ -176,13 +180,13 @@
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "注册" onclick="register1()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
         tbody += '<br/><p class="title"><span>登陆页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" onchange ="check()" autocomplete="off"></p>';
-        tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="20" autocomplete="off" onchange ="check()" onblur = "validataForm(this)"  placeholder="密码"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
+        tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="20" autocomplete="off" oninput ="check();" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
-        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "登陆" onclick="sign_in()"></p></input>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" disabled="" value = "登陆" onclick="sign_in()"></input></p>';
       }else if(Reg === 'submite'){
         tbody += '<p class="title"><span>重置密码</span></p><p class="error" id = "Errinfo"></p>';
         tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="用户名"></p>';

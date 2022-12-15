@@ -93,7 +93,10 @@
 			for(var i = 1;i<9;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			document.getElementById("b" + dual_num).innerHTML  = lang[15][language];
+			for(var i = 1 ;i < dual_num + 1;i++)
+			{
+				document.getElementById("b" + dual_num).innerHTML  = lang[16][language];
+			}
 			if(read == 1){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
@@ -119,7 +122,7 @@
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
 			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+ lang[15][language]+(i+1)+'</option>';
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+ lang[16][language]+(i+1)+'</option>';
 			}
 			document.getElementById("ms").selected = slave_addr;
 			return tbody;
@@ -173,13 +176,13 @@
 			{
 				var ss = document.getElementById('e'+(i -1));
 				var ms = document.getElementById('f'+(i -1));
-				if(dual_data[i][2] === 1){
+				if(dual_data[i][2] == 1){
 					ss.checked = true;
 				}
 				else{
 					ss.checked = false;
 				}
-				if(dual_data[i][3] === 1){
+				if(dual_data[i][3] == 1){
 					ms.checked = true;
 				}
 				else{

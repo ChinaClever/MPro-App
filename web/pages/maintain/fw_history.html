@@ -222,22 +222,22 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-				thead = '<tr><td width ="10%" id = "lang_2"></td>\
+				thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="15%" id = "lang_4"></td>\
-					<td width ="15%" id = "lang_5"></td>\
-					<td width ="15%" id = "lang_6"></td>\
-					<td width ="15%" id = "lang_7"></td>\
-					<td width ="15%" id = "lang_8"></td></tr>';
+					<td width ="10%" id = "lang_4"></td>\
+					<td width ="25%" id = "lang_5"></td>\
+					<td width ="25%" id = "lang_6"></td>\
+					<td width ="10%" id = "lang_7"></td>\
+					<td width ="10%" id = "lang_8"></td></tr>';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="10%" id = "lang_2"></td>\
+				thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="15%" id = "lang_4"></td>\
-					<td width ="15%" id = "lang_5"></td>\
-					<td width ="15%" id = "lang_6"></td>\
-					<td width ="15%" id = "lang_7"></td>\
-					<td width ="15%" id = "lang_8"></td></tr>';
+					<td width ="10%" id = "lang_4"></td>\
+					<td width ="25%" id = "lang_5"></td>\
+					<td width ="25%" id = "lang_6"></td>\
+					<td width ="10%" id = "lang_7"></td>\
+					<td width ="10%" id = "lang_8"></td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';

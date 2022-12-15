@@ -121,13 +121,10 @@
 			for(var i = 1 ;i < dual_num + 1;i++){
 				dual_name[i] = sessionStorage.getItem("DualName"+ addr +'_'+i);
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
+		lang_init();
 		$('.table-striped').html(buildTable(dual_num));
 		$('.devname').html(buildSel(slave_num/2));
-		lang_init();
 		lang_fun();
 		modeset();
 		function setdata(ipt)
@@ -159,7 +156,7 @@
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
 			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+lang[j][language]+(i+1)+'</option>';
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+lang[7][language]+(i+1)+'</option>';
 			}
 			document.getElementById("ms").selected = slave_addr;
 			return tbody;

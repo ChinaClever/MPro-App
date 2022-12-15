@@ -195,7 +195,7 @@
 				else{
 					ss.checked = false;
 				}
-				if(switch_mode[i] === 1){
+				if(switch_mode[i] == 1){
 					ms.checked = true;
 				}
 				else{
@@ -287,13 +287,13 @@
 			if(retVal == true)
 			{
 				if(btn.innerText == Input_state[0]){
-					stat = 1;
+					stat = '1';
 				}
 				else if(btn.innerText == Input_state[1]){
-					stat = 0;
+					stat = '0';
 				}
 				else if(btn.innerText == Input_state[2]){
-					stat = 2;
+					stat = '2';
 				}
 
 				if(num !== output_num + 1){
@@ -353,21 +353,24 @@
 		}
 		var state_ = 0;
 		function putdata(){
-			for(let i = 0;i < dual_num;i++){
+			for(let i = 0;i < output_num;i++){
 				state_ = document.getElementById('c' + i);
-				state_.innerHTML = dual_info[i+1][0];
+				state_.innerHTML = State[swtich_state[i + 1]];
 			}
 		}
 		function read_state_data(addr){
 			for(let i = 1;i<output_num+1;i++){
 				rpc.call('pduReadData',[addr,output,switch_,3,i]);
+				rpc.call('pduReadData',[addr,output,switch_,1,i]);
+				rpc.call('pduReadData',[addr,output,switch_,8,i]);
+				rpc.call('pduReadData',[addr,output,switch_,11,i]);
 			}
 		}
 		setInterval(function(){
 			read_state_data(0);
 			setTimeout(function(){
 				read_data();
-				// putdata();
+				putdata();
 				showdata();
 			},800);
 		},2000);
