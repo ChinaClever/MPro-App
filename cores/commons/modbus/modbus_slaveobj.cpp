@@ -37,7 +37,7 @@ bool Modbus_SlaveObj::initUnitMap()
 void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size)
 {
     if(((address >= 1000) && (address < 2000)) || (address >= 3000)){
-        quint16 value = 0;
+        quint16 value = 0; //cout << table << address << size;
         for (int i = 0; i < size; ++i) {
             switch (table) {
             case QModbusDataUnit::Coils:
@@ -48,9 +48,9 @@ void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int addr
                 break;
             default: value = 0xFF; qDebug() << "Error: Modbus Register Type " << table;
                 continue;
-            }
+            } setData(table, address+i, value);
             emit registerDataSig(address+i,value);
-            //qDebug() << Q_FUNC_INFO << table << address << size << value;
+            //cout << table << address+i << size << value;
         }
 
         //QModbusDataUnit rcvData(table, address, size);
