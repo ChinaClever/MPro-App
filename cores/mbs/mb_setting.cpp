@@ -71,7 +71,7 @@ void Mb_Setting::lineCurSet(ushort addr, ushort &value)
     } else {
         int offset = addr - 1005;
         sAlarmUnit *unit = &(mDevData->line.cur);
-        setAlarmUnit(unit, offset, value*10);
+        setAlarmUnit(unit, offset, value);
     }
 }
 
@@ -79,7 +79,7 @@ void Mb_Setting::outputCurSet(ushort addr, ushort &value)
 {
     int offset = addr - 1011;
     sAlarmUnit *unit = &(mDevData->output.cur);
-    setAlarmUnit(unit, offset, value*10);
+    setAlarmUnit(unit, offset, value);
 }
 
 void Mb_Setting::envSet(ushort addr, ushort &value)
@@ -88,7 +88,7 @@ void Mb_Setting::envSet(ushort addr, ushort &value)
     sAlarmUnit *unit = nullptr;
     if(addr < 1123) unit = &(mDevData->env.tem);
     else if(addr < 1139) { offset = addr - 1123; unit = &(mDevData->env.hum);}
-    if(unit) setAlarmUnit(unit, offset, value*10);
+    if(unit) setAlarmUnit(unit, offset, value);
 }
 
 void Mb_Setting::lineVolSet(ushort addr, ushort &value)
