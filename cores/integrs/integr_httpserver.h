@@ -11,6 +11,8 @@ public:
     static void initHttpsServer(bool en, int port=23413);
 
 private:
+    static void OnGetHeaders(const QByteArray &body);
+    static bool upload(const QByteArray &body);
     static bool execute(const QByteArray &body);
     static bool download(const QByteArray &body);
     static bool pduMetaData(const QByteArray &body);

@@ -73,6 +73,62 @@ bool Integr_HttpServer::download(const QByteArray &body)
     return ret;
 }
 
+void Integr_HttpServer::OnGetHeaders(const QByteArray &body)
+{
+    QString str = "form-data; name=";
+    int id = body.indexOf(str) + str.size()+1;
+    int idx = body.indexOf("filename=") - 2;
+
+    cout << id << idx << idx-id << body.mid(id, idx-id);
+
+
+//    if(body.contains("Content-Disposition")) {
+
+//        QString strFileName = m_reply->rawHeader("Content-Disposition");
+//        int idx = strFileName.indexOf(QStringLiteral("filename="));
+//        if(idx >= 0) //找到filename字段
+//        {
+//            strFileName = strFileName.replace('"', ""); //filename=后面有双引号，应该全部删除
+//            strFileName = strFileName.mid(idx + 9);
+//            m_strFileName = strFileName;
+//        }
+//    }
+//    else //如果没有Content-Disposition，则用QUrl获取basename
+//    {
+//        m_url = m_reply->url();
+//        if(!m_url.isEmpty())
+//        {
+//            m_strFileName = m_url.fileName();
+//        }
+//    }
+
+//    if(m_reply->hasRawHeader("Content-Length"))
+//    {
+//        QString strFileSize = m_reply->rawHeader("Content-Length");
+//        m_strFileSize = strFileSize;
+//    }
+//    else
+//    {
+//        m_strFileSize = "0";
+//    }
+}
+
+bool Integr_HttpServer::upload(const QByteArray &body)
+{
+        qDebug() << "AAAAAAAAAAAAAA" << body;
+    OnGetHeaders(body);
+        replyHttp("ok", 200);
+//    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
+//    QString file = it->getString(body, "file");
+//    if(file.size()) {
+//        QJsonObject object; QByteArray array;
+//        bool ret = it->checkInput(body, object);
+//        if(ret) array = it->getValue(object, "content").toArray();
+
+//    }
+        return true;
+}
+
 bool Integr_HttpServer::setDataItem(const QByteArray &body)
 {
     QJsonObject object;
@@ -124,7 +180,6 @@ bool Integr_HttpServer::execute(const QByteArray &body)
     return ret;
 }
 
-
 void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &session)
 {
     QString err = "error: Interface not supported";
@@ -142,6 +197,7 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
     } else if(method.contains("POST")) {
         if(url.contains("setDataItem")) setDataItem(body);
         else if(url.contains("setCfgItem")) setCfgItem(body);
+        else if(url.contains("upload")) upload(body);
         else replyHttp(err, 223);
     } else if(method.contains("PUT")) {
         if(url.contains("execute")) execute(body);
