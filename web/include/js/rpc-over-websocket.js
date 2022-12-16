@@ -10,7 +10,7 @@ let identify = '';
 let addr  = 0;
 let slave_addr = 0;
 let dual_addr = 0;
-let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","","","","","LoopStart","LoopEnd");
+let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","LoopOutput","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
@@ -129,7 +129,7 @@ var jsonrpc = function()
       case 12:
         if(topic>10){
           sessionStorage.setItem(type_info[topic]+ "Num" + subtopic  +'_'+ addr_ ,JSON.parse(evt.data).result[5]);
-        }else if(topic == 6){
+        }else if(topic == 6 || topic ==7){
           sessionStorage.setItem(type_info[topic]+ "Num" + '_' + subtopic,JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_info[topic]+ "Num" + addr_ ,JSON.parse(evt.data).result[5]);
@@ -520,6 +520,7 @@ function read_sensor_data(addr)
 }
 function read_num_info(addr){
   var j = 1;
+  var loop_num=0;
   var time1 = setInterval(function(){
     if(j >= parseInt(num_num + 1)){
       clearInterval(time1);
@@ -527,10 +528,13 @@ function read_num_info(addr){
       for(let i = 1;i<board_num+1;i++){
         rpc.call('pduReadParam',[addr,num,6,i,0]);
       }
+      for(let i = 1;i<loop_num+1;i++){
+        rpc.call('pduReadParam',[addr,num,7,i,0]);
+      }
     }
-    if((j < 6 || j > 10) && j <= num_num){
+    if((j < 8 || j > 10) && j <= num_num){
       if(j > 10){
-       var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
+       loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
         for(let i =0;i<loop_num;i++){
           rpc.call('pduReadParam',[addr,num,j,i,0]);
         }

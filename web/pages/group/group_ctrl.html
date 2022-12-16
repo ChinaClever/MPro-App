@@ -166,7 +166,7 @@
 			for(var i = 1 ;i < group_num + 1;i++)
 			{
 				var ss = document.getElementById('d'+(i -1));
-				if(group_data[i][1] === 1){
+				if(group_data[i][1] == 1){
 					ss.checked = true;
 				}
 				else{
@@ -223,10 +223,10 @@
 			if(retVal == true)
 			{
 				if(btn.innerText == lang[9][language]){
-					stat = 1;
+					stat = '1';
 				}
-				else if(btn.innerText == lang[10][language]){
-					stat = 0;
+				else if(btn.innerText == lang[10][language]){s
+					stat = '0';
 				}
 
 				if(num !== group_num + 1){
