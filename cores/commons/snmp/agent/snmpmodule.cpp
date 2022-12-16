@@ -44,7 +44,7 @@ QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
     void *v = mShash.value(var->name());
     switch ((QSNMPType_e)var->type()) {
     case QSNMPType_Integer: res = *((int *)v); break;
-    case QSNMPType_OctetStr: res = QString((char *)v).toUtf8(); break;
+    case QSNMPType_OctetStr: res = QString::fromUtf8((char *)v); break;
     default: qDebug() << "Error: snmpGetValue" << var->fullName(); break;
     }
 

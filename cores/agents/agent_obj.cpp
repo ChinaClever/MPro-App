@@ -25,9 +25,9 @@ bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QSt
 {
     sOidIt it;
     it.str = ptr;
+    it.name = name;
     it.fieldId = addr;
     it.enWrited = isWrite;
-    it.name = name.toUtf8();
     it.oid = oidPrefix + QString::number(oid);
     return mSnmp->addOid(it);
 }
