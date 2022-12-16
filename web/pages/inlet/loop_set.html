@@ -128,6 +128,12 @@
 			lang[34] = ["","回路","","","",""];
 			lang[35] = ["","统一设置","","","",""];
 			lang[36] = ["","设置模式","","","",""];
+			lang[37]  = ["", "主机", "", "", "", ""];
+			lang[38]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[37][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[38][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(let j = 1;j<34;j++){

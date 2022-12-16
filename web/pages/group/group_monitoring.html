@@ -63,7 +63,7 @@
 		}
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<8;i++){
+			for(let i = 1;i<10;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","分组监测","","","",""];
@@ -73,6 +73,12 @@
 			lang[5] = ["","有功功率(kW)","","","",""];
 			lang[6] = ["","视在功率(AV)","","","",""];
 			lang[7] = ["","电能消耗(kWh)","","","",""];
+			lang[8]  = ["", "主机", "", "", "", ""];
+			lang[9]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[8][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[9][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(let j = 1;j<8;j++){

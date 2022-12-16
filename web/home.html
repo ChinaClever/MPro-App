@@ -34,7 +34,7 @@
 	<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
 		<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
 			<div class="panel panel-default">
-				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select id="ms" style="width:200px;" onChange="change();"></select></ul></div>
+				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select class ="devname" id="ms" style="width:200px;" onChange="change();"></select></ul></div>
 			</div>
 			<div class ="phase_div1">
 				<div class ="phase_div2" id="lang_3"></div>
@@ -271,6 +271,7 @@
 		let total_title = new Array("kW","kVA","kWh","Hz","mA");
 		let lang  = new Array(36);
 		let dev_name = new Array();
+		let language = 1;
 		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
     	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		let stat_ = new Array("断开","闭合");
@@ -281,7 +282,8 @@
 		function delay(){
 			for(let i = 0;i<50;i++){}
 		}
-		function LangFun()
+		LangInit();
+		function LangInit()
 		{
 			for(let i = 0;i<lang.length;i++){
 				lang[i] = new Array();
@@ -321,8 +323,20 @@
 			lang[33]  = ["PDU series:", "产品系列：", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
 			lang[34]  = ["PDU version:", "软件版本：", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
 			lang[35]  = ["Real-time dynamic power and current trend graph", "实时动态功率和电流趋势图", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
+			lang[36]  = ["", "主机", "", "", "", ""];
+			lang[37]  = ["", "副机", "", "", "", ""];
+			lang[38]  = ["", "烟雾", "", "", "", ""];
+			lang[39]  = ["", "烟雾", "", "", "", ""];
+			lang[40]  = ["", "烟雾", "", "", "", ""];
+			lang[41]  = ["", "烟雾", "", "", "", ""];
+			dev_name[0] = lang[36][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[37][language] + i;
+			}
+		}
+		function LangFun(){
 			for(var i = 1;i<36;i++){
-				document.getElementById("lang_" + i).innerHTML  = lang[i][1];
+				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 		}
 		function read_chart_data(){
@@ -387,16 +401,12 @@
 			sensor_info[2] = info;
 			system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
 			system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
-			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" min";
+			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" day";
 			system_info[3] = "NPDU("+serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))]+")";
-			system_info[4] = sessionStorage.getItem(ver_name[1] + addr);
-			for(let i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
+			system_info[4] = sessionStorage.getItem(ver_name[1]);
 			showdata();
 			read_chart_data();
 		}
-
 		$('.total').html(buildTablePhase(0));
 		$('.p1').html(buildTablePhase(1));
 		$('.p2').html(buildTablePhase(2));
@@ -404,8 +414,18 @@
 		$('.loop_table').html(buildTableLoop(loop_num));
 		$('.sensor_tab').html(buildTableSensor());
 		$('.sys_table').html(buildTableSystem());
-		LangFun();
+		$('.devname').html(buildSel(slave_num));
 		read_data();
+		LangFun();
+		function buildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+			}
+			return tbody;
+		}
 		function showdata(){
 			for(let i = 0;i<5;i++){
 				if(i<2){
