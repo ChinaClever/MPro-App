@@ -16,17 +16,17 @@ JsonRpcFileLogger::~JsonRpcFileLogger()
 
 void JsonRpcFileLogger::logDebug(const QString& message)
 {
-    m_stream << message << "\n";
+    //m_stream << message << "\n";
 }
 
 void JsonRpcFileLogger::logInfo(const QString& message)
 {
-    m_stream << message << "\n";
+    //m_stream << message << "\n";
 }
 
 void JsonRpcFileLogger::logWarning(const QString& message)
 {
-    m_stream << message << "\n";
+    //m_stream << message << "\n";
 }
 
 void JsonRpcFileLogger::logError(const QString& message)
