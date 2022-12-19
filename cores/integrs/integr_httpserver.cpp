@@ -34,7 +34,7 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
 {
     bool ret = true;
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    int addr = it->getData(body, "id");
+    int addr = it->getData(body, "addr");
     if(addr >= 0) {
         QJsonObject obj = Integr_JsonBuild::bulid()->getJsonObject(addr);
         mSession->replyJsonObject(obj);
@@ -44,124 +44,58 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
     return ret;
 }
 
-bool Integr_HttpServer::getDataItem(const QByteArray &body)
-{
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) {
-        double res = it->getDataItem(object);
-        replyValue(res);
-    } else {
-        ret = replyHttp("error", 212);
-    }
-    return ret;
-}
-
 
 bool Integr_HttpServer::download(const QByteArray &body)
 {
     bool ret = true;
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    QString file = it->getString(body, "file");
-    if(QFile::exists(file)) {
-        mSession->replyFile(file);
+    QString fn = it->getString(body, "file");
+    if(fn.at(0) != '/') fn.insert(0, '/');
+    if(QFile::exists(fn)) {
+        mSession->replyFile(fn);
     } else {
         QString str = "error: file does not exist, ";
-        ret = replyHttp(str+file, 214);
+        ret = replyHttp(str+fn, 214);
     }
     return ret;
 }
 
-void Integr_HttpServer::OnGetHeaders(const QByteArray &body)
-{
-    QString str = "form-data; name=";
-    int id = body.indexOf(str) + str.size()+1;
-    int idx = body.indexOf("filename=") - 2;
-
-    cout << id << idx << idx-id << body.mid(id, idx-id);
-
-
-//    if(body.contains("Content-Disposition")) {
-
-//        QString strFileName = m_reply->rawHeader("Content-Disposition");
-//        int idx = strFileName.indexOf(QStringLiteral("filename="));
-//        if(idx >= 0) //找到filename字段
-//        {
-//            strFileName = strFileName.replace('"', ""); //filename=后面有双引号，应该全部删除
-//            strFileName = strFileName.mid(idx + 9);
-//            m_strFileName = strFileName;
-//        }
-//    }
-//    else //如果没有Content-Disposition，则用QUrl获取basename
-//    {
-//        m_url = m_reply->url();
-//        if(!m_url.isEmpty())
-//        {
-//            m_strFileName = m_url.fileName();
-//        }
-//    }
-
-//    if(m_reply->hasRawHeader("Content-Length"))
-//    {
-//        QString strFileSize = m_reply->rawHeader("Content-Length");
-//        m_strFileSize = strFileSize;
-//    }
-//    else
-//    {
-//        m_strFileSize = "0";
-//    }
-}
 
 bool Integr_HttpServer::upload(const QByteArray &body)
 {
-        qDebug() << "AAAAAAAAAAAAAA" << body;
-    OnGetHeaders(body);
-        replyHttp("ok", 200);
-//    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-//    QString file = it->getString(body, "file");
-//    if(file.size()) {
-//        QJsonObject object; QByteArray array;
-//        bool ret = it->checkInput(body, object);
-//        if(ret) array = it->getValue(object, "content").toArray();
+    bool ret = true;
+    if(body.contains("Content-Disposition")) {
+        QString str = "form-data; name=";
+        int id = body.indexOf(str) + str.size()+1;
+        int idx = body.indexOf("filename=") - 2;
+        QString fn = body.mid(id, idx-id);
+        str = QStringLiteral("filename=\"%1\"\r\n\r\n").arg(fn);
+        id = body.indexOf(str) + str.size();
+        idx = body.indexOf("\r\n--boundary_.oOo._");
+        QByteArray array = body.mid(id, idx-id);
+        QString cmd = "rm -f " + fn;
+        system(cmd.toLocal8Bit().data());
+        if(fn.at(0) != '/') {fn.insert(0, '/');} QFile file(fn);
+        if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            file.write(array); file.close();
+        } replyHttp("ok:"+fn, 200);
+    } else ret = replyHttp("error", 223);
 
-//    }
-        return true;
-}
-
-bool Integr_HttpServer::setDataItem(const QByteArray &body)
-{
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) ret = it->setDataItem(object);
-    if(ret) replyHttp("ok", 200);
-    else replyHttp("error", 221);
     return ret;
 }
 
-bool Integr_HttpServer::getCfgItem(const QByteArray &body)
+bool Integr_HttpServer::getting(const QByteArray &body)
 {
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) {
-        QVariant res = it->getCfgItem(object);
-        replyValue(res.toJsonValue());
-    } else {
-        ret = replyHttp("error", 213);
-    }
-    return ret;
+    QVariant res = Integr_JsonRecv::bulid()->reply(body);
+    if(res.isNull()) replyHttp("error", 212);
+    else replyValue(res.toJsonValue());
+    return true;
 }
 
-bool Integr_HttpServer::setCfgItem(const QByteArray &body)
+bool Integr_HttpServer::setting(const QByteArray &body)
 {
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) ret = it->setCfgItem(object);
-    if(ret) replyHttp("ok", 200);
-    else replyHttp("error", 222);
+    bool ret = Integr_JsonRecv::bulid()->recv(body);
+    if(ret) replyHttp("ok", 200); else replyHttp("error", 221);
     return ret;
 }
 
@@ -190,13 +124,11 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
 
     if(method.contains("GET")) {
         if(url.contains("pduMetaData")) pduMetaData(body);
-        else if(url.contains("getDataItem")) getDataItem(body);
-        else if(url.contains("getCfgItem")) getCfgItem(body);
+        else if(url.contains("pduGetting")) getting(body);
         else if(url.contains("download")) download(body);
         else replyHttp(err, 213);
     } else if(method.contains("POST")) {
-        if(url.contains("setDataItem")) setDataItem(body);
-        else if(url.contains("setCfgItem")) setCfgItem(body);
+        if(url.contains("pduSetting")) setting(body);
         else if(url.contains("upload")) upload(body);
         else replyHttp(err, 223);
     } else if(method.contains("PUT")) {
@@ -226,8 +158,8 @@ void Integr_HttpServer::initHttpsServer(bool en, int port)
         sslServerManage = new JQHttpServer::SslServerManage(1);
         sslServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ) );
         const auto listenSucceed = sslServerManage->listen( QHostAddress::Any, port,
-                                                           File::certFile(), File::keyFile()
-                                                           /*":/server.crt", ":/server.key"*/ );
+                                                            File::certFile(), File::keyFile()
+                                                            /*":/server.crt", ":/server.key"*/ );
         qDebug() << "HTTPS server listen:" << port << listenSucceed;
     }
 #else

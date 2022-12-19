@@ -40,7 +40,6 @@
 		var amqp_data = new Array();
 		let lang = new Array();
 		let id_name = new Array("enable","addr","port","host","usr","psd","switch","routing","binding","sslEn","state","update");
-		let ssl_en = new Array("","");
 		var amqp_data = new Array();
 		lang_init();
 		function lang_init(){
@@ -69,8 +68,6 @@
 
 			enable[0] = lang[17][language];
 			enable[1] = lang[16][language];
-			ssl_en[0] = lang[18][language];
-			ssl_en[1] = lang[19][language];
 		}
 		function lang_fun(){
 			for(let j = 1;j<15;j++){
@@ -84,9 +81,9 @@
 				amqp_data[j] = sessionStorage.getItem(type_name[20]+ amqp_cfg[j]);
 			}
 			if(amqp_data[11] == 'false' || amqp_data[11] == '0'){
-				amqp_data[11] = lang[18][language];
+				amqp_data[11] = lang[19][language];
 			}else{
-				amqp_data[11] = lang[17][language];
+				amqp_data[11] = lang[18][language];
 			}
 		}
 		$('.amqp').html(buildTable());

@@ -9,6 +9,7 @@ class Integr_JsonRecv : public QObject
 public:
     static Integr_JsonRecv *bulid(QObject *parent = nullptr);
     bool recv(const QByteArray &msg);
+    QVariant reply(const QByteArray &msg);
 
 signals:
     void recvSetSig(const sDataItem &it);

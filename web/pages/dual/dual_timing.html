@@ -74,9 +74,6 @@
 				dual_data[i][0] = sessionStorage.getItem(type_name[24]+ info_info[2] +dual_addr +'_'+i);
 				dual_data[i][1] = sessionStorage.getItem(type_name[24]+ info_info[3] +dual_addr +'_'+i);
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
 		function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -96,13 +93,13 @@
 			lang[12] = ["","下电","","","",""];
 			lang[13] = ["","设置模式","","","",""];
 			lang[14] = ["","统一设置","","","",""];
-			lang[14] = ["","机柜","","","",""];
+			lang[15] = ["","机柜","","","",""];
 		}
 		function lang_fun(){
 			for(var i = 1;i<11;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			document.getElementById("b" + dual_num).innerHTML  = lang[14][language];
+			document.getElementById("b" + dual_num).innerHTML  = lang[15][language];
 			if(read == 1){
 				document.getElementById("lang_2").innerHTML = lang[13][language];
 			}

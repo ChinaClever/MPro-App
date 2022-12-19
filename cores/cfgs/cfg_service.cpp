@@ -445,7 +445,7 @@ void Cfg_Service::push()
         cfg->udp[i].port = mCfg->readCfg(key, 1124+i, prefix).toInt();
 
         key = "udpSec_" + QString::number(i);
-        cfg->udp[i].en = mCfg->readCfg(key, 10, prefix).toInt();
+        cfg->udp[i].sec = mCfg->readCfg(key, 10, prefix).toInt();
     }
 }
 

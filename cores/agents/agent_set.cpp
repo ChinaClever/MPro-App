@@ -150,5 +150,5 @@ void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &valu
         else ret = setAlarm(value);
     }
 
-    if(!ret) qDebug() << Q_FUNC_INFO << addr << oid << value;
+    if(!ret) cout << addr << oid << value;
 }

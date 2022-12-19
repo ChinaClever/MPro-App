@@ -235,3 +235,14 @@ bool Integr_JsonRecv::recv(const QByteArray &msg)
     return ret;
 }
 
+QVariant Integr_JsonRecv::reply(const QByteArray &msg)
+{
+    QJsonObject object; QVariant res;
+    bool ret = checkInput(msg, object);
+    if(ret) {
+        QString key = "getDataItem";
+        if (object.contains(key)) res = getDataItem(object);
+        else res = getCfgItem(object);
+    }
+    return res;
+}

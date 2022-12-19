@@ -63,7 +63,6 @@
 		let pow_mark = new Array();
 		var len  = data_name.length -1;
 		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + dual_addr));
-		var dev_name =new Array();
 		var dual_name =new Array();
 		var dual_info = new Array();
 		var lang = new Array();
@@ -77,9 +76,6 @@
 				for(var j = 0;j <len;j++){
 					dual_info[i][j] = (sessionStorage.getItem(type_name[dual]+data_type[pow_]+data_name[j + 1]+dual_addr+'_'+i));
 				}
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		function lang_init(){
