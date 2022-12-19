@@ -98,6 +98,22 @@
 		function show(){
 
 		}
+		function cked(ckd){
+			var stat=0,group = 0;
+			let addr = 0;
+			var type1 = ckd.id.substr(0,1);
+			var num = parseInt(ckd.id.slice(1))+1;
+			if(ckd.checked == false){
+				return ;
+			}
+			group = type1.charCodeAt() - 'c'.charCodeAt();
+			if(ckd.checked == true){
+				stat = 1;
+			}else{
+				stat = 0;
+			}
+			rpc.call('pduSetParam',[addr,26,group+1,num,0,stat]);
+		}
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
@@ -157,45 +173,55 @@
 			thead = '<tr><td style="font-size:20px;" colspan = "3">阈值统一设置</td>\
 			<td width ="8%"></td>\
 			<td width ="8%"></td>\
-			<td width ="8%"></td><td width ="55%"></td></tr>';
-			tbody += '<tr><td width ="5%">序号</td><td width ="8%">数据类型</td><td width ="8%" >最小值</td><td>下临界值</td><td>上临界值</td><td>最大值</td><td></td></tr>';
-			tbody += '<tr><td>1</td><td>相电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
+			<td width ="8%"></td>\
+			<td width ="8%"></td><td width ="47%"></td></tr>';
+			tbody += '<tr><td width ="5%">序号</td><td width ="8%">数据类型</td><td width ="8%" >额定值</td><td width ="8%" >最小值</td><td>下临界值</td><td>上临界值</td><td>最大值</td><td></td></tr>';
+			tbody += '<tr><td>1</td><td>相电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="220"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="240"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="240"></input></td><td></td></tr>';
-			tbody += '<tr><td>2</td><td>相电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>2</td><td>相电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="63"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="63"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="63"></input></td><td></td></tr>';
-			tbody += '<tr><td>3</td><td>相功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>3</td><td>相功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="14080"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="14080"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="14080"></input></td><td></td></tr>';
-			tbody += '<tr><td>4</td><td>回路电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
+			tbody += '<tr><td>4</td><td>回路电压(V)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="220"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="240"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="240"></input></td><td></td></tr>';
-			tbody += '<tr><td>5</td><td>回路电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>5</td><td>回路电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="32"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="32"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="32"></input></td><td></td></tr>';
-			tbody += '<tr><td>6</td><td>回路功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>6</td><td>回路功率(W)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="7040"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="7040"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="7040"></input></td><td></td></tr>';
-			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="16"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="16"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="16"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>温度(℃)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>8</td><td>温度(℃)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="40"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="40"></input"></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>9</td><td>湿度(%)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
+			tbody += '<tr><td>9</td><td>湿度(%)</td><td><input id = "board_num_" style ="width:60.5%" type = "text" value ="90"></input></td>\
+				<td><input id = "board_num_" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="90"></input></td>\
 				<td><input id = "board_num_" style ="width:60.5%" type = "text"  value ="90"></input></td><td></td></tr>';
-			tbody += '<tr><td colspan = "3" ><input style ="width:100px" type = "button" onclick = "Set()" value="统一设置"></input></td><td></td><td></td><td></td><td></td></tr>';
+			tbody += '<tr><td colspan = "3" ><input style ="width:100px" type = "button" onclick = "Set()" value="统一设置"></input></td><td></td><td></td><td></td><td></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
@@ -212,7 +238,7 @@
 				tbody +='<td width = "1.5%"></td>';
 			}
 			tbody +='</tr>';
-			tbody +='<tr><td width = "5%" style ="text-align:center">10A</td>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">16A</td>';
 			for(let i = 0;i<12;i++){
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "a'+ ((i * 4)+1) + '"></input></td>';
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "a'+ ((i * 4)+2) + '"></input></td>';
@@ -221,7 +247,7 @@
 				tbody +='<td width = "1.5%"></td>';
 			}
 			tbody +='</tr>';
-			tbody +='<tr><td width = "5%" style ="text-align:center">16A</td>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">10A</td>';
 			for(let i = 0;i<12;i++){
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "b'+ ((i * 4)+1) + '"></input></td>';
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "b'+ ((i * 4)+2) + '"></input></td>';
