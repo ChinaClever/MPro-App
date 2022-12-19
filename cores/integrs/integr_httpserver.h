@@ -15,10 +15,8 @@ private:
     static bool execute(const QByteArray &body);
     static bool download(const QByteArray &body);
     static bool pduMetaData(const QByteArray &body);
-    static bool getDataItem(const QByteArray &body);
-    static bool setDataItem(const QByteArray &body);
-    static bool setCfgItem(const QByteArray &body);
-    static bool getCfgItem(const QByteArray &body);
+    static bool getting(const QByteArray &body);
+    static bool setting(const QByteArray &body);
     static void replyValue(const QJsonValue &v);
     static bool replyHttp(const QString &msg, const int &httpStatusCode=200);
     static void onHttpAccepted(const QPointer<JQHttpServer::Session> &session);

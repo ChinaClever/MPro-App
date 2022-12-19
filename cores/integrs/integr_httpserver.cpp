@@ -34,26 +34,12 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
 {
     bool ret = true;
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    int addr = it->getData(body, "id");
+    int addr = it->getData(body, "addr");
     if(addr >= 0) {
         QJsonObject obj = Integr_JsonBuild::bulid()->getJsonObject(addr);
         mSession->replyJsonObject(obj);
     } else {
         ret = replyHttp("error", 211);
-    }
-    return ret;
-}
-
-bool Integr_HttpServer::getDataItem(const QByteArray &body)
-{
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) {
-        double res = it->getDataItem(object);
-        replyValue(res);
-    } else {
-        ret = replyHttp("error", 212);
     }
     return ret;
 }
@@ -98,39 +84,18 @@ bool Integr_HttpServer::upload(const QByteArray &body)
     return ret;
 }
 
-bool Integr_HttpServer::setDataItem(const QByteArray &body)
+bool Integr_HttpServer::getting(const QByteArray &body)
 {
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) ret = it->setDataItem(object);
-    if(ret) replyHttp("ok", 200);
-    else replyHttp("error", 221);
-    return ret;
+    QVariant res = Integr_JsonRecv::bulid()->reply(body);
+    if(res.isNull()) replyHttp("error", 212);
+    else replyValue(res.toJsonValue());
+    return true;
 }
 
-bool Integr_HttpServer::getCfgItem(const QByteArray &body)
+bool Integr_HttpServer::setting(const QByteArray &body)
 {
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) {
-        QVariant res = it->getCfgItem(object);
-        replyValue(res.toJsonValue());
-    } else {
-        ret = replyHttp("error", 213);
-    }
-    return ret;
-}
-
-bool Integr_HttpServer::setCfgItem(const QByteArray &body)
-{
-    QJsonObject object;
-    Integr_JsonRecv *it = Integr_JsonRecv::bulid();
-    bool ret = it->checkInput(body, object);
-    if(ret) ret = it->setCfgItem(object);
-    if(ret) replyHttp("ok", 200);
-    else replyHttp("error", 222);
+    bool ret = Integr_JsonRecv::bulid()->recv(body);
+    if(ret) replyHttp("ok", 200); else replyHttp("error", 221);
     return ret;
 }
 
@@ -159,13 +124,11 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
 
     if(method.contains("GET")) {
         if(url.contains("pduMetaData")) pduMetaData(body);
-        else if(url.contains("getDataItem")) getDataItem(body);
-        else if(url.contains("getCfgItem")) getCfgItem(body);
+        else if(url.contains("pduGetting")) getting(body);
         else if(url.contains("download")) download(body);
         else replyHttp(err, 213);
     } else if(method.contains("POST")) {
-        if(url.contains("setDataItem")) setDataItem(body);
-        else if(url.contains("setCfgItem")) setCfgItem(body);
+        if(url.contains("pduSetting")) setting(body);
         else if(url.contains("upload")) upload(body);
         else replyHttp(err, 223);
     } else if(method.contains("PUT")) {
