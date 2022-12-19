@@ -16,8 +16,9 @@ static void initSystem()
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 
     system("rm /usr/data/clever/web/favicon.ico");
-    QString cmd = "ln -s /usr/data/clever/cfg/favicon.ico ";
-    cmd += "/usr/data/clever/web/favicon.ico";
+    system("rm /usr/data/clever/web/include/images/logo.png");
+    QString cmd = "ln -s /usr/data/clever/cfg/logo.png ";
+    cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
