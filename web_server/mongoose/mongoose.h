@@ -618,7 +618,7 @@ struct timeval {
 #endif
 
 #ifndef MG_ENABLE_OPENSSL
-#define MG_ENABLE_OPENSSL 0
+#define MG_ENABLE_OPENSSL 1
 #endif
 
 #ifndef MG_ENABLE_CUSTOM_TLS

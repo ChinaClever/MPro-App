@@ -40,7 +40,7 @@ QSNMPOid SnmpModule::toOid(const QString &oid)
 
 QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
 {
-    QVariant res;
+    QVariant res; QString str;
     void *v = mShash.value(var->name());
     switch ((QSNMPType_e)var->type()) {
     case QSNMPType_Integer: res = *((int *)v); break;

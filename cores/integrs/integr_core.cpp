@@ -13,9 +13,9 @@ Integr_Core::Integr_Core(QObject *parent)
 
 void Integr_Core::httpServer()
 {
-    bool en = pushCfg.http.en;
+    int en = pushCfg.http.enServer;
     int port = pushCfg.http.port;
-    switch (pushCfg.http.enServer) {
+    switch (en) {
     case 1: Integr_HttpServer::initHttpServer(en, port); break;
     case 2: Integr_HttpServer::initHttpsServer(en, port); break;
     }

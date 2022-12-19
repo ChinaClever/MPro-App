@@ -17,12 +17,12 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     int id = 1; QString oid = "0.0.";
     QString prefix = oidPrefix + "uut_";
 
-    addOid(addr, id++, oid, prefix+"dev", it.devType);
     addOid(addr, id++, oid, prefix+"room", it.room);
     addOid(addr, id++, oid, prefix+"location", it.location);
     addOid(addr, id++, oid, prefix+"name", it.devName);
     addOid(addr, id++, oid, prefix+"qrcode", it.qrcode);
     addOid(addr, id++, oid, prefix+"sn", it.sn);
+    addOid(addr, id++, oid, prefix+"dev", it.devType);
 }
 
 void Agent_Get::addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev)
