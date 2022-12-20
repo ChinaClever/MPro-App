@@ -83,9 +83,9 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
 {
     int id = 0; QString oid = oidPrefix + ".";
     QString name = tr("%1_%2_").arg(oidName).arg(index+1);
-    if(strlen((const char *)it.name)) addOid(addr, id++, oid, name+"name", it.name[index]); else id++;
-    if(it.relay.size) addOidValue(addr, id++, oid, name+"switch", it.relay.sw[index]); else id++;
-    if(it.vol.size) addAlarmUnit(addr, id++, oid, name+"vol", it.vol, index); else id++;
+    /*if(strlen((const char *)it.name))*/ addOid(addr, id++, oid, name+"name", it.name[index]); //else id++;
+    /*if(it.relay.size)*/ addOidValue(addr, id++, oid, name+"switch", it.relay.sw[index]); //else id++;
+    /*if(it.vol.size)*/ addAlarmUnit(addr, id++, oid, name+"vol", it.vol, index); //else id++;
 
     addAlarmUnit(addr, id++, oid, name+"cur", it.cur, index);
     addAlarmUnit(addr, id++, oid, name+"pow", it.pow, index);
