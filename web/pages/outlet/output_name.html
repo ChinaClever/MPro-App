@@ -58,11 +58,13 @@
     <script>
 		let read = 0;
 		let lang = new Array();
+		let language = 1;
 		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		let output_name =new Array();
+		let dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		function lang_init(){
-			for(let i = 1;i<7;i++){
+			for(let i = 1;i<9;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","单元名称","","","",""];
@@ -71,15 +73,21 @@
 			lang[4] = ["","序号","","","",""];
 			lang[5] = ["","单元名称","","","",""];
 			lang[6] = ["","设置模式","","","",""];
+			lang[7]  = ["", "主机", "", "", "", ""];
+			lang[8]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[7][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[8][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(let j = 1;j<6;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
 		function lang_fun_(){
 			for(let j = 4;j<6;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
 		function modeset(modesel){
@@ -121,9 +129,9 @@
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
+		lang_init();
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num));
-		lang_init();
 		lang_fun();
 		modeset();
 		function setdata(ipt)

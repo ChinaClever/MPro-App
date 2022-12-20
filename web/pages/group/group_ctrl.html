@@ -78,7 +78,7 @@
 			}
 		}
 		function lang_init(){
-			for(let i = 0;i<length;i++){
+			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","分组控制","","","",""];
@@ -93,6 +93,12 @@
 			lang[10] = ["","关闭","","","",""];
 			lang[11] = ["","设置模式","","","",""];
 			lang[12] = ["","统一设置","","","",""];
+			lang[13]  = ["", "主机", "", "", "", ""];
+			lang[14]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[13][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[14][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(var i = 1;i<9;i++){

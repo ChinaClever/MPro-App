@@ -59,7 +59,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
     case 9: ret = it->eleLogEn; break;
-    case 10: ret = it->powLogEn; break;
+    case 10: ret = it->language; break;
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
     case 13: ret = it->screenAngle; break;
@@ -84,7 +84,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
     case 9: key = "eleLogEn"; it->eleLogEn = value; break;
-    case 10: key = "powLogEn"; it->powLogEn = value; break;
+    case 10: key = "language"; it->language = value; break;
     case 11: key = "isBreaker";  it->isBreaker = value; break;
     case 12: key = "vh"; it->vh = value; break;
     case 13: key = "screenAngle"; it->screenAngle = value; break;
@@ -99,7 +99,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
 
 
 int Set_Info::devCfgNum(const sCfgItem &it)
-{
+{    
     sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
     int value = 0; switch(it.fc) {
     case DType::Line: value = dev->lineNum; break;
@@ -112,7 +112,7 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 11: value = dev->loopStarts[it.id]+1;  break;
     case 12: value = dev->loopEnds[it.id];  break;
     default: cout << it.fc; break;
-    }
+    } //cout << it.fc << it.id << value;
     return value;
 }
 

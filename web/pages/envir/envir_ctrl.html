@@ -84,7 +84,7 @@
 		let language = 1;
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<14;i++){
+			for(let i = 1;i<32;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","环控设置","","","",""];
@@ -116,6 +116,12 @@
 			lang[27] = ["","烟雾","","","",""];
 			lang[28] = ["","设置模式","","","",""];
 			lang[29] = ["","阅读模式","","","",""];
+			lang[30]  = ["", "主机", "", "", "", ""];
+			lang[31]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[30][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[31][language] + i;
+			}
 			for(let i =0;i<Sensor_state.length;i++){
 				Sensor_state[i] = lang[17 + i][language];
 			}
@@ -144,9 +150,6 @@
 						data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
 					}
 				}
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		$('.tmp_hum_table').html(buildTableTH(table_len));

@@ -61,6 +61,8 @@
 		let group_name = new Array();
 		var dev_name =new Array();
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		let time_sw = new Array();
+		let sw_mark = 0;
 		read_data();
 		lang_init();
 		function read_data(){
@@ -70,9 +72,7 @@
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
 				group_data[i][0] = sessionStorage.getItem(type_name[23]+ info_info[2] +addr +'_'+i);
 				group_data[i][1] = sessionStorage.getItem(type_name[23]+ info_info[3] +addr +'_'+i);
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+				time_sw[i] =  sessionStorage.getItem(type_name[group]+ data_type[switch_] + data_name[7] + addr +'_'+i);
 			}
 		}
 		function lang_init(){
@@ -89,17 +89,24 @@
 			lang[8] = ["","控制操作","","","",""];
 			lang[9] = ["","上电操作","","","",""];
 			lang[10] = ["","下电操作","","","",""];
-			lang[11] = ["","上电","","","",""];
-			lang[12] = ["","下电","","","",""];
-			lang[13] = ["","设置模式","","","",""];
-			lang[14] = ["","统一设置","","","",""];
+			lang[11] = ["","定时开关","","","",""];
+			lang[12] = ["","上电","","","",""];
+			lang[13] = ["","下电","","","",""];
+			lang[14] = ["","设置模式","","","",""];
+			lang[15] = ["","统一设置","","","",""];
+			lang[16]  = ["", "主机", "", "", "", ""];
+			lang[17]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[16][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[17][language] + i;
+			}
 		}
 		function lang_fun(){
-			for(var i = 1;i<11;i++){
+			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 			if(read == 1){
-				document.getElementById("lang_2").innerHTML = lang[13][language];
+				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
 		}
 		$('.table-striped').html(buildTable(group_num));
@@ -134,7 +141,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = lang[13][language];
+				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				var btnname = document.getElementsByTagName("button");
 				for(var i = 0; i<iptname.length;i++)
@@ -167,8 +174,21 @@
 			{
 				var ss = document.getElementById('c'+(i -1));
 				var cc = document.getElementById('d'+(i -1));
+				var hs = document.getElementById('i'+(i -1));
 				ss.innerHTML = group_data[i][0];
 				cc.innerHTML = group_data[i][1];
+				if(time_sw[i] == 0){
+					hs.checked = false;
+				}else{
+					hs.checked = true;
+				}
+				if(i == group_num){
+					if(sw_mark ==1){
+						document.getElementById('i'+(i)).checked = true;
+					}else{
+						document.getElementById('i'+(i)).checked = false;
+					}
+				}
 			}
 
 		}
@@ -191,6 +211,45 @@
 				document.getElementById('f'+i).value = time;
 			}
 		}
+		function cked(ckd)
+		{
+			var stat;
+			var type1 = ckd.id.substr(0,1);
+			var num = parseInt(ckd.id.slice(1))+1;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true)
+			{
+				if(type1 === 'i'){
+					if(ckd.checked == true){
+						stat = '1';
+					}else{
+						stat = '0';
+					}
+					if(num == group_num +1){
+						if(ckd.checked == true){
+							sw_mark = 1;
+						}else{
+							sw_mark = 0;
+						}
+					}
+					if(num !== group_num + 1){
+
+					}else{
+						num = 0;
+					}
+					rpc.call('pduSetData',[addr,group,switch_,7,num,stat]);
+				}
+				flash_html(ckd);
+			}else{
+				showdata();
+			}
+		}
+		function read_time_sw_data(){
+			for(var i = 1 ;i < group_num + 1;i++)
+			{
+				rpc.call("pduReadData",[addr,group,switch_,7,i]);
+			}
+		}
 		function checkTime(i) {
 			if (i < 10) {
 				i = "0" + i;
@@ -200,6 +259,7 @@
 		function flash_html(par)
 		{
 			read_group_param_data(0);
+			read_time_sw_data();
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
@@ -236,7 +296,8 @@
 				tbody = '';
 				if(rows == 0){
 					thead = '<tr><td width ="5%" rowspan = "2" id="lang_4"></td>\
-					<td width ="25%" rowspan = "2" id="lang_5"></td>\
+					<td width ="20%" rowspan = "2" id="lang_5"></td>\
+					<td width ="5%" rowspan = "2" id="lang_11"></td>\
 					<td width ="40%" colspan = "2" id="lang_6"></td>\
 					<td  rowspan = "2" colspan = "2" id="lang_7"></td>\
 					<td width ="10%" rowspan = "2" colspan = "2" id="lang_8"></td>\
@@ -247,7 +308,8 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" rowspan = "2" id="lang_4"></td>\
-					<td width ="25%" rowspan = "2" id="lang_5"></td>\
+					<td width ="20%" rowspan = "2" id="lang_5"></td>\
+					<td width ="5%" rowspan = "2" id="lang_11"></td>\
 					<td width ="40%" colspan = "2" id="lang_6"></td>\
 					<td  rowspan = "2" colspan = "2" id="lang_7"></td>\
 					<td width ="10%" rowspan = "2" colspan = "2" id="lang_8"></td>\
@@ -258,23 +320,25 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '" >'+group_name[i + 1]+'</td>';
+				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
-				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
-				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[13][language] + '</button></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
 					tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">'+lang[14][language]+'</td>';
+					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
-					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[11][language] + '</button></td>';
-					tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
+					tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[13][language] + '</button></td>';
 					tbody += '</tr>';
 				}
 			}

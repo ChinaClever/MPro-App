@@ -16,8 +16,9 @@ static void initSystem()
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 
     system("rm /usr/data/clever/web/favicon.ico");
-    QString cmd = "ln -s /usr/data/clever/cfg/favicon.ico ";
-    cmd += "/usr/data/clever/web/favicon.ico";
+    system("rm /usr/data/clever/web/include/images/logo.png");
+    QString cmd = "ln -s /usr/data/clever/cfg/logo.png ";
+    cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
@@ -40,7 +41,7 @@ static void init_netWork()
     }
 
     system("ip link set eth0 up");
-    //system("ip a flush dev eth0"); //　清掉所有IP地址
+    system("ip a flush dev eth0"); //　清掉所有IP地址
     system("ip link set eth0 multicast on");
     system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
