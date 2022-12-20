@@ -60,6 +60,7 @@
     <script>
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
+		let num_id = new Array("","phase_","loop_","","board_");
     	let distribution = new Array("6x8","4x12","8x6","12x4");
 		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		let phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
@@ -75,6 +76,7 @@
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
+		let unite_sub = new Array(2,5,6,7,4);
 		read_data();
     	$('.set_table').html(buildTable());
     	$('.threshold_table').html(buildTableThreshold());
@@ -88,17 +90,13 @@
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i));
 			}
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-			cfg_data[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i+1));
-
+			cfg_data[0] = sessionStorage.getItem("Angle" + addr);
+			cfg_data[1] = 0;
+			cfg_data[2] = 0;
+			cfg_data[3] = 0;
+			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + addr);
+			cfg_data[5] = sessionStorage.getItem("LanguageEn" + addr);
+			cfg_data[6] = sessionStorage.getItem(ip_mode[0]+ ip_addr[11]);
 			for(let i = 0;i<9;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[2] + 0 +'_'+0);
@@ -114,10 +112,41 @@
 			}
 		}
 		function Set_(){
-
+			for(let i = 0;i<num_id.length;i ++){
+				if(num_id[i] != ""){
+					rpc.call("pduSetParam",[0,num,i,0,0,document.getElementById(num_id[i]).value]);
+					rpc.call("pduReadParam",[0,num,i,0,0]);
+				}
+			}
+			for(let i = 1;i < loop_num+1;i++){
+				rpc.call("pduSetParam",[0,num,7,(i -1),0,document.getElementById("out_num"+i).value]);
+				rpc.call("pduReadParam",[0,num,7,(i -1),0]);
+			}
+			for(let i = 1;i < board_num+1;i++){
+				rpc.call("pduSetParam",[0,num,6,(i -1),0,document.getElementById("board_num"+i).value]);
+				rpc.call("pduReadParam",[0,num,6,(i -1),0]);
+			}
+			rpc.call("pduSetParam",[0,cfg,11,0,0,document.getElementById("break_").value]);
+			rpc.call("pduReadParam",[0,cfg,11,0,0]);
+			rpc.call("pduSetParam",[0,cfg,13,0,0,document.getElementById("angle_").value]);
+			rpc.call("pduReadParam",[0,cfg,13,0,0]);
+			rpc.call("pduSetParam",[0,cfg,1,0,0,document.getElementById("ser_sel_").value]);
+			rpc.call("pduReadParam",[0,cfg,1,0,0]);
+			rpc.call("pduSetParam",[0,cfg,10,0,0,document.getElementById("language_").value]);
+			rpc.call("pduReadParam",[0,cfg,10,0,0]);
+			rpc.call("pduSetParam",[0,41,11,0,0,document.getElementById("mac_").value]);
+			rpc.call("pduReadParam",[0,41,11,0,0]);
 		}
 		function AllSet(){
-
+			for(let i = 0;i<9;i++){
+				for(let j = 0;j<5;j++){
+					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
+					}else{
+						rpc.call("pduSetData",[0,unite_name[i],unite_type[i],unite_sub[j],0,document.getElementById(unite_id[i]+j).value]);
+						rpc.call("pduReadData",[0,unite_name[i],unite_type[i],unite_sub[j],0]);
+					}
+				}
+			}
 		}
 		function show_data(){
 			for(let i = 0;i<9;i++){
@@ -176,14 +205,14 @@
 			tbody += '<tr><td>相位数:</td>';
 			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
 			tbody += '<tr><td>执行板数量:</td>';
-			tbody += '<td><input id = "board_num_" style ="width:2.5%" type = "text" value="'+phase_num+'"></input></td></tr>';
+			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" value="'+board_num+'"></input></td></tr>';
 			tbody += '<tr><td>每块执行板的输出位数量:</td>';
 			tbody += '<td><input id = "board_num1" style ="width:2.5%" type = "text" value="'+board_out[0]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num2" style ="width:2.5%;" type = "text" value="'+board_out[1]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num3" style ="width:2.5%;" type = "text" value="'+board_out[2]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num4" style ="width:2.5%;" type = "text" value="'+board_out[3]+'"></input></td></tr>';
 			tbody += '<tr><td>回路数量:</td>';
-			tbody += '<td><input id = "loop_num_" style ="width:2.5%" type = "text" value="'+loop_num+'"></input></td></tr>';
+			tbody += '<td><input id = "loop_" style ="width:2.5%" type = "text" value="'+loop_num+'"></input></td></tr>';
 			tbody += '<tr><td>每个回路的输出位数量:</td>';
 			tbody += '<td><input id = "out_num1" style ="width:2.5%" type = "text" value="'+loop_out[0]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num2" style ="width:2.5%;" type = "text" value="'+loop_out[1]+'"></input>';
@@ -209,7 +238,7 @@
 			tbody += '<tr><td></td><td></td></tr>';
 
 			tbody += '<tr><td>语言选择:</td>';
-			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" value="'+cfg_data[5]+'"></input>(0-英文,1-中文)</td></tr>';
+			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
 			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" value="'+cfg_data[6]+'"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';

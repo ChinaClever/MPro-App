@@ -186,7 +186,7 @@
 									}],
 									yAxes: [{
 										ticks: {
-											min: 50,
+											suggestedMin : 0,
 										}
 									}]
   							  	}
@@ -280,10 +280,11 @@
 		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
     	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		let stat_ = new Array("断开","闭合");
-		let serial_ = new Array("A","B","C","D");
+		let serial_ = new Array("","A","B","C","D");
 		let Sensor_state = new Array("离线","开启","关闭");
 		let Sys_state = new Array("正常","告警","故障");
 		let loop_unit = new Array("","","","A","A","V","kVA","kWh");
+		let sample_= new Array(5,0,1);
 		function delay(){
 			for(let i = 0;i<50;i++){}
 		}
@@ -355,9 +356,9 @@
 			total_data[1][49] = parseFloat(total_info[6]).toFixed(2);
 			total_data[2][49] = parseFloat(total_info[5]).toFixed(1);
 			for(let i = 0;i<3;i++){
-				inletA_data[i][49] = parseFloat(phase_info[i + 1][5]).toFixed(2);
-				inletB_data[i][49] = parseFloat(phase_info[i + 1][0]).toFixed(2);
-				inletC_data[i][49] = parseFloat(phase_info[i + 1][1]).toFixed(1);
+				inletA_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
+				inletB_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
+				inletC_data[i][49] = parseFloat(phase_info[3][sample_[i]]).toFixed(2);
 			}
 		}
 		function read_data(){
