@@ -19,8 +19,9 @@ protected slots:
     void onNewConnection();
     void onReadyRead();
 
-private:
-     QTcpServer *tcpServer = nullptr;
+private:    
+    QTcpSocket *mSocket = nullptr;
+    QTcpServer *tcpServer = nullptr;
 };
 
 #endif // NET_TCPSERVER_H

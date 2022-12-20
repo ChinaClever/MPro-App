@@ -20,7 +20,7 @@ bool Net_TcpServer::listen(int port)
 void Net_TcpServer::onNewConnection()
 {
     while(tcpServer->hasPendingConnections()){
-        QTcpSocket *sock = tcpServer->nextPendingConnection();
+        QTcpSocket *sock = mSocket = tcpServer->nextPendingConnection();
         connect(sock, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
         connect(sock, SIGNAL(disconnected()), sock, SLOT(deleteLater()));
     }
@@ -28,7 +28,7 @@ void Net_TcpServer::onNewConnection()
 
 void Net_TcpServer::onReadyRead()
 {
-    QTcpSocket *sock = tcpServer->nextPendingConnection();
+    QTcpSocket *sock = mSocket; //tcpServer->nextPendingConnection();
     if(sock->bytesAvailable() > 0){
         QByteArray inData = sock->readAll();
         emit recvSig(inData); sock->flush();

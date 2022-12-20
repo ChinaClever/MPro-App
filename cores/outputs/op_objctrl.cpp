@@ -48,7 +48,7 @@ void OP_ObjCtrl::setDelay(int id, uchar sec)
 void OP_ObjCtrl::relaysCtrl(int start, int end, int v)
 {
     QList<int> ids;
-    for(int i=start; i<=end; i++) ids.append(i);
+    for(int i=start; i<end; i++) ids.append(i);
     relaysCtrl(ids, v);
 }
 
