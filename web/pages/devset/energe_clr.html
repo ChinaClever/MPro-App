@@ -59,10 +59,10 @@
 		let dev_name =new Array();
 		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		let lang = new Array();
-		let lanuage = 1;
+		let language = 1;
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<7;i++){
+			for(let i = 1;i<13;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","电能清零","","","",""];
@@ -75,10 +75,16 @@
 			lang[8] = ["","重置清零","","","",""];
 			lang[9] = ["","设置模式","","","",""];
 			lang[10] = ["","计量清零","","","",""];
+			lang[11]  = ["", "主机", "", "", "", ""];
+			lang[12]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[11][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[12][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(let j = 1;j<9;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][lanuage];
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
 		read_data();
@@ -88,9 +94,6 @@
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 				energe_val[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
 				ckd_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[9]+data_name[11]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));
@@ -188,7 +191,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML =  lang[9][lanuage];
+				ros.innerHTML =  lang[9][language];
 				var btnname = document.getElementsByTagName("input");
 				for(var j = 0; j<btnname.length;j++)
 				{
@@ -198,7 +201,7 @@
 			else{
 				read = 0;
 				ros.style.backgroundColor = '';
-				ros.innerHTML =  lang[2][lanuage];
+				ros.innerHTML =  lang[2][language];
 				var btnname = document.getElementsByTagName("input");
 				for(var j = 0; j<btnname.length;j++)
 				{
@@ -225,7 +228,7 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "btn_click(this)" value="'+lang[10][lanuage]+'"></input></td>';
+				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "btn_click(this)" value="'+lang[10][language]+'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -235,7 +238,7 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td id = "d'+ i + '"></td>';
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = btn_click(this) value="'+lang[10][lanuage]+'"></input></td>';
+					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = btn_click(this) value="'+lang[10][language]+'"></input></td>';
 					tbody += '</tr>';
 				}
 			}

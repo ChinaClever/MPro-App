@@ -99,7 +99,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
 
 
 int Set_Info::devCfgNum(const sCfgItem &it)
-{
+{    
     sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
     int value = 0; switch(it.fc) {
     case DType::Line: value = dev->lineNum; break;
@@ -112,7 +112,7 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 11: value = dev->loopStarts[it.id]+1;  break;
     case 12: value = dev->loopEnds[it.id];  break;
     default: cout << it.fc; break;
-    }
+    } //cout << it.fc << it.id << value;
     return value;
 }
 

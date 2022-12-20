@@ -91,7 +91,7 @@
 		}
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<14;i++){
+			for(let i = 1;i<21;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","单元控制","","","",""];
@@ -112,6 +112,12 @@
 			lang[16] = ["","统一设置","","","",""];
 			lang[17] = ["","开","","","",""];
 			lang[18] = ["","关","","","",""];
+			lang[19]  = ["", "主机", "", "", "", ""];
+			lang[20]  = ["", "副机", "", "", "", ""];
+			dev_name[0] = lang[19][language];
+			for(let i = 1;i<slave_num;i++){
+				dev_name[i] =  lang[20][language] + i;
+			}
 			State[0] = lang[18][language];
 			State[1] = lang[17][language];
 			Input_state[0] = lang[17][language];

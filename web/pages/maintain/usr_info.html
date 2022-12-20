@@ -71,8 +71,8 @@
 			lang[4] = ["","用户名:","","","",""];
 			lang[5] = ["","密码:","","","",""];
 			lang[6] = ["","确认密码:","","","",""];
-			lang[7] = ["","权限:","","","",""];
-			lang[8] = ["","输出位控制","","","",""];
+			lang[7] = ["","预留信息:","","","",""];
+			lang[8] = ["","权限:","","","",""];
 			lang[9] = ["","输出位","","","",""];
 			lang[10] = ["","权限设置","","","",""];
 			lang[11] = ["","输出位","","","",""];
@@ -87,7 +87,7 @@
 			jurisdiction[1] = lang[14][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<8;i++){
+			for(var i = 1;i<9;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 			document.getElementById("lang_18").value  = lang[18][language];
@@ -104,17 +104,13 @@
 		}
 		function showdata(){
 			for(let i = 1;i<5;i++){
-				if(i!= 3){
-					document.getElementById(user_info[i]).value = usrs_data[i][0];
-				}
+				document.getElementById(user_info[i]).value = usrs_data[i][0];
 			}
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
 		}
 		function Set_(opt){
 			for(let i = 1;i<5;i++){
-				if(i!= 3){
-					document.getElementById(user_info[i]).value = usrs_data[i][parseInt(opt)];
-				}
+				document.getElementById(user_info[i]).value = usrs_data[i][parseInt(opt)];
 			}
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
 		}
@@ -122,6 +118,7 @@
 			let val =  parseInt(document.getElementById("usrSel").value);
 			let usr_ = document.getElementById("UserName").value;
 			let psd_ = document.getElementById("Password").value;
+			let ident_ = document.getElementById("Identify").value;
 			let conpsd_ = document.getElementById("conpsd").value;
 			let jur_ = parseInt(document.getElementById("Jurisdiction").value);
 			for(let i = 0;i<5;i++){
@@ -137,9 +134,10 @@
 				if(jur_ != 0){
 					jur_ = 2;
 				}
-				if(usr_!= "" && psd_ !="" && conpsd_ != "" && psd_ == conpsd_){
+				if(usr_!= "" && psd_ !="" && conpsd_ != "" && ident_ !="" && psd_ == conpsd_){
 					rpc.call('pduSetParam',[0,14,1,val,0,usr_]);
 					rpc.call('pduSetParam',[0,14,2,val,0,psd_]);
+					rpc.call('pduSetParam',[0,14,3,val,0,ident_]);
 					rpc.call('pduSetParam',[0,14,4,val,0,jur_]);
 					usr_mark = val;
 					flash_html();
@@ -177,6 +175,8 @@
 			tbody += '<tr><td id ="lang_6" ></td>';
 			tbody += '<td><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
+			tbody += '<td><input id ="Identify" type="text"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
+			tbody += '<tr><td id ="lang_8"></td>';
 			tbody += '<td><select id ="Jurisdiction">';
 			for(var i = 0; i<jurisdiction.length;i++){
 				tbody +='<option value ="'+i+'">'+jurisdiction[i] +'</option>';

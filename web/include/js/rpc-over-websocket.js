@@ -342,7 +342,7 @@ function read_total_data(addr){
 function read_phase_data(addr)
 {
   var phase_num = parseInt(sessionStorage.getItem('PhaseNum' + addr));
-  var j = 1;var i = 1;
+  var j = 1;var i = 0;
   var time1 = setInterval(function(){
     if(j >= parseInt(sub_num + 1)){
       clearInterval(time1);
@@ -355,7 +355,7 @@ function read_phase_data(addr)
     }
     i++;
     if(i >= (phase_num + 1)){
-      i = 1;
+      i = 0;
       j++;
     }
   },1);
@@ -363,7 +363,7 @@ function read_phase_data(addr)
 function read_loop_data(addr)
 {
   var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
-  var j = 1;var i = 1;
+  var j = 1;var i = 0;
   var time1 = setInterval(function(){
     if(j >= parseInt(sub_num + 1)){
       clearInterval(time1);
@@ -378,7 +378,7 @@ function read_loop_data(addr)
     }
     i++;
     if(i >= (loop_num + 1)){
-      i = 1;
+      i = 0;
       j++;
     }
   },1);
@@ -397,7 +397,7 @@ function read_cfg_info(addr){
 }
 function read_group_data(addr)
 {
-  var j = 1;
+  var j = 0;
   var time1 = setInterval(function(){
     if(j >= parseInt(group_num + 1)){
       clearInterval(time1);
@@ -451,7 +451,7 @@ function read_group_param_data(addr)
 function read_dual_data(addr)
 {
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
-  var j = 1;var i = 1;
+  var j = 1;var i = 0;
   var time1 = setInterval(function(){
     if(j >= parseInt(sub_num + 1)){
       clearInterval(time1);
@@ -461,7 +461,7 @@ function read_dual_data(addr)
     }
     i++;
     if(i >= (output_num + 1)){
-      i = 1;
+      i = 0;
       j++;
     }
   },1);
@@ -469,7 +469,7 @@ function read_dual_data(addr)
 function read_output_data(addr)
 {
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
-  var j = 1;var i = 1;
+  var j = 1;var i = 0;
   var time1 = setInterval(function(){
     if(j >= parseInt(sub_num + 1)){
       clearInterval(time1);
@@ -487,14 +487,14 @@ function read_output_data(addr)
     }
       i++;
       if(i >= parseInt(output_num + 1)){
-        i = 1;
+        i = 0;
         j++;
       }
   },1);
 }
 function read_sensor_data(addr)
 {
-  let j = 1, i = 1;
+  let j = 1, i = 0;
   let time1 = setInterval(function(){
     if(i >= parseInt(hum_num + 1)){
       clearInterval(time1);
@@ -525,10 +525,10 @@ function read_num_info(addr){
     if(j >= parseInt(num_num + 1)){
       clearInterval(time1);
       let board_num = parseInt(sessionStorage.getItem('BoardNum' + addr));
-      for(let i = 1;i<board_num+1;i++){
+      for(let i = 0;i<board_num;i++){
         rpc.call('pduReadParam',[addr,num,6,i,0]);
       }
-      for(let i = 1;i<loop_num+1;i++){
+      for(let i = 0;i<loop_num;i++){
         rpc.call('pduReadParam',[addr,num,7,i,0]);
       }
     }
@@ -714,7 +714,7 @@ function read_mode_data(addr){
 }
 
 function read_monitoring_data(addr){
-  var j = 1;var i = 1;
+  var j = 1;var i = 0;
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
   var time1 = setInterval(function(){
     if(i >= parseInt(output_num + 1)){
@@ -957,7 +957,7 @@ function read_usrs_data(){
   },3);
 }
 function read_sw_data(addr){
-  let i = 1;
+  let i = 0;
   var output_num = parseInt(sessionStorage.getItem('OutputNum' + addr));
   let time1 = setInterval(function(){
     if(i >= parseInt(output_num + 1)){

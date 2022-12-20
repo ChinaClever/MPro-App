@@ -37,7 +37,7 @@
 						<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:50px; background:#ffffff;">
 						</div>
 					</div>
-					<div class="grid-col grid-col-7 border-none">
+					<div class="grid-col grid-col-7 border-none ">
 						<table class="table table-border-none text-left load"></table>
 					</div>
 				</div>
@@ -186,21 +186,21 @@
 		}
 		function buildTable(){
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="20%" id="lang_5" ></td>\
+			thead = '<tr ><td width ="20%" id="lang_5" ></td>\
 			<td rowspan = "2"></td></tr>';
-			tbody += '<tr><td ></td><td width ="40%"></td>< width ="40%"td></td></tr>'
+			tbody += '<tr><td width ="20%" ></td><td width ="40%"></td><td width ="40%"></td></tr>'
 			tbody += '<tr><td id="lang_6"></td><td></td><td></td></tr>';
-			tbody += '<tr><td id="lang_7"></td><td id="lang_8" ></td><td id="lang_9" ></td></tr>';
+			tbody += '<tr style="background:#f5f7fa" ><td id="lang_7"></td><td id="lang_8" ></td><td id="lang_9" ></td></tr>';
 			for(let i = 0;i<slave_num;i++){
-				tbody += '<tr><td id="'+slave_name[i]+'"></tr>';
+				tbody += '<tr><td id="'+slave_name[i]+'"><td>';
 				tbody += '<td id="Sprogress'+ i+'" ></td>';
-				tbody += '<tr><td id="Sstate'+i+'" ></td></tr>';
+				tbody += '<td id="Sstate'+i+'" ></td></tr>';
 			}
 			tbody += '<tr><td></td><td></td><td></td></tr>'
 			tbody += '<tr><td id="lang_10"></td><td></td><td></td></tr>';
-			tbody += '<tr><td id="lang_11"></td><td id="lang_12" ></td><td id="lang_13" ></td></tr>';
+			tbody += '<tr style="background:#f5f7fa"><td id="lang_11"></td><td id="lang_12" ></td><td id="lang_13" ></td></tr>';
 			for(let i = 0;i<board_num;i++){
-				tbody += '<tr><td id="'+board_name[i]+'"></td></td></tr>';
+				tbody += '<tr><td id="'+board_name[i]+'"></td>';
 				tbody += '<td id="Bprogress'+ i+'" ></td>';
 				tbody += '<td id="Bstate'+i+'" ></td></tr>';
 			}

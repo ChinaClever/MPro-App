@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left: 45%;width: 8%;"><button id="lang_14" onclick ="download(this);"></button></span>
 							</div>
 						</div>
 					</div>
@@ -61,13 +61,18 @@
 					}
 				}
 		}
+		function download(obj){
+			let url = window.location.origin;
+			url += "/index.html/snmp.mib";
+			window.open(url,'_blank');
+		}
 		function lang_init(){
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["","SNMP设置","","","",""];
 			lang[2] = ["","SNMP(v1/v2c)代理设置","","","",""];
-			lang[3] = ["","snmp v2启用","","","",""];
+			lang[3] = ["","snmp v2启用:","","","",""];
 			lang[4] = ["","立即生效","","","",""];
 			lang[5] = ["","SNMP(v3)代理设置","","","",""];
 			lang[6] = ["","SNMP v3启用:","","","",""];
@@ -78,13 +83,14 @@
 			lang[11] = ["","立即生效","","","",""];
 			lang[12] = ["","Trap地址设置","","","",""];
 			lang[13] = ["","立即生效","","","",""];
-			lang[14] = ["","禁用","","","",""];
-			lang[15] = ["","启用","","","",""];
-			mode_set[0] = lang[14][language];
-			mode_set[1] = lang[15][language];
+			lang[14] = ["","mib文件下载","","","",""];
+			lang[15] = ["","禁用","","","",""];
+			lang[16] = ["","启用","","","",""];
+			mode_set[0] = lang[15][language];
+			mode_set[1] = lang[16][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<14;i++){
+			for(var i = 1;i<15;i++){
 				if(i ==4 || i == 11 || i ==13){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
@@ -159,8 +165,8 @@
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>Get Community</td><td>public</td></tr>';
-			tbody += '<tr><td>Set Community</td><td>private</td></tr>';
+			tbody += '<tr><td>Get Community:</td><td>public</td></tr>';
+			tbody += '<tr><td>Set Community:</td><td>private</td></tr>';
 			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
