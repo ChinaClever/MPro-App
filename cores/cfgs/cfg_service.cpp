@@ -220,13 +220,13 @@ void Cfg_Service::mqtt()
 {
     QString prefix = "mqtt"; QString key;
     sMqttCfg *cfg = &(Mqtt_Client::cfg);
-    for(int i=1; i<10; ++i) {
+    for(int i=1; i<11; ++i) {
         switch (i) {
         case 1: key = "type"; cfg->type = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "url"; cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
         case 3: key = "port"; cfg->port = mCfg->readCfg(key, 1883, prefix).toInt(); break;
         case 4: key = "path"; cfg->path = mCfg->readCfg(key, "/mqtt", prefix).toString(); break;
-        case 5: key = "clientId"; cfg->clientId = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 5: key = "clientId"; cfg->clientId = mCfg->readCfg(key, "clientId", prefix).toString(); break;
         case 6: key = "usr"; cfg->usr = mCfg->readCfg(key, "", prefix).toByteArray(); break;
         case 7: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toByteArray(); break;
         case 8: key = "keepAlive"; cfg->keepAlive = mCfg->readCfg(key, 60, prefix).toInt();break;

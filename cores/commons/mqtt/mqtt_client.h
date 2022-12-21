@@ -3,8 +3,8 @@
 #include "qmqtt/qmqtt.h"
 
 struct sMqttCfg {
-    sMqttCfg():type(1), url("127.0.0.1"), port(1883), path("/mqtt"),
-        clientId("clientId"), isConnected(false), keepAlive(60), qos(0){}
+    sMqttCfg():type(1), url("192.168.1.117"), port(1883), path("/mqtt"),
+        clientId("clientId"), isConnected(false), keepAlive(60), qos(0), sec(10){}
 
     int type; // 1 mqtt 2 mqtts 3 ws 4 wss
     QString url;
