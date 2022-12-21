@@ -57,6 +57,7 @@
     <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
     <script src="./include/js/public.min.js"></script>
+    <script src="./include/js/fn_public.js"></script>
     <script>
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
@@ -77,11 +78,13 @@
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
 		let unite_sub = new Array(2,5,6,7,4);
-		read_data();
-    	$('.set_table').html(buildTable());
-    	$('.threshold_table').html(buildTableThreshold());
-    	$('.out_table').html(buildTableOutput());
-		show_data();
+		setTimeout(function(){
+			read_data();
+			$('.set_table').html(buildTable());
+			$('.threshold_table').html(buildTableThreshold());
+			$('.out_table').html(buildTableOutput());
+			show_data();
+		},2000);
 		function read_data(){
 			let i = 0;
 			for(i= 0;i<board_num;i++){

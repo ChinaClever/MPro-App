@@ -34,7 +34,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_mqtt_data(0)},150);
+		setTimeout(function(){read_mqtt_data(0)},300);
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		var mqtt_data = new Array();
 		let lang = new Array();
@@ -96,7 +96,7 @@
 		setTimeout(function(){
 			read_data();
 			showdata();
-		},500);
+		},600);
 		function showdata(){
 			for(var j = 0;j<id_name.length;j++){
 				if( j == 0 || j == 8){

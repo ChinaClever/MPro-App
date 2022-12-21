@@ -14,9 +14,9 @@
 		<link rel="stylesheet" href="../../doc-lib/doc.css">
 
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
+		<script src="../../include/js/fn_public.js"></script>
 		<script src="../../include/js/rpc-over-websocket.js"></script>
 		<script src="../../include/js/public.min.js"></script>
-		<script src="../../include/js/fn_public.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
 		<script src="../../include/js/chart.min.js"></script>
@@ -280,7 +280,7 @@
 		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
     	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		let stat_ = new Array("断开","闭合");
-		let serial_ = new Array("","A","B","C","D");
+		let serial_ = new Array("D","A","B","C","D");
 		let Sensor_state = new Array("离线","开启","关闭");
 		let Sys_state = new Array("正常","告警","故障");
 		let loop_unit = new Array("","","","A","A","V","kVA","kWh");
@@ -475,7 +475,6 @@
 							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = loop_info[i + 1][j];
 						}
 					}
-						
 				}
 			}
 			for(let i =0;i<head.length;i++){

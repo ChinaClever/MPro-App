@@ -279,8 +279,11 @@ var jsonrpc = function()
   };
 }
 
-
-var rpc = jsonrpc();
+var rpc= jsonrpc();
+// if(sessionStorage.getItem("CreateConnect") == 1){
+//   rpc
+//   sessionStorage.setItem("CreateConnect", "0");
+// }
 var start  = 0;
 var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
@@ -686,7 +689,7 @@ function read_mqtt_data(addr){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;
-  },3);
+  },5);
 }
 function read_amqp_data(addr){
   let j = 1;
