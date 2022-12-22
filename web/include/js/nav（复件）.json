@@ -1,0 +1,321 @@
+[
+  {
+    "name": "首页",
+    "icon": "homepage_fill",
+    "base": "",
+    "url": "home.html"
+  },
+  {
+    "name": "输入",
+    "icon": "flashlight_fill",
+    "base": "pages/inlet/",
+    "subNav": [
+      {
+        "name": "相设置",
+        "url": "inlet_set.html"
+      },
+      {
+        "name": "回路设置",
+        "url": "loop_set.html"
+      }
+    ]
+  },
+  {
+    "name": "输出",
+    "icon": "subtraction",
+    "base": "pages/outlet/",
+    "subNav": [ 
+      {
+        "name": "单元监测",
+        "url": "output_monitoring.html"
+      },
+      {
+        "name": "单元电流",
+        "url": "outlet_cur.html"
+      },
+      {
+        "name": "单元功率",
+        "url": "outlet_pow.html"
+      },  
+      {
+        "name": "单元名称",
+        "url": "output_name.html"
+      }, 
+      {
+        "name": "单元控制",
+        "url": "relay_ctrl.html"
+      },
+      {
+        "name": "单元定时",
+        "url": "relay_timing.html"
+      }    
+    ]
+  },
+  {
+    "name": "分组",
+    "icon": "tasklist_fill",
+    "base": "pages/group/",
+    "subNav": [
+
+      {
+        "name": "分组监测",
+        "url": "group_monitoring.html"
+      },
+      {
+        "name": "分组阈值",
+        "url": "group_alarm.html"
+      },
+      {
+        "name": "分组名称",
+        "url": "group_name.html"
+      },
+      {
+        "name": "分组定时",
+        "url": "group_timing.html"
+      },
+      {
+        "name": "分组设置",
+        "url": "group_set.html"
+      },
+      {
+        "name": "分组控制",
+        "url": "group_ctrl.html"
+      } 
+    ]
+  }, 
+  {
+    "name": "机架",
+    "icon": "createtask_fill",
+    "base": "pages/dual/",
+    "subNav": [
+      {
+        "name": "机架监测",
+        "url": "dual_monitoring.html"
+      },
+      {
+        "name": "机架功率",
+        "url": "dual_pow.html"
+      },
+      {
+        "name": "机架名称",
+        "url": "dual_name.html"
+      },
+      {
+        "name": "机架控制",
+        "url": "dual_ctrl.html"
+      },
+      {
+        "name": "机架定时",
+        "url": "dual_timing.html"
+      }      
+    ]
+  },
+  {
+    "name": "环境参数",
+    "icon": "flag_fill",
+    "base": "",
+    "url": "pages/envir/envir_ctrl.html"
+  },
+  {
+    "name": "设备设置",
+    "icon": "info",
+    "base": "pages/devset/",
+    "subNav": [
+      {
+        "name": "模式设置",
+        "url": "mode_set.html"
+      },
+      {
+        "name": "位置设置",
+        "url": "place_set.html"
+      },     
+      {
+        "name": "超限断电",
+        "url": "overrun.html"
+      },
+      {
+        "name": "电能清零",
+        "url": "energe_clr.html"
+      }      
+    ]
+  },
+  {
+    "name": "集成接口",
+    "icon": "collection_fill",
+    "base": "pages/integrate/",
+    "subNav": [
+      {
+        "name": "主动推送",
+        "url": "push.html"
+      },
+      {
+        "name": "RPC集成",
+        "url": "rpc.html"
+      },
+      {
+        "name": "REST集成",
+        "url": "rest.html"
+      },
+      {
+        "name": "MQTT集成",
+        "url": "mqtt.html"
+      },
+      {
+        "name": "AMQP服务",
+        "url": "amqp.html"
+      },
+      {
+        "name": "SNMP服务",
+        "url": "snmp.html"
+      },
+      {
+        "name": "数据库服务",
+        "url": "odbc.html"
+      },      
+      {
+        "name": "Modbus协议",
+        "url": "modbus.html"
+      }
+    ]
+  }, 
+  {
+    "name": "安全加密",
+    "icon": "lock_fill",
+    "base": "pages/sercet/",
+    "subNav": [      
+      {
+        "name": "数据加密",
+        "url": "data.html"
+      },
+      {
+        "name": "TLS证书",
+        "url": "tlscert.html"
+      },
+      {
+        "name": "网络安全",
+        "url": "net.html"
+      },
+      {
+        "name": "系统安全",
+        "url": "system.html"
+      }
+    ]
+  },
+  {
+    "name": "网络服务",
+    "icon": "computer_fill",
+    "base": "pages/network/",
+    "subNav": [
+      {
+        "name": "网络连接",
+        "url": "base.html"
+      },
+      {
+        "name": "WEB服务",
+        "url": "web.html"
+      },
+      {
+        "name": "NTP服务",
+        "url": "ntp.html"
+      },
+      {
+        "name": "SSH服务",
+        "url": "ssh.html"
+      },
+      {
+        "name": "SMTP服务",
+        "url": "smtp.html"
+      },
+      {
+        "name": "Syslog服务",
+        "url": "syslog.html"
+      },
+      {
+        "name": "远程认证服务",
+        "url": "radius.html"
+      }
+    ]
+  },  
+  {
+    "name": "图表信息",
+    "icon": "dynamic_fill",
+    "base": "",
+    "url": "pages/chart/chart.html"
+  },
+  {
+    "name": "日志查询",
+    "icon": "document_fill",
+    "base": "pages/logs/",
+    "subNav": [
+      {
+        "name": "告警日志",
+        "url": "alarm_log.html"
+      },
+      {
+        "name": "事件记录",
+        "url": "event_log.html"
+      },
+      {
+        "name": "历史数据",
+        "url": "history.html"
+      },
+      {
+        "name": "日志设置",
+        "url": "log_setting.html"
+      }
+    ]
+  },
+  {
+    "name": "系统维护",
+    "icon": "manage_fill",
+    "base": "pages/maintain/",
+    "subNav": [
+      {
+        "name": "系统信息",
+        "url": "sys_info.html"
+      },
+      {
+        "name": "用户信息",
+        "url": "usr_info.html"
+      },
+      {
+        "name": "更新固件",
+        "url": "fw_update.html"
+      },
+      {
+        "name": "固件历史",
+        "url": "fw_history.html"
+      },
+      {
+        "name": "批量配置",
+        "url": "batch_setting.html"
+      },
+      {
+        "name": "网络诊断",
+        "url": "net_diagnostics.html"
+      },
+      {
+        "name": "备份/恢复",
+        "url": "backups.html"
+      },
+      {
+        "name": "下载诊断",
+        "url": "download_diagnosis.html"
+      },
+      {
+        "name": "系统命令",
+        "url": "sys_command.html"
+      },{
+        "name": "",
+        "url": ""
+      },{
+        "name": "",
+        "url": ""
+      },{
+        "name": "",
+        "url": ""
+      }
+    ]
+  }
+
+]
