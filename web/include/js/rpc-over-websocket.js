@@ -261,6 +261,7 @@ var jsonrpc = function()
   }
   ws.onopen = function(){
       read_user_info();
+      read_language();
   };
   return {
     close:() => ws.close(),
@@ -291,7 +292,9 @@ var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactp
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
 
-
+function read_language(){
+  rpc.call('pduReadParam',[0,cfg,10,0,0]);
+}
 function read_user_info(){
   var j = 1;
   var time1 = setInterval(function(){
@@ -975,4 +978,94 @@ function read_sw_data(addr){
     }
     i++;
   },3);
+}
+function read_debug_data(){
+  var j = 1;
+    var time1 = setInterval(function(){
+      if(j >= parseInt(4 + 1)){
+        clearInterval(time1);
+      }
+      if(j < 5){
+        rpc.call('pduReadParam',[addr,num,j,0,0]);
+      }
+      j++;
+    },3);
+  setTimeout(function(){
+    read_data_frist();
+    read_data_second();
+    read_data_third();
+    read_data_fourth();
+    read_data_fifth();
+  },300);
+}
+function read_data_frist(){
+  let j =2;
+  var time2 = setInterval(function(){
+    if(j >= parseInt(7 + 1)){
+      clearInterval(time2);
+    }
+    if((j <= 7 && j != 3)){
+      rpc.call('pduReadData',[addr,phase,vol_,j,0]);
+      rpc.call('pduReadData',[addr,phase,cur_,j,0]);
+      rpc.call('pduReadData',[addr,phase,pow_,j,0]);
+      rpc.call('pduReadData',[addr,loop,vol_,j,0]);
+      rpc.call('pduReadData',[addr,loop,cur_,j,0]);
+      rpc.call('pduReadData',[addr,loop,pow_,j,0]);
+      rpc.call('pduReadData',[addr,output,cur_,j,0]);
+      rpc.call('pduReadData',[addr,envir,tmp_,j,0]);
+      rpc.call('pduReadData',[addr,envir,hum_,j,0]);
+    }
+    j++;
+  },3);
+}
+function read_data_second(){
+  let j = 1;
+  var time3 = setInterval(function(){
+    let output_num_ = parseInt(sessionStorage.getItem('OutputNum' + addr));
+    if(j >= parseInt(output_num_ + 1)){
+      clearInterval(time3);
+    }
+    if(j <= output_num_){
+      rpc.call('pduReadData',[addr,output,cur_,2,j]);
+    }
+    j++;
+  },3);
+}
+function read_data_third(){
+  var time4 = setInterval(function(){
+    rpc.call('pduReadParam',[addr,cfg,1,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,10,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,11,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,13,0,0]);
+    rpc.call('pduReadParam',[addr,41,11,0,0]);
+    clearInterval(time4);
+  },10);
+}
+function read_data_fourth(){
+  let j = 0;
+  var time5 = setInterval(function(){
+    let loop_num_ = parseInt(sessionStorage.getItem('LoopNum' + addr));
+    if(j >= parseInt(loop_num_ + 1)){
+      clearInterval(time5);
+    }
+    if(j <= loop_num_){
+      rpc.call('pduReadParam',[addr,num,7,j,0]);
+      console.log(j);
+    }
+    j++;
+  },10);
+}
+function read_data_fifth(){
+  let j = 0;
+  var time6 = setInterval(function(){
+    let board_num_ = parseInt(sessionStorage.getItem('BoardNum' + addr));
+    if(j >= parseInt(board_num_ + 1)){
+      clearInterval(time6);
+    }
+    if(j <= board_num_){
+      rpc.call('pduReadParam',[addr,num,6,j,0]);
+      console.log(j);
+    }
+    j++;
+  },10);
 }

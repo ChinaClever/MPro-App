@@ -56,17 +56,17 @@
 		</div>
     <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
-    <script src="./include/js/public.min.js"></script>
     <script src="./include/js/fn_public.js"></script>
+    <script src="./include/js/public.min.js"></script>
     <script>
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
     	let distribution = new Array("6x8","4x12","8x6","12x4");
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		let phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-		let loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
-		let board_num =	 parseInt(sessionStorage.getItem("BoardNum" + addr));
+		let output_num;
+		let phase_num;
+		let loop_num;
+		let board_num;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -77,16 +77,43 @@
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
+		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
-		setTimeout(function(){
+			setTimeout(function(){
+				read_debug_data();
+			},300);	
+		$('.set_table').html(buildTable());
+		$('.threshold_table').html(buildTableThreshold());
+		$('.out_table').html(buildTableOutput());
+		let m = 0;
+		var Time1 = setInterval(function(){
 			read_data();
-			$('.set_table').html(buildTable());
-			$('.threshold_table').html(buildTableThreshold());
-			$('.out_table').html(buildTableOutput());
 			show_data();
-		},2000);
+			m++;
+			if(m ==10){
+				clearInterval(Time1);
+			}
+		},500);
 		function read_data(){
 			let i = 0;
+			output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
+			loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
+			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + addr));
+			document.getElementById("phase_").value = phase_num;
+			document.getElementById("loop_").value = loop_num;
+			document.getElementById("board_").value = board_num;
+			for(let i = 1;i < loop_num+1;i++){
+				document.getElementById("out_num"+i).value = loop_out[i - 1];
+			}
+			for(let i = 1;i < board_num+1;i++){
+				document.getElementById("board_num"+i).value = board_out[i - 1];
+			}
+			document.getElementById("break_").value = break_en;
+			for(i =0;i<7;i++){
+				document.getElementById(name_cfg_[i]).value = cfg_data[i];
+			}
+
 			for(i= 0;i<board_num;i++){
 				board_out[i] = sessionStorage.getItem("BoardOutputNum" + '_' + (i));
 			}
