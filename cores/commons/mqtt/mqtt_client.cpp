@@ -90,6 +90,7 @@ void Mqtt_Client::onConnected()
     cfg.isConnected = true;
     QString topic = "pduSetting/#";// + cfg.clientId;
     m_client->subscribe(topic, cfg.qos);
+    qDebug() << "mqtt connected" << cfg.isConnected;
 }
 
 void Mqtt_Client::onPublish(const QByteArray &payload)

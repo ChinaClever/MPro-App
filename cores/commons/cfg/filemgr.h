@@ -9,7 +9,7 @@
 class FileMgr
 {
 public:
-    static FileMgr& GetInstance() {
+    static FileMgr& build() {
         static FileMgr m_fileMgr;
         return m_fileMgr;
     }

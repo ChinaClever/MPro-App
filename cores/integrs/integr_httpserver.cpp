@@ -69,7 +69,7 @@ bool Integr_HttpServer::upload(const QByteArray &body)
         int id = body.indexOf(str) + str.size()+1;
         int idx = body.indexOf("filename=") - 2;
         QString fn = body.mid(id, idx-id);
-        str = QStringLiteral("filename=\"%1\"\r\n\r\n").arg(fn);
+        str = QStringLiteral(";filename=\"%1\"\r\n\r\n").arg(fn.split("/").last());
         id = body.indexOf(str) + str.size();
         idx = body.indexOf("\r\n--boundary_.oOo._");
         QByteArray array = body.mid(id, idx-id);
