@@ -114,9 +114,9 @@ bool Set_Diagnose::net_diagnoseSet(int fc, const QVariant &v)
 {
     sNetDgsIt *it = &mNetDgs;
     bool ret = true; switch (fc) {
-    case 1: it->pingHost = v.toString(); break;
+    case 1: it->pingHost = toString(v); break;
     case 2: it->pingCnt = v.toInt(); break;
-    case 6: it->routeHost = v.toString();  break;
+    case 6: it->routeHost = toString(v);  break;
     case 7: it->timeout = v.toInt(); break;
     default: ret = false; cout << fc; break;
     }

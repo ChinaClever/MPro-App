@@ -75,7 +75,7 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
     switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
     case 2: key = "port";  cfg->port = v.toInt(); break;
-    case 3: key = "host";  cfg->host = v.toString();  break;
+    case 3: key = "host";  cfg->host = toString(v);  break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -111,10 +111,10 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
     QString prefix = "smtp"; QString key;
     bool ret = true; switch (fc) {
     case 1: key = "en"; it->en = v.toInt(); break;
-    case 2: key = "host";  it->host = v.toString(); break;
-    case 3: key = "from";  it->from = v.toString();  break;
-    case 4: key = "pwd";  it->pwd =v.toString();  break;
-    case 5: key = "to_"+QString::number(id); it->to[id] =v.toString();  break;
+    case 2: key = "host";  it->host = toString(v); break;
+    case 3: key = "from";  it->from = toString(v);  break;
+    case 4: key = "pwd";  it->pwd =toString(v);  break;
+    case 5: key = "to_"+QString::number(id); it->to[id] =toString(v);  break;
     case 6: key = "port";  it->port =v.toInt();  break;
     case 7: key = "ct";  it->ct =v.toInt();  break;
     default: ret = false; cout << fc << v; break;
@@ -152,8 +152,8 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     switch (fc) {
     case 1: key = "ssh_en"; cfg->ssh_en = v.toInt(); break;
     case 2: key = "telnet_en";  cfg->telnet_en = v.toInt(); break;
-    case 3: key = "usr";  cfg->usr = v.toString();  break;
-    case 4: key = "pwd";  cfg->pwd = v.toString();  break;
+    case 3: key = "usr";  cfg->usr = toString(v);  break;
+    case 4: key = "pwd";  cfg->pwd = toString(v);  break;
     case 5: ret = obj->ssh_save(); break;
     default: ret = false; cout << fc; break;
     }
@@ -190,10 +190,10 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     QString prefix = "ntp"; QString key;
 
     switch (fc) {
-    case 1: ret = obj->ntp_time(v.toString()); break;
+    case 1: ret = obj->ntp_time(toString(v)); break;
     case 2: key = "udp_en";  obj->ntp_udpEn(v.toInt()); break;
-    case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
-    case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
+    case 3: key = "ntp_host";  it->ntp_host = toString(v);  break;
+    case 4: key = "time_zone";  obj->ntp_timeZone(toString(v));  break;
     case 5: obj->ntpdate(); break;
     default: ret = false; cout << fc; break;
     }
@@ -264,8 +264,8 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
     case 2: key = "local";  cfg->local = v.toInt(); break;
-    case 3: key = "host";  cfg->host = v.toString();  break;
-    case 4: key = "key";  cfg->key = v.toString();  break;
+    case 3: key = "host";  cfg->host = toString(v);  break;
+    case 4: key = "key";  cfg->key = toString(v);  break;
     case 5: key = "authPort";  cfg->authPort = v.toInt();  break;
     case 6: key = "acctPort";  cfg->acctPort = v.toInt();  break;
     default: ret = false; cout << fc;  break;
@@ -300,8 +300,8 @@ bool Set_Service::ldapSet(int fc, const QVariant &v)
 
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "url";  cfg->url = v.toString(); break;
-    case 3: key = "user";  cfg->user = v.toString();  break;
+    case 2: key = "url";  cfg->url = toString(v); break;
+    case 3: key = "user";  cfg->user = toString(v);  break;
     default: ret = false; cout << fc;  break;
     }
 
