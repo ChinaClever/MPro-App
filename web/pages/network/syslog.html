@@ -40,7 +40,6 @@
 		var mode_set = new Array("","");
 		var syslog_data = new Array();
 		let lang = new Array();
-		let language = 1;
 		function read_data(){
 			for(var j = 1;j<syslog_name.length;j++){
 				syslog_data[j] = sessionStorage.getItem(syslog_name[j]);
@@ -51,14 +50,14 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","Syslog服务","","","",""];
-			lang[2] = ["","Syslog服务设置","","","",""];
-			lang[3] = ["","启用服务:","","","",""];
-			lang[4] = ["","服务器地址:","","","",""];
-			lang[5] = ["","端口号:","","","",""];
-			lang[6] = ["","禁用","","","",""];
-			lang[7] = ["","报警","","","",""];
-			lang[8] = ["","所有","","","",""];
+			lang[1] = ["Syslog服务","","","",""];
+			lang[2] = ["Syslog服务设置","","","",""];
+			lang[3] = ["启用服务:","","","",""];
+			lang[4] = ["服务器地址:","","","",""];
+			lang[5] = ["端口号:","","","",""];
+			lang[6] = ["禁用","","","",""];
+			lang[7] = ["报警","","","",""];
+			lang[8] = ["所有","","","",""];
 
 			mode_set[0] = lang[6][language];
 			mode_set[1] = lang[7][language];

@@ -18,6 +18,7 @@
   <script src="../../include/js/fn_public.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
+    language = parseInt(sessionStorage.getItem("LanguageEn" + addr));
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
       if(keyNum == 13){

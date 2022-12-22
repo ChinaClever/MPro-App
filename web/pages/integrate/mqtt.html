@@ -47,38 +47,38 @@
 			for(let i = 1;i<20;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","MQTT设置","","","",""];
-			lang[2] = ["","MQTT设置","","","",""];
-			lang[3] = ["","MQTT是否开启:","","","",""];
-			lang[4] = ["","服务器地址:","","","",""];
-			lang[5] = ["","端口:","","","",""];
-			lang[6] = ["","Path:","","","",""];
-			lang[7] = ["","ClientID:","","","",""];
-			lang[8] = ["","用户名:","","","",""];
-			lang[9] = ["","密码:","","","",""];
-			lang[10] = ["","KeepAlive(S):","","","",""];
-			lang[11] = ["","Qos:","","","",""];
-			lang[12] = ["","连接状态:","","","",""];
-			lang[13] = ["","更新频率(S):","","","",""];
-			lang[14] = ["","立即生效","","","",""];
-			lang[15] = ["","禁用","","","",""];
-			lang[16] = ["","启用","","","",""];
-			lang[17] = ["","0 消息最多传递一次","","","",""];
-			lang[18] = ["","1 消息传递最少一次","","","",""];
-			lang[19] = ["","2 消息仅传递一次","","","",""];
-			lang[20] = ["","已连接","","","",""];
-			lang[21] = ["","未连接","","","",""];
+			lang[1] = ["MQTT设置","","","",""];
+			lang[2] = ["MQTT设置","","","",""];
+			lang[3] = ["MQTT是否开启:","","","",""];
+			lang[4] = ["服务器地址:","","","",""];
+			lang[5] = ["端口:","","","",""];
+			lang[6] = ["Path:","","","",""];
+			lang[7] = ["ClientID:","","","",""];
+			lang[8] = ["用户名:","","","",""];
+			lang[9] = ["密码:","","","",""];
+			lang[10] = ["KeepAlive(S):","","","",""];
+			lang[11] = ["Qos:","","","",""];
+			lang[12] = ["连接状态:","","","",""];
+			lang[13] = ["更新频率(S):","","","",""];
+			lang[14] = ["立即生效","","","",""];
+			lang[15] = ["禁用","","","",""];
+			lang[16] = ["启用","","","",""];
+			lang[17] = ["0 消息最多传递一次","","","",""];
+			lang[18] = ["1 消息传递最少一次","","","",""];
+			lang[19] = ["2 消息仅传递一次","","","",""];
+			lang[20] = ["已连接","","","",""];
+			lang[21] = ["未连接","","","",""];
 
-			enable[0] = lang[15][1];
-			qos_[0] = lang[17][1];
-			qos_[1] = lang[18][1];
-			qos_[2] = lang[19][1];
+			enable[0] = lang[15][language];
+			qos_[0] = lang[17][language];
+			qos_[1] = lang[18][language];
+			qos_[2] = lang[19][language];
 		}
 		function lang_fun(){
 			for(let j = 1;j<14;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][1];
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			document.getElementById("lang_14").value  = lang[14][1];
+			document.getElementById("lang_14").value  = lang[14][language];
 		}
 
 		function read_data(){
@@ -86,9 +86,9 @@
 				mqtt_data[j] = sessionStorage.getItem(type_name[19]+ mqtt_cfg[j]);
 			}
 			if(mqtt_data[10] == 'false' || mqtt_data[10] == '0'){
-				mqtt_data[10] = lang[21][1];
+				mqtt_data[10] = lang[21][language];
 			}else{
-				mqtt_data[10] = lang[20][1];
+				mqtt_data[10] = lang[20][language];
 			}
 		}
 		$('.mqtt').html(buildTable());

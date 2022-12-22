@@ -1,5 +1,6 @@
 // JSON-RPC over Websocket implementation
 var JSONRPC_TIMEOUT_MS = 1000;
+var language = 0;
 let verfity = 0;
 let ws,pending = {};
 let rpcid = 0;

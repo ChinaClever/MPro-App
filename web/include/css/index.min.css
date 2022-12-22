@@ -40,8 +40,11 @@ html {
 }
 
 .logo {
+    border-radius: 8px;
     display: block;
     max-height: 80px;
+    width: 65px;
+    height: 65px;
     margin: 0 auto;
     border: none;
     outline: 0
