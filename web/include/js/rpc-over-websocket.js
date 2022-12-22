@@ -163,6 +163,7 @@ var jsonrpc = function()
           sessionStorage.setItem(type_name[type]+ push_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
+          console.log(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
       break;
       case 19:
@@ -464,6 +465,7 @@ function read_dual_data(addr)
     }
     if(i <= output_num && j <= sub_num){
       rpc.call('pduReadData',[addr,dual,pow_,j,i]);
+      rpc.call('pduReadData',[addr,dual,switch_,j,i]);
     }
     i++;
     if(i >= (output_num + 1)){
@@ -637,10 +639,10 @@ function read_push_data(){
 function read_http_data(addr){
   let j = 11;
   var time1 = setInterval(function(){
-    if(j >= parseInt(18)){
+    if(j >= parseInt(17)){
       clearInterval(time1);
     }
-    if(j <= 17){
+    if(j < 17){
       rpc.call('pduReadParam',[addr,push,j,0,0]);
     }
     j++;
@@ -685,10 +687,10 @@ function read_group_info(addr){
 function read_mqtt_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(10 +1)){
+    if(j >= parseInt(11 +1)){
       clearInterval(time1);
     }
-    if(j < 10 +1){
+    if(j < 11 +1){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;

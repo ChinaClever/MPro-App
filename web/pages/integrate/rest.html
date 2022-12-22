@@ -46,11 +46,7 @@
 		let lang = new Array();
 		function read_data(){
 			for(var j = 11; j<17;j++){
-				if(j ==12){
-					http_data[j] = sessionStorage.getItem(type_name[18]+ push_info[j]);
-				}else{
-					http_data[j] = parseInt(sessionStorage.getItem(type_name[18]+ push_info[j]));
-				}
+				http_data[j] = sessionStorage.getItem(type_name[18]+ push_info[j]);
 			}
 		}
 		function lang_init(){
