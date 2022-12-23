@@ -200,7 +200,9 @@ struct sVersions
     char compileDate[NAME_SIZE]; // 编译时间
     char releaseDate[NAME_SIZE]; // 发布时间
     char upgradeDate[NAME_SIZE]; // 升级时间
-    char reserve[3][NAME_SIZE]; // 预留
+    char serialNumber[NAME_SIZE]; // 序列号
+    char hwVersion[NAME_SIZE]; // 硬件版本
+    char reserve[NAME_SIZE]; // 预留
     ushort opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
