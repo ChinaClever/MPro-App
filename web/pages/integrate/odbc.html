@@ -122,7 +122,7 @@
 		function showdata(){
 			for(var j = 0;j<id_name.length-1;j++){
 				if(j == 0){
-					document.getElementById(id_name[j]).selected = odbc_data[j +1];
+					document.getElementById(id_name[j]).value = odbc_data[j +1];
 				}else{
 					document.getElementById(id_name[j]).value = odbc_data[j +1];
 				}
@@ -136,7 +136,7 @@
 			document.getElementById(id_name[id_name.length-1]).innerHTML = odbc_data[10];
 			for(var j = 0;j<red_name.length-1;j++){
 				if(j == 0){
-					document.getElementById(red_name[j]).selected = redis_data[j +1];
+					document.getElementById(red_name[j]).value = redis_data[j +1];
 				}else{
 					document.getElementById(red_name[j]).value = redis_data[j +1];
 				}
