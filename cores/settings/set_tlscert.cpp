@@ -33,7 +33,7 @@ QVariant Set_TlsCert::getTlsCert(uchar fc)
 bool Set_TlsCert::setTlsCert(uchar fc, const QVariant &v)
 {
     cout << fc << v;
-    QString str = toString(v);
+    QString str = v.toString();
     bool ret = false;
     switch(fc)
     {

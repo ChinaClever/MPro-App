@@ -168,7 +168,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     bool ret = true;
     QString prefix = "uut";
     QString key; char *ptr=nullptr;
-    QByteArray array = toString(v).toUtf8();
+    QByteArray array = v.toString().toUtf8();
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     switch (fc) {

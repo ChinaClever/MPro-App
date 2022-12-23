@@ -77,10 +77,3 @@ void Set_Alarm::oplog(const sDataItem &it)
     db.event_type += opSrc(it.txType);
     Log_Core::bulid()->append(db);
 }
-
-QString Set_Alarm::toString(const QVariant &value)
-{
-    QVariant v = value;
-    if(v.type() != QVariant::String) v.clear();
-    return v.toString();
-}

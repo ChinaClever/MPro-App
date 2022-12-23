@@ -157,7 +157,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 {    
     QString str = QStringLiteral("全部"); QString op;
     if(it.fc) str = QStringLiteral("第%１").arg(it.fc);
-    str += QStringLiteral("名称修改为:%1").arg(toString(v));
+    str += QStringLiteral("名称修改为:%1").arg(v.toString());
 
     switch (it.type) {
     case SFnCode::EOutput: op += QStringLiteral("输出位名称"); break;
@@ -194,7 +194,7 @@ bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
 {
     uint addr = it.addr; if(addr==0xff) addr = 0;
-    QStringList strs = toString(v).simplified().split(";");
+    QStringList strs = v.toString().simplified().split(";");
     sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
     uchar *ptr = dev->cfg.nums.group[it.fc]; bool ret = true;
     memset(ptr, 0, OUTPUT_NUM);

@@ -88,12 +88,12 @@ bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
     bool ret = true; switch (fc) {
     case 1: key = "enV2"; cfg->enV2 = v.toInt(); break;
     case 11: key = "enV3"; cfg->enV3 = v.toInt(); break;
-    case 12: key = "usr"; cfg->usr = toString(v); break;
-    case 13: key = "pwd"; cfg->pwd = toString(v); break;
-    case 14: key = "key"; cfg->key = toString(v); break;
-    case 15: key = "encrypt"; cfg->encrypt = toString(v); break;
-    case 21: key = "trap_" + QString::number(id); cfg->trap[id] = toString(v); break;
-    case 22: key = "inform_" + QString::number(id); cfg->inform[id] = toString(v); break;
+    case 12: key = "usr"; cfg->usr = v.toString(); break;
+    case 13: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 14: key = "key"; cfg->key = v.toString(); break;
+    case 15: key = "encrypt"; cfg->encrypt = v.toString(); break;
+    case 21: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); break;
+    case 22: key = "inform_" + QString::number(id); cfg->inform[id] = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
     }
 
@@ -168,12 +168,12 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     QString prefix = "mqtt";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "type"; cfg->type = v.toInt(); break;
-    case 2: key = "url"; cfg->url = toString(v); break;
+    case 2: key = "url"; cfg->url = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "path"; cfg->path = toString(v); break;
-    case 5: key = "clientId";  cfg->clientId = toString(v);break;
-    case 6: key = "usr"; cfg->usr = toString(v).toLatin1(); break;
-    case 7: key = "pwd";  cfg->pwd = toString(v).toLatin1(); break;
+    case 4: key = "path"; cfg->path = v.toString(); break;
+    case 5: key = "clientId";  cfg->clientId = v.toString();break;
+    case 6: key = "usr"; cfg->usr = v.toString().toLatin1(); break;
+    case 7: key = "pwd";  cfg->pwd = v.toString().toLatin1(); break;
     case 8: key = "keepAlive"; cfg->keepAlive = v.toInt(); break;
     case 9: key = "qos"; cfg->qos = v.toInt(); break;
     case 11: key = "sec"; cfg->sec = v.toInt(); break;
@@ -220,14 +220,14 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
 
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "host"; cfg->host = toString(v); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "virtualHost"; cfg->virtualHost =toString(v); break;
-    case 5: key = "username"; cfg->username = toString(v); break;
-    case 6: key = "password"; cfg->password = toString(v); break;
-    case 7: key = "name"; cfg->name = toString(v); break;
-    case 8: key = "routingKey"; cfg->routingKey = toString(v); break;
-    case 9: key = "bindingKey"; cfg->bindingKey = toString(v); break;
+    case 4: key = "virtualHost"; cfg->virtualHost =v.toString(); break;
+    case 5: key = "username"; cfg->username = v.toString(); break;
+    case 6: key = "password"; cfg->password = v.toString(); break;
+    case 7: key = "name"; cfg->name = v.toString(); break;
+    case 8: key = "routingKey"; cfg->routingKey = v.toString(); break;
+    case 9: key = "bindingKey"; cfg->bindingKey = v.toString(); break;
     case 10: key = "ssl"; cfg->ssl = v.toInt(); break;
     case 12: key = "sec"; cfg->sec = v.toInt(); break;
     case 20: QRabbitMQ::bulid()->start(); break;
@@ -269,9 +269,9 @@ bool Set_Integr::redisSet(uchar fc, const QVariant &v)
     QString prefix = "redis";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "host"; cfg->host = toString(v); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "pwd"; cfg->pwd = toString(v); break;
+    case 4: key = "pwd"; cfg->pwd = v.toString(); break;
     case 5: key = "db"; cfg->db =v.toInt(); break;
     case 6: key = "pdukey"; cfg->key = v.toByteArray(); break;
     case 7: key = "subscribe"; cfg->subscribe = v.toByteArray(); break;
@@ -317,12 +317,12 @@ bool Set_Integr::odbcSet(uchar fc, const QVariant &v)
     QString prefix = "odbc";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "host"; cfg->host = toString(v); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "db"; cfg->db =toString(v); break;
-    case 5: key = "user"; cfg->user = toString(v); break;
-    case 6: key = "pwd"; cfg->pwd = toString(v); break;
-    case 7: key = "pdukey"; cfg->pdukey = toString(v); break;
+    case 4: key = "db"; cfg->db =v.toString(); break;
+    case 5: key = "user"; cfg->user = v.toString(); break;
+    case 6: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 7: key = "pdukey"; cfg->pdukey = v.toString(); break;
     case 8: key = "dataPoll"; cfg->dataPoll = v.toInt(); break;
     case 9: key = "hdaPoll"; cfg->hdaPoll = v.toInt(); break;
     default: ret = false; cout << fc; break;
@@ -367,7 +367,7 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
     QString prefix = "push";  QString key;
     bool ret = true; if(id) id -= 1; switch (fc) {
     case 1: key = "udpEn_" + QString::number(id); cfg->udp[id].en = v.toInt(); break;
-    case 2: key = "udpHost_" + QString::number(id); cfg->udp[id].host = toString(v); break;
+    case 2: key = "udpHost_" + QString::number(id); cfg->udp[id].host = v.toString(); break;
     case 3: key = "udpPort_" + QString::number(id); cfg->udp[id].port = v.toInt(); break;
     case 4: key = "udpSec_"+ QString::number(id); cfg->udp[id].sec = v.toInt(); break;
     case 8: key = "recvEn"; cfg->recvEn = v.toInt(); break;
@@ -376,7 +376,7 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
 
         // case 10: key = "dc";  cfg->dataContent = v.toInt(); break;
     case 11: key = "httpEn"; cfg->http.en = v.toInt(); break;
-    case 12: key = "httpUrl"; cfg->http.url = toString(v); ; break;
+    case 12: key = "httpUrl"; cfg->http.url = v.toString(); ; break;
     case 13: key = "httpTimeout"; cfg->http.timeout = v.toInt(); break;
     case 15: key = "enServer"; cfg->http.enServer = v.toInt(); break;
     case 16: key = "httpPort"; cfg->http.port = v.toInt(); break;
