@@ -58,7 +58,6 @@
     <script>
 		let read = 0;
 		let lang = new Array();
-		let language = 1;
 		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		let output_name =new Array();
 		let dev_name =new Array();
@@ -67,12 +66,12 @@
 			for(let i = 1;i<9;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","单元名称","","","",""];
-			lang[2] = ["","阅读模式","","","",""];
-			lang[3] = ["","设备选择","","","",""];
-			lang[4] = ["","序号","","","",""];
-			lang[5] = ["","单元名称","","","",""];
-			lang[6] = ["","设置模式","","","",""];
+			lang[1] = ["单元名称","","","",""];
+			lang[2] = ["阅读模式","","","",""];
+			lang[3] = ["设备选择","","","",""];
+			lang[4] = ["序号","","","",""];
+			lang[5] = ["单元名称","","","",""];
+			lang[6] = ["设置模式","","","",""];
 			lang[7]  = ["", "主机", "", "", "", ""];
 			lang[8]  = ["", "副机", "", "", "", ""];
 			dev_name[0] = lang[7][language];

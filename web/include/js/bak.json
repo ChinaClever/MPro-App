@@ -1,13 +1,13 @@
 [
   {
     "name": "首页",
-    "icon": "icon-homepage_fill",
+    "icon": "homepage_fill",
     "base": "",
     "url": "home.html"
   },
   {
     "name": "输入",
-    "icon": "icon-flashlight_fill",
+    "icon": "flashlight_fill",
     "base": "pages/inlet/",
     "subNav": [
       {
@@ -22,7 +22,7 @@
   },
   {
     "name": "输出",
-    "icon": "icon-subtraction",
+    "icon": "subtraction",
     "base": "pages/outlet/",
     "subNav": [ 
       {
@@ -53,7 +53,7 @@
   },
   {
     "name": "分组",
-    "icon": "fa-list",
+    "icon": "tasklist_fill",
     "base": "pages/group/",
     "subNav": [
 
@@ -85,7 +85,7 @@
   }, 
   {
     "name": "机架",
-    "icon": "icon-createtask_fill",
+    "icon": "createtask_fill",
     "base": "pages/dual/",
     "subNav": [
       {
@@ -112,13 +112,13 @@
   },
   {
     "name": "环境参数",
-    "icon": "icon-flag_fill",
+    "icon": "flag_fill",
     "base": "",
     "url": "pages/envir/envir_ctrl.html"
   },
   {
     "name": "设备设置",
-    "icon": "icon-info",
+    "icon": "info",
     "base": "pages/devset/",
     "subNav": [
       {
@@ -141,7 +141,7 @@
   },
   {
     "name": "集成接口",
-    "icon": "icon-collection_fill",
+    "icon": "collection_fill",
     "base": "pages/integrate/",
     "subNav": [
       {
@@ -180,7 +180,7 @@
   }, 
   {
     "name": "安全加密",
-    "icon": "icon-lock_fill",
+    "icon": "lock_fill",
     "base": "pages/sercet/",
     "subNav": [      
       {
@@ -203,7 +203,7 @@
   },
   {
     "name": "网络服务",
-    "icon": "icon-computer_fill",
+    "icon": "computer_fill",
     "base": "pages/network/",
     "subNav": [
       {
@@ -238,13 +238,13 @@
   },  
   {
     "name": "图表信息",
-    "icon": "icon-dynamic_fill",
+    "icon": "dynamic_fill",
     "base": "",
     "url": "pages/chart/chart.html"
   },
   {
     "name": "日志查询",
-    "icon": "icon-document_fill",
+    "icon": "document_fill",
     "base": "pages/logs/",
     "subNav": [
       {
@@ -267,7 +267,7 @@
   },
   {
     "name": "系统维护",
-    "icon": "icon-manage_fill",
+    "icon": "manage_fill",
     "base": "pages/maintain/",
     "subNav": [
       {
