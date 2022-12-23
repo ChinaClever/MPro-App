@@ -83,8 +83,8 @@ void Mqtt_Client::startMqtt()
     }
 
     if(cfg.type) connectToHost();
-
 }
+
 void Mqtt_Client::onConnected()
 {
     cfg.isConnected = true;
