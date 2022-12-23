@@ -7,7 +7,7 @@
 struct sOdbcCfg
 {
     sOdbcCfg() {
-        en = true;
+        en = 1;
         host = "192.168.1.102";
         port = 3306;
         db = "pdu";
@@ -18,7 +18,7 @@ struct sOdbcCfg
         hdaPoll = 1;
     }
 
-    bool en;
+    int en;
     int port;
     bool status=0;
     QString host;
