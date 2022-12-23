@@ -172,8 +172,8 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     case 3: key = "port"; cfg->port = v.toInt(); break;
     case 4: key = "path"; cfg->path = toString(v); break;
     case 5: key = "clientId";  cfg->clientId = toString(v);break;
-    case 6: key = "usr"; cfg->usr = v.toByteArray(); break;
-    case 7: key = "pwd";  cfg->pwd = v.toByteArray(); break;
+    case 6: key = "usr"; cfg->usr = toString(v).toLatin1(); break;
+    case 7: key = "pwd";  cfg->pwd = toString(v).toLatin1(); break;
     case 8: key = "keepAlive"; cfg->keepAlive = v.toInt(); break;
     case 9: key = "qos"; cfg->qos = v.toInt(); break;
     case 11: key = "sec"; cfg->sec = v.toInt(); break;
