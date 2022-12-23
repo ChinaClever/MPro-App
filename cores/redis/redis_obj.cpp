@@ -120,14 +120,15 @@ bool Redis_Obj::connectServer()
 
 void Redis_Obj::onConnected()
 {
-    redisCfg.isConnect = true;
-    qDebug() << "redis connected";
+    if(!redisCfg.isConnect)
+        qDebug() << "redis connected";
+    redisCfg.isConnect = true;   
 }
 
 void Redis_Obj::onDisconnected()
 {
     redisCfg.isConnect = false;
-    qDebug() << "redis disconnected";
+    //qDebug() << "redis disconnected";
 }
 
 void Redis_Obj::onError(const QString &msg)

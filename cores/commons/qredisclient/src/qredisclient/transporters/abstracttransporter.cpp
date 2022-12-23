@@ -270,9 +270,9 @@ bool RedisClient::AbstractTransporter::validateSystemProxy() {
   bool disableProxy =
       settings.value("app/disableProxyForRedisConnections", false).toBool();
 
-  qDebug() << "disableProxyForRedisConnections:" << disableProxy;
+  //qDebug() << "disableProxyForRedisConnections:" << disableProxy; /////========
 
-  qDebug() << "proxy type:" << proxy.type();
+  //qDebug() << "proxy type:" << proxy.type(); /////========
 
   return proxy.type() == QNetworkProxy::Socks5Proxy && !disableProxy;
 }
