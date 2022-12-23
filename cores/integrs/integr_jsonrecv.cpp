@@ -174,7 +174,6 @@ bool Integr_JsonRecv::cfgItem(const QString key, const QJsonObject &object, sCfg
         res = getData(obj, "id"); if(res >= 0) it.id = res;
         it.txType = DTxType::TxJson;
     }else ret = false;
-
     return ret;
 }
 

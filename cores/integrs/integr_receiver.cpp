@@ -38,7 +38,7 @@ void Integr_Receiver::initRecvFun()
     case 2: mTcp->listen(cfg->recvPort); break;
     case 3: mWs->initServer(cfg->recvPort); break;
     case 4: mWss->initSslServer(cfg->recvPort); break;
-    }
+    } qDebug() << "push recv" << cfg->recvEn << cfg->recvPort;
 }
 
 void Integr_Receiver::closeServers()

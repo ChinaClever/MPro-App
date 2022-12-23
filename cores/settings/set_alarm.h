@@ -13,7 +13,6 @@ protected:
     bool setAlarm(sDataItem &unit);
     void setAlarmLog(sDataItem &unit);
     QString opSrc(uchar addr);
-    QString toString(const QVariant &value);
 
 private:
     QString opContent(const sDataItem &index);

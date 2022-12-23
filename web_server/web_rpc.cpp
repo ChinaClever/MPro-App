@@ -36,8 +36,10 @@ char *Web_Rpc::execute(mg_str &r)
 char* Web_Rpc::pduSetData(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
-    double value = mObj->getString(r, 5).toDouble();  //qDebug() << its << value;
-    bool ret = mObj->setting(its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value);
+    QVariant value = mObj->getString(r, 5);
+    if(value.toString().isNull()) value = mObj->getNumber(r, 5);
+    //double value = mObj->getString(r, 5).toDouble();  //qDebug() << its << value;
+    bool ret = mObj->setting(its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value.toDouble());
     return responRpcData(its, ret?1:0);
 }
 
@@ -66,7 +68,7 @@ char *Web_Rpc::pduSetParam(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5);
-    if(value.toString().isEmpty()) value = mObj->getNumber(r, 5);
+    if(value.toString().isNull()) value = mObj->getNumber(r, 5);
     bool ret = mObj->setCfg(its.at(1), its.at(2), value,its.at(3), its.at(0));
     return responRpcData(its, ret?1:0);
 }

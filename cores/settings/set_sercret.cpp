@@ -88,10 +88,10 @@ bool Set_Sercret::setWhiteList(uchar fc, const QVariant &v)
 
     switch (fc) {
     case 1: key = "en";  cfg->en = v.toInt(); break;
-    case 2: key = "mac1";  cfg->mac[0] = toString(v); break;
-    case 3: key = "mac2";  cfg->mac[1] = toString(v);  break;
-    case 4: key = "ip1";  cfg->ip[0] = toString(v);  break;
-    case 5: key = "ip2";  cfg->ip[0] = toString(v); break;
+    case 2: key = "mac1";  cfg->mac[0] = v.toString(); break;
+    case 3: key = "mac2";  cfg->mac[1] = v.toString();  break;
+    case 4: key = "ip1";  cfg->ip[0] = v.toString();  break;
+    case 5: key = "ip2";  cfg->ip[0] = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 

@@ -3,8 +3,8 @@
 #include "qmqtt/qmqtt.h"
 
 struct sMqttCfg {
-    sMqttCfg():type(1), url("192.168.1.117"), port(1883), path("/mqtt"),
-        clientId("clientId"), isConnected(false), keepAlive(60), qos(0), sec(10){}
+    sMqttCfg():type(2), url("192.168.1.102"), port(8883), path("/mqtt"),
+        clientId("clientId"), isConnected(false), keepAlive(60), qos(0), sec(5){}
 
     int type; // 1 mqtt 2 mqtts 3 ws 4 wss
     QString url;
@@ -36,7 +36,7 @@ signals:
 private slots:
     void onConnected();
     void onPublish(const QByteArray &payload);
-    void onDisconnected(){cfg.isConnected = false;}
+    void onDisconnected();//{cfg.isConnected = false;}
     void onReceived(const QMQTT::Message& message);
     void onError(const QMQTT::ClientError error) {qDebug() << Q_FUNC_INFO << error;}
 
