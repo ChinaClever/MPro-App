@@ -90,9 +90,15 @@ void Mqtt_Client::onConnected()
     cfg.isConnected = true;
     QString topic = "pduSetting/#";// + cfg.clientId;
     m_client->subscribe(topic, cfg.qos);
-    qDebug() << "mqtt connected" << cfg.isConnected;
+    qDebug() << "mqtt connected" << cfg.url << cfg.isConnected;
 }
 
+void Mqtt_Client::onDisconnected()
+{
+    cfg.isConnected = false;
+    qDebug() << "mqtt disconnected" << cfg.isConnected;
+
+}
 void Mqtt_Client::onPublish(const QByteArray &payload)
 {
     if(cfg.isConnected && cfg.clientId.size()) {
