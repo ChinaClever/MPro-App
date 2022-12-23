@@ -71,7 +71,7 @@ void Mb_Core::connectTcpSlot()
 
 void Mb_Core::connectRtuSlot()
 {     
-    bool ret = false;mRtu->disconnectModbus();
+    bool ret = false; mRtu->disconnectModbus();
     int res = cm::masterDev()->cfg.param.devMode;
     if(res == DevMode::DM_Rtu && mCfg->enRtu) {
         ret = mRtu->connectRtu(*mCfg);
