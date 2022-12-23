@@ -217,7 +217,7 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
-    obj.insert("pdu_type", "MPDU-Pro");
+    //obj.insert("pdu_type", "MPDU-Pro");
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
 
@@ -241,6 +241,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     if(strlen(it.room)) obj.insert("room", it.room);
     if(strlen(it.devName)) obj.insert("name", it.devName);
     if(strlen(it.qrcode)) obj.insert("qrcode", it.qrcode);
+    if(strlen(it.devType)) obj.insert("pdu_type", it.devType);
     if(strlen(it.location)) obj.insert("location", it.location);
     if(obj.size()) json.insert(key, obj);
 }

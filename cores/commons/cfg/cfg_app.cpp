@@ -50,6 +50,8 @@ bool Cfg_App::app_unpack(sAppVerIt &it)
 {
     QString g = "app_pack";
     //it.apps = File::entryList(mDir+ "/app/");
+    it.sn = readCfg("sn", "", g).toString();
+    it.hw = readCfg("hw", "", g).toString();
     it.usr = readCfg("usr", "", g).toString();
     it.md5 = readCfg("md5", "", g).toString();
     it.ver = readCfg("ver", "", g).toString();

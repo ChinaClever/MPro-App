@@ -1,5 +1,6 @@
 // JSON-RPC over Websocket implementation
 var JSONRPC_TIMEOUT_MS = 1000;
+var language = 0;
 let verfity = 0;
 let ws,pending = {};
 let rpcid = 0;
@@ -15,7 +16,7 @@ let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sen
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
-let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","PowSwEn","BreakerEn","Direction","Angle");
+let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","LanguageEn","BreakerEn","Direction","Angle");
 let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
 let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
@@ -163,6 +164,7 @@ var jsonrpc = function()
           sessionStorage.setItem(type_name[type]+ push_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
+          console.log(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
       break;
       case 19:
@@ -261,6 +263,7 @@ var jsonrpc = function()
   }
   ws.onopen = function(){
       read_user_info();
+      read_language();
   };
   return {
     close:() => ws.close(),
@@ -279,8 +282,11 @@ var jsonrpc = function()
   };
 }
 
-
-var rpc = jsonrpc();
+var rpc= jsonrpc();
+// if(sessionStorage.getItem("CreateConnect") == 1){
+//   rpc
+//   sessionStorage.setItem("CreateConnect", "0");
+// }
 var start  = 0;
 var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
@@ -288,7 +294,9 @@ var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactp
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 window.addr = 0;
 
-
+function read_language(){
+  rpc.call('pduReadParam',[0,cfg,10,0,0]);
+}
 function read_user_info(){
   var j = 1;
   var time1 = setInterval(function(){
@@ -458,6 +466,7 @@ function read_dual_data(addr)
     }
     if(i <= output_num && j <= sub_num){
       rpc.call('pduReadData',[addr,dual,pow_,j,i]);
+      rpc.call('pduReadData',[addr,dual,switch_,j,i]);
     }
     i++;
     if(i >= (output_num + 1)){
@@ -631,10 +640,10 @@ function read_push_data(){
 function read_http_data(addr){
   let j = 11;
   var time1 = setInterval(function(){
-    if(j >= parseInt(18)){
+    if(j >= parseInt(17)){
       clearInterval(time1);
     }
-    if(j <= 17){
+    if(j < 17){
       rpc.call('pduReadParam',[addr,push,j,0,0]);
     }
     j++;
@@ -679,14 +688,14 @@ function read_group_info(addr){
 function read_mqtt_data(addr){
   let j = 1;
   var time1 = setInterval(function(){
-    if(j >= parseInt(10 +1)){
+    if(j >= parseInt(11 +1)){
       clearInterval(time1);
     }
-    if(j < 10 +1){
+    if(j < 11 +1){
       rpc.call('pduReadParam',[addr,19,j,0,0]);
     }
     j++;
-  },3);
+  },5);
 }
 function read_amqp_data(addr){
   let j = 1;
@@ -972,4 +981,94 @@ function read_sw_data(addr){
     }
     i++;
   },3);
+}
+function read_debug_data(){
+  var j = 1;
+    var time1 = setInterval(function(){
+      if(j >= parseInt(4 + 1)){
+        clearInterval(time1);
+      }
+      if(j < 5){
+        rpc.call('pduReadParam',[addr,num,j,0,0]);
+      }
+      j++;
+    },3);
+  setTimeout(function(){
+    read_data_frist();
+    read_data_second();
+    read_data_third();
+    read_data_fourth();
+    read_data_fifth();
+  },300);
+}
+function read_data_frist(){
+  let j =2;
+  var time2 = setInterval(function(){
+    if(j >= parseInt(7 + 1)){
+      clearInterval(time2);
+    }
+    if((j <= 7 && j != 3)){
+      rpc.call('pduReadData',[addr,phase,vol_,j,0]);
+      rpc.call('pduReadData',[addr,phase,cur_,j,0]);
+      rpc.call('pduReadData',[addr,phase,pow_,j,0]);
+      rpc.call('pduReadData',[addr,loop,vol_,j,0]);
+      rpc.call('pduReadData',[addr,loop,cur_,j,0]);
+      rpc.call('pduReadData',[addr,loop,pow_,j,0]);
+      rpc.call('pduReadData',[addr,output,cur_,j,0]);
+      rpc.call('pduReadData',[addr,envir,tmp_,j,0]);
+      rpc.call('pduReadData',[addr,envir,hum_,j,0]);
+    }
+    j++;
+  },3);
+}
+function read_data_second(){
+  let j = 1;
+  var time3 = setInterval(function(){
+    let output_num_ = parseInt(sessionStorage.getItem('OutputNum' + addr));
+    if(j >= parseInt(output_num_ + 1)){
+      clearInterval(time3);
+    }
+    if(j <= output_num_){
+      rpc.call('pduReadData',[addr,output,cur_,2,j]);
+    }
+    j++;
+  },3);
+}
+function read_data_third(){
+  var time4 = setInterval(function(){
+    rpc.call('pduReadParam',[addr,cfg,1,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,10,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,11,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,13,0,0]);
+    rpc.call('pduReadParam',[addr,41,11,0,0]);
+    clearInterval(time4);
+  },10);
+}
+function read_data_fourth(){
+  let j = 0;
+  var time5 = setInterval(function(){
+    let loop_num_ = parseInt(sessionStorage.getItem('LoopNum' + addr));
+    if(j >= parseInt(loop_num_ + 1)){
+      clearInterval(time5);
+    }
+    if(j <= loop_num_){
+      rpc.call('pduReadParam',[addr,num,7,j,0]);
+      console.log(j);
+    }
+    j++;
+  },10);
+}
+function read_data_fifth(){
+  let j = 0;
+  var time6 = setInterval(function(){
+    let board_num_ = parseInt(sessionStorage.getItem('BoardNum' + addr));
+    if(j >= parseInt(board_num_ + 1)){
+      clearInterval(time6);
+    }
+    if(j <= board_num_){
+      rpc.call('pduReadParam',[addr,num,6,j,0]);
+      console.log(j);
+    }
+    j++;
+  },10);
 }

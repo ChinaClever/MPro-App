@@ -37,8 +37,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_rpc_data(0)},150);
-		var language = 1;
+		setTimeout(function(){read_rpc_data(0)},300);
 		var mode_name = new Array("","TCP","WebSocket");
 		var mode_name1 = new Array("","HTTP");
 		var data_id  = new Array("json_mode","json_port","","xml_mode","xml_port");
@@ -48,16 +47,16 @@
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","RPC集成","","","",""];
-			lang[2] = ["","JSON-RPC设置","","","",""];
-			lang[3] = ["","JSON-RPC模式选择:","","","",""];
-			lang[4] = ["","JSON-RPC端口号:","","","",""];
-			lang[5] = ["","立即生效","","","",""];
-			lang[6] = ["","XML-RPC集成设置","","","",""];
-			lang[7] = ["","XML-RPC模式选择:","","","",""];
-			lang[8] = ["","XML-RPC端口号:","","","",""];
-			lang[9] = ["","立即生效","","","",""];
-			lang[10] = ["","禁用","","","",""];
+			lang[1] = ["RPC集成","","","",""];
+			lang[2] = ["JSON-RPC设置","","","",""];
+			lang[3] = ["JSON-RPC模式选择:","","","",""];
+			lang[4] = ["JSON-RPC端口号:","","","",""];
+			lang[5] = ["立即生效","","","",""];
+			lang[6] = ["XML-RPC集成设置","","","",""];
+			lang[7] = ["XML-RPC模式选择:","","","",""];
+			lang[8] = ["XML-RPC端口号:","","","",""];
+			lang[9] = ["立即生效","","","",""];
+			lang[10] = ["禁用","","","",""];
 			mode_name[0] = lang[10][language];
 			mode_name1[0] = lang[10][language];
 		}

@@ -35,6 +35,8 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -58,7 +60,6 @@
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		let dual_dev_name =  new Array();
 		let lang = new Array();
-		let language = 1;
 		lang_init();
 		setTimeout(function(){
 			read_data();
@@ -67,20 +68,20 @@
 			lang_fun();
 		},800);
 		function lang_init(){
-			lang[1] = ["","机架监测","","","",""];
-			lang[2] = ["","机柜选择","","","",""];
-			lang[3] = ["","序号","","","",""];
-			lang[4] = ["","名称","","","",""];
-			lang[5] = ["","A路有功功率(kW)","","","",""];
-			lang[6] = ["","B路有功功率(kW)","","","",""];
-			lang[7] = ["","总有功功率(kW)","","","",""];
-			lang[8] = ["","总视在功率(AV)","","","",""];
-			lang[9] = ["","电能消耗(kW)","","","",""];
-			lang[10] = ["","开","","","",""];
-			lang[11] = ["","闭","","","",""];
-			lang[12] = ["","重启","","","",""];
-			lang[13] = ["","关","","","",""];
-			lang[14] = ["","机柜","","","",""];
+			lang[1] = ["机架监测","","","",""];
+			lang[2] = ["机柜选择","","","",""];
+			lang[3] = ["序号","","","",""];
+			lang[4] = ["名称","","","",""];
+			lang[5] = ["A路有功功率(kW)","","","",""];
+			lang[6] = ["B路有功功率(kW)","","","",""];
+			lang[7] = ["总有功功率(kW)","","","",""];
+			lang[8] = ["总视在功率(AV)","","","",""];
+			lang[9] = ["电能消耗(kW)","","","",""];
+			lang[10] = ["开","","","",""];
+			lang[11] = ["闭","","","",""];
+			lang[12] = ["重启","","","",""];
+			lang[13] = ["关","","","",""];
+			lang[14] = ["机柜","","","",""];
 			Input_state[0] = lang[10][language];
 			Input_state[1] = lang[11][language];
 			Input_state[2] = lang[12][language];

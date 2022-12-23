@@ -25,8 +25,6 @@ private:
     bool outputsCtrl(sDataItem &unit);
     void relayOpLog(const sDataItem &it);
     void opNameLog(const sCfgItem &it, const QVariant &v);
-
-
     bool outputSetById(sCfgItem &it, const QVariant &v);
 };
 

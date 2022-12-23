@@ -34,7 +34,6 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		let language = 1;
 		var place_data = new Array();
 		let lang = new Array();
 		let id_val = new Array("","room","addr","dev","qr","sn",);
@@ -43,13 +42,13 @@
 			for(let i = 0;i<8;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","位置设置","","","",""];
-			lang[2] = ["","位置设置","","","",""];
-			lang[3] = ["","机房名称:","","","",""];
-			lang[4] = ["","位置信息:","","","",""];
-			lang[5] = ["","设备名称:","","","",""];
-			lang[6] = ["","二维码:","","","",""];
-			lang[7] = ["","设备SN码:","","","",""];
+			lang[1] = ["位置设置","","","",""];
+			lang[2] = ["位置设置","","","",""];
+			lang[3] = ["机房名称:","","","",""];
+			lang[4] = ["位置信息:","","","",""];
+			lang[5] = ["设备名称:","","","",""];
+			lang[6] = ["二维码:","","","",""];
+			lang[7] = ["设备SN码:","","","",""];
 		}
 		function lang_fun(){
 			for(let i = 1;i < 8; i++){

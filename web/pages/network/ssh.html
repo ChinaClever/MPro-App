@@ -36,11 +36,10 @@
     <script>
 		setTimeout(function(){
 			read_ssh_data(0);
-		},150);
+		},300);
 		var mode_set = new Array("","");
 		var ssh_data = new Array();
 		let lang = new Array();
-		let language = 1;
 		function read_data(){
 			for(var j = 1;j<ssh_name.length;j++){
 					ssh_data[j] = sessionStorage.getItem(ssh_name[j]);
@@ -51,15 +50,15 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["","SSH服务","","","",""];
-			lang[2] = ["","SSH服务设置","","","",""];
-			lang[3] = ["","启用SSH服务:","","","",""];
-			lang[4] = ["","启用Telnet服务:","","","",""];
-			lang[5] = ["","账号:","","","",""];
-			lang[6] = ["","密码:","","","",""];
-			lang[7] = ["","创建账户","","","",""];
-			lang[8] = ["","禁用","","","",""];
-			lang[9] = ["","启用","","","",""];
+			lang[1] = ["SSH服务","","","",""];
+			lang[2] = ["SSH服务设置","","","",""];
+			lang[3] = ["启用SSH服务:","","","",""];
+			lang[4] = ["启用Telnet服务:","","","",""];
+			lang[5] = ["账号:","","","",""];
+			lang[6] = ["密码:","","","",""];
+			lang[7] = ["创建账户","","","",""];
+			lang[8] = ["禁用","","","",""];
+			lang[9] = ["启用","","","",""];
 
 			mode_set[0] = lang[8][language];
 			mode_set[1] = lang[9][language];

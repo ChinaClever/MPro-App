@@ -170,15 +170,15 @@ bool Set_Integr::mqttSet(uchar fc, const QVariant &v)
     case 1: key = "type"; cfg->type = v.toInt(); break;
     case 2: key = "url"; cfg->url = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "path"; cfg->path =v.toString(); break;
-    case 5: key = "clientId"; cfg->clientId = v.toString(); break;
-    case 6: key = "usr"; cfg->usr = v.toByteArray(); break;
-    case 7: key = "pwd"; cfg->pwd = v.toByteArray(); break;
+    case 4: key = "path"; cfg->path = v.toString(); break;
+    case 5: key = "clientId";  cfg->clientId = v.toString();break;
+    case 6: key = "usr"; cfg->usr = v.toString().toLatin1(); break;
+    case 7: key = "pwd";  cfg->pwd = v.toString().toLatin1(); break;
     case 8: key = "keepAlive"; cfg->keepAlive = v.toInt(); break;
     case 9: key = "qos"; cfg->qos = v.toInt(); break;
     case 11: key = "sec"; cfg->sec = v.toInt(); break;
     case 20: Mqtt_Client::bulid()->startMqtt(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {
@@ -217,6 +217,7 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
 {
     sAmqpCfg *cfg = &(QRabbitMQ::amqpCfg);
     QString prefix = "amqp";  QString key;
+
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
     case 2: key = "host"; cfg->host = v.toString(); break;
@@ -391,9 +392,6 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
 
     return ret;
 }
-
-
-
 
 
 int Set_Integr::baudTo(int value)

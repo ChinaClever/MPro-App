@@ -5,6 +5,8 @@
 #define CFG_APP  "ver.ini"
 
 struct sAppVerIt {
+    QString sn; // 序列号
+    QString hw; // 硬件版本
     QString usr; // 客户名称
     QString md5; // 校验码
     QString sig; // 签名

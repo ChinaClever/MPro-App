@@ -14,9 +14,9 @@
 		<link rel="stylesheet" href="../../doc-lib/doc.css">
 
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
+		<script src="../../include/js/fn_public.js"></script>
 		<script src="../../include/js/rpc-over-websocket.js"></script>
 		<script src="../../include/js/public.min.js"></script>
-		<script src="../../include/js/fn_public.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
 		<script src="../../include/js/chart.min.js"></script>
@@ -186,7 +186,7 @@
 									}],
 									yAxes: [{
 										ticks: {
-											min: 50,
+											suggestedMin : 0,
 										}
 									}]
   							  	}
@@ -276,14 +276,14 @@
 		let total_title = new Array("kW","kVA","kWh","Hz","mA");
 		let lang  = new Array(36);
 		let dev_name = new Array();
-		let language = 1;
 		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
     	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		let stat_ = new Array("断开","闭合");
-		let serial_ = new Array("A","B","C","D");
+		let serial_ = new Array("D","A","B","C","D");
 		let Sensor_state = new Array("离线","开启","关闭");
 		let Sys_state = new Array("正常","告警","故障");
 		let loop_unit = new Array("","","","A","A","V","kVA","kWh");
+		let sample_= new Array(5,0,1);
 		function delay(){
 			for(let i = 0;i<50;i++){}
 		}
@@ -293,47 +293,47 @@
 			for(let i = 0;i<lang.length;i++){
 				lang[i] = new Array();
 			}
-			lang[1]   = ["Dashboard", "首页", "Tableau", "Первая страница", "Página", "منزل"];
-			lang[2]   = ["PDU Selection: ", "设备选择:", "Dispositif Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
-			lang[3]   = ["Input ", "输入", "Input", "вход", "Entrada", "دخول"];
-			lang[4]   = ["Electric energy: ", "电能消耗:", "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
-			lang[5]   = ["Frequency:", "频率:", "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
-			lang[6]   = ["Leakage current:", "漏电电流:", "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
-			lang[7]   = ["Output", "输出", "Output", "выход", "Salida", "تصدير"];
-			lang[8]   = ["Circuit", "回路", "Circuit", "цепь", "Vuelta", "فرع الطريق"];
-			lang[9]   = ["Status", "状态", "état", "состояние", "Estado", "دولة"];
-			lang[10]  = ["Outlet", "输出位", "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
-			lang[11]  = ["Load current", "当前电流", "Courant", "текущий ток", "Corriente actual", "التيار الحالي"];
-			lang[12]  = ["Overload current", "过载电流", "Surcharge Courant", "максимальный ток", "Corriente de sobrecarga", "الزائد الحالي"];
-			lang[13]  = ["Input voltage", "当前电压", "Tension", "текущее напряжение", "Tensión actual", "الجهد"];
-			lang[14]  = ["Apparent power", "视在功率", "Puissance optique", "кажущаяся мощность", "Potencia visual", "القوة الظاهرة"];
-			lang[15]  = ["Energy consumption", "电能消耗", "Énergie électrique", "расход электроэнергии", "Consumo de energía eléctrica", "استهلاك الطاقة"];
-			lang[16]  = ["Sensor", "传感器", "Capteur", "датчик", "Sensor", "الاستشعار"];
-			lang[17]  = ["Sensor name", "传感器名称", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
-			lang[18]  = ["Sensor status", "传感器状态", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
-			lang[19]  = ["Sensor name", "传感器名称", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
-			lang[20]  = ["Sensor status", "传感器状态", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
-			lang[21]  = ["Temperature 1", "温度1", "Temperature 1", "температура1", "Temperatura 1", "درجة الحرارة 1"];
-			lang[22]  = ["Humidity 1", "湿度1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
-			lang[23]  = ["Temperature 2", "温度2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
-			lang[24]  = ["Humidity 2", "湿度2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
-			lang[25]  = ["Door1", "门禁1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
-			lang[26]  = ["Door2", "门禁2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
-			lang[27]  = ["Water", "水浸", "Eau", "погружение", "Inmersión", "الفيضانات"];
-			lang[28]  = ["Smoke", "烟雾", "Fumée", "дым", "Humo", "دخان"];
-			lang[29]  = ["Information", "信息", "Information", "сведения", "Información", "معلومات"];
-			lang[30]  = ["Working status:", "工作状态：", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
-			lang[31]  = ["PDU location:", "PDU位置：", "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
-			lang[32]  = ["PDU uptime:", "运行时长：", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
-			lang[33]  = ["PDU series:", "产品系列：", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
-			lang[34]  = ["PDU version:", "软件版本：", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
-			lang[35]  = ["Real-time dynamic power and current trend graph", "实时动态功率和电流趋势图", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
-			lang[36]  = ["", "主机", "", "", "", ""];
-			lang[37]  = ["", "副机", "", "", "", ""];
-			lang[38]  = ["", "烟雾", "", "", "", ""];
-			lang[39]  = ["", "烟雾", "", "", "", ""];
-			lang[40]  = ["", "烟雾", "", "", "", ""];
-			lang[41]  = ["", "烟雾", "", "", "", ""];
+			lang[1]   = [ "首页","Dashboard", "Tableau", "Первая страница", "Página", "منزل"];
+			lang[2]   = [ "设备选择:", "PDU Selection: ","Dispositif Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+			lang[3]   = ["输入","Input ",  "Input", "вход", "Entrada", "دخول"];
+			lang[4]   = ["电能消耗:","Electric energy: ",  "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
+			lang[5]   = ["频率:","Frequency:",  "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
+			lang[6]   = ["漏电电流:","Leakage current:",  "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
+			lang[7]   = ["输出","Output",  "Output", "выход", "Salida", "تصدير"];
+			lang[8]   = ["回路","Circuit",  "Circuit", "цепь", "Vuelta", "فرع الطريق"];
+			lang[9]   = ["状态", "Status", "état", "состояние", "Estado", "دولة"];
+			lang[10]  = ["输出位","Outlet",  "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
+			lang[11]  = ["当前电流","Load current",  "Courant", "текущий ток", "Corriente actual", "التيار الحالي"];
+			lang[12]  = [ "过载电流","Overload current", "Surcharge Courant", "максимальный ток", "Corriente de sobrecarga", "الزائد الحالي"];
+			lang[13]  = [ "当前电压","Input voltage", "Tension", "текущее напряжение", "Tensión actual", "الجهد"];
+			lang[14]  = ["视在功率", "Apparent power", "Puissance optique", "кажущаяся мощность", "Potencia visual", "القوة الظاهرة"];
+			lang[15]  = [ "电能消耗","Energy consumption", "Énergie électrique", "расход электроэнергии", "Consumo de energía eléctrica", "استهلاك الطاقة"];
+			lang[16]  = ["传感器","Sensor",  "Capteur", "датчик", "Sensor", "الاستشعار"];
+			lang[17]  = ["传感器名称","Sensor name",  "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+			lang[18]  = ["传感器状态","Sensor status",  "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+			lang[19]  = ["传感器名称","Sensor name",  "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+			lang[20]  = ["传感器状态","Sensor status",  "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+			lang[21]  = ["温度1","Temperature 1",  "Temperature 1", "температура1", "Temperatura 1", "درجة الحرارة 1"];
+			lang[22]  = [ "湿度1","Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
+			lang[23]  = [ "温度2", "Temperature 2","Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
+			lang[24]  = ["湿度2","Humidity 2",  "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
+			lang[25]  = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+			lang[26]  = [ "门禁2","Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
+			lang[27]  = ["水浸","Water",  "Eau", "погружение", "Inmersión", "الفيضانات"];
+			lang[28]  = ["烟雾","Smoke",  "Fumée", "дым", "Humo", "دخان"];
+			lang[29]  = ["信息","Information",  "Information", "сведения", "Información", "معلومات"];
+			lang[30]  = ["工作状态：", "Working status:", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
+			lang[31]  = ["PDU位置:","PDU location:",  "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
+			lang[32]  = ["运行时长：","PDU uptime:",  "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
+			lang[33]  = ["产品系列：","PDU series:",  "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
+			lang[34]  = ["软件版本：","PDU version:",  "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
+			lang[35]  = [ "实时动态功率和电流趋势图","Real-time dynamic power and current trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
+			lang[36]  = ["主机", "", "", "", ""];
+			lang[37]  = ["副机", "", "", "", ""];
+			lang[38]  = ["烟雾", "", "", "", ""];
+			lang[39]  = ["烟雾", "", "", "", ""];
+			lang[40]  = ["烟雾", "", "", "", ""];
+			lang[41]  = ["烟雾", "", "", "", ""];
 			dev_name[0] = lang[36][language];
 			for(let i = 1;i<slave_num;i++){
 				dev_name[i] =  lang[37][language] + i;
@@ -355,9 +355,9 @@
 			total_data[1][49] = parseFloat(total_info[6]).toFixed(2);
 			total_data[2][49] = parseFloat(total_info[5]).toFixed(1);
 			for(let i = 0;i<3;i++){
-				inletA_data[i][49] = parseFloat(phase_info[i + 1][5]).toFixed(2);
-				inletB_data[i][49] = parseFloat(phase_info[i + 1][0]).toFixed(2);
-				inletC_data[i][49] = parseFloat(phase_info[i + 1][1]).toFixed(1);
+				inletA_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
+				inletB_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
+				inletC_data[i][49] = parseFloat(phase_info[3][sample_[i]]).toFixed(2);
 			}
 		}
 		function read_data(){
@@ -407,7 +407,7 @@
 			system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
 			system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
 			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" day";
-			system_info[3] = "NPDU("+serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))]+")";
+			system_info[3] = "MPDU("+serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))]+")";
 			system_info[4] = sessionStorage.getItem(ver_name[1]);
 			showdata();
 			read_chart_data();
@@ -474,7 +474,6 @@
 							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = loop_info[i + 1][j];
 						}
 					}
-						
 				}
 			}
 			for(let i =0;i<head.length;i++){
