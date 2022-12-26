@@ -8,7 +8,7 @@
 Agent_Get::Agent_Get(QObject *parent) : Agent_Obj{parent}
 {
     if((snmpCfg.enV3) || (snmpCfg.enV2)) {
-        QTimer::singleShot(3255,this,SLOT(addOidSlot()));
+        QTimer::singleShot(5255,this,SLOT(addOidSlot()));
     }
 }
 
@@ -32,17 +32,17 @@ void Agent_Get::addDevNums(uchar addr, const QString &oidPrefix, sDevNums &dev)
     addOidValue(addr, id++, oid, prefix+"line", dev.lineNum, w);
     addOidValue(addr, id++, oid, prefix+"loop", dev.loopNum, w);
     addOidValue(addr, id++, oid, prefix+"output", dev.outputNum, w);
-    addOidValue(addr, id++, oid, prefix+"slave", dev.slaveNum, w);
     addOidValue(addr, id++, oid, prefix+"board", dev.boardNum, w);
+    addOidValue(addr, id++, oid, prefix+"slave", dev.slaveNum, w);
 }
 
 void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &dev)
 {
     bool w = false; QString oid = "0.2.";
     int id = 1; QString prefix = oidPrefix + "info_";
-    addOidValue(addr, id++, oid, prefix+"type", dev.devSpec, w);
+    addOidValue(addr, id++, oid, prefix+"spec", dev.devSpec, w);
     addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
-    //addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
+    addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
 }
 
 void Agent_Get::addDevVer(uchar addr, const QString &oidPrefix, sVersions &dev)
@@ -152,11 +152,17 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         addObjData(addr, oid, name+"output", it->output, i);
     }
 
-    //size = it->group.size; // if(!size) size = GROUP_NUM;
-    //for(int i=0; i<size; ++i) {
-    //    QString oid = "4." +QString::number(i+1);
-    //    addObjData(addr, oid, name+"group", it->group, i);
-    //}
+    size = it->group.size; // if(!size) size = GROUP_NUM;
+    for(int i=0; i<size; ++i) {
+        QString oid = "4." +QString::number(i+1);
+        addObjData(addr, oid, name+"group", it->group, i);
+    }
+
+    size = it->dual.size; // if(!size) size = GROUP_NUM;
+    for(int i=0; i<size; ++i) {
+        QString oid = "5." +QString::number(i+1);
+        addObjData(addr, oid, name+"dual", it->group, i);
+    }
 
     size = it->env.size; if(!size) size = SENOR_NUM;
     for(int i=0; i<size; ++i) {
