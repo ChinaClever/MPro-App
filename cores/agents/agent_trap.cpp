@@ -43,8 +43,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 {
     QString msg = "Alarm: ";
     QSNMPOid oid = mModuleOid;
-
-    oid << index.addr;
+    oid << index.addr;  QSNMPOid dstOid = oid;
     msg += " addr " + QString::number(index.addr);
 
     switch (index.type) {
@@ -78,7 +77,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
     else if(index.type == DType::Env) oid << 6;
     else oid << 7;
 
-    QSNMPOid dstOid = oid; if(value) {
+    if(value) {
         QString doid = toString(dstOid); // dstOid << 11
         sAgentCfg *cfg = &Agent_Core::snmpCfg;
         for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
