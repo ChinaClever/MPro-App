@@ -9,7 +9,7 @@ struct sAgentCfg {
     QString usr;
     QString pwd;
     QString key;
-    QString encrypt;
+    int encrypt; // 0:DES 1:AES
     QString trap[SNMP_TRAP_SIZE];
     QString inform[SNMP_TRAP_SIZE];
 };

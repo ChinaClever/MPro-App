@@ -30,7 +30,7 @@ int Set_Integr::modbusCfg(uchar fc)
     case 6: res = stopBitsTo(cfg->stopBits); break;
     case 11: res = cfg->enTcp; break;
     case 12: res = cfg->port; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    default: cout << fc; break;
     }
 
     return res;
@@ -52,7 +52,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     case 11: key = "enTcp"; cfg->enTcp = value; break;
     case 12: key = "port"; cfg->port = value; break;
     case 13: emit Mb_Core::bulid()->connectTcpSig(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {
@@ -75,7 +75,7 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
     case 15: res = cfg->encrypt; break;
     case 21: res = cfg->trap[id]; break;
     case 22: res = cfg->inform[id]; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    default: cout << fc; break;
     }
 
     return res;
@@ -91,15 +91,17 @@ bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
     case 12: key = "usr"; cfg->usr = v.toString(); break;
     case 13: key = "pwd"; cfg->pwd = v.toString(); break;
     case 14: key = "key"; cfg->key = v.toString(); break;
-    case 15: key = "encrypt"; cfg->encrypt = v.toString(); break;
+    case 15: key = "encrypt"; cfg->encrypt = v.toInt(); break;
+    case 17: Agent_Core::bulid()->set_snmpdV3(); break;
     case 21: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); break;
     case 22: key = "inform_" + QString::number(id); cfg->inform[id] = v.toString(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
+        cout << fc << key << v;
     }
 
     return ret;
@@ -113,7 +115,7 @@ int Set_Integr::rpcCfg(uchar fc)
     case 2: res = cfg->json.port; break;
     case 4: res = cfg->xml.en; break;
     case 5: res = cfg->xml.port; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    default: cout << fc; break;
     }
 
     return res;
@@ -126,12 +128,12 @@ bool Set_Integr::rpcSet(uchar fc, int value)
     bool ret = true; switch (fc) {
     case 1: key = "jsonRpcEn"; cfg->json.en = value; break;
     case 2: key = "jsonRpcPort"; cfg->json.port = value; break;
-    case 3: Rpc_Service::bulid()->startJsonRpc();  break;
+    case 3: ret = Rpc_Service::bulid()->startJsonRpc(); break;
 
     case 4: key = "xmlRpcEn"; cfg->xml.en = value; break;
     case 5: key = "xmlRpcPort"; cfg->xml.port = value; break;
-    case 6: Rpc_Service::bulid()->startXmlRpc();  break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    case 6: ret = Rpc_Service::bulid()->startXmlRpc(); break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {
@@ -157,7 +159,7 @@ QVariant Set_Integr::mqttCfg(uchar fc)
     case 9: res = cfg->qos; break;
     case 10: res = cfg->isConnected; break;
     case 11: res = cfg->sec; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    default: cout << fc; break;
     }
     return res;
 }
@@ -207,7 +209,7 @@ QVariant Set_Integr::amqpCfg(uchar fc)
     case 10: res = cfg->ssl; break;
     case 11: res = cfg->isConnected; break;
     case 12: res = cfg->sec; break;
-    default: qDebug() << Q_FUNC_INFO << fc; break;
+    default: cout << fc; break;
     }
     return res;
 }
@@ -231,7 +233,7 @@ bool Set_Integr::amqpSet(uchar fc, const QVariant &v)
     case 10: key = "ssl"; cfg->ssl = v.toInt(); break;
     case 12: key = "sec"; cfg->sec = v.toInt(); break;
     case 20: QRabbitMQ::bulid()->start(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {
@@ -296,10 +298,10 @@ QVariant Set_Integr::odbcCfg(uchar fc)
     QVariant res = 0; switch (fc) {
     case 1: res = cfg->en; break;
     case 2: res = cfg->host; break;
-    case 3: res = cfg->port; break;
-    case 4: res = cfg->db; break;
-    case 5: res = cfg->user; break;
-    case 6: res = cfg->pwd; break;
+    case 3: res = cfg->port; break;        
+    case 4: res = cfg->user; break;
+    case 5: res = cfg->pwd; break;
+    case 6: res = cfg->db; break;
     case 7: res = cfg->pdukey; break;
     case 8: res = cfg->dataPoll; break;
     case 9: res = cfg->hdaPoll; break;
@@ -319,9 +321,9 @@ bool Set_Integr::odbcSet(uchar fc, const QVariant &v)
     case 1: key = "en"; cfg->en = v.toInt(); break;
     case 2: key = "host"; cfg->host = v.toString(); break;
     case 3: key = "port"; cfg->port = v.toInt(); break;
-    case 4: key = "db"; cfg->db =v.toString(); break;
-    case 5: key = "user"; cfg->user = v.toString(); break;
-    case 6: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 4: key = "user"; cfg->user = v.toString(); break;
+    case 5: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 6: key = "db"; cfg->db =v.toString(); break;
     case 7: key = "pdukey"; cfg->pdukey = v.toString(); break;
     case 8: key = "dataPoll"; cfg->dataPoll = v.toInt(); break;
     case 9: key = "hdaPoll"; cfg->hdaPoll = v.toInt(); break;
@@ -382,7 +384,7 @@ bool Set_Integr::pushSet(uchar fc, int id, const QVariant &v)
     case 16: key = "httpPort"; cfg->http.port = v.toInt(); break;
     case 14: key = "httpSec"; cfg->http.sec = v.toInt(); break;
     case 19: Integr_Core::bulid()->httpServer(); break;
-    default: ret = false; qDebug() << Q_FUNC_INFO << fc; break;
+    default: ret = false; cout << fc; break;
     }
 
     if(ret && key.size()) {

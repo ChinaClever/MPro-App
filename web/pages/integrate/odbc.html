@@ -64,8 +64,8 @@
 			lang[7] = ["密码:","","","",""];
 			lang[8] = ["数据库名:","","","",""];
 			lang[9] = ["本机Key:","","","",""];
-			lang[10] = ["更新频率:","","","",""];
-			lang[11] = ["记录频率:","","","",""];
+			lang[10] = ["更新频率(s):","","","",""];
+			lang[11] = ["记录频率(min):","","","",""];
 			lang[12] = ["连接状态:","","","",""];
 			lang[13] = ["Redis配置","","","",""];
 			lang[14] = ["Redis启用:","","","",""];
@@ -75,8 +75,8 @@
 			lang[18] = ["DB编号:","","","",""];
 			lang[19] = ["设备Key:","","","",""];
 			lang[20] = ["订阅频道:","","","",""];
-			lang[21] = ["更新频率:","","","",""];
-			lang[22] = ["过期时间:","","","",""];
+			lang[21] = ["更新频率(s):","","","",""];
+			lang[22] = ["过期时间(s):","","","",""];
 			lang[23] = ["连接状态:","","","",""];
 			lang[24] = ["启用","","","",""];
 			lang[25] = ["禁用","","","",""];
@@ -120,7 +120,7 @@
 			showdata();
 		},500);
 		function showdata(){
-			for(var j = 0;j<id_name.length-2;j++){
+			for(var j = 0;j<id_name.length-1;j++){
 				if(j == 0){
 					document.getElementById(id_name[j]).selected = odbc_data[j +1];
 				}else{
@@ -129,12 +129,12 @@
 				document.getElementById(id_name[j]).disabled = false;
 			}
 			if(odbc_data[1] == 0 || odbc_data[1] == "false"){
-				for(var j = 1;j<id_name.length-2;j++){
+				for(var j = 1;j<id_name.length-1;j++){
 					document.getElementById(id_name[j]).disabled = true;
 				}
 			}
 			document.getElementById(id_name[id_name.length-1]).innerHTML = odbc_data[10];
-			for(var j = 0;j<red_name.length-2;j++){
+			for(var j = 0;j<red_name.length-1;j++){
 				if(j == 0){
 					document.getElementById(red_name[j]).selected = redis_data[j +1];
 				}else{
@@ -143,7 +143,7 @@
 				document.getElementById(red_name[j]).disabled = false;
 			}
 			if(redis_data[1] == 0 || redis_data[1] == "false"){
-				for(var j = 1;j<red_name.length-2;j++){
+				for(var j = 1;j<red_name.length-1;j++){
 					document.getElementById(red_name[j]).disabled = true;
 				}
 			}

@@ -55,11 +55,10 @@ void Cfg_Service::smtp()
     QString *str = nullptr; int *ptr = nullptr;
     for(int i=1; i<8; ++i) {
         switch (i) {
-        case 1: key = "en"; ptr = &cfg->en; break;
         case 2: key = "host"; str = &cfg->host; break;
         case 3: key = "from"; str = &cfg->from; break;
         case 4: key = "pwd"; str = &cfg->pwd; break;
-            //case 5: key = "to"; str = &cfg->to; break;
+        case 5: key = "en"; ptr = &cfg->en; break;
         case 6: key = "port"; ptr = &cfg->port; break;
         case 7: key = "ct"; ptr = &cfg->ct; break;
         default: ptr = nullptr; str = nullptr; break;
@@ -83,13 +82,12 @@ void Cfg_Service::snmp()
     for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
-            //case 2: key = "trap2"; ptr = &cfg->trap2; break;
+        case 2: key = "encrypt"; ptr = &cfg->encrypt; break;
         case 3: key = "enV3"; ptr = &cfg->enV3; break;
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;
         case 6: key = "key"; str = &cfg->key; break;
-        case 7: key = "encrypt"; str = &cfg->encrypt; break;
-        default: ptr = nullptr; break;
+        default: ptr = nullptr; str = nullptr; break;
         }
 
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
@@ -292,7 +290,7 @@ void Cfg_Service::odbc()
         case 5: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
         case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
         case 7: key = "pdukey"; cfg->pdukey = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 10, prefix).toInt();break;
+        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 30, prefix).toInt();break;
         case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, 30, prefix).toInt(); break;
         default: key.clear(); break;
         }

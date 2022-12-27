@@ -18,7 +18,7 @@ void Integr_Core::httpServer()
     switch (en) {
     case 1: Integr_HttpServer::initHttpServer(en, port); break;
     case 2: Integr_HttpServer::initHttpsServer(en, port); break;
-    }
+    } qDebug() << Q_FUNC_INFO << en << port;
 }
 
 Integr_Core *Integr_Core::bulid(QObject *parent)

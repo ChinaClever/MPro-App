@@ -164,7 +164,7 @@ var jsonrpc = function()
           sessionStorage.setItem(type_name[type]+ push_info[topic] + subtopic, JSON.parse(evt.data).result[5]);
         }else{
           sessionStorage.setItem(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
-          console.log(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
+          // console.log(type_name[type]+ push_info[topic], JSON.parse(evt.data).result[5]);
         }
       break;
       case 19:
@@ -255,7 +255,7 @@ var jsonrpc = function()
       break;
       case 93:
         sessionStorage.setItem(net_diagn[topic], JSON.parse(evt.data).result[5]);
-        console.log(net_diagn[topic], JSON.parse(evt.data).result[5]);
+        // console.log(net_diagn[topic], JSON.parse(evt.data).result[5]);
       break;
       default:
         break;
@@ -1053,7 +1053,7 @@ function read_data_fourth(){
     }
     if(j <= loop_num_){
       rpc.call('pduReadParam',[addr,num,7,j,0]);
-      console.log(j);
+      // console.log(j);
     }
     j++;
   },10);
@@ -1067,7 +1067,7 @@ function read_data_fifth(){
     }
     if(j <= board_num_){
       rpc.call('pduReadParam',[addr,num,6,j,0]);
-      console.log(j);
+      // console.log(j);
     }
     j++;
   },10);

@@ -10,7 +10,7 @@ Agent_Set::Agent_Set(QObject *parent)
     : Agent_Get{parent}
 {
     if((snmpCfg.enV3) || (snmpCfg.enV2)) {
-        QTimer::singleShot(3550,this,SLOT(initSetSlot()));
+        QTimer::singleShot(5550,this,SLOT(initSetSlot()));
     }
 }
 
@@ -51,6 +51,18 @@ bool Agent_Set::uutSet(const QVariant &value)
     return ret;
 }
 
+bool Agent_Set::cfgSet(const QVariant &value)
+{
+    bool ret = false;
+    sIndex *it = &mIndex;
+    if(it->id == 0) {
+        ret = uutSet(value);
+    } else {
+        cout << it->id << value;
+    }
+
+    return ret;
+}
 
 bool Agent_Set::upAlarmIndex(sDataItem &index)
 {
@@ -66,6 +78,7 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     case 2: v = DType::Loop; break;
     case 3: v = DType::Output; break;
     case 4: v = DType::Group; break;
+    case 5: v = DType::Dual; break;
     case 6: v = DType::Env; break;
     default: ret = false; break;
     } index.type = v;
@@ -130,6 +143,20 @@ bool Agent_Set::relayCtrl(const QVariant &value)
     return Set_Core::bulid()->setting(unit);
 }
 
+bool Agent_Set::relayCtrl(int type, const QVariant &value)
+{
+    sDataItem unit;
+    unit.rw = 1;
+    unit.id = mIndex.id;
+    unit.addr = mIndex.addr;
+    unit.type = type;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Value;
+    unit.txType = DTxType::TxSnmp;
+    unit.value = value.toUInt();
+    return Set_Core::bulid()->setting(unit);
+}
+
 bool Agent_Set::setOutputName(const QVariant &value)
 {
     sCfgItem item;
@@ -139,14 +166,25 @@ bool Agent_Set::setOutputName(const QVariant &value)
     return Set_Core::bulid()->setCfg(item, value);
 }
 
+bool Agent_Set::setName(int type,const QVariant &value)
+{
+    sCfgItem item;
+    item.txType = DTxType::TxSnmp;
+    item.type = 19 + type;
+    item.addr = mIndex.addr; item.fc = mIndex.id;
+    return Set_Core::bulid()->setCfg(item, value);
+}
+
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)
 {
-    sIndex *it = &mIndex;
+    sIndex *it = &mIndex; m_oid = oid;
     bool ret = toIndex(addr, oid);
     if(ret) {
-        if(0 == it->fc) ret = uutSet(value);
-        else if((3 == it->fc) && (0 == it->type)) ret = setOutputName(value);
-        else if((3 == it->fc) && (1 == it->type)) ret = relayCtrl(value);
+        if(0 == it->fc) ret = cfgSet(value);
+        //else if((3 == it->fc) && (0 == it->type)) ret = setOutputName(value); //////========
+        //else if((3 == it->fc) && (1 == it->type)) ret = relayCtrl(value);   ////////=========
+        else if(0 == it->type) ret = setName(it->fc, value);
+        else if(1 == it->type) ret = relayCtrl(it->fc, value);
         else ret = setAlarm(value);
     }
 
