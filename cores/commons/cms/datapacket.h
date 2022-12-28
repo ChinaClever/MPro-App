@@ -47,7 +47,7 @@ struct sAlarmUnit
 #ifndef SUPPORT_C
     sAlarmUnit() {size=0;}
 #endif
-    uchar size;
+    uint size;
     uint en[PACK_ARRAY_SIZE]; // 报警开启
     uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
     uint hda[PACK_ARRAY_SIZE]; // 数据记录开关
@@ -67,7 +67,7 @@ struct sAlarmUnit
 
 struct sRelayUnit
 {
-    uchar size;
+    uint size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
@@ -132,7 +132,7 @@ struct sEnvData
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
     uint smoke[SENOR_NUM]; // 烟雾
-    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][SENOR_NUM]; // 预留
 };
 
 struct sTgUnit
