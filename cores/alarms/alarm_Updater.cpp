@@ -244,6 +244,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         if(dev->dtc.fault) dev->status = 2;
         if(dev->offLine <= 1) dev->status = 3;
         if(addr == 0) dev->offLine = 2;
+        dev->cfg.param.runStatus = dev->status;
     }
     return ret;
 }
