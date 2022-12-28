@@ -12,10 +12,12 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/agent_core.h \
+    $$PWD/agent_mib.h \
     $$PWD/agent_set.h \
     $$PWD/agent_trap.h
 
 SOURCES += \
     $$PWD/agent_core.cpp \
+    $$PWD/agent_mib.cpp \
     $$PWD/agent_set.cpp \
     $$PWD/agent_trap.cpp

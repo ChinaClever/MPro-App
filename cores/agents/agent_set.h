@@ -15,6 +15,7 @@ private slots:
 
 private:
     bool toIndex(uint addr, const QSNMPOid &oid);
+    bool paramSet(const QVariant &value);
     bool uutSet(const QVariant &value);
     bool cfgSet(const QVariant &value);
 

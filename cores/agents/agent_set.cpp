@@ -51,14 +51,29 @@ bool Agent_Set::uutSet(const QVariant &value)
     return ret;
 }
 
+bool Agent_Set::paramSet(const QVariant &value)
+{
+    bool ret = false;
+    sIndex *it = &mIndex;
+    if(it->id == 2) {
+        sCfgItem item;
+        item.addr = it->addr;
+        item.fc = it->type;
+        item.type = SFnCode::EDevInfo;
+        item.txType = DTxType::TxSnmp;
+        ret = Set_Core::bulid()->setCfg(item, value);
+    }
+    return ret;
+}
+
 bool Agent_Set::cfgSet(const QVariant &value)
 {
     bool ret = false;
     sIndex *it = &mIndex;
-    if(it->id == 0) {
-        ret = uutSet(value);
-    } else {
-        cout << it->id << value;
+    switch (it->id) {
+    case 0: ret = uutSet(value); break;
+    case 2: ret = paramSet(value); break;
+    default: cout << it->id << value; break;
     }
 
     return ret;
@@ -84,6 +99,7 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     } index.type = v;
 
     switch (it->type) {
+    case 1: v = DTopic::Relay; break;
     case 2: v = DTopic::Vol; break;
     case 3: v = DTopic::Cur; break;
     case 4: v = DTopic::Pow; break;
@@ -93,23 +109,26 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     default: ret = false; break;
     } index.topic = v;
 
-    if(index.type < 6) {
+    if(index.type > 1) {
         switch (it->subtopic) {
-        case 2: v = DSub::Rated; break;
+        case 2: v = DSub::Alarm; break;
         case 3: v = DSub::VMax; break;
         case 4: v = DSub::VCrMax; break;
         case 5: v = DSub::VCrMin; break;
         case 6: v = DSub::VMin; break;
         case 7: v = DSub::EnAlarm; break;
+        case 8: v = DSub::Rated; break;
         default: ret = false; break;
         }
     } else {
         switch (it->subtopic) {
-        case 2: v = DSub::VMax; break;
-        case 3: v = DSub::VCrMax; break;
-        case 4: v = DSub::VCrMin; break;
-        case 5: v = DSub::VMin; break;
-        case 6: v = DSub::EnAlarm; break;
+        case 1: v = DSub::Value; break;
+        case 2: v = DSub::Alarm; break;
+        case 3: v = DSub::Rated; break;
+        case 4: v = DSub::UpDelay; break;
+        case 5: v = DSub::ResetDelay; break;
+        case 6: v = DSub::OverrunOff; break;
+        case 7: v = DSub::RelayEn; break;
         default: ret = false; break;
         }
     }
@@ -184,7 +203,7 @@ void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &valu
         //else if((3 == it->fc) && (0 == it->type)) ret = setOutputName(value); //////========
         //else if((3 == it->fc) && (1 == it->type)) ret = relayCtrl(value);   ////////=========
         else if(0 == it->type) ret = setName(it->fc, value);
-        else if(1 == it->type) ret = relayCtrl(it->fc, value);
+        //else if(1 == it->type) ret = relayCtrl(it->fc, value);
         else ret = setAlarm(value);
     }
 

@@ -209,7 +209,7 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     if(strlen(it.releaseDate)) obj.insert("releaseDate", it.releaseDate);
 
     QJsonArray vs;
-    for(uint i=0; i<6; ++i) vs.append(it.opVers[i]);
+    for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
     obj.insert("op_vers", vs);
     json.insert(key, obj);
 }

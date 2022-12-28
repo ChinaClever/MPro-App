@@ -13,6 +13,7 @@ sAgentCfg Agent_Obj::snmpCfg;
 Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
+    mMib = Agent_Mib::bulid();
     QTimer::singleShot(1355,this,SLOT(initAgentSlot()));
 }
 
@@ -27,8 +28,10 @@ bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QSt
     it.str = ptr;
     it.name = name;
     it.fieldId = addr;
+    it.oid = oidPrefix;
     it.enWrited = isWrite;
-    it.oid = oidPrefix + QString::number(oid);
+    mMib->appendNode(it, oid);
+    it.oid += QString::number(oid);
     return mSnmp->addOid(it);
 }
 
@@ -38,8 +41,10 @@ bool Agent_Obj::addOidValue(uchar addr, uint oid, const QString &oidPrefix, cons
     it.name = name;
     it.fieldId = addr;
     it.intPtr = &value;
+    it.oid = oidPrefix;
     it.enWrited = isWrite;
-    it.oid = oidPrefix + QString::number(oid);
+    mMib->appendNode(it, oid);
+    it.oid += QString::number(oid);
     return mSnmp->addOid(it);
 }
 

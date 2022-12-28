@@ -1,7 +1,7 @@
 #ifndef AGENT_OBJ_H
 #define AGENT_OBJ_H
-#include "commons.h"
-#include "snmp/snmpagent.h"
+#include "agent_mib.h"
+
 #define SNMP_TRAP_SIZE 4
 struct sAgentCfg {
     int enV2;
@@ -29,6 +29,7 @@ protected:
     bool addOidValue(uchar addr, uint oid, const QString &oidPrefix,
                      const QString &name, uint &value, bool isWrite=true);
 protected:
+    Agent_Mib *mMib;
     SnmpModule *mSnmp;
 };
 
