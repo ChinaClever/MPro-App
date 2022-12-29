@@ -28,7 +28,7 @@ JsonRpcServer::JsonRpcServer(QObject* parent,
     , m_allowNotification(false)
 {
     if (!m_logger) {
-        m_logger = std::make_shared<JsonRpcFileLogger>("json_server_log.txt");
+        m_logger = std::make_shared<JsonRpcFileLogger>("/tmp/json_server_log.txt");
     }
 }
 

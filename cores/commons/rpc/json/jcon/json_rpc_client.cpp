@@ -24,7 +24,7 @@ JsonRpcClient::JsonRpcClient(std::shared_ptr<JsonRpcSocket> socket,
     , m_allowNotification(false)
 {
     if (!m_logger) {
-        m_logger = std::make_shared<JsonRpcFileLogger>("json_client_log.txt");
+        m_logger = std::make_shared<JsonRpcFileLogger>("/tmp/json_client_log.txt");
     }
 
     m_endpoint = std::make_shared<JsonRpcEndpoint>(socket, m_logger, this);

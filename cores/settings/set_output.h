@@ -13,16 +13,16 @@ protected:
     QString outputName(int addr, int id);
     bool outputNameSet(sCfgItem &it, const QVariant &v);
 
-    QString outputCfg(sCfgItem &it);
+    QString outputCfg(const sCfgItem &it);
     bool outputSet(sCfgItem &it, const QVariant &v);
     QString grouping(int addr, int id);
     bool groupingSet(sCfgItem &it, const QVariant &v);
     bool groupSet(sCfgItem &it, const QVariant &v);
 
 private:
-    bool groupCtrl(sDataItem &unit);
-    bool outputCtrl(sDataItem &unit);
-    bool outputsCtrl(sDataItem &unit);
+    bool groupCtrl(const sDataItem &unit);
+    bool outputCtrl(const sDataItem &unit);
+    bool outputsCtrl(const sDataItem &unit);
     void relayOpLog(const sDataItem &it);
     void opNameLog(const sCfgItem &it, const QVariant &v);
     bool outputSetById(sCfgItem &it, const QVariant &v);

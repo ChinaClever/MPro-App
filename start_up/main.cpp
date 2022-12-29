@@ -15,7 +15,7 @@ static void initSystem()
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 
-    system("rm /usr/data/clever/web/favicon.ico");
+    //system("rm /usr/data/clever/web/favicon.ico");
     system("rm /usr/data/clever/web/include/images/logo.png");
     QString cmd = "ln -s /usr/data/clever/cfg/logo.png ";
     cmd += "/usr/data/clever/web/include/images/logo.png";
