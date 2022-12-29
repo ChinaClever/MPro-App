@@ -49,7 +49,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 6: ptr = inet->dns;  break;
     case 7: ptr = inet->dns2; break;
     case 11: ptr = net->mac; system(QStringLiteral("echo '%1' > /usr/data/clever/cfg/mac.ini").arg(v.toString()).toLocal8Bit().data()); break;
-    case 15: App_Core::bulid()->inet_saveCfg(it.id);
+    case 15: App_Core::bulid()->inet_saveCfg(it.id); break;
     default: res = false; cout << it.fc; break;
     }
 
