@@ -29,7 +29,8 @@ struct _sObjData {
     uint ratedCur;
     uint activePow;
     uint reactivePow;
-    uint reserve[6];
+    uint lineVol;
+    uint reserve[5];
 };
 
 

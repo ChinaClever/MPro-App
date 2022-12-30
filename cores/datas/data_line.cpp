@@ -19,7 +19,7 @@ void Data_Line::lineWork()
         int start = i * num;
         int end = (i+1) * num;
         lineData(i, start, end);
-    } inletNum();
+    } inletNum(); lineVoltage();
 }
 
 void Data_Line::inletNum()
@@ -27,6 +27,14 @@ void Data_Line::inletNum()
     int size = mDev->cfg.nums.lineNum;
     sObjData *obj = &(mDev->line); obj->relay.size = 0;
     obj->size = obj->vol.size = obj->cur.size = obj->pow.size = size;
+}
+
+void Data_Line::lineVoltage()
+{
+    sObjData *obj = &(mDev->line); //obj->relay.size = 0;
+    for (int i = 0; i < obj->size; ++i) {
+        obj->lineVol[i] = obj->vol.value[i] * std::sqrt(3);
+    }
 }
 
 void Data_Line::tgWork()

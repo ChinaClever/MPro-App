@@ -47,7 +47,7 @@ struct sAlarmUnit
 #ifndef SUPPORT_C
     sAlarmUnit() {size=0;}
 #endif
-    uint size;
+    int size;
     uint en[PACK_ARRAY_SIZE]; // 报警开启
     uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
     uint hda[PACK_ARRAY_SIZE]; // 数据记录开关
@@ -67,7 +67,7 @@ struct sAlarmUnit
 
 struct sRelayUnit
 {
-    uint size;
+    int size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
@@ -91,7 +91,7 @@ struct sObjData
 #ifndef SUPPORT_C
     sObjData() {size=0;}
 #endif
-    uint size;
+    int size;
     struct sAlarmUnit vol; // 电压
     struct sAlarmUnit cur; // 电流
     struct sAlarmUnit pow; // 有功功率
@@ -104,8 +104,8 @@ struct sObjData
     uint hdaEle[PACK_ARRAY_SIZE]; // 电能数据记录开关
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
+    uint lineVol[PACK_ARRAY_SIZE]; // 线电压
     uint reserve[6][PACK_ARRAY_SIZE]; // 预留
-
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -146,6 +146,7 @@ struct sTgUnit
     uint crMin;
     uint crMax;
     uint alarm;
+    uint reserve[10]; // 预留
 };
 
 struct sTgObjData
@@ -156,8 +157,10 @@ struct sTgObjData
 
     uint ele; // 电能
     uint pf; // 功率因数
-    uint artPow; // 袖在功率
-    uint reactivePow;
+    uint artPow; // 视在功率
+    uint leakCur; // 漏电电流
+    uint reactivePow; // 无功功率
+    uint reserve[10]; // 预留
 };
 
 
@@ -201,7 +204,7 @@ struct sVersions
     char upgradeDate[NAME_SIZE]; // 升级时间
     char serialNumber[NAME_SIZE]; // 序列号
     char hwVersion[NAME_SIZE]; // 硬件版本
-    char reserve[NAME_SIZE]; // 预留
+    char reserve[3][NAME_SIZE]; // 预留
     uint opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
@@ -387,7 +390,7 @@ struct sDataPacket
 
 
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
-enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
+enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
