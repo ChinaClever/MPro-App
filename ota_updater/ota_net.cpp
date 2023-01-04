@@ -28,6 +28,7 @@ QString Ota_Net::unzip(const QString &fn)
     QString dst = "/tmp/updater/clever/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
     str = cm::execute(str.arg(fn)); throwMessage(str);
+    system("chmod 777 -R /tmp/updater/clever/");
     return dst;
 }
 
@@ -77,6 +78,7 @@ void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dir = "/tmp/updater/clever/";
+    system("chmod 777 -R /usr/data/clever/");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
 

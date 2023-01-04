@@ -140,6 +140,8 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
         QString dir = "/tmp/updater/clever/";
         QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
+        system("chmod 777 -R /usr/data/clever/");
+        system("chmod 777 -R /tmp/updater/clever/");
 
         QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
