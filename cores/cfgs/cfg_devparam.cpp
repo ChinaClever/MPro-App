@@ -71,7 +71,7 @@ void Cfg_devParam::groupWrite()
 void Cfg_devParam::devParamRead(sParameter &it)
 {
     Cfg_Obj *cfg = mDevCfg; QString g = "devParams";
-    it.devSpec = cfg->readCfg("devSpec", 0, g).toInt();
+    it.devSpec = cfg->readCfg("devSpec", 4, g).toInt();
     it.language = cfg->readCfg("language", 0, g).toInt();
     it.devMode = cfg->readCfg("devMode", 0, g).toInt();
     it.cascadeAddr = cfg->readCfg("cascadeAddr", 1, g).toInt();

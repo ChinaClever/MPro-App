@@ -17,7 +17,6 @@ void App_NetAddr::inet_initFunSlot()
     QString fn = Cfg_Obj::pathOfCfg("inet.ini");
     mInetCfg = new Cfg_Obj(fn, this);
 
-    //system("chown root:root mac.ini");
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
@@ -30,7 +29,6 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(inet->gw, "192.168.1.1");
         qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
-        //qstrcpy(net->mac, "00:00:00:00:00:01");
     } inet_setInterface();
 }
 
@@ -201,7 +199,6 @@ void App_NetAddr::inet_saveCfg(int fc)
     QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
     QString cmd = fmd.arg(net->mac); //qDebug() << cmd;
     system(cmd.toLocal8Bit().data());
-    //system("chown root:root mac.ini");
 
     if(fc) inet_writeCfg(net->inet6, "IPV6");
     else inet_writeCfg(net->inet, "IPV4");

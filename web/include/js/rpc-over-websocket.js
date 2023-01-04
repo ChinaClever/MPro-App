@@ -175,6 +175,7 @@ var jsonrpc = function()
       break;
       case 21:
         sessionStorage.setItem(odbc_cfg[topic], JSON.parse(evt.data).result[5]);
+        // console.log(odbc_cfg[topic], JSON.parse(evt.data).result[5]);
       break;
       case 22:
         sessionStorage.setItem(type_name[type]+ info_info[topic] + addr_ +'_'+subtopic, JSON.parse(evt.data).result[5]);
@@ -264,6 +265,7 @@ var jsonrpc = function()
   ws.onopen = function(){
       read_user_info();
       read_language();
+      read_num_info(addr);
   };
   return {
     close:() => ws.close(),

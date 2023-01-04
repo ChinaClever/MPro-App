@@ -55,8 +55,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
     case DType::Env: oid << 6; msg += " env "; break;
     case DType::Sensor: oid << 7; msg += " Sensor ";  break;
     default: cout << index.type; break;
-    }
-    oid << index.id; msg += QString::number(index.id+1);
+    } oid << index.id; msg += QString::number(index.id+1);
 
     switch (index.topic) {
     case DTopic::Relay: oid << 1;  msg += " switch "; break;
@@ -72,13 +71,13 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
     default: cout << index.topic; break;
     }
 
-    if(index.topic == DTopic::Relay);
-    else if(index.topic == DType::Sensor);
-    else if(index.type == DType::Env) oid << 6;
-    else oid << 7;
+//    if(index.topic == DTopic::Relay);
+//    else if(index.topic == DType::Sensor);
+//    else if(index.type == DType::Env) oid << 6;
+//    else oid << 7;
 
     if(value) {
-        QString doid = toString(dstOid); // dstOid << 11
+        QString doid = toString(dstOid << 1); // dstOid << 11   2
         sAgentCfg *cfg = &Agent_Core::snmpCfg;
         for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
             QString ip = cfg->trap[i]; if(ip.size()) {

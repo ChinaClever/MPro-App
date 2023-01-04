@@ -8,7 +8,7 @@
 #include "cfg_app.h"
 
 App_Core::App_Core(QObject *parent)
-    : App_Start{parent}
+    : App_WhiteList{parent}
 {
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     Shm::initShm();

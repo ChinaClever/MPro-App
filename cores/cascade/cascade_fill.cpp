@@ -54,6 +54,7 @@ void Cascade_Fill::upObjData(uchar id, sObjData &data, c_sObjData &obj)
     obj.pf = data.pf[id];
     obj.ele = data.ele[id];
     obj.hdaEle = data.hdaEle[id];
+    obj.lineVol = data.lineVol[id];
     obj.activePow = data.artPow[id];
     obj.reactivePow = data.reactivePow[id];
     obj.reserve[0] = data.reserve[0][id];

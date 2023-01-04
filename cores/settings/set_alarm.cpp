@@ -74,6 +74,6 @@ void Set_Alarm::oplog(const sDataItem &it)
     db.addr = it.addr;
     db.event_content = content;
     db.event_type = QStringLiteral("告警设置:");
-    db.event_type += opSrc(it.txType);
+    db.event_type += opSrc(it.addr);
     Log_Core::bulid()->append(db);
 }

@@ -150,7 +150,7 @@ bool Set_Core::setting(sDataItem &it)
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-        }setAlarmLog(it);
+        } if(it.topic != DTopic::Relay) setAlarmLog(it);
         if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}
     } else {
         ret = false;

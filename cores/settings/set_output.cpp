@@ -46,7 +46,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
     Log_Core::bulid()->append(db);
 }
 
-bool Set_Output::outputCtrl(sDataItem &unit)
+bool Set_Output::outputCtrl(const sDataItem &unit)
 {
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
@@ -58,7 +58,7 @@ bool Set_Output::outputCtrl(sDataItem &unit)
     return ret;
 }
 
-bool Set_Output::outputsCtrl(sDataItem &unit)
+bool Set_Output::outputsCtrl(const sDataItem &unit)
 {
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     bool ret = false; int start = unit.type-1; int end = start + unit.id;
@@ -72,7 +72,7 @@ bool Set_Output::outputsCtrl(sDataItem &unit)
     return ret;
 }
 
-bool Set_Output::groupCtrl(sDataItem &unit)
+bool Set_Output::groupCtrl(const sDataItem &unit)
 {
     QList<int> ids;
     bool ret = true;  int id = unit.id; if(id) {
@@ -111,7 +111,7 @@ bool Set_Output::relaySet(sDataItem &unit)
     return ret;
 }
 
-QString Set_Output::outputCfg(sCfgItem &it)
+QString Set_Output::outputCfg(const sCfgItem &it)
 {
     uint addr = it.addr;
     if(addr==0xff) addr = 0;
@@ -123,14 +123,14 @@ QString Set_Output::outputCfg(sCfgItem &it)
     case SFnCode::EOutput: obj = &(dev->output); break;
     case SFnCode::EGroup: obj = &(dev->group); break;
     case SFnCode::EDual: obj = &(dev->dual); break;
-    default: qDebug() << Q_FUNC_INFO << it.type; return res;
+    default: cout << it.type; return res;
     }
 
     switch (it.fc) {
     case 1: res = obj->name[id]; break;
     case 2: res = obj->relay.timingOn[id]; break;
     case 3: res = obj->relay.timingOff[id]; break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    default: cout << it.fc; break;
     }
 
     return res;

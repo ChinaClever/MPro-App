@@ -14,7 +14,8 @@ bool Modbus_SlaveTcp::connectModbusTcp(int port)
 {
     initModbusNet(port);
     bool ret = connectDevice();
-    if(!ret) cout << "Modbus Tcp connect" << port << ret;
+    if(ret) qDebug() << "Modbus Tcp connect" << port << ret;
+    else cout << "Modbus Tcp connect" << port << ret;
     return ret;
 }
 

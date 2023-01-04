@@ -28,6 +28,7 @@ QString Ota_Net::unzip(const QString &fn)
     QString dst = "/tmp/updater/clever/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
     str = cm::execute(str.arg(fn)); throwMessage(str);
+    system("chmod 777 -R /tmp/updater/clever/");
     return dst;
 }
 
@@ -77,6 +78,7 @@ void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dir = "/tmp/updater/clever/";
+    system("chmod 777 -R /usr/data/clever/");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
 
@@ -107,9 +109,9 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         if(it.fc == 21) dir = it.path; // 21时为U盘升级
         else dir = unzip(it.path+it.file);
         ok = versionCheck(dir);
-    }
+    } cm::execute("chmod 777 -R " + dir);
 
-    if(ok) {
+    if(ok) {        
         if(QFile::exists(dir+"auto.sh")) {
             QString str = "sh %1/auto.sh ";
             str = cm::execute(str.arg(dir));
@@ -148,8 +150,8 @@ bool Ota_Net::versionCheck(const QString &dir)
         throwMessage("version check ok");
         QString str = cm::masterDev()->cfg.vers.releaseDate;
         if(str.size()) {
-            QDate ct = QDate::fromString(str, "yyyy-MM-dd");
-            QDate date = QDate::fromString(it.releaseDate, "yyyy-MM-dd");
+            QDate ct = QDate::fromString(str.mid(0,10), "yyyy-MM-dd");
+            QDate date = QDate::fromString(it.releaseDate.mid(0,10), "yyyy-MM-dd");
             throwMessage("version release date " +it.releaseDate); if(date < ct) {
                 QString msg = "version release date err: currnet date %1 up date:%2";
                 throwMessage(msg.arg(str, it.releaseDate)); ret = false;

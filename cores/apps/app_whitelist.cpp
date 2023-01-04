@@ -14,6 +14,7 @@ App_WhiteList::App_WhiteList(QObject *parent)
 
 void App_WhiteList::internetFirewall()
 {
+    bool ret = false;
     sWhiteListCfg *cfg = &whiteListCfg;
     if(cfg->en && QFile::exists("netcfg")) {
         system("netcfg -s on");
@@ -22,9 +23,11 @@ void App_WhiteList::internetFirewall()
             QString ip = cfg->ip[i]; if(ip.isEmpty()) ip = "-";
             QString mac = cfg->mac[i]; if(mac.isEmpty()) mac = "-";
             QString fmd = "netcfg -a '%1 - - %2'";
-            QString cmd = fmd.arg(ip, mac);
-            system(cmd.toLocal8Bit().data());
-            qDebug() << cmd;
-        }
+            if(ip.size() > 2 || mac.size() > 2) {
+                QString cmd = fmd.arg(ip, mac);
+                system(cmd.toLocal8Bit().data());
+                qDebug() << cmd; ret = true;
+            }
+        } if(!ret) system("netcfg -s off");
     }
 }

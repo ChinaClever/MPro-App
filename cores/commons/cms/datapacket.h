@@ -47,7 +47,7 @@ struct sAlarmUnit
 #ifndef SUPPORT_C
     sAlarmUnit() {size=0;}
 #endif
-    uchar size;
+    int size;
     uint en[PACK_ARRAY_SIZE]; // 报警开启
     uint cnt[PACK_ARRAY_SIZE]; // 连续报警次数
     uint hda[PACK_ARRAY_SIZE]; // 数据记录开关
@@ -62,12 +62,12 @@ struct sAlarmUnit
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
     uint peakMax[PACK_ARRAY_SIZE]; // 最大峰值
     uint peakStamp[PACK_ARRAY_SIZE]; // 峰值的时间戳
-    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+    uint reserve[6][PACK_ARRAY_SIZE]; // 预留
 };
 
 struct sRelayUnit
 {
-    uchar size;
+    int size;
     uint en[PACK_ARRAY_SIZE];
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
@@ -79,7 +79,7 @@ struct sRelayUnit
     uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+    uint reserve[6][PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -91,8 +91,7 @@ struct sObjData
 #ifndef SUPPORT_C
     sObjData() {size=0;}
 #endif
-    uchar size;
-
+    int size;
     struct sAlarmUnit vol; // 电压
     struct sAlarmUnit cur; // 电流
     struct sAlarmUnit pow; // 有功功率
@@ -105,8 +104,8 @@ struct sObjData
     uint hdaEle[PACK_ARRAY_SIZE]; // 电能数据记录开关
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
-
+    uint lineVol[PACK_ARRAY_SIZE]; // 线电压
+    uint reserve[6][PACK_ARRAY_SIZE]; // 预留
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -124,8 +123,8 @@ struct sEnvData
 #ifndef SUPPORT_C
     sEnvData() {size=0;}
 #endif
-    uchar size;
-    uchar isInsert[SENOR_NUM];
+    uint size;
+    uint isInsert[SENOR_NUM];
     struct sAlarmUnit tem; // 温度
     struct sAlarmUnit hum; // 湿度
 
@@ -133,7 +132,7 @@ struct sEnvData
     uint door[SENOR_NUM]; // 门禁
     uint water[SENOR_NUM]; // 水浸
     uint smoke[SENOR_NUM]; // 烟雾
-    uint reserve[10][PACK_ARRAY_SIZE]; // 预留
+    uint reserve[10][SENOR_NUM]; // 预留
 };
 
 struct sTgUnit
@@ -147,6 +146,7 @@ struct sTgUnit
     uint crMin;
     uint crMax;
     uint alarm;
+    uint reserve[10]; // 预留
 };
 
 struct sTgObjData
@@ -157,8 +157,10 @@ struct sTgObjData
 
     uint ele; // 电能
     uint pf; // 功率因数
-    uint artPow; // 袖在功率
-    uint reactivePow;
+    uint artPow; // 视在功率
+    uint leakCur; // 漏电电流
+    uint reactivePow; // 无功功率
+    uint reserve[10]; // 预留
 };
 
 
@@ -202,8 +204,8 @@ struct sVersions
     char upgradeDate[NAME_SIZE]; // 升级时间
     char serialNumber[NAME_SIZE]; // 序列号
     char hwVersion[NAME_SIZE]; // 硬件版本
-    char reserve[NAME_SIZE]; // 预留
-    ushort opVers[DEV_NUM]; // 每块执行板软件版本
+    char reserve[3][NAME_SIZE]; // 预留
+    uint opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
 struct sUutInfo {
@@ -218,24 +220,25 @@ struct sUutInfo {
 
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
-    uchar language; // 0 中文 1 英文
-    uchar devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
-    uchar cascadeAddr; // 级联地址
+    uint runStatus; // 运行状态 0：正常 1：告警 2：故障 3: 离线
+    uint language; // 0 中文 1 英文
+    uint devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
+    uint cascadeAddr; // 级联地址
     uint  modbusRtuBr; // Modbus-Rtu 波特率
-    uchar modbusRtuAddr; // Modbus-Rtu 地址
-    uchar buzzerSw; // 蜂鸣器开关
+    uint modbusRtuAddr; // Modbus-Rtu 地址
+    uint buzzerSw; // 蜂鸣器开关
     uint  buzzerSec; // 消音时间
-    uchar drySw; // 报警干接点开关
-    uchar isBreaker; // 0没有断路器 1有断路器
+    uint drySw; // 报警干接点开关
+    uint isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
     uint backlightType; // 屏幕显示模式 0 常亮 1 节能
     uint backlightTime; // 节能 时长 小时数
     uint groupEn; // 组开关使能
-    uchar eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
-    uchar powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
+    uint powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
     uint dataContent; // 0：自动 1：最多 2：最少
     uint runTime; // 总运行时间 单位天
-    uchar vh; // 0:垂直 1:水平
+    uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
 
     uint reserve[20];
@@ -387,7 +390,7 @@ struct sDataPacket
 
 
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
-enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
+enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};

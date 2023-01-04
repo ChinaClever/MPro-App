@@ -29,7 +29,7 @@ bool Set_Maintain::factoryRestore()
     Log_Core::bulid()->append(it);
 
     QStringList fns;
-    QString dir = "usr/data/clever/cfg/";
+    QString dir = "/usr/data/clever/cfg/";
     fns << "logs.db" << "proc_log.txt";
     fns << "cfg.ini" << "inet.ini" << "alarm.cfg";
 
@@ -37,7 +37,7 @@ bool Set_Maintain::factoryRestore()
         QString fmd = "rm -f %1%2";
         QString cmd = fmd.arg(dir, fn);
         system(cmd.toLocal8Bit().data());
-    } cm::mdelay(650);
+    } cm::mdelay(650); system("reboot");
 
     return true;
 }

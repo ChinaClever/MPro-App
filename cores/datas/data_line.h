@@ -14,6 +14,7 @@ protected:
 private:
     void calHz();
     void inletNum();
+    void lineVoltage();
 };
 
 #endif // DATA_LINE_H

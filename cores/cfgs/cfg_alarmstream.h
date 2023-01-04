@@ -16,7 +16,7 @@ struct _sAlarmIt
     uint crMax; // 最大值
     uint peakMax; // 峰值
     uint peakStamp; // 峰值的时间戳
-    uint reserve[10]; // 预留
+    uint reserve[6]; // 预留
 };
 
 struct _sRelayIt
@@ -28,7 +28,7 @@ struct _sRelayIt
     uchar resetDelay;
     uchar overrunOff;
     uchar timingEn;
-    uchar reserve[10]; // 预留
+    uchar reserve[6]; // 预留
     char timingOn[NAME_SIZE];
     char timingOff[NAME_SIZE];
 };
@@ -40,7 +40,7 @@ struct _sObjData {
     _sAlarmIt pow;
     _sRelayIt relay;
     uint hdaEle;
-    uint reserve[10]; // 预留
+    uint reserve[6]; // 预留
 };
 
 
@@ -48,7 +48,7 @@ struct _sEnvData
 {
     _sAlarmIt tem; // 温度
     _sAlarmIt hum; // 湿度
-    uint reserve[10]; // 预留
+    uint reserve[6]; // 预留
 };
 
 struct _sDevData

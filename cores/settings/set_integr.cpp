@@ -101,7 +101,6 @@ bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
     if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
-        cout << fc << key << v;
     }
 
     return ret;

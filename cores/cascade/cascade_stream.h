@@ -29,7 +29,8 @@ struct _sObjData {
     uint ratedCur;
     uint activePow;
     uint reactivePow;
-    uint reserve[10];
+    uint lineVol;
+    uint reserve[5];
 };
 
 
@@ -43,7 +44,7 @@ struct _sEnvData
     uchar door; // 门禁
     uchar water; // 水浸
     uchar smoke; // 烟雾
-    uint reserve[10];
+    uint reserve[6];
 };
 
 struct _sDevData
@@ -79,7 +80,7 @@ struct _sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uchar hz; // 电压频率
-    uchar reserve[10];
+    uchar reserve[6];
 };
 
 struct _sFrame {
