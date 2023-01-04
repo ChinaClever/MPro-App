@@ -265,6 +265,7 @@ var jsonrpc = function()
   ws.onopen = function(){
       read_user_info();
       read_language();
+      read_num_info(addr);
   };
   return {
     close:() => ws.close(),
