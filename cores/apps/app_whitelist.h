@@ -18,7 +18,7 @@ public:
     explicit App_WhiteList(QObject *parent = nullptr);
     static sWhiteListCfg whiteListCfg;
 
-private slots:
+public slots:
     void internetFirewall();
 };
 

@@ -100,6 +100,7 @@ bool Set_Sercret::setWhiteList(uchar fc, const QVariant &v)
     case 7: key = "ip2";  cfg->ip[1] = v.toString(); break;
     case 8: key = "ip3";  cfg->ip[2] = v.toString();  break;
     case 9: key = "ip4";  cfg->ip[3] = v.toString(); break;
+    case 10: App_Core::bulid()->internetFirewall(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
