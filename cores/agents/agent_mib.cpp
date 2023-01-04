@@ -92,7 +92,7 @@ void Agent_Mib::appendModule(const sOidIt &it)
 
 void Agent_Mib::save()
 {
-    QString fn = "/usr/data/clever/cfg/M-PRO-PDU.MIB";
+    QString fn = "/usr/data/clever/doc/snmp.mib";
     m_mib.append("\nEND\n"); QFile file(fn);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         file.write(m_mib.toLatin1());
