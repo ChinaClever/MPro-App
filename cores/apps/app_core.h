@@ -3,7 +3,7 @@
 
 #include "app_whitelist.h"
 
-class App_Core : public App_Start
+class App_Core : public App_WhiteList
 {
     explicit App_Core(QObject *parent = nullptr);
 public:

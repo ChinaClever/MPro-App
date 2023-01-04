@@ -120,8 +120,8 @@ sRelayUnit *Alarm_Object::getRelayUnit(const sDataItem &index)
 
 void Alarm_Object::setAll(uint *ptr, uint value, int size)
 {
-     if(0 == size) size = OUTPUT_NUM;
-     for(int i=0; i<size; ++i)  ptr[i] = value;
+    if(0 == size) size = OUTPUT_NUM;
+    for(int i=0; i<size; ++i)  ptr[i] = value;
 }
 
 bool Alarm_Object::alarmUnitValue(sDataItem &index)
@@ -243,6 +243,7 @@ bool Alarm_Object::powPfValue(sDataItem &index)
     switch (index.topic) {
     case DTopic::PF: ptr = obj->pf; break;
     case DTopic::ArtPow: ptr = obj->artPow; break;
+    case DTopic::LineVol: ptr = obj->lineVol; break;
     case DTopic::ReactivePow: ptr = obj->reactivePow; break;
     default: ret = false; cout << index.topic; break;
     }
@@ -302,7 +303,7 @@ bool Alarm_Object::upMetaData(sDataItem &index)
     switch (index.topic) {
     case DTopic::HdaEle: case DTopic::Ele: ret = eleValue(index); break;
     case DTopic::Relay: ret = relayUnitValue(index); break;
-    case DTopic::ArtPow: case DTopic::ReactivePow:
+    case DTopic::ArtPow: case DTopic::ReactivePow: case DTopic::LineVol:
     case DTopic::PF: ret = powPfValue(index); break;
     default: ret = alarmUnitValue(index); break;
     } index.addr = addr;

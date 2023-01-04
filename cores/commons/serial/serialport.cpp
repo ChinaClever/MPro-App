@@ -68,7 +68,7 @@ void SerialPort::waitForSend(int size)
 {
     if((size > 0) && (mBr > 0)) {
         int ms = (size*10.0)/mBr*1000;
-        cm::mdelay(ms+20);
+        cm::mdelay(ms+50);
     }
 }
 

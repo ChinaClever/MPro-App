@@ -21,7 +21,7 @@ Cascade_Core *Cascade_Core::bulid(QObject *parent)
 void Cascade_Core::initFunSlot()
 {
     if(cm::masterDev()->cfg.param.devMode < DevMode::DM_Rtu) {
-        qint32 baudRate = QSerialPort::Baud115200; cm::mdelay(200);
+        qint32 baudRate = QSerialPort::Baud57600; cm::mdelay(200);
         openSerial("/dev/ttyS1", baudRate , QSerialPort::EvenParity);
     }
 }
@@ -44,10 +44,6 @@ void Cascade_Core::workFun()
 
 void Cascade_Core::run()
 {
-//    cm::masterDev()->cfg.param.cascadeAddr = 0;
-//    cm::masterDev()->cfg.param.devMode = DM_Dual;
-//    cm::masterDev()->cfg.nums.slaveNum = 1;
-
     cm::mdelay(210);while(isRun) {
         int mode = cm::masterDev()->cfg.param.devMode;
         if(mode < DevMode::DM_Rtu) {

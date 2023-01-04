@@ -52,7 +52,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
         Log_Core::bulid()->append(db);
     }
 
-    if(ret) {
+    if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key.arg(id), v, prefix);
     }
