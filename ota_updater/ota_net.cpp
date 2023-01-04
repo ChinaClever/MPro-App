@@ -50,18 +50,24 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
     return ret;
 }
 
+bool Ota_Net::rootfsExists(const QString &path)
+{
+    bool ret = false; QString dir = path + "rootfs";
+    QStringList fns = File::entryList(dir); //cout << dir << fns;
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;
+    return ret;
+}
+
 bool Ota_Net::up_rootfs(const QString &path)
 {
-    bool ret = true;
-    QString dir = path + "rootfs";
-    QStringList fns = File::entryList(dir); //cout << dir << fns;
-    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) {
+    bool ret =  rootfsExists(path); if(ret) {
         QString fmd = "system-update %1/xImage %1/rootfs.squashfs";
         sOtaUpdater *ota = &cm::dataPacket()->ota;
         setbit(ota->work, DOta_Rootfs);
         ota->rootfs.progress = 0;
         ota->rootfs.isRun = 1;
 
+        QString dir = path + "rootfs";
         QString str = fmd.arg(dir);
         system(str.toLocal8Bit().data());
         throwMessage(str); cm::mdelay(100);
@@ -78,20 +84,18 @@ void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dir = "/tmp/updater/clever/";
-    system("chmod 777 -R /usr/data/clever/");
-    QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
-
-    QString cmd = fmd.arg(dir);
-    throwMessage(cmd);
-    cmd = cm::execute(cmd);
-    throwMessage(cmd);
+    system("chmod 777 -R /usr/data/clever/");
+    QString fmd = "cp -af %1 /usr/data/clever/";
+    if(rootfsExists(dir)) fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
+    QString cmd = fmd.arg(dir); throwMessage(cmd);
+    cmd = cm::execute(cmd); throwMessage(cmd);
     up_rootfs(dir);
 
     clrbit(mOta->work, bit);
     bool ret = coreRuning();
     if(ret) cmd_updater(fn, bit);
-    if(!mOta->work) QTimer::singleShot(3555,this,SLOT(rebootSlot()));
+    if(!mOta->work) QTimer::singleShot(2555,this,SLOT(rebootSlot()));
 #endif
 }
 
@@ -134,8 +138,8 @@ void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
     system("rm -rf /tmp/updater/clever");
-    system("chmod +x /usr/data/clever/bin/*");
-    system("chmod +x /usr/data/clever/app/*");
+    system("chmod 777 /usr/data/clever/bin/*");
+    system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot");
