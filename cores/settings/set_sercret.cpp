@@ -71,9 +71,13 @@ QVariant Set_Sercret::whiteListCfg(int fc)
     QVariant res; switch (fc) {
     case 1: res = cfg->en; break;
     case 2: res = cfg->mac[0]; break;
-    case 3: res = cfg->mac[1]; break;
-    case 4: res = cfg->ip[0]; break;
-    case 5: res = cfg->ip[1]; break;
+    case 3: res = cfg->mac[1]; break;        
+    case 4: res = cfg->mac[2]; break;
+    case 5: res = cfg->mac[3]; break;
+    case 6: res = cfg->ip[0]; break;
+    case 7: res = cfg->ip[1]; break;
+    case 8: res = cfg->ip[2]; break;
+    case 9: res = cfg->ip[3]; break;
     default: cout << fc; break;
     }
 
@@ -90,8 +94,12 @@ bool Set_Sercret::setWhiteList(uchar fc, const QVariant &v)
     case 1: key = "en";  cfg->en = v.toInt(); break;
     case 2: key = "mac1";  cfg->mac[0] = v.toString(); break;
     case 3: key = "mac2";  cfg->mac[1] = v.toString();  break;
-    case 4: key = "ip1";  cfg->ip[0] = v.toString();  break;
-    case 5: key = "ip2";  cfg->ip[0] = v.toString(); break;
+    case 4: key = "mac3";  cfg->mac[2] = v.toString(); break;
+    case 5: key = "mac4";  cfg->mac[3] = v.toString();  break;
+    case 6: key = "ip1";  cfg->ip[0] = v.toString();  break;
+    case 7: key = "ip2";  cfg->ip[1] = v.toString(); break;
+    case 8: key = "ip3";  cfg->ip[2] = v.toString();  break;
+    case 9: key = "ip4";  cfg->ip[3] = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 

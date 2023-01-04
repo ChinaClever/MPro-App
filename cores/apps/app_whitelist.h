@@ -2,7 +2,7 @@
 #define APP_WHITELIST_H
 
 #include "app_start.h"
-#define WHITE_LIST_NUM 2
+#define WHITE_LIST_NUM 4
 
 struct sWhiteListCfg
 {

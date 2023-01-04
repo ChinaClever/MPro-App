@@ -392,13 +392,17 @@ void Cfg_Service::whiteList()
     QString *str = nullptr;
     QString prefix = "whiteList"; QString key;
     sWhiteListCfg *it = &App_WhiteList::whiteListCfg;
-    for(int i=1; i<6; ++i) {
+    for(int i=1; i<10; ++i) {
         switch (i) {
         case 1: key = "en"; it->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "mac1"; str = &it->mac[0]; break;
         case 3: key = "mac2"; str = &it->mac[1]; break;
-        case 4: key = "ip1"; str = &it->ip[0]; break;
-        case 5: key = "ip2"; str = &it->ip[1]; break;
+        case 4: key = "mac3"; str = &it->mac[2]; break;
+        case 5: key = "mac4"; str = &it->mac[3]; break;
+        case 6: key = "ip1"; str = &it->ip[0]; break;
+        case 7: key = "ip2"; str = &it->ip[1]; break;
+        case 8: key = "ip3"; str = &it->ip[2]; break;
+        case 9: key = "ip4"; str = &it->ip[3]; break;
         default: key.clear(); break;
         }
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
