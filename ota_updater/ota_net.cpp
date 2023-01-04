@@ -164,6 +164,8 @@ bool Ota_Net::versionCheck(const QString &dir)
                     } else if(it.md5 == cm::masterDev()->cfg.vers.md5) {
                         QString msg = "version dev md5 err: md5=%1";
                         throwMessage(msg.arg(it.md5)); ret = false;
+                    } else {
+                        app.app_upgradeDate();
                     }
                 }
             }
