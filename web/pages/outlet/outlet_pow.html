@@ -83,9 +83,6 @@
 					}
 				}
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
 		lang_init();
 		function lang_init(){
@@ -108,10 +105,10 @@
 			lang[14] = ["设置模式","","","",""];
 			lang[15] = ["阅读模式","","","",""];
 			lang[16] = ["统一设置","","","",""];
-			lang[17]  = ["", "主机", "", "", "", ""];
-			lang[18]  = ["", "副机", "", "", "", ""];
+			lang[17]  = ["主机", "", "", "", ""];
+			lang[18]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[17][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[18][language] + i;
 			}
 		}
@@ -121,7 +118,7 @@
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		showdata();
 		lang_fun();
 		modeset();

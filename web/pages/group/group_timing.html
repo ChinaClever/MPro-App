@@ -93,10 +93,10 @@
 			lang[13] = ["下电","","","",""];
 			lang[14] = ["设置模式","","","",""];
 			lang[15] = ["统一设置","","","",""];
-			lang[16]  = ["", "主机", "", "", "", ""];
-			lang[17]  = ["", "副机", "", "", "", ""];
+			lang[16]  = ["主机", "", "", "", ""];
+			lang[17]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[16][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
@@ -109,7 +109,7 @@
 			}
 		}
 		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		modeset();
 		showdata();

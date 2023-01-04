@@ -115,10 +115,10 @@
 			lang[27] = ["烟雾","","","",""];
 			lang[28] = ["设置模式","","","",""];
 			lang[29] = ["阅读模式","","","",""];
-			lang[30]  = ["", "主机", "", "", "", ""];
-			lang[31]  = ["", "副机", "", "", "", ""];
+			lang[30]  = ["主机", "", "", "", ""];
+			lang[31]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[30][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[31][language] + i;
 			}
 			for(let i =0;i<Sensor_state.length;i++){
@@ -153,7 +153,7 @@
 		}
 		$('.tmp_hum_table').html(buildTableTH(table_len));
 		$('.oth_table').html(buildTableOth(table_len));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		function buildSel(rows)
 		{

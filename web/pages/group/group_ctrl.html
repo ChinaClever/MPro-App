@@ -72,9 +72,6 @@
 				group_data[i][0] = sessionStorage.getItem(type_name[25]+ addr +'_'+i);
 				group_data[i][1] = parseInt(sessionStorage.getItem(type_name[group]+data_type[switch_]+data_name[8]+addr+'_'+i));
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
 		function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -92,10 +89,10 @@
 			lang[10] = ["关闭","","","",""];
 			lang[11] = ["设置模式","","","",""];
 			lang[12] = ["统一设置","","","",""];
-			lang[13]  = ["", "主机", "", "", "", ""];
-			lang[14]  = ["", "副机", "", "", "", ""];
+			lang[13]  = ["主机","","","",""];
+			lang[14]  = ["副机","","","",""];
 			dev_name[0] = lang[13][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[14][language] + i;
 			}
 		}
@@ -109,7 +106,7 @@
 			}
 		}
 		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		modeset();
 		showdata();

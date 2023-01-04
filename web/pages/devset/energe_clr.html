@@ -74,10 +74,10 @@
 			lang[8] = ["重置清零","","","",""];
 			lang[9] = ["设置模式","","","",""];
 			lang[10] = ["计量清零","","","",""];
-			lang[11]  = ["", "主机", "", "", "", ""];
-			lang[12]  = ["", "副机", "", "", "", ""];
+			lang[11]  = ["主机", "", "", "", ""];
+			lang[12]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[11][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[12][language] + i;
 			}
 		}
@@ -96,7 +96,7 @@
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		show_data();
 		var state_ = 0;

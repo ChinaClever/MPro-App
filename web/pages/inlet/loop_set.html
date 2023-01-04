@@ -82,9 +82,6 @@
 					}
 				}
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
 		lang_init();
 		function lang_init(){
@@ -127,10 +124,10 @@
 			lang[34] = ["回路","","","",""];
 			lang[35] = ["统一设置","","","",""];
 			lang[36] = ["设置模式","","","",""];
-			lang[37]  = ["", "主机", "", "", "", ""];
-			lang[38]  = ["", "副机", "", "", "", ""];
+			lang[37]  = ["主机", "", "", "", ""];
+			lang[38]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[37][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[38][language] + i;
 			}
 		}
@@ -142,7 +139,7 @@
 		$('.vol_table').html(buildTableVol(loop_num));
 		$('.cur_table').html(buildTableCur(loop_num));
 		$('.pow_table').html(buildTablePow(loop_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel(slave_num +1));
 		lang_fun();
 		showdata();
 		modeset();

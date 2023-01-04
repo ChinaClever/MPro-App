@@ -115,7 +115,7 @@
 							lang[21] = ["提交","","","",""];
 							lang[22] = ["数据","","","",""];
 							lang[23] = ["历史数据图表","","","",""];
-							for(i = 0;i<slave_num;i++){
+							for(i = 0;i<(slave_num+1);i++){
 								if(i == 0){
 									dev_name_[i] = lang[7][language];
 								}else{
@@ -258,7 +258,7 @@
 							return jsonLength;
 						}
 						lang_fun();
-						$('.devname').html(buildSel("dev",slave_num,dev_name_));
+						$('.devname').html(buildSel("dev",(slave_num+1),dev_name_));
 						$('.typename').html(buildSel("type",num_type,type_name_));
 						$('.topicname').html(buildSel("topic",topic_name_[0].length,topic_name_[0]));
 						$('.num').html(buildSel("num",num_name_[0].length,num_name_[0]));

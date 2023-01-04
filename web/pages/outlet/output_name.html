@@ -72,10 +72,10 @@
 			lang[4] = ["序号","","","",""];
 			lang[5] = ["单元名称","","","",""];
 			lang[6] = ["设置模式","","","",""];
-			lang[7]  = ["", "主机", "", "", "", ""];
-			lang[8]  = ["", "副机", "", "", "", ""];
+			lang[7]  = ["主机", "", "", "", ""];
+			lang[8]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[7][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[8][language] + i;
 			}
 		}
@@ -124,13 +124,10 @@
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
 			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
-			}
 		}
 		lang_init();
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel(slave_num+1));
 		lang_fun();
 		modeset();
 		function setdata(ipt)
