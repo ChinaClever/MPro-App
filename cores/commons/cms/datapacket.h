@@ -337,7 +337,7 @@ struct sNetInterface
 struct sDevLogin
 {
     uchar permit; // 0 管理员  1 操作员  2 访客
-    uint ctrl; // 按位操作 0 有权限  1 没有权限
+    uint groupCtrl; // 按位操作 0 有权限  1 没有权限
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];

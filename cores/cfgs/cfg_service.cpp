@@ -315,7 +315,7 @@ void Cfg_Service::login()
             qstrcpy(ptr, res.toUtf8().data());
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
-            key = "ctrl_%1"; it->ctrl = mCfg->readCfg(key.arg(k), 0xFF, prefix).toInt();
+            key = "groupCtrl_%1"; it->groupCtrl = mCfg->readCfg(key.arg(k), 0xFF, prefix).toInt();
         }
     }
 }
