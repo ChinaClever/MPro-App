@@ -37,7 +37,7 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->outputSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
-    size = ptr->envSize; in << size;
+    size = ptr->envSize; in << size; size = SENOR_NUM;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
 
     in << toByteArray(ptr->tg);
@@ -75,7 +75,7 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     out >> size; ptr->outputSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->output[i] = toStruct<c_sObjData>(v);}
 
-    out >> size; ptr->envSize = size;
+    out >> size; ptr->envSize = size; size = SENOR_NUM;
     for(int i=0; i<size; ++i) {out >> v; ptr->env[i] = toStruct<c_sEnvData>(v);}
 
     out >> v; ptr->tg = toStruct<sTgObjData>(v);

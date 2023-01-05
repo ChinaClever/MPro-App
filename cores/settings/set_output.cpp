@@ -182,9 +182,9 @@ bool Set_Output::outputNameSet(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::groupSet(sCfgItem &it, const QVariant &v)
 {
-    bool ret = true; uint addr = it.addr; if(addr==0xff) addr = 0;
+    uint addr = it.addr; if(addr==0xff) addr = 0;
     sDevData *dev = cm::devData(addr); if(it.fc) it.fc -= 1;
-    uchar *ptr = dev->cfg.nums.group[it.fc];
+    uchar *ptr = dev->cfg.nums.group[it.fc]; bool ret = true;
     if(it.id < OUTPUT_NUM) ptr[it.id-1] = v.toInt();
     else {cout << it.id; ret = false;}
     if(ret) Cfg_Core::bulid()->groupWrite();
@@ -201,6 +201,7 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
     foreach(auto &str, strs) {
         int id = str.toInt(); if(id) id -= 1; ptr[id] = 1;
     } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
+
     return ret;
 }
 
@@ -239,8 +240,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 
 bool Set_Output::outputSet(sCfgItem &it, const QVariant &v)
 {
-    int id = it.id;
-    bool ret = false; if(it.id){
+    int id = it.id; bool ret = true; if(it.id){
         it.id--; ret = outputSetById(it, v);
     } else {
         sObjData *obj = nullptr;

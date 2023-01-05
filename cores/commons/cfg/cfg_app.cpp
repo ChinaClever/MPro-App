@@ -30,6 +30,14 @@ void Cfg_App::app_dir(const QString &dir)
     }
 }
 
+void Cfg_App::app_upgradeDate()
+{
+    QString g = "app_pack";
+    QDateTime dateTime = QDateTime::currentDateTime();
+    QString dt = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+    writeCfg("upgradeDate", dt, g);
+}
+
 bool Cfg_App::app_pack(sAppVerIt &it)
 {
     QString g = "app_pack";

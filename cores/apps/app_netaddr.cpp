@@ -197,7 +197,7 @@ void App_NetAddr::inet_saveCfg(int fc)
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
-    QString cmd = fmd.arg(net->mac); //qDebug() << cmd;
+    QString cmd = fmd.arg(net->mac).remove("\n"); //qDebug() << cmd;
     system(cmd.toLocal8Bit().data());
 
     if(fc) inet_writeCfg(net->inet6, "IPV6");

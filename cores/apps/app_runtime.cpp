@@ -25,7 +25,7 @@ void App_RunTime::runing_initFunSlot()
 void App_RunTime::runing_onTimeoutDone()
 {
     sRunTime *param = &(cm::masterDev()->proc.core);
-    param->runSec += 1; if(0 == param->runSec % 24*60*60) {
+    param->runSec += 1; if(0 == (param->runSec % (24*60*60))) {
         Cfg_Core::bulid()->runTimeWrite();
     }
 }
