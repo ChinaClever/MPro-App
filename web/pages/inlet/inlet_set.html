@@ -24,7 +24,7 @@
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2">阅读模式</button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
+									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_4"></span>
 							</div>
@@ -73,7 +73,7 @@
 		var pow_mark = new Array(),cur_mark = new Array(),vol_mark = new Array();
 		var phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
 		function read_data(){
 			for(var i = 1 ;i < phase_num + 1;i++){
@@ -83,9 +83,6 @@
 						phase_info[i][(len * k) + j] = (sessionStorage.getItem(type_name[phase]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
 					}
 				}
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		lang_init();
@@ -129,10 +126,10 @@
 			lang[34] = ["相","","","",""];
 			lang[35] = ["统一设置","","","",""];
 			lang[36] = ["设置模式","","","",""];
-			lang[37]  = ["", "主机", "", "", "", ""];
-			lang[38]  = ["", "副机", "", "", "", ""];
+			lang[37]  = ["主机", "", "", "", ""];
+			lang[38]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[37][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num + 1);i++){
 				dev_name[i] =  lang[38][language] + i;
 			}
 		}
@@ -140,11 +137,12 @@
 			for(let j = 1;j<34;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.vol_table').html(buildTableVol(phase_num));
 		$('.cur_table').html(buildTableCur(phase_num));
 		$('.pow_table').html(buildTablePow(phase_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num + 1)));
 		lang_fun();
 		showdata();
 		modeset();
@@ -408,7 +406,6 @@
 		function setdata(ipt)
 		{
 
-		// var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 			// var opt_val = parseInt(document.getElementById("opt_").value);
 			var addr_ = addr + 0 * 256;
 			var sub = 0,type = 0,number1 = 0;
@@ -594,8 +591,8 @@
 				state1_ = document.getElementById('cur'+(i)).childNodes[1];
 				state2_ = document.getElementById('pow'+i).childNodes[1];
 				state_.innerHTML = (parseFloat(phase_info[i + 1][0])).toFixed(1);
-				state1_.innerHTML = (parseFloat(phase_info[i + 1][8])).toFixed(2);
-				state2_.innerHTML = (parseFloat(phase_info[i + 1][16]));
+				state1_.innerHTML = (parseFloat(phase_info[i + 1][11])).toFixed(2);
+				state2_.innerHTML = (parseFloat(phase_info[i + 1][22])).toFixed(3);
 			}
 		}
 		setInterval(function(){

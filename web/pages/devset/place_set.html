@@ -57,7 +57,7 @@
 		}
 		function read_data(){
 			for(let i = 1;i<6;i++){
-				place_data[i] = sessionStorage.getItem(uut_name[i] + addr);
+				place_data[i] = sessionStorage.getItem(uut_name[i] + default_addr);
 			}
 		}
 		$('.place_set').html(buildTable());
@@ -75,14 +75,14 @@
 			if(confirm("请确认是否修改此项。")){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
-						rpc.call("pduSetParam",[0,uut,i,0,0,mds_data]);
+						rpc.call("pduSetParam",[default_addr,uut,i,0,0,mds_data]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_uut_info(0);
+			read_uut_info(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

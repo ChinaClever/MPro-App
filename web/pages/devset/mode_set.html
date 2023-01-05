@@ -77,13 +77,13 @@
 			}
 		}
 		function read_data(){
-			mode_data[0] = parseInt(sessionStorage.getItem(cfg_name[3] + addr));
-			mode_data[1] = parseInt(sessionStorage.getItem(cfg_name[4] + addr));
-			mode_data[2] = parseInt(sessionStorage.getItem(cfg_name[7] + addr));
-			mode_data[3] = parseInt(sessionStorage.getItem(cfg_name[8] + addr));
-			mode_data[4] = parseInt(sessionStorage.getItem(cfg_name[9] + addr));
-			mode_data[5] = parseInt(sessionStorage.getItem(cfg_name[10] + addr));
-			slave_num1 = parseInt(sessionStorage.getItem(type_info[5]+ "Num" + addr));
+			mode_data[0] = parseInt(sessionStorage.getItem(cfg_name[3] + default_addr));
+			mode_data[1] = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
+			mode_data[2] = parseInt(sessionStorage.getItem(cfg_name[7] + default_addr));
+			mode_data[3] = parseInt(sessionStorage.getItem(cfg_name[8] + default_addr));
+			mode_data[4] = parseInt(sessionStorage.getItem(cfg_name[9] + default_addr));
+			mode_data[5] = parseInt(sessionStorage.getItem(cfg_name[10] + default_addr));
+			slave_num1 = parseInt(sessionStorage.getItem(type_info[5]+ "Num" + default_addr));
 		}
 		$('.mode_set').html(buildTableMode());
 		$('.sw_set').html(buildTableSw());
@@ -120,7 +120,7 @@
 			if(confirm("请确认是否修改此项。")){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
-						rpc.call("pduSetParam",[0,cfg,i,0,0,mds_data]);
+						rpc.call("pduSetParam",[default_addr,cfg,i,0,0,mds_data]);
 					}
 				}
 				flash_html();
@@ -137,15 +137,15 @@
 			let mds_data = 0;
 			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否修改此项。")){
-				rpc.call("pduSetParam",[0,num,5,0,0,mds_data]);
+				rpc.call("pduSetParam",[default_addr,num,5,0,0,mds_data]);
 				flash_html();
 			}else{
 				showdata();
 			}
 		}
 		function flash_html(){
-			read_cfg_info(0);
-			rpc.call('pduReadParam',[addr,num,5,0,0]);
+			read_cfg_info(default_addr);
+			rpc.call('pduReadParam',[default_addr,num,5,0,0]);
 			setTimeout(function(){
 				read_data();
 				showdata();

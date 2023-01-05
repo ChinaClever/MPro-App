@@ -37,7 +37,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_push_data(0)},300);
+		setTimeout(function(){read_push_data(default_addr)},300);
 		var mode_set = new Array();
 		var mode_name = new Array("","UDP","TCP","WebSocket");
 		var select_name = new Array("","udpEn","udpAddr","udpPort","delay","","","","mode","port");
@@ -131,9 +131,9 @@
 					for(let i = 0;i<select_name.length;i++){
 						if(btn.id == select_name[i]){
 							if(i < 5){
-								rpc.call('pduSetParam',[0,push,i,1 + udp_num,0,btn.value]);
+								rpc.call('pduSetParam',[default_addr,push,i,1 + udp_num,0,btn.value]);
 							}else if(i>7){
-								rpc.call('pduSetParam',[0,push,i,0,0,btn.value]);
+								rpc.call('pduSetParam',[default_addr,push,i,0,0,btn.value]);
 							}
 						}
 					}
@@ -144,7 +144,7 @@
 			}
 		}
 		function flash_html(){
-			read_push_data(0);
+			read_push_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -152,7 +152,7 @@
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[0,push,10,0,0,0]);
+				rpc.call('pduSetParam',[default_addr,push,10,0,0,0]);
 			}else{}
 		}
 		function buildTablePush() {

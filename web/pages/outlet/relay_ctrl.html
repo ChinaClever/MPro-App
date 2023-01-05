@@ -40,7 +40,7 @@
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -70,7 +70,7 @@
 		var reset_delay = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let lang = new Array();
 		read_data();
 		function read_data(){
@@ -83,9 +83,6 @@
 				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
 				reset_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[5]+addr+'_'+i));
 				switch_enable[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		lang_init();
@@ -111,10 +108,10 @@
 			lang[16] = ["统一设置","","","",""];
 			lang[17] = ["开","","","",""];
 			lang[18] = ["关","","","",""];
-			lang[19]  = ["", "主机", "", "", "", ""];
-			lang[20]  = ["", "副机", "", "", "", ""];
+			lang[19]  = ["主机", "", "", "", ""];
+			lang[20]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[19][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[20][language] + i;
 			}
 			State[0] = lang[18][language];
@@ -127,9 +124,10 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		function buildSel(rows)
 		{
@@ -305,7 +303,7 @@
 				}else{
 					num = 0;
 				}
-				rpc.call('pduSetData',[0,output,switch_,1,num,stat]);
+				rpc.call('pduSetData',[addr,output,switch_,1,num,stat]);
 				flash_html(btn);
 			}else{}
 		}

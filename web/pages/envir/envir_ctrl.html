@@ -40,7 +40,7 @@
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2" ></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id ="opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
+								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_4"></span>
 							</div>
@@ -79,7 +79,7 @@
 		var dev_name =new Array();
 		var table_len = 4;
 		var type_num = 0;
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let lang = new Array();
 		lang_init();
 		function lang_init(){
@@ -115,10 +115,10 @@
 			lang[27] = ["烟雾","","","",""];
 			lang[28] = ["设置模式","","","",""];
 			lang[29] = ["阅读模式","","","",""];
-			lang[30]  = ["", "主机", "", "", "", ""];
-			lang[31]  = ["", "副机", "", "", "", ""];
+			lang[30]  = ["主机", "", "", "", ""];
+			lang[31]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[30][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[31][language] + i;
 			}
 			for(let i =0;i<Sensor_state.length;i++){
@@ -132,6 +132,7 @@
 			for(let j = 1;j<17;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		read_data();
 		function read_data(){
@@ -153,7 +154,7 @@
 		}
 		$('.tmp_hum_table').html(buildTableTH(table_len));
 		$('.oth_table').html(buildTableOth(table_len));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		function buildSel(rows)
 		{
