@@ -34,7 +34,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_log_setting_data(0)},150);
+		setTimeout(function(){read_log_setting_data(default_addr)},150);
 		var logset_data = new Array();
 		let lang = new Array();
 		var enable = new Array("","");
@@ -82,14 +82,14 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<logset_name.length;i++){
 					if(logset_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,47,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,47,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_log_setting_data(0);
+			read_log_setting_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

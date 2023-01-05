@@ -144,6 +144,7 @@ var jsonrpc = function()
       break;
       case 13:
         sessionStorage.setItem(cfg_name[topic] + addr_, (JSON.parse(evt.data).result[5]));
+        console.log(cfg_name[topic] + addr_, (JSON.parse(evt.data).result[5]));
       break;
       case 14:
         if(topic  == 11)

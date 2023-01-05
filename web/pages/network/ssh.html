@@ -35,7 +35,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		setTimeout(function(){
-			read_ssh_data(0);
+			read_ssh_data(default_addr);
 		},300);
 		var mode_set = new Array("","");
 		var ssh_data = new Array();
@@ -95,9 +95,9 @@
 						alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
 						return ;
 					}else{
-						rpc.call('pduSetParam',[0,45,3,0,0,ssh_name]);
-						rpc.call('pduSetParam',[0,45,4,0,0,ssh_psd]);
-						rpc.call('pduSetParam',[0,45,5,0,0,0]);
+						rpc.call('pduSetParam',[default_addr,45,3,0,0,ssh_name]);
+						rpc.call('pduSetParam',[default_addr,45,4,0,0,ssh_psd]);
+						rpc.call('pduSetParam',[default_addr,45,5,0,0,0]);
 					}
 				}else {
 					alert("username or password error!");
@@ -110,14 +110,14 @@
 			if(confirm("请确认是否保存此次修改。")){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,45,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,45,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_ssh_data(0);
+			read_ssh_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

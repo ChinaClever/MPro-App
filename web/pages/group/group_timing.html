@@ -287,7 +287,7 @@
 					val += " ";
 				}
 				val += document.getElementById('f'+ (num -1)).value;
-				rpc.call('pduSetParam',[0,23,stat,num,0,val]);
+				rpc.call('pduSetParam',[addr,23,stat,num,0,val]);
 				flash_html(btn);
 			}else{}
 		}

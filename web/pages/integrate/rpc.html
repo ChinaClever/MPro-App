@@ -37,7 +37,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_rpc_data(0)},300);
+		setTimeout(function(){read_rpc_data(default_addr)},300);
 		var mode_name = new Array("","TCP","WebSocket");
 		var mode_name1 = new Array("","HTTP");
 		var data_id  = new Array("json_mode","json_port","","xml_mode","xml_port");
@@ -106,7 +106,7 @@
 			}
 		}
 		function flash_html(){
-			read_rpc_data(0);
+			read_rpc_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -118,7 +118,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<data_id.length;i++){
 					if(btn.id == data_id[i]){
-						rpc.call('pduSetParam',[0,rpc_cfg,(i + 1),0,0,mds_data]);
+						rpc.call('pduSetParam',[default_addr,rpc_cfg,(i + 1),0,0,mds_data]);
 					}
 				}
 				flash_html();
@@ -129,9 +129,9 @@
 			var lab = 0;
 			if(confirm("请确认是否生效当前设置。")){
 				if(btn.id =="lang_5"){
-					rpc.call('pduSetParam',[0,rpc_cfg,3,0,0,0]);
+					rpc.call('pduSetParam',[default_addr,rpc_cfg,3,0,0,0]);
 				}else{5
-					rpc.call('pduSetParam',[0,rpc_cfg,6,0,0,0]);
+					rpc.call('pduSetParam',[default_addr,rpc_cfg,6,0,0,0]);
 				}
 				flash_html();
 			}else{}

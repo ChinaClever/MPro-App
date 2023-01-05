@@ -40,7 +40,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_snmp_data(0)},300);
+		setTimeout(function(){read_snmp_data(default_addr)},300);
 		var mode_set = new Array("","");
 		var snmp_name = new Array("","v2en","","","","","","","","","","v3en","usr","psd","parity","encrpty","","","","","","trap");
 		var addr_name = new Array("","addr1","addr2","addr3","addr4");
@@ -133,16 +133,16 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<snmp_name.length;i++){
 					if(snmp_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,snmp,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,snmp,i,0,0,btn.value]);
 					}else if(addr_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,snmp,21,i,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,snmp,21,i,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_snmp_data(0);
+			read_snmp_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -150,7 +150,7 @@
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[0,snmp,17,0,0,0]);
+				rpc.call('pduSetParam',[default_addr,snmp,17,0,0,0]);
 				flash_html();
 			}else{}
 		}

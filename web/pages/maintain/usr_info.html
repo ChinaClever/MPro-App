@@ -134,10 +134,10 @@
 					jur_ = 2;
 				}
 				if(usr_!= "" && psd_ !="" && conpsd_ != "" && ident_ !="" && psd_ == conpsd_){
-					rpc.call('pduSetParam',[0,14,1,val,0,usr_]);
-					rpc.call('pduSetParam',[0,14,2,val,0,psd_]);
-					rpc.call('pduSetParam',[0,14,3,val,0,ident_]);
-					rpc.call('pduSetParam',[0,14,4,val,0,jur_]);
+					rpc.call('pduSetParam',[default_addr,14,1,val,0,usr_]);
+					rpc.call('pduSetParam',[default_addr,14,2,val,0,psd_]);
+					rpc.call('pduSetParam',[default_addr,14,3,val,0,ident_]);
+					rpc.call('pduSetParam',[default_addr,14,4,val,0,jur_]);
 					usr_mark = val;
 					flash_html();
 				}else{

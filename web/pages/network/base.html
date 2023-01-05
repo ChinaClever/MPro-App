@@ -41,7 +41,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		setTimeout(function(){
-			read_ip_addr_data(0);
+			read_ip_addr_data(default_addr);
 		},300);
 		var mode_set = new Array("","DHCP");
 		var state_set = new Array("","");
@@ -176,7 +176,7 @@
 			}else{}
 		}
 		function flash_html(){
-			read_ip_addr_data(0);
+			read_ip_addr_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -199,13 +199,13 @@
 							if(i == 5 || i ==1){
 							}else{
 								val = document.getElementById(info_name[i] + num).value;
-								rpc.call('pduSetParam',[0,41,i,num,0,val]);
+								rpc.call('pduSetParam',[default_addr,41,i,num,0,val]);
 							}
 						}else{
 							if(i==3 || i ==1){
 							}else{
 								val = document.getElementById(info_name[i] + num).value;
-								rpc.call('pduSetParam',[0,41,i,num,0,val]);
+								rpc.call('pduSetParam',[default_addr,41,i,num,0,val]);
 							}
 						}
 					}

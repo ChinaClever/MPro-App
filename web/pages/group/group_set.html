@@ -79,6 +79,7 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			document.getElementById("ms").value = addr;
+			document.getElementById("en").value = group_mode;
 		}
 		function lang_fun_(){
 			for(let j = 4;j<6;j++){
@@ -121,7 +122,7 @@
 			if(sel.id == "lang_2"){
 
 			}else{
-				rpc.call("pduSetParam",[0,cfg,8,0,0,sel.value]);
+				rpc.call("pduSetParam",[addr,cfg,8,0,0,sel.value]);
 				if(sel.value == 1){
 					group_mode =1;
 					document.getElementById("lang_2").style.display = "";
@@ -182,7 +183,6 @@
 		function cked(ckd)
 		{
 			var stat=0,group = 0;
-			let addr = 0;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
 			var retVal = confirm("您已更改表单，请确认提交！");
@@ -195,18 +195,27 @@
 				}
 				rpc.call('pduSetParam',[addr,26,group+1,num,0,stat]);
 				flash_html(ckd);
-			}else{}
+			}else{
+				show_data();
+			}
 		}
 		function flash_html(par)
 		{
-			read_group_info(0);
-			setTimeout(function(){
+			let m_num = 0;
+			var time = setInterval(function(){
+				if(m_num  == 5){
+					clearInterval(time);
+					return ;
+				}
+				read_group_info(addr);
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
 				lang_fun_();
 				show_data();
-			},500);
+				m_num ++;
+				console.log(m_num);
+			},1000);
 		}
 		function buildTable(rows) {
 			var thead = '',
