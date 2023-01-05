@@ -47,7 +47,7 @@ void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &de
     addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
     addOidValue(addr, id++, oid, prefix+"buzzer", dev.buzzerSw, w);
     addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
-    addOidValue(addr, id++, oid, prefix+"eleLogEn", dev.eleLogEn, w);
+    addOidValue(addr, id++, oid, prefix+"sensorBox", dev.sensorBoxEn, w);
     addOidValue(addr, id++, oid, prefix+"language", dev.language, w);
     addOidValue(addr, id++, oid, prefix+"breaker", dev.isBreaker, w);
 }

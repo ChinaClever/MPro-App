@@ -58,7 +58,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
-    case 9: ret = it->eleLogEn; break;
+    case 9: ret = it->sensorBoxEn; break;
     case 10: ret = it->language; break;
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
@@ -83,7 +83,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
-    case 9: key = "eleLogEn"; it->eleLogEn = value; break;
+    case 9: key = "sensorBoxEn"; it->sensorBoxEn = value; break;
     case 10: key = "language"; it->language = value; break;
     case 11: key = "isBreaker";  it->isBreaker = value; break;
     case 12: key = "vh"; it->vh = value; break;

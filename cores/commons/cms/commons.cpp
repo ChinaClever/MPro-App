@@ -59,7 +59,7 @@ QString cm::executes(const QStringList &cmds)
 bool cm::pingNet(const QString& ip)
 {   
     bool bPingSuccess = false;
-    QString strArg = "ping -c3 " + ip;  //strPingIP 为设备IP地址
+    QString strArg = "ping -c2 " + ip;  //strPingIP 为设备IP地址
     QString p_stdout = execute(strArg);
     if(p_stdout.contains("ttl=")) { //我采用这个字符来判断 对不对？
         bPingSuccess = true;

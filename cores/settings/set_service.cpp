@@ -194,7 +194,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     case 2: key = "udp_en";  obj->ntp_udpEn(v.toInt()); break;
     case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
     case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
-    case 5: obj->ntpdate(); break;
+    case 5: obj->ntpdate(); break; case 6: ret = cm::pingNet(it->ntp_host); break;
     default: ret = false; cout << fc; break;
     }
 
