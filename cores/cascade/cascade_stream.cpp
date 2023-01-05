@@ -37,7 +37,7 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->outputSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
-    size = ptr->envSize; in << size;
+    size = ptr->envSize; in << size; size = SENOR_NUM;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
 
     in << toByteArray(ptr->tg);
