@@ -11,7 +11,7 @@ sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
 {
-    uint t = 6*60*60*1000;
+    uint t = 6*60*1000;
     timer = new QTimer(this);
     timer->start(t + rand()%100);
     connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
@@ -72,14 +72,14 @@ void Log_Core::append(const sDataItem &it)
 
 void Log_Core::log_hda(const sDataItem &it)
 {
-    uint sec = cfg.hdaTime * 60*60;
+    uint sec = cfg.hdaTime * 60;
     if(!cfg.hdaEn || !sec) return ;
     if(!(mCnt%sec)) append(it);
 }
 
 void Log_Core::log_hdaEle(const sDataItem &it)
 {
-    uint sec = cfg.eleTime * 24*60*60;
+    uint sec = cfg.eleTime * 24*60;
     if(!cfg.hdaEn || !sec) return ;
     if(!(mCnt%sec)) append(it);
 }
