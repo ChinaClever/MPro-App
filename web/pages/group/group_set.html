@@ -43,7 +43,7 @@
 		var output_name = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let group_name = new Array();
 		let group_info = new Array();
 		let group_data = new Array();
@@ -78,6 +78,7 @@
 			for(let j = 1;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		function lang_fun_(){
 			for(let j = 4;j<6;j++){

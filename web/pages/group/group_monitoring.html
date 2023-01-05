@@ -28,7 +28,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -46,7 +46,7 @@
 		var AVpow_val = new Array();
 		var dev_name =new Array();
 		let lang = new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
 		function read_data(){
 			for(var i = 1 ;i < group_num + 1;i++){
@@ -80,6 +80,7 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(group_num));
 		$('.devname').html(buildSel((slave_num+1)));

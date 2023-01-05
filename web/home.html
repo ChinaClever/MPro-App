@@ -34,7 +34,7 @@
 	<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
 		<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
 			<div class="panel panel-default">
-				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select class ="devname" id="ms" style="width:200px;" onChange="change();"></select></ul></div>
+				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select class ="devname" id="ms" style="width:200px;" onChange="change(this);"></select></ul></div>
 			</div>
 			<div class ="phase_div1">
 				<div class ="phase_div2" id="lang_3"></div>
@@ -276,7 +276,7 @@
 		let total_title = new Array("kW","kVA","kWh","Hz","mA");
 		let lang  = new Array(36);
 		let dev_name = new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
     	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
 		let stat_ = new Array("断开","闭合");
 		let serial_ = new Array("D","A","B","C","D");
@@ -335,7 +335,7 @@
 			lang[40]  = ["烟雾", "", "", "", ""];
 			lang[41]  = ["烟雾", "", "", "", ""];
 			dev_name[0] = lang[36][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[37][language] + i;
 			}
 		}
@@ -343,6 +343,7 @@
 			for(var i = 1;i<36;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
+			document.getElementById("ms").value = addr;
 		}
 		function read_chart_data(){
 			for(let i = 0;i<3;i++){
@@ -419,7 +420,7 @@
 		$('.loop_table').html(buildTableLoop(loop_num));
 		$('.sensor_tab').html(buildTableSensor());
 		$('.sys_table').html(buildTableSystem());
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		read_data();
 		LangFun();
 		function buildSel(rows)

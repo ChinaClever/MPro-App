@@ -8,7 +8,7 @@ let value_now = 0, val = 0;
 let user_name='user_name';
 let password = 'password';
 let identify = '';
-let addr  = 0;
+let default_addr = 0;
 let slave_addr = 0;
 let dual_addr = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","LoopOutput","","","","LoopStart","LoopEnd");
@@ -51,6 +51,12 @@ let odbc_cfg = new Array("","OdbcEn","OdbcServer","OdbcPort","OdbcUsr","OdbcPsd"
 let redis_cfg = new Array("","RedisEn","RedisServer","RedisPort","RedisPsd","RedisDbNum","RedisKey","RedisChannel","RedisUpdate","RedisTime","RedisState");
 // var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+// sessionStorage.setItem("dev_addr",0);
+if(sessionStorage.getItem("dev_addr") != null){
+  addr = parseInt(sessionStorage.getItem("dev_addr"));
+}else{
+  addr = default_addr;
+}
 let url_1;
 let group_num  = 8;
 let total_data = new Array(3);
@@ -294,7 +300,6 @@ var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
-window.addr = 0;
 
 function read_language(){
   rpc.call('pduReadParam',[0,cfg,10,0,0]);
@@ -1073,4 +1078,24 @@ function read_data_fifth(){
     }
     j++;
   },10);
+}
+function change(sel){
+  addr = parseInt(sel.value);
+  sessionStorage.setItem("dev_addr", parseInt(sel.value));
+  var time1 = setTimeout(function(){
+    read_num_info(addr);
+    read_cfg_info(addr);
+    setTimeout(function(){
+      read_phase_data(addr);
+      read_loop_data(addr);
+      read_output_data(addr);
+      read_sensor_data(addr);
+      read_group_data(addr);
+      read_total_data(addr);
+      read_output_param(addr);
+      read_group_param_data(addr);
+      read_group_info(addr);
+      read_monitoring_data(addr);
+    },500);
+  },1500);
 }
