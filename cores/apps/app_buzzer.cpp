@@ -41,7 +41,7 @@ void App_Buzzer::beep_initFunSlot()
 
     beep[1] = open("/sys/clever/beep/trigger", O_RDWR);
     if(beep[1] < 0) perror("open beep trigger");
-    QTimer::singleShot(5*1000,this,SLOT(beep_offSlot()));
+    QTimer::singleShot(300,this,SLOT(beep_offSlot()));
 
     mBeepTimer = new QTimer(this); mBeepTimer->start(1000);
     connect(mBeepTimer, SIGNAL(timeout()), this, SLOT(beep_onTimeoutDone()));

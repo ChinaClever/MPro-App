@@ -20,7 +20,7 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 2: res = it->pwd; break;
     case 3: res = it->token; break;
     case 4: res = it->permit; break;
-    case 5: res = it->ctrl; break;
+    case 5: res = it->groupCtrl; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -39,7 +39,7 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 2: key = "pwd_%1"; ptr = it->pwd; break;
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
-    case 5: key = "ctrl_%1"; it->ctrl = v.toLongLong(); break;
+    case 5: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
     case 11: ret = loginCheck(v.toString()); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();

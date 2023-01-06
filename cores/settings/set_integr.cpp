@@ -68,6 +68,8 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QVariant res; switch (fc) {
     case 1: res = cfg->enV2; break;
+    case 2: res = cfg->get; break;
+    case 3: res = cfg->set; break;
     case 11: res = cfg->enV3; break;
     case 12: res = cfg->usr; break;
     case 13: res = cfg->pwd; break;
@@ -87,6 +89,8 @@ bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
     QString prefix = "snmp";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "enV2"; cfg->enV2 = v.toInt(); break;
+    case 2: key = "get"; cfg->get = v.toString(); break;
+    case 3: key = "set"; cfg->set = v.toString(); break;
     case 11: key = "enV3"; cfg->enV3 = v.toInt(); break;
     case 12: key = "usr"; cfg->usr = v.toString(); break;
     case 13: key = "pwd"; cfg->pwd = v.toString(); break;
@@ -297,7 +301,7 @@ QVariant Set_Integr::odbcCfg(uchar fc)
     QVariant res = 0; switch (fc) {
     case 1: res = cfg->en; break;
     case 2: res = cfg->host; break;
-    case 3: res = cfg->port; break;        
+    case 3: res = cfg->port; break;
     case 4: res = cfg->user; break;
     case 5: res = cfg->pwd; break;
     case 6: res = cfg->db; break;

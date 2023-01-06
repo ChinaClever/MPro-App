@@ -47,7 +47,7 @@ void Agent_Get::addDevParam(uchar addr, const QString &oidPrefix, sParameter &de
     addOidValue(addr, id++, oid, prefix+"hz", dev.hz, w);
     addOidValue(addr, id++, oid, prefix+"buzzer", dev.buzzerSw, w);
     addOidValue(addr, id++, oid, prefix+"group", dev.groupEn, w);
-    addOidValue(addr, id++, oid, prefix+"eleLogEn", dev.eleLogEn, w);
+    addOidValue(addr, id++, oid, prefix+"sensorBox", dev.sensorBoxEn, w);
     addOidValue(addr, id++, oid, prefix+"language", dev.language, w);
     addOidValue(addr, id++, oid, prefix+"breaker", dev.isBreaker, w);
 }
@@ -125,6 +125,8 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
     addAlarmUnit(addr, id++, oid, name+"pow", it.pow, index);
     addOidValue(addr, id++, oid, name+"ele", it.ele[index], false);
     addOidValue(addr, id++, oid, name+"pf", it.pf[index], false);
+    addOidValue(addr, id++, oid, name+"artPow", it.artPow[index], false);
+    if(it.vol.size > 1) addOidValue(addr, id++,oid, name+"phase_voltage", it.lineVol[index], false);
 }
 
 void Agent_Get::addEnvData(uchar addr, const QString &oidPrefix,

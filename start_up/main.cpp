@@ -39,7 +39,7 @@ static void init_netWork()
 
     if(!mac.contains(deMac)) {
         system("ip link set eth0 down");
-        QString cmd = "ip link set eth0 address " +mac;
+        QString cmd = "ip link set eth0 address " + mac.mid(0, 17);
         system(cmd.toStdString().c_str()); qDebug() << cmd;
     }
 
