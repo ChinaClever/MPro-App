@@ -151,7 +151,9 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
+    if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
     strListAppend(it.name, size, "name", obj);
+
     json.insert(key, obj);
 }
 

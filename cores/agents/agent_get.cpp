@@ -125,6 +125,8 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
     addAlarmUnit(addr, id++, oid, name+"pow", it.pow, index);
     addOidValue(addr, id++, oid, name+"ele", it.ele[index], false);
     addOidValue(addr, id++, oid, name+"pf", it.pf[index], false);
+    addOidValue(addr, id++, oid, name+"artPow", it.artPow[index], false);
+    if(it.vol.size > 1) addOidValue(addr, id++,oid, name+"phase_voltage", it.lineVol[index], false);
 }
 
 void Agent_Get::addEnvData(uchar addr, const QString &oidPrefix,

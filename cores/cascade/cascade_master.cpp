@@ -34,7 +34,7 @@ void Cascade_Master::masterReadDevs()
         setEndisable(i, ret, devData(i)->offLine);
     }
 
-    if(runTime() > 48*60) t = 500;
+    if(runTime() > 48*60*60) t += 500;
     t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
 }
 

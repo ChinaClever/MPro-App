@@ -17,7 +17,7 @@ OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
 bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
 {
     bool ret = true;
-    if(cm::runTime() < 48*60) dest = src;
+    if(cm::runTime() < 48*60*60) dest = src;
     if((src >= min) && (src < max)) {
         dest = src; ret = true;
     } else {
@@ -31,7 +31,7 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60) num = 1;
+    if(cm::runTime() < 48*60*60) num = 1;
     if((cnt[id] == num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
@@ -58,7 +58,7 @@ void OP_Object::recoveryLog(int id, uint *cnt)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60) num = 1;
+    if(cm::runTime() < 48*60*60) num = 1;
     if((cnt[id] > num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
@@ -100,7 +100,7 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
     if(src[i] == 16*COM_RATE_VOL) {ret = false; /*dest[id] = 0;*/}
     if(!faultCode(id, ret, cnt, FaultCode::DTC_VOL)) {
         faultLog(id, cnt, src[i]);
-        if(cm::runTime() > 48*60) {
+        if(cm::runTime() > 48*60*60) {
             if(cnt[id] > FAULT_NUM) dest[id] = mDev->line.vol.value[0];
         }
     }
@@ -116,7 +116,7 @@ bool OP_Object::curFaultCheck(uchar k, uchar i)
     bool ret = dataFiltering(dest[id], src[i], COM_MAX_CUR);
     if(!faultCode(id, ret, cnt, FaultCode::DTC_CUR)) {
         faultLog(id, cnt, src[i]);
-         if(cm::runTime() > 48*60) {
+         if(cm::runTime() > 48*60*60) {
             if(cnt[id] > FAULT_NUM) dest[id] = 0;
          }
     }
@@ -157,7 +157,7 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     }
 
     if(!faultCode(id, ret, cnt, FaultCode::DTC_ELE)) {
-        if(cm::runTime() < 48*60) dest[id] = src[i];
+        if(cm::runTime() < 48*60*60) dest[id] = src[i];
         else if(cnt[id] > FAULT_NUM) dest[id] = src[i];
     } else dest[id] = src[i];
 }

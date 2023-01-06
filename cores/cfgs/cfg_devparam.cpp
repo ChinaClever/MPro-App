@@ -93,9 +93,13 @@ void Cfg_devParam::devParamRead(sParameter &it)
 void Cfg_devParam::runTimeWrite()
 {
     QString g = "devParams";
+    static int cnt=0; bool ret = false;
     sDevCfg *cfg = &(cm::masterDev()->cfg);
     uint t = cfg->param.runTime += 1;
-    devParamWrite("runTime", t, g);
+    if(cnt++ < 60) {if(0 == t%10) ret = true;}
+    else if(cnt++ < 48*60) {if(0 == t%60) ret = true;}
+    else if(0 == t%(24*60)) ret = true;
+    if(ret) devParamWrite("runTime", t, g);
 }
 
 
