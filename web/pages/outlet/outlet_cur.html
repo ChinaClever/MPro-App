@@ -43,7 +43,7 @@
 			</div>
 		</div>
     <script>
-		var  read  = 0,dt = 0;
+		var  read  = 1,dt = 0;
 		var mode = 0;
 		let cur_mark = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
@@ -94,6 +94,10 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[14][language];
+			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel((slave_num+1)));
@@ -110,7 +114,6 @@
 			return tbody;
 		}
 		function showdata(){
-			document.getElementById("ms").value = addr;
 			var cs = 0 ,ss = 0,hs=0;
 			for(var i = 1 ;i < output_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
@@ -160,8 +163,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
@@ -175,7 +178,7 @@
 			else{
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "none";
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[15][language];
 				var iptname = document.getElementsByTagName("input");
@@ -215,41 +218,38 @@
 			let sub = 0;
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ckd.id.slice(1))+1;
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(type1 === 'd'){
-					sub = 8;
-				}else{
-					sub = 11;
-				}
-				if(ckd.checked == true){
-					if(number == output_num +1){
-						if(sub ==8){
-							cur_mark[0] = 1;
-						}else{
-							cur_mark[1] = 1;
-						}
-					}
-					stat = '1';
-				}else{
-					if(number == output_num +1){
-						if(sub ==8){
-							cur_mark[0] = 0;
-						}else{
-							cur_mark[1] = 0;
-						}
-					}
-					stat = '0';
-				}
+			if(type1 === 'd'){
+				sub = 8;
+			}else{
+				sub = 11;
+			}
+			if(ckd.checked == true){
 				if(number == output_num +1){
-					number1 = 0;
-				}else{
-					number1 = number;
+					if(sub ==8){
+						cur_mark[0] = 1;
+					}else{
+						cur_mark[1] = 1;
+					}
 				}
-				dt = sub;
-				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
-				flash_html(ckd);
-			}else{}
+				stat = '1';
+			}else{
+				if(number == output_num +1){
+					if(sub ==8){
+						cur_mark[0] = 0;
+					}else{
+						cur_mark[1] = 0;
+					}
+				}
+				stat = '0';
+			}
+			if(number == output_num +1){
+				number1 = 0;
+			}else{
+				number1 = number;
+			}
+			dt = sub;
+			rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
+			flash_html(ckd);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -265,33 +265,31 @@
 			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[9].childNodes[0].value);
-			if(data1>data2 || data2>data3 || data3>data4){
+			
+			if(number == output_num +1){
+					number1 = 0;
+			}else{
+				number1 = number;
+				if(data1>data2 || data2>data3 || data3>data4){
 				alert("input data error");
 				showdata();
 				return ;
 			}
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(type1 === 'e'){
-					sub = 2;
-				}else if(type1 === 'f'){
-					sub = 5;
-				}else if(type1 === 'g'){
-					sub = 6;
-				}else if(type1 === 'h'){
-					sub = 7;
-				}else if(type1 === 'i'){
-					sub = 4;
-				}
-				if(number == output_num +1){
-						number1 = 0;
-				}else{
-					number1 = number;
-				}
-				dt = sub;
-				rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
-				flash_html(ipt);
-			}else{}
+			}
+			if(type1 === 'e'){
+				sub = 2;
+			}else if(type1 === 'f'){
+				sub = 5;
+			}else if(type1 === 'g'){
+				sub = 6;
+			}else if(type1 === 'h'){
+				sub = 7;
+			}else if(type1 === 'i'){
+				sub = 4;
+			}
+			dt = sub;
+			rpc.call('pduSetData',[addr_,output,cur_,sub,number1,stat]);
+			flash_html(ipt);
 		}
 		function buildTable(rows) {
 			var thead = '',
@@ -330,10 +328,10 @@
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
 					tbody += '<td id = "e'+ i + '"></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"value="8.00"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"value="10.00"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>16){value=16};if(value<0)value=0" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}

@@ -39,7 +39,7 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var read = 0;
+		var read = 1;
 		var output_name = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
@@ -159,8 +159,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[7][language];
 				var iptname = document.getElementsByTagName("input");
@@ -170,7 +170,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");

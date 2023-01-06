@@ -59,7 +59,7 @@
 				rpc.call('pduReadParam',[addr,23,1,i,i]);
 			}
 		}
-		let read = 0;
+		let read = 1;
 		let lang = new Array();
 		let group_name =new Array();
 		let group_data =new Array();
@@ -87,6 +87,9 @@
 			for(let j = 1;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[7][language];
+			}
 			document.getElementById("ms").value = addr;
 		}
 		function lang_fun_(){
@@ -103,10 +106,10 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = lang[7][1];
+				ros.innerHTML = lang[7][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -114,9 +117,9 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = lang[2][1];
+				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -142,12 +145,8 @@
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
 			let val = ipt.value;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				rpc.call('pduSetParam',[addr_,23,1,number,number,val]);
-				flash_html(ipt);
-			}else{}
+			rpc.call('pduSetParam',[addr_,23,1,number,number,val]);
+			flash_html(ipt);
 		}
 
 		function flash_html(par)

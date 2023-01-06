@@ -54,7 +54,7 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var read  = 0;
+		var read  = 1;
 		let lang = new Array();
 		let group_data = new Array();
 		let group_name = new Array();
@@ -104,7 +104,7 @@
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			if(read == 1){
+			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
 			document.getElementById("ms").value = addr;
@@ -138,8 +138,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
@@ -154,7 +154,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
@@ -216,33 +216,27 @@
 			var stat;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(type1 === 'i'){
-					if(ckd.checked == true){
-						stat = '1';
-					}else{
-						stat = '0';
-					}
-					if(num == group_num +1){
-						if(ckd.checked == true){
-							sw_mark = 1;
-						}else{
-							sw_mark = 0;
-						}
-					}
-					if(num !== group_num + 1){
-
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,group,switch_,7,num,stat]);
+			if(type1 === 'i'){
+				if(ckd.checked == true){
+					stat = '1';
+				}else{
+					stat = '0';
 				}
-				flash_html(ckd);
-			}else{
-				showdata();
+				if(num == group_num +1){
+					if(ckd.checked == true){
+						sw_mark = 1;
+					}else{
+						sw_mark = 0;
+					}
+				}
+				if(num !== group_num + 1){
+
+				}else{
+					num = 0;
+				}
+				rpc.call('pduSetData',[addr,group,switch_,7,num,stat]);
 			}
+			flash_html(ckd);
 		}
 		function read_time_sw_data(){
 			for(var i = 1 ;i < group_num + 1;i++)
