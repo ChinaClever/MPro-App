@@ -47,8 +47,8 @@ void App_Sensor::env_workDown()
             } else {
                 env->isInsert[i] = 1;
                 sscanf(t, "%d:%d", v, v+1);
-                env->tem.value[i] = v[0];
                 env->hum.value[i] = v[1];
+                env->tem.value[i] = v[0]*10;
                 //qDebug() << i <<  v[0] << v[1];
                 //printf("th%d:温度(%d),湿度(%d)\n", i, v[0], v[1]);
             }
