@@ -137,6 +137,21 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     }
 }
 
+void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
+{
+    int size = it.size; bool dc = false;
+    //arrayAppend(it.sw, size, key+"_state", json);
+    if(mDataContent == 0) {
+        for(int i=0; i<size; ++i) dc |= it.timingEn[i];
+    } else if(mDataContent == 1) dc = true;
+
+    if(dc) {
+        arrayAppend(it.timingEn, size, key+"_timing_en", json);
+        strListAppend(it.timingOn, size, key+"_timing_on", json);
+        strListAppend(it.timingOff, size, key+"_timing_off", json);
+    }
+}
+
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
 {
     QJsonObject obj;  int size = it.size;
@@ -145,6 +160,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
 
     if(1 == relay) relayUnit(it.relay, "relay", obj);
+    else if(3 == relay) groupRelayUnit(it.relay, "group_relay", obj);
     else if(2 == relay) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
 
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
@@ -260,7 +276,7 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 
     //it->group.size = 8;/////////////////==============
     //it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
-    ObjData(it->group, "group_item_list", obj);
+    ObjData(it->group, "group_item_list", obj, 3);
 
     //it->dual.size = 48;/////////////////============
     //it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
