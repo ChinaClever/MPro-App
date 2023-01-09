@@ -333,6 +333,7 @@
 	</div>
 	</div>
 	<script>
+		let dev_dis = 0;
 		let phase_info = new Array();
 		let total_info = new Array();
 		let system_info = new Array();
@@ -414,6 +415,9 @@
 				}
 			}
 			document.getElementById("ms").value = addr;
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
 		}
 		function read_chart_data() {
 			for (let i = 0; i < 3; i++) {
@@ -432,6 +436,7 @@
 			}
 		}
 		function read_data() {
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			total_info[0] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[4] + data_name[1] + addr));
 			total_info[1] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[7] + data_name[1] + addr));
 			total_info[2] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[5] + data_name[1] + addr));
@@ -576,10 +581,10 @@
 			if (obj == 0) {
 				for (let i = 0; i < 4; i++) {
 					if (i < 2) {
-						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:10px;" id ="dat' + (i + 1) + '"></span>';
+						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
 					} else {
-						tbody += '<tr><td><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
+						tbody += '<tr><td style="padding-top:'+(15-(i-2)*5) +'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
 						tbody += '<span class = "span_data" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td></tr>';
 					}
@@ -592,7 +597,7 @@
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L'+((obj+1)<=phase_num?(obj+1):1)+':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (70 + obj) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
