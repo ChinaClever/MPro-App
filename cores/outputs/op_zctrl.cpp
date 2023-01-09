@@ -5,7 +5,7 @@
  */
 #include "op_zctrl.h"
 
-OP_ZCtrl::OP_ZCtrl(QObject *parent) : OP_ObjCtrl{parent}
+OP_ZCtrl::OP_ZCtrl(QObject *parent) : OP_ARtu{parent}
 {
 
 }

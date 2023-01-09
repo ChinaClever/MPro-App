@@ -10,6 +10,7 @@
  */
 struct sOpIt
 {
+    uchar type; // 0 执行板 １　总监测板
     uchar addr;
     uchar size;
     uchar hz;
@@ -26,13 +27,16 @@ struct sOpIt
     uchar ens[DEV_NUM];
 };
 
+
 class OP_Object : public SerialPort
 {
 public:
     explicit OP_Object(QObject *parent = nullptr);
+    enum {zCmdLen=68, zRcvLen=127};
 
 protected:
     void fillData(uchar addr);
+    void loop_fillData();
 
 private:
     bool volFaultCheck(uchar k, uchar i);

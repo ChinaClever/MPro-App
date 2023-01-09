@@ -1,16 +1,16 @@
 #ifndef OP_ARTU_H
 #define OP_ARTU_H
 
-#include <QObject>
+#include "op_objctrl.h"
 
-class OP_ARtu : public QObject
+class OP_ARtu : public OP_ObjCtrl
 {
-    Q_OBJECT
 public:
     explicit OP_ARtu(QObject *parent = nullptr);
 
-signals:
-
+protected:
+    bool loop_readData();
+    bool loop_recvPacket(const QByteArray &array, sOpIt *it);
 };
 
 #endif // OP_ARTU_H
