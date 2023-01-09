@@ -13,7 +13,7 @@ let slave_addr = 0;
 let dual_addr = 0;
 let type_info = new Array("","Phase","Loop","Output","Board","Slave","BoardOutput","LoopOutput","","","","LoopStart","LoopEnd");
 let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sensor","","","Output","Uut","Num","Cfg","User","Modbus","Snmp","Rpc","Push","Mqtt","Amqp","Content","Output","Group","Dual","GroupInfo","GroupSet");
-let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
+let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","LineVol","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
 let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","LanguageEn","BreakerEn","Direction","Angle");
@@ -368,6 +368,9 @@ function read_phase_data(addr)
       rpc.call('pduReadData',[addr,phase,cur_,j,i]);
       rpc.call('pduReadData',[addr,phase,pow_,j,i]);
       rpc.call('pduReadData',[addr,phase,pf_,j,i]);
+    }
+    if(i <= phase_num ){
+      rpc.call('pduReadData',[addr,phase,10,j,i]);
     }
     i++;
     if(i >= (phase_num + 1)){

@@ -258,24 +258,7 @@ p{
   }
   
   .progress-bar {
-    /* position: relative;
-    border-radius: inherit;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    height: 12px;
-    border-radius: 15px;
-    -webkit-transition: 0.5s linear;
-    -moz-transition: 0.5s linear;
-    -o-transition: 0.5s linear;
-    transition: 0.5s linear;
-    -webkit-transition-property: width, background-color;
-    -moz-transition-property: width, background-color;
-    -o-transition-property: width, background-color;
-    transition-property: width, background-color;
-    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1); */
-    background: #ff6780;
+    background: #a4a4a4;
     position: absolute;
     left: 0;
     top: 0;
@@ -283,6 +266,7 @@ p{
     border-radius: inherit;
     animation: process 1s linear forwards;
   }
+
   .loop_div{
     border:1px solid;
     border-color: #ffffff;
@@ -299,4 +283,35 @@ p{
   .spacing{
 	text-align:left; 
 	padding-left:20px;
+}
+.child {
+    position: relative;
+    height: 100%;
+    border-radius: inherit;
+}
+@keyframes process {
+    0% {
+        left: 0;
+        right: 100%;
+    }
+
+    20% {
+        right: 80%
+    }
+
+    40% {
+        right: 60%;
+    }
+
+    60% {
+        right: 40%;
+    }
+
+    80% {
+        right: 20%;
+    }
+
+    100% {
+        right: 0;
+    }
 }

@@ -44,7 +44,7 @@
 										onclick="readonlyset(this);" id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-								<span style="float:right;"><span style="padding-right: 5px;" id="lang_3"></span><select
+								<span id="dev_sel" style="float:right;display: none;"><span style="padding-right: 5px;" id="lang_3"></span><select
 										class="devname" id="ms" style="width:100px;"
 										onchange="change(this);"></select></span>
 							</div>
@@ -63,6 +63,7 @@
 		<script src="../../doc-lib/doc.js"></script>
 		<script>
 			var read = 1;
+		let dev_dis = 0;
 			let sw_mark = 0;
 			let lang = new Array();
 			let group_data = new Array();
@@ -72,6 +73,7 @@
 			read_data();
 			lang_init();
 			function read_data() {
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 				for (var i = 1; i < group_num + 1; i++) {
 					group_data[i] = new Array();
 					group_name[i] = sessionStorage.getItem("GroupName" + addr + '_' + i);
@@ -85,7 +87,7 @@
 				}
 				lang[1] = ["分组控制", "", "", "", ""];
 				lang[2] = ["阅读模式", "", "", "", ""];
-				lang[3] = ["设备选择", "", "", "", ""];
+				lang[3] = ["设备选择:", "", "", "", ""];
 				lang[4] = ["序号", "", "", "", ""];
 				lang[5] = ["分组名称", "", "", "", ""];
 				lang[6] = ["分组信息(输出位)", "", "", "", ""];
@@ -111,6 +113,9 @@
 				if (read == 0) {
 					document.getElementById("lang_2").innerHTML = lang[11][language];
 				}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
 			}
 			$('.table-striped').html(buildTable(group_num));
 			$('.devname').html(buildSel((slave_num + 1)));
