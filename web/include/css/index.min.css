@@ -173,10 +173,11 @@ html {
     overflow: hidden
 }
 p{
-    height: 35px;
+    width: 100%;
+    height: 83px;
     color:#fff;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background:#2b333e;
+    background:#323b48;
 }
 .main-box>iframe {
     width: 100%;
@@ -185,7 +186,7 @@ p{
     background: #fff
 }
 .top-box{
-    height: 40px;
+    height: 83px;
     color:#fff;
     background:#2b333e;
 }
@@ -196,7 +197,7 @@ p{
 }
 .phase_table{
 	width:100%;
-	margin-top:10px;
+	margin-top:5px;
 	font-size:12px;
 	border:0px solid;
 	border-color: #aaaaff;
@@ -257,8 +258,11 @@ p{
   }
   
   .progress-bar {
-    position: relative;
-  
+    /* position: relative;
+    border-radius: inherit;
+    left: 0;
+    top: 0;
+    bottom: 0;
     height: 12px;
     border-radius: 15px;
     -webkit-transition: 0.5s linear;
@@ -270,7 +274,14 @@ p{
     -o-transition-property: width, background-color;
     transition-property: width, background-color;
     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1); */
+    background: #ff6780;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: inherit;
+    animation: process 1s linear forwards;
   }
   .loop_div{
     border:1px solid;

@@ -135,6 +135,9 @@
 			for(let j = 1;j<34;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[36][language];
+			}
 			document.getElementById("ms").value = addr;
 		}
 		$('.vol_table').html(buildTableVol(loop_num));
@@ -325,76 +328,73 @@
 			let sub =0;
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ckd.id.slice(1))+1;
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(type1 === 'c'){
-					sub = 8;
-				}else{
-					sub = 11;
-				}
+			if(type1 === 'c'){
+				sub = 8;
+			}else{
+				sub = 11;
+			}
+			if(ckd.name == "pow"){
+				type = 4;
+			}else if(ckd.name == "cur"){
+				type = 3;
+			}else if(ckd.name == "vol"){
+				type = 2;
+			}
+			if(ckd.checked == true){
+				stat = '1';
+			}else{
+				stat = '0';
+			}
+			if(number == loop_num +1){
+				number1 = 0;
 				if(ckd.name == "pow"){
-					type = 4;
-				}else if(ckd.name == "cur"){
-					type = 3;
-				}else if(ckd.name == "vol"){
-					type = 2;
-				}
-				if(ckd.checked == true){
-					stat = 1;
-				}else{
-					stat = 0;
-				}
-				if(number == loop_num +1){
-					number1 = 0;
-					if(ckd.name == "pow"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								pow_mark[0] = 1;
-							}else{
-								pow_mark[0] = 0;
-							}
+					if(sub == 8){
+						if(ckd.checked == true){
+							pow_mark[0] = 1;
 						}else{
-							if(ckd.checked == true){
-								pow_mark[1] = 1;
-							}else{
-								pow_mark[1] = 0;
-							}
+							pow_mark[0] = 0;
 						}
-					}else if(ckd.name == "cur"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								cur_mark[0] = 1;
-							}else{
-								cur_mark[0] = 0;
-							}
+					}else{
+						if(ckd.checked == true){
+							pow_mark[1] = 1;
 						}else{
-							if(ckd.checked == true){
-								cur_mark[1] = 1;
-							}else{
-								cur_mark[1] = 0;
-							}
-						}
-					}else if(ckd.name == "vol"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								vol_mark[0] = 1;
-							}else{
-								vol_mark[0] = 0;
-							}
-						}else{
-							if(ckd.checked == true){
-								vol_mark[1] = 1;
-							}else{
-								vol_mark[1] = 0;
-							}
+							pow_mark[1] = 0;
 						}
 					}
-				}else{
-					number1 = number;
+				}else if(ckd.name == "cur"){
+					if(sub == 8){
+						if(ckd.checked == true){
+							cur_mark[0] = 1;
+						}else{
+							cur_mark[0] = 0;
+						}
+					}else{
+						if(ckd.checked == true){
+							cur_mark[1] = 1;
+						}else{
+							cur_mark[1] = 0;
+						}
+					}
+				}else if(ckd.name == "vol"){
+					if(sub == 8){
+						if(ckd.checked == true){
+							vol_mark[0] = 1;
+						}else{
+							vol_mark[0] = 0;
+						}
+					}else{
+						if(ckd.checked == true){
+							vol_mark[1] = 1;
+						}else{
+							vol_mark[1] = 0;
+						}
+					}
 				}
-				rpc.call('pduSetData',[addr_,loop,type,sub,number1,stat]);
-				flash_html(ckd);
-			}else{}
+			}else{
+				number1 = number;
+			}
+			rpc.call('pduSetData',[addr_,loop,type,sub,number1,stat]);
+			flash_html(ckd);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -410,44 +410,38 @@
 			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
-			if(data1>data2 || data2>data3 || data3>data4){
-				alert("input data error");
-				showdata();
-				return ;
-			}
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(ipt.name == "pow"){
-					type = 4;
-					stat *= 1;
-				}else if(ipt.name == "cur"){
-					type = 3;
-					stat *= 1;
-				}else if(ipt.name == "vol"){
-					type = 2;
-					stat *= 1;
+			
+			if(number == loop_num +1){
+				number1 = 0;
+			}else{
+				number1 = number;
+				if(data1>data2 || data2>data3 || data3>data4){
+					alert("input data error");
+					showdata();
+					return ;
 				}
-				if(type1 === 'e'){
-					sub = 5;
-				}else if(type1 === 'f'){
-					sub = 6;
-				}else if(type1 === 'g'){
-					sub = 7;
-				}else if(type1 === 'h'){
-					sub = 4;
-				}
-				if(number == loop_num +1){
-					number1 = 0;
-				}else{
-					number1 = number;
-				}
-				rpc.call('pduSetData',[addr_,loop,type,sub,number1,parseInt(stat.toFixed(0))]);
-				flash_html(ipt);
 			}
-			else
-			{
-				
+			if(ipt.name == "pow"){
+				type = 4;
+				stat *= 1;
+			}else if(ipt.name == "cur"){
+				type = 3;
+				stat *= 1;
+			}else if(ipt.name == "vol"){
+				type = 2;
+				stat *= 1;
 			}
+			if(type1 === 'e'){
+				sub = 5;
+			}else if(type1 === 'f'){
+				sub = 6;
+			}else if(type1 === 'g'){
+				sub = 7;
+			}else if(type1 === 'h'){
+				sub = 4;
+			}
+			rpc.call('pduSetData',[addr_,loop,type,sub,number1,parseInt(stat.toFixed(0))]);
+			flash_html(ipt);
 		}
 		function buildTablePow(rows) {
 			var thead = '',tbody = '';
@@ -483,10 +477,10 @@
 						tbody += '<td><input name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 						tbody += '<td><input name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 						tbody += '<td id = "d'+ i +'"></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"value="2.816"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"value="3.520"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7000){value=7000};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 						tbody += '</tr>';
 					}
 				}
@@ -527,10 +521,10 @@
 					tbody += '<td><input name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'"></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "g'+ i + '"value="12.80"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "h'+ i + '"value="16.00"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>32){value=32};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -570,10 +564,10 @@
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'"></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "g'+ i + '"value="176.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "h'+ i + '"value="220.0"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}

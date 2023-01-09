@@ -58,7 +58,8 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var  read  = 0;
+		var  read  = 1;
+		let pow_mark = new Array();
 		var Input_state = new Array("","","");
 		var State = new Array("","");
 		var switch_enable = new Array();
@@ -124,6 +125,9 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[14][language];
+			}
 			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(output_num));
@@ -154,8 +158,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
@@ -170,7 +174,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[15][language];
 				var iptname = document.getElementsByTagName("input");
@@ -212,6 +216,18 @@
 				else{
 					cs.bgColor = '';
 				}
+				if(i == output_num){
+					if(pow_mark[0] ==1){
+						document.getElementById('e'+(i)).checked = true;
+					}else{
+						document.getElementById('e'+(i)).checked = false;
+					}
+					if(pow_mark[1] ==1){
+						document.getElementById('f'+(i)).checked = true;
+					}else{
+						document.getElementById('f'+(i)).checked = false;
+					}
+				}
 			}
 		}
 		function flash_html(par)
@@ -227,60 +243,64 @@
 		}
 		function cked(ckd)
 		{
-			var stat;
+			var stat = 0,number1 = 0;
 			var type1 = ckd.id.substr(0,1);
-			var num = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(ckd.checked == true){
-					stat = '1';
-				}else{
-					stat = '0';
-				}
-				if(type1 === 'e'){
-					if(num !== output_num + 1){
-
+			let sub =0;
+			var number = parseInt(ckd.id.slice(1))+1;
+			if(type1 === 'e'){
+				sub = 8;
+			}
+			else if(type1 === 'f'){
+				sub = 2;
+			}
+			if(ckd.checked == true){
+				if(number == output_num +1){
+					if(sub ==8){
+						pow_mark[0] = 1;
 					}else{
-						num = 0;
+						pow_mark[1] = 1;
 					}
-					rpc.call('pduSetData',[addr,output,switch_,8,num,stat]);
 				}
-				else if(type1 === 'f'){
-					if(num !== output_num + 1){
+				stat = '1';
+			}else{
+				if(number == output_num +1){
+					if(sub ==8){
+						pow_mark[0] = 0;
 					}else{
-						num = 0;
+						pow_mark[1] = 0;
 					}
-					rpc.call('pduSetData',[addr,output,switch_,2,num,stat]);
 				}
-				flash_html(ckd);
-			}else{}
+				stat = '0';
+			}
+			if(number == output_num +1){
+				number1 = 0;
+			}else{
+				number1 = number;
+			}
+			rpc.call('pduSetData',[addr,output,switch_,sub,number1,stat]);
+			flash_html(ckd);
 		}
 		function setdata(ipt)
 		{
 			var stat;
 			var type1 = ipt.id.substr(0,1);
 			var num = parseInt(ipt.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(type1 === 'd'){
-					stat = parseInt(ipt.value);
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
-				}else if(type1 === 'j'){
-					stat = parseInt(ipt.value);
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
+			if(type1 === 'd'){
+				stat = parseInt(ipt.value);
+				if(num !== output_num + 1){
+				}else{
+					num = 0;
 				}
-				flash_html(ipt);
-			}else{}
+				rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
+			}else if(type1 === 'j'){
+				stat = parseInt(ipt.value);
+				if(num !== output_num + 1){
+				}else{
+					num = 0;
+				}
+				rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
+			}
+			flash_html(ipt);
 		}
 		function btn_click(btn)
 		{
@@ -341,8 +361,8 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">'+lang[16][language]+'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "3"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "5"></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" ></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" ></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';
