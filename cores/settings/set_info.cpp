@@ -4,7 +4,8 @@
  *      Author: Lzy
  */
 #include "set_info.h"
-#include "cfg_com.h"
+//#include "cfg_com.h"
+#include "app_core.h"
 
 Set_Info::Set_Info()
 {
@@ -65,6 +66,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 13: ret = it->screenAngle; break;
     case 14: ret = it->backlightType; break;
     case 15: ret = it->backlightTime; break;
+    case 16: App_Core::bulid()->beep_once(); break;
     case 21: ret = it->dataContent; break;
     default: cout << type; break;
     }
@@ -90,9 +92,10 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 13: key = "screenAngle"; it->screenAngle = value; break;
     case 14: key = "backlightType"; it->backlightType = value; break;
     case 15: key = "backlightTime"; it->backlightTime = value; break;
+    case 16: App_Core::bulid()->beep_once(); break;
     case 21: key = "dataContent"; it->dataContent = value; break;
     default: ret = false; cout << fc; break;
-    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
+    } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     return ret;
 }
