@@ -15,6 +15,7 @@ bool OP_ARtu::loop_recvPacket(const QByteArray &array, sOpIt *it)
 {
     bool ret = true; int op = 6;
     uchar *ptr = (uchar *)array.data();
+
     if((*ptr++ == 0x7B) && (*ptr++ == 0xC1))  {
         it->addr = *ptr++;
         it->hz = *ptr++;

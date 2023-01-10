@@ -221,15 +221,18 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     if(strlen(it.usr)) obj.insert("usr", it.usr);
     if(strlen(it.md5)) obj.insert("md5", it.md5);
     if(strlen(it.ver)) obj.insert("ver", it.ver);
+    if(strlen(it.dev)) obj.insert("dev", it.dev);
     if(strlen(it.remark)) obj.insert("remark", it.remark);
+    if(strlen(it.hwVersion)) obj.insert("hwVersion", it.hwVersion);
     if(strlen(it.oldVersion)) obj.insert("oldVersion", it.oldVersion);
     if(strlen(it.compileDate)) obj.insert("compileDate", it.compileDate);
     if(strlen(it.releaseDate)) obj.insert("releaseDate", it.releaseDate);
+    if(strlen(it.upgradeDate)) obj.insert("upgradeDate", it.upgradeDate);
+    if(strlen(it.serialNumber)) obj.insert("serialNumber", it.serialNumber);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
-    obj.insert("op_vers", vs);
-    json.insert(key, obj);
+    obj.insert("op_vers", vs); json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
@@ -238,6 +241,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     //obj.insert("pdu_type", "MPDU-Pro");
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
+    obj.insert("dev_mode", it.param.devMode/r);
 
     obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
@@ -301,6 +305,6 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
-    //    obj.insert("mac", it.mac);
+    // obj.insert("mac", it.mac);
     json.insert(key, obj);
 }
