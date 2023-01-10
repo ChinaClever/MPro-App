@@ -12,10 +12,12 @@ public:
 private:
     void env_workDown();
     void env_initFun();
+    void env_close();
+    void env_delay();
     void env_run();
 
 private:
-    bool mEnvIsRun=false;
+    bool mEnvIsRun=true;
     int mFds[SENOR_NUM]={-1,-1};
 };
 

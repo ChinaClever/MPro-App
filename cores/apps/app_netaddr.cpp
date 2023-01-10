@@ -128,11 +128,11 @@ void App_NetAddr::inet_setIpV4()
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //if(dns2.size()) {
+        //    cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
+        //    str = cmd.arg(dns); qDebug() << str;
+        //    system(str.toStdString().c_str());
+        //}
     }
 
     //inet_writeCfg(net->inet, "IPV4");
@@ -183,11 +183,11 @@ void App_NetAddr::inet_setIpV6()
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //if(dns2.size()) {
+        //    cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+        //    str = cmd.arg(dns); qDebug() << str;
+        //    system(str.toStdString().c_str());
+        //}
     }
 
     //inet_writeCfg(net->inet6, "IPV6");

@@ -22,7 +22,13 @@ App_Sensor::App_Sensor(QObject *parent)
 
 App_Sensor::~App_Sensor()
 {
-    int *th = mFds; mEnvIsRun = false;
+     mEnvIsRun = false;
+     env_close();
+}
+
+void App_Sensor::env_close()
+{
+    int *th = mFds;
     for(int i=0; i<2; i++) {
         if(th[i]) close(th[i]);
     }
@@ -35,7 +41,7 @@ void App_Sensor::env_initFun()
         QString cmd = fmd.arg(i);
         th[i] = open(cmd.toLocal8Bit().data(), O_RDONLY);
         if(th[i] < 0) cout << "env open err" << i << fmd;
-        else mEnvIsRun = true;
+        //else mEnvIsRun = true;
     }
 }
 
@@ -59,13 +65,21 @@ void App_Sensor::env_workDown()
             }
         }
     }
+}
 
+void App_Sensor::env_delay()
+{
     int r = QRandomGenerator::global()->bounded(565);
     if(cm::runTime() > 48*60*60){r += 500;}  cm::mdelay(1500 + r);
 }
 
 void App_Sensor::env_run()
 {
-    cm::mdelay(2111); env_initFun();
-    while(mEnvIsRun) env_workDown();
+    cm::mdelay(2111);
+    while(mEnvIsRun) {
+        env_initFun();
+        env_workDown();
+        env_close();
+        env_delay();
+    }
 }
