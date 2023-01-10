@@ -538,6 +538,7 @@
 				else {
 					document.getElementById('pgt' + (i + 1)).style.background = '';
 				}
+				document.getElementById("progress"+(i + 1)).title = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
 			}
 			for (let i = 0; i < loop_num; i++) {
 				for (j = 0; j < 8; j++) {
@@ -619,7 +620,7 @@
 				tbody += '<tr><td><span class = "span_tit" >L' + obj + '</span></td></tr>';
 				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
-				tbody += '<tr><td><div class = "progress"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
+				tbody += '<tr><td><div class = "progress" id ="progress'+ obj +'"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
