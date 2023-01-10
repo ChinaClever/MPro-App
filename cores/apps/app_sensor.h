@@ -12,6 +12,8 @@ public:
 private:
     void env_workDown();
     void env_initFun();
+    void env_close();
+    void env_delay();
     void env_run();
 
 private:
