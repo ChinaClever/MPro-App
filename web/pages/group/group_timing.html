@@ -38,7 +38,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -55,6 +55,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		var read  = 1;
+		let dev_dis = 0;
 		let lang = new Array();
 		let group_data = new Array();
 		let group_name = new Array();
@@ -65,6 +66,7 @@
 		read_data();
 		lang_init();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++)
 			{
 				group_data[i] = new Array();
@@ -80,7 +82,7 @@
 			}
 			lang[1] = ["分组控制","","","",""];
 			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择","","","",""];
+			lang[3] = ["设备选择:","","","",""];
 			lang[4] = ["序号","","","",""];
 			lang[5] = ["分组名称","","","",""];
 			lang[6] = ["上次设置","","","",""];
@@ -106,6 +108,9 @@
 			}
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
+			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}

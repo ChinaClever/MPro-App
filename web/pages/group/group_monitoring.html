@@ -28,7 +28,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -39,6 +39,7 @@
 			</div>
 		</div>
     <script>
+		let dev_dis = 0;
 		var group_name = new Array();
 		var pow_val = new Array();
 		var energe_val = new Array();
@@ -49,6 +50,7 @@
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
 				AVpow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
@@ -63,7 +65,7 @@
 				lang[i] = new Array();
 			}
 			lang[1] = ["分组监测","","","",""];
-			lang[2] = ["设备选择","","","",""];
+			lang[2] = ["设备选择:","","","",""];
 			lang[3] = ["序号","","","",""];
 			lang[4] = ["名称","","","",""];
 			lang[5] = ["有功功率(kW)","","","",""];
@@ -79,6 +81,9 @@
 		function lang_fun(){
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}

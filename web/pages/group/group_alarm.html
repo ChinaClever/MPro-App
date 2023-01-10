@@ -41,7 +41,7 @@
 								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" onclick ="readonlyset(this);"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span style = "float:right;"><span id="lang_3" style = "padding-right: 5px;"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span id="lang_3" style = "padding-right: 5px;"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -60,6 +60,7 @@
     <script>
 		var  read  = 1,dt = 0;
 		var mode = 0;
+		let dev_dis = 0;
 		let pow_mark = new Array();
 		var len  = data_name.length -1;
 		var dev_name =new Array();
@@ -70,6 +71,7 @@
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_info[i] =  new Array();
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
@@ -85,7 +87,7 @@
 			}
 			lang[1] = ["分组阈值","","","",""];
 			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择","","","",""];
+			lang[3] = ["设备选择:","","","",""];
 			lang[4] = ["序号","","","",""];
 			lang[5] = ["分组名称","","","",""];
 			lang[6] = ["有功功率(kW)","","","",""];
@@ -111,6 +113,9 @@
 			}
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
+			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
