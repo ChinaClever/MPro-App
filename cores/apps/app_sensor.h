@@ -17,7 +17,7 @@ private:
     void env_run();
 
 private:
-    bool mEnvIsRun=false;
+    bool mEnvIsRun=true;
     int mFds[SENOR_NUM]={-1,-1};
 };
 

@@ -28,7 +28,7 @@ App_Sensor::~App_Sensor()
 
 void App_Sensor::env_close()
 {
-    int *th = mFds; mEnvIsRun = false;
+    int *th = mFds;
     for(int i=0; i<2; i++) {
         if(th[i]) close(th[i]);
     }
@@ -41,7 +41,7 @@ void App_Sensor::env_initFun()
         QString cmd = fmd.arg(i);
         th[i] = open(cmd.toLocal8Bit().data(), O_RDONLY);
         if(th[i] < 0) cout << "env open err" << i << fmd;
-        else mEnvIsRun = true;
+        //else mEnvIsRun = true;
     }
 }
 
@@ -61,7 +61,7 @@ void App_Sensor::env_workDown()
                 env->hum.value[i] = v[1];
                 env->tem.value[i] = v[0]*10;
                 //qDebug() << i <<  v[0] << v[1];
-                //printf("th%d:温度(%d),湿度(%d)\n", i, v[0], v[1]);
+                printf("th%d:温度(%d),湿度(%d)\n", i, v[0], v[1]);
             }
         }
     }
