@@ -122,9 +122,10 @@
 		function flash_html(par)
 		{
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
 				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
 				showdata();lang_fun();
 			},800);
 		}

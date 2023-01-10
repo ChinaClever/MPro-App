@@ -36,6 +36,8 @@
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -122,9 +124,10 @@
 		function flash_html(par)
 		{
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
 				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
 				showdata();
 			},800);
 		}
@@ -224,14 +227,14 @@
 				tbody = '';
 				thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="35%" id = "lang_4"></td>\
-					<td width ="45%" id = "lang_5"></td>';
+					<td width ="25%" id = "lang_4"></td>\
+					<td width ="55%" id = "lang_5"></td>';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="35%" id = "lang_4"></td>\
-					<td width ="45%" id = "lang_5"></td>';
+					<td width ="25%" id = "lang_4"></td>\
+					<td width ="55%" id = "lang_5"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';

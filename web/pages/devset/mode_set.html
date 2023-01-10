@@ -39,11 +39,13 @@
     <script>
 		var mode_data = new Array();
 		let lang = new Array();
+		var dev_name =new Array();
 		let mode_set = new Array();
 		let opt_val = new Array();
 		let id_val = new Array("","","","mode","addr","","","buz");//,"group","energe","pow");
 		let id_val1 = new Array("mode","addr","buz");//,"group","energe","pow");
 		let slave_num1 = 0;
+		let device_num = 10;
 		lang_init();
 		function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -64,12 +66,18 @@
 			lang[13] = ["级联","","","",""];
 			lang[14] = ["机柜双电源","","","",""];
 			lang[15] = ["RTU","","","",""];
+			lang[16]  = ["主机", "", "", "", ""];
+			lang[17]  = ["副机", "", "", "", ""];
 
 			for(let j = 0;j < 4;j++){
 				mode_set[j] = lang[12 +j][language];
 			}
 			opt_val[0] = lang[10][language];
 			opt_val[1] = lang[11][language];
+			dev_name[0] = lang[16][language];
+			for(let i = 1;i< device_num;i++){
+				dev_name[i] =  lang[17][language] + i;
+			}
 		}
 		function lang_fun(){
 			for(let i = 1;i < 8; i++){
@@ -99,9 +107,9 @@
 					}else{
 						document.getElementById(id_val1[1]).disabled = false
 						if(mode_data[1] != 0){
-							document.getElementById("slave").disabled = true;
+							document.getElementById("slave_").style.display = "none";
 						}else{
-							document.getElementById("slave").disabled = false;
+							document.getElementById("slave_").style.display = "";
 						}
 					}
 				}
@@ -162,9 +170,12 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" oninput = "if(value>9){value=9}" placeholder="0~9"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id = "lang_5"></td>';
+			tbody += '<td><select id ="addr" onchange ="SetData(this)">';
+			for(var i = 0; i<device_num;i++){
+				tbody +='<option value ="'+i+'">'+ dev_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr id ="slave_" style ="display:none;"><td id = "lang_5"></td>';
 			tbody += '<td><input id = "slave" style ="width:24.5%" type = "text" onchange = "Set(this)" oninput = "if(value>10){value=10}" placeholder="1~10"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
