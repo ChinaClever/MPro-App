@@ -164,11 +164,12 @@
 					}
 					if(parseFloat(data[i][0]) > 1000){
 						data[i][0] = "NA";
-					}
-					if(parseInt(i / 2) == 0){
-						data[i][0] += "°C";
 					}else{
-						data[i][0] += "%";
+						if(parseInt(i / 2) == 0){
+							data[i][0] += "°C";
+						}else{
+							data[i][0] += "%";
+						}
 					}
 				}
 			}
