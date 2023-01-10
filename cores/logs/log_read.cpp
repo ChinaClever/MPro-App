@@ -102,6 +102,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     QString res; Db_Hda *db = Db_Hda::bulid();
     QVector<sHdaItem> its = db->selectItems(cmd);
     if(its.size()) {
+        for(int i=0; i<its.size(); ++i) its[i].id = i;
         int minId = its.first().id;
         res = db->toPageJson(its, minId);
     } else qDebug() << Q_FUNC_INFO << cmd;
