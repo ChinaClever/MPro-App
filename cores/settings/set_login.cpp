@@ -44,17 +44,17 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
+    if(ret && key.size()) {
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key.arg(id), v, prefix);
+    }
+
     if(ptr) {
         QByteArray str = v.toByteArray();
         qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
         sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
         db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
         Log_Core::bulid()->append(db);
-    }
-
-    if(ret && key.size()) {
-        Cfg_Com *cfg = Cfg_Com::bulid();
-        cfg->writeCfg(key.arg(id), v, prefix);
     }
 
     return ret;
