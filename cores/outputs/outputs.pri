@@ -4,6 +4,7 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/op_artu.h \
     $$PWD/op_core.h \
     $$PWD/op_objctrl.h \
     $$PWD/op_object.h \
@@ -13,6 +14,7 @@ HEADERS += \
     $$PWD/op_zrtu.h
 
 SOURCES += \
+    $$PWD/op_artu.cpp \
     $$PWD/op_core.cpp \
     $$PWD/op_objctrl.cpp \
     $$PWD/op_object.cpp \

@@ -181,6 +181,7 @@ double cm::decimal(const sDataItem &it)
             case DTopic::Ele: res = COM_RATE_ELE; break;
             case DTopic::PF: res = COM_RATE_PF; break;
             case DTopic::ArtPow: res = COM_RATE_POW; break;
+            case DTopic::LineVol: res = COM_RATE_VOL; break;
             case DTopic::ReactivePow: res = COM_RATE_POW; break;
             case DTopic::Tem: res = COM_RATE_TEM; break;
             case DTopic::Hum: res = COM_RATE_HUM; break;

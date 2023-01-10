@@ -1,8 +1,8 @@
 #ifndef APP_NETADDR_H
 #define APP_NETADDR_H
-#include "app_sensor.h"
+#include "app_sensorbox.h"
 
-class App_NetAddr: public App_Sensor
+class App_NetAddr: public App_SensorBox
 {
     Q_OBJECT
 public:

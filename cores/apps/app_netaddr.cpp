@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 App_NetAddr::App_NetAddr(QObject *parent)
-    : App_Sensor{parent}
+    : App_SensorBox{parent}
 {
     QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }

@@ -28,10 +28,14 @@ void OP_Core::run()
 {
     while (isRun) {
         int size = mDev->cfg.nums.boardNum; // cout << size;
-        for(int i=0; i<size; ++i) {
-            cmsWrite(175);
-            ota_updates();
-            readData(i+1);
+        if(size) {
+            for(int i=0; i<size; ++i) {
+                cmsWrite(175);
+                ota_updates();
+                readData(i+1);
+            }
+        } else {
+            //loop_readData();/////=====
         } cm::mdelay(10);
     }
 }
