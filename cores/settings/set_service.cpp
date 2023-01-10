@@ -19,8 +19,8 @@ QVariant Set_Service::logCfg(int fc)
     case 2: ret = cfg->eleTime; break;
     case 3: ret = cfg->hdaTime; break;
     case 4: ret = cfg->logCnt; break;
-    case 5: ret = cfg->hdaCnt; break;
-    case 6: ret = cfg->eventCnt; break;
+    case 5: ret = cfg->eventCnt; break;
+    case 6: ret = cfg->hdaCnt; break;
     default: cout << fc; break;
     }
 
@@ -37,8 +37,8 @@ bool Set_Service::logSet(int fc, const QVariant &v)
     case 2: key = "eleTime"; cfg->eleTime = v.toInt(); break;
     case 3: key = "hdaTime";  cfg->hdaTime = v.toInt(); break;
     case 4: key = "logCnt";  cfg->logCnt = v.toInt();  break;
-    case 5: key = "hdaCnt";  cfg->hdaCnt = v.toInt();  break;
-    case 6: key = "eventCnt";  cfg->eventCnt = v.toInt();  break;
+    case 5: key = "eventCnt";  cfg->eventCnt = v.toInt();  break;
+    case 6: key = "hdaCnt";  cfg->hdaCnt = v.toInt();  break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
