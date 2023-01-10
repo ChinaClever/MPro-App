@@ -560,30 +560,30 @@
 				}
 			}
 			for (let i = 0; i < head.length; i++) {
-				if (sensor_info[i] == 2 || sensor_info[i] == 4) {
-					document.getElementById('dat' + (63 + i)).bgColor = 'yellow';
-				} else if (sensor_info[i] == 1 || sensor_info[i] == 8) {
-					document.getElementById('dat' + (63 + i)).bgColor = 'red';
-				}
-				else if (sensor_info[i] == 65535) {
-					document.getElementById('dat' + (63 + i)).color = 'green';
-					sensor_info[i] = 0;
-				}
-				else {
-					document.getElementById('dat' + (63 + i)).bgColor = '';
-				}
+				// if (sensor_info[i] == 2 || sensor_info[i] == 4) {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = 'yellow';
+				// } else if (sensor_info[i] == 1 || sensor_info[i] == 8) {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = 'red';
+				// }
+				// else if (sensor_info[i] == 65535) {
+				// 	document.getElementById('dat' + (63 + i)).color = 'green';
+				// 	sensor_info[i] = 0;
+				// }
+				// else {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
+				// }
 				if(i<4){
-					if(sensor_info[i] > 1000){
+					if(parseInt(sensor_info[i]) > 1000){
 						if(i%2==0){
-							document.getElementById('dat' + (63 + i)).innerHTML = "NA­°C";
+							document.getElementById('dat' + (63 + i)).innerHTML = "NA°C";
 						}else{
-							document.getElementById('dat' + (63 + i)).innerHTML = "NA­%";
+							document.getElementById('dat' + (63 + i)).innerHTML = "NA%";
 						}
 					}else{
 						if(i%2==0){
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"­°C";
+							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"°C";
 						}else{
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"­%";
+							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"%";
 						}
 					}
 				}else if(i<6){

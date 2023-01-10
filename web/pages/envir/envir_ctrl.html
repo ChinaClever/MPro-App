@@ -162,6 +162,14 @@
 						if(j!= 8 || j!= 9)
 						data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
 					}
+					if(parseFloat(data[i][0]) > 1000){
+						data[i][0] = "NA";
+					}
+					if(parseInt(i / 2) == 0){
+						data[i][0] += "°C";
+					}else{
+						data[i][0] += "%";
+					}
 				}
 			}
 		}
