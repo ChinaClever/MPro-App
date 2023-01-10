@@ -49,13 +49,13 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
         cfg->writeCfg(key.arg(id), v, prefix);
     }
 
-    if(ptr) {
-        QByteArray str = v.toByteArray();
-        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
-        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
-        Log_Core::bulid()->append(db);
-    }
+//    if(ptr) {
+//        QByteArray str = v.toByteArray();
+//        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
+//        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+//        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
+//        Log_Core::bulid()->append(db);
+//    }
 
     return ret;
 }
@@ -94,7 +94,7 @@ bool Set_Login::loginCheck(const QString &str)
 
     if(ret) {
         sEventItem db; db.event_type = QStringLiteral("用户登陆");
-        db.event_content = QStringLiteral("登陆登陆为 %1").arg(ls.first());
+        db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         Log_Core::bulid()->append(db);
     }
 
