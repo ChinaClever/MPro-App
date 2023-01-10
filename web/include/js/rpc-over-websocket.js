@@ -144,7 +144,7 @@ var jsonrpc = function()
       break;
       case 13:
         sessionStorage.setItem(cfg_name[topic] + addr_, (JSON.parse(evt.data).result[5]));
-        console.log(cfg_name[topic] + addr_, (JSON.parse(evt.data).result[5]));
+        //console.log(cfg_name[topic] + addr_, (JSON.parse(evt.data).result[5]));
       break;
       case 14:
         if(topic  == 11)
@@ -257,6 +257,7 @@ var jsonrpc = function()
       break;
       case 82:
         sessionStorage.setItem("LogData" , JSON.parse(evt.data).result[5]);
+        console.log(JSON.parse(evt.data).result[5]);
       break;
       case 92:
         sessionStorage.setItem(Progress_name[topic]+Progress_info[subtopic] +addr_, JSON.parse(evt.data).result[5]);
