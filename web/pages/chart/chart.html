@@ -222,7 +222,7 @@
 									config.type = type_text;
 									config.data.datasets[0].label = label_text;
 									config.data.datasets[0].data = data_total;
-									config.options.title.text = title_text;
+									config.options.plugins.title.text = title_text;
 									create_new_chart();
 									// chart.update();
 								}else{
@@ -281,34 +281,44 @@
 							},
 							options: {
 								responsive: true,
-								title: {
-									display: true,
-									text: title_text
+								plugins: {
+									title: {
+										display: true,
+										text: title_text
+									},
+								},
+								interaction: {
+									mode: 'index',
+									intersect: false
 								},
 								scales: {
-									xAxes: [{
-										ticks: {
-											min: 50,
-											callback: function(dataLabel, index) {
-												return index % 5 === 0 ? dataLabel : '';
-											}
-										}
-									}],
-									yAxes: [{
+									x: {
 										display: true,
-										scaleLabel: {
+										title: {
 											display: true,
 										},
+										grid:{
+											display:false,
+										},
 										ticks: {
-											suggestedMin: 0,
+											callback: function(val, index) {
+												return index % 5 === 0 ? this.getLabelForValue(val) : '';
+											}
 										}
-									}]
-  							  	}
+									},
+									y: {
+										display: true,
+										title: {
+											display: true,
+										},
+										min : 0
+									}
+								}
 							}
 						};
 						function create_new_chart(){
 							document.getElementById('chart').remove();
-							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
+							// document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
 							let e = document.createElement("canvas"); 
 							e.id = "chart";
 							e.style.display = "block";
