@@ -215,7 +215,7 @@ int Set_Service::webCfg(int fc)
     case 4: ret = it->https_en; break;
     case 5: ret = it->https_port; break;
     default: cout << fc; break;
-    }
+    } cout << fc << ret;
 
     return ret;
 }
@@ -231,7 +231,7 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
     default: ret = false; cout<< fc; break;
-    }
+    } //cout << key << fc << v;
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
