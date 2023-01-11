@@ -173,7 +173,7 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
 {
     struct mg_http_serve_opts opts;
     memset(&opts , 0 , sizeof(opts));
-    opts.mime_types = "mib=a/b,txt=c/d";
+    opts.mime_types = "foo=a/b,txt=c/d";
     if(0 == strcmp("/index.html/client-cert.pem" , path)){
         mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/client-key.pem" , path)){
@@ -187,6 +187,7 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
     }else if(0 == strcmp("/index.html/modbus.docx" , path)){
         mg_http_serve_file(c , hm , "/usr/data/clever/doc/modbus.docx" , &opts);
     }else if(0 == strcmp("/index.html/snmp.mib" , path)){
+        opts.mime_types = "mib=a/b,txt=c/d";
         mg_http_serve_file(c , hm , "/usr/data/clever/doc/snmp.mib" , &opts);
     }
 }
