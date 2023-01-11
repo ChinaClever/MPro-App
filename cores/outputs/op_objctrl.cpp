@@ -37,7 +37,7 @@ void OP_ObjCtrl::orderCtrl(int on, uchar all)
 
 void OP_ObjCtrl::clearEle(int id)
 {
-    if(id) setClearEle(id); else clearAllEle();
+    if(id) setClearEle(id-1); else clearAllEle();
 }
 
 void OP_ObjCtrl::setDelay(int id, uchar sec)
