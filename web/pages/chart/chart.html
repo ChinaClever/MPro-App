@@ -75,6 +75,9 @@
 						let name_1 = new Array("","","","","","","","","");
 						let topic_show = new Array();
 						let tick_nums = 0;
+						let uint_arr_ = "";
+						let y_val = new Array("V","A","kW","kWh");
+						let y_val1 = new Array("°C","%");
 						lang_init();
 						data_init();
 						datetime();
@@ -200,6 +203,8 @@
 							}else{}
 						}
 						function read_data(){
+							let t1 = parseInt(document.getElementById("type").value);
+							let t2 = parseInt(document.getElementById("topic").value);
 							let time1 = setInterval(function(){
 								if(sessionStorage.getItem("LogData") != ""){
 									clearInterval(time1);
@@ -219,10 +224,16 @@
 									}else{
 										type_text = "line";
 									}
+									if(t1 < 5){
+										uint_arr_ = y_val[t2];
+									}else{
+										uint_arr_ = y_val1[t2];
+									}
 									config.type = type_text;
 									config.data.datasets[0].label = label_text;
 									config.data.datasets[0].data = data_total;
-									config.options.title.text = title_text;
+									config.options.scales.y.title.text = uint_arr_;
+									config.options.plugins.title.text = title_text;
 									create_new_chart();
 									// chart.update();
 								}else{
@@ -281,34 +292,45 @@
 							},
 							options: {
 								responsive: true,
-								title: {
-									display: true,
-									text: title_text
+								plugins: {
+									title: {
+										display: true,
+										text: title_text
+									},
+								},
+								interaction: {
+									mode: 'index',
+									intersect: false
 								},
 								scales: {
-									xAxes: [{
-										ticks: {
-											min: 50,
-											callback: function(dataLabel, index) {
-												return index % 5 === 0 ? dataLabel : '';
-											}
-										}
-									}],
-									yAxes: [{
+									x: {
 										display: true,
-										scaleLabel: {
+										title: {
 											display: true,
 										},
+										grid:{
+											display:false,
+										},
 										ticks: {
-											suggestedMin: 0,
+											callback: function(val, index) {
+												return index % 5 === 0 ? this.getLabelForValue(val) : '';
+											}
 										}
-									}]
-  							  	}
+									},
+									y: {
+										display: true,
+										title: {
+											display: true,
+											text: uint_arr_
+										},
+										min : 0
+									}
+								}
 							}
 						};
 						function create_new_chart(){
 							document.getElementById('chart').remove();
-							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
+							// document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
 							let e = document.createElement("canvas"); 
 							e.id = "chart";
 							e.style.display = "block";

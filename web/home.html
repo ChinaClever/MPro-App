@@ -37,8 +37,11 @@
 	<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
 		<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
 			<div class="panel panel-default">
-				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span>
-					<ul id="dev_sel" style="float:right; font-family:courier;display: none;"><span id="lang_2"></span><select class="devname" id="ms" style="width:200px;" onChange="change(this);"></select></ul>
+				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span
+						id="lang_1"></span>
+					<ul id="dev_sel" style="float:right; font-family:courier;display: none;"><span
+							id="lang_2"></span><select class="devname" id="ms" style="width:200px;"
+							onChange="change(this);"></select></ul>
 				</div>
 			</div>
 			<div class="phase_div1">
@@ -67,7 +70,9 @@
 							style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:203px; background:#ffffff; text-align:center;">
 							<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;"
 								id="lang_16"></div>
-							<table class="sensor_tab" style="height:32px;width:100%; font-size:12px;border:1px solid;border-color: #ffffff;"></table>
+							<table class="sensor_tab"
+								style="height:32px;width:100%; font-size:12px;border:1px solid;border-color: #ffffff;">
+							</table>
 						</div>
 					</td>
 				</tr>
@@ -158,15 +163,6 @@
 							labels: dataLabels,
 							datasets: [
 								{
-									label: total_name,
-									data: data_total,
-									backgroundColor: 'rgb(255, 99, 132)',
-									borderColor: 'rgb(255, 99, 132)',
-									fill: false,
-									borderWidth: 1.5,
-									pointRadius: 2,
-								},
-								{
 									label: 'inletA',
 									data: data_inlet1,
 									backgroundColor: 'rgb(75, 192, 192)',
@@ -192,55 +188,63 @@
 									fill: false,
 									borderWidth: 1.5,
 									pointRadius: 2,
+								},
+								{
+									label: total_name,
+									data: data_total,
+									backgroundColor: 'rgb(255, 99, 132)',
+									borderColor: 'rgb(255, 99, 132)',
+									fill: false,
+									borderWidth: 1.5,
+									pointRadius: 2,
 								}
 							]
 						},
 						options: {
 							responsive: true,
-							title: {
-								display: true,
-								text: title_text
+							plugins: {
+								title: {
+									display: true,
+									text: title_text
+								},
 							},
-							tooltips: {
+							interaction: {
 								mode: 'index',
-								intersect: false,
-							},
-							hover: {
-								mode: 'nearest',
-								intersect: true
+								intersect: false
 							},
 							scales: {
-								xAxes: [{
+								x: {
 									display: true,
-									ticks: {
-										min: 50,
-									}
-								}],
-								yAxes: [{
-									display: true,
-									scaleLabel: {
+									title: {
 										display: true,
-										labelString: uint_arr_
 									},
-									ticks: {
-										suggestedMin: 0,
+									grid:{
+										display:false,
 									}
-								}]
+								},
+								y: {
+									display: true,
+									title: {
+										display: true,
+										text: uint_arr_
+									},
+									min : 0
+								}
 							}
 						}
 					};
 					function create_new_chart() {
 						if (mark_num[1] == 1) {
-							config.data.datasets.splice(0, 1);
+							chart.data.datasets.pop();
 							chart.update();
 						}
 						if (mark_num[0] == 1) {
-							config.data.datasets.unshift({ label: total_name, data: data_total, backgroundColor: 'rgb(255, 99, 132)', borderColor: 'rgb(255, 99, 132)', fill: false, borderWidth: 1.5, pointRadius: 2, });
-							//config.data.datasets.push(config.data.datasets[0]);
+							let newDateset = { label: total_name, data: data_total, backgroundColor: 'rgb(255, 99, 132)', borderColor: 'rgb(255, 99, 132)', fill: false, borderWidth: 1.5, pointRadius: 2, };
+							chart.data.datasets.push(newDateset);
 							chart.update();
 						}
 						document.getElementById('chart').remove();
-						document.getElementsByClassName('chartjs-size-monitor')[0].remove();
+						//document.getElementsByClassName('chartjs-size-monitor')[0].remove();
 						let e = document.createElement("canvas");
 						e.id = "chart";
 						e.style.display = "block";
@@ -273,17 +277,17 @@
 						create_new_chart();
 						set_data_show(chart_type);
 						if (chart_type == 0) {
-							config.data.datasets[0].label = total_name;
-							config.data.datasets[0].data = data_total;
-							config.data.datasets[1].data = data_inlet1;
-							config.data.datasets[2].data = data_inlet2;
-							config.data.datasets[3].data = data_inlet3;
+							config.data.datasets[0].data = data_inlet1;
+							config.data.datasets[1].data = data_inlet2;
+							config.data.datasets[2].data = data_inlet3;
+							config.data.datasets[3].label = total_name;
+							config.data.datasets[3].data = data_total;
 						} else {
 							config.data.datasets[0].data = data_inlet1;
 							config.data.datasets[1].data = data_inlet2;
 							config.data.datasets[2].data = data_inlet3;
 						}
-						config.options.scales.yAxes[0].scaleLabel.labelString = uint_arr_;
+						config.options.scales.y.title.text = uint_arr_;
 						chart.update();
 					}
 					function flash_chart() {
@@ -324,14 +328,14 @@
 					}
 				</script>
 			</div>
-			<div style ="height: 100px;background-color: #e7e7e7;">
+			<div style="height: 100px;background-color: #e7e7e7;">
 			</div>
 		</div>
 	</div>
 	</div>
 	<script>
 		let dev_dis = 0;
-		let line_vol =new Array();
+		let line_vol = new Array();
 		let phase_info = new Array();
 		let total_info = new Array();
 		let system_info = new Array();
@@ -417,13 +421,13 @@
 		}
 		function LangFun() {
 			for (var i = 1; i < 36; i++) {
-				if ((i != 6 && i < 29)|| i > 34 ) {
+				if ((i != 6 && i < 29) || i > 34) {
 					document.getElementById("lang_" + i).innerHTML = lang[i][language];
 				}
 			}
 			document.getElementById("ms").value = addr;
-			if(dev_dis == 0){
-				document.getElementById("dev_sel").style.display="";
+			if (dev_dis == 0) {
+				document.getElementById("dev_sel").style.display = "";
 			}
 		}
 		function read_chart_data() {
@@ -538,7 +542,7 @@
 				else {
 					document.getElementById('pgt' + (i + 1)).style.background = '';
 				}
-				document.getElementById("progress"+(i + 1)).title = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
+				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
 			}
 			for (let i = 0; i < loop_num; i++) {
 				for (j = 0; j < 8; j++) {
@@ -572,23 +576,23 @@
 				// else {
 				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
 				// }
-				if(i<4){
-					if(parseInt(sensor_info[i]) > 1000){
-						if(i%2==0){
+				if (i < 4) {
+					if (parseInt(sensor_info[i]) > 1000) {
+						if (i % 2 == 0) {
 							document.getElementById('dat' + (63 + i)).innerHTML = "NA";
-						}else{
+						} else {
 							document.getElementById('dat' + (63 + i)).innerHTML = "NA";
 						}
-					}else{
-						if(i%2==0){
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"°C";
-						}else{
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i]+"%";
+					} else {
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i] + "°C";
+						} else {
+							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i] + "%";
 						}
 					}
-				}else if(i<6){
+				} else if (i < 6) {
 					document.getElementById('dat' + (63 + i)).innerHTML = Sensor_state[sensor_info[i]];
-				}else{
+				} else {
 					document.getElementById('dat' + (63 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
@@ -611,7 +615,7 @@
 						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
 					} else {
-						tbody += '<tr><td style="padding-top:'+(15-(i-2)*5) +'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
+						tbody += '<tr><td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
 						tbody += '<span class = "span_data" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td></tr>';
 					}
@@ -620,11 +624,11 @@
 				tbody += '<tr><td><span class = "span_tit" >L' + obj + '</span></td></tr>';
 				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
-				tbody += '<tr><td><div class = "progress" id ="progress'+ obj +'"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
+				tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L'+((obj+1)<=phase_num?(obj+1):1)+':</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L' + ((obj + 1) <= phase_num ? (obj + 1) : 1) + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (70 + obj) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
