@@ -45,12 +45,17 @@ QSslConfiguration Sercret_TlsCert::sslConfiguration()
     bool ret = keyFile.open(QIODevice::ReadOnly);
     if(ret) ret = certFile.open(QIODevice::ReadOnly);
     if(ret) {
-        QSslCertificate certificate(&certFile, QSsl::Pem);
-        QSslKey sslKey(&keyFile, QSsl::Rsa, QSsl::Pem);
-        ssl.setPeerVerifyMode(QSslSocket::VerifyNone);
-        ssl.setLocalCertificate(certificate);
-        ssl.setPrivateKey(sslKey);
+        QList< QSslCertificate > caCertificates;
+        QSslCertificate sslCertificate( certFile.readAll(), QSsl::Pem );
+        QSslKey sslKey( keyFile.readAll(), QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey );
+        ssl.setPeerVerifyMode(QSslSocket::VerifyNone);        
+        ssl.setPeerVerifyDepth( 1 );
+        ssl.setLocalCertificate( sslCertificate );
+        ssl.setPrivateKey( sslKey );
+        ssl.setProtocol(QSsl::AnyProtocol);  //TlsV1_1OrLater
+        ssl.setCaCertificates( caCertificates );
     }
+
     return ssl;
 }
 

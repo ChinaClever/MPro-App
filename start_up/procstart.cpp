@@ -34,7 +34,7 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
         QString cmd = fn + " &";
         system(cmd.toLatin1().data());
         qDebug() << "proc start " +cmd;
-        proc_log(app +"_startup");
+        proc_log(app +" startup");
     } else qDebug() << "proc start err:" << fn;
 }
 
@@ -47,7 +47,7 @@ void ProcStart::proc_log(const QString &arg)
 
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
     QString str = t + arg;
-    QString fmd = "echo %1 >> %2 ";
+    QString fmd = "echo '%1' >> %2 ";
     QString cmd = fmd.arg(str, fn);
     system(cmd.toLatin1().data());
 }
@@ -77,7 +77,7 @@ QString ProcStart::md5(const QString &fn)
 
 bool ProcStart::proc_isRun(const QString &p)
 {
-    QString cmd = "./proc_run " + p; //system("killall proc_run");
+    QString cmd = "proc_run " + p; //system("killall proc_run");
     QProcess pro; pro.start(cmd); pro.waitForFinished();
     QByteArray bs = pro.readAllStandardOutput();
     bs +=  pro.readAllStandardError(); mdelay(2);
