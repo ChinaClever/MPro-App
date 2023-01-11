@@ -528,7 +528,7 @@
 
 			}
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (71 + i)).innerHTML = parseFloat(line_vol[i + 1]).toFixed(1);
+				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(line_vol[i + 1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i + 1][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i + 1][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i + 1][2]).toFixed(2);
@@ -579,21 +579,21 @@
 				if (i < 4) {
 					if (parseInt(sensor_info[i]) > 1000) {
 						if (i % 2 == 0) {
-							document.getElementById('dat' + (63 + i)).innerHTML = "NA";
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
 						} else {
-							document.getElementById('dat' + (63 + i)).innerHTML = "NA";
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
 						}
 					} else {
 						if (i % 2 == 0) {
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i] + "°C";
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "°C";
 						} else {
-							document.getElementById('dat' + (63 + i)).innerHTML = sensor_info[i] + "%";
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
 						}
 					}
 				} else if (i < 6) {
-					document.getElementById('dat' + (63 + i)).innerHTML = Sensor_state[sensor_info[i]];
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
 				} else {
-					document.getElementById('dat' + (63 + i)).innerHTML = Sensor_state_[sensor_info[i]];
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
 			// for (let i = 0; i < 5; i++) {
@@ -629,7 +629,7 @@
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L' + ((obj + 1) <= phase_num ? (obj + 1) : 1) + ':</span>';
-				tbody += '<span class = "span_data"  id="dat' + (70 + obj) + '" ></span>';
+				tbody += '<span class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
@@ -677,7 +677,7 @@
 					if (j % 2 == 0) {
 						tbody += '<td class="spacing" id="lang_' + (21 + i * 2 + parseInt(j / 2)) + '"></td>';
 					} else {
-						tbody += '<td class="spacing" id="dat' + (63 + i * 2 + parseInt(j / 2)) + '"></td>';
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
 					}
 				}
 				tbody += '</tr>';
@@ -688,9 +688,9 @@
 			let tbody = "";
 			for (let i = 0; i < 5; i++) {
 				if (i == 0) {
-					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (71 + i) + '" style="font-weight:bold"></td></tr>';
+					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (72 + i) + '" style="font-weight:bold"></td></tr>';
 				} else {
-					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (71 + i) + '"></td></tr>';
+					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (72 + i) + '"></td></tr>';
 				}
 			}
 			return tbody;
