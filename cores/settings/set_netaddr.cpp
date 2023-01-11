@@ -40,7 +40,8 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     char *ptr = nullptr; if(it.id) inet = &net->inet6;
 
     switch (it.fc) {
-    case 0: inet->en = v.toInt(); break;
+    case 0: inet->en = v.toInt(); //break;
+    case 15: App_Core::bulid()->inet_saveCfg(it.id); break;
     case 1: inet->dhcp = v.toInt(); break;
     case 2: ptr = inet->ip; break;
     case 3: ptr = inet->mask; break;
@@ -49,7 +50,6 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 6: ptr = inet->dns;  break;
     case 7: ptr = inet->dns2; break;
     case 11: ptr = net->mac; system(QStringLiteral("echo '%1' > /usr/data/clever/cfg/mac.ini").arg(v.toString()).toLocal8Bit().data()); break;
-    case 15: App_Core::bulid()->inet_saveCfg(it.id); break;
     default: res = false; cout << it.fc; break;
     }
 
