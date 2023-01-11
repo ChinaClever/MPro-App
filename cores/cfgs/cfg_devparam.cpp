@@ -40,7 +40,7 @@ void Cfg_devParam::devNumRead(sDevNums &it)
     it.slaveNum = cfg->readCfg("slaveNum", 0, g).toInt();
     it.boardNum = cfg->readCfg("boardNum", 3, g).toInt();
     it.lineNum = cfg->readCfg("lineNum", LINE_NUM, g).toInt();
-    it.loopNum = cfg->readCfg("boardNum", LOOP_NUM/2, g).toInt();
+    it.loopNum = cfg->readCfg("loopNum", LOOP_NUM/2, g).toInt();
     it.outputNum = cfg->readCfg("outputNum", OUTPUT_NUM/2, g).toInt();
 
     for(uint i=0; i<it.boardNum; ++i) {
