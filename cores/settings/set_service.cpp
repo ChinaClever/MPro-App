@@ -227,7 +227,7 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     bool ret = true; switch (fc) {
     case 1: key = "http_en";  it->http_en = v.toInt(); break;
     case 2: key = "http_port";  it->http_port = v.toInt(); break;
-    case 3: key = "http_redirect";  it->http_port = v.toInt();  break;
+    case 3: key = "http_redirect";  it->http_redirect = v.toInt();  break;
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
     default: ret = false; cout<< fc; break;
