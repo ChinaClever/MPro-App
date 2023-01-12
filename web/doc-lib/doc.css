@@ -1,6 +1,6 @@
 .section-cont > .grid-row {
     padding: 8px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 0px solid #ddd;
 }
 
 .section-cont ul {list-style-type:circle;}

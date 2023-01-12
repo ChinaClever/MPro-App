@@ -50,7 +50,7 @@
 						<table class="table table-border-none_ text-left_ out_table"></table>
 					</div>
 					<div class="grid-col grid-col-7">
-						<table class="table table-border-none_ text-left_ vol_table"></table>
+						<table class="table table-border-none_ text-center vol_table"></table>
 					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div>
@@ -76,16 +76,19 @@
 		let break_en = 0;
 		let rating = new Array();
 		let rating_ = new Array();
-		let out_vol = new Array(24);
+		let out_vol = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
 		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
-			setTimeout(function(){
-				read_debug_data();
-			},300);	
+		setTimeout(function(){
+			read_debug_data();
+		},300);
+		for(i = 1;i<49;i++){
+			out_vol[i] = 0;
+		}
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
@@ -101,10 +104,10 @@
 		},500);
 		function read_data(){
 			let i = 0;
-			output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-			loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
-			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + addr));
+			output_num = parseInt(sessionStorage.getItem("OutputNum" + default_addr));
+			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + default_addr));
+			loop_num = parseInt(sessionStorage.getItem("LoopNum" + default_addr));
+			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + default_addr));
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
 			document.getElementById("board_").value = board_num;
@@ -125,12 +128,13 @@
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i));
 			}
-			cfg_data[0] = sessionStorage.getItem("Angle" + addr);
+			break_en = sessionStorage.getItem("BreakerEn" + default_addr);
+			cfg_data[0] = sessionStorage.getItem("Angle" + default_addr);
 			cfg_data[1] = 0;
 			cfg_data[2] = 0;
 			cfg_data[3] = 0;
-			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + addr);
-			cfg_data[5] = sessionStorage.getItem("LanguageEn" + addr);
+			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + default_addr);
+			cfg_data[5] = sessionStorage.getItem("LanguageEn" + default_addr);
 			cfg_data[6] = sessionStorage.getItem(ip_mode[0]+ ip_addr[11]);
 			for(let i = 0;i<9;i++){
 				unite_data[i] = new Array();
@@ -236,7 +240,7 @@
 		}
 		setInterval(function(){
 			for(i =1;i<=output_num;i++){
-				rpc.call('pduReadData',[default_addr,output,vol_,i,0]);
+				rpc.call('pduReadData',[addr,output,vol_,1,i]);
 			}
 			setTimeout(function(){
 				for(i =1;i<=output_num;i++){
@@ -397,7 +401,7 @@
 		}
 		function buildTableVol() {
 			var thead = '',tbody = '';
-			thead = '<tr><td style="font-size:20px;" colspan = "31">输出位电压值</td></tr>';
+			thead = '<tr><td style="font-size:20px;text-align:left" colspan = "31">输出位电压值</td></tr>';
 			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
 				for(let i = 0;i<6;i++){
 				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+1) + '</td>';
@@ -433,7 +437,6 @@
 				tbody +='<td width = "3%"></td>';
 			}
 			tbody +='</tr>';
-			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
