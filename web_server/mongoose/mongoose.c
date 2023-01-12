@@ -1734,6 +1734,8 @@ static void static_cb(struct mg_connection *c, int ev, void *ev_data,
 // some environments don't like it defined there.
 // clang-format off
 static struct mg_str s_known_types[] = {
+    MG_C_STR("pem"), MG_C_STR("application/x-x509"),
+    MG_C_STR("crt"), MG_C_STR("application/x-x509"),
     MG_C_STR("html"), MG_C_STR("text/html; charset=utf-8"),
     MG_C_STR("htm"), MG_C_STR("text/html; charset=utf-8"),
     MG_C_STR("css"), MG_C_STR("text/css; charset=utf-8"),
