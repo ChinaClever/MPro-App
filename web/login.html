@@ -18,9 +18,22 @@
   <script src="../../include/js/fn_public.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
-    if(window.location.protocol === "http:"){
-      window.location.href = window.location.href.replace("http:","https:")
-    }
+    let time_1_num = 0;
+    let time_1 = setInterval(function(){
+      if(time_1_num== 10 ){
+        clearInterval(time_1);
+      }
+      if(sessionStorage.getItem(web_service[3]) != null){
+        if(parseInt(sessionStorage.getItem(web_service[3])) == 1){
+          if(window.location.protocol === "http:"){
+            window.location.href = window.location.href.replace("http:","https:")
+          }
+        }
+        clearInterval(time_1);
+      }
+      time_1_num ++;
+    },100);
+      
     language = parseInt(sessionStorage.getItem("LanguageEn" + addr));
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
