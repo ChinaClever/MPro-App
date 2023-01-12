@@ -104,7 +104,6 @@
 					let uint_arr = new Array("kW", "A", "V");
 					let uint_arr_ = uint_arr[0];
 					let chart_type = 0;
-					let total_name = "total_pow";
 					let title_text = "";
 					let mark_num = new Array(0, 0);
 					let Hou = 0, Minu = 0, Seco = 0;
@@ -163,7 +162,7 @@
 							labels: dataLabels,
 							datasets: [
 								{
-									label: 'inletA',
+									label: 'L1',
 									data: data_inlet1,
 									backgroundColor: 'rgb(75, 192, 192)',
 									borderColor: 'rgb(75, 192, 192)',
@@ -172,7 +171,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'inletB',
+									label: 'L1',
 									data: data_inlet2,
 									backgroundColor: 'rgb(128, 128, 128)',
 									borderColor: 'rgb(128, 128, 128)',
@@ -181,7 +180,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'inletC',
+									label: 'L3',
 									data: data_inlet3,
 									backgroundColor: 'rgb(70, 130, 180)',
 									borderColor: 'rgb(70, 130, 180)',
@@ -190,7 +189,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: total_name,
+									label: 'Total',
 									data: data_total,
 									backgroundColor: 'rgb(255, 99, 132)',
 									borderColor: 'rgb(255, 99, 132)',
@@ -239,7 +238,7 @@
 							chart.update();
 						}
 						if (mark_num[0] == 1) {
-							let newDateset = { label: total_name, data: data_total, backgroundColor: 'rgb(255, 99, 132)', borderColor: 'rgb(255, 99, 132)', fill: false, borderWidth: 1.5, pointRadius: 2, };
+							let newDateset = { label: "Total", data: data_total, backgroundColor: 'rgb(255, 99, 132)', borderColor: 'rgb(255, 99, 132)', fill: false, borderWidth: 1.5, pointRadius: 2, };
 							chart.data.datasets.push(newDateset);
 							chart.update();
 						}
@@ -259,13 +258,6 @@
 					function change_mode(obj) {
 						chart_type = parseInt(obj.value);
 						clearInterval(time1);
-						if (obj.value == 0) {
-							total_name = "total_pow";
-						} else if (obj.value == 1) {
-							total_name = "total_cur";
-						} else {
-							total_name = "total_vol";
-						}
 						uint_arr_ = uint_arr[chart_type];
 						if (chart_type == 0) {
 							mark_num[0]++;
@@ -280,7 +272,6 @@
 							config.data.datasets[0].data = data_inlet1;
 							config.data.datasets[1].data = data_inlet2;
 							config.data.datasets[2].data = data_inlet3;
-							config.data.datasets[3].label = total_name;
 							config.data.datasets[3].data = data_total;
 						} else {
 							config.data.datasets[0].data = data_inlet1;
@@ -305,7 +296,6 @@
 							data_inlet1.push(inletA_data[chart_type][49]);
 							data_inlet2.push(inletB_data[chart_type][49]);
 							data_inlet3.push(inletC_data[chart_type][49]);
-							// total_name.push(total_name);
 							if (chart_type == 0) {
 								data_total.shift();
 							}
@@ -313,7 +303,6 @@
 							data_inlet1.shift();
 							data_inlet2.shift();
 							data_inlet3.shift();
-							// total_name.shift();
 
 							chart.update();
 						}

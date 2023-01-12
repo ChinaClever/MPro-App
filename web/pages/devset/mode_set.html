@@ -42,8 +42,9 @@
 		var dev_name =new Array();
 		let mode_set = new Array();
 		let opt_val = new Array();
-		let id_val = new Array("","","","mode","addr","","","buz");//,"group","energe","pow");
-		let id_val1 = new Array("mode","addr","buz");//,"group","energe","pow");
+		let sel_len = new Array();
+		let id_val = new Array("","","","mode","addr","","","buz","","","","","","","","","","","","","","data_len");//,"group","energe","pow");
+		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
 		let slave_num1 = 0;
 		let device_num = 10;
 		lang_init();
@@ -58,7 +59,7 @@
 			lang[5] = ["副机数量:","","","",""];
 			lang[6] = ["其他设置","","","",""];
 			lang[7] = ["蜂鸣器开关:","","","",""];
-			lang[8] = ["电能记录功能:","","","",""];
+			lang[8] = ["JSON数据内容:","","","",""];
 			lang[9] = ["总功率记录功能:","","","",""];
 			lang[10] = ["禁用","","","",""];
 			lang[11] = ["启用","","","",""];
@@ -68,6 +69,9 @@
 			lang[15] = ["RTU","","","",""];
 			lang[16]  = ["主机", "", "", "", ""];
 			lang[17]  = ["副机", "", "", "", ""];
+			lang[18]  = ["自动", "", "", "", ""];
+			lang[19]  = ["最多", "", "", "", ""];
+			lang[20]  = ["最少", "", "", "", ""];
 
 			for(let j = 0;j < 4;j++){
 				mode_set[j] = lang[12 +j][language];
@@ -75,12 +79,15 @@
 			opt_val[0] = lang[10][language];
 			opt_val[1] = lang[11][language];
 			dev_name[0] = lang[16][language];
+			sel_len[0] = lang[18][language];
+			sel_len[1] = lang[19][language];
+			sel_len[2] = lang[20][language];
 			for(let i = 1;i< device_num;i++){
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
 		function lang_fun(){
-			for(let i = 1;i < 8; i++){
+			for(let i = 1;i < 9; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
@@ -88,9 +95,10 @@
 			mode_data[0] = parseInt(sessionStorage.getItem(cfg_name[3] + default_addr));
 			mode_data[1] = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			mode_data[2] = parseInt(sessionStorage.getItem(cfg_name[7] + default_addr));
-			mode_data[3] = parseInt(sessionStorage.getItem(cfg_name[8] + default_addr));
-			mode_data[4] = parseInt(sessionStorage.getItem(cfg_name[9] + default_addr));
-			mode_data[5] = parseInt(sessionStorage.getItem(cfg_name[10] + default_addr));
+			mode_data[3] = parseInt(sessionStorage.getItem(cfg_name[21] + default_addr));
+			mode_data[4] = parseInt(sessionStorage.getItem(cfg_name[8] + default_addr));
+			mode_data[5] = parseInt(sessionStorage.getItem(cfg_name[9] + default_addr));
+			mode_data[6] = parseInt(sessionStorage.getItem(cfg_name[10] + default_addr));
 			slave_num1 = parseInt(sessionStorage.getItem(type_info[5]+ "Num" + default_addr));
 		}
 		$('.mode_set').html(buildTableMode());
@@ -114,15 +122,11 @@
 					}
 				}
 				document.getElementById(id_val1[i]).value = mode_data[i];
+				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
 			}
 		}
 		function SetData(btn){
-			if(btn.value == ""){
-				alert("请输入正确的数值");
-				showdata();
-				return;
-			}
 			let mds_data = 0;
 			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否修改此项。")){
@@ -137,11 +141,6 @@
 			}
 		}
 		function Set(btn){
-			if(btn.value == ""){
-				alert("请输入正确的数值");
-				showdata();
-				return;
-			}
 			let mds_data = 0;
 			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否修改此项。")){
@@ -191,6 +190,12 @@
 			tbody += '<td><select id ="buz" onchange ="SetData(this)">';
 			for(var i = 0; i<opt_val.length;i++){
 				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id = "lang_8"></td>';
+			tbody += '<td><select id ="data_len" onchange ="SetData(this)">';
+			for(var i = 0; i<sel_len.length;i++){
+				tbody +='<option value ="'+i+'">'+sel_len[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

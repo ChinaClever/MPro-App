@@ -16,8 +16,8 @@ let type_name = new Array("Total","Phs","Loop","Output","Group","Dual","TH","Sen
 let data_type = new Array("","Sw","Vol","Cur","Pow","Enger","Pf","AVpow","React","EngHis","LineVol","Tmp","Hum","","","","","","","","","Door1","Door2","Water","Smoke");
 let data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","MaxVal","MaxTime","HisEn");
 let alarm_name = new Array("","State","Mode","Alarm","Seq","Reset","Overrun","Timeout","Enable");
-let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","LanguageEn","BreakerEn","Direction","Angle");
-let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN");
+let cfg_name = new Array("Offline","Serial","DevState","DevMode","SlaveAddr","RunTime","Freq","Buz","GroupSwEn","EnergeSwEn","LanguageEn","BreakerEn","Direction","Angle","","","","","","","","JsonLen");
+let uut_name = new Array("","RoomName","AddrInfo","DevName","QRCode","DevSN","DevType");
 let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 let log_info = new Array("","LogNum","LogInfo");
 let modbus_info = new Array("","Enable","Addr","Baud","Parity","Data","Stop","","","","","TcpEnable","TcpPort");
@@ -272,7 +272,7 @@ var jsonrpc = function()
   }
   ws.onopen = function(){
       read_user_info();
-      read_cfg_();
+      read_language();
       read_num_info(addr);
   };
   return {
@@ -298,13 +298,13 @@ var rpc= jsonrpc();
 //   sessionStorage.setItem("CreateConnect", "0");
 // }
 var start  = 0;
-var hum_num = 2,num_num = 12,cfg_num = 14,uut_num = 5, sub_num = 11;
+var hum_num = 2,num_num = 12,cfg_num = 22,uut_num = 6, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
 var switch_ = 1,vol_ = 2,cur_ = 3,pow_ = 4,energe_ = 5,pf_ = 6,AVpow_ = 7,reactpow_ = 8,tmp_ = 11, hum_ = 12, door1_ = 21,door2_ = 22,water_ = 23,smoke_ =24;
 var idc_ = 1,room_ = 2;module_ = 3,cabnite_ = 4, loop_ = 5, dev_ = 6;
 
-function read_cfg_(){
-  rpc.call('pduReadParam',[0,cfg,10,0,0]);  
+function read_language(){
+  rpc.call('pduReadParam',[0,cfg,10,0,0]);
   rpc.call('pduReadParam',[0,42,3,0,0]);
 }
 function read_user_info(){
@@ -317,7 +317,7 @@ function read_user_info(){
       rpc.call('pduReadParam',[0,user,j,0,0]);
     }
     j++;
-  },3);
+  },1);
 }
 function read_dev_name(){
   var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + 0));
@@ -330,7 +330,7 @@ function read_dev_name(){
       rpc.call('pduReadParam',[j,uut,dev_,0,0]);
     }
     j++;
-  },3);
+  },1);
 }
 function read_uut_info(addr)
 {
@@ -411,7 +411,9 @@ function read_cfg_info(addr){
       clearInterval(time1);
     }
     if(j < cfg_num){
-      rpc.call('pduReadParam',[addr,cfg,j,0,0]);
+      if(j<14 || j>20){
+        rpc.call('pduReadParam',[addr,cfg,j,0,0]);
+      }
     }
     j++;
   },1);
@@ -1021,16 +1023,15 @@ function read_data_frist(){
       clearInterval(time2);
     }
     if((j <= 7 && j != 3)){
-      rpc.call('pduReadData',[default_addr,phase,vol_,j,0]);
-      rpc.call('pduReadData',[default_addr,phase,cur_,j,0]);
-      rpc.call('pduReadData',[default_addr,phase,pow_,j,0]);
-      rpc.call('pduReadData',[default_addr,loop,vol_,j,0]);
-      rpc.call('pduReadData',[default_addr,loop,cur_,j,0]);
-      rpc.call('pduReadData',[default_addr,loop,pow_,j,0]);
-      rpc.call('pduReadData',[default_addr,output,cur_,j,0]);
-      rpc.call('pduReadData',[default_addr,output,vol_,j,0]);
-      rpc.call('pduReadData',[default_addr,envir,tmp_,j,0]);
-      rpc.call('pduReadData',[default_addr,envir,hum_,j,0]);
+      rpc.call('pduReadData',[addr,phase,vol_,j,0]);
+      rpc.call('pduReadData',[addr,phase,cur_,j,0]);
+      rpc.call('pduReadData',[addr,phase,pow_,j,0]);
+      rpc.call('pduReadData',[addr,loop,vol_,j,0]);
+      rpc.call('pduReadData',[addr,loop,cur_,j,0]);
+      rpc.call('pduReadData',[addr,loop,pow_,j,0]);
+      rpc.call('pduReadData',[addr,output,cur_,j,0]);
+      rpc.call('pduReadData',[addr,envir,tmp_,j,0]);
+      rpc.call('pduReadData',[addr,envir,hum_,j,0]);
     }
     j++;
   },3);
@@ -1043,18 +1044,19 @@ function read_data_second(){
       clearInterval(time3);
     }
     if(j <= output_num_){
-      rpc.call('pduReadData',[default_addr,output,cur_,2,j]);
+      rpc.call('pduReadData',[addr,output,cur_,2,j]);
+      rpc.call('pduReadData',[addr,output,vol_,1,j]);
     }
     j++;
   },3);
 }
 function read_data_third(){
   var time4 = setInterval(function(){
-    rpc.call('pduReadParam',[default_addr,cfg,1,0,0]);
-    rpc.call('pduReadParam',[default_addr,cfg,10,0,0]);
-    rpc.call('pduReadParam',[default_addr,cfg,11,0,0]);
-    rpc.call('pduReadParam',[default_addr,cfg,13,0,0]);
-    rpc.call('pduReadParam',[default_addr,41,11,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,1,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,10,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,11,0,0]);
+    rpc.call('pduReadParam',[addr,cfg,13,0,0]);
+    rpc.call('pduReadParam',[addr,41,11,0,0]);
     clearInterval(time4);
   },10);
 }
@@ -1066,7 +1068,7 @@ function read_data_fourth(){
       clearInterval(time5);
     }
     if(j <= loop_num_){
-      rpc.call('pduReadParam',[default_addr,num,7,j,0]);
+      rpc.call('pduReadParam',[addr,num,7,j,0]);
       // console.log(j);
     }
     j++;
@@ -1080,7 +1082,7 @@ function read_data_fifth(){
       clearInterval(time6);
     }
     if(j <= board_num_){
-      rpc.call('pduReadParam',[default_addr,num,6,j,0]);
+      rpc.call('pduReadParam',[addr,num,6,j,0]);
       // console.log(j);
     }
     j++;

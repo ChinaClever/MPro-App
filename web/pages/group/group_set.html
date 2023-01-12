@@ -190,8 +190,6 @@
 			var stat=0,group = 0;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true){
 				group = type1.charCodeAt() - 'c'.charCodeAt();
 				if(ckd.checked == true){
 					stat = '1';
@@ -200,9 +198,6 @@
 				}
 				rpc.call('pduSetParam',[addr,26,group+1,num,0,stat]);
 				flash_html(ckd);
-			}else{
-				show_data();
-			}
 		}
 		function flash_html(par)
 		{
