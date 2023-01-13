@@ -215,7 +215,7 @@ int Set_Service::webCfg(int fc)
     case 4: ret = it->https_en; break;
     case 5: ret = it->https_port; break;
     default: cout << fc; break;
-    } cout << fc << ret;
+    } //cout << fc << ret;
 
     return ret;
 }

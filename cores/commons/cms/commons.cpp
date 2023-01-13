@@ -105,6 +105,26 @@ bool cm::language()
     return masterDev()->cfg.param.language ? false: true;
 }
 
+QByteArray cm::zipCompress(const QByteArray &array)
+{
+    QByteArray res = qCompress(array);
+    return res.mid(4);
+}
+
+//qUncompress好像对前四位的原数据长度没要求，乱填都可以，只不过性能有些差距。
+QByteArray cm::zipUncompress(const QByteArray &array)
+{
+    ulong dataLen = 10*10000;
+    char *pByte = (char *)(&dataLen);
+    QByteArray len; len.resize(4);
+    len[3] = *pByte;
+    len[2] = *(pByte + 1);
+    len[1] = *(pByte + 2);
+    len[0] = *(pByte + 3);
+    QByteArray qByteArray = len + array;
+    return qUncompress(qByteArray);
+}
+
 /**
  * @brief 转16进制
  * @param array

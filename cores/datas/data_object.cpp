@@ -43,7 +43,7 @@ uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
          int k = (list.size() + 1) / 2;
          if(k < list.size()) ret = list.at(k);
          else ret = list.last();
-     }
+     } if(ret < 50*COM_RATE_VOL) ret = 0;
 
      return ret;
 }
