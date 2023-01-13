@@ -254,6 +254,7 @@ bool Set_Info::qrcodeGenerator(const QString& msg)
     qstrcpy(ptr, msg.toUtf8().data());
     system(qr.toUtf8().data());
     if(msg.isEmpty()) ptr[0] = 0;
+    qDebug() << qr;
 
     return true;
 }
