@@ -11,6 +11,8 @@ void mdelay(int msec=1);
 bool pingNet(const QString& ip);
 bool isDigitStr(const QString &src);
 bool isIPaddress(const QString& ip);
+QByteArray zipCompress(const QByteArray &array);
+QByteArray zipUncompress(const QByteArray &array);
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
 

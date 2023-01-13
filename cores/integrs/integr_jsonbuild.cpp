@@ -21,7 +21,7 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
 
 QByteArray Integr_JsonBuild::getJson(uchar addr)
 {    
-    mDataContent = cm::masterDev()->cfg.param.dataContent;
+    mDataContent = cm::masterDev()->cfg.param.jsonContent;
     QByteArray array; QJsonObject json = getJsonObject(addr);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
