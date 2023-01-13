@@ -56,5 +56,5 @@ bool OP_ARtu::loop_readData()
         t = QRandomGenerator::global()->bounded(565);
     } cm::mdelay(t + 360);
 
-    return res;
+    return !res;
 }
