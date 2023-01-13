@@ -73,6 +73,7 @@
 		var loop_info = new Array();
 		var dev_name = new Array();
 		let lang = new Array();
+		let type_arr = new Array("vol","cur","pow");
 		var len  = data_name.length -1;
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
@@ -313,7 +314,6 @@
 		}
 		function flash_html(par)
 		{
-			read_loop_data(addr);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
@@ -400,7 +400,10 @@
 			}else{
 				number1 = number;
 			}
-			rpc.call('pduSetData',[addr_,loop,type,sub,number1,stat]);
+			SetDataSend(addr_,loop,type,sub,number1,stat,loop_num);
+			setTimeout(() => {
+				ReadDataSend(addr_,loop,type,sub,number1,loop_num);
+			}, 50);
 			flash_html(ckd);
 		}
 		function clearNum(obj){
@@ -430,13 +433,10 @@
 			}
 			if(ipt.name == "pow"){
 				type = 4;
-				stat *= 1;
 			}else if(ipt.name == "cur"){
 				type = 3;
-				stat *= 1;
 			}else if(ipt.name == "vol"){
 				type = 2;
-				stat *= 1;
 			}
 			if(type1 === 'e'){
 				sub = 5;
@@ -447,7 +447,10 @@
 			}else if(type1 === 'h'){
 				sub = 4;
 			}
-			rpc.call('pduSetData',[addr_,loop,type,sub,number1,parseInt(stat.toFixed(0))]);
+			SetDataSend(addr_,loop,type,sub,number1,stat,loop_num);
+			setTimeout(() => {
+				ReadDataSend(addr_,loop,type,sub,number1,loop_num);
+			}, 50);
 			flash_html(ipt);
 		}
 		function buildTablePow(rows) {
@@ -581,25 +584,28 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0,state1_ = 0,state2_ = 0;
 		function putdata(){
 			for(let i = 0;i < loop_num;i++){
-				state_ = document.getElementById('vol'+(i)).childNodes[1];
-				state1_ = document.getElementById('cur'+(i)).childNodes[1];
-				state2_ = document.getElementById('pow'+(i)).childNodes[1];
-				state_.innerHTML = (parseFloat(loop_info[i + 1][0])).toFixed(1);
-				state1_.innerHTML = (parseFloat(loop_info[i + 1][8])).toFixed(1);
-				state2_.innerHTML = (parseFloat(loop_info[i + 1][16])).toFixed(3);
+				for(let j = 0;j<3;j++){
+					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(loop_info[i + 1][0 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[4].innerHTML = (parseFloat(loop_info[i + 1][1 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[5].childNodes[0].value = (parseFloat(loop_info[i + 1][4 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[6].childNodes[0].value = (parseFloat(loop_info[i + 1][5 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[7].childNodes[0].value = (parseFloat(loop_info[i + 1][6 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[8].childNodes[0].value = (parseFloat(loop_info[i + 1][3 + j * 11])).toFixed(j+1);
+				}
 			}
 		}
-		setInterval(function(){
-			read_loop_data(addr);
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+		let Time1 = setInterval(function(){
+			ReadDataSend(addr,loop,pow_,1,0,loop_num);
+			ReadDataSend(addr,loop,cur_,1,0,loop_num);
+			ReadDataSend(addr,loop,vol_,1,0,loop_num);
 		},2000);
+		let Time2 = setInterval(function(){
+			read_data();
+			putdata();
+			showdata();
+		},1000);
     </script>
 </body>
 </html>

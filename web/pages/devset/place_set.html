@@ -31,9 +31,10 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script>
+		let rpc = window.top.shareSocket;
 		var place_data = new Array();
 		let lang = new Array();
 		let id_val = new Array("","room","addr","dev","qr","sn","dt");
