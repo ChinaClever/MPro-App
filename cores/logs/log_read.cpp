@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "log_read.h"
+#include "commons.h"
 
 Log_Read::Log_Read(QObject *parent)
     : Log_Sys{parent}
@@ -72,7 +73,8 @@ Sql_Statement *Log_Read::getSql(int type)
 
 
 QString Log_Read::log_readFun(const sLogFcIt &it)
-{
+{    
+    //cout << it.type << it.fc << it.id;
     Sql_Statement *sql = getSql(it.type); if(!sql) return "";
     QString res; QWriteLocker locker(mRwLock); switch (it.fc) {
     case eLogFc::eLog_clear: sql->clear(); break;
@@ -80,7 +82,8 @@ QString Log_Read::log_readFun(const sLogFcIt &it)
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
     case eLogFc::eLog_read: res = log_readPage(it.type, it.id, it.cnt); break;
     default: qDebug() << Q_FUNC_INFO << it.fc; break;
-    }
+    } //cout << it.type << it.fc << it.id << res;
+
     return res;
 }
 
@@ -106,7 +109,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
         int minId = its.first().id;
         res = db->toPageJson(its, minId);
     } else qDebug() << Q_FUNC_INFO << cmd;
-    //qDebug() << its.size() << cmd  << res;
+    cout << its.size() << cmd  << res;
 
     return res;
 }

@@ -37,7 +37,7 @@ template<typename T> T toStruct(const QByteArray &array) {
 double decimal(const sDataItem &it);
 #define setbit(x,y) x|=(1<<y) //将X的第Y位置1
 #define clrbit(x,y) x&=~(1<<y) //将X的第Y位清0
-#define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
+#define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
 }
 
 #endif // COMMONS_H
