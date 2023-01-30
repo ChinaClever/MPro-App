@@ -254,6 +254,7 @@ var jsonrpc = function()
       break;
       case 81:
         sessionStorage.setItem(log_info[subtopic] , JSON.parse(evt.data).result[5]);
+        console.log(log_info[subtopic] ,JSON.parse(evt.data).result[5]);
       break;
       case 82:
         sessionStorage.setItem("LogData" , JSON.parse(evt.data).result[5]);
@@ -274,6 +275,8 @@ var jsonrpc = function()
       read_user_info();
       read_language();
       read_num_info(addr);
+      read_uut_info(default_addr);
+      read_cfg_info(default_addr);
   };
   return {
     close:() => ws.close(),
@@ -291,12 +294,14 @@ var jsonrpc = function()
     },
   };
 }
-
-var rpc= jsonrpc();
-// if(sessionStorage.getItem("CreateConnect") == 1){
-//   rpc
-//   sessionStorage.setItem("CreateConnect", "0");
-// }
+var rpc;
+if(sessionStorage.getItem("CreateConnect") == 1){
+  rpc = jsonrpc();
+  window.shareSocket = rpc;
+  sessionStorage.setItem("CreateConnect", "0");
+}else{
+  rpc = window.top.shareSocket;
+}
 var start  = 0;
 var hum_num = 2,num_num = 12,cfg_num = 22,uut_num = 6, sub_num = 11;
 var total = 0, phase  = 1,loop = 2,output = 3,group = 4,dual = 5,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14,modbus = 15,snmp = 16,rpc_cfg = 17,push = 18,ver_ = 30,tls_ = 32,log = 81;
@@ -1094,17 +1099,60 @@ function change(sel){
   var time1 = setTimeout(function(){
     read_num_info(addr);
     read_cfg_info(addr);
-    setTimeout(function(){
-      read_phase_data(addr);
-      read_loop_data(addr);
-      read_output_data(addr);
-      read_sensor_data(addr);
-      read_group_data(addr);
-      read_total_data(addr);
+    setTimeout(function(){  
       read_output_param(addr);
       read_group_param_data(addr);
       read_group_info(addr);
       read_monitoring_data(addr);
     },500);
   },1500);
+}
+function ReadDataSend(Addr,Type,Topic,Subtopic,Id,Num){
+  if(Id == 0){
+    for(let i = 1; i < Num + 1;i++){
+      rpc.call('pduReadData',[Addr,Type,Topic,Subtopic,i]);
+    }
+  }else{
+    rpc.call('pduReadData',[Addr,Type,Topic,Subtopic,Id]);
+  }
+}
+function SetDataSend(Addr,Type,Topic,Subtopic,Id,Value,Num){
+  if(Id == 0){
+    for(let i = 1; i < Num + 1;i++){
+      rpc.call('pduSetData',[Addr,Type,Topic,Subtopic,i,Value]);
+    }
+  }else{
+    rpc.call('pduSetData',[Addr,Type,Topic,Subtopic,Id,Value]);
+  }
+}
+function ReadHomeData(){
+  var phase_num = parseInt(sessionStorage.getItem('PhaseNum' + addr));
+  var loop_num = parseInt(sessionStorage.getItem('LoopNum' + addr));
+  ReadDataSend(addr, total, pow_, 1, 1,0);
+  ReadDataSend(addr, total, vol_, 1, 1,0);
+  ReadDataSend(addr, total, cur_, 1, 1,0);
+  ReadDataSend(addr, total, energe_, 1, 1,0);
+  ReadDataSend(addr, total, AVpow_, 1, 1,0);
+  ReadDataSend(addr, phase, vol_, 1, 0,phase_num);
+  ReadDataSend(addr, phase, cur_, 1, 0,phase_num);
+  ReadDataSend(addr, phase, cur_, 3, 0,phase_num);
+  ReadDataSend(addr, phase, cur_, 4, 0,phase_num);
+  ReadDataSend(addr, phase, pf_, 1, 0,phase_num);
+  ReadDataSend(addr, phase, pow_, 1, 0,phase_num);
+  ReadDataSend(addr, phase, 10, 1, 0,phase_num);
+  ReadDataSend(addr, loop, switch_, 1, 0,loop_num);
+  ReadDataSend(addr, loop, vol_, 1, 0,loop_num);
+  ReadDataSend(addr, loop, cur_, 1, 0,loop_num);
+  ReadDataSend(addr, loop, cur_, 4, 0,loop_num);
+  ReadDataSend(addr, loop, energe_, 1, 0,loop_num);
+  ReadDataSend(addr, loop, pow_, 1, 0,loop_num);
+		
+  ReadDataSend(addr, envir, tmp_, 1, 1,0);
+  ReadDataSend(addr, envir, tmp_, 1, 2,0);
+  ReadDataSend(addr, envir, hum_, 1, 1,0);
+  ReadDataSend(addr, envir, hum_, 1, 2,0);
+  ReadDataSend(addr, sensor, door1_, 1, 1,0);
+  ReadDataSend(addr, sensor, door2_, 1, 1,0);
+  ReadDataSend(addr, sensor, water_, 1, 1,0);
+  ReadDataSend(addr, sensor, smoke_, 1, 1,0);
 }

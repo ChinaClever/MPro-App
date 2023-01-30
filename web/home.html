@@ -7,20 +7,16 @@
 	<meta name="renderer" content="webkit">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>home</title>
-	<link rel="stylesheet" href="../../include/css/public.min.css">
-	<link rel="stylesheet" href="../../include/css/index.min.css">
-	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
-	<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
-	<link rel="stylesheet" href="../../doc-lib/doc.css">
+	<link rel="stylesheet" href="include/css/public.min.css">
+	<link rel="stylesheet" href="include/css/iconfont.min.css">
+	<link rel="stylesheet" href="include/css/font-awesome.min.css">
+	<link rel="stylesheet" href="include/css/index.min.css">
 
-	<script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/fn_public.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
-	<script src="../../include/js/public.min.js"></script>
-	<script src="../../doc-lib/highlight.pack.js"></script>
-	<script src="../../doc-lib/doc.js"></script>
-	<script src="../../include/js/chart.min.js"></script>
+	<script src="include/js/jquery-1.11.3.min.js"></script>
+	<script src="include/js/index.min.js"></script>
+    <script src="include/js/fn_public.js"></script>
+	<script src="include/js/rpc-over-websocket.js"></script>
+	<script src="include/js/chart.min.js"></script>
 	<style>
 		.box {
 			border: 1px solid #C4C2C3;
@@ -171,7 +167,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'L1',
+									label: 'L2',
 									data: data_inlet2,
 									backgroundColor: 'rgb(128, 128, 128)',
 									borderColor: 'rgb(128, 128, 128)',
@@ -684,68 +680,8 @@
 			}
 			return tbody;
 		}
-		function get_data() {
-			rpc.call("pduReadData", [addr, total, pow_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, total, vol_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, total, cur_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, total, energe_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, total, AVpow_, 1, 1]);
-			delay();
-			for (let i = 1; i < phase_num + 1; i++) {
-				rpc.call("pduReadData", [addr, phase, vol_, 1, i]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, cur_, 1, i]);
-				delay();
-				rpc.call("pduReadData", [addr, total, cur_, 1, 1]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, cur_, 3, i]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, cur_, 4, i]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, pf_, 1, i]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, pow_, 1, i]);
-				delay();
-				rpc.call("pduReadData", [addr, phase, 10, 1, i]);
-				delay();
-			}
-			for (let j = 1; j < loop_num + 1; j++) {
-				rpc.call("pduReadData", [addr, loop, switch_, 1, j]);
-				delay();
-				rpc.call("pduReadData", [addr, loop, vol_, 1, j]);
-				delay();
-				rpc.call("pduReadData", [addr, loop, cur_, 1, j]);
-				delay();
-				rpc.call("pduReadData", [addr, loop, cur_, 4, j]);
-				delay();
-				rpc.call("pduReadData", [addr, loop, energe_, 1, j]);
-				delay();
-				rpc.call("pduReadData", [addr, loop, pow_, 1, j]);
-				delay();
-			}
-			rpc.call("pduReadData", [addr, envir, tmp_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, envir, tmp_, 1, 2]);
-			delay();
-			rpc.call("pduReadData", [addr, envir, hum_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, envir, hum_, 1, 2]);
-			delay();
-			rpc.call("pduReadData", [addr, sensor, door1_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, sensor, door2_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, sensor, water_, 1, 1]);
-			delay();
-			rpc.call("pduReadData", [addr, sensor, smoke_, 1, 1]);
-			delay();
-		}
 		setInterval(function () {
-			get_data();
+			ReadHomeData();
 			setTimeout(read_data(), 1000);
 		}, 2000);
 	</script>

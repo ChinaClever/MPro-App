@@ -15,7 +15,7 @@
     </div>
   </div>
   <script src="./include/js/jquery-1.11.3.min.js"></script>
-  <script src="../../include/js/fn_public.js"></script>
+  <script src="./include/js/fn_public.js"></script>
 	<script src="./include/js/rpc-over-websocket.js"></script>
   <script>
     let time_1_num = 0;
@@ -189,6 +189,12 @@
         }
       }
     }
+    var time1 = setTimeout(function(){
+      ReadHomeData();
+      read_dev_name();
+			read_ver_info(default_addr);
+			read_phase_data(addr);
+    },500);
     function builddiv(Reg){
       var tbody = '';
       if(Reg === 'register')
@@ -215,29 +221,6 @@
       }
       return tbody;
     }
-
-    var time1 = setTimeout(function(){
-      console.log("start");
-      read_num_info(0);
-      read_uut_info(0);
-      read_cfg_info(0);
-      read_dev_name();
-      setTimeout(function(){
-        read_phase_data(0);
-        read_output_param(0);
-        read_loop_data(0);
-        read_output_data(0);
-        read_sensor_data(0);
-        read_total_data(0);
-        read_ver_info(0);
-        read_group_data(0);
-        read_dual_data(0);
-        read_dual_param_data(0);
-        read_group_param_data(0);
-        read_group_info(0);
-        read_monitoring_data(0);
-      },500);
-    },1500);
   </script>
 
 </body>
