@@ -76,7 +76,9 @@ char *Web_Rpc::pduSetParam(mg_str &r)
 char* Web_Rpc::pduLogFun(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
+    //qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << its;
     QString value = mObj->log_fun(its.at(2), its.at(3),its.at(0), its.at(4)).toString();
+    //qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << value;
     return responRpcString(its, value);
 }
 

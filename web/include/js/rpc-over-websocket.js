@@ -75,6 +75,20 @@ for(let i = 0;i<3;i++){
     inletC_data[i][j] = 0;
   }
 }
+function isJSON(str) {
+  if (typeof str == 'string') {
+      try {
+          var obj=JSON.parse(str);
+          if(typeof obj == 'object' && obj ){
+              return true;
+          }else{
+              return false;
+          }
+      } catch(e) {
+          return false;
+      }
+  }
+}
 var jsonrpc = function()
 {
   var pro = 0;
@@ -92,12 +106,18 @@ var jsonrpc = function()
   let type = 0,topic = 0,subtopic = 0,num = 0;
   ws.onclose = function(){};
   ws.onmessage = function(evt) {
+    
     let addr_  = parseInt(JSON.parse(evt.data).result[0]);
-    type = parseInt(JSON.parse(evt.data).result[1]);
+    type = JSON.parse(evt.data).result[1];
     topic = parseInt(JSON.parse(evt.data).result[2]);
     subtopic = parseInt(JSON.parse(evt.data).result[3]);
     num = parseInt(JSON.parse(evt.data).result[4]);
-    switch(type)
+    if(isJSON(JSON.parse(evt.data).result[5]) == true && JSON.parse(JSON.parse(evt.data).result[5]).addr != null ){
+      Jsonparse(JSON.parse(evt.data).result[5]);
+      console.log(JSON.parse(evt.data).result[5]);
+      return ;
+    }
+    switch(parseInt(type))
     {
       case 0:
         sessionStorage.setItem(type_name[type]+ data_type[topic] + data_name[subtopic] + addr_, (JSON.parse(evt.data).result[5])); 
@@ -268,13 +288,15 @@ var jsonrpc = function()
         // console.log(net_diagn[topic], JSON.parse(evt.data).result[5]);
       break;
       default:
+        console.log(JSON.parse(evt.data).result[0]);
         break;
     }
   }
   ws.onopen = function(){
-      read_user_info();
       read_language();
       read_num_info(addr);
+      read_user_info();
+      rpc.call("pduMetaData",addr);
       read_uut_info(default_addr);
       read_cfg_info(default_addr);
   };
@@ -1155,4 +1177,128 @@ function ReadHomeData(){
   ReadDataSend(addr, sensor, door2_, 1, 1,0);
   ReadDataSend(addr, sensor, water_, 1, 1,0);
   ReadDataSend(addr, sensor, smoke_, 1, 1,0);
+}
+let GroupType = new Array(7,5,1,0,6,4,4,4,4,4,4,4,4,8);
+let GroupName = new Array(1,1,8,1,1,8,4,5,3,2,1,7,6,1);
+let PhaseType = new Array(7,3,3,3,3,3,3,3,3,5,6,10,4,4,4,4,4,4,4,4,8,2,2,2,2,2,2,2,2);
+let PhaseName = new Array(1,8,4,5,3,2,1,7,6,1,1,1,8,4,5,3,2,1,7,6,1,8,4,5,3,2,1,7,6);
+let PduAlarmName = new Array();
+function Jsonparse(str){
+  var pdu_data = JSON.parse(str);
+  let i = 0;
+  let addr_ = pdu_data.addr;
+  for(i = 0;i<pdu_data.pdu_data.group_item_list.apparent_pow.length;i++){
+    sessionStorage.setItem(type_name[group]+ data_type[7] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.apparent_pow[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[5] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.ele[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[1] + alarm_name[8] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.group_relay_timing_en[i]); 
+    sessionStorage.setItem(type_name[23]+ info_info[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.name[i]);
+    sessionStorage.setItem(type_name[group]+ data_type[6] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pf[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.group_item_list.pow_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pow_alarm_max[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pow_alarm_min[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.group_item_list.pow_alarm_status[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pow_rated[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pow_value[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.group_item_list.pow_warn_max[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[4] + data_name[6] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.pow_warn_min[i]); 
+    sessionStorage.setItem(type_name[group]+ data_type[8] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.reactive_pow[i]); 
+  }
+  for(i = 0;i<pdu_data.pdu_data.line_item_list.apparent_pow.length;i++){
+    sessionStorage.setItem(type_name[phase]+ data_type[7] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.apparent_pow[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.cur_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.cur_alarm_max[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.cur_alarm_min[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.cur_alarm_status[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.cur_rated[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.cur_value[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.cur_warn_max[i]);
+    sessionStorage.setItem(type_name[phase]+ data_type[3] + data_name[6] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.cur_warn_min[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[5] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.ele[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[6] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pf[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[10] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.phase_voltage[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.pow_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pow_alarm_max[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pow_alarm_min[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.pow_alarm_status[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pow_rated[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pow_value[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.pow_warn_max[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[4] + data_name[6] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.pow_warn_min[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[8] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.reactive_pow[i]);
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.vol_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.vol_alarm_max[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.vol_alarm_min[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.vol_alarm_status[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.vol_rated[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.line_item_list.vol_value[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.vol_warn_max[i]); 
+    sessionStorage.setItem(type_name[phase]+ data_type[2] + data_name[6] + addr_ +'_'+(i+1),pdu_data.pdu_data.line_item_list.vol_warn_min[i]); 
+  }
+  for(i = 0;i<pdu_data.pdu_data.loop_item_list.apparent_pow.length;i++){
+    sessionStorage.setItem(type_name[loop]+ data_type[7] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.apparent_pow[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.cur_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.cur_alarm_max[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.cur_alarm_min[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.cur_alarm_status[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.cur_rated[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.cur_value[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.cur_warn_max[i]);
+    sessionStorage.setItem(type_name[loop]+ data_type[3] + data_name[6] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.cur_warn_min[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[5] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.ele[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[6] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pf[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[10] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.phase_voltage[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.pow_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pow_alarm_max[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pow_alarm_min[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.pow_alarm_status[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pow_rated[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pow_value[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.pow_warn_max[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[4] + data_name[6] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.pow_warn_min[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[8] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.reactive_pow[i]);
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.vol_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.vol_alarm_max[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.vol_alarm_min[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.vol_alarm_status[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.vol_rated[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.loop_item_list.vol_value[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.vol_warn_max[i]); 
+    sessionStorage.setItem(type_name[loop]+ data_type[2] + data_name[6] + addr_ +'_'+(i+1),pdu_data.pdu_data.loop_item_list.vol_warn_min[i]); 
+  }
+  for(i = 0;i<pdu_data.pdu_data.output_item_list.apparent_pow.length;i++){
+    sessionStorage.setItem(type_name[output]+ data_type[7] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.apparent_pow[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.cur_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.cur_alarm_max[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.cur_alarm_min[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.cur_alarm_status[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.cur_rated[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.cur_value[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.cur_warn_max[i]);
+    sessionStorage.setItem(type_name[output]+ data_type[3] + data_name[6] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.cur_warn_min[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[5] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.ele[i]); 
+    sessionStorage.setItem(type_name[22]+ info_info[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.group_item_list.name[i]);
+    sessionStorage.setItem(type_name[output]+ data_type[6] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pf[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.pow_alarm_enable[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pow_alarm_max[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[4] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pow_alarm_min[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.pow_alarm_status[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pow_rated[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pow_value[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[7] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.pow_warn_max[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[4] + data_name[6] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.pow_warn_min[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[8] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.reactive_pow[i]);
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[3] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.relay_alarm[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[2] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.relay_off_alarm[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[6] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.relay_overrun_off[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[4] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.relay_powerup_delay[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[5] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.relay_reset_delay[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[1] + addr_ +'_'+(i+1), pdu_data.pdu_data.output_item_list.relay_state[i]); 
+    sessionStorage.setItem(type_name[output]+ data_type[1] + data_name[8] + addr_ +'_'+(i+1),pdu_data.pdu_data.output_item_list.relay_timing_en[i]); 
+  }
+  sessionStorage.setItem(type_name[0]+ data_type[7] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.apparent_pow); 
+  sessionStorage.setItem(type_name[0]+ data_type[3] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.cur); 
+  sessionStorage.setItem(type_name[0]+ data_type[5] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.ele); 
+  sessionStorage.setItem(type_name[0]+ data_type[6] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.pf); 
+  sessionStorage.setItem(type_name[0]+ data_type[4] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.pow); 
+  sessionStorage.setItem(type_name[0]+ data_type[8] + data_name[1] + addr_, pdu_data.pdu_data.output_item_list.reactive_pow); 
 }

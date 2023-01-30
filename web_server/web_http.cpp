@@ -295,7 +295,7 @@ void Web_Http::run()
 {
     mg_mgr *mgr = &g_mgr;   // Event manager
     mg_mgr_poll(mgr, 1000); // Infinite event loop
-    QTimer::singleShot(15,this,SLOT(run()));
+    QTimer::singleShot(10,this,SLOT(run()));
     //qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
 }
 
