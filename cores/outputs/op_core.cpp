@@ -35,7 +35,7 @@ void OP_Core::run()
                 ret |= readData(i+1);
             }
         } else {
-            //ret |= loop_readData();/////=====
+            ret |= loop_readData();
         } cm::mdelay(10);
         if(ret) mDev->dtc.fault = 1;
     }

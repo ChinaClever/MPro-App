@@ -22,7 +22,6 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
     uchar *ptr = (uchar *)array.data();
-
     if((*ptr++ == 0x7B) && (*ptr++ == 0xC1))  {
         obj->addr = *ptr++;
         obj->size = *ptr++; obj->hz = *ptr++;
