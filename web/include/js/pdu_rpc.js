@@ -7,12 +7,13 @@ class JsonRpc {
     static _instance = null;
     constructor() {
         this.rpcid = 0; 
-        this.timeOut = 60;
-        this.isSetting = false;
-        this.root_map = new Map();
-        this.ws = this.socket_open(); 
+        this.timeOut = 65; // HTTP最小超时时间 
+        this.isSetting = false; // 是否在设置模式
+        this.root_map = new Map(); // 唯一的Map表，此表会存储所有的数据
+        this.ws = this.socket_open(); // 自动建立连接
     }
 
+    // 生成唯一实例
     static build() {
         if (!JsonRpc._instance) {            
             JsonRpc._instance = new JsonRpc()
@@ -20,6 +21,7 @@ class JsonRpc {
         return JsonRpc._instance
     }
 
+    // 自动生成URL
     rpc_url() {
         var protocol = "ws";        
         var host = window.location.host;
@@ -34,6 +36,7 @@ class JsonRpc {
         return new Promise((resolve) => setTimeout(resolve, delay));
     }
 
+    // 异步延时
     async sleep(ms) {
         //var dateBegin = new Date().getTime();
         await this.asyncSleep(ms);
@@ -41,21 +44,28 @@ class JsonRpc {
         //console.log("After waiting" + res);
     }
 
+    // 同步延时
     delay(ms) {
          var waitForMillisecond = ms;           
          var endTime = new Date().getTime() + parseInt(waitForMillisecond, 10);
          while(new Date().getTime() < endTime ) {;}     
     }
 
+    // 获取至少所需的连接时间
     getTimeOut() {
         return this.timeOut;
     }
 
+    // 清空表
+    clear() {
+        this.root_map.clear();
+    }
 
     static socket_close(evt) {
         alert('json rpc websocket close');
     }    
 
+    // 打开Websocket
     socket_open() {        
         var url = this.rpc_url();
         var ws = new WebSocket(url);
@@ -64,6 +74,7 @@ class JsonRpc {
         return ws;
     }
 
+    // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
         if(this.ws.readyState == WebSocket.OPEN){     
@@ -72,12 +83,14 @@ class JsonRpc {
         return ret;
     }
 
+    // WS套接字发送数据
     static socket_recv(evt) {
         //alert(evt.data);
         var data = JSON.parse(evt.data).result;
         if(data) JsonRpc.build().json_rpc_recv(data);
     }
 
+    // RPC接收数据并更新至Map表中
     json_rpc_recv(data) {
         var addr  = data[0];
         var type = data[1];
@@ -94,6 +107,7 @@ class JsonRpc {
         return true;
     }
 
+    // RPC读写操作接口
     json_rpc_obj(method, params) {
         const id = this.rpcid++;
         const request = {id, method, params};
@@ -101,16 +115,19 @@ class JsonRpc {
         return this.socket_send(msg);
     }
 
+    // RPC读取接口
     json_rpc_get(method, params) {
         this.isSetting = false;
         return this.json_rpc_obj(method, params);
     }
    
+    // RPC设置接口
     json_rpc_set(method, params) {
         this.isSetting = true;
         return this.json_rpc_obj(method, params);
     }
 
+    // 获取Map中的值
     json_rpc_value(key) {
         var res = null;
         if(this.root_map.has(key)) {
@@ -140,6 +157,8 @@ class JsonRpc {
     }
 } //JsonRpc.build();
 
+
+// PDU整个JSON包操作类
 class PduMetaData {
     constructor() {
         this.addr = 0;
@@ -147,6 +166,7 @@ class PduMetaData {
         setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }
 
+    // 设置地址，并更新JSON数据
     setAddr(addr) {
         this.addr = addr;
         this.meta_workDown();
@@ -160,6 +180,7 @@ class PduMetaData {
         return this.rpc.getTimeOut();
     }
 
+    // 获取JSON包中某个字段具体的值
     meta_value(type, fc, id=null) {
         var key = this.addr+'_'+100+'_'+0+'_'+0+'_'+0;
         var res = this.rpc.json_rpc_value(key);
@@ -170,10 +191,12 @@ class PduMetaData {
         return res;
     }
 
+    // 启动定时刷新JSON包数据
     meta_start() {
         setInterval(function(){PduMetaData.meta_workDown()}, 1940+this.getTimeOut());  
     }
 
+    // 定时器响应函数
    static meta_workDown() {
         var method = "pduMetaData"; 
         var params = [this.addr, 100, 0, 0, 0];
@@ -182,16 +205,19 @@ class PduMetaData {
 } //new PduMetaData().meta_start();
 
 
+// PDU实时数据操作类
 class PduDataItem extends PduMetaData{
     constructor() {
         super();  
     }
 
+    // 根据地址获取某个具体实时数据
     getValueByAddr(addr, type, topic, sub, id) {
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         return this.rpc.json_rpc_value(key);
     }
 
+    // 从Map表中获取某个具体实时数据 地址使用成员变量
     getValue(type, topic, sub, id) {
         return this.getValueByAddr(this.addr, type, topic, sub, id);
     }
@@ -202,6 +228,7 @@ class PduDataItem extends PduMetaData{
         return this.rpc.json_rpc_get(method, params);
     }
 
+    // 刷新某个具体实时数据至Map表中
     getData(type, topic, sub, id) {       
         return this.getDataByAddr(this.addr, type, topic, sub, id);
     }
@@ -212,6 +239,7 @@ class PduDataItem extends PduMetaData{
         return this.rpc.json_rpc_set(method, params);
     }
 
+    // 修改某个具体实时数
     setData(type, topic, sub, id, value) {
         return this.setDataByAddr(this.addr, type, topic, sub, id, value);
     }
@@ -219,22 +247,26 @@ class PduDataItem extends PduMetaData{
 } //var obj = new PduDataItem(); setTimeout(function(){obj.getData(1,2,1,1);}, obj.getTimeOut());
 
 
+// 单个配置参数操作类
 class PduCfgItem extends PduDataItem {
     constructor() {
         super(); 
     }
 
+    // 从Map表中获取某个配置参数
     cfgValue(type, fc, id=0, addr=0) {
         var key = addr+'_'+type+'_'+fc+'_'+id+'_'+0;
         return this.rpc.json_rpc_value(key);
     }
 
+    // 刷新某个配置参数至Map表中
     getCfg(type, fc, id=0, addr=0) {
         var method = "pduReadParam"; 
         var params = [addr, type, fc, id,0];
         return this.rpc.json_rpc_get(method, params);
     }
 
+    // 修改某个配置参数
     setCfg(type, fc, value, id=0, addr=0) {
         var method = "pduSetParam"; 
         var params = [addr, type, fc, id, 0, value];
@@ -242,30 +274,34 @@ class PduCfgItem extends PduDataItem {
     }
 } //var obj = new PduCfgItem(); setTimeout(function(){obj.getCfg(22,1,1);}, obj.getTimeOut());
 
-
+// 多个配置参数操作类
 class PduCfgObj extends PduCfgItem {
     constructor() {
         super();
     }
 
+    // 按ID号刷新多个不连续配置参数至Map表中
     getCfgItems(type, fc, ids, addr=0) {
         for(var it of ids) {
             this.getCfg(type, fc, it, addr);
         } 
     }
 
+    // 按ID号刷新多个连续配置参数至Map表中
     getCfgIds(type, fc, start, end) {
         for(var i=start; i<=end; ++i) {
             this.getCfg(type, fc, i, 0);
         }
     }
 
+     // 按功能码刷新多个不连续配置参数至Map表中
     getCfgList(type, fcs, id=0, addr=0) {
         for(var it of fcs) {
             this.getCfg(type, it, id, addr);
         } 
     }
 
+    // 按功能码刷新多个连续配置参数至Map表中
     getCfgFns(type, start, end) {
         for(var i=start; i<=end; ++i) {
             this.getCfg(type, i, 0, 0);
@@ -279,6 +315,7 @@ class PduCfgObj extends PduCfgItem {
 //     obj.getCfgList(30, fcs);
 // }, 250);
 
+// 不同类型配置参数一次读取操作类
 class PduCfgs extends PduCfgObj {
     constructor() {
         super();
@@ -297,7 +334,7 @@ class PduCfgs extends PduCfgObj {
     }
 }
 
-
+// 日志操作接口
 class PduLog extends  PduCfgs{
     constructor() {
         super();
@@ -326,6 +363,7 @@ class PduLog extends  PduCfgs{
     }
 }
 
+// 实例化接口类
 class PduCore extends PduCfgs {
     static _instance = null;
     constructor() {
@@ -339,14 +377,22 @@ class PduCore extends PduCfgs {
         return PduCore._instance
     }
 
-    msleep(ms) {
+    // 清除所有数据
+    clear() {
+        this.rpc.clear();
+    }
+
+    // 异步延时
+    msleep(ms) { 
         this.rpc.sleep(ms);
     }
 
+    // 同步延时
     mdelay(ms) {
         this.rpc.delay(ms);
     }
 
+    // 计算耗时时间
     timeCnt(dateBegin) {
         this.rpc.timeFn(dateBegin);
     }
@@ -355,7 +401,7 @@ class PduCore extends PduCfgs {
         //this.mqttCfg();
         this.swVersion();
     }
-} //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut());
+} //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 
 
 
