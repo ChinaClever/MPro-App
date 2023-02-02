@@ -13,11 +13,13 @@ Mb_Update::Mb_Update(QObject *parent)
 
 void Mb_Update::mbUpdates()
 {
+    line_update();
+    loop_update();
+    output_update();
+    env_update();
+
+
     upDevInfo();
-    mbLineUpdate();
-    mbLoopUpdate();
-    mbOutputUpdate();
-    mbEnvUpdate();
     mbSetUpdate();
     mbAlarmUpdate();
     mbCtrlUpdate();

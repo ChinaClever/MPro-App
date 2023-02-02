@@ -10,48 +10,78 @@ Mb_Line::Mb_Line(QObject *parent) : Mb_Object{parent}
 
 }
 
-void Mb_Line::mbLineUpdate()
+
+void Mb_Line::line_update()
 {
-    upTgData();
-    upLineData();
-    upLineThreshold();
+    line_dataUpdate();
+    line_alarmUpdate();
+    line_thresholdUpdate();
 }
 
-void Mb_Line::upTgData()
+void Mb_Line::line_dataObj(vshort &vs, int id)
 {
-    vshort vs; sTgObjData *tg = &(mDevData->tg);
-    vs << tg->vol.value << tg->cur.value << tg->pow.value;
-    vs << tg->artPow - tg->pow.value << tg->pf;
-    vs << tg->ele / 65536 << tg->ele % 65536;
-    vs << mDevData->hz;
-    setRegs(MbReg_Totals, vs);
+    sObjData *obj = &(mDevData->line);
+    vs << obj->vol.value[id];
+    vs << obj->cur.value[id];
+    vs << obj->pow.value[id];
+    vs << obj->artPow[id];
+    vs << obj->pf[id];
+    vs << obj->ele[id]/0xffff;
+    vs << obj->ele[id]%0xffff;
+    vs << obj->reactivePow[id];
+    vs << obj->lineVol[id];
+    vs << 0;
 }
 
-void Mb_Line::upLineData()
+void Mb_Line::line_dataUpdate()
 {
-    vshort vs; int size = LINE_NUM;
-    sObjData *line = &(mDevData->line);
-    appendData(size, line->vol.value, vs);
-    appendData(size, line->cur.value, vs);
-    appendData(size, line->pow.value, vs);
-    appendData(size, line->reactivePow, vs);
-    appendData(size, line->pf, vs);
-    setRegs(MbReg_Lines, vs);    
+    vshort vs; int size = mDevData->line.size;
+    for(int i=0; i<size; ++i) {
+        line_dataObj(vs, i);
+    } setRegs(MbReg_LineData, vs);
 }
 
-void Mb_Line::upLineThreshold()
+void Mb_Line::line_alarmObj(vshort &vs, int id)
 {
-    sObjData *obj = &(mDevData->line); vshort vs;
-    vs << mDevData->tg.cur.max << mDevData->tg.cur.min;
-
-    appendAlarm(obj->cur, vs);
-    setRegs(MbReg_SetLine, vs);
-    vs.clear();
-
-    vs << mDevData->tg.vol.max << mDevData->tg.vol.min;
-    appendAlarm(obj->vol, vs);
-
-    vs << mDevData->tg.cur.crMax;
-    appendData(obj->size, obj->cur.crMax, vs);
-    setRegs(1141, vs);
+    sObjData *obj = &(mDevData->line);
+    vs << obj->vol.alarm[id];
+    vs << obj->cur.alarm[id];
+    vs << obj->pow.alarm[id];
 }
+
+void Mb_Line::line_alarmUpdate()
+{
+    vshort vs; int size = mDevData->line.size;
+    for(int i=0; i<size; ++i) {
+        line_alarmObj(vs, i);
+    } setRegs(MbReg_LineAlarm, vs);
+}
+
+void Mb_Line::line_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs)
+{
+    vs << unit.max[id];
+    vs << unit.crMax[id];
+    vs << unit.crMin[id];
+    vs << unit.min[id];
+    vs << unit.en[id];
+}
+
+void Mb_Line::line_thresholdUpdate()
+{
+    vshort vs; sObjData *obj = &(mDevData->line);
+    int size = mDevData->line.size;
+    for(int i=0; i<size; ++i) {
+        line_thresholdObj(obj->vol, i, vs);
+        line_thresholdObj(obj->cur, i, vs);
+        line_thresholdObj(obj->pow, i, vs);
+    } setRegs(MbReg_LineThreshol, vs);
+}
+
+
+
+
+
+
+
+
+

@@ -8,11 +8,13 @@ public:
     explicit Mb_Output(QObject *parent = nullptr);
 
 protected:
-    void mbOutputUpdate();
+    void output_update();
 
 private:
-    void upOutputData();
-    void upOutputThreshold();
+    void output_dataUpdate();
+    void output_alarmUpdate();
+    void output_thresholdUpdate();
+    void output_thresholdObj(const sAlarmUnit &unit, vshort &vs);
 };
 
 #endif // MB_OUTPUT_H

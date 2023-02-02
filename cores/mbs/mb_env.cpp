@@ -10,35 +10,66 @@ Mb_Env::Mb_Env(QObject *parent) : Mb_Loop{parent}
 
 }
 
-void Mb_Env::mbEnvUpdate()
-{
-    upEnvData();
-    upEnvThreshold();
-}
 
-void Mb_Env::upEnvData()
+void Mb_Env::env_dataUpdate()
 {
+    vshort vs; int size = SENOR_NUM;
     sEnvData *obj = &(mDevData->env);
-    vshort vs; int size = obj->size;
-    for(int i=0; i<18; ++i) vs << 0xFFFF;
-    for(int i=0; i<size; ++i) {
-        vs[2*i] = obj->tem.value[i];
-        vs[2*i+1] = obj->hum.value[i];
-    }
-
-    setRegs(MbReg_Envs, vs);
+    appendData(size, obj->tem.value, vs);
+    appendData(size, obj->hum.value, vs);
+    setRegs(MbReg_EnvData, vs);
 }
 
-void Mb_Env::upEnvThreshold()
+void Mb_Env::env_alarmUpdate()
 {
-    vshort vs; sEnvData *env = &(mDevData->env);
-    int size = env->size;
-    if( size == 0 ) size = 2;
-    for(int i=0; i<size; ++i)
-        vs << env->tem.max[i] << env->tem.min[i];
-    setRegs(MbReg_SetEnv, vs); vs.clear();
-
-    for(int i=0; i<size; ++i)
-        vs << env->hum.max[i] << env->hum.min[i];
-    setRegs(MbReg_SetEnv+16, vs);
+    vshort vs; int size = SENOR_NUM;
+    sEnvData *obj = &(mDevData->env);
+    appendData(size, obj->tem.alarm, vs);
+    appendData(size, obj->hum.alarm, vs);
+    setRegs(MbReg_EnvAlarm, vs);
 }
+
+
+void Mb_Env::env_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs)
+{
+    vs << unit.max[id];
+    vs << unit.crMax[id];
+    vs << unit.crMin[id];
+    vs << unit.min[id];
+    vs << unit.en[id];
+}
+
+
+void Mb_Env::env_thresholdUpdate()
+{
+    vshort vs; int size = SENOR_NUM; //obj.size;
+    sEnvData *obj = &(mDevData->env);
+    for(int i=0; i<size; ++i) {
+        env_thresholdObj(obj->tem, i, vs);
+        env_thresholdObj(obj->hum, i, vs);
+    } setRegs(MbReg_EnvThreshol, vs);
+}
+
+void Mb_Env::env_sensorUpdate()
+{
+    vshort vs;
+    sEnvData *obj = &(mDevData->env);
+    vs << obj->door[0];
+    vs << obj->door[1];
+    vs << obj->water[0];
+    vs << obj->smoke[0];
+    setRegs(MbReg_EnvSensor, vs);
+}
+
+void Mb_Env::env_update()
+{
+    env_dataUpdate();
+    env_alarmUpdate();
+    env_sensorUpdate();
+    env_thresholdUpdate();
+}
+
+
+
+
+

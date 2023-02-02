@@ -8,27 +8,21 @@ class Mb_Line : public Mb_Object
 public:
     explicit Mb_Line(QObject *parent = nullptr);
 
-    void mbLineUpdate();
+
 protected:
+    void line_update();
 
 private:
-    void upTgData();
-    void upLineData();
-    void upLineThreshold();
+    void line_dataObj(vshort &vs, int id);
+    void line_dataUpdate();
 
-protected:
-    template<typename T>
-    void appendData(uchar size, const T v[], vshort &vs) {
-        for(int i=0; i<size; ++i) vs << v[i];
-    }
+    void line_alarmObj(vshort &vs, int id);
+    void line_alarmUpdate();
 
-    void appendAlarm(const sAlarmUnit &unit, vshort &vs) {
-        for(int i=0; i<unit.size; ++i) vs << unit.max[i] << unit.min[i];
-    }
+    void line_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs);
+    void line_thresholdUpdate();
 
-    void appendData2(uchar size, const uint v[], vshort &vs) {
-        for(int i=0; i<size; ++i) vs << v[i] / 65536  << v[i] % 65536;
-    }
+
 };
 
 #endif // MB_LINE_H

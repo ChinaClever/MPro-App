@@ -21,6 +21,20 @@ private:
     ushort getShort(uchar h, uchar l) {return ((h<<8) +l);}
 
 protected:
+    template<typename T>
+    void appendData(uchar size, const T v[], vshort &vs) {
+        for(int i=0; i<size; ++i) vs << v[i];
+    }
+
+    void appendAlarm(const sAlarmUnit &unit, vshort &vs) {
+        for(int i=0; i<unit.size; ++i) vs << unit.max[i] << unit.min[i];
+    }
+
+    void appendData2(uchar size, const uint v[], vshort &vs) {
+        for(int i=0; i<size; ++i) vs << v[i] / 65536  << v[i] % 65536;
+    }
+
+protected:
     sDevData *mDevData;
 };
 
