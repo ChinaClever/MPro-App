@@ -34,7 +34,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_log_setting_data(0)},150);
+		setTimeout(function(){read_log_setting_data(default_addr)},150);
 		var logset_data = new Array();
 		let lang = new Array();
 		var enable = new Array("","");
@@ -53,11 +53,12 @@
 			lang[3] = ["历史记录启用:","","","",""];
 			lang[4] = ["电能记录时间间隔(天):","","","",""];
 			lang[5] = ["历史数据记录时间(小时):","","","",""];
-			lang[6] = ["报警记录最大条数(万条):","","","",""];
-			lang[7] = ["事件记录最大条数(万条):","","","",""];
-			lang[8] = ["历史数据记录最大条数(万条):","","","",""];
+			lang[6] = ["报警记录最大条数(条):","","","",""];
+			lang[7] = ["事件记录最大条数(条):","","","",""];
+			lang[8] = ["历史数据记录最大条数(条):","","","",""];
 			lang[9] = ["启用","","","",""];
 			lang[10] = ["禁用","","","",""];
+			lang[11] = ["条","","","",""];
 			enable[0] = lang[10][language];
 			enable[1] = lang[9][language];
 		}
@@ -82,14 +83,14 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<logset_name.length;i++){
 					if(logset_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,47,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,47,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_log_setting_data(0);
+			read_log_setting_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -106,19 +107,19 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "EnergeDelay" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "EnergeDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "HistoryDelay" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "HistoryDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "AlarmMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "AlarmMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>10000){value=10000};"></input><span style="color:grey;">(0~10000'+lang[11][language]+')<span>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><input id = "EventMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "EventMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>10000){value=10000};"></input><span style="color:grey;">(0~10000'+lang[11][language]+')<span>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_8" ></td>';
-			tbody += '<td><input id = "HistoryMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "HistoryMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>50000){value=50000};"></input><span style="color:grey;">(0~50000'+lang[11][language]+')<span>';
 			tbody += '</td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

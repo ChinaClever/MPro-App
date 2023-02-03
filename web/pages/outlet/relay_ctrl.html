@@ -40,7 +40,7 @@
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -58,7 +58,9 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var  read  = 0;
+		var  read  = 1;
+		let dev_dis = 0;
+		let pow_mark = new Array();
 		var Input_state = new Array("","","");
 		var State = new Array("","");
 		var switch_enable = new Array();
@@ -70,10 +72,11 @@
 		var reset_delay = new Array();
 		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let lang = new Array();
 		read_data();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
@@ -83,9 +86,6 @@
 				seq_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[4]+addr+'_'+i));
 				reset_delay[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[5]+addr+'_'+i));
 				switch_enable[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[8]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		lang_init();
@@ -101,7 +101,7 @@
 			lang[6] = ["开关状态","","","",""];
 			lang[7] = ["顺序延时(S)","","","",""];
 			lang[8] = ["复位延时(S)","","","",""];
-			lang[9] = ["开关使能","","","",""];
+			lang[9] = ["关键设备保护","","","",""];
 			lang[10] = ["断开告警","","","",""];
 			lang[11] = ["开启","","","",""];
 			lang[12] = ["关闭","","","",""];
@@ -111,10 +111,10 @@
 			lang[16] = ["统一设置","","","",""];
 			lang[17] = ["开","","","",""];
 			lang[18] = ["关","","","",""];
-			lang[19]  = ["", "主机", "", "", "", ""];
-			lang[20]  = ["", "副机", "", "", "", ""];
+			lang[19]  = ["主机", "", "", "", ""];
+			lang[20]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[19][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[20][language] + i;
 			}
 			State[0] = lang[18][language];
@@ -127,9 +127,16 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[14][language];
+			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		function buildSel(rows)
 		{
@@ -156,8 +163,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
@@ -172,7 +179,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[15][language];
 				var iptname = document.getElementsByTagName("input");
@@ -214,6 +221,18 @@
 				else{
 					cs.bgColor = '';
 				}
+				if(i == output_num){
+					if(pow_mark[0] ==1){
+						document.getElementById('e'+(i)).checked = true;
+					}else{
+						document.getElementById('e'+(i)).checked = false;
+					}
+					if(pow_mark[1] ==1){
+						document.getElementById('f'+(i)).checked = true;
+					}else{
+						document.getElementById('f'+(i)).checked = false;
+					}
+				}
 			}
 		}
 		function flash_html(par)
@@ -229,60 +248,64 @@
 		}
 		function cked(ckd)
 		{
-			var stat;
+			var stat = 0,number1 = 0;
 			var type1 = ckd.id.substr(0,1);
-			var num = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(ckd.checked == true){
-					stat = '1';
-				}else{
-					stat = '0';
-				}
-				if(type1 === 'e'){
-					if(num !== output_num + 1){
-
+			let sub =0;
+			var number = parseInt(ckd.id.slice(1))+1;
+			if(type1 === 'e'){
+				sub = 8;
+			}
+			else if(type1 === 'f'){
+				sub = 2;
+			}
+			if(ckd.checked == true){
+				if(number == output_num +1){
+					if(sub ==8){
+						pow_mark[0] = 1;
 					}else{
-						num = 0;
+						pow_mark[1] = 1;
 					}
-					rpc.call('pduSetData',[addr,output,switch_,8,num,stat]);
 				}
-				else if(type1 === 'f'){
-					if(num !== output_num + 1){
+				stat = '1';
+			}else{
+				if(number == output_num +1){
+					if(sub ==8){
+						pow_mark[0] = 0;
 					}else{
-						num = 0;
+						pow_mark[1] = 0;
 					}
-					rpc.call('pduSetData',[addr,output,switch_,2,num,stat]);
 				}
-				flash_html(ckd);
-			}else{}
+				stat = '0';
+			}
+			if(number == output_num +1){
+				number1 = 0;
+			}else{
+				number1 = number;
+			}
+			rpc.call('pduSetData',[addr,output,switch_,sub,number1,stat]);
+			flash_html(ckd);
 		}
 		function setdata(ipt)
 		{
 			var stat;
 			var type1 = ipt.id.substr(0,1);
 			var num = parseInt(ipt.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(type1 === 'd'){
-					stat = parseInt(ipt.value);
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
-				}else if(type1 === 'j'){
-					stat = parseInt(ipt.value);
-					if(num !== output_num + 1){
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
+			if(type1 === 'd'){
+				stat = parseInt(ipt.value);
+				if(num !== output_num + 1){
+				}else{
+					num = 0;
 				}
-				flash_html(ipt);
-			}else{}
+				rpc.call('pduSetData',[addr,output,switch_,4,num,stat]);
+			}else if(type1 === 'j'){
+				stat = parseInt(ipt.value);
+				if(num !== output_num + 1){
+				}else{
+					num = 0;
+				}
+				rpc.call('pduSetData',[addr,output,switch_,5,num,stat]);
+			}
+			flash_html(ipt);
 		}
 		function btn_click(btn)
 		{
@@ -305,7 +328,7 @@
 				}else{
 					num = 0;
 				}
-				rpc.call('pduSetData',[0,output,switch_,1,num,stat]);
+				rpc.call('pduSetData',[addr,output,switch_,1,num,stat]);
 				flash_html(btn);
 			}else{}
 		}
@@ -343,8 +366,8 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">'+lang[16][language]+'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" value = "3"></input></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" value = "5"></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "d'+ i + '" ></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "j'+ i + '" ></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + Input_state[0] + '</button></td>';

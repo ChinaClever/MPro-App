@@ -7,7 +7,7 @@
 #include <QNetworkInterface>
 
 App_NetAddr::App_NetAddr(QObject *parent)
-    : App_Sensor{parent}
+    : App_SensorBox{parent}
 {
     QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
 }
@@ -128,11 +128,11 @@ void App_NetAddr::inet_setIpV4()
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //if(dns2.size()) {
+        //    cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
+        //    str = cmd.arg(dns); qDebug() << str;
+        //    system(str.toStdString().c_str());
+        //}
     }
 
     //inet_writeCfg(net->inet, "IPV4");
@@ -183,11 +183,11 @@ void App_NetAddr::inet_setIpV6()
             system(str.toStdString().c_str());
         }
 
-        if(dns2.size()) {
-            cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-            str = cmd.arg(dns); qDebug() << str;
-            system(str.toStdString().c_str());
-        }
+        //if(dns2.size()) {
+        //    cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
+        //    str = cmd.arg(dns); qDebug() << str;
+        //    system(str.toStdString().c_str());
+        //}
     }
 
     //inet_writeCfg(net->inet6, "IPV6");
@@ -197,7 +197,7 @@ void App_NetAddr::inet_saveCfg(int fc)
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
-    QString cmd = fmd.arg(net->mac); //qDebug() << cmd;
+    QString cmd = fmd.arg(net->mac).remove("\n"); //qDebug() << cmd;
     system(cmd.toLocal8Bit().data());
 
     if(fc) inet_writeCfg(net->inet6, "IPV6");

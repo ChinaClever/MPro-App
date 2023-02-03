@@ -38,8 +38,8 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script>
 		setTimeout(function(){
-			read_radius_data(0);
-			read_ldap_data(0);
+			read_radius_data(default_addr);
+			read_ldap_data(default_addr);
 		},300);
 		var mode_set = new Array("","");
 		var radius_data = new Array();
@@ -112,20 +112,20 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<radius_name.length;i++){
 					if(radius_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,48,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,48,i,0,0,btn.value]);
 					}
 				}
 				for(let i = 0;i<ldap_name.length;i++){
 					if(ldap_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,49,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,49,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_radius_data(0);
-			read_ldap_data(0);
+			read_radius_data(default_addr);
+			read_ldap_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

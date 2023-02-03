@@ -33,15 +33,20 @@ App_Buzzer::~App_Buzzer()
     close(beep[1]);
 }
 
+void App_Buzzer::beep_once()
+{
+    int *beep = mBeep; BEEP_ON(beep[0]);
+    QTimer::singleShot(300,this,SLOT(beep_offSlot()));
+}
+
 void App_Buzzer::beep_initFunSlot()
 {
     int *beep = mBeep;
     beep[0] = open("/sys/clever/beep/switch", O_RDWR);
-    if(beep[0] < 0) perror("open beep switch"); else BEEP_ON(beep[0]);
+    if(beep[0] < 0) perror("open beep switch"); else beep_once();
 
     beep[1] = open("/sys/clever/beep/trigger", O_RDWR);
     if(beep[1] < 0) perror("open beep trigger");
-    QTimer::singleShot(5*1000,this,SLOT(beep_offSlot()));
 
     mBeepTimer = new QTimer(this); mBeepTimer->start(1000);
     connect(mBeepTimer, SIGNAL(timeout()), this, SLOT(beep_onTimeoutDone()));

@@ -35,7 +35,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		setTimeout(function(){
-			read_syslog_data(0);
+			read_syslog_data(default_addr);
 		},300);
 		var mode_set = new Array("","");
 		var syslog_data = new Array();
@@ -90,14 +90,14 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<syslog_name.length;i++){
 					if(syslog_name[i] == btn.id){
-						rpc.call('pduSetParam',[0,46,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,46,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_syslog_data(0);
+			read_syslog_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

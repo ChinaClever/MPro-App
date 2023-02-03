@@ -56,7 +56,7 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var read  = 0;
+		var read  = 1;
 		let lang = new Array();
 		let dual_data = new Array();
 		let dual_name = new Array();
@@ -102,7 +102,7 @@
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			if(read == 1){
+			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
 		}
@@ -136,8 +136,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
@@ -152,7 +152,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");

@@ -21,10 +21,10 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2">阅读模式</button></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span><br/><br/>
+									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span><br/><br/>
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_4"></span>
 							</div>
@@ -55,6 +55,8 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped pow_table text-center"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -66,16 +68,18 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
-		var  read  = 0;
+		var  read  = 1;
+		let dev_dis = 0;
 		var phase_info = new Array();
 		let lang = new Array();
 		var len  = data_name.length -1;
 		var pow_mark = new Array(),cur_mark = new Array(),vol_mark = new Array();
 		var phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-		read_data();
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let type_arr = new Array("vol","cur","pow");
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < phase_num + 1;i++){
 				phase_info[i] =  new Array();
 				for(var k = 0; k < 3; k++){
@@ -83,9 +87,6 @@
 						phase_info[i][(len * k) + j] = (sessionStorage.getItem(type_name[phase]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
 					}
 				}
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		lang_init();
@@ -129,10 +130,10 @@
 			lang[34] = ["相","","","",""];
 			lang[35] = ["统一设置","","","",""];
 			lang[36] = ["设置模式","","","",""];
-			lang[37]  = ["", "主机", "", "", "", ""];
-			lang[38]  = ["", "副机", "", "", "", ""];
+			lang[37]  = ["主机", "", "", "", ""];
+			lang[38]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[37][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num + 1);i++){
 				dev_name[i] =  lang[38][language] + i;
 			}
 		}
@@ -140,11 +141,19 @@
 			for(let j = 1;j<34;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(read == 0){
+				document.getElementById("lang_2").innerHTML  = lang[36][language];
+			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
+			document.getElementById("ms").value = addr;
 		}
+		read_data();
 		$('.vol_table').html(buildTableVol(phase_num));
 		$('.cur_table').html(buildTableCur(phase_num));
 		$('.pow_table').html(buildTablePow(phase_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num + 1)));
 		lang_fun();
 		showdata();
 		modeset();
@@ -280,8 +289,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
@@ -295,7 +304,7 @@
 			else{
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "none";
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
@@ -307,7 +316,6 @@
 		}
 		function flash_html(par)
 		{
-			read_phase_data(addr);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
@@ -320,7 +328,7 @@
 				}
 				showdata();
 				lang_fun();
-			},800);
+			},500);
 		}
 		function cked(ckd)
 		{
@@ -330,77 +338,77 @@
 			let sub =0;
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ckd.id.slice(1))+1;
-			var stat = parseInt(ipt.value);
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(type1 === 'c'){
-					sub = 8;
-				}else{
-					sub = 11;
-				}
+			var stat = parseInt(ckd.value);
+			if(type1 === 'c'){
+				sub = 8;
+			}else{
+				sub = 11;
+			}
+			if(ckd.name == "pow"){
+				type = 4;
+			}else if(ckd.name == "cur"){
+				type = 3;
+			}else if(ckd.name == "vol"){
+				type = 2;
+			}
+			if(ckd.checked == true){
+				stat = '1';
+			}else{
+				stat = '0';
+			}
+			if(number == phase_num +1){
+				number1 = 0;
 				if(ckd.name == "pow"){
-					type = 4;
-				}else if(ckd.name == "cur"){
-					type = 3;
-				}else if(ckd.name == "vol"){
-					type = 2;
-				}
-				if(ckd.checked == true){
-					stat = '1';
-				}else{
-					stat = '0';
-				}
-				if(number == phase_num +1){
-					number1 = 0;
-					if(ckd.name == "pow"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								pow_mark[0] = 1;
-							}else{
-								pow_mark[0] = 0;
-							}
+					if(sub == 8){
+						if(ckd.checked == true){
+							pow_mark[0] = 1;
 						}else{
-							if(ckd.checked == true){
-								pow_mark[1] = 1;
-							}else{
-								pow_mark[1] = 0;
-							}
+							pow_mark[0] = 0;
 						}
-					}else if(ckd.name == "cur"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								cur_mark[0] = 1;
-							}else{
-								cur_mark[0] = 0;
-							}
+					}else{
+						if(ckd.checked == true){
+							pow_mark[1] = 1;
 						}else{
-							if(ckd.checked == true){
-								cur_mark[1] = 1;
-							}else{
-								cur_mark[1] = 0;
-							}
-						}
-					}else if(ckd.name == "vol"){
-						if(sub == 8){
-							if(ckd.checked == true){
-								vol_mark[0] = 1;
-							}else{
-								vol_mark[0] = 0;
-							}
-						}else{
-							if(ckd.checked == true){
-								vol_mark[1] = 1;
-							}else{
-								vol_mark[1] = 0;
-							}
+							pow_mark[1] = 0;
 						}
 					}
-				}else{
-					number1 = number;
+				}else if(ckd.name == "cur"){
+					if(sub == 8){
+						if(ckd.checked == true){
+							cur_mark[0] = 1;
+						}else{
+							cur_mark[0] = 0;
+						}
+					}else{
+						if(ckd.checked == true){
+							cur_mark[1] = 1;
+						}else{
+							cur_mark[1] = 0;
+						}
+					}
+				}else if(ckd.name == "vol"){
+					if(sub == 8){
+						if(ckd.checked == true){
+							vol_mark[0] = 1;
+						}else{
+							vol_mark[0] = 0;
+						}
+					}else{
+						if(ckd.checked == true){
+							vol_mark[1] = 1;
+						}else{
+							vol_mark[1] = 0;
+						}
+					}
 				}
-				rpc.call('pduSetData',[addr_,phase,type,sub,number1,stat]);
-				flash_html(ckd);
-			}else{}
+			}else{
+				number1 = number;
+			}
+			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+			setTimeout(() => {
+				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
+			}, 50);
+			flash_html(ckd);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -408,7 +416,6 @@
 		function setdata(ipt)
 		{
 
-		// var data_name = new Array("Size","Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable");
 			// var opt_val = parseInt(document.getElementById("opt_").value);
 			var addr_ = addr + 0 * 256;
 			var sub = 0,type = 0,number1 = 0;
@@ -419,42 +426,38 @@
 			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
-			if(data1>data2 || data2>data3 || data3>data4){
-				alert("input data error");
-				showdata();
-				return ;
-			}
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				if(ipt.name == "pow"){
-					type = 4;
-				}else if(ipt.name == "cur"){
-					type = 3;
-				}else if(ipt.name == "vol"){
-					type = 2;
+
+			if(number == phase_num +1){
+				number1 = 0;
+			}else{
+				number1 = number;
+				if(data1>data2 || data2>data3 || data3>data4){
+					alert("input data error");
+					showdata();
+					return ;
 				}
-				if(type1 === 'e'){
-					sub = 5;
-				}else if(type1 === 'f'){
-					sub = 6;
-				}else if(type1 === 'g'){
-					sub = 7;
-				}else if(type1 === 'h'){
-					sub = 4;
-				}
-				if(number == phase_num +1){
-					number1 = 0;
-				}else{
-					number1 = number;
-				}
-				rpc.call('pduSetData',[addr_,phase,type,sub,number1,stat]);
-				flash_html(ipt);
 			}
-			else
-			{
-				
-				
+			if(ipt.name == "pow"){
+				type = 4;
+			}else if(ipt.name == "cur"){
+				type = 3;
+			}else if(ipt.name == "vol"){
+				type = 2;
 			}
+			if(type1 === 'e'){
+				sub = 5;
+			}else if(type1 === 'f'){
+				sub = 6;
+			}else if(type1 === 'g'){
+				sub = 7;
+			}else if(type1 === 'h'){
+				sub = 4;
+			}
+			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+			setTimeout(() => {
+				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
+			}, 50);
+			flash_html(ipt);
 		}
 		function buildTablePow(rows) {
 			var thead = '',tbody = '';
@@ -490,10 +493,10 @@
 						tbody += '<td><input name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 						tbody += '<td><input name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 						tbody += '<td id = "d'+ i +'"></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "g'+ i + '"value="5.632"></input></td>';
-						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "h'+ i + '"value="7.040"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+						tbody += '<td><input name = "pow" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>7.040){value=7.040};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 						tbody += '</tr>';
 					}
 				}
@@ -534,10 +537,10 @@
 					tbody += '<td><input name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'"></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.00"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "g'+ i + '"value="12.80"></input></td>';
-					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "h'+ i + '"value="16.00"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input name = "cur" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>63){value=63};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -577,35 +580,38 @@
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
 					tbody += '<td id = "d'+ i +'"></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "e'+ i + '"value="0.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "f'+ i + '"value="0.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "g'+ i + '"value="176.0"></input></td>';
-					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "h'+ i + '"value="220.0"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol" type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>400){value=400};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0,state1_ = 0,state2_ = 0;
 		function putdata(){
 			for(let i = 0;i < phase_num;i++){
-				state_ = document.getElementById('vol'+(i)).childNodes[1];
-				state1_ = document.getElementById('cur'+(i)).childNodes[1];
-				state2_ = document.getElementById('pow'+i).childNodes[1];
-				state_.innerHTML = (parseFloat(phase_info[i + 1][0])).toFixed(1);
-				state1_.innerHTML = (parseFloat(phase_info[i + 1][8])).toFixed(2);
-				state2_.innerHTML = (parseFloat(phase_info[i + 1][16]));
+				for(let j = 0;j<3;j++){
+					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(phase_info[i + 1][0 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[4].innerHTML = (parseFloat(phase_info[i + 1][1 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[5].childNodes[0].value = (parseFloat(phase_info[i + 1][4 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[6].childNodes[0].value = (parseFloat(phase_info[i + 1][5 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[7].childNodes[0].value = (parseFloat(phase_info[i + 1][6 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[8].childNodes[0].value = (parseFloat(phase_info[i + 1][3 + j * 11])).toFixed(j+1);
+				}
 			}
 		}
-		setInterval(function(){
-			read_phase_data(addr);
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+		let Time1 = setInterval(function(){
+			ReadDataSend(addr,phase,pow_,1,0,phase_num);
+			ReadDataSend(addr,phase,cur_,1,0,phase_num);
+			ReadDataSend(addr,phase,vol_,1,0,phase_num);
 		},2000);
+		let Time2 = setInterval(function(){
+			read_data();
+			putdata();
+			showdata();
+		},1000);
     </script>
 </body>
 </html>

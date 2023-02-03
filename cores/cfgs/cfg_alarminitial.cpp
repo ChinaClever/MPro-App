@@ -70,6 +70,11 @@ void Cfg_AlarmInitial::initEnvData(sEnvData &it)
     uchar size = SENOR_NUM;
     setAlarmUnit(it.tem, size, 60*COM_RATE_TEM);
     setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
+
+    for(int i=0; i<size; ++i) {
+        it.tem.crMax[i] = 60*COM_RATE_TEM;
+        it.hum.crMax[i] = 99*COM_RATE_HUM;
+    }
 }
 
 void Cfg_AlarmInitial::initDevData(sDevData *dev)

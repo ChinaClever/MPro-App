@@ -20,7 +20,7 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 2: res = it->pwd; break;
     case 3: res = it->token; break;
     case 4: res = it->permit; break;
-    case 5: res = it->ctrl; break;
+    case 5: res = it->groupCtrl; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -39,23 +39,23 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 2: key = "pwd_%1"; ptr = it->pwd; break;
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
-    case 5: key = "ctrl_%1"; it->ctrl = v.toLongLong(); break;
+    case 5: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
     case 11: ret = loginCheck(v.toString()); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
-
-    if(ptr) {
-        QByteArray str = v.toByteArray();
-        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
-        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
-        Log_Core::bulid()->append(db);
-    }
 
     if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key.arg(id), v, prefix);
     }
+
+//    if(ptr) {
+//        QByteArray str = v.toByteArray();
+//        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
+//        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+//        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
+//        Log_Core::bulid()->append(db);
+//    }
 
     return ret;
 }
@@ -94,7 +94,7 @@ bool Set_Login::loginCheck(const QString &str)
 
     if(ret) {
         sEventItem db; db.event_type = QStringLiteral("用户登陆");
-        db.event_content = QStringLiteral("登陆登陆为 %1").arg(ls.first());
+        db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         Log_Core::bulid()->append(db);
     }
 

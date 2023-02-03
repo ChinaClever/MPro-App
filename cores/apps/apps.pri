@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/app_radius.h \
     $$PWD/app_runtime.h \
     $$PWD/app_sensor.h \
+    $$PWD/app_sensorbox.h \
     $$PWD/app_smtp.h \
     $$PWD/app_ssh.h \
     $$PWD/app_start.h \
@@ -28,6 +29,7 @@ SOURCES += \
     $$PWD/app_radius.cpp \
     $$PWD/app_runtime.cpp \
     $$PWD/app_sensor.cpp \
+    $$PWD/app_sensorbox.cpp \
     $$PWD/app_smtp.cpp \
     $$PWD/app_ssh.cpp \
     $$PWD/app_start.cpp \

@@ -34,7 +34,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_mqtt_data(0)},300);
+		setTimeout(function(){read_mqtt_data(default_addr)},300);
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		var mqtt_data = new Array();
 		let lang = new Array();
@@ -119,7 +119,7 @@
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
 		}
 		function flash_html(){
-			read_mqtt_data(0);
+			read_mqtt_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -129,7 +129,7 @@
 			if(confirm("请确认是否保存此次修改？")){
 				for(var i = 0 ;i<(id_name.length);i++){
 					if(ipt.id == id_name[i]){
-						rpc.call('pduSetParam',[0,19,(i+1),0,0,ipt.value]);
+						rpc.call('pduSetParam',[default_addr,19,(i+1),0,0,ipt.value]);
 					}
 				}
 				flash_html();
@@ -138,7 +138,7 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[0,19,20,0,0,sel]);
+				rpc.call('pduSetParam',[default_addr,19,20,0,0,sel]);
 			}else{}
 		}
 		function buildTable() {

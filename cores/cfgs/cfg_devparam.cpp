@@ -40,7 +40,7 @@ void Cfg_devParam::devNumRead(sDevNums &it)
     it.slaveNum = cfg->readCfg("slaveNum", 0, g).toInt();
     it.boardNum = cfg->readCfg("boardNum", 3, g).toInt();
     it.lineNum = cfg->readCfg("lineNum", LINE_NUM, g).toInt();
-    it.loopNum = cfg->readCfg("boardNum", LOOP_NUM/2, g).toInt();
+    it.loopNum = cfg->readCfg("loopNum", LOOP_NUM/2, g).toInt();
     it.outputNum = cfg->readCfg("outputNum", OUTPUT_NUM/2, g).toInt();
 
     for(uint i=0; i<it.boardNum; ++i) {
@@ -75,7 +75,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.language = cfg->readCfg("language", 0, g).toInt();
     it.devMode = cfg->readCfg("devMode", 0, g).toInt();
     it.cascadeAddr = cfg->readCfg("cascadeAddr", 1, g).toInt();
-    it.eleLogEn = cfg->readCfg("eleLogEn", 0, g).toInt();
+    it.sensorBoxEn = cfg->readCfg("sensorBoxEn", 0, g).toInt();
     it.powLogEn = cfg->readCfg("powLogEn", 0, g).toInt();
     it.buzzerSw = cfg->readCfg("buzzerSw", 1, g).toInt();
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
@@ -83,7 +83,8 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.screenAngle = cfg->readCfg("screenAngle", 0, g).toInt();
     it.backlightType = cfg->readCfg("backlightType", 0, g).toInt();
     it.backlightTime = cfg->readCfg("backlightTime", 6, g).toInt();
-    it.dataContent = cfg->readCfg("dataContent", 1, g).toInt();
+    it.jsonContent = cfg->readCfg("jsonContent", 1, g).toInt();
+    it.jsonCompress = cfg->readCfg("jsonCompress", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
@@ -93,9 +94,13 @@ void Cfg_devParam::devParamRead(sParameter &it)
 void Cfg_devParam::runTimeWrite()
 {
     QString g = "devParams";
+    static int cnt=0; bool ret = false;
     sDevCfg *cfg = &(cm::masterDev()->cfg);
     uint t = cfg->param.runTime += 1;
-    devParamWrite("runTime", t, g);
+    if(cnt++ < 60) {if(0 == t%10) ret = true;}
+    else if(cnt++ < 48*60) {if(0 == t%60) ret = true;}
+    else if(0 == t%(24*60)) ret = true;
+    if(ret) devParamWrite("runTime", t, g);
 }
 
 

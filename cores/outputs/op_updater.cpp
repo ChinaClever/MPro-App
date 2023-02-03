@@ -39,8 +39,8 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 
 void OP_Updater::ota_reboot()
 {
-    system("chmod +x /usr/data/clever/bin/*");
-    system("chmod +x /usr/data/clever/app/*");
+    system("chmod 777 /usr/data/clever/bin/*");
+    system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
     system("rm -rf /tmp/updater/clever");
     system("rm -rf /usr/data/upload/*");

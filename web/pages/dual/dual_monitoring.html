@@ -8,6 +8,7 @@
 		<title>dual</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/index.min.css">
 		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../../doc-lib/doc.css">.
@@ -60,6 +61,7 @@
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
 		let dual_dev_name =  new Array();
 		let lang = new Array();
+		let progress_width = new Array();
 		lang_init();
 		setTimeout(function(){
 			read_data();
@@ -75,7 +77,7 @@
 			lang[5] = ["A路有功功率(kW)","","","",""];
 			lang[6] = ["B路有功功率(kW)","","","",""];
 			lang[7] = ["总有功功率(kW)","","","",""];
-			lang[8] = ["总视在功率(AV)","","","",""];
+			lang[8] = ["AB路功率占比","","","",""];
 			lang[9] = ["电能消耗(kW)","","","",""];
 			lang[10] = ["开","","","",""];
 			lang[11] = ["闭","","","",""];
@@ -108,6 +110,11 @@
 				EnergeValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+dual_addr+'_'+i));
 				EnergeValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+(dual_addr +1)+'_'+i));
 				TotalEnergeVal[i] = EnergeValA[i] + EnergeValB[i];
+				if(TotalPowVal[i] != 0){
+					progress_width[i] = parseFloat(PowValA[i] * 100 /TotalPowVal[i]).toFixed(1);
+				}else{
+					progress_width[i] = 0;
+				}
 			}
 			for(var i = 0;i<slave_num;i++){
 				dev_name[i] = sessionStorage.getItem("DevName" + i);
@@ -146,6 +153,15 @@
 				}else{
 					ss.bgColor = '';
 				}
+				document.getElementById('pgt' + (i - 1)).style.width = progress_width[i]+"%";
+				if(TotalPowVal[i] == 0){
+					document.getElementById("progress"+(i-1)).title ="A:0% B:0%";
+				}else if(PowValB[i] != 0){
+					document.getElementById("progress"+(i-1)).style.backgroundColor= "#b7b7b7";
+					document.getElementById("progress"+(i-1)).title ="A:"+progress_width[i]+"% B:" + parseFloat(100-progress_width[i])+"%";
+				}else{
+					document.getElementById("progress"+(i-1)).title ="A:"+progress_width[i]+"% B:" + parseFloat(100-progress_width[i])+"%";
+				}
 			}
 		}
 		function buildTable(rows) {
@@ -166,7 +182,7 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(PowValA[i + 1]).toFixed(3)  +'</td>';
 				tbody += '<td id = "d'+ i + '">' + parseFloat(PowValB[i + 1]).toFixed(3)  + '</td>';
 				tbody += '<td id = "e'+ i + '">'+ parseFloat(TotalPowVal[i + 1]).toFixed(3) +'</td>';
-				tbody += '<td id = "f'+ i + '">'+ parseFloat(TotalAVPowVal[i + 1]).toFixed(3) +'</td>';
+				tbody += '<td id = "f'+ i + '"><div class = "progress" id="progress'+ i +'"><div class ="child" id ="child'+ i+'"><p style ="height:13px; width:0%" class="progress-bar" id="pgt' + i + '"></p></div></div></td>';
 				tbody += '<td id = "g'+ i + '">' + parseFloat(TotalEnergeVal[i + 1]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
@@ -179,7 +195,7 @@
 				document.getElementById('c'+i).innerHTML = (parseFloat(PowValA[i + 1])).toFixed(3);
 				document.getElementById('d'+i).innerHTML = (parseFloat(PowValB[i + 1])).toFixed(3);
 				document.getElementById('e'+i).innerHTML = (parseFloat(TotalPowVal[i + 1])).toFixed(3);
-				document.getElementById('f'+i).innerHTML = (parseFloat(TotalAVPowVal[i + 1])).toFixed(3);
+				// document.getElementById('f'+i).innerHTML = (parseFloat(TotalAVPowVal[i + 1])).toFixed(3);
 				document.getElementById('g'+i).innerHTML = (parseFloat(TotalEnergeVal[i + 1])).toFixed(2);
 			}
 		}

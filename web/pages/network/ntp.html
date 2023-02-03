@@ -92,7 +92,7 @@
     <script src="../../include/js/timezone.js"></script>
     <script>
 		setTimeout(function(){
-			read_ntp_data(0);
+			read_ntp_data(default_addr);
 		},300);
 		$(function(){
 			$(".selectBox .imitationSelect").on("click",function(){
@@ -215,7 +215,7 @@
 			if(confirm("请确认是否选择此时区。")){
 				for(let i = 1;i<ntp_info.length;i++){
 					if(ntp_info[i] == btn.id){
-						rpc.call('pduSetParam',[0,43,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,43,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
@@ -254,7 +254,7 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[0,43,5,0,0,0]);
+				rpc.call('pduSetParam',[default_addr,43,5,0,0,0]);
 				flash_html();
 			}else{
 				showdata();
@@ -265,7 +265,7 @@
 			let val = document.getElementById('DateTime').value;
 			if(confirm("请确认是否保存此次修改？")){
 				val = val.replace("T"," ");
-				rpc.call('pduSetParam',[0,43,1,0,0,val]);
+				rpc.call('pduSetParam',[default_addr,43,1,0,0,val]);
 				flash_html();
 			}else{
 				showdata();

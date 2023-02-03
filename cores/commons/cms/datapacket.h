@@ -17,9 +17,9 @@ typedef unsigned int uint;
 #define LINE_NUM  3
 #define LOOP_NUM  6
 #define OUTPUT_NUM 48
-#define SENOR_NUM 2
+#define SENOR_NUM 4
 #define NAME_SIZE 48
-#define DEV_NUM 10
+#define DEV_NUM 20
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 10
 #define GROUP_NUM 8
@@ -234,14 +234,14 @@ struct sParameter {
     uint backlightType; // 屏幕显示模式 0 常亮 1 节能
     uint backlightTime; // 节能 时长 小时数
     uint groupEn; // 组开关使能
-    uint eleLogEn; // 电能记录功能是否启用 0：禁用， 1：启用
+    uint sensorBoxEn; // 传感器盒子 0：禁用， 1：启用
     uint powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
-    uint dataContent; // 0：自动 1：最多 2：最少
+    uint jsonContent; // 0：自动 1：最多 2：最少
     uint runTime; // 总运行时间 单位天
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
-
-    uint reserve[20];
+    uint jsonCompress; // 0：不压缩 1：压缩
+    uint reserve[19];
 };
 
 struct sRunTime
@@ -337,11 +337,12 @@ struct sNetInterface
 struct sDevLogin
 {
     uchar permit; // 0 管理员  1 操作员  2 访客
-    long long ctrl; // 按位操作 0 有权限  1 没有权限
+    uint groupCtrl; // 按位操作 0 有权限  1 没有权限
+    uchar ctrl[GROUP_NUM];
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
-    char reserve[NAME_SIZE];
+    char reserve[4][NAME_SIZE];
 };
 
 struct sOtaUpIt
@@ -395,7 +396,7 @@ enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
-enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 

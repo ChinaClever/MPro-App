@@ -27,6 +27,7 @@ public:
     bool app_check(const QString &fn);
     bool app_pack(sAppVerIt &it);
     bool app_unpack(sAppVerIt &it);
+    void app_upgradeDate();
 
 private:
     void app_dir(const QString &dir);

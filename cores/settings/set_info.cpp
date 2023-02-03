@@ -4,7 +4,8 @@
  *      Author: Lzy
  */
 #include "set_info.h"
-#include "cfg_com.h"
+//#include "cfg_com.h"
+#include "app_core.h"
 
 Set_Info::Set_Info()
 {
@@ -58,14 +59,15 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 6: ret = it->hz; break;
     case 7: ret = it->buzzerSw; break;
     case 8: ret = it->groupEn; break;
-    case 9: ret = it->eleLogEn; break;
+    case 9: ret = it->sensorBoxEn; break;
     case 10: ret = it->language; break;
     case 11: ret = it->isBreaker; break;
     case 12: ret = it->vh; break;
     case 13: ret = it->screenAngle; break;
     case 14: ret = it->backlightType; break;
     case 15: ret = it->backlightTime; break;
-    case 21: ret = it->dataContent; break;
+    case 16: App_Core::bulid()->beep_once(); break;
+    case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }
 
@@ -83,16 +85,19 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
-    case 9: key = "eleLogEn"; it->eleLogEn = value; break;
+    case 9: key = "sensorBoxEn"; it->sensorBoxEn = value; break;
     case 10: key = "language"; it->language = value; break;
     case 11: key = "isBreaker";  it->isBreaker = value; break;
     case 12: key = "vh"; it->vh = value; break;
     case 13: key = "screenAngle"; it->screenAngle = value; break;
     case 14: key = "backlightType"; it->backlightType = value; break;
     case 15: key = "backlightTime"; it->backlightTime = value; break;
-    case 21: key = "dataContent"; it->dataContent = value; break;
+    case 16: App_Core::bulid()->beep_once(); break;
+    case 21: key = "jsonContent"; it->jsonContent = value; break;
+    case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
-    } if(ret) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
+    } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
+    //cout  << key << fc << value;
 
     return ret;
 }
@@ -108,9 +113,9 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
     case 6: value = dev->boards[it.id]; break;
-    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id];  break;
+    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1;  break;
     case 11: value = dev->loopStarts[it.id]+1;  break;
-    case 12: value = dev->loopEnds[it.id];  break;
+    case 12: value = dev->loopEnds[it.id]+1;  break;
     default: cout << it.fc; break;
     } //cout << it.fc << it.id << value;
     return value;
@@ -127,19 +132,25 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break; case 7: break;
     case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
-    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value-1;  break;
-    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value;  break;
+    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
+    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value+1;  break;
     default: ret = false; cout << it.fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     if(7 == it.fc) {
-        int end = dev->loopEnds[it.id] = dev->loopStarts[it.id] + value;
+        int start = 0; if(it.id) start = dev->loopEnds[it.id-1]+1;
+        key = "loopStarts_" + QString::number(it.id);
+        Cfg_Core::bulid()->devParamWrite(key, start, prefix);
+        dev->loopStarts[it.id] = start;
+
+        int end = dev->loopEnds[it.id] = dev->loopStarts[it.id]+value-1;
         key = "loopEnds_" + QString::number(it.id);
         Cfg_Core::bulid()->devParamWrite(key, end, prefix);
-
-        int start =dev->loopStarts[it.id+1] = end;
-        key = "loopStarts_" + QString::number(it.id+1);
-        Cfg_Core::bulid()->devParamWrite(key, start, prefix);
+        //cout << it.id << "loopStarts_" << start << "loopEnds_" << end;
+    } else if(6 == it.fc) {
+        int num = 0; key = "outputNum";
+        for(uint i=0; i<dev->boardNum; ++i) num += dev->boards[it.id];
+        dev->outputNum = num; Cfg_Core::bulid()->devParamWrite(key, num, prefix);
     }
 
     return ret;
@@ -244,6 +255,7 @@ bool Set_Info::qrcodeGenerator(const QString& msg)
     qstrcpy(ptr, msg.toUtf8().data());
     system(qr.toUtf8().data());
     if(msg.isEmpty()) ptr[0] = 0;
+    qDebug() << qr;
 
     return true;
 }

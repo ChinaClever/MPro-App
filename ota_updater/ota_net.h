@@ -17,6 +17,7 @@ private:
     void workDown(const QString &fn, int bit);
     int cmd_updater(const QString &fn, int bit);
     bool up_rootfs(const QString &path);
+    bool rootfsExists(const QString &path);
 
 private slots:
     void rebootSlot();

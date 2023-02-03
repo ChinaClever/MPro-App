@@ -28,7 +28,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -39,6 +39,7 @@
 			</div>
 		</div>
     <script>
+		let dev_dis = 0;
 		var group_name = new Array();
 		var pow_val = new Array();
 		var energe_val = new Array();
@@ -46,18 +47,16 @@
 		var AVpow_val = new Array();
 		var dev_name =new Array();
 		let lang = new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		read_data();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
 				AVpow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
 				pow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
 				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[3]+addr+'_'+i));
 				energe_val[i] = (sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
 			}
 		}
 		lang_init();
@@ -66,16 +65,16 @@
 				lang[i] = new Array();
 			}
 			lang[1] = ["分组监测","","","",""];
-			lang[2] = ["设备选择","","","",""];
+			lang[2] = ["设备选择:","","","",""];
 			lang[3] = ["序号","","","",""];
 			lang[4] = ["名称","","","",""];
 			lang[5] = ["有功功率(kW)","","","",""];
 			lang[6] = ["视在功率(AV)","","","",""];
 			lang[7] = ["电能消耗(kWh)","","","",""];
-			lang[8]  = ["", "主机", "", "", "", ""];
-			lang[9]  = ["", "副机", "", "", "", ""];
+			lang[8]  = ["主机", "", "", "", ""];
+			lang[9]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[8][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[9][language] + i;
 			}
 		}
@@ -83,9 +82,13 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		function buildSel(rows)
 		{

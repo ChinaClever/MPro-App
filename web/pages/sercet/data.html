@@ -43,7 +43,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_encrpty_data(0)},300);
+		setTimeout(function(){read_encrpty_data(default_addr)},300);
 		let mode_set = new Array("ECB","CBC","CFB","OFB");
 		let encrpty_set = new Array("","AES","RSA","SM4");
 		var filling = new Array("ZERO","PKCS7","ISO");
@@ -146,7 +146,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(var j = 1;j<35;j++){
 					if(encrpty_name[j] == btn.id){
-						rpc.call('pduSetParam',[0,31,j,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,31,j,0,0,btn.value]);
 					}
 				}
 				flash_html();
@@ -155,7 +155,7 @@
 			}
 		}
 		function flash_html(){
-			read_encrpty_data(0);
+			read_encrpty_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

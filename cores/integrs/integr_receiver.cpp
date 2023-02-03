@@ -11,7 +11,7 @@ Integr_Receiver::Integr_Receiver(QObject *parent)
 {
     mUdp = new Net_Udp(this);
     mWs = new WS_Server(this);
-    mWss = new WS_Server(parent);
+    mWss = new WS_Server(this);
     mTcp = new Net_TcpServer(this);
     mAmqp = QRabbitMQ::bulid(parent);
     mMqtt = Mqtt_Client::bulid(parent); initRecvFun();

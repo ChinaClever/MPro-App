@@ -28,7 +28,7 @@
 	</div>
 	<div class="main-box">
 		<div class = "top-box">
-		<div align="right"><p><span>Version</span><button  style = "width:5%;height: auto; line-height: 1.6;" value = "登出" onclick = "sign_out()">登出</button></p></div>
+		<div align="right" ><p><span>Version</span><button  style = "width:5%;height: auto; line-height: 1.6;" value = "登出" onclick = "sign_out()">登出</button></p></div>
 		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
@@ -62,6 +62,19 @@
 				window.close();
 			}
 		}
+		setTimeout(function(){
+			// read_loop_data(addr);
+			read_sensor_data(addr);
+			// read_total_data(addr);
+			// read_output_param(addr);
+			// read_output_data(addr);
+			// read_group_data(addr);
+			read_dual_data(addr);
+			read_dual_param_data(addr);
+			// read_group_param_data(addr);
+			// read_group_info(addr);
+			// read_monitoring_data(addr);
+		},500);
 	</script>
 </body>
 </html>

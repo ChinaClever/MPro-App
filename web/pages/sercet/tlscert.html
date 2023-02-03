@@ -96,7 +96,7 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_tls_data(0)},300);
+		setTimeout(function(){read_tls_data(default_addr)},300);
 		var tls_data = new Array();
 		var lang = new Array();
 		let length = 49;
@@ -257,13 +257,13 @@
 		}
 		function create(){
 			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[0,tls_,31,0,0,0]);
+				rpc.call('pduSetParam',[default_addr,tls_,31,0,0,0]);
 			}else{}
 		}
 		function SetData(ipt){
 			if(confirm("请确认是否保存此次修改？")){
 				let id = parseInt(ipt.id.slice(3));
-				rpc.call('pduSetParam',[0,tls_,id+11,0,0,ipt.value]);
+				rpc.call('pduSetParam',[default_addr,tls_,id+11,0,0,ipt.value]);
 				flash_html();
 			}else{}
 		}

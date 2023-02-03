@@ -9,11 +9,14 @@ public:
     explicit Mb_Env(QObject *parent = nullptr);
 
 protected:
-    void mbEnvUpdate();
+    void env_update();
 
 private:
-    void upEnvData();
-    void upEnvThreshold();
+    void env_dataUpdate();
+    void env_alarmUpdate();
+    void env_sensorUpdate();
+    void env_thresholdUpdate();
+    void env_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs);
 };
 
 #endif // MB_ENV_H

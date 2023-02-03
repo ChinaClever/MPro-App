@@ -36,6 +36,8 @@
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -44,14 +46,15 @@
 	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		setTimeout(function(){
+			read_log_data(1,1,0,0);
+			console.log("1,1");
+		},200);
 		let lang = new Array();
 		let btn_name = new Array("jump","last","next","del","export");
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
-		setTimeout(function(){
-			read_log_data(1,1,0,0);
-		},100);
 		function lang_init(){
 			let i = 0;
 			for(i = 1;i<31;i++){
@@ -81,6 +84,8 @@
 			}
 		}
 		lang_init();
+		$('.table-striped').html(buildTable(0));
+		lang_fun();
 		function read_data(){
 			let stat = 0;
 			let log_str = window.JSON.parse(sessionStorage.getItem(log_info[2]));
@@ -112,19 +117,23 @@
 				stat= 0;
 			}
 			read_log_data(1,2,stat,show_num);
+			console.log("1,2");
 		},600);
+
 		setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},800);
+		},1000);
+
 		function flash_html(par)
 		{
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
 				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
 				showdata();
 			},800);
 		}
@@ -224,14 +233,14 @@
 				tbody = '';
 				thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="35%" id = "lang_4"></td>\
-					<td width ="45%" id = "lang_5"></td>';
+					<td width ="25%" id = "lang_4"></td>\
+					<td width ="55%" id = "lang_5"></td>';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
-					<td width ="35%" id = "lang_4"></td>\
-					<td width ="45%" id = "lang_5"></td>';
+					<td width ="25%" id = "lang_4"></td>\
+					<td width ="55%" id = "lang_5"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';

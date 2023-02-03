@@ -10,32 +10,55 @@ Mb_Output::Mb_Output(QObject *parent) : Mb_Line{parent}
 
 }
 
-void Mb_Output::mbOutputUpdate()
+void Mb_Output::output_dataUpdate()
 {
-    upOutputData();
-    upOutputThreshold();
-}
-
-void Mb_Output::upOutputData()
-{
-    vshort vs; int size = OUTPUT_NUM;
+    vshort vs; int size = OUTPUT_NUM+2;
     sObjData *obj = &(mDevData->output);
     appendData(size, obj->cur.value, vs);
-    appendData2(size, obj->ele, vs);
-
     appendData(size, obj->pow.value, vs);
+    appendData(size, obj->artPow, vs);
+    appendData(size, obj->pf, vs);
+    appendData2(size, obj->ele, vs);
+    appendData(size, obj->relay.sw, vs);
     appendData(size, obj->reactivePow, vs);
-    appendData(size, obj->cur.rated, vs);
-    setRegs(MbReg_Outputs, vs);
+    setRegs(MbReg_OutputData, vs);
 }
 
-void Mb_Output::upOutputThreshold()
+void Mb_Output::output_alarmUpdate()
 {
-    vshort vs;
+    vshort vs; int size = OUTPUT_NUM+2;
     sObjData *obj = &(mDevData->output);
-    appendAlarm(obj->cur, vs);
-    setRegs(MbReg_SetOutput, vs); vs.clear();
-
-    appendData(obj->size, obj->cur.crMax, vs);
-    setRegs(1153, vs);
+    appendData(size, obj->relay.alarm, vs);
+    appendData(size, obj->cur.alarm, vs);
+    appendData(size, obj->pow.alarm, vs);
+    setRegs(MbReg_OutputAlarm, vs);
 }
+
+void Mb_Output::output_thresholdObj(const sAlarmUnit &unit, vshort &vs)
+{
+    int size = OUTPUT_NUM+2;
+    appendData(size, unit.max, vs);
+    appendData(size, unit.crMax, vs);
+    appendData(size, unit.crMin, vs);
+    appendData(size, unit.min, vs);
+    appendData(size, unit.en, vs);
+}
+
+void Mb_Output::output_thresholdUpdate()
+{
+    vshort vs; int size = OUTPUT_NUM+2;
+    sObjData *obj = &(mDevData->output);
+    output_thresholdObj(obj->cur, vs);
+    output_thresholdObj(obj->pow, vs);
+    appendData(size, obj->relay.powerUpDelay, vs);
+    setRegs(MbReg_OutputThreshol, vs);
+}
+
+void Mb_Output::output_update()
+{
+    output_dataUpdate();
+    output_alarmUpdate();
+    output_thresholdUpdate();
+}
+
+

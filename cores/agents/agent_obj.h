@@ -5,6 +5,8 @@
 #define SNMP_TRAP_SIZE 4
 struct sAgentCfg {
     int enV2;
+    QString get;
+    QString set;
     int enV3;
     QString usr;
     QString pwd;

@@ -59,7 +59,7 @@ QString cm::executes(const QStringList &cmds)
 bool cm::pingNet(const QString& ip)
 {   
     bool bPingSuccess = false;
-    QString strArg = "ping -c3 " + ip;  //strPingIP 为设备IP地址
+    QString strArg = "ping -c2 " + ip;  //strPingIP 为设备IP地址
     QString p_stdout = execute(strArg);
     if(p_stdout.contains("ttl=")) { //我采用这个字符来判断 对不对？
         bPingSuccess = true;
@@ -103,6 +103,26 @@ bool cm::isIPaddress(const QString& ip)
 bool cm::language()
 {
     return masterDev()->cfg.param.language ? false: true;
+}
+
+QByteArray cm::zipCompress(const QByteArray &array)
+{
+    QByteArray res = qCompress(array);
+    return res.mid(4);
+}
+
+//qUncompress好像对前四位的原数据长度没要求，乱填都可以，只不过性能有些差距。
+QByteArray cm::zipUncompress(const QByteArray &array)
+{
+    ulong dataLen = 10*10000;
+    char *pByte = (char *)(&dataLen);
+    QByteArray len; len.resize(4);
+    len[3] = *pByte;
+    len[2] = *(pByte + 1);
+    len[1] = *(pByte + 2);
+    len[0] = *(pByte + 3);
+    QByteArray qByteArray = len + array;
+    return qUncompress(qByteArray);
 }
 
 /**
@@ -181,6 +201,7 @@ double cm::decimal(const sDataItem &it)
             case DTopic::Ele: res = COM_RATE_ELE; break;
             case DTopic::PF: res = COM_RATE_PF; break;
             case DTopic::ArtPow: res = COM_RATE_POW; break;
+            case DTopic::LineVol: res = COM_RATE_VOL; break;
             case DTopic::ReactivePow: res = COM_RATE_POW; break;
             case DTopic::Tem: res = COM_RATE_TEM; break;
             case DTopic::Hum: res = COM_RATE_HUM; break;

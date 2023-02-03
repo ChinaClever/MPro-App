@@ -19,8 +19,8 @@ QVariant Set_Service::logCfg(int fc)
     case 2: ret = cfg->eleTime; break;
     case 3: ret = cfg->hdaTime; break;
     case 4: ret = cfg->logCnt; break;
-    case 5: ret = cfg->hdaCnt; break;
-    case 6: ret = cfg->eventCnt; break;
+    case 5: ret = cfg->eventCnt; break;
+    case 6: ret = cfg->hdaCnt; break;
     default: cout << fc; break;
     }
 
@@ -37,8 +37,8 @@ bool Set_Service::logSet(int fc, const QVariant &v)
     case 2: key = "eleTime"; cfg->eleTime = v.toInt(); break;
     case 3: key = "hdaTime";  cfg->hdaTime = v.toInt(); break;
     case 4: key = "logCnt";  cfg->logCnt = v.toInt();  break;
-    case 5: key = "hdaCnt";  cfg->hdaCnt = v.toInt();  break;
-    case 6: key = "eventCnt";  cfg->eventCnt = v.toInt();  break;
+    case 5: key = "eventCnt";  cfg->eventCnt = v.toInt();  break;
+    case 6: key = "hdaCnt";  cfg->hdaCnt = v.toInt();  break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -194,7 +194,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     case 2: key = "udp_en";  obj->ntp_udpEn(v.toInt()); break;
     case 3: key = "ntp_host";  it->ntp_host = v.toString();  break;
     case 4: key = "time_zone";  obj->ntp_timeZone(v.toString());  break;
-    case 5: obj->ntpdate(); break;
+    case 5: obj->ntpdate(); break; case 6: ret = cm::pingNet(it->ntp_host); break;
     default: ret = false; cout << fc; break;
     }
 
@@ -215,7 +215,7 @@ int Set_Service::webCfg(int fc)
     case 4: ret = it->https_en; break;
     case 5: ret = it->https_port; break;
     default: cout << fc; break;
-    }
+    } //cout << fc << ret;
 
     return ret;
 }
@@ -227,11 +227,11 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     bool ret = true; switch (fc) {
     case 1: key = "http_en";  it->http_en = v.toInt(); break;
     case 2: key = "http_port";  it->http_port = v.toInt(); break;
-    case 3: key = "http_redirect";  it->http_port = v.toInt();  break;
+    case 3: key = "http_redirect";  it->http_redirect = v.toInt();  break;
     case 4: key = "https_en";  it->https_en =v.toInt();  break;
     case 5: key = "https_port";  it->https_port = v.toInt(); break;
     default: ret = false; cout<< fc; break;
-    }
+    } //cout << key << fc << v;
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();

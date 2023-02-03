@@ -49,6 +49,9 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-border-none_ text-left_ out_table"></table>
 					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-border-none_ text-center vol_table"></table>
+					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div>
 				</div>
@@ -73,18 +76,23 @@
 		let break_en = 0;
 		let rating = new Array();
 		let rating_ = new Array();
+		let out_vol = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
 		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
-			setTimeout(function(){
-				read_debug_data();
-			},300);	
+		setTimeout(function(){
+			read_debug_data();
+		},300);
+		for(i = 1;i<49;i++){
+			out_vol[i] = 0;
+		}
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
+		$('.vol_table').html(buildTableVol());
 		let m = 0;
 		var Time1 = setInterval(function(){
 			read_data();
@@ -96,10 +104,10 @@
 		},500);
 		function read_data(){
 			let i = 0;
-			output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-			loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
-			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + addr));
+			output_num = parseInt(sessionStorage.getItem("OutputNum" + default_addr));
+			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + default_addr));
+			loop_num = parseInt(sessionStorage.getItem("LoopNum" + default_addr));
+			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + default_addr));
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
 			document.getElementById("board_").value = board_num;
@@ -120,12 +128,13 @@
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i));
 			}
-			cfg_data[0] = sessionStorage.getItem("Angle" + addr);
+			break_en = sessionStorage.getItem("BreakerEn" + default_addr);
+			cfg_data[0] = sessionStorage.getItem("Angle" + default_addr);
 			cfg_data[1] = 0;
 			cfg_data[2] = 0;
 			cfg_data[3] = 0;
-			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + addr);
-			cfg_data[5] = sessionStorage.getItem("LanguageEn" + addr);
+			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + default_addr);
+			cfg_data[5] = sessionStorage.getItem("LanguageEn" + default_addr);
 			cfg_data[6] = sessionStorage.getItem(ip_mode[0]+ ip_addr[11]);
 			for(let i = 0;i<9;i++){
 				unite_data[i] = new Array();
@@ -138,6 +147,7 @@
 
 			for(i =1;i<=output_num;i++){
 				rating[i] = sessionStorage.getItem(type_name[output]+ data_type[cur_] + data_name[2] + 0 +'_'+i);
+				out_vol[i] = sessionStorage.getItem(type_name[output]+ data_type[vol_] + data_name[1] + 0 +'_'+i);
 				rating_[i] = rating[i];
 			}
 		}
@@ -228,6 +238,17 @@
 				rpc.call('pduSetData',[0,output,cur_,2,i,rating_[i]]);
 			}
 		}
+		setInterval(function(){
+			for(i =1;i<=output_num;i++){
+				rpc.call('pduReadData',[addr,output,vol_,1,i]);
+			}
+			setTimeout(function(){
+				for(i =1;i<=output_num;i++){
+					out_vol[i] = sessionStorage.getItem(type_name[output]+ data_type[vol_] + data_name[1] + 0 +'_'+i);
+					document.getElementById("vol" + i).innerHTML = out_vol[i];
+				}
+			},500);
+		},1000);
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
@@ -256,7 +277,7 @@
 
 
 			tbody += '<tr><td>屏幕方向角:</td>';
-			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" value="'+cfg_data[0]+'">(0-90°垂直,1-180°水平,2-270°垂直)</input></td></tr>';
+			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" value="'+cfg_data[0]+'">(0-0°水平,1-90°垂直,2-180°水平,3-270°垂直)</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
 			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
 			tbody += '<tr><td>IN/OUT口级联方式:</td>';
@@ -374,6 +395,48 @@
 			}
 			tbody +='</tr>';
 			tbody += '<tr><td colspan = "61"><input style ="width:100px" type = "button" onclick = "Set()" value="保存"></input></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableVol() {
+			var thead = '',tbody = '';
+			thead = '<tr><td style="font-size:20px;text-align:left" colspan = "31">输出位电压值</td></tr>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
+				for(let i = 0;i<6;i++){
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+1) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+2) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+3) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+4) + '</td>';
+				tbody +='<td width = "3%"></td>';
+			}
+			tbody +='</tr>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">电压(V)</td>';
+			for(let i = 0;i<6;i++){
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+1) + '">'+out_vol[(i * 4)+1]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+2) + '">'+out_vol[(i * 4)+2]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+3) + '">'+out_vol[(i * 4)+3]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+4) + '">'+out_vol[(i * 4)+4]+'</td>';
+				tbody +='<td width = "3%"></td>';
+			}
+			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
+				for(let i = 6;i<12;i++){
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+1) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+2) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+3) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+4) + '</td>';
+				tbody +='<td width = "3%"></td>';
+			}
+			tbody +='</tr>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">电压(V)</td>';
+			for(let i = 6;i<12;i++){
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+1) + '">'+out_vol[(i * 4)+1]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+2) + '">'+out_vol[(i * 4)+2]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+3) + '">'+out_vol[(i * 4)+3]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+4) + '">'+out_vol[(i * 4)+4]+'</td>';
+				tbody +='<td width = "3%"></td>';
+			}
+			tbody +='</tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

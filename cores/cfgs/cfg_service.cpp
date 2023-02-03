@@ -79,7 +79,7 @@ void Cfg_Service::snmp()
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     QString *str = nullptr; int *ptr = nullptr;
-    for(int i=1; i<8; ++i) {
+    for(int i=1; i<10; ++i) {
         switch (i) {
         case 1: key = "enV2"; ptr = &cfg->enV2; break;
         case 2: key = "encrypt"; ptr = &cfg->encrypt; break;
@@ -87,12 +87,17 @@ void Cfg_Service::snmp()
         case 4: key = "usr"; str = &cfg->usr; break;
         case 5: key = "pwd"; str = &cfg->pwd; break;
         case 6: key = "key"; str = &cfg->key; break;
+        case 7: key = "get"; str = &cfg->get; break;
+        case 8: key = "set"; str = &cfg->set; break;
         default: ptr = nullptr; str = nullptr; break;
         }
 
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
         else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
     }
+
+    if(cfg->get.isEmpty()) cfg->get = "public";
+    if(cfg->set.isEmpty()) cfg->set = "private";
 
     for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
         key = "trap_" + QString::number(i); str = &cfg->trap[i];
@@ -113,7 +118,7 @@ void Cfg_Service::web()
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
-        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
+        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 1; break;
         case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
         default: key.clear(); break;
@@ -192,9 +197,9 @@ void Cfg_Service::log()
         switch (i) {
         case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
         case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 2, prefix).toInt(); break;
-        case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
-        case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
-        case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 1, prefix).toInt();  break;
+        case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 10000, prefix).toInt();  break;
+        case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 50000, prefix).toInt();  break;
+        case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 10000, prefix).toInt();  break;
         case 6: key = "hdaEn";  cfg->hdaEn = mCfg->readCfg(key, 1, prefix).toInt();  break;
         }
     }
@@ -315,7 +320,7 @@ void Cfg_Service::login()
             qstrcpy(ptr, res.toUtf8().data());
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
-            key = "ctrl_%1"; it->ctrl = mCfg->readCfg(key.arg(k), "", prefix).toLongLong();
+            key = "groupCtrl_%1"; it->groupCtrl = mCfg->readCfg(key.arg(k), 0xFF, prefix).toInt();
         }
     }
 }

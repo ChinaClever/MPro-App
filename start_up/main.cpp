@@ -10,10 +10,7 @@ static void initSystem()
 {
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
-    system("chmod 666 -R /usr/data/clever/cfg");
-    system("chmod 777 -R /usr/data/clever/bin/");
-    system("chmod 777 -R /usr/data/clever/app/");
-    system("chmod 777 -R /usr/data/clever/awtk/");
+    system("chmod 777 -R /usr/data/clever");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
@@ -39,7 +36,7 @@ static void init_netWork()
 
     if(!mac.contains(deMac)) {
         system("ip link set eth0 down");
-        QString cmd = "ip link set eth0 address " +mac;
+        QString cmd = "ip link set eth0 address " + mac.mid(0, 17);
         system(cmd.toStdString().c_str()); qDebug() << cmd;
     }
 

@@ -99,7 +99,7 @@ html {
     position: relative;
     padding-left: 26px;
     font-size: 15px;
-    line-height: 50px
+    line-height: 45px
 }
 
 .nav-item-link:after {
@@ -173,10 +173,11 @@ html {
     overflow: hidden
 }
 p{
-    height: 35px;
+    width: 100%;
+    height: 83px;
     color:#fff;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background:#2b333e;
+    background:#323b48;
 }
 .main-box>iframe {
     width: 100%;
@@ -185,7 +186,7 @@ p{
     background: #fff
 }
 .top-box{
-    height: 40px;
+    height: 83px;
     color:#fff;
     background:#2b333e;
 }
@@ -196,7 +197,7 @@ p{
 }
 .phase_table{
 	width:100%;
-	margin-top:10px;
+	margin-top:5px;
 	font-size:12px;
 	border:0px solid;
 	border-color: #aaaaff;
@@ -257,21 +258,15 @@ p{
   }
   
   .progress-bar {
-    position: relative;
-  
-    height: 12px;
-    border-radius: 15px;
-    -webkit-transition: 0.5s linear;
-    -moz-transition: 0.5s linear;
-    -o-transition: 0.5s linear;
-    transition: 0.5s linear;
-    -webkit-transition-property: width, background-color;
-    -moz-transition-property: width, background-color;
-    -o-transition-property: width, background-color;
-    transition-property: width, background-color;
-    -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+    background: #848484;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: inherit;
+    animation: process 1s linear forwards;
   }
+
   .loop_div{
     border:1px solid;
     border-color: #ffffff;
@@ -288,4 +283,35 @@ p{
   .spacing{
 	text-align:left; 
 	padding-left:20px;
+}
+.child {
+    position: relative;
+    height: 100%;
+    border-radius: inherit;
+}
+@keyframes process {
+    0% {
+        left: 0;
+        right: 100%;
+    }
+
+    20% {
+        right: 80%
+    }
+
+    40% {
+        right: 60%;
+    }
+
+    60% {
+        right: 40%;
+    }
+
+    80% {
+        right: 20%;
+    }
+
+    100% {
+        right: 0;
+    }
 }

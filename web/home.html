@@ -1,270 +1,326 @@
 ﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
-		<meta name="renderer" content="webkit">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>home</title>
-		<link rel="stylesheet" href="../../include/css/public.min.css">
-		<link rel="stylesheet" href="../../include/css/index.min.css">
-		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
-		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
-		<link rel="stylesheet" href="../../doc-lib/doc.css">
 
-		<script src="../../include/js/jquery-1.11.3.min.js"></script>
-		<script src="../../include/js/fn_public.js"></script>
-		<script src="../../include/js/rpc-over-websocket.js"></script>
-		<script src="../../include/js/public.min.js"></script>
-		<script src="../../doc-lib/highlight.pack.js"></script>
-		<script src="../../doc-lib/doc.js"></script>
-		<script src="../../include/js/chart.min.js"></script>
-		<style>
-			.box{
-				border: 1px solid #C4C2C3;
-				background-color: #fff;
-			}
-			tr{
-				height: 30px;
-			}
-		</style>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>home</title>
+	<link rel="stylesheet" href="include/css/public.min.css">
+	<link rel="stylesheet" href="include/css/iconfont.min.css">
+	<link rel="stylesheet" href="include/css/font-awesome.min.css">
+	<link rel="stylesheet" href="include/css/index.min.css">
+
+	<script src="include/js/jquery-1.11.3.min.js"></script>
+	<script src="include/js/index.min.js"></script>
+    <script src="include/js/fn_public.js"></script>
+	<script src="include/js/rpc-over-websocket.js"></script>
+	<script src="include/js/chart.min.js"></script>
+	<style>
+		.box {
+			border: 1px solid #C4C2C3;
+			background-color: #fff;
+		}
+
+		tr {
+			height: 30px;
+		}
+	</style>
+</head>
+
 <body>
 	<div style="padding: 0px; margin-bottom: 0.8%; overflow: hidden; ">
 		<div class="box" style="width: 100%; margin-bottom: 0.8%;  background:#e7e7e7;">
 			<div class="panel panel-default">
-				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span id="lang_1"></span><ul style="float:right; font-family:courier;" ><span id="lang_2"></span><select class ="devname" id="ms" style="width:200px;" onChange="change();"></select></ul></div>
-			</div>
-			<div class ="phase_div1">
-				<div class ="phase_div2" id="lang_3"></div>
-				<div class ="phase_div">
-					<table class ="phase_table total"></table>
-				</div>
-				<div class ="phase" id="L1">
-					<table class ="phase_table p1"></table>
-				</div>
-				<div class ="phase " id="L2">
-					<table class ="phase_table p2"></table>
-				</table>
-				</div>
-				<div class ="phase" id="L3">
-					<table class ="phase_table p3"></table>
+				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span
+						id="lang_1"></span>
+					<ul id="dev_sel" style="float:right; font-family:courier;display: none;"><span
+							id="lang_2"></span><select class="devname" id="ms" style="width:200px;"
+							onChange="change(this);"></select></ul>
 				</div>
 			</div>
-			<div id="ht" class = "loop_div">	
-				<table class = "loop_table "></table>
+			<div class="phase_div1">
+				<div class="phase_div2" id="lang_3"></div>
+				<div class="phase_div">
+					<table class="phase_table total"></table>
+				</div>
+				<div class="phase" id="L1">
+					<table class="phase_table p1"></table>
+				</div>
+				<div class="phase " id="L2">
+					<table class="phase_table p2"></table>
+					</table>
+				</div>
+				<div class="phase" id="L3">
+					<table class="phase_table p3"></table>
+				</div>
+			</div>
+			<div id="ht" class="loop_div">
+				<table class="loop_table "></table>
 			</div>
 			<table style="width:100%;height:203px; ">
 				<tr>
-					<td style=" width: 64%;">
-						<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:203px; background:#ffffff; text-align:center;">
-							<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" id="lang_16"></div>
-							<table class = "sensor_tab" style="height:32px; width:100%; font-size:12px;"></table>
-						</div>
-					</td>
-					<td style="width: 32%;">
-						<div style="width: 97%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-top:-5px; margin-left:10px; height:203px;  background:#ffffff; ">
-						<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" id="lang_29"></div>
-						<table class = "sys_table" style="width: 97% ;font-size:12px;"></table>
+					<td style=" width: 99%;">
+						<div
+							style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:203px; background:#ffffff; text-align:center;">
+							<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;"
+								id="lang_16"></div>
+							<table class="sensor_tab"
+								style="height:32px;width:100%; font-size:12px;border:1px solid;border-color: #ffffff;">
+							</table>
 						</div>
 					</td>
 				</tr>
 			</table>
-			<div align="center" style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
-				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_35"></div>
-				
-					<br>
-					<ul style="padding-right:70%; font-family:courier;" ><span id=""></span><select id="sel1" style="width:100px;" onChange="change_mode(this);"></select></ul> 
-					<div  id="container" style="width:90%; height:500px;">
-						<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
-					</div>
-					<script type="text/javascript">
-						let sel_name =new Array("功率","电流","电压");
-						let sample_num = 50;
-						let data_total = new Array(50);
-						let data_inlet1 = new Array(50);
-						let data_inlet2 = new Array(50);
-						let data_inlet3 = new Array(50);
-						let data_view = new Array(50);
-						let date  = new Date();
-						let time1 = 0;
-						let chart = 0;
-						let ctx = 0;
-						let chart_type = 0;
-						let total_name = "total_pow";
-						let Hou= 0, Minu = 0,Seco = 0;
-						Seco = date.getSeconds();
-						Minu = date.getMinutes();
-						Hou = date.getHours();
-						let dataLabels = new Array();
-						function set_data_show(num){
-							for(let j = 0;j < sample_num;j++){
-								data_total[j] = total_data[num][j];
-								data_inlet1[j] = inletA_data[num][j];
-								data_inlet2[j] = inletB_data[num][j];
-								data_inlet3[j] = inletC_data[num][j];
+			<div align="center"
+				style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
+				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;"
+					id="lang_35"></div>
+
+				<br>
+				<ul style="padding-right:70%; font-family:courier;"><span id=""></span><select id="sel1"
+						style="width:100px;" onChange="change_mode(this);"></select></ul>
+				<div id="container" style="width:90%; height:500px;">
+					<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
+				</div>
+				<script type="text/javascript">
+					let chart_lang = new Array();
+					let sel_name = new Array(3);
+					let sample_num = 50;
+					let data_total = new Array(50);
+					let data_inlet1 = new Array(50);
+					let data_inlet2 = new Array(50);
+					let data_inlet3 = new Array(50);
+					let data_view = new Array(50);
+					let date = new Date();
+					let time1 = 0;
+					let chart = 0;
+					let ctx = 0;
+					let uint_arr = new Array("kW", "A", "V");
+					let uint_arr_ = uint_arr[0];
+					let chart_type = 0;
+					let title_text = "";
+					let mark_num = new Array(0, 0);
+					let Hou = 0, Minu = 0, Seco = 0;
+					let total_mark = 0;
+					Seco = date.getSeconds();
+					Minu = date.getMinutes();
+					Hou = date.getHours();
+					let dataLabels = new Array();
+					function set_data_show(num) {
+						for (let j = 0; j < sample_num; j++) {
+							data_total[j] = total_data[num][j];
+							data_inlet1[j] = inletA_data[num][j];
+							data_inlet2[j] = inletB_data[num][j];
+							data_inlet3[j] = inletC_data[num][j];
+						}
+					}
+					chart_lang_init();
+					set_data_show(0);
+					function chart_lang_init() {
+						for (let i = 0; i < 16; i++) {
+							chart_lang[i] = new Array();
+						}
+						chart_lang[1] = ["功率", "", "", "", ""];
+						chart_lang[2] = ["电流", "", "", "", ""];
+						chart_lang[3] = ["电压", "", "", "", ""];
+						chart_lang[4] = ["相信息实时统计图表显示", "", "", "", ""];
+						sel_name[0] = chart_lang[1][language];
+						sel_name[1] = chart_lang[2][language];
+						sel_name[2] = chart_lang[3][language];
+						title_text = chart_lang[4][language];
+					}
+					for (let k = sample_num; k > 0; k--) {
+
+						data_view[k] = 0;
+						Seco -= 3;
+						if (Seco < 0) {
+							Seco = 60 + Seco - 3;
+							Minu -= 1;
+							if (Minu < 0) {
+								Minu = 59;
+								Hou -= 1;
+							}
+							if (Hou < 0) {
+								Hou = 23;
 							}
 						}
-						set_data_show(0);
-						for(let k = sample_num;k>0;k--){
+						dataLabels[k - 1] = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
+					}
+					for (let i = 0; i < 3; i++) {
+						document.getElementById("sel1").options.add(new Option(sel_name[i], i));
+					}
 
-							data_view[k] =0;
-							Seco -=  3;
-							if(Seco < 0){
-								Seco = 60 + Seco -3;
-								Minu -= 1;
-								if(Minu < 0){
-									Minu =  59;
-									Hou -= 1;
+					let config = {
+						type: 'line',
+						data: {
+							labels: dataLabels,
+							datasets: [
+								{
+									label: 'L1',
+									data: data_inlet1,
+									backgroundColor: 'rgb(75, 192, 192)',
+									borderColor: 'rgb(75, 192, 192)',
+									fill: false,
+									borderWidth: 1.5,
+									pointRadius: 2,
+								},
+								{
+									label: 'L2',
+									data: data_inlet2,
+									backgroundColor: 'rgb(128, 128, 128)',
+									borderColor: 'rgb(128, 128, 128)',
+									fill: false,
+									borderWidth: 1.5,
+									pointRadius: 2,
+								},
+								{
+									label: 'L3',
+									data: data_inlet3,
+									backgroundColor: 'rgb(70, 130, 180)',
+									borderColor: 'rgb(70, 130, 180)',
+									fill: false,
+									borderWidth: 1.5,
+									pointRadius: 2,
+								},
+								{
+									label: 'Total',
+									data: data_total,
+									backgroundColor: 'rgb(255, 99, 132)',
+									borderColor: 'rgb(255, 99, 132)',
+									fill: false,
+									borderWidth: 1.5,
+									pointRadius: 2,
 								}
-								if(Hou < 0){
-									Hou = 23;
-								}
-							}
-							dataLabels[k-1] = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
-						}
-						for(let i=0;i<3;i++)
-						{
-							document.getElementById("sel1").options.add( new Option(sel_name[i] ,i));
-						}
-
-						let config = {
-							type: 'line',
-							data: {
-								labels: dataLabels,
-								datasets: [
-									{
-										label: total_name,
-										data: data_total,
-										backgroundColor: 'rgb(255, 99, 132)',
-										borderColor: 'rgb(255, 99, 132)',
-										fill: false,
-										borderWidth:1.5,
-										pointRadius: 2,
-									},
-									{
-										label: 'inletA',
-										data: data_inlet1,
-										backgroundColor: 'rgb(75, 192, 192)',
-										borderColor: 'rgb(75, 192, 192)',
-										fill: false, 
-										borderWidth:1.5,
-										pointRadius: 2,
-									},
-									{
-										label: 'inletB',
-										data: data_inlet2,
-										backgroundColor: 'rgb(128, 128, 128)',
-										borderColor: 'rgb(128, 128, 128)',
-										fill: false,
-										borderWidth:1.5,
-										pointRadius: 2,
-									},
-									{
-										label: 'inletC',
-										data: data_inlet3,
-										backgroundColor: 'rgb(70, 130, 180)',
-										borderColor: 'rgb(70, 130, 180)',
-										fill: false,
-										borderWidth:1.5,
-										pointRadius: 2,
-									}
-								]
-							},
-							options: {
-								responsive: true,
+							]
+						},
+						options: {
+							responsive: true,
+							plugins: {
 								title: {
 									display: true,
-									text: '功率信息实时统计'
+									text: title_text
 								},
-								scales: {
-									xAxes: [{
-										ticks: {
-											min: 50,
-										}
-									}],
-									yAxes: [{
-										ticks: {
-											suggestedMin : 0,
-										}
-									}]
-  							  	}
+							},
+							interaction: {
+								mode: 'index',
+								intersect: false
+							},
+							scales: {
+								x: {
+									display: true,
+									title: {
+										display: true,
+									},
+									grid:{
+										display:false,
+									}
+								},
+								y: {
+									display: true,
+									title: {
+										display: true,
+										text: uint_arr_
+									},
+									min : 0
+								}
 							}
-						};
-						function create_new_chart(){
-							document.getElementById('chart').remove();
-							document.getElementsByClassName('chartjs-size-monitor')[0].remove();		
-							let e = document.createElement("canvas"); 
-							e.id = "chart";
-							e.style.display = "block";
-							e.style.width = "90%";
-							e.style.height = "410px";
-							document.getElementById('container').appendChild(e);
-
-							ctx = document.getElementById('chart').getContext('2d');
-							chart = new Chart(ctx, config);
-							time1 = setInterval(flash_chart, 3000);
 						}
-						function change_mode(obj){
-							chart_type =parseInt(obj.value);
-							clearInterval(time1);
-							if(obj.value == 0){
-								total_name = "total_pow";
-							}else if(obj.value == 1){
-								total_name ="total_cur";
-							}else{
-								total_name ="total_vol";
-							}
-							create_new_chart();
-							set_data_show(chart_type);
-							config.data.datasets[0].label = total_name;
-							config.data.datasets[0].data = data_total;
-							config.data.datasets[1].data = data_inlet1;
-							config.data.datasets[2].data = data_inlet2;
-							config.data.datasets[3].data = data_inlet3;
+					};
+					function create_new_chart() {
+						if (mark_num[1] == 1) {
+							chart.data.datasets.pop();
 							chart.update();
 						}
-						function flash_chart() {
-							if (config.data.datasets.length > 0) {
-								date  = new Date();
-								Seco = date.getSeconds();
-								Minu = date.getMinutes();
-								Hou = date.getHours();
-								label_ = (Hou<10?'0'+Hou:Hou) +':'+(Minu<10?'0'+Minu:Minu) + ':' + (Seco<10?'0'+Seco:Seco);
-
-								dataLabels.push(label_);
-								data_total.push(total_data[chart_type][49]);
-								data_inlet1.push(inletA_data[chart_type][49]);
-								data_inlet2.push(inletB_data[chart_type][49]);
-								data_inlet3.push(inletC_data[chart_type][49]);
-								// total_name.push(total_name);
-				
-								dataLabels.shift();
-								data_total.shift();
-								data_inlet1.shift();
-								data_inlet2.shift();
-								data_inlet3.shift();
-								// total_name.shift();
-
-								chart.update();
-							}
+						if (mark_num[0] == 1) {
+							let newDateset = { label: "Total", data: data_total, backgroundColor: 'rgb(255, 99, 132)', borderColor: 'rgb(255, 99, 132)', fill: false, borderWidth: 1.5, pointRadius: 2, };
+							chart.data.datasets.push(newDateset);
+							chart.update();
 						}
+						document.getElementById('chart').remove();
+						//document.getElementsByClassName('chartjs-size-monitor')[0].remove();
+						let e = document.createElement("canvas");
+						e.id = "chart";
+						e.style.display = "block";
+						e.style.width = "90%";
+						e.style.height = "410px";
+						document.getElementById('container').appendChild(e);
+
 						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
 						time1 = setInterval(flash_chart, 3000);
-						function getRandomNum(min, max) {
-							var range = max - min;
-							var rand = Math.random();
-							return(min + Math.round(rand * range));
+					}
+					function change_mode(obj) {
+						chart_type = parseInt(obj.value);
+						clearInterval(time1);
+						uint_arr_ = uint_arr[chart_type];
+						if (chart_type == 0) {
+							mark_num[0]++;
+							mark_num[1] = 0;
+						} else {
+							mark_num[0] = 0;
+							mark_num[1]++;
 						}
-				
-					</script>
-				</div>
+						create_new_chart();
+						set_data_show(chart_type);
+						if (chart_type == 0) {
+							config.data.datasets[0].data = data_inlet1;
+							config.data.datasets[1].data = data_inlet2;
+							config.data.datasets[2].data = data_inlet3;
+							config.data.datasets[3].data = data_total;
+						} else {
+							config.data.datasets[0].data = data_inlet1;
+							config.data.datasets[1].data = data_inlet2;
+							config.data.datasets[2].data = data_inlet3;
+						}
+						config.options.scales.y.title.text = uint_arr_;
+						chart.update();
+					}
+					function flash_chart() {
+						if (config.data.datasets.length > 0) {
+							date = new Date();
+							Seco = date.getSeconds();
+							Minu = date.getMinutes();
+							Hou = date.getHours();
+							label_ = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
+
+							dataLabels.push(label_);
+							if (chart_type == 0) {
+								data_total.push(total_data[chart_type][49]);
+							}
+							data_inlet1.push(inletA_data[chart_type][49]);
+							data_inlet2.push(inletB_data[chart_type][49]);
+							data_inlet3.push(inletC_data[chart_type][49]);
+							if (chart_type == 0) {
+								data_total.shift();
+							}
+							dataLabels.shift();
+							data_inlet1.shift();
+							data_inlet2.shift();
+							data_inlet3.shift();
+
+							chart.update();
+						}
+					}
+					ctx = document.getElementById('chart').getContext('2d');
+					chart = new Chart(ctx, config);
+					time1 = setInterval(flash_chart, 3000);
+					function getRandomNum(min, max) {
+						var range = max - min;
+						var rand = Math.random();
+						return (min + Math.round(rand * range));
+					}
+				</script>
+			</div>
+			<div style="height: 100px;background-color: #e7e7e7;">
 			</div>
 		</div>
 	</div>
-    <script>
+	</div>
+	<script>
+		let dev_dis = 0;
+		let line_vol = new Array();
 		let phase_info = new Array();
 		let total_info = new Array();
 		let system_info = new Array();
@@ -272,105 +328,121 @@
 		let sensor_info = new Array();
 		let phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
 		let loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
-		let len  = data_name.length -1;
-		let total_title = new Array("kW","kVA","kWh","Hz","mA");
-		let lang  = new Array(36);
+		let len = data_name.length - 1;
+		let total_title = new Array("kW", "kVA", "kWh", "Hz", "mA");
+		let lang = new Array(36);
 		let dev_name = new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
-    	let head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
-		let stat_ = new Array("断开","闭合");
-		let serial_ = new Array("D","A","B","C","D");
-		let Sensor_state = new Array("离线","开启","关闭");
-		let Sys_state = new Array("正常","告警","故障");
-		let loop_unit = new Array("","","","A","A","V","kVA","kWh");
-		let sample_= new Array(5,0,1);
-		function delay(){
-			for(let i = 0;i<50;i++){}
+		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
+		let stat_ = new Array("", "");
+		let serial_ = new Array("D", "A", "B", "C", "D");
+		let Sensor_state = new Array("NA", "", "");
+		let Sensor_state_ = new Array("NA", "", "");
+		let Sys_state = new Array("正常", "告警", "故障");
+		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
+		let sample_ = new Array(5, 0, 1);
+
+		function delay() {
+			for (let i = 0; i < 50; i++) { }
 		}
 		LangInit();
-		function LangInit()
-		{
-			for(let i = 0;i<lang.length;i++){
+		function LangInit() {
+			for (let i = 0; i < lang.length; i++) {
 				lang[i] = new Array();
 			}
-			lang[1]   = [ "首页","Dashboard", "Tableau", "Первая страница", "Página", "منزل"];
-			lang[2]   = [ "设备选择:", "PDU Selection: ","Dispositif Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
-			lang[3]   = ["输入","Input ",  "Input", "вход", "Entrada", "دخول"];
-			lang[4]   = ["电能消耗:","Electric energy: ",  "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
-			lang[5]   = ["频率:","Frequency:",  "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
-			lang[6]   = ["漏电电流:","Leakage current:",  "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
-			lang[7]   = ["输出","Output",  "Output", "выход", "Salida", "تصدير"];
-			lang[8]   = ["回路","Circuit",  "Circuit", "цепь", "Vuelta", "فرع الطريق"];
-			lang[9]   = ["状态", "Status", "état", "состояние", "Estado", "دولة"];
-			lang[10]  = ["输出位","Outlet",  "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
-			lang[11]  = ["当前电流","Load current",  "Courant", "текущий ток", "Corriente actual", "التيار الحالي"];
-			lang[12]  = [ "过载电流","Overload current", "Surcharge Courant", "максимальный ток", "Corriente de sobrecarga", "الزائد الحالي"];
-			lang[13]  = [ "当前电压","Input voltage", "Tension", "текущее напряжение", "Tensión actual", "الجهد"];
-			lang[14]  = ["视在功率", "Apparent power", "Puissance optique", "кажущаяся мощность", "Potencia visual", "القوة الظاهرة"];
-			lang[15]  = [ "电能消耗","Energy consumption", "Énergie électrique", "расход электроэнергии", "Consumo de energía eléctrica", "استهلاك الطاقة"];
-			lang[16]  = ["传感器","Sensor",  "Capteur", "датчик", "Sensor", "الاستشعار"];
-			lang[17]  = ["传感器名称","Sensor name",  "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
-			lang[18]  = ["传感器状态","Sensor status",  "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
-			lang[19]  = ["传感器名称","Sensor name",  "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
-			lang[20]  = ["传感器状态","Sensor status",  "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
-			lang[21]  = ["温度1","Temperature 1",  "Temperature 1", "температура1", "Temperatura 1", "درجة الحرارة 1"];
-			lang[22]  = [ "湿度1","Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
-			lang[23]  = [ "温度2", "Temperature 2","Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
-			lang[24]  = ["湿度2","Humidity 2",  "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
-			lang[25]  = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
-			lang[26]  = [ "门禁2","Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
-			lang[27]  = ["水浸","Water",  "Eau", "погружение", "Inmersión", "الفيضانات"];
-			lang[28]  = ["烟雾","Smoke",  "Fumée", "дым", "Humo", "دخان"];
-			lang[29]  = ["信息","Information",  "Information", "сведения", "Información", "معلومات"];
-			lang[30]  = ["工作状态：", "Working status:", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
-			lang[31]  = ["PDU位置:","PDU location:",  "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
-			lang[32]  = ["运行时长：","PDU uptime:",  "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
-			lang[33]  = ["产品系列：","PDU series:",  "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
-			lang[34]  = ["软件版本：","PDU version:",  "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
-			lang[35]  = [ "实时动态功率和电流趋势图","Real-time dynamic power and current trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
-			lang[36]  = ["主机", "", "", "", ""];
-			lang[37]  = ["副机", "", "", "", ""];
-			lang[38]  = ["烟雾", "", "", "", ""];
-			lang[39]  = ["烟雾", "", "", "", ""];
-			lang[40]  = ["烟雾", "", "", "", ""];
-			lang[41]  = ["烟雾", "", "", "", ""];
+			lang[1] = ["首页", "Dashboard", "Tableau", "Первая страница", "Página", "منزل"];
+			lang[2] = ["设备选择:", "PDU Selection: ", "Dispositif Choix:", "Выбор устройства:", "Selección del dispositivo:", "اختيار المعدات:"];
+			lang[3] = ["输入", "Input ", "Input", "вход", "Entrada", "دخول"];
+			lang[4] = ["电能消耗:", "Electric energy: ", "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
+			lang[5] = ["频率:", "Frequency:", "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
+			lang[6] = ["漏电电流:", "Leakage current:", "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
+			lang[7] = ["输出", "Output", "Output", "выход", "Salida", "تصدير"];
+			lang[8] = ["回路", "Circuit", "Circuit", "цепь", "Vuelta", "فرع الطريق"];
+			lang[9] = ["状态", "Status", "état", "состояние", "Estado", "دولة"];
+			lang[10] = ["输出位", "Outlet", "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];
+			lang[11] = ["当前电流", "Load current", "Courant", "текущий ток", "Corriente actual", "التيار الحالي"];
+			lang[12] = ["过载电流", "Overload current", "Surcharge Courant", "максимальный ток", "Corriente de sobrecarga", "الزائد الحالي"];
+			lang[13] = ["当前电压", "Input voltage", "Tension", "текущее напряжение", "Tensión actual", "الجهد"];
+			lang[14] = ["有功功率", "Apparent power", "Puissance optique", "кажущаяся мощность", "Potencia visual", "القوة الظاهرة"];
+			lang[15] = ["电能消耗", "Energy consumption", "Énergie électrique", "расход электроэнергии", "Consumo de energía eléctrica", "استهلاك الطاقة"];
+			lang[16] = ["传感器", "Sensor", "Capteur", "датчик", "Sensor", "الاستشعار"];
+			lang[17] = ["传感器名称", "Sensor name", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+			lang[18] = ["传感器状态", "Sensor status", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+			lang[19] = ["传感器名称", "Sensor name", "Capteur Nom", "наименование датчика", "Nombre del sensor", "اسم المستشعر"];
+			lang[20] = ["传感器状态", "Sensor status", "Capteur état", "состояние датчика", "Estado del sensor", "حالة الاستشعار"];
+			lang[21] = ["温度1", "Temperature 1", "Temperature 1", "температура1", "Temperatura 1", "درجة الحرارة 1"];
+			lang[22] = ["湿度1", "Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
+			lang[23] = ["温度2", "Temperature 2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
+			lang[24] = ["湿度2", "Humidity 2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
+			lang[25] = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+			lang[26] = ["门禁2", "Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
+			lang[27] = ["水浸", "Water", "Eau", "погружение", "Inmersión", "الفيضانات"];
+			lang[28] = ["烟雾", "Smoke", "Fumée", "дым", "Humo", "دخان"];
+			lang[29] = ["信息", "Information", "Information", "сведения", "Información", "معلومات"];
+			lang[30] = ["工作状态：", "Working status:", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
+			lang[31] = ["PDU位置:", "PDU location:", "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
+			lang[32] = ["运行时长：", "PDU uptime:", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
+			lang[33] = ["产品系列：", "PDU series:", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
+			lang[34] = ["软件版本：", "PDU version:", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
+			lang[35] = ["实时动态功率和电流趋势图", "Real-time dynamic power and current trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
+			lang[36] = ["主机", "", "", "", ""];
+			lang[37] = ["副机", "", "", "", ""];
+			lang[38] = ["开启", "", "", "", ""];
+			lang[39] = ["关闭", "", "", "", ""];
+			lang[40] = ["正常", "", "", "", ""];
+			lang[41] = ["告警", "", "", "", ""];
+			lang[42] = ["断开", "", "", "", ""];
+			lang[43] = ["闭合", "", "", "", ""];
 			dev_name[0] = lang[36][language];
-			for(let i = 1;i<slave_num;i++){
-				dev_name[i] =  lang[37][language] + i;
+			for (let i = 1; i < (slave_num + 1); i++) {
+				dev_name[i] = lang[37][language] + i;
+			}
+			Sensor_state[1] = lang[38][language];
+			Sensor_state[2] = lang[39][language];
+			Sensor_state[1] = lang[40][language];
+			Sensor_state[2] = lang[41][language];
+			stat_[0] = lang[42][language];
+			stat_[1] = lang[43][language];
+		}
+		function LangFun() {
+			for (var i = 1; i < 36; i++) {
+				if ((i != 6 && i < 29) || i > 34) {
+					document.getElementById("lang_" + i).innerHTML = lang[i][language];
+				}
+			}
+			document.getElementById("ms").value = addr;
+			if (dev_dis == 0) {
+				document.getElementById("dev_sel").style.display = "";
 			}
 		}
-		function LangFun(){
-			for(var i = 1;i<36;i++){
-				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
-			}
-		}
-		function read_chart_data(){
-			for(let i = 0;i<3;i++){
-				total_data[i] = total_data[i].slice(0,sample_num-1);
-				inletA_data[i] = inletA_data[i].slice(0,sample_num-1);
-				inletB_data[i] = inletB_data[i].slice(0,sample_num-1);
-				inletC_data[i] = inletC_data[i].slice(0,sample_num-1);
+		function read_chart_data() {
+			for (let i = 0; i < 3; i++) {
+				total_data[i] = total_data[i].slice(0, sample_num - 1);
+				inletA_data[i] = inletA_data[i].slice(0, sample_num - 1);
+				inletB_data[i] = inletB_data[i].slice(0, sample_num - 1);
+				inletC_data[i] = inletC_data[i].slice(0, sample_num - 1);
 			}
 			total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
 			total_data[1][49] = parseFloat(total_info[6]).toFixed(2);
 			total_data[2][49] = parseFloat(total_info[5]).toFixed(1);
-			for(let i = 0;i<3;i++){
+			for (let i = 0; i < 3; i++) {
 				inletA_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
 				inletB_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 				inletC_data[i][49] = parseFloat(phase_info[3][sample_[i]]).toFixed(2);
 			}
 		}
-		function read_data(){
-			total_info[0] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[4] + data_name[1] + addr));
-			total_info[1] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[7] + data_name[1] + addr));
-			total_info[2] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[5] + data_name[1] + addr));
+		function read_data() {
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
+			total_info[0] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[4] + data_name[1] + addr));
+			total_info[1] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[7] + data_name[1] + addr));
+			total_info[2] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[5] + data_name[1] + addr));
 			total_info[3] = parseFloat(sessionStorage.getItem(cfg_name[6] + addr));
 			total_info[4] = 50;
-			total_info[5] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[2] + data_name[1] + addr));
-			total_info[6] = parseFloat(sessionStorage.getItem(type_name[0]+ data_type[3] + data_name[1] + addr));
-			for(let i = 1 ;i < phase_num + 1;i++){
-				phase_info[i] =  new Array();
-
+			total_info[5] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[2] + data_name[1] + addr));
+			total_info[6] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[3] + data_name[1] + addr));
+			for (let i = 1; i < phase_num + 1; i++) {
+				phase_info[i] = new Array();
+				line_vol[i] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[10] + data_name[1] + addr + '_' + i));
 				phase_info[i][0] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[1] + addr + '_' + i));
 				phase_info[i][1] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[2] + data_name[1] + addr + '_' + i));
 				phase_info[i][2] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
@@ -378,26 +450,26 @@
 				phase_info[i][4] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
 				phase_info[i][5] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
 			}
-			for(let i = 1 ;i < loop_num + 1;i++){
-				loop_info[i] =  new Array();
+			for (let i = 1; i < loop_num + 1; i++) {
+				loop_info[i] = new Array();
 				loop_info[i][0] = "C" + (i);
-				loop_info[i][1] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[1]+data_name[1]+addr+'_'+i));
-				loop_info[i][2] = sessionStorage.getItem(type_info[11]+ "Num" + (i-1)  +'_'+ addr) +'-'+ sessionStorage.getItem(type_info[12]+ "Num" + (i-1)  +'_'+ addr);
-				loop_info[i][3] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[1]+addr+'_'+i));
-				loop_info[i][4] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[3]+data_name[4]+addr+'_'+i));
-				loop_info[i][5] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[2]+data_name[1]+addr+'_'+i));
-				loop_info[i][6] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[7]+data_name[1]+addr+'_'+i));
-				loop_info[i][7] = parseFloat(sessionStorage.getItem(type_name[loop]+data_type[5]+data_name[1]+addr+'_'+i));
+				loop_info[i][1] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[1] + data_name[1] + addr + '_' + i));
+				loop_info[i][2] = sessionStorage.getItem(type_info[11] + "Num" + (i - 1) + '_' + addr) + '-' + sessionStorage.getItem(type_info[12] + "Num" + (i - 1) + '_' + addr);
+				loop_info[i][3] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[3] + data_name[1] + addr + '_' + i));
+				loop_info[i][4] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[3] + data_name[4] + addr + '_' + i));
+				loop_info[i][5] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[2] + data_name[1] + addr + '_' + i));
+				loop_info[i][6] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[4] + data_name[1] + addr + '_' + i));
+				loop_info[i][7] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[5] + data_name[1] + addr + '_' + i));
 			}
 			let type_num_ = 0;
-			for(let i = 0; i<head.length;i++){
-				if( i > 3){
+			for (let i = 0; i < head.length; i++) {
+				if (i > 3) {
 					type_num_ = 7;
-					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] +head[i] + "Val" + addr+"_1");
+					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] + head[i] + "Val" + addr + "_1");
 				}
-				else{
+				else {
 					type_num_ = 6;
-					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] +head[i]+ "Val" +addr+"_"+(parseInt(i%2)+1));
+					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] + head[i] + "Val" + addr + "_" + (parseInt(i % 2) + 1));
 				}
 			}
 			let info = 0;
@@ -406,8 +478,8 @@
 			sensor_info[2] = info;
 			system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
 			system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
-			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr)+" day";
-			system_info[3] = "MPDU("+serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))]+")";
+			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
+			system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
 			system_info[4] = sessionStorage.getItem(ver_name[1]);
 			showdata();
 			read_chart_data();
@@ -418,119 +490,139 @@
 		$('.p3').html(buildTablePhase(3));
 		$('.loop_table').html(buildTableLoop(loop_num));
 		$('.sensor_tab').html(buildTableSensor());
-		$('.sys_table').html(buildTableSystem());
-		$('.devname').html(buildSel(slave_num));
+		// $('.sys_table').html(buildTableSystem());
+		$('.devname').html(buildSel((slave_num + 1)));
 		read_data();
 		LangFun();
-		function buildSel(rows)
-		{
+		function buildSel(rows) {
 			var tbody = '';
-			for(var i = 0;i<rows;i++)
-			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+			for (var i = 0; i < rows; i++) {
+				tbody += '<option id = "opt' + i + '"value ="' + i + '">' + dev_name[i] + '</option>';
 			}
 			return tbody;
 		}
-		function showdata(){
-			for(let i = 0;i<5;i++){
-				if(i<2){
-					document.getElementById('dat'+(i + 1)).innerHTML =  parseFloat(total_info[i]).toFixed(2);
-				}else if(i == 2){
-					document.getElementById('dat'+(i + 1)).innerHTML =  parseFloat(total_info[i]).toFixed(1);
-				}else{
-					document.getElementById('dat'+(i + 1)).innerHTML =  total_info[i];
+		function showdata() {
+			for (let i = 0; i < 4; i++) {
+				if (i < 2) {
+					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
+				} else if (i == 2) {
+					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(1);
+				} else {
+					document.getElementById('dat' + (i + 1)).innerHTML = total_info[i];
 				}
-				
+
 			}
-			for(let i = 0;i < phase_num;i++){
-				document.getElementById('dat'+(3 * i + 6)).innerHTML = parseFloat(phase_info[i +1][0]).toFixed(2);
-				document.getElementById('dat'+(3 * i + 7)).innerHTML = parseFloat(phase_info[i +1][1]).toFixed(1);
-				document.getElementById('dat'+(3 * i + 8)).innerHTML = parseFloat(phase_info[i +1][2]).toFixed(2);
-				document.getElementById('pgt'+(i + 1)).style.width = parseFloat(phase_info[i +1][0]/phase_info[i+ 1][4] / 100).toFixed(3) * 100 +'%';
-				if(phase_info[i +1][3] == 2 || phase_info[i +1][3] == 4){
-					document.getElementById('pgt'+(i + 1)).style.background = 'yellow';
+			for (let i = 0; i < phase_num; i++) {
+				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(line_vol[i + 1]).toFixed(1);
+				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i + 1][0]).toFixed(2);
+				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i + 1][1]).toFixed(1);
+				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i + 1][2]).toFixed(2);
+				document.getElementById('pgt' + (i + 1)).style.width = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
+				if (phase_info[i + 1][3] == 2 || phase_info[i + 1][3] == 4) {
+					document.getElementById('pgt' + (i + 1)).style.background = 'yellow';
 				}
-				else if(phase_info[i +1][3] == 1 || phase_info[i +1][3] == 8){
-					document.getElementById('pgt'+(i + 1)).style.background  = 'red';
+				else if (phase_info[i + 1][3] == 1 || phase_info[i + 1][3] == 8) {
+					document.getElementById('pgt' + (i + 1)).style.background = 'red';
 				}
-				else{
-					document.getElementById('pgt'+(i + 1)).style.background = '';
+				else {
+					document.getElementById('pgt' + (i + 1)).style.background = '';
 				}
+				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
 			}
-			for(let i = 0;i<loop_num;i++){
-				for(j = 0;j<8;j++){
-					if(j>2 && j!= 5 && j != 7){
-						if(j==6){
-							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(3)+loop_unit[j];
-						}else{
-							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(2)+loop_unit[j];
+			for (let i = 0; i < loop_num; i++) {
+				for (j = 0; j < 8; j++) {
+					if (j > 2 && j != 5 && j != 7) {
+						if (j == 6) {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(3) + loop_unit[j];
+						} else {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(2) + loop_unit[j];
 						}
-					}else if(j == 5 || j == 7){
-						document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(1)+loop_unit[j];
-					}else{
-						if( j ==1){
-							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = stat_[loop_info[i + 1][j]];
-						}else{
-							document.getElementById('dat'+(16+ i * 8 + j)).innerHTML = loop_info[i + 1][j];
+					} else if (j == 5 || j == 7) {
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(1) + loop_unit[j];
+					} else {
+						if (j == 1) {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i + 1][j]];
+						} else {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = loop_info[i + 1][j];
 						}
 					}
 				}
 			}
-			for(let i =0;i<head.length;i++){
-				if(sensor_info[i] == 2|| sensor_info[i] == 4){
-					document.getElementById('dat'+(63+i)).bgColor = 'yellow';
-				}else if(sensor_info[i] == 1 || sensor_info[i] == 8){
-					document.getElementById('dat'+(63+i)).borderColor = 'red';
+			for (let i = 0; i < head.length; i++) {
+				// if (sensor_info[i] == 2 || sensor_info[i] == 4) {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = 'yellow';
+				// } else if (sensor_info[i] == 1 || sensor_info[i] == 8) {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = 'red';
+				// }
+				// else if (sensor_info[i] == 65535) {
+				// 	document.getElementById('dat' + (63 + i)).color = 'green';
+				// 	sensor_info[i] = 0;
+				// }
+				// else {
+				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
+				// }
+				if (i < 4) {
+					if (parseInt(sensor_info[i]) > 1000) {
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						}
+					} else {
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "°C";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
+						}
+					}
+				} else if (i < 6) {
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
+				} else {
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
-				else if(sensor_info[i] == 65535){
-					document.getElementById('dat'+(63+i)).color = 'green';
-					sensor_info[i] = 0;
-				}
-				else{
-					document.getElementById('dat'+(63+i)).bgColor = '';
-				}
-				document.getElementById('dat'+(63+i)).innerHTML = Sensor_state[sensor_info[i]];
 			}
-			for(let i =0;i<5;i++){
-				document.getElementById('dat'+(71+i)).innerHTML = system_info[i];
-			}
+			// for (let i = 0; i < 5; i++) {
+			// 	document.getElementById('dat' + (71 + i)).innerHTML = system_info[i];
+			// }
 		}
-		function modeset(modesel){
+		function modeset(modesel) {
 			let ms = document.getElementById("sel");
 			let iptname = document.getElementsByTagName("input");
-			for(let i = 0; i<iptname.length;i++)
-			{
+			for (let i = 0; i < iptname.length; i++) {
 				iptname[i].disabled = true;
 			}
 		}
-		function buildTablePhase(obj){
+		function buildTablePhase(obj) {
 			let tbody = '';
-			if(obj == 0){
-				for(let i = 0;i<5;i++){
-					if(i < 2){
-						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;" id ="dat'+(i + 1)+'"></span>';
-						tbody += '<span class = "span_data" style=" padding-top:28px;">'+ total_title[i] +'</span></td></tr>';
-					}else{
-						tbody += '<tr><td><span class = "span_tit" id ="lang_'+(i + 2)+'"></span>';
-						tbody += '<span class = "span_data" id ="dat'+ (i + 1) +'"></span>';
-						tbody += '<span class = "span_unit">'+ total_title[i] +'</span></td></tr>';
+			if (obj == 0) {
+				for (let i = 0; i < 4; i++) {
+					if (i < 2) {
+						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
+						tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
+					} else {
+						tbody += '<tr><td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
+						tbody += '<span class = "span_data" id ="dat' + (i + 1) + '"></span>';
+						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td></tr>';
 					}
 				}
-			}else{
-				tbody += '<tr><td><span class = "span_tit" >L'+ obj +'</span></td></tr>';
-				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat'+ (3*(obj-1) + 6)+'" ></span>';
+			} else {
+				tbody += '<tr><td><span class = "span_tit" >L' + obj + '</span></td></tr>';
+				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
-				tbody += '<tr><td><div class = "progress"><div class="progress-bar" id="pgt'+ obj +'"></div></div></td></tr>';
-				tbody += '<tr><td><span class = "span_tit" >L'+ obj +'-N:</span>';
-				tbody += '<span class = "span_data"  id="dat'+ (3*(obj-1) + 7)+'" ></span>';
+				tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
+				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr><td><span class = "span_tit" >PF:</span>';
-				tbody += '<span class = "span_data"  id="dat'+ (3*(obj-1) + 8)+'" ></span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L' + ((obj + 1) <= phase_num ? (obj + 1) : 1) + ':</span>';
+				tbody += '<span class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
+				tbody += '<span class = "span_unit">V</span></td></tr>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
+				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
 				tbody += '<span class = "span_unit"></span></td></tr>';
 			}
 			return tbody;
 		}
-		function buildTableLoop(obj){
+		function buildTableLoop(obj) {
 			let tbody = '';
 			tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 			tbody += '<tr><td class="spacing" id="lang_8"></td>';
@@ -541,115 +633,58 @@
 			tbody += '<td class="spacing" id="lang_13"></td>';
 			tbody += '<td class="spacing" id="lang_14"></td>';
 			tbody += '<td class="spacing" id="lang_15"></td></tr>';
-			for(let i = 0;i < obj;i++){
-				if(i % 2 == 0){
-					tbody += '<tr id = "tr'+ i +'" style="background:#e7e7e7;">';
-				}else{
-					tbody += '<tr id = "tr'+ i +'">';
+			for (let i = 0; i < obj; i++) {
+				if (i % 2 == 0) {
+					tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
+				} else {
+					tbody += '<tr id = "tr' + i + '">';
 				}
-				for(let j = 0; j<8;j++){
-					tbody += '<td class="spacing" id="dat'+ (16+ i * 8 + j)+'"></td>';
+				for (let j = 0; j < 8; j++) {
+					tbody += '<td class="spacing" id="dat' + (16 + i * 8 + j) + '"></td>';
 				}
-			tbody += '</tr>';
+				tbody += '</tr>';
 			}
 			return tbody;
 		}
-		function buildTableSensor(){
-			let tbody ="";
-			tbody += '<tr><td class="spacing" id="lang_17"></td>';
-			tbody += '<td class="spacing" id="lang_18"></td>';
-			tbody += '<td class="spacing" id="lang_19"></td>';
-			tbody += '<td class="spacing" id="lang_20"></td></tr>';
-			for(let i = 0;i < 4;i++){
-				if(i % 2 == 0){
+		function buildTableSensor() {
+			let tbody = "";
+			tbody += '<tr><td width="20%" class="spacing" id="lang_17"></td>';
+			tbody += '<td width="30%" class="spacing" id="lang_18"></td>';
+			tbody += '<td width="20%" class="spacing" id="lang_19"></td>';
+			tbody += '<td width="30%" class="spacing" id="lang_20"></td></tr>';
+			for (let i = 0; i < 4; i++) {
+				if (i % 2 == 0) {
 					tbody += '<tr style="background:#e7e7e7;">';
-				}else{
+				} else {
 					tbody += '<tr>';
 				}
-				for(let j = 0;j < 4;j++){
-					if(j % 2 == 0){
-						tbody += '<td class="spacing" id="lang_'+(21+i*2 + parseInt(j/2))+'"></td>';
-					}else{
-						tbody += '<td class="spacing" id="dat'+(63+i*2+parseInt(j/2))+'"></td>';
+				for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (21 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
 					}
 				}
 				tbody += '</tr>';
 			}
 			return tbody;
 		}
-		function buildTableSystem(){
-			let tbody ="";
-			for(let i = 0;i< 5;i++){
-				if(i == 0){
-					tbody +='<tr><td class="spacing" style="width:32%" id="lang_'+(30+i)+'"></td><td id="dat'+(71+i)+'" style="font-weight:bold"></td></tr>';
-				}else{
-					tbody +='<tr><td class="spacing" style="width:32%" id="lang_'+(30+i)+'"></td><td id="dat'+(71+i)+'"></td></tr>';
+		function buildTableSystem() {
+			let tbody = "";
+			for (let i = 0; i < 5; i++) {
+				if (i == 0) {
+					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (72 + i) + '" style="font-weight:bold"></td></tr>';
+				} else {
+					tbody += '<tr><td class="spacing" style="width:32%" id="lang_' + (30 + i) + '"></td><td id="dat' + (72 + i) + '"></td></tr>';
 				}
 			}
 			return tbody;
 		}
-		function get_data(){
-			rpc.call("pduReadData",[addr,total,pow_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,total,vol_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,total,cur_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,total,energe_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,total,AVpow_,1,1]);
-			delay();
-			for(let i = 1 ;i < phase_num + 1;i++){
-				rpc.call("pduReadData",[addr,phase,vol_,1,i]);
-				delay();
-				rpc.call("pduReadData",[addr,phase,cur_,1,i]);
-				delay();
-			rpc.call("pduReadData",[addr,total,cur_,1,1]);
-			delay();
-				rpc.call("pduReadData",[addr,phase,cur_,3,i]);
-				delay();
-				rpc.call("pduReadData",[addr,phase,cur_,4,i]);
-				delay();
-				rpc.call("pduReadData",[addr,phase,pf_,1,i]);
-				delay();
-				rpc.call("pduReadData",[addr,phase,pow_,1,i]);
-				delay();
-			}
-			for(let j = 1 ;j < loop_num + 1;j++){
-				rpc.call("pduReadData",[addr,loop,switch_,1,j]);
-				delay();
-				rpc.call("pduReadData",[addr,loop,vol_,1,j]);
-				delay();
-				rpc.call("pduReadData",[addr,loop,cur_,1,j]);
-				delay();
-				rpc.call("pduReadData",[addr,loop,cur_,4,j]);
-				delay();
-				rpc.call("pduReadData",[addr,loop,energe_,1,j]);
-				delay();
-				rpc.call("pduReadData",[addr,loop,AVpow_,1,j]);
-				delay();
-			}
-			rpc.call("pduReadData",[addr,envir,tmp_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,envir,tmp_,1,2]);
-			delay();
-			rpc.call("pduReadData",[addr,envir,hum_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,envir,hum_,1,2]);
-			delay();
-			rpc.call("pduReadData",[addr,sensor,door1_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,sensor,door2_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,sensor,water_,1,1]);
-			delay();
-			rpc.call("pduReadData",[addr,sensor,smoke_,1,1]);
-			delay();
-		}
-		setInterval(function(){
-			get_data();
-			setTimeout(read_data(),1000);
-		},2000);
-    </script>
+		setInterval(function () {
+			ReadHomeData();
+			setTimeout(read_data(), 1000);
+		}, 2000);
+	</script>
 </body>
+
 </html>

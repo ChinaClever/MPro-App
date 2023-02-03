@@ -22,7 +22,6 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
     uchar *ptr = (uchar *)array.data();
-
     if((*ptr++ == 0x7B) && (*ptr++ == 0xC1))  {
         obj->addr = *ptr++;
         obj->size = *ptr++; obj->hz = *ptr++;
@@ -43,7 +42,7 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
         ptr += 3; //忽略三位97
         obj->version = *ptr++;
         obj->chipStatus = *ptr++; // 01表示执行版计量芯片模块损坏，00表示正常。
-        ptr++;
+        ptr++; obj->type = 0;
 
         for(int i=1; i<obj->size-1; ++i) {
             obj->vol[i] = getShort(ptr); ptr += 2;
@@ -94,7 +93,6 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid()->append(it);
-
     }
 
     return res;
@@ -125,7 +123,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         t = QRandomGenerator::global()->bounded(565);
     } cm::mdelay(t + 360);
 
-    return ret;
+    return !ret;
 }
 
 bool OP_ZRtu::readData(int addr)

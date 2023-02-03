@@ -22,10 +22,11 @@ Cfg_Core *Cfg_Core::bulid()
 void Cfg_Core::writeAlarmDefault()
 {
     QString cmd = "rm -f %1";
-    system(cmd.arg(CFG_ALARM_DF).toLatin1().data());
+    QString dir = "/usr/data/clever/cfg/";
+    system(cmd.arg(dir+CFG_ALARM_DF).toLatin1().data());
 
-    cmd = "cp -rf %1 %2";
-    cmd = cmd.arg(CFG_ALARM_FN, CFG_ALARM_DF);
+    cmd = "cp -af %1 %2";
+    cmd = cmd.arg(dir+CFG_ALARM_FN, dir+CFG_ALARM_DF);
     system(cmd.toLatin1().data());
 }
 

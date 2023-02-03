@@ -40,8 +40,8 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		setTimeout(function(){
-			read_odbc_data(0);
-			read_redis_data(0);
+			read_odbc_data(default_addr);
+			read_redis_data(default_addr);
 		},300);
 		var enable = new Array("","");
 		var odbc_data = new Array();
@@ -150,8 +150,8 @@
 			document.getElementById(red_name[red_name.length-1]).innerHTML = redis_data[10];
 		}
 		function flash_html(){
-			read_odbc_data(0);
-			read_redis_data(0);
+			read_odbc_data(default_addr);
+			read_redis_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -161,7 +161,7 @@
 			if(confirm("请确认是否保存此次修改？")){
 				for(var i = 0 ;i<(id_name.length -1);i++){
 					if(ipt.id == id_name[i]){
-						rpc.call('pduSetParam',[0,21,(i+1),0,0,ipt.value]);
+						rpc.call('pduSetParam',[default_addr,21,(i+1),0,0,ipt.value]);
 					}
 				}
 				flash_html();
@@ -171,7 +171,7 @@
 			if(confirm("请确认是否保存此次修改？")){
 				for(var i = 0 ;i<(red_name.length -1);i++){
 					if(ipt.id == red_name[i]){
-						rpc.call('pduSetParam',[0,28,(i+1),0,0,ipt.value]);
+						rpc.call('pduSetParam',[default_addr,28,(i+1),0,0,ipt.value]);
 					}
 				}
 				flash_html();
@@ -180,7 +180,7 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[0,21,20,0,0,sel]);
+				rpc.call('pduSetParam',[default_addr,21,20,0,0,sel]);
 			}else{}
 		}
 

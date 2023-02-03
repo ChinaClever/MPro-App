@@ -68,8 +68,10 @@ void Integr_PushThread::workDown()
     for(int i=0; i<DEV_NUM; ++i) {
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
-            mArray = mJson->getJson(i);
-            emit pushSig();
+            mArray = mJson->getJson(i); //cout << mArray.size();
+            if(cm::masterDev()->cfg.param.jsonCompress) {
+                mArray = cm::zipCompress(mArray); //cout << mArray.size();
+            } emit pushSig();
         } if(isRun) delay(20);
     }
 }
@@ -88,7 +90,6 @@ bool Integr_PushThread::checkPush()
     ret |= QRabbitMQ::amqpCfg.isConnected;
     ret |= Mqtt_Client::cfg.isConnected;
     ret |= mCfg->http.en;
-
     return ret;
 }
 

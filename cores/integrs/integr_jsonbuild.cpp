@@ -21,7 +21,7 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
 
 QByteArray Integr_JsonBuild::getJson(uchar addr)
 {    
-    mDataContent = cm::masterDev()->cfg.param.dataContent;
+    mDataContent = cm::masterDev()->cfg.param.jsonContent;
     QByteArray array; QJsonObject json = getJsonObject(addr);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
@@ -137,6 +137,21 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     }
 }
 
+void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
+{
+    int size = it.size; bool dc = false;
+    //arrayAppend(it.sw, size, key+"_state", json);
+    if(mDataContent == 0) {
+        for(int i=0; i<size; ++i) dc |= it.timingEn[i];
+    } else if(mDataContent == 1) dc = true;
+
+    if(dc) {
+        arrayAppend(it.timingEn, size, key+"_timing_en", json);
+        strListAppend(it.timingOn, size, key+"_timing_on", json);
+        strListAppend(it.timingOff, size, key+"_timing_off", json);
+    }
+}
+
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
 {
     QJsonObject obj;  int size = it.size;
@@ -145,13 +160,16 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
 
     if(1 == relay) relayUnit(it.relay, "relay", obj);
+    else if(3 == relay) groupRelayUnit(it.relay, "group_relay", obj);
     else if(2 == relay) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
 
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
+    if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
     strListAppend(it.name, size, "name", obj);
+
     json.insert(key, obj);
 }
 
@@ -203,15 +221,18 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     if(strlen(it.usr)) obj.insert("usr", it.usr);
     if(strlen(it.md5)) obj.insert("md5", it.md5);
     if(strlen(it.ver)) obj.insert("ver", it.ver);
+    if(strlen(it.dev)) obj.insert("dev", it.dev);
     if(strlen(it.remark)) obj.insert("remark", it.remark);
+    if(strlen(it.hwVersion)) obj.insert("hwVersion", it.hwVersion);
     if(strlen(it.oldVersion)) obj.insert("oldVersion", it.oldVersion);
     if(strlen(it.compileDate)) obj.insert("compileDate", it.compileDate);
     if(strlen(it.releaseDate)) obj.insert("releaseDate", it.releaseDate);
+    if(strlen(it.upgradeDate)) obj.insert("upgradeDate", it.upgradeDate);
+    if(strlen(it.serialNumber)) obj.insert("serialNumber", it.serialNumber);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
-    obj.insert("op_vers", vs);
-    json.insert(key, obj);
+    obj.insert("op_vers", vs); json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
@@ -220,6 +241,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     //obj.insert("pdu_type", "MPDU-Pro");
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
+    obj.insert("dev_mode", it.param.devMode/r);
 
     obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
@@ -258,7 +280,7 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 
     //it->group.size = 8;/////////////////==============
     //it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
-    ObjData(it->group, "group_item_list", obj);
+    ObjData(it->group, "group_item_list", obj, 3);
 
     //it->dual.size = 48;/////////////////============
     //it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
@@ -283,6 +305,6 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
-    //    obj.insert("mac", it.mac);
+    // obj.insert("mac", it.mac);
     json.insert(key, obj);
 }

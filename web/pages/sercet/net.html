@@ -94,7 +94,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<white_list.length;i++){
 					if(white_list[i] == btn.id){
-						rpc.call('pduSetParam',[0,33,i,0,0,btn.value]);
+						rpc.call('pduSetParam',[default_addr,33,i,0,0,btn.value]);
 					}
 				}
 				flash_html();
@@ -105,12 +105,12 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[0,33,6,0,0,0]);
+				rpc.call('pduSetParam',[default_addr,33,6,0,0,0]);
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_net_ctrl_data(0);
+			read_net_ctrl_data(default_addr);
 			setTimeout(function(){
 				read_data();
 				showdata();

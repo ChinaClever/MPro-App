@@ -1,13 +1,12 @@
 #ifndef OP_ZCTRL_H
 #define OP_ZCTRL_H
 
-#include "op_objctrl.h"
+#include "op_artu.h"
 
-class OP_ZCtrl : public OP_ObjCtrl
+class OP_ZCtrl : public OP_ARtu
 {
 public:
     explicit OP_ZCtrl(QObject *parent = nullptr);
-    enum {zCmdLen=68, zRcvLen=127};
 
 private:
     void writeCtrlCmd(uchar *cmd, int k);

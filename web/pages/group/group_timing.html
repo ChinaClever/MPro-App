@@ -38,7 +38,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
-									<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change();"></select></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -54,17 +54,19 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var read  = 0;
+		var read  = 1;
+		let dev_dis = 0;
 		let lang = new Array();
 		let group_data = new Array();
 		let group_name = new Array();
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let time_sw = new Array();
 		let sw_mark = 0;
 		read_data();
 		lang_init();
 		function read_data(){
+			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++)
 			{
 				group_data[i] = new Array();
@@ -80,7 +82,7 @@
 			}
 			lang[1] = ["分组控制","","","",""];
 			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择","","","",""];
+			lang[3] = ["设备选择:","","","",""];
 			lang[4] = ["序号","","","",""];
 			lang[5] = ["分组名称","","","",""];
 			lang[6] = ["上次设置","","","",""];
@@ -93,10 +95,10 @@
 			lang[13] = ["下电","","","",""];
 			lang[14] = ["设置模式","","","",""];
 			lang[15] = ["统一设置","","","",""];
-			lang[16]  = ["", "主机", "", "", "", ""];
-			lang[17]  = ["", "副机", "", "", "", ""];
+			lang[16]  = ["主机", "", "", "", ""];
+			lang[17]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[16][language];
-			for(let i = 1;i<slave_num;i++){
+			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
@@ -104,12 +106,16 @@
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			if(read == 1){
+			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
+			if(dev_dis == 0){
+				document.getElementById("dev_sel").style.display="";
+			}
+			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel(slave_num));
+		$('.devname').html(buildSel((slave_num+1)));
 		lang_fun();
 		modeset();
 		showdata();
@@ -137,8 +143,8 @@
 			}
 		}
 		function readonlyset(ros){
-			if(read === 0){
-				read = 1;
+			if(read === 1){
+				read = 0;
 				ros.style.backgroundColor = 'red';
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
@@ -153,7 +159,7 @@
 				}
 			}
 			else{
-				read = 0;
+				read = 1;
 				ros.style.backgroundColor = '';
 				ros.innerHTML = lang[2][language];
 				var iptname = document.getElementsByTagName("input");
@@ -215,33 +221,27 @@
 			var stat;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				if(type1 === 'i'){
-					if(ckd.checked == true){
-						stat = '1';
-					}else{
-						stat = '0';
-					}
-					if(num == group_num +1){
-						if(ckd.checked == true){
-							sw_mark = 1;
-						}else{
-							sw_mark = 0;
-						}
-					}
-					if(num !== group_num + 1){
-
-					}else{
-						num = 0;
-					}
-					rpc.call('pduSetData',[addr,group,switch_,7,num,stat]);
+			if(type1 === 'i'){
+				if(ckd.checked == true){
+					stat = '1';
+				}else{
+					stat = '0';
 				}
-				flash_html(ckd);
-			}else{
-				showdata();
+				if(num == group_num +1){
+					if(ckd.checked == true){
+						sw_mark = 1;
+					}else{
+						sw_mark = 0;
+					}
+				}
+				if(num !== group_num + 1){
+
+				}else{
+					num = 0;
+				}
+				rpc.call('pduSetData',[addr,group,switch_,7,num,stat]);
 			}
+			flash_html(ckd);
 		}
 		function read_time_sw_data(){
 			for(var i = 1 ;i < group_num + 1;i++)
@@ -286,7 +286,7 @@
 					val += " ";
 				}
 				val += document.getElementById('f'+ (num -1)).value;
-				rpc.call('pduSetParam',[0,23,stat,num,0,val]);
+				rpc.call('pduSetParam',[addr,23,stat,num,0,val]);
 				flash_html(btn);
 			}else{}
 		}
