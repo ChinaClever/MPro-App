@@ -1,15 +1,16 @@
 #ifndef MB_ENV_H
 #define MB_ENV_H
 
-#include "mb_loop.h"
+#include "mb_group.h"
 
-class Mb_Env : public Mb_Loop
+class Mb_Env : public Mb_Group
 {
 public:
     explicit Mb_Env(QObject *parent = nullptr);
 
 protected:
     void env_update();
+    void env_setting(ushort addr, ushort value);
 
 private:
     void env_dataUpdate();

@@ -5,7 +5,7 @@
  */
 #include "mb_loop.h"
 
-Mb_Loop::Mb_Loop(QObject *parent) : Mb_Output{parent}
+Mb_Loop::Mb_Loop(QObject *parent) : Mb_Line{parent}
 {
 
 }
@@ -89,6 +89,29 @@ void Mb_Loop::loop_update()
     loop_thresholdUpdate();
 }
 
+void Mb_Loop::loop_setting(ushort addr, ushort value)
+{
+    ushort reg = addr - MbReg_LoopThreshol;
+    sObjData *obj = &(mDevData->loop);
+    sAlarmUnit *unit = nullptr;
+    uint *ptr = nullptr;
+    int id = reg/15;
 
+    switch (reg%15/5) {
+    case 0: unit = &(obj->vol); break;
+    case 1: unit = &(obj->cur); break;
+    case 3: unit = &(obj->pow); break;
+    default: cout << addr; return;
+    }
+
+    switch (reg % 5) {
+    case 0: ptr = unit->max; break;
+    case 1: ptr = unit->crMax; break;
+    case 2: ptr = unit->crMin; break;
+    case 3: ptr = unit->min; break;
+    case 4: ptr = unit->en; break;
+    default: cout << addr; break;
+    } if(ptr) ptr[id] = value;
+}
 
 
