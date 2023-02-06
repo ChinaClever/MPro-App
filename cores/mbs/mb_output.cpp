@@ -55,11 +55,11 @@ void Mb_Output::output_alarmUpdate()
 void Mb_Output::output_thresholdObj(const sAlarmUnit &unit, vshort &vs)
 {
     int size = OUTPUT_NUM+2;
+    appendData(size, unit.en, vs);
     appendData(size, unit.max, vs);
     appendData(size, unit.crMax, vs);
     appendData(size, unit.crMin, vs);
     appendData(size, unit.min, vs);
-    appendData(size, unit.en, vs);
 }
 
 void Mb_Output::output_thresholdUpdate()
@@ -116,11 +116,11 @@ void Mb_Output::output_setting(ushort addr, ushort value)
     }
 
     switch (reg%250/50) {
-    case 0: ptr = unit->max; break;
-    case 1: ptr = unit->crMax; break;
-    case 2: ptr = unit->crMin; break;
-    case 3: ptr = unit->min; break;
-    case 4: ptr = unit->en; break;
+    case 0: ptr = unit->en; break;
+    case 1: ptr = unit->max; break;
+    case 2: ptr = unit->crMax; break;
+    case 3: ptr = unit->crMin; break;
+    case 4: ptr = unit->min; break;
     default: cout << addr; break;
     } if(ptr) ptr[id] = value;
 }

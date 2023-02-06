@@ -27,11 +27,11 @@ void Mb_Group::group_thresholdUpdate()
 {
     vshort vs; int size = GROUP_NUM+2;
     sAlarmUnit *obj = &(mDevData->group.pow);
+    appendData(size, obj->en, vs);
     appendData(size, obj->max, vs);
     appendData(size, obj->crMax, vs);
     appendData(size, obj->crMin, vs);
     appendData2(size, obj->min, vs);
-    appendData(size, obj->en, vs);
     setRegs(MbReg_GroupThreshol, vs);
 }
 
@@ -63,11 +63,11 @@ void Mb_Group::group_setting(ushort addr, ushort value)
     }
 
     switch (reg%50/10) {
-    case 0: ptr = unit->max; break;
-    case 1: ptr = unit->crMax; break;
-    case 2: ptr = unit->crMin; break;
-    case 3: ptr = unit->min; break;
-    case 4: ptr = unit->en; break;
+    case 0: ptr = unit->en; break;
+    case 1: ptr = unit->max; break;
+    case 2: ptr = unit->crMax; break;
+    case 3: ptr = unit->crMin; break;
+    case 4: ptr = unit->min; break;
     default: cout << addr; break;
     } if(ptr) ptr[id] = value;
 }

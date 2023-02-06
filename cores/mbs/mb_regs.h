@@ -41,7 +41,8 @@ enum eMbRegs {
     MbReg_SetAddr = 60001, // 通讯地址
     MbReg_SetBuzzer = 6002, // 蜂鸣器开关
     MbReg_SetTime = 6003,
-    MbReg_SetDry = 6005, // 报警干接点开关
+    MbReg_SetEle = 6005,
+    MbReg_SetDry = 6006, // 报警干接点开关
 
     MbReg_Restores = 4000,  // 恢复出厂设置
 };

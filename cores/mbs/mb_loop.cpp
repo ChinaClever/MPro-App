@@ -63,11 +63,11 @@ void Mb_Loop::loop_breakerUpdate()
 
 void Mb_Loop::loop_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs)
 {
+    vs << unit.en[id];
     vs << unit.max[id];
     vs << unit.crMax[id];
     vs << unit.crMin[id];
     vs << unit.min[id];
-    vs << unit.en[id];
 }
 
 void Mb_Loop::loop_thresholdUpdate()
@@ -105,11 +105,11 @@ void Mb_Loop::loop_setting(ushort addr, ushort value)
     }
 
     switch (reg % 5) {
-    case 0: ptr = unit->max; break;
-    case 1: ptr = unit->crMax; break;
-    case 2: ptr = unit->crMin; break;
-    case 3: ptr = unit->min; break;
-    case 4: ptr = unit->en; break;
+    case 0: ptr = unit->en; break;
+    case 1: ptr = unit->max; break;
+    case 2: ptr = unit->crMax; break;
+    case 3: ptr = unit->crMin; break;
+    case 4: ptr = unit->min; break;
     default: cout << addr; break;
     } if(ptr) ptr[id] = value;
 }
