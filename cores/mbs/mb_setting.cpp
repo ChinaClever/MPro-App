@@ -77,25 +77,6 @@ void Mb_Setting::timeSet(ushort addr, ushort &value)
     }
 }
 
-void Mb_Setting::timeZone(ushort addr, ushort &value)
-{
-    static uint z = 0;
-    if(addr%2) {
-        z = value << 16;
-    } else {
-        z += value;
-
-        ////////////===========  时区同步
-    }
-}
-
-void Mb_Setting::datetimeSet(ushort addr, ushort &value)
-{
-    switch (addr) {
-    case 1239: case 1240: timeSet(addr, value); break;
-    case 1241: case 1242: timeZone(addr, value); break;
-    }
-}
 
 void Mb_Setting::restoreFactoryDefaults()
 {

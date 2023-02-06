@@ -18,10 +18,7 @@ private:
     void buzzerSw(ushort &v);
     void drySw(ushort &v);
     void startSet(ushort addr, ushort &value);
-
-
     void timeSet(ushort addr, ushort &value);
-    void timeZone(ushort addr, ushort &value);
     void datetimeSet(ushort addr, ushort &value);
     void restoreFactoryDefaults();
 
