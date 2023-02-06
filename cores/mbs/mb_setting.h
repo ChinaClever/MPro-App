@@ -19,26 +19,10 @@ private:
     void drySw(ushort &v);
     void startSet(ushort addr, ushort &value);
 
-    void setAlarmUnit(sAlarmUnit *unit, int offset, ushort value);
-    void lineCurSet(ushort addr, ushort &value);
-    void outputCurSet(ushort addr, ushort &value);
-    void envSet(ushort addr, ushort &value);
-
-    void lineVolSet(ushort addr, ushort &value);
-    void lineCrCurSet(ushort addr, ushort &value);
-    void outputCrCurSet(ushort addr, ushort &value);
-    void powerOnDelay(ushort &value);
-
-    void loopCurMaxSet(ushort addr, ushort &value);
-    void loopCurCrMaxSet(ushort addr, ushort &value);
-    void loopCurMinSet(ushort addr, ushort &value);
 
     void timeSet(ushort addr, ushort &value);
     void timeZone(ushort addr, ushort &value);
-    void otherSet(ushort addr, ushort &value);
-    void relaySet(ushort addr, ushort &value);
-
-    void eleClear(ushort addr);
+    void datetimeSet(ushort addr, ushort &value);
     void restoreFactoryDefaults();
 
 private slots:

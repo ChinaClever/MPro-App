@@ -37,36 +37,12 @@ enum eMbRegs {
     MbReg_EnvThreshol = 7001,
 
 
+    MbReg_Setting = 6000,    // 配置参数
+    MbReg_SetAddr = 60001, // 通讯地址
+    MbReg_SetBuzzer = 6002, // 蜂鸣器开关
+    MbReg_SetTime = 6003,
+    MbReg_SetDry = 6005, // 报警干接点开关
 
-
-
-    MbReg_Rateds  = 28,  // 额定电压 额定电流 额定频率
-    MbReg_OutputType = 31, // 输出位数 输出位开关功能 输出位电流计量功能 输出位电度计量功能
-
-    MbReg_Totals = 35, // 电压、电流、有功功率、无功功率、功率因数、总有功电度
-    MbReg_Hz   = 42,  // 频率 4500-6500
-
-    MbReg_Lines = 43, // 相电压、相电流、相有功功率    
-    MbReg_Outputs = 58, // 输出位参数
-
-    MbReg_PhaseNum = 346, // 1：单相，2：双火线；3：三相；4：三火线
-    MbReg_Classify = 347, // 1：主路监测型，2：开关型
-
-    MbReg_Loops = 400,  // 回路参数
-    MbReg_Envs = 500, // 环境参数
-
-    MbReg_Settings = 1000,    // 配置参数
-    MbReg_SetAddr = 1000, // 通讯地址
-    MbReg_SetBuzzer = 1001, // 蜂鸣器开关
-    MbReg_SetDry = 1002, // 报警干接点开关
-
-    MbReg_SetLine = 1003,
-    MbReg_SetOutput = 1011,
-    MbReg_SetEnv = 1107,
-    MbReg_SetLoop = 1202,
-    MbReg_Alarms = 2000,    // 警报：01H功能码读
-
-    MbReg_Controls = 3000,  // 控制量
     MbReg_Restores = 4000,  // 恢复出厂设置
 };
 

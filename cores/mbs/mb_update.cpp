@@ -19,9 +19,5 @@ void Mb_Update::mbUpdates()
     output_update();
     group_update();
     env_update();
-
-
     mbSetUpdate();
-    mbAlarmUpdate();
-    mbCtrlUpdate();
 }
