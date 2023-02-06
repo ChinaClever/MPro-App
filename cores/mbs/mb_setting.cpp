@@ -4,7 +4,6 @@
  *      Author: Lzy
  */
 #include "mb_setting.h"
-#include  "op_core.h"
 #include "mb_core.h"
 
 Mb_Setting::Mb_Setting(QObject *parent) : Mb_Env{parent}
@@ -158,6 +157,9 @@ void Mb_Setting::timeSet(ushort addr, ushort &value)
         t += value;
 
         ////////////===========  时间同步
+        /// QDateTime time2 = QDateTime::fromTime_t(QDateTime::currentSecsSinceEpoch());
+        //qDebug() << time2; // QDateTime(2022-02-23 09:03:41.000 HKT Qt::LocalTime)
+
     }
 }
 
@@ -203,12 +205,14 @@ void Mb_Setting::restoreFactoryDefaults()
 void Mb_Setting::registerRecvSlot(int address, ushort value)
 {
     if(address < 1003) startSet(address, value);
-    else if(address < 1011) lineCurSet(address, value);
-    else if(address < 1107) outputCurSet(address, value);
-    else if(address < 1141) envSet(address, value);
-    else if(address < 1149) lineVolSet(address, value);
-    else if(address < 1153) lineCrCurSet(address, value);
-    else if(address < 1201) outputCrCurSet(address, value);
+    else if(address < 6150) line_setting(address, value);
+    else if(address < 6300) loop_setting(address, value);
+    else if(address < 6900) output_setting(address, value);
+    else if(address < 7000) output_ctrl(address, value);
+    else if(address < 7050) env_setting(address, value);
+    else if(address < 7160) group_setting(address, value);
+
+
     else if(address == 1201) powerOnDelay(value);
     else if(address < 1214) loopCurMaxSet(address, value);
     else if(address < 1226) loopCurCrMaxSet(address, value);

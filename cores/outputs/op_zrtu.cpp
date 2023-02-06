@@ -22,7 +22,6 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
     uchar *ptr = (uchar *)array.data();
-
     if((*ptr++ == 0x7B) && (*ptr++ == 0xC1))  {
         obj->addr = *ptr++;
         obj->size = *ptr++; obj->hz = *ptr++;
@@ -94,7 +93,6 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid()->append(it);
-
     }
 
     return res;
@@ -125,7 +123,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
         t = QRandomGenerator::global()->bounded(565);
     } cm::mdelay(t + 360);
 
-    return ret;
+    return !ret;
 }
 
 bool OP_ZRtu::readData(int addr)

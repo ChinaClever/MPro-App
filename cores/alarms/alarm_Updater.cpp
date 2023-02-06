@@ -234,16 +234,16 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
-    bool ret = false;
+    bool ret = false; uchar *ptr = &cm::masterDev()->status;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
     if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;
         dev->status = dev->alarm;
-        if(dev->dtc.fault) dev->status = 2;
-        if(dev->offLine <= 1) dev->status = 3;
-        if(addr == 0) dev->offLine = 2;
+        if(addr == 0) dev->offLine = 5;
+        if(dev->dtc.fault && !dev->alarm) dev->status = 2;
+        if(dev->offLine <= 1) {dev->status = 3; if(!(*ptr)) *ptr=2;}
         dev->cfg.param.runStatus = dev->status;
     }
     return ret;

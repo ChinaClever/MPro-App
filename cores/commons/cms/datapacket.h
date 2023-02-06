@@ -396,7 +396,7 @@ enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
-enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8};
+enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
 

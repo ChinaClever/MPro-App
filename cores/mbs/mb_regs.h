@@ -2,6 +2,7 @@
 #define MB_REGS_H
 #include "modbus_slavertu.h"
 #include "set_core.h"
+#include "op_core.h"
 
 enum eMbRegs {
     MbReg_Factory   =   0,     // 生产厂家
@@ -10,6 +11,34 @@ enum eMbRegs {
     MbReg_Sw       =   21,    // 100-999
     MbReg_Version  =   22,    // 0x100-0x999 0x100-0x999
     MbReg_CompileTime  = 24,  // 软件编译时间 YYYYMMDD（字符串）
+
+
+    MbReg_LineData = 101, // 相电压、相电流、相有功功率
+    MbReg_LineAlarm = 1011,
+    MbReg_LineThreshol = 6101,
+
+    MbReg_LoopData = 131,
+    MbReg_LoopBreaker = 1001,
+    MbReg_LoopAlarm = 1021,
+    MbReg_LoopThreshol = 6201,
+
+    MbReg_OutputValue = 201, // 输出位参数
+    MbReg_OutputData = 501, // 输出位参数
+    MbReg_OutputAlarm = 1201,
+    MbReg_OutputRelay = 6901,
+    MbReg_OutputThreshol = 6301,
+
+    MbReg_GroupData = 1601,
+    MbReg_GroupThreshol = 7101,
+
+    MbReg_EnvData = 1771,
+    MbReg_EnvAlarm = 1781,
+    MbReg_EnvSensor = 1791,
+    MbReg_EnvThreshol = 7001,
+
+
+
+
 
     MbReg_Rateds  = 28,  // 额定电压 额定电流 额定频率
     MbReg_OutputType = 31, // 输出位数 输出位开关功能 输出位电流计量功能 输出位电度计量功能

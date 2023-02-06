@@ -25,18 +25,27 @@ void Mb_Object::initFucRegs()
 
 void Mb_Object::upDevInfo()
 {
-    vshort vs; initFucRegs();
-    vs << mDevData->tg.vol.rated; // 额定电压
-    vs << mDevData->tg.cur.rated; // 额定电流
-    vs << 50; // 额定频率
+    sDevData *dev = mDevData;
+    vshort vs; //initFucRegs();
+    vs << 1; // 通讯协议版本
 
-    vs << mDevData->cfg.nums.outputNum;
-    vs << 1 << 1 << 1;
-    setRegs(MbReg_Rateds, vs);
+    vs << dev->cfg.param.devSpec; // 设备规格
+    vs << dev->cfg.nums.lineNum;
+    vs << dev->cfg.nums.loopNum;
+    vs << dev->cfg.nums.outputNum;
+    vs << dev->cfg.nums.boardNum;
 
-    setReg(MbReg_PhaseNum, mDevData->cfg.nums.lineNum);
-    setReg(MbReg_Classify, 2);
-    setReg(MbReg_Classify+1, 0xFF);
+    vs << dev->hz;
+    vs << dev->status;
+    vs << dev->tg.pow.value;
+    vs << dev->tg.artPow;
+    vs << dev->tg.pf;
+    vs << dev->tg.ele/0xffff;
+    vs << dev->tg.ele%0xffff;
+
+    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
+    vs << timestamp/0xffff; vs << timestamp%0xffff;
+    setRegs(0, vs);
 }
 
 bool Mb_Object::setReg(ushort reg, const char *str)
@@ -54,7 +63,6 @@ vshort Mb_Object::strToShort(const char *str)
 
     for(int i=0; i<size; i+=2) {
         buf[i] = (ptr[i]<<8) + ptr[i+1];
-
         res.append(buf[i]);
     }
 

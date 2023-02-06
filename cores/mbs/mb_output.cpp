@@ -5,37 +5,123 @@
  */
 #include "mb_output.h"
 
-Mb_Output::Mb_Output(QObject *parent) : Mb_Line{parent}
+Mb_Output::Mb_Output(QObject *parent) : Mb_Loop{parent}
 {
 
 }
 
-void Mb_Output::mbOutputUpdate()
+void Mb_Output::output_dataObj(vshort &vs, int id)
 {
-    upOutputData();
-    upOutputThreshold();
+    sObjData *obj = &(mDevData->output);
+    vs << obj->cur.value[id];
+    vs << obj->pow.value[id];
+    vs << obj->artPow[id];
+    vs << obj->pf[id];
+    vs << obj->relay.sw[id];
 }
 
-void Mb_Output::upOutputData()
+void Mb_Output::output_objUpdate()
 {
-    vshort vs; int size = OUTPUT_NUM;
+    vshort vs; int size = mDevData->output.size;
+    for(int i=0; i<size; ++i) {
+        output_dataObj(vs, i);
+    } setRegs(MbReg_OutputValue, vs);
+}
+
+void Mb_Output::output_dataUpdate()
+{
+    vshort vs; int size = OUTPUT_NUM+2;
     sObjData *obj = &(mDevData->output);
     appendData(size, obj->cur.value, vs);
-    appendData2(size, obj->ele, vs);
-
     appendData(size, obj->pow.value, vs);
+    appendData(size, obj->artPow, vs);
+    appendData(size, obj->pf, vs);
+    appendData2(size, obj->ele, vs);
+    appendData(size, obj->relay.sw, vs);
     appendData(size, obj->reactivePow, vs);
-    appendData(size, obj->cur.rated, vs);
-    setRegs(MbReg_Outputs, vs);
+    setRegs(MbReg_OutputData, vs);
 }
 
-void Mb_Output::upOutputThreshold()
+void Mb_Output::output_alarmUpdate()
 {
-    vshort vs;
+    vshort vs; int size = OUTPUT_NUM+2;
     sObjData *obj = &(mDevData->output);
-    appendAlarm(obj->cur, vs);
-    setRegs(MbReg_SetOutput, vs); vs.clear();
-
-    appendData(obj->size, obj->cur.crMax, vs);
-    setRegs(1153, vs);
+    appendData(size, obj->relay.alarm, vs);
+    appendData(size, obj->cur.alarm, vs);
+    appendData(size, obj->pow.alarm, vs);
+    setRegs(MbReg_OutputAlarm, vs);
 }
+
+void Mb_Output::output_thresholdObj(const sAlarmUnit &unit, vshort &vs)
+{
+    int size = OUTPUT_NUM+2;
+    appendData(size, unit.max, vs);
+    appendData(size, unit.crMax, vs);
+    appendData(size, unit.crMin, vs);
+    appendData(size, unit.min, vs);
+    appendData(size, unit.en, vs);
+}
+
+void Mb_Output::output_thresholdUpdate()
+{
+    vshort vs; int size = OUTPUT_NUM+2;
+    sObjData *obj = &(mDevData->output);
+    output_thresholdObj(obj->cur, vs);
+    output_thresholdObj(obj->pow, vs);
+    appendData(size, obj->relay.powerUpDelay, vs);
+    setRegs(MbReg_OutputThreshol, vs);
+}
+
+void Mb_Output::output_relayUpdate()
+{
+    sObjData *obj = &(mDevData->output);
+    vshort vs; int size = obj->size;
+    appendData(size, obj->relay.sw, vs);
+    setRegs(MbReg_OutputRelay, vs);
+}
+
+void Mb_Output::output_update()
+{
+    output_objUpdate();
+    output_dataUpdate();
+    output_alarmUpdate();
+    output_relayUpdate();
+    output_thresholdUpdate();
+}
+
+void Mb_Output::output_ctrl(ushort addr, ushort value)
+{
+    ushort reg = addr - MbReg_OutputRelay;
+    int id = reg % 50 + 1;
+    if(reg > 50) {
+        OP_Core::bulid()->clearEle(id);
+    } else {
+         sRelayUnit *obj = &(mDevData->output.relay);
+        if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
+    }
+}
+
+void Mb_Output::output_setting(ushort addr, ushort value)
+{
+    ushort reg = addr - MbReg_OutputThreshol;
+    sObjData *obj = &(mDevData->output);
+    sAlarmUnit *unit = nullptr;
+    uint *ptr = nullptr;
+    int id = reg%50;
+
+    switch (reg/250) {
+    case 0: unit = &(obj->cur); break;
+    case 1: unit = &(obj->pow); break;
+    default: OP_Core::bulid()->setDelay(id+1, value); return;
+    }
+
+    switch (reg%250/50) {
+    case 0: ptr = unit->max; break;
+    case 1: ptr = unit->crMax; break;
+    case 2: ptr = unit->crMin; break;
+    case 3: ptr = unit->min; break;
+    case 4: ptr = unit->en; break;
+    default: cout << addr; break;
+    } if(ptr) ptr[id] = value;
+}
+

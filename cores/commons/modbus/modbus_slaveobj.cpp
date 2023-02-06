@@ -25,10 +25,10 @@ void Modbus_SlaveObj::initRecvSlot()
 bool Modbus_SlaveObj::initUnitMap()
 {
     QModbusDataUnitMap reg;
-    reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 2000, 800});
+    reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 9000, 800});
     //reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, 1999 });
     //reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, 1999 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 4999 });
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 8999 });
     bool ret = mDev->setMap(reg);
     if(!ret) throwError("Error: ModbusDataUnitMap");
     return ret;
@@ -36,7 +36,7 @@ bool Modbus_SlaveObj::initUnitMap()
 
 void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size)
 {
-    if(((address >= 1000) && (address < 2000)) || (address >= 3000)){
+    if((address > 6000) && (address < 9000)){
         quint16 value = 0; //cout << table << address << size;
         for (int i = 0; i < size; ++i) {
             switch (table) {

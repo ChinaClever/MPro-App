@@ -10,6 +10,9 @@ public:
 
 protected:
     bool loop_readData();
+
+private:
+    bool loop_setEndisable(bool ret, uchar &v);
     bool loop_recvPacket(const QByteArray &array, sOpIt *it);
 };
 
