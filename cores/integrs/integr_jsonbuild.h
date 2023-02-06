@@ -8,7 +8,7 @@ class Integr_JsonBuild
     Integr_JsonBuild();
 public:
     static Integr_JsonBuild *bulid();
-    QByteArray getJson(uchar addr, int dc);
+    QByteArray getJson(uchar addr, int dc=0);
     QJsonObject getJsonObject(uchar addr, int dc);
     void saveJson(uchar addr);
     void saveJsons();

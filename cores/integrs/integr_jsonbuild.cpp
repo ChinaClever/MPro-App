@@ -35,7 +35,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 {
     if(dc) mDataContent = dc;
     else mDataContent = cm::masterDev()->cfg.param.jsonContent;
-    sDevData *dev = cm::devData(addr);  QJsonObject json;
+    sDevData *dev = cm::devData(addr); QJsonObject json;
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
