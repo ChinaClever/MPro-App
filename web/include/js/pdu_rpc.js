@@ -103,11 +103,11 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
-        if(this.isSetting == false) {
+        //if(this.isSetting == false)  {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
             console.log(key,value);
             this.root_map.set(key, value);
-        } 
+        //} 
 
         return true;
     }
@@ -170,7 +170,7 @@ class PduMetaData {
     constructor() {
         this.addr = 0;
         this.rpc = JsonRpc.build();        
-        //setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }
 
     // 设置地址，并更新JSON数据
@@ -410,6 +410,6 @@ class PduCore extends PduCfgs {
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 
-var obj = new PduCfgItem;
+// var obj = new PduCfgItem;
 
 

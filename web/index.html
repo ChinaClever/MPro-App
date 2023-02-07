@@ -17,7 +17,7 @@
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
     <script src="./include/js/fn_public.js"></script>
-	<script src="include/js/rpc-over-websocket.js"></script>
+	<script src="include/js/pdu_rpc.js"></script>
 </head>
 <body>
 	<div class="side-box">
@@ -62,19 +62,6 @@
 				window.close();
 			}
 		}
-		setTimeout(function(){
-			// read_loop_data(addr);
-			read_sensor_data(addr);
-			// read_total_data(addr);
-			// read_output_param(addr);
-			// read_output_data(addr);
-			// read_group_data(addr);
-			read_dual_data(addr);
-			read_dual_param_data(addr);
-			// read_group_param_data(addr);
-			// read_group_info(addr);
-			// read_monitoring_data(addr);
-		},500);
 	</script>
 </body>
 </html>

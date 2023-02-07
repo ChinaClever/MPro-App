@@ -18,7 +18,7 @@
   <script src="./include/js/fn_public.js"></script>
 	<script src="./include/js/pdu_rpc.js"></script>
   <script>
-    // let obj = new PduCfgItem;
+    var obj = new PduCfgItem;
     let time1_num = 0;
     let time2_num = 0;
     let web_service = 0;
@@ -72,16 +72,15 @@
           if(time2_num== 10){
             clearInterval(time2);
           }
-          // obj.getCfg(14,11,0,0);
           let ver = obj.cfgValue(14,11,0,0);
           if(ver === null || ver === ""){
           }else{
             if(ver  == 1){
               var key = '0_14_11_0_0';
-              obj.root_map.set(key, 0);
+              obj.rpc.root_map.set(key, 0);
               window.open('index.html','_self');
             }else{
-             alert("用户名或密码输入有误，请重新输入！");
+              alert("用户名或密码输入有误，请重新输入！");
             }
             window.clearInterval(time2);
           }

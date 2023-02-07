@@ -96,9 +96,7 @@ bool Set_Login::loginCheck(const QString &str)
         sEventItem db; db.event_type = QStringLiteral("用户登陆");
         db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         Log_Core::bulid()->append(db);
-    }
-
-    cout << ls << ret;
+    } //cout << ls << ret;
 
     return ret;
 }
