@@ -33,6 +33,12 @@
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
+		var pdu_cfg_ = new PduCfgs;
+		var language_;
+		setTimeout(function(){
+			PduMetaData.meta_workDown(pdu_cfg_);
+		},300);
+		setTimeout(function(){language_ = pdu_cfg_.cfgValue(13,10,0,0);},400);
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',this.popstateFun,false);
 		function popstateFun(){
@@ -60,6 +66,22 @@
 				window.opener = null;
 				window.open('', '_self');
 				window.close();
+			}
+		}
+		var total_data = new Array(3);
+		var inletA_data = new Array(3);
+		var inletB_data = new Array(3);
+		var inletC_data = new Array(3);
+		for(let i = 0;i<3;i++){
+			total_data[i] = new Array(3);
+			inletA_data[i] = new Array(3);
+			inletB_data[i] = new Array(3);
+			inletC_data[i] = new Array(3);
+			for(let j = 0;j< 50;j++){
+				total_data[i][j] = 0;
+				inletA_data[i][j] = 0;
+				inletB_data[i][j] = 0;
+				inletC_data[i][j] = 0;
 			}
 		}
 	</script>

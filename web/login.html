@@ -23,6 +23,7 @@
     let time2_num = 0;
     let web_service = 0;
     setTimeout(function(){
+      obj.getCfg(13,10,0,0);
       obj.getCfg(42,3,0,0);
       obj.getCfg(14,1,0,0);
       obj.getCfg(14,2,0,0);
@@ -44,7 +45,7 @@
       time1_num ++;
     },50);
       
-    // language = parseInt(sessionStorage.getItem("LanguageEn" + addr));
+    language = obj.cfgValue(13,10,0,0);
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
       if(keyNum == 13){

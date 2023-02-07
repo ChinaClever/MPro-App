@@ -64,9 +64,6 @@ class JsonRpc {
     static socket_close(evt) {
         alert('json rpc websocket close');
     }
-    static read_init_data() {
-      obj.getCfg(13,10,0,0);
-    }
 
     // 打开Websocket
     socket_open() {        
@@ -74,7 +71,6 @@ class JsonRpc {
         var ws = new WebSocket(url);
         ws.onclose =  function (evt) {JsonRpc.socket_close(evt);}; 
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
-        ws.onopen = function () {JsonRpc.read_init_data();};
         return ws;
     }
 
@@ -105,7 +101,7 @@ class JsonRpc {
 
         //if(this.isSetting == false)  {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
-            console.log(key,value);
+            // console.log(key,value);
             this.root_map.set(key, value);
         //} 
 
@@ -169,8 +165,8 @@ class JsonRpc {
 class PduMetaData {
     constructor() {
         this.addr = 0;
-        this.rpc = JsonRpc.build();        
-        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+        this.rpc = JsonRpc.build();  
+        // setTimeout(function(){PduMetaData.meta_workDown()},this.getTimeOut());
     }
 
     // 设置地址，并更新JSON数据
@@ -204,9 +200,9 @@ class PduMetaData {
     }
 
     // 定时器响应函数
-   static meta_workDown() {
+   static meta_workDown(x) {
         var method = "pduMetaData"; 
-        var params = [this.addr, 100, 0, 0, 0];
+        var params = [x.addr, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();
@@ -263,6 +259,7 @@ class PduCfgItem extends PduDataItem {
     // 从Map表中获取某个配置参数
     cfgValue(type, fc, id, addr=0) {
         var key = addr+'_'+type+'_'+fc+'_'+id+'_'+0;
+        console.log(key);
         return this.rpc.json_rpc_value(key);
     }
 
@@ -410,6 +407,5 @@ class PduCore extends PduCfgs {
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 
-// var obj = new PduCfgItem;
 
 
