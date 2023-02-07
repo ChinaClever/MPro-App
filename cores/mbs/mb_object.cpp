@@ -27,7 +27,7 @@ void Mb_Object::upDevInfo()
 {
     sDevData *dev = mDevData;
     vshort vs; //initFucRegs();
-    vs << 1; // 通讯协议版本
+    vs << 1 << 0; // 通讯协议版本
 
     vs << dev->cfg.param.devSpec; // 设备规格
     vs << dev->cfg.nums.lineNum;

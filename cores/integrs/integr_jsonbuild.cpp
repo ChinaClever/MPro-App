@@ -19,10 +19,10 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
     return sington;
 }
 
-QByteArray Integr_JsonBuild::getJson(uchar addr)
-{    
-    mDataContent = cm::masterDev()->cfg.param.jsonContent;
-    QByteArray array; QJsonObject json = getJsonObject(addr);
+// dc 0 使用系统配置， 1读的参数 2 所有参数
+QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
+{
+    QByteArray array; QJsonObject json = getJsonObject(addr, dc);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,9 +31,11 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
     return array;
 }
 
-QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
+QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 {
-    sDevData *dev = cm::devData(addr);  QJsonObject json;
+    if(dc) mDataContent = dc;
+    else mDataContent = cm::masterDev()->cfg.param.jsonContent;
+    sDevData *dev = cm::devData(addr); QJsonObject json;
     //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
@@ -55,7 +57,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 
 void Integr_JsonBuild::saveJson(uchar addr)
 {
-    QJsonObject json = getJsonObject(addr);
+    QJsonObject json = getJsonObject(addr, 2);
     QString dir = "/tmp/download/dia/metadata/"; cm::execute("mkdir -p "+dir);
     QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
@@ -96,7 +98,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 
     if(mDataContent == 0){
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent == 2) dc = true;
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r);
@@ -123,7 +125,7 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
 
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent == 2) dc = true;
 
     if(dc) {
         arrayAppend(it.alarm, size, key+"_alarm", json);
@@ -143,7 +145,7 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
     //arrayAppend(it.sw, size, key+"_state", json);
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.timingEn[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent == 2) dc = true;
 
     if(dc) {
         arrayAppend(it.timingEn, size, key+"_timing_en", json);
