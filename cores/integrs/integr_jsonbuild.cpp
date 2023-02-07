@@ -214,7 +214,7 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
         if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
     } else {
-        tem.size = hum.size = 2;
+        if(!tem.size) tem.size = hum.size = 2;
         arrayAppend(it.door, 2, "door", obj);
         arrayAppend(it.water, 1, "water", obj);
         arrayAppend(it.smoke, 1, "smoke", obj);
