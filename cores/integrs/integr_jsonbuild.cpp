@@ -98,7 +98,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 
     if(mDataContent == 0){
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 2) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r);
@@ -125,7 +125,7 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
 
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 2) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.alarm, size, key+"_alarm", json);
@@ -145,7 +145,7 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
     //arrayAppend(it.sw, size, key+"_state", json);
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.timingEn[i];
-    } else if(mDataContent == 2) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.timingEn, size, key+"_timing_en", json);
@@ -208,12 +208,20 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj;
-    if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
-    if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-    if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
-    alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
-    alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+    QJsonObject obj; sAlarmUnit tem=it.tem, hum = it.hum;
+    if(mDataContent < 2) {
+        if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
+        if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
+    } else {
+        tem.size = hum.size = 2;
+        arrayAppend(it.door, 2, "door", obj);
+        arrayAppend(it.water, 1, "water", obj);
+        arrayAppend(it.smoke, 1, "smoke", obj);
+    }
+
+    alarmUnit(tem, "tem", obj, COM_RATE_TEM);
+    alarmUnit(hum, "hum", obj, COM_RATE_HUM);
     if(obj.size()) json.insert(key, obj);
 }
 
