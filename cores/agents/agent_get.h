@@ -19,10 +19,14 @@ private:
     void addDevParam(uchar addr, const QString &oidPrefix, sParameter &dev);
     void addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev);
 
-    void addAlarmUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
-    void addObjData(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index, int relay=0);
-    void addRelayUnit(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sRelayUnit &it, int index);
+    void addUnitData(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
+    void addUnitAlarm(uchar addr, uchar key, const QString &oidPrefix, const QString &oidName, sAlarmUnit &it, int index);
+    void addObjData(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index, int type=0);
+    void addObjAlarm(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index, int type);
+
+    void addRelayUnit(uchar addr, const QString &oidPrefix, const QString &oidName, sRelayUnit &it, int index);
     void addEnvData(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);
+    void addEnvAlarm(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);
     void addDoors(uchar addr, const QString &oidPrefix, sEnvData &it);
     void addDevData(uchar addr, sDevData *it);
 };

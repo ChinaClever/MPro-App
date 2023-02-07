@@ -114,7 +114,7 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 {
     QJsonArray array;
     for(int i=0; i<size; ++i) {
-        if(strlen(ptr[i])) array.append(ptr[i]);
+        array.append(ptr[i]); //if(strlen(ptr[i]))
     } if(array.size()) json.insert(key, array);
 }
 
@@ -154,23 +154,23 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
     }
 }
 
-void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
+void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int type)
 {
     QJsonObject obj;  int size = it.size;
     alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
     alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
 
-    if(1 == relay) relayUnit(it.relay, "relay", obj);
-    else if(3 == relay) groupRelayUnit(it.relay, "group_relay", obj);
-    else if(2 == relay) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
-
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
-    if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
-    strListAppend(it.name, size, "name", obj);
+
+    if(3 == type) relayUnit(it.relay, "relay", obj);
+    else if(4 == type) groupRelayUnit(it.relay, "group_relay", obj);
+    else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
+    else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
+    if(type > 2) strListAppend(it.name, size, "name", obj);
 
     json.insert(key, obj);
 }
@@ -252,6 +252,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
     obj.insert("dev_mode", it.param.devMode/r);
+    obj.insert("language", it.param.language/r);
 
     obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
@@ -281,28 +282,12 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    //it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////==========
-    ObjData(it->line, "line_item_list", obj);
-
-    //it->loop.size = 6;///////=============
-    //it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
+    ObjData(it->line, "line_item_list", obj, 1);
     ObjData(it->loop, "loop_item_list", obj, 2);
-
-    //it->group.size = 8;/////////////////==============
-    //it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
-    ObjData(it->group, "group_item_list", obj, 3);
-
-    //it->dual.size = 48;/////////////////============
-    //it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
-    ObjData(it->dual, "dual_item_list", obj);
-
-    //it->output.size = 48;///////////////==========
-    //it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
-    ObjData(it->output, "output_item_list", obj, 1);
-
+    ObjData(it->output, "output_item_list", obj, 3);
+    ObjData(it->group, "group_item_list", obj, 4);
+    ObjData(it->dual, "dual_item_list", obj, 5);
     tgObjData(it->tg, "pdu_tg_data", obj);
-    //it->env.tem.size = 2;////////////////===========
-    //it->env.hum.size = 2;////////////////============
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }
@@ -315,6 +300,6 @@ void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObje
     obj.insert("mask", it.mask);
     obj.insert("gw", it.gw);
     obj.insert("dns", it.dns);
-    // obj.insert("mac", it.mac);
+    //obj.insert("mac", it.mac);
     json.insert(key, obj);
 }
