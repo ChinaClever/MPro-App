@@ -63,14 +63,18 @@ class JsonRpc {
 
     static socket_close(evt) {
         alert('json rpc websocket close');
-    }    
+    }
+    static read_init_data() {
+      obj.getCfg(13,10,0,0);
+    }
 
     // 打开Websocket
     socket_open() {        
         var url = this.rpc_url();
         var ws = new WebSocket(url);
-        ws.onclose =  function (evt) {JsonRpc.socket_close(evt);};    
+        ws.onclose =  function (evt) {JsonRpc.socket_close(evt);}; 
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
+        ws.onopen = function () {JsonRpc.read_init_data();};
         return ws;
     }
 
@@ -101,6 +105,7 @@ class JsonRpc {
 
         if(this.isSetting == false) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
+            console.log(key,value);
             this.root_map.set(key, value);
         } 
 
@@ -111,6 +116,7 @@ class JsonRpc {
     json_rpc_obj(method, params) {
         const id = this.rpcid++;
         const request = {id, method, params};
+        console.log(method,params);
         var msg = JSON.stringify(request);
         return this.socket_send(msg);
     }
@@ -155,15 +161,16 @@ class JsonRpc {
         var timeFn = "耗时："+dayDiff+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒"+minseconds+"毫秒";
         return timeFn;
     }
-} //JsonRpc.build();
+}
 
+//JsonRpc.build();
 
 // PDU整个JSON包操作类
 class PduMetaData {
     constructor() {
         this.addr = 0;
         this.rpc = JsonRpc.build();        
-        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+        //setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }
 
     // 设置地址，并更新JSON数据
@@ -254,20 +261,20 @@ class PduCfgItem extends PduDataItem {
     }
 
     // 从Map表中获取某个配置参数
-    cfgValue(type, fc, id=0, addr=0) {
+    cfgValue(type, fc, id, addr=0) {
         var key = addr+'_'+type+'_'+fc+'_'+id+'_'+0;
         return this.rpc.json_rpc_value(key);
     }
 
     // 刷新某个配置参数至Map表中
-    getCfg(type, fc, id=0, addr=0) {
+    getCfg(type, fc, id, addr=0) {
         var method = "pduReadParam"; 
         var params = [addr, type, fc, id,0];
         return this.rpc.json_rpc_get(method, params);
     }
 
     // 修改某个配置参数
-    setCfg(type, fc, value, id=0, addr=0) {
+    setCfg(type, fc, value, id, addr=0) {
         var method = "pduSetParam"; 
         var params = [addr, type, fc, id, 0, value];
         return this.rpc.json_rpc_set(method, params);
@@ -403,5 +410,6 @@ class PduCore extends PduCfgs {
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 
+var obj = new PduCfgItem;
 
 

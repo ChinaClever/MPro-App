@@ -16,25 +16,35 @@
   </div>
   <script src="./include/js/jquery-1.11.3.min.js"></script>
   <script src="./include/js/fn_public.js"></script>
-	<script src="./include/js/rpc-over-websocket.js"></script>
+	<script src="./include/js/pdu_rpc.js"></script>
   <script>
-    let time_1_num = 0;
-    let time_1 = setInterval(function(){
-      if(time_1_num== 10 ){
-        clearInterval(time_1);
+    // let obj = new PduCfgItem;
+    let time1_num = 0;
+    let time2_num = 0;
+    let web_service = 0;
+    setTimeout(function(){
+      obj.getCfg(42,3,0,0);
+      obj.getCfg(14,1,0,0);
+      obj.getCfg(14,2,0,0);
+      obj.getCfg(14,3,0,0);
+    },300);
+    let time1 = setInterval(function(){
+      if(time1_num== 20 ){
+        clearInterval(time1);
       }
-      if(sessionStorage.getItem(web_service[3]) != null){
-        if(parseInt(sessionStorage.getItem(web_service[3])) == 1){
+      web_service = obj.cfgValue(42,3,0,0);
+      if(web_service != null){
+        if(web_service == 1){
           if(window.location.protocol === "http:"){
             window.location.href = window.location.href.replace("http:","https:")
           }
         }
-        clearInterval(time_1);
+        clearInterval(time1);
       }
-      time_1_num ++;
-    },100);
+      time1_num ++;
+    },50);
       
-    language = parseInt(sessionStorage.getItem("LanguageEn" + addr));
+    // language = parseInt(sessionStorage.getItem("LanguageEn" + addr));
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
       if(keyNum == 13){
@@ -42,14 +52,12 @@
       }
     }
     $('.center_form').html(builddiv('signin'));
-    console.log("1");
     var time = setTimeout(function (){
-      console.log("2");
-      user_name = sessionStorage.getItem(user_info[1] + 0);
-      password = sessionStorage.getItem(user_info[2] + 0);
-      identify = sessionStorage.getItem(user_info[3] + 0);
-      if(user_name == '' && password ==''){
-        register();
+      user_name = obj.cfgValue(14,1,0,0);
+      password = obj.cfgValue(14,2,0,0);
+      identify = obj.cfgValue(14,3,0,0);
+      if(user_name == null && password ==null){
+          register();
         }
       document.getElementById('username').value = '';
       document.getElementById('psd').value ='';
@@ -58,24 +66,29 @@
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
-        let userPsd = usr + "; " + psd;
-        rpc.call('pduSetParam',[0,user,11,0,0,userPsd]);
+        let userPsd = usr + ";" + psd;
+        obj.setCfg(14,11,userPsd,0,0);
         let time2 = setInterval(function(){
-          if(verfity == 1)
-          {
-            verfity = 0;
-            let ver = parseInt(sessionStorage.getItem(user_info[11] + 0));
+          if(time2_num== 10){
+            clearInterval(time2);
+          }
+          // obj.getCfg(14,11,0,0);
+          let ver = obj.cfgValue(14,11,0,0);
+          if(ver === null || ver === ""){
+          }else{
             if(ver  == 1){
-              sessionStorage.setItem(user_info[11],0);
+              var key = '0_14_11_0_0';
+              obj.root_map.set(key, 0);
               window.open('index.html','_self');
             }else{
-              alert("用户名或密码输入有误，请重新输入！");
+             alert("用户名或密码输入有误，请重新输入！");
             }
             window.clearInterval(time2);
           }
-        },500);
+          time2_num ++;
+        },100);
       }else{
-        alert("user name or password error");
+        alert("user name or password is null");
       }    
     }
     function submite(){
@@ -189,12 +202,12 @@
         }
       }
     }
-    var time1 = setTimeout(function(){
-      ReadHomeData();
-      // read_dev_name();
-			read_ver_info(default_addr);
-			// read_phase_data(addr);
-    },500);
+    // var time1 = setTimeout(function(){
+    //   ReadHomeData();
+    //   // read_dev_name();
+		// 	read_ver_info(default_addr);
+		// 	// read_phase_data(addr);
+    // },500);
     function builddiv(Reg){
       var tbody = '';
       if(Reg === 'register')

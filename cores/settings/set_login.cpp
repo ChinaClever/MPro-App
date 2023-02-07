@@ -76,7 +76,7 @@ bool Set_Login::loginAuth(const QStringList &ls)
 bool Set_Login::loginCheck(const QString &str)
 {
     bool ret = false;
-    QStringList ls = str.split("; ");
+    QStringList ls = str.split(";");
 
     if(ls.size() == 2) {
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
@@ -98,6 +98,7 @@ bool Set_Login::loginCheck(const QString &str)
         Log_Core::bulid()->append(db);
     }
 
+    cout << ls << ret;
 
     return ret;
 }
