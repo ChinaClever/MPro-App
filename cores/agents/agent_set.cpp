@@ -92,9 +92,9 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     switch (it->fc) {
     case 1: v = DType::Line; break;
     case 2: v = DType::Loop; break;
-    case 3: v = DType::Output; break;
-    case 4: v = DType::Group; it->type +=1; break;
-    case 5: v = DType::Dual; it->type +=1; break;
+    case 3: v = DType::Output; it->type +=1; break;
+    case 4: v = DType::Group; it->type +=2; break;
+    case 5: v = DType::Dual; it->type +=2; break;
     case 6: v = DType::Env; it->type +=5; break;
     default: ret = false; break;
     } index.type = v;
@@ -119,22 +119,6 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     case 7: v = DSub::Alarm; break;
     default: ret = false; break;
     } index.subtopic = v;
-
-    if(index.type > 1) {
-
-    } else {
-        switch (it->subtopic) {
-        case 1: v = DSub::Value; break;
-        case 2: v = DSub::Alarm; break;
-        case 3: v = DSub::Rated; break;
-        case 4: v = DSub::UpDelay; break;
-        case 5: v = DSub::ResetDelay; break;
-        case 6: v = DSub::OverrunOff; break;
-        case 7: v = DSub::RelayEn; break;
-        default: ret = false; break;
-        }
-    }
-
 
     return ret;
 }
@@ -195,6 +179,40 @@ bool Agent_Set::setName(int type,const QVariant &value)
     return Set_Core::bulid()->setCfg(item, value);
 }
 
+bool Agent_Set::ctrlOutput(const QVariant &value)
+{
+    sDataItem unit;
+    unit.rw = 1;
+    unit.id = mIndex.id;
+    unit.addr = mIndex.addr;
+    uchar v=0; bool ret = true;
+    sIndex *it = &mIndex;
+
+    if(it->type) {
+
+    } else {
+        switch (it->subtopic) {
+        case 1: v = DSub::Value; break;
+        case 7: v = DSub::RelayEn; break;
+        case 2: v = DSub::Alarm; break;
+        case 3: v = DSub::Rated; break;
+        case 4: v = DSub::UpDelay; break;
+        case 5: v = DSub::ResetDelay; break;
+        case 6: v = DSub::OverrunOff; break;
+        default: ret = false; break;
+        }
+    }
+
+
+//    unit.type = type;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Value;
+    unit.txType = DTxType::TxSnmp;
+    unit.value = value.toUInt();
+
+    return ret;
+}
+
 
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)
 {
@@ -202,17 +220,16 @@ void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &valu
     bool ret = toIndex(addr, oid);
     if(ret) {
         if(2 == it->rw) {
-
-
+            if(0 == it->fc) ret = cfgSet(value);
+            else if(0 == it->type) ret = setName(it->fc, value);
+            else ret = setAlarm(value);
+        } else if(3 == it->rw) {
             switch (it->fc) {
-            case 0: ret = cfgSet(value); break;
-           // case 1: ret
+            case 1: ret = ctrlOutput(value); break;
+
             default:
                 break;
             }
-
-        } else if(3 == it->rw) {
-
         }
 
         if(0 == it->fc) ret = cfgSet(value);

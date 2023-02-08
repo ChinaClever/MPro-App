@@ -19,10 +19,9 @@ private:
     bool uutSet(const QVariant &value);
     bool cfgSet(const QVariant &value);
 
-    bool lineSet(const QVariant &value);
-
     bool upAlarmIndex(sDataItem &index);
     bool setAlarm(const QVariant &value);
+    bool ctrlOutput(const QVariant &value);
 
     bool setName(int type,const QVariant &value);
     bool relayCtrl(int type, const QVariant &value);
