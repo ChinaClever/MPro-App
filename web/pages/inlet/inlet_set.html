@@ -60,23 +60,25 @@
 				</div>
 			</div>
 		</div>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		var pdu_cfg = top.pdu_cfg_;
 		let read  = 1;
 		let language;
 		let dev_dis = 0;
 		let lang = new Array();
 		let phase_info = new Array();
 		let phase_info_ = new Array();
-		let pdu_cfg = top.pdu_cfg_;
 		var pow_mark = new Array(),cur_mark = new Array(),vol_mark = new Array();
 		var phase_num;
 		var slave_num;
 		let type_arr = new Array("vol","cur","pow");
 		var dev_name =new Array();
+		let addr = pdu_cfg.addr;
 		function ParseData(){
 			let DataString = pdu_cfg.cfgValue(100,0,0,0);
 			let pdu_data = JSON.parse(DataString);
@@ -97,13 +99,18 @@
 		if(pdu_cfg.cfgValue(100,0,0,0) != null){
 			ParseData();
 		}
+		let phase_arr = [29,28,26,24,25,31,30,23,0,0,27,7,6,4,2,3,9,8,1,0,0,5,19,18,16,14,15,21,20,13,0,0,17];
 		function read_data(){
-			for(var i = 1 ;i < phase_num + 1;i++){
-				phase_info[i] =  new Array();
-				for(var k = 0; k < 3; k++){
-					for(var j = 0;j <len;j++){
-						phase_info[i][(len * k) + j] = (sessionStorage.getItem(type_name[phase]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
+			for (let i = 1; i < phase_num + 1; i++) {
+				phase_info[i] = new Array();
+				let j = 0;
+				for(let key of phase_arr){
+					if(j == 8 || j == 9 || j == 19 || j == 20 || j == 30 || j ==31){
+
+					}else{
+						phase_info[i][j] = phase_info_[i - 1][key];
 					}
+					j++;
 				}
 			}
 		}
@@ -422,10 +429,15 @@
 			}else{
 				number1 = number;
 			}
-			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+
+			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
+				PduMetaData.meta_workDown(pdu_cfg);
 			}, 50);
+			// SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+			// setTimeout(() => {
+			// 	ReadDataSend(addr_,phase,type,sub,number1,phase_num);
+			// }, 50);
 			flash_html(ckd);
 		}
 		function clearNum(obj){
@@ -471,9 +483,9 @@
 			}else if(type1 === 'h'){
 				sub = 4;
 			}
-			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
+				PduMetaData.meta_workDown(pdu_cfg);
 			}, 50);
 			flash_html(ipt);
 		}
@@ -620,12 +632,8 @@
 				}
 			}
 		}
-		let Time1 = setInterval(function(){
-			ReadDataSend(addr,phase,pow_,1,0,phase_num);
-			ReadDataSend(addr,phase,cur_,1,0,phase_num);
-			ReadDataSend(addr,phase,vol_,1,0,phase_num);
-		},2000);
 		let Time2 = setInterval(function(){
+			ParseData();
 			read_data();
 			putdata();
 			showdata();
