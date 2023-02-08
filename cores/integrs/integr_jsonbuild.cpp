@@ -264,6 +264,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
     obj.insert("board_num", it.nums.boardNum/r);
+    obj.insert("group_en", it.param.groupEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
 
     QJsonArray loopEnd, loopStart;
