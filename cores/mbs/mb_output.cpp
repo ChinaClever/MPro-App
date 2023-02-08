@@ -96,8 +96,19 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
     if(reg > 50) {
         OP_Core::bulid()->clearEle(id);
     } else {
-         sRelayUnit *obj = &(mDevData->output.relay);
-        if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
+         //sRelayUnit *obj = &(mDevData->output.relay);
+        //if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
+
+        sDataItem unit;
+        unit.rw = 1;
+        unit.id = id;
+        unit.addr = 0;
+        unit.type = DType::Output;
+        unit.topic = DTopic::Relay;
+        unit.subtopic = DSub::Value;
+        unit.txType = DTxType::TxSnmp;
+        unit.value = value;
+        Set_Core::bulid()->setting(unit);
     }
 }
 

@@ -19,6 +19,8 @@ private:
     bool uutSet(const QVariant &value);
     bool cfgSet(const QVariant &value);
 
+    bool lineSet(const QVariant &value);
+
     bool upAlarmIndex(sDataItem &index);
     bool setAlarm(const QVariant &value);
 
@@ -31,6 +33,7 @@ private:
 private:
     struct sIndex {
         uchar addr;
+        uchar rw;
         uchar fc;
         uchar id;
         uchar type;
