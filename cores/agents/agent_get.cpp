@@ -144,9 +144,9 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
 void Agent_Get::addObjAlarm(uchar addr, const QString &oidPrefix,
                            const QString &oidName, sObjData &it, int index, int type)
 {
-    int id = 1; QString oid = oidPrefix + ".";
+    int id = 0; QString oid = oidPrefix + ".";
     QString name = tr("%1-%2-").arg(oidName).arg(index+1);
-    if(type > 2) addOid(addr, id++, oid, name+"name", it.name[index]);
+    if(type > 2) addOid(addr, id++, oid, name+"name", it.name[index]); else id++;
     if(it.vol.size) addUnitAlarm(addr, id++, oid, name+"vol", it.vol, index);
     if(it.cur.size) addUnitAlarm(addr, id++, oid, name+"cur", it.cur, index);
     if(it.pow.size) addUnitAlarm(addr, id++, oid, name+"pow", it.pow, index);

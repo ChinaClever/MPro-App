@@ -36,18 +36,18 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
     if(dc) mDataContent = dc;
     else mDataContent = cm::masterDev()->cfg.param.jsonContent;
     sDevData *dev = cm::devData(addr); QJsonObject json;
-    //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
-        faultCode(dev, json);
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
 
         if(dc > 1) {
+            faultCode(dev, json);
             devInfo(dev->cfg, "pdu_info", json);
             uutInfo(dev->cfg.uut, "uut_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
+            if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
@@ -264,11 +264,12 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
     obj.insert("board_num", it.nums.boardNum/r);
+    obj.insert("cascade_addr", it.param.cascadeAddr/r);
 
     QJsonArray loopEnd, loopStart;
     for(uint i=0; i<it.nums.loopNum; ++i) {
         loopEnd.append(it.nums.loopEnds[i]);
-        loopStart.append(it.nums.loopStarts[i]);
+        loopStart.append(it.nums.loopStarts[i]+1);
     }
     obj.insert("loop_ends", loopEnd);
     obj.insert("loop_start", loopStart);
@@ -304,14 +305,14 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     json.insert(key, obj);
 }
 
-void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::netAddr(const sNetInterface &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("mode", it.dhcp);
-    obj.insert("ip", it.ip);
-    obj.insert("mask", it.mask);
-    obj.insert("gw", it.gw);
-    obj.insert("dns", it.dns);
-    //obj.insert("mac", it.mac);
+    obj.insert("mode", it.inet.dhcp);
+    obj.insert("ip", it.inet.ip);
+    obj.insert("mask", it.inet.mask);
+    obj.insert("gw", it.inet.gw);
+    obj.insert("dns", it.inet.dns);
+    obj.insert("mac", it.mac);
     json.insert(key, obj);
 }
