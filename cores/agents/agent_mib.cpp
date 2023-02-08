@@ -85,8 +85,13 @@ void Agent_Mib::appendModule(const sOidIt &it)
 {
     QStringList os = it.oid.split(".");
     QStringList ls = it.name.split("-");
-    appendModule("pdu-"+ls.at(1)+"-dev", it.fieldId);
+    QString name = "pdu-"+ls.at(1)+"-";
+    appendModule(name+"dev", it.fieldId);
+    qDebug() << os << ls;
+
     if(os.size()>1) appendModule("pdu-"+ls.at(1)+"-"+ls.at(2), os.at(0).toInt());
+
+
     if(os.size()>2) appendModule("pdu-"+ls.at(1)+"-"+ls.at(2)+"-"+ls.at(3), os.at(1).toInt());
     if(os.size()>3) appendModule("pdu-"+ls.at(1)+"-"+ls.at(2)+"-"+ls.at(3)+"-"+ls.at(4), os.at(2).toInt());
     if(os.size()>4) appendModule("pdu-"+ls.at(1)+"-"+ls.at(2)+"-"+ls.at(3)+"-"+ls.at(4)+"-"+ls.at(5), os.at(3).toInt());

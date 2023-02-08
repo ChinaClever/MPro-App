@@ -107,6 +107,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
         arrayAppend(it.max, size, key+"_alarm_max", json, r);
         arrayAppend(it.crMin, size, key+"_warn_min", json, r);
         arrayAppend(it.crMax, size, key+"_warn_max", json, r);
+        arrayAppend(it.hda, size, key+"_hda_en", json, r);
     }
 }
 
