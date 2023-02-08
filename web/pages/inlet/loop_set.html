@@ -61,7 +61,7 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
@@ -69,22 +69,48 @@
 		var pow_mark = new Array(),cur_mark = new Array(),vol_mark = new Array();		
 		var  read  = 1;
 		let dev_dis = 0;
-		var loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		var slave_num;
+		var loop_num;
 		var loop_info = new Array();
+		var loop_info_ = new Array();
 		var dev_name = new Array();
 		let lang = new Array();
 		let type_arr = new Array("vol","cur","pow");
-		var len  = data_name.length -1;
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
-		read_data();
+		let addr = pdu_cfg.addr;
+		function ParseData(){
+			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let pdu_data = JSON.parse(DataString);
+			loop_num = pdu_data.pdu_info.loop_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.dev_mode;
+			let k = 0;
+			for(let i = 0;i<loop_num;i++){
+				loop_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.loop_item_list){
+					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
+		let loop_arr = [29,28,26,24,25,31,30,23,0,0,27,8,7,5,3,4,10,9,2,0,0,6,19,18,16,14,15,21,20,13,0,0,17];
 		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < loop_num + 1;i++){
-				loop_info[i] =  new Array();
-				for(var k = 0; k < 3; k++){
-					for(var j = 0;j <len;j++){
-						loop_info[i][(len * k) + j] = (sessionStorage.getItem(type_name[loop]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
+			for (let i = 1; i < loop_num + 1; i++) {
+				loop_info[i] = new Array();
+				let j = 0;
+				for(let key of loop_arr){
+					if(j == 8 || j == 9 || j == 19 || j == 20 || j == 30 || j ==31){
+
+					}else{
+						loop_info[i][j] = loop_info_[i - 1][key];
 					}
+					j++;
 				}
 			}
 		}
@@ -148,6 +174,7 @@
 			}
 			document.getElementById("ms").value = addr;
 		}
+		read_data();
 		$('.vol_table').html(buildTableVol(loop_num));
 		$('.cur_table').html(buildTableCur(loop_num));
 		$('.pow_table').html(buildTablePow(loop_num));
@@ -400,10 +427,10 @@
 			}else{
 				number1 = number;
 			}
-			SetDataSend(addr_,loop,type,sub,number1,stat,loop_num);
+			pdu_cfg.setData(2,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,loop,type,sub,number1,loop_num);
-			}, 50);
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 			flash_html(ckd);
 		}
 		function clearNum(obj){
@@ -447,10 +474,10 @@
 			}else if(type1 === 'h'){
 				sub = 4;
 			}
-			SetDataSend(addr_,loop,type,sub,number1,stat,loop_num);
+			pdu_cfg.setData(2,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,loop,type,sub,number1,loop_num);
-			}, 50);
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 			flash_html(ipt);
 		}
 		function buildTablePow(rows) {
@@ -596,16 +623,12 @@
 				}
 			}
 		}
-		let Time1 = setInterval(function(){
-			ReadDataSend(addr,loop,pow_,1,0,loop_num);
-			ReadDataSend(addr,loop,cur_,1,0,loop_num);
-			ReadDataSend(addr,loop,vol_,1,0,loop_num);
-		},2000);
 		let Time2 = setInterval(function(){
+			ParseData();
 			read_data();
 			putdata();
 			showdata();
-		},1000);
+		},500);
     </script>
 </body>
 </html>

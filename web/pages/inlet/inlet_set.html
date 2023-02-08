@@ -66,7 +66,7 @@
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var pdu_cfg = top.pdu_cfg_;
+		let pdu_cfg = top.pdu_cfg_;
 		let read  = 1;
 		let language;
 		let dev_dis = 0;
@@ -353,7 +353,7 @@
 				}
 				showdata();
 				lang_fun();
-			},500);
+			},1500);
 		}
 		function cked(ckd)
 		{
@@ -433,11 +433,7 @@
 			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
-			}, 50);
-			// SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
-			// setTimeout(() => {
-			// 	ReadDataSend(addr_,phase,type,sub,number1,phase_num);
-			// }, 50);
+			}, 100);
 			flash_html(ckd);
 		}
 		function clearNum(obj){
@@ -486,7 +482,7 @@
 			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
-			}, 50);
+			}, 100);
 			flash_html(ipt);
 		}
 		function buildTablePow(rows) {
@@ -625,10 +621,10 @@
 				for(let j = 0;j<3;j++){
 					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(phase_info[i + 1][0 + j * 11])).toFixed(j+1);
 					document.getElementById(type_arr[j]+(i)).childNodes[4].innerHTML = (parseFloat(phase_info[i + 1][1 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[5].childNodes[0].value = (parseFloat(phase_info[i + 1][4 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[6].childNodes[0].value = (parseFloat(phase_info[i + 1][5 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[7].childNodes[0].value = (parseFloat(phase_info[i + 1][6 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[8].childNodes[0].value = (parseFloat(phase_info[i + 1][3 + j * 11])).toFixed(j+1);
+					// document.getElementById(type_arr[j]+(i)).childNodes[5].childNodes[0].value = (parseFloat(phase_info[i + 1][4 + j * 11])).toFixed(j+1);
+					// document.getElementById(type_arr[j]+(i)).childNodes[6].childNodes[0].value = (parseFloat(phase_info[i + 1][5 + j * 11])).toFixed(j+1);
+					// document.getElementById(type_arr[j]+(i)).childNodes[7].childNodes[0].value = (parseFloat(phase_info[i + 1][6 + j * 11])).toFixed(j+1);
+					// document.getElementById(type_arr[j]+(i)).childNodes[8].childNodes[0].value = (parseFloat(phase_info[i + 1][3 + j * 11])).toFixed(j+1);
 				}
 			}
 		}
@@ -637,7 +633,7 @@
 			read_data();
 			putdata();
 			showdata();
-		},1000);
+		},500);
     </script>
 </body>
 </html>

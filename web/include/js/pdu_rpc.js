@@ -99,10 +99,10 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
-        if(this.isSetting == false) {
+       // if(this.isSetting == false) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
             this.root_map.set(key, value);
-        } 
+      //  } 
 
         return true;
     }
