@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="../../doc-lib/doc.css">
 
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
-		<script src="../../include/js/rpc-over-websocket.js"></script>
+		<script src="../../include/js/pdu_rpc.js"></script>
 		<script src="../../include/js/public.min.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
@@ -47,12 +47,14 @@
 		var mode = 0;
 		let dev_dis = 0;
 		let cur_mark = new Array();
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var dev_name =new Array();
-		var output_name =new Array();
+		var output_num;
+		var slave_num;
 		var output_info = new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		var output_info_ = new Array();
 		let lang = new Array();
+		var dev_name =new Array();
+		
+		var output_name =new Array();
 		read_data();
 		function read_data(){
 			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));

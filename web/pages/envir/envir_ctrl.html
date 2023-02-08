@@ -64,25 +64,48 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let dev_dis = 0;
+		let  read  = 1;
+		let dev_name =new Array();
+		let slave_num;
+		let sensor_info_ = new Array();
+    	let sensor_name = new Array("","","","","","","","");
+    	let data = new Array();
+		let type_num = 0;
+		let lang = new Array();
+		let table_len = 4;
 		let Sensor_state = new Array("", "", "");
 		let Sensor_state_ = new Array("", "", "");
-    	var sensor_name = new Array("","","","","","","","");
-    	var head = new Array("Tmp","Tmp","Hum","Hum","Door1","Door2","Water","Smoke");
-		var end = new Array("Val","Rated","Alarm","Max","Min","Vcmin","Vcmax","Enable","","","HisEn");
-    	var data = new Array();
-		let dev_dis = 0;
-		var  read  = 1;
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var dev_name =new Array();
-		var table_len = 4;
-		var type_num = 0;
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
-		let lang = new Array();
+		let addr = pdu_cfg.addr;
+
+		let arr1 = [0,1,0,1,0,1,0,0];
+		let arr2 = [0,0,10,20];
+		let arr3 = [17,16,14,12,13,19,18,11,0,0,15];
+		let k = 0;
+		function ParseData(){
+			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let pdu_data = JSON.parse(DataString);
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.dev_mode;
+			for(let i = 0;i<2;i++){
+				sensor_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.env_item_list){
+					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<32;i++){
@@ -147,20 +170,19 @@
 			document.getElementById("ms").value = addr;
 		}
 		read_data();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 0; i<head.length;i++){
-    			data[i] = new Array();
+    	function read_data(){
+			for(let i = 0; i<8;i++){
+				k = 0;
+				data[i] = new Array();
 				if( i > 3){
-					j = 0;
-					type_num = 7;
-					data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_1");
-				}
-				else{
-					for(var j = 0; j<end.length;j++){
-						type_num = 6;
-						if(j!= 8 || j!= 9)
-						data[i][j] = sessionStorage.getItem(type_name[type_num] +head[i]+end[j]+addr+"_"+(parseInt(i%2)+1));
+					data[i][0] = sensor_info_[arr1[i]][arr2[i-4]]; 
+				}else{
+					for(let key of arr3){
+						if(k == 8 || k == 9){
+						}else{
+							data[i][k] = sensor_info_[arr1[i]][key - (10 * parseInt(i/2))];
+						}
+						k++;
 					}
 					if(parseFloat(data[i][0]) > 1000){
 						data[i][0] = "NA";
@@ -189,6 +211,19 @@
 		}
 		showdata();
 		modeset();
+		function showdata_(){
+			for(var i = 1 ;i < table_len+ 1;i++){
+				var cs = document.getElementById('b'+(i-1));
+				if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
+					cs.bgColor = 'red';
+				}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
+					cs.bgColor = 'yellow';
+				}
+				else{
+					cs.bgColor = '';
+				}
+			}
+		}
 		function showdata(){
 			for(var i = 1 ;i < table_len+ 1;i++){
 				var ss = document.getElementById('c'+(i-1));
@@ -252,14 +287,13 @@
 		}
 		function flash_html(par)
 		{
-			read_sensor_data(addr);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.tmp_hum_table').html(buildTableTH(table_len));
 				showdata();
 				lang_fun();
-			},800);
+			},500);
 		}
 		function cked(ckd)
 		{
@@ -275,9 +309,9 @@
 				type = 11;
 			}
 			if(number <= 2){
-				number1  = tmp_;
+				number1  = 11;
 			}else{
-				number1  = hum_;
+				number1  = 12;
 			}
 			id  = parseInt(number-1) % 2 + 1;
 			if(ckd.checked == true){
@@ -285,8 +319,10 @@
 			}else{
 				stat = 0;
 			}
-			rpc.call('pduSetData',[addr_,envir,number1,type,id,stat]);
-			flash_html(ckd);
+			pdu_cfg.setData(6,number1,type,id,stat);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -312,9 +348,9 @@
 				return ;
 			}
 			if(number <= 2){
-				number1  = tmp_;
+				number1  = 11;
 			}else{
-				number1  = hum_;
+				number1  = 12;
 			}
 			id  = parseInt(number - 1)%2 + 1;
 			if(type1 === 'e'){
@@ -326,8 +362,12 @@
 			}else if(type1 === 'h'){
 				sub = 4;
 			}
-			rpc.call('pduSetData',[addr_,envir,number1,sub,id,stat]);
-			flash_html(ipt);
+
+			pdu_cfg.setData(6,number1,sub,id,stat);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
+			ipt.blur();
 		}
 		function buildTableTH(rows) {
 			var thead = '',tbody = '';
@@ -377,22 +417,16 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0 ,state1_ = 0;
 		function putdata(){
 			for(let i = 0;i < 4;i++){
-				state_ = document.getElementById('b' + i);
-				state_.innerHTML = data[i][0];
-				// state1_ = document.getElementById('k' + i);
-				// state_.innerHTML = parseFloat(data[i+4][0]).toFixed(1);
+				document.getElementById('b' + i).innerHTML = data[i][0];
 			}
 		}
 		setInterval(function(){
-			read_sensor_data(addr);
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+			ParseData();
+			read_data();
+			putdata();
+			showdata_();
 		},2000);
     </script>
 </body>

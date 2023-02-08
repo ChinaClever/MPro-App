@@ -14,8 +14,6 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
-    <script src="include/js/fn_public.js"></script>
-	<script src="include/js/rpc-over-websocket.js"></script>
 	<script src="include/js/chart.min.js"></script>
 	<style>
 		.box {
@@ -85,6 +83,14 @@
 					<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
 				</div>
 				<script type="text/javascript">
+					let pdu_cfg = top.pdu_cfg_;
+					let language;
+					let Tm1 = 850;
+					let Tm2 = 800;
+					if(top.first_time == 1){
+						Tm1 = 15;
+						Tm2 = 10;
+					}
 					let chart_lang = new Array();
 					let sel_name = new Array(3);
 					let sample_num = 50;
@@ -110,14 +116,19 @@
 					let dataLabels = new Array();
 					function set_data_show(num) {
 						for (let j = 0; j < sample_num; j++) {
-							data_total[j] = total_data[num][j];
-							data_inlet1[j] = inletA_data[num][j];
-							data_inlet2[j] = inletB_data[num][j];
-							data_inlet3[j] = inletC_data[num][j];
+							data_total[j] = top.total_data[num][j];
+							data_inlet1[j] = top.inletA_data[num][j];
+							data_inlet2[j] = top.inletB_data[num][j];
+							data_inlet3[j] = top.inletC_data[num][j];
 						}
 					}
-					chart_lang_init();
-					set_data_show(0);
+					setTimeout(() => {
+						top.first_time = 1;
+						chart_lang_init();
+						set_data_show(0);
+						ctx = document.getElementById('chart').getContext('2d');
+						chart = new Chart(ctx, config);
+					}, Tm1);
 					function chart_lang_init() {
 						for (let i = 0; i < 16; i++) {
 							chart_lang[i] = new Array();
@@ -130,26 +141,26 @@
 						sel_name[1] = chart_lang[2][language];
 						sel_name[2] = chart_lang[3][language];
 						title_text = chart_lang[4][language];
-					}
-					for (let k = sample_num; k > 0; k--) {
+						for (let k = sample_num; k > 0; k--) {
 
-						data_view[k] = 0;
-						Seco -= 3;
-						if (Seco < 0) {
-							Seco = 60 + Seco - 3;
-							Minu -= 1;
-							if (Minu < 0) {
-								Minu = 59;
-								Hou -= 1;
+							data_view[k] = 0;
+							Seco -= 3;
+							if (Seco < 0) {
+								Seco = 60 + Seco - 3;
+								Minu -= 1;
+								if (Minu < 0) {
+									Minu = 59;
+									Hou -= 1;
+								}
+								if (Hou < 0) {
+									Hou = 23;
+								}
 							}
-							if (Hou < 0) {
-								Hou = 23;
-							}
+							dataLabels[k - 1] = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
 						}
-						dataLabels[k - 1] = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
-					}
-					for (let i = 0; i < 3; i++) {
-						document.getElementById("sel1").options.add(new Option(sel_name[i], i));
+						for (let i = 0; i < 3; i++) {
+							document.getElementById("sel1").options.add(new Option(sel_name[i], i));
+						}
 					}
 
 					let config = {
@@ -287,11 +298,11 @@
 
 							dataLabels.push(label_);
 							if (chart_type == 0) {
-								data_total.push(total_data[chart_type][49]);
+								data_total.push(top.total_data[chart_type][49]);
 							}
-							data_inlet1.push(inletA_data[chart_type][49]);
-							data_inlet2.push(inletB_data[chart_type][49]);
-							data_inlet3.push(inletC_data[chart_type][49]);
+							data_inlet1.push(top.inletA_data[chart_type][49]);
+							data_inlet2.push(top.inletB_data[chart_type][49]);
+							data_inlet3.push(top.inletC_data[chart_type][49]);
 							if (chart_type == 0) {
 								data_total.shift();
 							}
@@ -303,8 +314,7 @@
 							chart.update();
 						}
 					}
-					ctx = document.getElementById('chart').getContext('2d');
-					chart = new Chart(ctx, config);
+					
 					time1 = setInterval(flash_chart, 3000);
 					function getRandomNum(min, max) {
 						var range = max - min;
@@ -319,20 +329,25 @@
 	</div>
 	</div>
 	<script>
-		let dev_dis = 0;
-		let line_vol = new Array();
+		var default_addr = 0;
+		let phase_num;
+		let loop_num;
+		let slave_num;
+		let phase_info_ = new Array();
+		let loop_info_ = new Array();
+		let sensor_info_ = new Array();
 		let phase_info = new Array();
-		let total_info = new Array();
-		let system_info = new Array();
 		let loop_info = new Array();
 		let sensor_info = new Array();
-		let phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-		let loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
-		let len = data_name.length - 1;
+		let total_info_ = new Array();
+		let freq_;
+		let dev_dis = 0;
+		let loop_se = new Array();
+		let total_info = new Array();
+		let system_info = new Array();
 		let total_title = new Array("kW", "kVA", "kWh", "Hz", "mA");
 		let lang = new Array(36);
 		let dev_name = new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
 		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
 		let stat_ = new Array("", "");
 		let serial_ = new Array("D", "A", "B", "C", "D");
@@ -342,10 +357,68 @@
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 
+		function ParseData(){
+			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let pdu_data = JSON.parse(DataString);
+			phase_num = pdu_data.pdu_info.line_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			top.language_ = language;
+			let k = 0;
+			for(let i = 0;i<phase_num;i++){
+				phase_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.line_item_list){
+					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let i = 0;i<loop_num;i++){
+				loop_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.loop_item_list){
+					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let i = 0;i<2;i++){
+				sensor_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.env_item_list){
+					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let key in pdu_data.pdu_data.pdu_tg_data){
+				total_info_[k] = pdu_data.pdu_data.pdu_tg_data[key];
+				k++;
+			}
+			freq_ = pdu_data.pdu_info.pdu_hz;
+			dev_dis = pdu_data.pdu_info.dev_mode;
+			for(let i = 0;i<loop_num;i++){
+				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
+			}
+		}
+		setTimeout(function(){
+			ParseData();
+			LangInit();
+		},Tm2);
+		setTimeout(function(){
+			$('.total').html(buildTablePhase(0));
+			$('.p1').html(buildTablePhase(1));
+			$('.p2').html(buildTablePhase(2));
+			$('.p3').html(buildTablePhase(3));
+			$('.loop_table').html(buildTableLoop(loop_num));
+			$('.sensor_tab').html(buildTableSensor());
+			// $('.sys_table').html(buildTableSystem());
+			$('.devname').html(buildSel((slave_num + 1)));
+			read_data();
+			LangFun();
+		},Tm1);
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
 		}
-		LangInit();
 		function LangInit() {
 			for (let i = 0; i < lang.length; i++) {
 				lang[i] = new Array();
@@ -410,90 +483,71 @@
 					document.getElementById("lang_" + i).innerHTML = lang[i][language];
 				}
 			}
-			document.getElementById("ms").value = addr;
+			document.getElementById("ms").value = pdu_cfg.addr;
 			if (dev_dis == 0) {
 				document.getElementById("dev_sel").style.display = "";
 			}
 		}
 		function read_chart_data() {
 			for (let i = 0; i < 3; i++) {
-				total_data[i] = total_data[i].slice(0, sample_num - 1);
-				inletA_data[i] = inletA_data[i].slice(0, sample_num - 1);
-				inletB_data[i] = inletB_data[i].slice(0, sample_num - 1);
-				inletC_data[i] = inletC_data[i].slice(0, sample_num - 1);
+				top.total_data[i] = top.total_data[i].slice(1, sample_num);
+				top.inletA_data[i] = top.inletA_data[i].slice(1, sample_num);
+				top.inletB_data[i] = top.inletB_data[i].slice(1, sample_num);
+				top.inletC_data[i] = top.inletC_data[i].slice(1, sample_num);
 			}
-			total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
-			total_data[1][49] = parseFloat(total_info[6]).toFixed(2);
-			total_data[2][49] = parseFloat(total_info[5]).toFixed(1);
+			top.total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
+			top.total_data[1][49] = 0;
+			top.total_data[2][49] = 0;
 			for (let i = 0; i < 3; i++) {
-				inletA_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
-				inletB_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
-				inletC_data[i][49] = parseFloat(phase_info[3][sample_[i]]).toFixed(2);
+				top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+				top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
+				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 			}
 		}
+		let phase_arr = [7,29,11,4,2,19,12];
+		let loop_arr = [1,0,8,3,29,19,11];
 		function read_data() {
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			total_info[0] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[4] + data_name[1] + addr));
-			total_info[1] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[7] + data_name[1] + addr));
-			total_info[2] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[5] + data_name[1] + addr));
-			total_info[3] = parseFloat(sessionStorage.getItem(cfg_name[6] + addr));
-			total_info[4] = 50;
-			total_info[5] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[2] + data_name[1] + addr));
-			total_info[6] = parseFloat(sessionStorage.getItem(type_name[0] + data_type[3] + data_name[1] + addr));
-			for (let i = 1; i < phase_num + 1; i++) {
+			total_info[0] = total_info_[4];
+			total_info[1] = total_info_[0];
+			total_info[2] = total_info_[2];
+			total_info[3] = freq_;
+			for (let i = 0; i < phase_num; i++) {
 				phase_info[i] = new Array();
-				line_vol[i] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[10] + data_name[1] + addr + '_' + i));
-				phase_info[i][0] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[1] + addr + '_' + i));
-				phase_info[i][1] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[2] + data_name[1] + addr + '_' + i));
-				phase_info[i][2] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[6] + data_name[1] + addr + '_' + i));
-				phase_info[i][3] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[3] + addr + '_' + i));
-				phase_info[i][4] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[3] + data_name[4] + addr + '_' + i));
-				phase_info[i][5] = parseFloat(sessionStorage.getItem(type_name[phase] + data_type[4] + data_name[1] + addr + '_' + i));
+				let j = 0;
+				for(let key of phase_arr){
+					phase_info[i][j] = phase_info_[i][key];
+					j++;
+				}
 			}
-			for (let i = 1; i < loop_num + 1; i++) {
+			for (let i = 0; i < loop_num; i++) {
 				loop_info[i] = new Array();
-				loop_info[i][0] = "C" + (i);
-				loop_info[i][1] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[1] + data_name[1] + addr + '_' + i));
-				loop_info[i][2] = sessionStorage.getItem(type_info[11] + "Num" + (i - 1) + '_' + addr) + '-' + sessionStorage.getItem(type_info[12] + "Num" + (i - 1) + '_' + addr);
-				loop_info[i][3] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[3] + data_name[1] + addr + '_' + i));
-				loop_info[i][4] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[3] + data_name[4] + addr + '_' + i));
-				loop_info[i][5] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[2] + data_name[1] + addr + '_' + i));
-				loop_info[i][6] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[4] + data_name[1] + addr + '_' + i));
-				loop_info[i][7] = parseFloat(sessionStorage.getItem(type_name[loop] + data_type[5] + data_name[1] + addr + '_' + i));
-			}
-			let type_num_ = 0;
-			for (let i = 0; i < head.length; i++) {
-				if (i > 3) {
-					type_num_ = 7;
-					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] + head[i] + "Val" + addr + "_1");
-				}
-				else {
-					type_num_ = 6;
-					sensor_info[i] = sessionStorage.getItem(type_name[type_num_] + head[i] + "Val" + addr + "_" + (parseInt(i % 2) + 1));
+				loop_info[i][0] = "C" + (i + 1);
+				let j = 1;
+				for(let key of loop_arr){
+					if(j == 2){
+						loop_info[i][j] = loop_se[i];
+					}else{
+						loop_info[i][j] = loop_info_[i][key];
+					}
+					j++;
 				}
 			}
-			let info = 0;
-			info = sensor_info[1];
-			sensor_info[1] = sensor_info[2];
-			sensor_info[2] = info;
-			system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
-			system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
-			system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
-			system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
-			system_info[4] = sessionStorage.getItem(ver_name[1]);
+			sensor_info[0] = sensor_info_[0][17];
+			sensor_info[1] = sensor_info_[1][17];
+			sensor_info[2] = sensor_info_[0][7];
+			sensor_info[3] = sensor_info_[1][7];
+			sensor_info[4] = sensor_info_[0][0];
+			sensor_info[5] = sensor_info_[1][0];
+			sensor_info[6] = sensor_info_[0][20];
+			sensor_info[7] = sensor_info_[0][10];
+			// system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
+			// system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
+			// system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
+			// system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
+			// system_info[4] = sessionStorage.getItem(ver_name[1]);
 			showdata();
 			read_chart_data();
 		}
-		$('.total').html(buildTablePhase(0));
-		$('.p1').html(buildTablePhase(1));
-		$('.p2').html(buildTablePhase(2));
-		$('.p3').html(buildTablePhase(3));
-		$('.loop_table').html(buildTableLoop(loop_num));
-		$('.sensor_tab').html(buildTableSensor());
-		// $('.sys_table').html(buildTableSystem());
-		$('.devname').html(buildSel((slave_num + 1)));
-		read_data();
-		LangFun();
 		function buildSel(rows) {
 			var tbody = '';
 			for (var i = 0; i < rows; i++) {
@@ -513,37 +567,37 @@
 
 			}
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(line_vol[i + 1]).toFixed(1);
-				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i + 1][0]).toFixed(2);
-				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i + 1][1]).toFixed(1);
-				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i + 1][2]).toFixed(2);
-				document.getElementById('pgt' + (i + 1)).style.width = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
-				if (phase_info[i + 1][3] == 2 || phase_info[i + 1][3] == 4) {
+				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][6]).toFixed(1);
+				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
+				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
+				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
+				document.getElementById('pgt' + (i + 1)).style.width = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
+				if (phase_info[i][3] == 2 || phase_info[i][3] == 4) {
 					document.getElementById('pgt' + (i + 1)).style.background = 'yellow';
 				}
-				else if (phase_info[i + 1][3] == 1 || phase_info[i + 1][3] == 8) {
+				else if (phase_info[i][3] == 1 || phase_info[i][3] == 8) {
 					document.getElementById('pgt' + (i + 1)).style.background = 'red';
 				}
 				else {
 					document.getElementById('pgt' + (i + 1)).style.background = '';
 				}
-				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i + 1][0] / phase_info[i + 1][4]).toFixed(2) * 100 + '%';
+				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
 			}
 			for (let i = 0; i < loop_num; i++) {
 				for (j = 0; j < 8; j++) {
 					if (j > 2 && j != 5 && j != 7) {
 						if (j == 6) {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(3) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit[j];
 						} else {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(2) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit[j];
 						}
 					} else if (j == 5 || j == 7) {
-						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i + 1][j]).toFixed(1) + loop_unit[j];
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit[j];
 					} else {
 						if (j == 1) {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i + 1][j]];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i][j]];
 						} else {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = loop_info[i + 1][j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = loop_info[i][j];
 						}
 					}
 				}
@@ -681,8 +735,8 @@
 			return tbody;
 		}
 		setInterval(function () {
-			ReadHomeData();
-			setTimeout(read_data(), 1000);
+			ParseData();
+			read_data();
 		}, 2000);
 	</script>
 </body>
