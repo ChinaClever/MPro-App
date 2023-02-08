@@ -211,6 +211,19 @@
 		}
 		showdata();
 		modeset();
+		function showdata_(){
+			for(var i = 1 ;i < table_len+ 1;i++){
+				var cs = document.getElementById('b'+(i-1));
+				if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
+					cs.bgColor = 'red';
+				}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
+					cs.bgColor = 'yellow';
+				}
+				else{
+					cs.bgColor = '';
+				}
+			}
+		}
 		function showdata(){
 			for(var i = 1 ;i < table_len+ 1;i++){
 				var ss = document.getElementById('c'+(i-1));
@@ -280,7 +293,7 @@
 				$('.tmp_hum_table').html(buildTableTH(table_len));
 				showdata();
 				lang_fun();
-			},2000);
+			},500);
 		}
 		function cked(ckd)
 		{
@@ -310,7 +323,6 @@
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);
-			flash_html(ckd);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -355,7 +367,7 @@
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);
-			flash_html(ipt);
+			ipt.blur();
 		}
 		function buildTableTH(rows) {
 			var thead = '',tbody = '';
@@ -408,28 +420,13 @@
 		function putdata(){
 			for(let i = 0;i < 4;i++){
 				document.getElementById('b' + i).innerHTML = data[i][0];
-				document.getElementById('d' + i).innerHTML = data[i][1];
 			}
 		}
-		function FlashSetData(){
-			let i = 0;
-			let time1 = setInterval(function(){
-				if(i == 10){
-					clearInterval(time1);
-				}
-				document.getElementById('e' + i).value = data[i][4];
-				document.getElementById('f' + i).value = data[i][5];
-				document.getElementById('g' + i).value = data[i][6];
-				document.getElementById('h' + i).value = data[i][3];
-				i++;
-			},500);
-		}
-
 		setInterval(function(){
 			ParseData();
 			read_data();
 			putdata();
-			showdata();
+			showdata_();
 		},2000);
     </script>
 </body>

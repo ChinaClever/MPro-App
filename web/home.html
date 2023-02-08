@@ -341,8 +341,8 @@
 		let sensor_info = new Array();
 		let total_info_ = new Array();
 		let freq_;
-
 		let dev_dis = 0;
+		let loop_se = new Array();
 		let total_info = new Array();
 		let system_info = new Array();
 		let total_title = new Array("kW", "kVA", "kWh", "Hz", "mA");
@@ -397,8 +397,7 @@
 			freq_ = pdu_data.pdu_info.pdu_hz;
 			dev_dis = pdu_data.pdu_info.dev_mode;
 			for(let i = 0;i<loop_num;i++){
-				pdu_cfg.getCfg(12,11,i,0);
-				pdu_cfg.getCfg(12,12,i,0);
+				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
 			}
 		}
 		setTimeout(function(){
@@ -526,7 +525,7 @@
 				let j = 1;
 				for(let key of loop_arr){
 					if(j == 2){
-						loop_info[i][j] = pdu_cfg.cfgValue(12,11,i,0) + '-' + pdu_cfg.cfgValue(12,12,i,0);
+						loop_info[i][j] = loop_se[i];
 					}else{
 						loop_info[i][j] = loop_info_[i][key];
 					}
