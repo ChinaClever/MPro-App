@@ -16,7 +16,6 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
-    <script src="./include/js/fn_public.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
 </head>
 <body>
@@ -35,10 +34,11 @@
 	<script>
 		var pdu_cfg_ = new PduCfgs;
 		var language_;
+		var dev_dis_;
+		var first_time = 0;
 		setTimeout(function(){
 			PduMetaData.meta_workDown(pdu_cfg_);
 		},300);
-		setTimeout(function(){language_ = pdu_cfg_.cfgValue(13,10,0,0);},400);
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',this.popstateFun,false);
 		function popstateFun(){
@@ -84,6 +84,9 @@
 				inletC_data[i][j] = 0;
 			}
 		}
+		setInterval(function(){
+			PduMetaData.meta_workDown(pdu_cfg_);
+		},2000);
 	</script>
 </body>
 </html>

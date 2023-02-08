@@ -14,7 +14,6 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
-	<script src="include/js/pdu_rpc.js"></script>
 	<script src="include/js/chart.min.js"></script>
 	<style>
 		.box {
@@ -85,8 +84,13 @@
 				</div>
 				<script type="text/javascript">
 					let pdu_cfg = top.pdu_cfg_;
-					top.language_ = 0;
-					let language =top.language_;
+					let language;
+					let Tm1 = 850;
+					let Tm2 = 800;
+					if(top.first_time == 1){
+						Tm1 = 15;
+						Tm2 = 10;
+					}
 					let chart_lang = new Array();
 					let sel_name = new Array(3);
 					let sample_num = 50;
@@ -119,11 +123,12 @@
 						}
 					}
 					setTimeout(() => {
+						top.first_time = 1;
 						chart_lang_init();
 						set_data_show(0);
 						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
-					}, 500);
+					}, Tm1);
 					function chart_lang_init() {
 						for (let i = 0; i < 16; i++) {
 							chart_lang[i] = new Array();
@@ -136,26 +141,26 @@
 						sel_name[1] = chart_lang[2][language];
 						sel_name[2] = chart_lang[3][language];
 						title_text = chart_lang[4][language];
-					}
-					for (let k = sample_num; k > 0; k--) {
+						for (let k = sample_num; k > 0; k--) {
 
-						data_view[k] = 0;
-						Seco -= 3;
-						if (Seco < 0) {
-							Seco = 60 + Seco - 3;
-							Minu -= 1;
-							if (Minu < 0) {
-								Minu = 59;
-								Hou -= 1;
+							data_view[k] = 0;
+							Seco -= 3;
+							if (Seco < 0) {
+								Seco = 60 + Seco - 3;
+								Minu -= 1;
+								if (Minu < 0) {
+									Minu = 59;
+									Hou -= 1;
+								}
+								if (Hou < 0) {
+									Hou = 23;
+								}
 							}
-							if (Hou < 0) {
-								Hou = 23;
-							}
+							dataLabels[k - 1] = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
 						}
-						dataLabels[k - 1] = (Hou < 10 ? '0' + Hou : Hou) + ':' + (Minu < 10 ? '0' + Minu : Minu) + ':' + (Seco < 10 ? '0' + Seco : Seco);
-					}
-					for (let i = 0; i < 3; i++) {
-						document.getElementById("sel1").options.add(new Option(sel_name[i], i));
+						for (let i = 0; i < 3; i++) {
+							document.getElementById("sel1").options.add(new Option(sel_name[i], i));
+						}
 					}
 
 					let config = {
@@ -354,11 +359,12 @@
 
 		function ParseData(){
 			let DataString = pdu_cfg.cfgValue(100,0,0,0);
-			console.log(DataString);
 			let pdu_data = JSON.parse(DataString);
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			top.language_ = language;
 			let k = 0;
 			for(let i = 0;i<phase_num;i++){
 				phase_info_[i] = new Array();
@@ -371,8 +377,8 @@
 			for(let i = 0;i<loop_num;i++){
 				loop_info_[i] = new Array();
 				let j = 0;
-				for(let key in pdu_data.pdu_data.line_item_list){
-					loop_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+				for(let key in pdu_data.pdu_data.loop_item_list){
+					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
 					j ++;
 				}
 			}
@@ -395,8 +401,10 @@
 				pdu_cfg.getCfg(12,12,i,0);
 			}
 		}
-		LangInit();
-		setTimeout(function(){ParseData()},500);
+		setTimeout(function(){
+			ParseData();
+			LangInit();
+		},Tm2);
 		setTimeout(function(){
 			$('.total').html(buildTablePhase(0));
 			$('.p1').html(buildTablePhase(1));
@@ -408,7 +416,7 @@
 			$('.devname').html(buildSel((slave_num + 1)));
 			read_data();
 			LangFun();
-		},650);
+		},Tm1);
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
 		}
@@ -483,10 +491,10 @@
 		}
 		function read_chart_data() {
 			for (let i = 0; i < 3; i++) {
-				top.total_data[i] = top.total_data[i].slice(0, sample_num - 1);
-				top.inletA_data[i] = top.inletA_data[i].slice(0, sample_num - 1);
-				top.inletB_data[i] = top.inletB_data[i].slice(0, sample_num - 1);
-				top.inletC_data[i] = top.inletC_data[i].slice(0, sample_num - 1);
+				top.total_data[i] = top.total_data[i].slice(1, sample_num);
+				top.inletA_data[i] = top.inletA_data[i].slice(1, sample_num);
+				top.inletB_data[i] = top.inletB_data[i].slice(1, sample_num);
+				top.inletC_data[i] = top.inletC_data[i].slice(1, sample_num);
 			}
 			top.total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
 			top.total_data[1][49] = 0;
@@ -498,7 +506,7 @@
 			}
 		}
 		let phase_arr = [6,26,10,4,2,17,11];
-		let loop_arr = [1,0,7,3,27,18,10];
+		let loop_arr = [1,0,7,3,26,17,10];
 		function read_data() {
 			total_info[0] = total_info_[4];
 			total_info[1] = total_info_[0];
@@ -727,10 +735,10 @@
 			}
 			return tbody;
 		}
-		// setInterval(function () {
-		// 	ReadHomeData();
-		// 	setTimeout(read_data(), 1000);
-		// }, 2000);
+		setInterval(function () {
+			ParseData();
+			read_data();
+		}, 2000);
 	</script>
 </body>
 
