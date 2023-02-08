@@ -25,6 +25,7 @@ bool Agent_Set::toIndex(uint addr, const QSNMPOid &oid)
     if((oid.at(k++) == 30966) && (oid.at(k++) == 11)) {
         if(oid.at(k++) == addr) {
             it->addr = addr;
+            it->rw = oid.at(k++);
             it->fc = oid.at(k++);
             it->id = oid.at(k++);
             it->type = oid.at(k++);
@@ -81,9 +82,9 @@ bool Agent_Set::cfgSet(const QVariant &value)
 
 bool Agent_Set::upAlarmIndex(sDataItem &index)
 {
-    uchar v=0;
-    bool ret = true;
     sIndex *it = &mIndex;
+    uchar v=0; bool ret = true;
+    index.txType = DTxType::TxSnmp;
     index.addr = it->addr;
     index.id = it->id;
     index.rw = 1;
@@ -92,34 +93,35 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
     case 1: v = DType::Line; break;
     case 2: v = DType::Loop; break;
     case 3: v = DType::Output; break;
-    case 4: v = DType::Group; break;
-    case 5: v = DType::Dual; break;
-    case 6: v = DType::Env; break;
+    case 4: v = DType::Group; it->type +=1; break;
+    case 5: v = DType::Dual; it->type +=1; break;
+    case 6: v = DType::Env; it->type +=5; break;
     default: ret = false; break;
     } index.type = v;
 
     switch (it->type) {
-    case 1: v = DTopic::Relay; break;
-    case 2: v = DTopic::Vol; break;
-    case 3: v = DTopic::Cur; break;
-    case 4: v = DTopic::Pow; break;
-    case 5: v = DTopic::Ele; break;
+    case 1: v = DTopic::Vol; break;
+    case 2: v = DTopic::Cur; break;
+    case 3: v = DTopic::Pow; break;
+    case 4: v = DTopic::Ele; break;
     case 6: v = DTopic::Tem; break;
     case 7: v = DTopic::Hum; break;
     default: ret = false; break;
     } index.topic = v;
 
+    switch (it->subtopic) {
+    case 1: v = DSub::EnAlarm; break;
+    case 2: v = DSub::VMax; break;
+    case 3: v = DSub::VCrMax; break;
+    case 4: v = DSub::VCrMin; break;
+    case 5: v = DSub::VMin; break;
+    case 6: v = DSub::Rated; break;
+    case 7: v = DSub::Alarm; break;
+    default: ret = false; break;
+    } index.subtopic = v;
+
     if(index.type > 1) {
-        switch (it->subtopic) {
-        case 2: v = DSub::Alarm; break;
-        case 3: v = DSub::VMax; break;
-        case 4: v = DSub::VCrMax; break;
-        case 5: v = DSub::VCrMin; break;
-        case 6: v = DSub::VMin; break;
-        case 7: v = DSub::EnAlarm; break;
-        case 8: v = DSub::Rated; break;
-        default: ret = false; break;
-        }
+
     } else {
         switch (it->subtopic) {
         case 1: v = DSub::Value; break;
@@ -132,8 +134,7 @@ bool Agent_Set::upAlarmIndex(sDataItem &index)
         default: ret = false; break;
         }
     }
-    index.subtopic = v;
-    index.txType = DTxType::TxSnmp;
+
 
     return ret;
 }
@@ -194,11 +195,26 @@ bool Agent_Set::setName(int type,const QVariant &value)
     return Set_Core::bulid()->setCfg(item, value);
 }
 
+
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)
 {
     sIndex *it = &mIndex; m_oid = oid;
     bool ret = toIndex(addr, oid);
     if(ret) {
+        if(2 == it->rw) {
+
+
+            switch (it->fc) {
+            case 0: ret = cfgSet(value); break;
+           // case 1: ret
+            default:
+                break;
+            }
+
+        } else if(3 == it->rw) {
+
+        }
+
         if(0 == it->fc) ret = cfgSet(value);
         //else if((3 == it->fc) && (0 == it->type)) ret = setOutputName(value); //////========
         //else if((3 == it->fc) && (1 == it->type)) ret = relayCtrl(value);   ////////=========

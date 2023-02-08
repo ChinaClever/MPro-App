@@ -43,10 +43,21 @@ void Mb_Group::group_update()
 
 void Mb_Group::group_ctrl(int id, ushort value)
 {
-    QList<int> ids; sObjData *obj = &(mDevData->group);
-    ids = Data_Core::bulid()->outletByGroup(id);
-    sRelayUnit *it = &(obj->relay);
-    if(it->en[id]) OP_Core::bulid()->relaysCtrl(ids, value);
+    //QList<int> ids; sObjData *obj = &(mDevData->group);
+    //ids = Data_Core::bulid()->outletByGroup(id);
+    //sRelayUnit *it = &(obj->relay);
+   // if(it->en[id]) OP_Core::bulid()->relaysCtrl(ids, value);
+
+    sDataItem unit;
+    unit.rw = 1;
+    unit.id = id+1;
+    unit.addr = 0;
+    unit.type = DType::Group;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Value;
+    unit.txType = DTxType::TxSnmp;
+    unit.value = value;
+    Set_Core::bulid()->setting(unit);
 }
 
 void Mb_Group::group_setting(ushort addr, ushort value)
