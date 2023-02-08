@@ -43,9 +43,12 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
-        devInfo(dev->cfg, "pdu_info", json);
-        uutInfo(dev->cfg.uut, "uut_info", json);
-        verInfo(dev->cfg.vers, "pdu_version", json);
+
+        if(dc > 1) {
+            devInfo(dev->cfg, "pdu_info", json);
+            uutInfo(dev->cfg.uut, "uut_info", json);
+            verInfo(dev->cfg.vers, "pdu_version", json);
+        }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
@@ -107,7 +110,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
         arrayAppend(it.max, size, key+"_alarm_max", json, r);
         arrayAppend(it.crMin, size, key+"_warn_min", json, r);
         arrayAppend(it.crMax, size, key+"_warn_max", json, r);
-        arrayAppend(it.hda, size, key+"_hda_en", json, r);
+        arrayAppend(it.hda, size, key+"_hda_en", json);
     }
 }
 
