@@ -133,13 +133,13 @@ bool Agent_Set::setAlarm(const QVariant &value)
     return ret;
 }
 
-bool Agent_Set::relayCtrl(const QVariant &value)
+bool Agent_Set::relayGroupCtrl(const QVariant &value)
 {
     sDataItem unit;
     unit.rw = 1;
     unit.id = mIndex.id;
     unit.addr = mIndex.addr;
-    unit.type = DType::Output;
+    unit.type = DType::Group;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
     unit.txType = DTxType::TxSnmp;
@@ -147,13 +147,13 @@ bool Agent_Set::relayCtrl(const QVariant &value)
     return Set_Core::bulid()->setting(unit);
 }
 
-bool Agent_Set::relayCtrl(int type, const QVariant &value)
+bool Agent_Set::relayDualCtrl(const QVariant &value)
 {
     sDataItem unit;
     unit.rw = 1;
     unit.id = mIndex.id;
     unit.addr = mIndex.addr;
-    unit.type = type;
+    unit.type = DType::Dual;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
     unit.txType = DTxType::TxSnmp;
@@ -185,34 +185,29 @@ bool Agent_Set::ctrlOutput(const QVariant &value)
     unit.rw = 1;
     unit.id = mIndex.id;
     unit.addr = mIndex.addr;
-    uchar v=0; bool ret = true;
-    sIndex *it = &mIndex;
+    unit.type = DType::Output;
+    unit.txType = DTxType::TxSnmp;
+    uchar v=1; sIndex *it = &mIndex;
 
     if(it->type) {
-
+        unit.topic = DTopic::Ele;
     } else {
         switch (it->subtopic) {
         case 1: v = DSub::Value; break;
-        case 7: v = DSub::RelayEn; break;
-        case 2: v = DSub::Alarm; break;
-        case 3: v = DSub::Rated; break;
-        case 4: v = DSub::UpDelay; break;
-        case 5: v = DSub::ResetDelay; break;
-        case 6: v = DSub::OverrunOff; break;
-        default: ret = false; break;
-        }
+        case 2: v = DSub::RelayEn; break;
+        case 3: v = DSub::Alarm; break;
+        case 4: v = DSub::Rated; break;
+        case 5: v = DSub::UpDelay; break;
+        case 6: v = DSub::ResetDelay; break;
+        case 7: v = DSub::OverrunOff; break;
+        default: cout << it->subtopic; break;
+        }  unit.topic = DTopic::Relay;
     }
 
-
-//    unit.type = type;
-    unit.topic = DTopic::Relay;
-    unit.subtopic = DSub::Value;
-    unit.txType = DTxType::TxSnmp;
+    unit.subtopic = v;
     unit.value = value.toUInt();
-
-    return ret;
+    return Set_Core::bulid()->setting(unit);
 }
-
 
 void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value)
 {
@@ -226,18 +221,10 @@ void Agent_Set::snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &valu
         } else if(3 == it->rw) {
             switch (it->fc) {
             case 1: ret = ctrlOutput(value); break;
-
-            default:
-                break;
+            case 2: ret = relayGroupCtrl(value); break;
+            case 3: ret = relayDualCtrl(value); break;
             }
         }
-
-        if(0 == it->fc) ret = cfgSet(value);
-        //else if((3 == it->fc) && (0 == it->type)) ret = setOutputName(value); //////========
-        //else if((3 == it->fc) && (1 == it->type)) ret = relayCtrl(value);   ////////=========
-        else if(0 == it->type) ret = setName(it->fc, value);
-        //else if(1 == it->type) ret = relayCtrl(it->fc, value);
-        else ret = setAlarm(value);
     }
 
     if(!ret) cout << addr << oid << value;
