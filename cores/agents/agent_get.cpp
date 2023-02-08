@@ -17,6 +17,8 @@ void Agent_Get::addUutInfo(uchar addr, const QString &oidPrefix, sUutInfo &it)
     int id = 1; QString oid = "2.0.1.";
     QString prefix = oidPrefix + "uut-";
     addOid(addr, id++, oid, prefix+"room", it.room);
+    return ;
+
     addOid(addr, id++, oid, prefix+"location", it.location);
     addOid(addr, id++, oid, prefix+"name", it.devName);
     addOid(addr, id++, oid, prefix+"qrcode", it.qrcode);
@@ -73,6 +75,7 @@ void Agent_Get::addDevInfo(uchar addr, const QString &oidPrefix, sDevCfg &dev)
 {
     QString oid = oidPrefix + "write-info-";
     addUutInfo(addr, oid, dev.uut);
+return ;
 
     oid = oidPrefix + "read-info-";
     addDevNums(addr, oid, dev.nums);
@@ -174,7 +177,9 @@ void Agent_Get::addDoors(uchar addr, const QString &oidPrefix, sEnvData &it)
 void Agent_Get::addDevData(uchar addr, sDevData *it)
 {
     QString name = tr("pdu-%1-").arg(addr);
-//    addDevInfo(addr, name, it->cfg);
+    addDevInfo(addr, name, it->cfg);
+
+    return ;
 
 //    int size = it->cfg.nums.lineNum;
 //    for(int i=0; i<size; ++i) {
