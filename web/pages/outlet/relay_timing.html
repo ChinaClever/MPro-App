@@ -51,34 +51,56 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		let output_info_ = new Array();
 		var read  = 1;
 		let dev_dis = 0;
 		let lang = new Array();
 		let output_data = new Array();
 		let output_name = new Array();
 		var dev_name =new Array();
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		var output_num;
+		var slave_num;
 		let time_sw = new Array();
 		let sw_mark = 0;
-		read_data();
-		lang_init();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				output_data[i] = new Array();
-				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				output_data[i][0] = sessionStorage.getItem(type_name[22]+ info_info[2] +addr +'_'+i);
-				output_data[i][1] = sessionStorage.getItem(type_name[22]+ info_info[3] +addr +'_'+i);
-				time_sw[i] =  sessionStorage.getItem(type_name[output]+ data_type[switch_] + alarm_name[7] + addr +'_'+i);
+		function ParseData(){
+			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
 			}
 		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
+		function read_data(){
+			for (let i = 1; i < output_num + 1; i++) {
+				output_data[i] = new Array();
+				output_name[i] = output_info_[i - 1][11];
+				output_data[i][0] = output_info_[i - 1][31];
+				output_data[i][1] = output_info_[i - 1][30];
+				time_sw[i] = output_info_[i - 1][29];
+			}
+		}
+		read_data();
+		lang_init();
 		function lang_init(){
 			for(let i = 0;i<17;i++){
 				lang[i] = new Array();
@@ -191,13 +213,6 @@
 				}else{
 					hs.checked = true;
 				}
-				if(i == output_num){
-					if(sw_mark ==1){
-						document.getElementById('i'+(i)).checked = true;
-					}else{
-						document.getElementById('i'+(i)).checked = false;
-					}
-				}
 			}
 
 		}
@@ -234,16 +249,12 @@
 		}
 		function flash_html(par)
 		{
-			read_output_param(0);
-			read_time_sw_data();
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				$('.table-striped').html(buildTable(output_num));
-				lang_fun();
-				showdata();
-				datetime();
-			},800);
+			par.parentNode.parentNode.parentNode.remove();
+			read_data();
+			$('.table-striped').html(buildTable(output_num));
+			lang_fun();
+			showdata();
+			datetime();
 		}
 		function cked(ckd)
 		{
@@ -256,42 +267,52 @@
 				}else{
 					stat = '0';
 				}
-				if(num == output_num +1){
-					if(ckd.checked == true){
-						sw_mark = 1;
-					}else{
-						sw_mark = 0;
-					}
-				}
 				if(num !== output_num + 1){
 
 				}else{
 					num = 0;
+					for(let i = 0;i<output_num;i++){
+						if(ckd.checked == true){
+							document.getElementById(type1+(i)).checked = true;
+						}else{
+							document.getElementById(type1+(i)).checked = false;
+						}
+					}
 				}
-				rpc.call('pduSetData',[addr,output,switch_,7,num,stat]);
+				pdu_cfg.setData(3,1,7,num,stat);
+				setTimeout(() => {
+					PduMetaData.meta_workDown(pdu_cfg);
+				}, 100);
 			}
-			flash_html(ckd);
 		}
 		function btn_click(btn)
 		{
-			var type1 = btn.id.substr(0,1);
-			var num = parseInt(btn.id.slice(1))+1;
-			var stat = 0,val = "";
-			var retVal = confirm("您已更改表单，请确认提交！");
+			let type_ = 0;
+			let type1 = btn.id.substr(0,1);
+			let num = parseInt(btn.id.slice(1))+1;
+			let stat = 0,val = "";
+			let retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
 				stat = type1.charCodeAt() - 'g'.charCodeAt() + 2;
-				if(num !== output_num + 1){
-				}else{
-					num = 0;
-				}
+				type_ = String.fromCharCode('c'.charCodeAt()+ stat -2);
 				val = document.getElementById('e'+ (num -1)).value;
 				if(val != ""){
 					val += " ";
 				}
 				val += document.getElementById('f'+ (num -1)).value;
-				rpc.call('pduSetParam',[addr,22,stat,num,0,val]);
-				flash_html(btn);
+				if(num !== output_num + 1){
+					document.getElementById(type_+(num -1)).innerHTML = val;
+				}else{
+					for(let i = 0;i<output_num;i++){
+						document.getElementById(type_+(i)).innerHTML = val;
+					}
+					num = 0;
+				}
+				pdu_cfg.setCfg(22,stat,val,num,addr);
+				setTimeout(() => {
+					PduMetaData.meta_workDown(pdu_cfg);
+				}, 100);
 			}else{}
 		}
 		function buildTable(rows) {

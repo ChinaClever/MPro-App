@@ -84,7 +84,7 @@
 			phase_num = pdu_data.pdu_info.line_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.dev_mode;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<phase_num;i++){
 				phase_info_[i] = new Array();
@@ -272,19 +272,16 @@
 		}
 		function flash_html(par)
 		{
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				if(par.name == "pow"){
-					$('.pow_table').html(buildTablePow(phase_num));
-				}else if(par.name == "cur"){
-					$('.cur_table').html(buildTableCur(phase_num));
-				}else if(par.name == "vol"){
-					$('.vol_table').html(buildTableVol(phase_num));
-				}
-				showdata();
-				lang_fun();
-			},1500);
+			par.parentNode.parentNode.parentNode.remove();
+			if(par.name == "pow"){
+				$('.pow_table').html(buildTablePow(phase_num));
+			}else if(par.name == "cur"){
+				$('.cur_table').html(buildTableCur(phase_num));
+			}else if(par.name == "vol"){
+				$('.vol_table').html(buildTableVol(phase_num));
+			}
+			showdata();
+			lang_fun();
 		}
 		function cked(ckd)
 		{
@@ -353,7 +350,7 @@
 				number1 = number;
 				if(data1>data2 || data2>data3 || data3>data4){
 					alert("input data error");
-					showdata();
+					flash_html(ipt);
 					return ;
 				}
 			}
@@ -382,6 +379,8 @@
 					document.getElementById(ipt.name+(i)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
 				}
 				document.getElementById(ipt.name + phase_num).childNodes[childnum].childNodes[0].value = "";
+			}else{
+				document.getElementById(ipt.name+(number -1)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
 			}
 			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {

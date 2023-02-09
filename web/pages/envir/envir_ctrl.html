@@ -287,13 +287,10 @@
 		}
 		function flash_html(par)
 		{
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				$('.tmp_hum_table').html(buildTableTH(table_len));
-				showdata();
-				lang_fun();
-			},500);
+			par.parentNode.parentNode.parentNode.remove();
+			$('.tmp_hum_table').html(buildTableTH(table_len));
+			showdata();
+			lang_fun();
 		}
 		function cked(ckd)
 		{
@@ -344,7 +341,7 @@
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
 			if(data1>data2 || data2>data3 || data3>data4){
 				alert("input data error");
-				showdata();
+				flash_html(ipt);
 				return ;
 			}
 			if(number <= 2){

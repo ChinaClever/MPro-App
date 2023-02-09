@@ -33,8 +33,8 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"><i class="fa fa-sitemap fa-lg" style="padding-right: 5px;"></i><span
 						id="lang_1"></span>
-					<ul id="dev_sel" style="float:right; font-family:courier;display: none;"><span
-							id="lang_2"></span><select class="devname" id="ms" style="width:200px;"
+					<ul id="dev_sel" style="float:right; padding-right:5%;font-family:courier;display: none;"><span
+							id="lang_2"></span><select class="devname" id="ms" style="width:100px;"
 							onChange="change(this);"></select></ul>
 				</div>
 			</div>
@@ -365,6 +365,8 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
 			top.language_ = language;
+			freq_ = pdu_data.pdu_info.pdu_hz;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<phase_num;i++){
 				phase_info_[i] = new Array();
@@ -394,8 +396,6 @@
 				total_info_[k] = pdu_data.pdu_data.pdu_tg_data[key];
 				k++;
 			}
-			freq_ = pdu_data.pdu_info.pdu_hz;
-			dev_dis = pdu_data.pdu_info.dev_mode;
 			for(let i = 0;i<loop_num;i++){
 				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
 			}

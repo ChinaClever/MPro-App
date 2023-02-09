@@ -254,20 +254,20 @@ class PduCfgItem extends PduDataItem {
     }
 
     // 从Map表中获取某个配置参数
-    cfgValue(type, fc, id=0, addr=0) {
+    cfgValue(type, fc, id, addr) {
         var key = addr+'_'+type+'_'+fc+'_'+id+'_'+0;
         return this.rpc.json_rpc_value(key);
     }
 
     // 刷新某个配置参数至Map表中
-    getCfg(type, fc, id=0, addr=0) {
+    getCfg(type, fc, id, addr) {
         var method = "pduReadParam"; 
         var params = [addr, type, fc, id,0];
         return this.rpc.json_rpc_get(method, params);
     }
 
     // 修改某个配置参数
-    setCfg(type, fc, value, id=0, addr=0) {
+    setCfg(type, fc, value, id, addr) {
         var method = "pduSetParam"; 
         var params = [addr, type, fc, id, 0, value];
         return this.rpc.json_rpc_set(method, params);
