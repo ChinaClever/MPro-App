@@ -126,6 +126,15 @@ void Agent_Get::addRelayGroup(uchar addr, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"switch", it.sw[index]);
 }
 
+void Agent_Get::addOutputEle(uchar addr, const QString &oidPrefix,
+                            const QString &oidName, sObjData &it, int index)
+{
+    if(!it.size) return;
+    int id = 1; QString oid = oidPrefix + ".2.";
+    QString name = tr("%1-%2-ele-").arg(oidName).arg(index+1);
+    addOidValue(addr, id++, oid, name+"value", it.ele[index]);
+}
+
 void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
                            const QString &oidName, sObjData &it, int index, int type)
 {
@@ -214,6 +223,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
 
         oid = "3.1." +QString::number(i+1);
         addRelayUnit(addr, oid, name+"ctrl-output", it->output.relay, i);
+        addOutputEle(addr, oid, name+"ctrl-output", it->output, i);
     }
 
     size = it->group.size;

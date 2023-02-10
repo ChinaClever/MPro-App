@@ -29,6 +29,7 @@ private:
     void faultCode(sDevData *dev, QJsonObject &json);
     void netAddr(const sNetInterface &it, const QString &key, QJsonObject &json);
     void groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
+    void webGroupData(sDevData *it, QJsonObject &obj);
 
 private:
     int mDataContent;

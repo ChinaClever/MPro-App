@@ -24,8 +24,8 @@ private:
     bool ctrlOutput(const QVariant &value);
 
     bool setName(int type,const QVariant &value);
-    bool relayCtrl(int type, const QVariant &value);
-    bool relayCtrl(const QVariant &value);
+    bool relayDualCtrl(const QVariant &value);
+    bool relayGroupCtrl(const QVariant &value);
     bool setOutputName(const QVariant &value);
 
 

@@ -19,7 +19,7 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
     return sington;
 }
 
-// dc 0 使用系统配置， 1读的参数 2 所有参数
+// dc 0 使用系统配置， 1读的参数 2 所有参数 3网页数据
 QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
 {
     QByteArray array; QJsonObject json = getJsonObject(addr, dc);
@@ -212,20 +212,23 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj; sAlarmUnit tem=it.tem, hum = it.hum;
-    if(mDataContent < 2) {
+    QJsonObject obj;
+    if(mDataContent < 3) {
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
         if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
+        alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+        alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
+        sAlarmUnit tem=it.tem, hum = it.hum;
         if(!tem.size) tem.size = hum.size = 2;
         arrayAppend(it.door, 2, "door", obj);
         arrayAppend(it.water, 1, "water", obj);
         arrayAppend(it.smoke, 1, "smoke", obj);
+        alarmUnit(tem, "tem", obj, COM_RATE_TEM);
+        alarmUnit(hum, "hum", obj, COM_RATE_HUM);
     }
 
-    alarmUnit(tem, "tem", obj, COM_RATE_TEM);
-    alarmUnit(hum, "hum", obj, COM_RATE_HUM);
     if(obj.size()) json.insert(key, obj);
 }
 
@@ -264,6 +267,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
     obj.insert("board_num", it.nums.boardNum/r);
+    obj.insert("group_en", it.param.groupEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
 
     QJsonArray loopEnd, loopStart;
@@ -292,14 +296,30 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     if(obj.size()) json.insert(key, obj);
 }
 
+void Integr_JsonBuild::webGroupData(sDevData *it, QJsonObject &obj)
+{
+    sObjData group = it->group;
+    group.size = group.pow.size = GROUP_NUM;
+    group.relay.size = it->output.relay.size ? GROUP_NUM:0;
+    ObjData(group, "group_item_list", obj, 4);
+
+    sObjData dual = it->dual;
+    group.size = group.pow.size = it->output.size;
+    ObjData(dual, "dual_item_list", obj, 5);
+}
+
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
     ObjData(it->line, "line_item_list", obj, 1);
     ObjData(it->loop, "loop_item_list", obj, 2);
     ObjData(it->output, "output_item_list", obj, 3);
-    ObjData(it->group, "group_item_list", obj, 4);
-    ObjData(it->dual, "dual_item_list", obj, 5);
+
+    if(mDataContent < 3) {
+        ObjData(it->group, "group_item_list", obj, 4);
+        ObjData(it->dual, "dual_item_list", obj, 5);
+    } else webGroupData(it, obj);
+
     tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
