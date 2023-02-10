@@ -31,10 +31,10 @@ QString JsonRpc_Client::execute(const QString &cmd)
     return ret;
 }
 
-QString JsonRpc_Client::pduMetaData(uchar addr)
+QString JsonRpc_Client::pduMetaData(uchar addr, int dc)
 {
     QString ret; if(!isConnected()) return ret;
-    auto result = rpc_client->call("pduMetaData", addr);
+    auto result = rpc_client->call("pduMetaData", addr, dc);
     if (result->isSuccess()) {
         ret = result->result().toString();
     } else {
