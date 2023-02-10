@@ -132,6 +132,7 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
     } else if(mDataContent > 1) dc = true;
 
     if(dc) {
+        arrayAppend(it.en, size, key+"_enable", json);
         arrayAppend(it.alarm, size, key+"_alarm", json);
         arrayAppend(it.offAlarm, size, key+"_off_alarm", json);
         arrayAppend(it.resetDelay, size, key+"_reset_delay", json);
