@@ -79,7 +79,7 @@
 		let slave_num;
 		let lang = new Array();
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
@@ -95,9 +95,7 @@
 				}
 			}
 		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
+		ParseData();
 		function read_data(){
 			for (let i = 1; i < output_num + 1; i++) {
 				output_name[i] = output_info_[i - 1][11];

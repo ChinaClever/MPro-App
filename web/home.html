@@ -358,7 +358,7 @@
 		let sample_ = new Array(5, 0, 1);
 
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
@@ -429,7 +429,7 @@
 			lang[4] = ["电能消耗:", "Electric energy: ", "Énergie électrique: ", "расход электроэнергии: ", "Consumo de energía eléctrica: ", "استهلاك الطاقة"];
 			lang[5] = ["频率:", "Frequency:", "Fréquence:", "частота:", "Frecuencia:", "تردد:"];
 			lang[6] = ["漏电电流:", "Leakage current:", "Courant de fuite:", , "ток утечки:", "corriente de fuga:", "التسرب الحالي:"];
-			lang[7] = ["输出", "Output", "Output", "выход", "Salida", "تصدير"];
+			lang[7] = ["回路输入", "Output", "Output", "выход", "Salida", "تصدير"];
 			lang[8] = ["回路", "Circuit", "Circuit", "цепь", "Vuelta", "فرع الطريق"];
 			lang[9] = ["状态", "Status", "état", "состояние", "Estado", "دولة"];
 			lang[10] = ["输出位", "Outlet", "Output bit", "выходной бит", "Salida de salida", "الانتاج قليلا"];

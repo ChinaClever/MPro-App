@@ -34,10 +34,13 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_rpc_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		pdu_cfg.ampqCfg();
 		var mode_name = new Array("","TCP","WebSocket");
 		var mode_name1 = new Array("","HTTP");
 		var data_id  = new Array("json_mode","json_port","","xml_mode","xml_port");
@@ -69,19 +72,25 @@
 				}
 			}
 		}
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		lang_init();
 		function read_data(){
 			for(let i = 0;i < data_id.length;i++){
 				if( i != 2){
-					rpc_data[i+1] = parseInt(sessionStorage.getItem(type_name[17]+ rpc_info[i + 1]));
+					rpc_data[i+1] = pdu_cfg.cfgValue(17,i + 1,0,addr);
 				}
 			}
 		}
-		$('.json_rpc').html(buildTableRpc());
-		$('.xml_rpc').html(buildTableRpc_());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			$('.json_rpc').html(buildTableRpc());
+			$('.xml_rpc').html(buildTableRpc_());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
@@ -106,19 +115,18 @@
 			}
 		}
 		function flash_html(){
-			read_rpc_data(default_addr);
+			pdu_cfg.rpcCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function SetData(btn){
-			let mds_data = 0, setbtn = 0 ,lab = 0;
-			mds_data = parseInt(btn.value);
+			let setbtn = 0 ,lab = 0;
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<data_id.length;i++){
 					if(btn.id == data_id[i]){
-						rpc.call('pduSetParam',[default_addr,rpc_cfg,(i + 1),0,0,mds_data]);
+						pdu_cfg.setCfg(17,(i + 1),btn.value,0,addr);
 					}
 				}
 				flash_html();
@@ -129,9 +137,9 @@
 			var lab = 0;
 			if(confirm("请确认是否生效当前设置。")){
 				if(btn.id =="lang_5"){
-					rpc.call('pduSetParam',[default_addr,rpc_cfg,3,0,0,0]);
-				}else{5
-					rpc.call('pduSetParam',[default_addr,rpc_cfg,6,0,0,0]);
+					pdu_cfg.setCfg(17,3,0,0,addr);
+				}else{
+					pdu_cfg.setCfg(17,6,0,0,addr);
 				}
 				flash_html();
 			}else{}

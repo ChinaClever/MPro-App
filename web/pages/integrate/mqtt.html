@@ -31,10 +31,13 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_mqtt_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		pdu_cfg.mqttCfg();
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		var mqtt_data = new Array();
 		let lang = new Array();
@@ -42,6 +45,12 @@
 		var enable = new Array("","mqtt","mqtts","ws","wss");
 		let qos_ = new Array("","","");
 		var mqtt_data = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<20;i++){
@@ -83,7 +92,7 @@
 
 		function read_data(){
 			for(var j = 1;j<12;j++){
-				mqtt_data[j] = sessionStorage.getItem(type_name[19]+ mqtt_cfg[j]);
+				mqtt_data[j] = pdu_cfg.cfgValue(19,j,0,addr);
 			}
 			if(mqtt_data[10] == 'false' || mqtt_data[10] == '0'){
 				mqtt_data[10] = lang[21][language];
@@ -91,12 +100,12 @@
 				mqtt_data[10] = lang[20][language];
 			}
 		}
-		$('.mqtt').html(buildTable());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			$('.mqtt').html(buildTable());
+			lang_fun();
 			showdata();
-		},600);
+		},500);
 		function showdata(){
 			for(var j = 0;j<id_name.length;j++){
 				if( j == 0 || j == 8){
@@ -119,17 +128,17 @@
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
 		}
 		function flash_html(){
-			read_mqtt_data(default_addr);
+			pdu_cfg.mqttCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function changed(ipt){
 			if(confirm("请确认是否保存此次修改？")){
 				for(var i = 0 ;i<(id_name.length);i++){
 					if(ipt.id == id_name[i]){
-						rpc.call('pduSetParam',[default_addr,19,(i+1),0,0,ipt.value]);
+						pdu_cfg.setCfg(19,(i + 1),ipt.value,0,addr);
 					}
 				}
 				flash_html();
@@ -138,7 +147,7 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[default_addr,19,20,0,0,sel]);
+				pdu_cfg.setCfg(19,20,ipt.value,0,addr);
 			}else{}
 		}
 		function buildTable() {

@@ -58,6 +58,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
+		let addr = pdu_cfg.addr;
 		let dev_dis = 0;
 		let read = 1;
 		let lang = new Array();
@@ -66,10 +67,9 @@
 		let output_name =new Array();
 		let dev_name =new Array();
 		let slave_num;
-		let addr = pdu_cfg.addr;
 
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;

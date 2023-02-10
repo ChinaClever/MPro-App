@@ -89,7 +89,7 @@
 		let arr3 = [17,16,14,12,13,19,18,11,0,0,15];
 		let k = 0;
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;

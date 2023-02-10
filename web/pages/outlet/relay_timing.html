@@ -71,7 +71,7 @@
 		let time_sw = new Array();
 		let sw_mark = 0;
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;

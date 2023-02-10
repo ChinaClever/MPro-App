@@ -93,14 +93,24 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_tls_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.tlscert();
+		let tls_info = new Array("","Before","After","SN","KeyLength");
+		let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
 		var tls_data = new Array();
 		var lang = new Array();
 		let length = 49;
-		lang_init();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function upload_data(){
 			let  key = document.getElementById("info").value;
 			let  cert = document.getElementById("info1").value;
@@ -221,25 +231,21 @@
 		}
 		function read_data(){
 			for(var j = 1;j<30;j++){
-				if(j < 5){
-					tls_data[j] = sessionStorage.getItem("Tls"+tls_info[j]);
-				}else if((j>10&& j<18) || (j>20 && j<28)){
-					if(j/10 == 1){
-						tls_data[j] = sessionStorage.getItem("Theme"+tls_info1[j % 10]);
-					}else{
-						tls_data[j] = sessionStorage.getItem("Issue"+tls_info1[j % 10]);
+				for(var j = 1;j<35;j++){
+					if(j < 5 || (j>10 && j<18)|| (j>20 && j< 28)){
+						tls_data[j] = pdu_cfg.cfgValue(32,j,0,addr);
 					}
-					
 				}
 			}
 		}
-		$('.theme_table').html(buildTableCert(0));
-		$('.issue_table').html(buildTableCert(1));
-		$('.cert_table').html(buildTableCert1());
-		$('.new_table').html(buildTableNew());
-		$('.set_table').html(buildTableNew1());
 		setTimeout(function(){
+			lang_init();
 			read_data();
+			$('.theme_table').html(buildTableCert(0));
+			$('.issue_table').html(buildTableCert(1));
+			$('.cert_table').html(buildTableCert1());
+			$('.new_table').html(buildTableNew());
+			$('.set_table').html(buildTableNew1());
 			lang_fun(1);
 			showdata();
 		},500);
@@ -257,22 +263,22 @@
 		}
 		function create(){
 			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[default_addr,tls_,31,0,0,0]);
+				pdu_cfg.setCfg(32,31,0,0,addr);
 			}else{}
 		}
 		function SetData(ipt){
 			if(confirm("请确认是否保存此次修改？")){
 				let id = parseInt(ipt.id.slice(3));
-				rpc.call('pduSetParam',[default_addr,tls_,id+11,0,0,ipt.value]);
+				pdu_cfg.setCfg(32,id+11,ipt.value,0,addr);
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			// read_modbus_data(0);
+			pdu_cfg.tlscert();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function download(obj){
 			let url = window.location.origin;
@@ -303,7 +309,7 @@
 			for(let i = 0;i<7 ;i++){
 				tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;" id="lang_'+(28 + i)+'"></td>';
 				if(i<3){
-					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+' "></input></td></tr>';
+					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][language]+' "></input></td></tr>';
 				}else{
 					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"></input></td></tr>';
 				}
@@ -313,13 +319,13 @@
 		function buildTableNew1(){
 			let tbody ="";
 			tbody +='<tr><td style="padding-left:20px;"colspan= "2" id="lang_36"></td></tr>';
-			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><input id="ipt7" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input>&nbsp&nbsp&nbsp<button>-</button></td></tr>';
+			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><input id="ipt7" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][language]+'"></input>&nbsp&nbsp&nbsp<button>-</button></td></tr>';
 			tbody +='<tr><td style="padding-left:20px;"colspan= "2" ><button id="lang_37" ></button></td></tr>';
 			tbody +='<tr><td style="padding-left:20px;style="width:32%;" id="lang_38" style="font-weight:bold"></td><td>RSA</td></tr>';
 			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_39"></td><td>4096 bits</td></tr>';
 			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_40"></td><td><input id="ipt8" type = "checkbox"></input></td></tr>';
-			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_41"></td><td><input id="ipt9" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
-			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_42"></td><td><input id="ipt10" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][1]+'"></input></td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_41"></td><td><input id="ipt9" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][language]+'"></input></td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_42"></td><td><input id="ipt10" style="width:80%;background:#F8F8F8;border:1px;"placeholder="'+ lang[47][language]+'"></input></td></tr>';
 			tbody +='<tr><td  colspan= "2" align="center"><button id="lang_43" onclick = "create();" ></button></td></tr>';
 			return tbody;
 		}

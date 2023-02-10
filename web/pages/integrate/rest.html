@@ -34,18 +34,27 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_http_data(0)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		pdu_cfg.httpPush();
 		var mode_set = new Array("禁用","POST","PUT");
 		var mode_set1 = new Array("禁用","启用","加密");
 		var select_name = new Array("push","addr","timeout","delay","encrypt","port");
 		var http_data = new Array();
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 11; j<17;j++){
-				http_data[j] = sessionStorage.getItem(type_name[18]+ push_info[j]);
+				http_data[j] = pdu_cfg.cfgValue(18,j,0,addr);
 			}
 		}
 		function lang_init(){
@@ -86,6 +95,10 @@
 		lang_fun();
 		setTimeout(function(){
 			read_data();
+			lang_init();
+			$('.push_mode').html(buildTablePush());
+			$('.recv_mode').html(buildTableRecv());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
@@ -113,7 +126,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,push,11 + i,0,0,btn.value]);
+						pdu_cfg.setCfg(18,11 + i,btn.value,0,addr);
 					}
 				}
 				flash_html();
@@ -122,15 +135,15 @@
 			}
 		}
 		function flash_html(){
-			read_http_data(default_addr);
+			pdu_cfg.httpPush();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[default_addr,push,19,0,0,0]);
+				pdu_cfg.setCfg(18,19,0,0,addr);
 				flash_html();
 			}else{}
 		}

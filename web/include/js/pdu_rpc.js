@@ -181,13 +181,14 @@ class PduMetaData {
     }
 
     // 获取JSON包中某个字段具体的值
-    meta_value(type, fc, id=null) {
+    // meta_value(type, fc, id=null) {
+    meta_value() {
         var key = this.addr+'_'+100+'_'+0+'_'+0+'_'+0;
         var res = this.rpc.json_rpc_value(key);
-        if(res != null) {
-            res = res.get(type).get(fc);
-            if(id != null) res = res.get(id);
-        }
+        // if(res != null) {
+        //     res = res.get(type).get(fc);
+        //     if(id != null) res = res.get(id);
+        // }
         return res;
     }
 
@@ -322,8 +323,8 @@ class PduCfgs extends PduCfgObj {
     }
 
     mqttCfg() {
-        var fcs = [1,2,3,4,5,6,7,8,9,10,11,20];
-        this.getCfgList(21, fcs);
+        var fcs = [1,2,3,4,5,6,7,8,9,10,11];
+        this.getCfgList(19, fcs);
     }
 
     swVersion() {
@@ -331,6 +332,54 @@ class PduCfgs extends PduCfgObj {
         this.getCfgFns(type, 0, 8);
         this.getCfgFns(type, 11, 15);
         this.getCfgFns(type, 21, 23);
+    }
+
+    dataEncrpty(){
+        let fcs = [1,11,12,13,14,15,21,22,23,24,31,32,33,34];
+        this.getCfgList(31, fcs);
+    }
+    tlscert(){
+        let fcs = [1,2,3,4,11,12,13,14,15,16,17,21,22,23,24,25,26,27];
+        this.getCfgList(32, fcs);
+    }
+    whiteList(){
+        let fcs = [1,2,3,4,5,6,7,8,9];
+        this.getCfgList(33, fcs);
+    }
+    udpPush(){
+        for(let i=1;i<6;i++){
+            this.getCfgIds(18, i, 1, 4);
+        }
+        let fcs = [8,9];
+        this.getCfgList(18, fcs);
+    }
+    httpPush(){
+        let fcs = [11,12,13,14,15,16];
+        this.getCfgList(18, fcs);
+    }
+    rpcCfg(){
+        let fcs = [1,2,4,5];
+        this.getCfgList(17, fcs);
+    }
+    ampqCfg() {
+        var fcs = [1,2,3,4,5,6,7,8,9,10,11,12];
+        this.getCfgList(20, fcs);
+    }
+    snmpCfg(){
+        for(let i=21;i<23;i++){
+            this.getCfgIds(16, i, 1, 4);
+        }
+        let fcs = [1,2,3,11,12,13,14,15];
+        this.getCfgList(16, fcs);
+    }
+    modbusCfg() {
+        var fcs = [1,2,3,4,5,6,11,12];
+        this.getCfgList(15, fcs);
+    }
+    odbcCfg() {
+        var fcs = [1,2,3,4,5,6,7,8,9,10];
+        this.getCfgList(21, fcs);
+        this.getCfgList(28, fcs);
     }
 }
 

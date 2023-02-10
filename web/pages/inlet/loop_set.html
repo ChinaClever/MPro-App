@@ -79,7 +79,7 @@
 		let type_arr = new Array("vol","cur","pow");
 		let addr = pdu_cfg.addr;
 		function ParseData(){
-			let DataString = pdu_cfg.cfgValue(100,0,0,0);
+			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			loop_num = pdu_data.pdu_info.loop_num;
 			slave_num = pdu_data.pdu_info.slave_num;

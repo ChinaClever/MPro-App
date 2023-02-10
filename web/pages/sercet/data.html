@@ -8,7 +8,7 @@
 		<title>sercet</title>
 		<link rel="stylesheet" href="../../include/css/public.min.css">
 		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
-		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">>
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
 	</head>
 <body>
 	<div class="page-cont">
@@ -40,20 +40,31 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_encrpty_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.dataEncrpty();
+		let encrpty_name = new Array("","Encrptyen","","","","","","","","","","AESmode","AESfilling","AESlength","AESkey","AESoffset","","","","","","RSAlength","RSAfilling","RSAkey","","","","","","","","SM4mode","SM4filling","SM4key","SM4offset");
+		// setTimeout(function(){read_encrpty_data(default_addr)},300);
 		let mode_set = new Array("ECB","CBC","CFB","OFB");
 		let encrpty_set = new Array("","AES","RSA","SM4");
 		var filling = new Array("ZERO","PKCS7","ISO");
 		var key_length = new Array("AES_128","AES_192","AES_256");
 		var encrpty_data = new Array();
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<35;j++){
 				if(j == 1 || (j>10 && j<16)|| (j>20 && j< 24)||(j>30 && j<35)){
-					encrpty_data[j] = sessionStorage.getItem(encrpty_name[j]);
+					encrpty_data[j] = pdu_cfg.cfgValue(31,j,0,addr);
 				}
 			}
 		}
@@ -88,15 +99,15 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		$('.sw').html(buildTableSw());
-		$('.aes').html(buildTableAes());
-		$('.rsa').html(buildTableRsa());
-		$('.sm4').html(buildTableSm4());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			$('.sw').html(buildTableSw());
+			$('.aes').html(buildTableAes());
+			$('.rsa').html(buildTableRsa());
+			$('.sm4').html(buildTableSm4());
 			showdata();
-		},500);
+			lang_fun();
+		},300);
 		function showdata(){
 			let i = 0;
 			for(var j = 1;j<35;j++){
@@ -146,7 +157,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(var j = 1;j<35;j++){
 					if(encrpty_name[j] == btn.id){
-						rpc.call('pduSetParam',[default_addr,31,j,0,0,btn.value]);
+						pdu_cfg.setCfg(31,j,btn.value,0,addr);
 					}
 				}
 				flash_html();
@@ -155,11 +166,11 @@
 			}
 		}
 		function flash_html(){
-			read_encrpty_data(default_addr);
+			pdu_cfg.dataEncrpty();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTableSw() {
 			var tbody = '';

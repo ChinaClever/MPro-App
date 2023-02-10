@@ -24,26 +24,41 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left http"></table>
+						<table class="table table-border-none text-left udp"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left udp_mac"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left udp_ip"></table>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_net_ctrl_data(0)},300);
-		var mode_set = new Array("","");
-		var ctrl_data = new Array();
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.whiteList();
+		let mode_set = new Array("","");
+		let ctrl_data = new Array();
 		let lang = new Array();
+		let white_list = new Array("","WlCtrlEn","WlMac1","WlMac2","WlMac3","WlMac4","WlIp1","WlIp2","WlIp3","WlIp4");
 		function read_data(){
-			for(var j = 1;j<6;j++){
-				ctrl_data[j] = sessionStorage.getItem(white_list[j]);
+			for(var j = 1;j<10;j++){
+				ctrl_data[j] =  pdu_cfg.cfgValue(33,j,0,addr);;
 			}
 		}
-		lang_init();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function lang_init(){
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
@@ -53,48 +68,57 @@
 			lang[3] = ["网络白名单启用:","","","",""];
 			lang[4] = ["白名单MAC1:","","","",""];
 			lang[5] = ["白名单MAC2:","","","",""];
-			lang[6] = ["白名单IP1:","","","",""];
-			lang[7] = ["白名单IP2:","","","",""];
-			lang[8] = ["立即生效:","","","",""];
-			lang[9] = ["禁用","","","",""];
-			lang[10] = ["启用","","","",""];
+			lang[6] = ["白名单MAC3:","","","",""];
+			lang[7] = ["白名单MAC4:","","","",""];
+			lang[8] = ["白名单IP1:","","","",""];
+			lang[9] = ["白名单IP2:","","","",""];
+			lang[10] = ["白名单IP3:","","","",""];
+			lang[11] = ["白名单IP4:","","","",""];
+			lang[12] = ["立即生效","","","",""];
+			lang[13] = ["MAC地址","","","",""];
+			lang[14] = ["IP地址","","","",""];
+			lang[15] = ["禁用","","","",""];
+			lang[16] = ["启用","","","",""];
  
-			mode_set[0] = lang[9][language];
-			mode_set[1] = lang[10][language];
+			mode_set[0] = lang[15][language];
+			mode_set[1] = lang[16][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<9;j++){
-				if(j == 8){
+			for(let j = 1;j<15;j++){
+				if(j == 12){
 					document.getElementById("lang_" + j).value  = lang[j][language];
 				}else{
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
 		}
-		$('.http').html(buildTable());
-		lang_fun();
 		setTimeout(function(){
+			lang_init();
 			read_data();
+			$('.udp').html(buildTable());
+			$('.udp_mac').html(buildTableMac());
+			$('.udp_ip').html(buildTableIp());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
-			for(let i = 1;i<6;i++){
+			for(let i = 1;i<10;i++){
 				document.getElementById(white_list[i]).value = ctrl_data[i];
 				document.getElementById(white_list[i]).disabled = false;
-				document.getElementById("lang_8").disabled = false;
+				document.getElementById("lang_12").disabled = false;
 			}
 			if(parseInt(ctrl_data[1]) == 0){
-				for(let j = 2;j<6;j++){
+				for(let j = 2;j<10;j++){
 					document.getElementById(white_list[j]).disabled = true;
 				}
-				document.getElementById("lang_8").disabled = true;
+				document.getElementById("lang_12").disabled = true;
 			}
 		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<white_list.length;i++){
 					if(white_list[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,33,i,0,0,btn.value]);
+						pdu_cfg.setCfg(33,i,btn.value,0,addr);
 					}
 				}
 				flash_html();
@@ -105,16 +129,16 @@
 		function Set(){
 			var sel =0;
 			if(confirm("请确认是否保存此次修改？")){
-				rpc.call('pduSetParam',[default_addr,33,6,0,0,0]);
+				pdu_cfg.setCfg(33,10,0,0,addr);
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_net_ctrl_data(default_addr);
+			pdu_cfg.whiteList();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTable() {
 			var thead = '',tbody = '';
@@ -126,20 +150,48 @@
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableMac() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_13" ></td>\
+			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "WlMac1" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '<td ><input id = "WlMac1" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id = "WlMac2" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "WlIp1" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "WlMac3" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<td><input id = "WlMac4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableIp() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_14" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_8"></td>';
+			tbody += '<td ><input id = "WlIp1" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
 			tbody += '<td><input id = "WlIp2" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id="lang_8" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td id="lang_10" ></td>';
+			tbody += '<td><input id = "WlIp3" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_11" ></td>';
+			tbody += '<td><input id = "WlIp4" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			tbody += '<tr><td><input id="lang_12" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
