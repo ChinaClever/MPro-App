@@ -60,32 +60,56 @@
 				</div>
 			</div>
 		</div>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../../../include/js/fn_public.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
-		var phase  = 1,loop = 2,output = 3,envir = 6,sensor = 7,bit = 10,uut = 11,num =12, cfg = 13,user  = 14;
-		var  read  = 1;
+		let pdu_cfg = top.pdu_cfg_;
+		let read  = 1;
+		let language;
 		let dev_dis = 0;
-		var phase_info = new Array();
 		let lang = new Array();
-		var len  = data_name.length -1;
-		var pow_mark = new Array(),cur_mark = new Array(),vol_mark = new Array();
-		var phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let phase_info = new Array();
+		let phase_info_ = new Array();
+		var phase_num;
+		var slave_num;
 		let type_arr = new Array("vol","cur","pow");
+		var dev_name =new Array();
+		let addr = pdu_cfg.addr;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			phase_num = pdu_data.pdu_info.line_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<phase_num;i++){
+				phase_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.line_item_list){
+					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
+		let phase_arr = [29,28,26,24,25,31,30,23,0,0,27,7,6,4,2,3,9,8,1,0,0,5,19,18,16,14,15,21,20,13,0,0,17];
 		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < phase_num + 1;i++){
-				phase_info[i] =  new Array();
-				for(var k = 0; k < 3; k++){
-					for(var j = 0;j <len;j++){
-						phase_info[i][(len * k) + j] = (sessionStorage.getItem(type_name[phase]+data_type[(k+2)]+data_name[j + 1]+addr+'_'+i));
+			for (let i = 1; i < phase_num + 1; i++) {
+				phase_info[i] = new Array();
+				let j = 0;
+				for(let key of phase_arr){
+					if(j == 8 || j == 9 || j == 19 || j == 20 || j == 30 || j ==31){
+
+					}else{
+						phase_info[i][j] = phase_info_[i - 1][key];
 					}
+					j++;
 				}
 			}
 		}
@@ -168,114 +192,46 @@
 		}
 		function showdata(){
 			for(var i = 1 ;i < phase_num + 1;i++){
-				var hs = document.getElementById('pow'+(i -1)).childNodes[3].firstChild;
-				var ss = document.getElementById('pow'+(i -1)).childNodes[2].firstChild;
-				var cs = document.getElementById('pow'+(i -1)).childNodes[1];
-				if(phase_info[i][29] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phase_info[i][32] == 1){
-					hs.checked = true;
-				}
-				else{
-					hs.checked = false;
-				}
-				if(phase_info[i][24] == 2 || phase_info[i][24] == 4){
-					cs.bgColor = 'yellow';
-				}else if(phase_info[i][24] == 1 || phase_info[i][24] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(pow_mark[0] ==1){
-						document.getElementById('pow'+(i)).childNodes[2].firstChild.checked = true;
-					}else{
-						document.getElementById('pow'+(i)).childNodes[2].firstChild.checked = false;
+				for(var j = 0;j < 3;j++){
+					hs = document.getElementById(type_arr[j]+(i -1)).childNodes[3].firstChild;
+					ss = document.getElementById(type_arr[j]+(i -1)).childNodes[2].firstChild;
+					cs = document.getElementById(type_arr[j]+(i -1)).childNodes[1];
+					if(phase_info[i][7 + j*11] == 1){
+						ss.checked = true;
 					}
-					if(pow_mark[1] ==1){
-						document.getElementById('pow'+(i)).childNodes[3].firstChild.checked = true;
-					}else{
-						document.getElementById('pow'+(i)).childNodes[3].firstChild.checked = false;
+					else{
+						ss.checked = false;
+					}
+					if(phase_info[i][10 + j*11] == 1){
+						hs.checked = true;
+					}
+					else{
+						hs.checked = false;
+					}
+					if(phase_info[i][2 + j*11] == 2 || phase_info[i][2 + j*11] == 4){
+						cs.bgColor = 'yellow';
+					}
+					else if(phase_info[i][2 + j*11] == 1 || phase_info[i][2 + j*11] == 8){
+						cs.bgColor = 'red';
+					}
+					else{
+						cs.bgColor = '';
 					}
 				}
 			}
+		}
+		function showdata_(){
 			for(var i = 1 ;i < phase_num + 1;i++){
-				hs = document.getElementById('cur'+(i -1)).childNodes[3].firstChild;
-				ss = document.getElementById('cur'+(i -1)).childNodes[2].firstChild;
-				cs = document.getElementById('cur'+(i -1)).childNodes[1];
-				if(phase_info[i][18] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phase_info[i][21] == 1){
-					hs.checked = true;
-				}
-				else{
-					hs.checked = false;
-				}
-				if(phase_info[i][13] == 2 || phase_info[i][13] == 4){
-					cs.bgColor = 'yellow';
-				}else if(phase_info[i][13] == 1 || phase_info[i][13] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(cur_mark[0] ==1){
-						document.getElementById('cur'+(i)).childNodes[2].firstChild.checked = true;
-					}else{
-						document.getElementById('cur'+(i)).childNodes[2].firstChild.checked = false;
+				for(var j = 0;j < 3;j++){
+					cs = document.getElementById(type_arr[j]+(i -1)).childNodes[1];
+					if(phase_info[i][2 + j*11] == 2 || phase_info[i][2 + j*11] == 4){
+						cs.bgColor = 'yellow';
 					}
-					if(cur_mark[1] ==1){
-						document.getElementById('cur'+(i)).childNodes[3].firstChild.checked = true;
-					}else{
-						document.getElementById('cur'+(i)).childNodes[3].firstChild.checked = false;
+					else if(phase_info[i][2 + j*11] == 1 || phase_info[i][2 + j*11] == 8){
+						cs.bgColor = 'red';
 					}
-				}
-			}
-			for(var i = 1 ;i < phase_num + 1;i++){
-				hs = document.getElementById('vol'+(i -1)).childNodes[3].firstChild;
-				ss = document.getElementById('vol'+(i -1)).childNodes[2].firstChild;
-				cs = document.getElementById('vol'+(i -1)).childNodes[1];
-				if(phase_info[i][7] == 1){
-					ss.checked = true;
-				}
-				else{
-					ss.checked = false;
-				}
-				if(phase_info[i][10] == 1){
-					hs.checked = true;
-				}
-				else{
-					hs.checked = false;
-				}
-				if(phase_info[i][2] == 2 || phase_info[i][2] == 4){
-					cs.bgColor = 'yellow';
-				}
-				else if(phase_info[i][2] == 1 || phase_info[i][2] == 8){
-					cs.bgColor = 'red';
-				}
-				else{
-					cs.bgColor = '';
-				}
-				if(i == phase_num){
-					if(vol_mark[0] ==1){
-						document.getElementById('vol'+(i)).childNodes[2].firstChild.checked = true;
-					}else{
-						document.getElementById('vol'+(i)).childNodes[2].firstChild.checked = false;
-					}
-					if(vol_mark[1] ==1){
-						document.getElementById('vol'+(i)).childNodes[3].firstChild.checked = true;
-					}else{
-						document.getElementById('vol'+(i)).childNodes[3].firstChild.checked = false;
+					else{
+						cs.bgColor = '';
 					}
 				}
 			}
@@ -316,24 +272,20 @@
 		}
 		function flash_html(par)
 		{
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				if(par.name == "pow"){
-					$('.pow_table').html(buildTablePow(phase_num));
-				}else if(par.name == "cur"){
-					$('.cur_table').html(buildTableCur(phase_num));
-				}else if(par.name == "vol"){
-					$('.vol_table').html(buildTableVol(phase_num));
-				}
-				showdata();
-				lang_fun();
-			},500);
+			par.parentNode.parentNode.parentNode.remove();
+			if(par.name == "pow"){
+				$('.pow_table').html(buildTablePow(phase_num));
+			}else if(par.name == "cur"){
+				$('.cur_table').html(buildTableCur(phase_num));
+			}else if(par.name == "vol"){
+				$('.vol_table').html(buildTableVol(phase_num));
+			}
+			showdata();
+			lang_fun();
 		}
 		function cked(ckd)
 		{
-			var stat = 0,number1 = 0,type = 0;
-			// var opt_val = parseInt(document.getElementById("opt_").value);
+			var stat = 0,number1 = 0,type = 0,childnum =0;
 			var type1 = ckd.id.substr(0,1);
 			let sub =0;
 			var addr_ = addr + 0 * 256;
@@ -341,8 +293,10 @@
 			var stat = parseInt(ckd.value);
 			if(type1 === 'c'){
 				sub = 8;
+				childnum = 2;
 			}else{
 				sub = 11;
+				childnum = 3;
 			}
 			if(ckd.name == "pow"){
 				type = 4;
@@ -358,67 +312,29 @@
 			}
 			if(number == phase_num +1){
 				number1 = 0;
-				if(ckd.name == "pow"){
-					if(sub == 8){
-						if(ckd.checked == true){
-							pow_mark[0] = 1;
-						}else{
-							pow_mark[0] = 0;
-						}
+				for(let i = 0;i<phase_num;i++){
+					if(ckd.checked == true){
+						document.getElementById(ckd.name+(i)).childNodes[childnum].childNodes[0].checked = true;
 					}else{
-						if(ckd.checked == true){
-							pow_mark[1] = 1;
-						}else{
-							pow_mark[1] = 0;
-						}
-					}
-				}else if(ckd.name == "cur"){
-					if(sub == 8){
-						if(ckd.checked == true){
-							cur_mark[0] = 1;
-						}else{
-							cur_mark[0] = 0;
-						}
-					}else{
-						if(ckd.checked == true){
-							cur_mark[1] = 1;
-						}else{
-							cur_mark[1] = 0;
-						}
-					}
-				}else if(ckd.name == "vol"){
-					if(sub == 8){
-						if(ckd.checked == true){
-							vol_mark[0] = 1;
-						}else{
-							vol_mark[0] = 0;
-						}
-					}else{
-						if(ckd.checked == true){
-							vol_mark[1] = 1;
-						}else{
-							vol_mark[1] = 0;
-						}
+						document.getElementById(ckd.name+(i)).childNodes[childnum].childNodes[0].checked = false;
 					}
 				}
 			}else{
 				number1 = number;
 			}
-			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+
+			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
-			}, 50);
-			flash_html(ckd);
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
 		}
 		function setdata(ipt)
 		{
-
-			// var opt_val = parseInt(document.getElementById("opt_").value);
 			var addr_ = addr + 0 * 256;
-			var sub = 0,type = 0,number1 = 0;
+			var sub = 0,type = 0,number1 = 0,childnum = 0;
 			var stat = (ipt.value);
 			var number = parseInt(ipt.id.slice(1))+1;
 			var type1 = ipt.id.substr(0,1);
@@ -429,11 +345,12 @@
 
 			if(number == phase_num +1){
 				number1 = 0;
+
 			}else{
 				number1 = number;
 				if(data1>data2 || data2>data3 || data3>data4){
 					alert("input data error");
-					showdata();
+					flash_html(ipt);
 					return ;
 				}
 			}
@@ -446,18 +363,30 @@
 			}
 			if(type1 === 'e'){
 				sub = 5;
+				childnum = 5;
 			}else if(type1 === 'f'){
 				sub = 6;
+				childnum = 6;
 			}else if(type1 === 'g'){
 				sub = 7;
+				childnum = 7;
 			}else if(type1 === 'h'){
 				sub = 4;
+				childnum = 8;
 			}
-			SetDataSend(addr_,phase,type,sub,number1,stat,phase_num);
+			if(number1 == 0){
+				for(let i = 0;i<phase_num;i++){
+					document.getElementById(ipt.name+(i)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
+				}
+				document.getElementById(ipt.name + phase_num).childNodes[childnum].childNodes[0].value = "";
+			}else{
+				document.getElementById(ipt.name+(number -1)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
+			}
+			pdu_cfg.setData(1,type,sub,number1,stat);
 			setTimeout(() => {
-				ReadDataSend(addr_,phase,type,sub,number1,phase_num);
-			}, 50);
-			flash_html(ipt);
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
+			ipt.blur();
 		}
 		function buildTablePow(rows) {
 			var thead = '',tbody = '';
@@ -594,24 +523,15 @@
 			for(let i = 0;i < phase_num;i++){
 				for(let j = 0;j<3;j++){
 					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(phase_info[i + 1][0 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[4].innerHTML = (parseFloat(phase_info[i + 1][1 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[5].childNodes[0].value = (parseFloat(phase_info[i + 1][4 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[6].childNodes[0].value = (parseFloat(phase_info[i + 1][5 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[7].childNodes[0].value = (parseFloat(phase_info[i + 1][6 + j * 11])).toFixed(j+1);
-					document.getElementById(type_arr[j]+(i)).childNodes[8].childNodes[0].value = (parseFloat(phase_info[i + 1][3 + j * 11])).toFixed(j+1);
 				}
 			}
 		}
-		let Time1 = setInterval(function(){
-			ReadDataSend(addr,phase,pow_,1,0,phase_num);
-			ReadDataSend(addr,phase,cur_,1,0,phase_num);
-			ReadDataSend(addr,phase,vol_,1,0,phase_num);
-		},2000);
 		let Time2 = setInterval(function(){
+			ParseData();
 			read_data();
 			putdata();
-			showdata();
-		},1000);
+			showdata_();
+		},500);
     </script>
 </body>
 </html>

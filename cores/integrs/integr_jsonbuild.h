@@ -8,8 +8,8 @@ class Integr_JsonBuild
     Integr_JsonBuild();
 public:
     static Integr_JsonBuild *bulid();
-    QByteArray getJson(uchar addr);
-    QJsonObject getJsonObject(uchar addr);
+    QByteArray getJson(uchar addr, int dc=0);
+    QJsonObject getJsonObject(uchar addr, int dc);
     void saveJson(uchar addr);
     void saveJsons();
 
@@ -18,7 +18,7 @@ private:
     void arrayAppend(const uint *ptr, int size, const QString &key, QJsonObject &json, double r=1);
     void alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
     void relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
-    void ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay=0);
+    void ObjData(const sObjData &it, const QString &key, QJsonObject &json, int type=0);
     void envData(const sEnvData &it, const QString &key, QJsonObject &json);
     void tgUnit(const sTgUnit &it, const QString &key, QJsonObject &json, double r);
     void tgObjData(const sTgObjData &it, const QString &key, QJsonObject &json);
@@ -27,8 +27,9 @@ private:
     void uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json);
     void devData(sDevData *it, const QString &key, QJsonObject &json);
     void faultCode(sDevData *dev, QJsonObject &json);
-    void netAddr(const sNetAddr &it, const QString &key, QJsonObject &json);
+    void netAddr(const sNetInterface &it, const QString &key, QJsonObject &json);
     void groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
+    void webGroupData(sDevData *it, QJsonObject &obj);
 
 private:
     int mDataContent;

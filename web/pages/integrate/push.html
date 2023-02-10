@@ -34,10 +34,13 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_push_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		pdu_cfg.udpPush();
 		var mode_set = new Array();
 		var mode_name = new Array("","UDP","TCP","WebSocket");
 		var select_name = new Array("","udpEn","udpAddr","udpPort","delay","","","","mode","port");
@@ -45,16 +48,22 @@
 		var push_data = new Array();
 		let lang = new Array();
 		let udp_num = 0;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
 			var i = 0;
 			for(var i = 1;i<10;i++){
 				push_data[i] = new Array();
 				if(i < 5){
 					for(let j = 1;j<5;j++){
-						push_data[i][j] = sessionStorage.getItem(type_name[18]+ push_info[i]+j);
+						push_data[i][j] = pdu_cfg.cfgValue(18,i,j,addr);
 					}
 				}else if(i>7){
-					push_data[i][1] = sessionStorage.getItem(type_name[18]+ push_info[i]);
+					push_data[i][1] = pdu_cfg.cfgValue(18,i,0,addr);
 				}
 			}
 		}
@@ -94,12 +103,12 @@
 				}
 			}
 		}
-		lang_init();
-		$('.push').html(buildTablePush());
-		$('.control').html(buildTableCtl());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			lang_init();
+			$('.push').html(buildTablePush());
+			$('.control').html(buildTableCtl());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
@@ -131,9 +140,9 @@
 					for(let i = 0;i<select_name.length;i++){
 						if(btn.id == select_name[i]){
 							if(i < 5){
-								rpc.call('pduSetParam',[default_addr,push,i,1 + udp_num,0,btn.value]);
+								pdu_cfg.setCfg(18,i,btn.value,1 + udp_num,addr);
 							}else if(i>7){
-								rpc.call('pduSetParam',[default_addr,push,i,0,0,btn.value]);
+								pdu_cfg.setCfg(18,i,btn.value,0,addr);
 							}
 						}
 					}
@@ -144,15 +153,15 @@
 			}
 		}
 		function flash_html(){
-			read_push_data(default_addr);
+			pdu_cfg.udpPush();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[default_addr,push,10,0,0,0]);
+				pdu_cfg.setCfg(18,10,0,0,addr);
 			}else{}
 		}
 		function buildTablePush() {
@@ -195,8 +204,8 @@
 			tbody += '<tr><td id ="lang_11"></td>';
 			tbody += '<td><input id = "port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_12" onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}

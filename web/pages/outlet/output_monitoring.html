@@ -35,12 +35,13 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
-	<script src="../../include/js/fn_public.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
 		let dev_dis = 0;
 		var output_name = new Array();
 		var cur_val = new Array();
@@ -50,28 +51,46 @@
 		var pow_alarm = new Array();
 		var pf_val = new Array();
 		var energe_val = new Array();
+		let output_info_ = new Array();
 		var State = new Array("","");
 		let lang = new Array();
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		var output_num;
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
-		read_data();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < output_num + 1;i++){
-				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				swtich_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[1]+addr+'_'+i));
-				cur_val[i] = (sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[1]+addr+'_'+i));
-				pow_val[i] = (sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+addr+'_'+i));
-				cur_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[cur_]+data_name[3]+addr+'_'+i));
-				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+addr+'_'+i));
-				pf_val[i] = (sessionStorage.getItem(type_name[output]+data_type[pf_]+data_name[1]+addr+'_'+i));
-				energe_val[i] = (sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
-			}
-			for(var i = 0;i<slave_num;i++){
-				dev_name[i] = sessionStorage.getItem("DevName" + i);
+		var slave_num;
+		let addr = pdu_cfg.addr;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
 			}
 		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
+		function read_data(){
+			for (let i = 1; i < output_num + 1; i++) {
+				output_name[i] = output_info_[i - 1][11];
+				swtich_state[i] = output_info_[i - 1][28];
+				cur_val[i] = output_info_[i - 1][7];
+				pow_val[i] = output_info_[i - 1][19];
+				cur_alarm[i] = output_info_[i - 1][4];
+				pow_alarm[i] = output_info_[i - 1][16];
+				pf_val[i] = output_info_[i - 1][12];
+				energe_val[i] = output_info_[i - 1][10];
+			}
+		}
+		read_data();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<14;i++){
@@ -139,24 +158,6 @@
 				}
 			}
 		}
-		function read_monitoring_data(){
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(i >= parseInt(output_num + 1)){
-					clearInterval(time1);
-				}
-				if(i <= output_num){
-					rpc.call('pduReadData',[addr,output,energe_,j,i]);
-					rpc.call('pduReadData',[addr,output,pf_,j,i]);
-					rpc.call('pduReadData',[addr,output,switch_,j,i]);
-					rpc.call('pduReadData',[addr,output,cur_,j,i]);
-					rpc.call('pduReadData',[addr,output,pow_,j,i]);
-					rpc.call('pduReadData',[addr,output,cur_,3,i]);
-					rpc.call('pduReadData',[addr,output,pow_,3,i]);
-				}
-				i++;
-			},5);
-		}
 		function buildTable(rows) {
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows; i++) {
@@ -182,23 +183,16 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
 		function putdata(){
 			for(let i = 0;i < output_num;i++){
-				state1_ = document.getElementById('d'+i);
-				state2_ = document.getElementById('e'+i);
-				state3_ = document.getElementById('f'+i);
-				state4_ = document.getElementById('g'+i);
-				state5_ = document.getElementById('c'+i);
-				state1_.innerHTML = (parseFloat(cur_val[i + 1])).toFixed(2);
-				state2_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
-				state3_.innerHTML = (parseFloat(pf_val[i + 1])).toFixed(2);
-				state4_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
-				state5_.innerHTML = State[swtich_state[i + 1]];
+				document.getElementById('d'+i).innerHTML = (parseFloat(cur_val[i + 1])).toFixed(2);
+				document.getElementById('e'+i).innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
+				document.getElementById('f'+i).innerHTML = (parseFloat(pf_val[i + 1])).toFixed(2);
+				document.getElementById('g'+i).innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
+				document.getElementById('c'+i).innerHTML = State[swtich_state[i + 1]];
 			}
 		}
 		setInterval(function(){
-			read_monitoring_data();
 			setTimeout(function(){
 				read_data();
 				putdata();

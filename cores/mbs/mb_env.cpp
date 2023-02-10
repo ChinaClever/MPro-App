@@ -5,7 +5,7 @@
  */
 #include "mb_env.h"
 
-Mb_Env::Mb_Env(QObject *parent) : Mb_Loop{parent}
+Mb_Env::Mb_Env(QObject *parent) : Mb_Group{parent}
 {
 
 }
@@ -15,28 +15,30 @@ void Mb_Env::env_dataUpdate()
 {
     vshort vs; int size = SENOR_NUM;
     sEnvData *obj = &(mDevData->env);
-    appendData(size, obj->tem.value, vs);
-    appendData(size, obj->hum.value, vs);
-    setRegs(MbReg_EnvData, vs);
+    for(int i=0; i<size; ++i) {
+        vs << obj->tem.value[i];
+        vs << obj->hum.value[i];
+    }setRegs(MbReg_EnvData, vs);
 }
 
 void Mb_Env::env_alarmUpdate()
 {
     vshort vs; int size = SENOR_NUM;
     sEnvData *obj = &(mDevData->env);
-    appendData(size, obj->tem.alarm, vs);
-    appendData(size, obj->hum.alarm, vs);
-    setRegs(MbReg_EnvAlarm, vs);
+    for(int i=0; i<size; ++i) {
+        vs << obj->tem.alarm[i];
+        vs << obj->hum.alarm[i];
+    }setRegs(MbReg_EnvAlarm, vs);
 }
 
 
 void Mb_Env::env_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs)
 {
+    vs << unit.en[id];
     vs << unit.max[id];
     vs << unit.crMax[id];
     vs << unit.crMin[id];
     vs << unit.min[id];
-    vs << unit.en[id];
 }
 
 
@@ -71,5 +73,27 @@ void Mb_Env::env_update()
 
 
 
+void Mb_Env::env_setting(ushort addr, ushort value)
+{
+    ushort reg = addr - MbReg_EnvThreshol;
+    sEnvData *obj = &(mDevData->env);
+    sAlarmUnit *unit = nullptr;
+    uint *ptr = nullptr;
+    int id = reg/10;
 
+    switch (reg%10/5) {
+    case 0: unit = &(obj->tem); break;
+    case 1: unit = &(obj->hum); break;
+    default: cout << addr; return;
+    }
+
+    switch (reg % 5) {
+    case 0: ptr = unit->en; break;
+    case 1: ptr = unit->max; break;
+    case 2: ptr = unit->crMax; break;
+    case 3: ptr = unit->crMin; break;
+    case 4: ptr = unit->min; break;
+    default: cout << addr; break;
+    } if(ptr) ptr[id] = value;
+}
 

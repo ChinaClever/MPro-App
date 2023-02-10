@@ -26,7 +26,7 @@ public:
     bool pduRelaysCtrl(int addr, int start, int num, uchar on);
     QString pduLogFun(uchar type, uchar fc, int id, int cnt=30);
     QString execute(const QString &cmd);
-    QString pduMetaData(uchar addr);
+    QString pduMetaData(uchar addr, int dc);
     void initReceiveNotification();
 
 private slots:

@@ -21,9 +21,10 @@ Rpc_Method *Rpc_Method::bulid(QObject *parent)
     return sington;
 }
 
-QString Rpc_Method::pduMetaData(int addr)
+// dc 0 使用系统配置， 1读的参数 2 所有参数
+QString Rpc_Method::pduMetaData(int addr, int dc)
 {
-    return Integr_JsonBuild::bulid()->getJson(addr);
+    return Integr_JsonBuild::bulid()->getJson(addr, dc);
 }
 
 QString Rpc_Method::execute(const QString &cmd)

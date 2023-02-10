@@ -16,8 +16,7 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
-    <script src="./include/js/fn_public.js"></script>
-	<script src="include/js/rpc-over-websocket.js"></script>
+	<script src="include/js/pdu_rpc.js"></script>
 </head>
 <body>
 	<div class="side-box">
@@ -33,6 +32,14 @@
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
+		var pdu_cfg_ = new PduCfgs;
+		var language_;
+		var dev_dis_;
+		var first_time = 0;
+		var group_num_ = 8;
+		setTimeout(function(){
+			PduMetaData.meta_workDown(pdu_cfg_);
+		},300);
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',this.popstateFun,false);
 		function popstateFun(){
@@ -62,19 +69,25 @@
 				window.close();
 			}
 		}
-		setTimeout(function(){
-			// read_loop_data(addr);
-			read_sensor_data(addr);
-			// read_total_data(addr);
-			// read_output_param(addr);
-			// read_output_data(addr);
-			// read_group_data(addr);
-			read_dual_data(addr);
-			read_dual_param_data(addr);
-			// read_group_param_data(addr);
-			// read_group_info(addr);
-			// read_monitoring_data(addr);
-		},500);
+		var total_data = new Array(3);
+		var inletA_data = new Array(3);
+		var inletB_data = new Array(3);
+		var inletC_data = new Array(3);
+		for(let i = 0;i<3;i++){
+			total_data[i] = new Array(3);
+			inletA_data[i] = new Array(3);
+			inletB_data[i] = new Array(3);
+			inletC_data[i] = new Array(3);
+			for(let j = 0;j< 50;j++){
+				total_data[i][j] = 0;
+				inletA_data[i][j] = 0;
+				inletB_data[i][j] = 0;
+				inletC_data[i][j] = 0;
+			}
+		}
+		setInterval(function(){
+			PduMetaData.meta_workDown(pdu_cfg_);
+		},2000);
 	</script>
 </body>
 </html>

@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 45%;width: 8%;"><button id="lang_14" onclick ="download(this);"></button></span>
+								<span id="lang_1"></span><span style="padding-left: 45%;width: 8%;"><button id="lang_16" onclick ="download(this);"></button></span>
 							</div>
 						</div>
 					</div>
@@ -32,30 +32,44 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left trap"></table>
 					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left inform"></table>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_snmp_data(default_addr)},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		pdu_cfg.snmpCfg();
 		var mode_set = new Array("","");
-		var snmp_name = new Array("","v2en","","","","","","","","","","v3en","usr","psd","parity","encrpty","","","","","","trap");
-		var addr_name = new Array("","addr1","addr2","addr3","addr4");
+		var snmp_name = new Array("","v2en","getcomm","setcomm","","","","","","","","v3en","usr","psd","parity","encrpty","","","","","","trap","inform");
+		var inform_name = new Array("","inform1","inform2","inform3","inform4");
+		var trap_name = new Array("","trap1","trap2","trap3","trap4");
 		var snmp_data = new Array();
 		let lang = new Array();
 		let encrpty = new Array("DES","AES");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
-			for(var j = 1;j<22;j++){
+			for(var j = 1;j<23;j++){
 					snmp_data[j] = new Array();
-					 if(j ==1 ||(j>10 && j<16)){
-
-						snmp_data[j][0] = sessionStorage.getItem(type_name[16]+ snmp_info[j]);
-					}else if(j ==21){
+					 if(j < 4||(j>10 && j<16)){
+						snmp_data[j][0] = pdu_cfg.cfgValue(16,j,0,addr);
+					}else if(j >20){
 						for(var i = 1;i<5;i++){
-							snmp_data[j][i] = sessionStorage.getItem(type_name[16]+ snmp_info[j] + i);
+							snmp_data[j][i] = pdu_cfg.cfgValue(16,j,i,addr);
 						}
 					}
 				}
@@ -82,45 +96,54 @@
 			lang[11] = ["立即生效","","","",""];
 			lang[12] = ["Trap地址设置","","","",""];
 			lang[13] = ["立即生效","","","",""];
-			lang[14] = ["mib文件下载","","","",""];
-			lang[15] = ["禁用","","","",""];
-			lang[16] = ["启用","","","",""];
-			mode_set[0] = lang[15][language];
-			mode_set[1] = lang[16][language];
+			lang[14] = ["Inform地址设置","","","",""];
+			lang[15] = ["立即生效","","","",""];
+			lang[16] = ["mib文件下载","","","",""];
+			lang[17] = ["禁用","","","",""];
+			lang[18] = ["启用","","","",""];
+			mode_set[0] = lang[17][language];
+			mode_set[1] = lang[18][language];
 		}
 		function lang_fun(){
-			for(var i = 1;i<15;i++){
-				if(i ==4 || i == 11 || i ==13){
+			for(var i = 1;i<17;i++){
+				if(i ==4 || i == 11 || i ==13 || i ==15){
 					document.getElementById("lang_" + i).value  = lang[i][language];
 				}else{
 					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 				}
 			}
 		}
-		lang_init();
-		$('.v1_2').html(buildTableV1_2());
-		$('.v3').html(buildTableV3());
-		$('.trap').html(buildTableTrap());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			lang_init();
+			$('.v1_2').html(buildTableV1_2());
+			$('.v3').html(buildTableV3());
+			$('.trap').html(buildTableTrap());
+			$('.inform').html(buildTableInform());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
 			for(let i = 1; i < snmp_name.length;i++){
-				if(i == 21){
-					for(var j = 1;j<5;j++){
-						document.getElementById(addr_name[j]).value = snmp_data[i][j];
-						document.getElementById(addr_name[j]).disabled = false;
-					}
-				}else if(i ==1 ||(i>10 && i<16)){
+				if(i < 4 ||(i>10 && i<16)){
 					document.getElementById(snmp_name[i]).value = snmp_data[i][0];
 					document.getElementById(snmp_name[i]).disabled = false;
+				}else if(i == 21){
+					for(var j = 1;j<5;j++){
+						document.getElementById(trap_name[j]).value = snmp_data[i][j];
+						document.getElementById(trap_name[j]).disabled = false;
+					}
+				}else if(i == 22){
+					for(var j = 1;j<5;j++){
+						document.getElementById(inform_name[j]).value = snmp_data[i][j];
+						document.getElementById(inform_name[j]).disabled = false;
+					}
 				}
 			}
 			for(var j = 1;j<5;j++){
-				if(parseInt(snmp_data[11][0]) == 0 && parseInt(snmp_data[1][0])){
-					document.getElementById(addr_name[j]).disabled = true;
+				if(parseInt(snmp_data[11][0]) == 0 && parseInt(snmp_data[1][0]) == 0){
+					document.getElementById(trap_name[j]).disabled = true;
+					document.getElementById(inform_name[j]).disabled = true;
 				}
 			}
 			for(var j = 12;j<16;j++){
@@ -133,24 +156,26 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 0;i<snmp_name.length;i++){
 					if(snmp_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,snmp,i,0,0,btn.value]);
-					}else if(addr_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,snmp,21,i,0,btn.value]);
+						pdu_cfg.setCfg(16,i,btn.value,0,addr);
+					}else if(trap_name[i] == btn.id){
+						pdu_cfg.setCfg(16,21,btn.value,0,addr);
+					}else if(inform_name[i] == btn.id){
+						pdu_cfg.setCfg(16,22,btn.value,0,addr);
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_snmp_data(default_addr);
+			pdu_cfg.snmpCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function Set(){
 			if(confirm("请确认是否生效当前设置。")){
-				rpc.call('pduSetParam',[default_addr,snmp,17,0,0,0]);
+				pdu_cfg.setCfg(16,17,0,0,addr);
 				flash_html();
 			}else{}
 		}
@@ -164,10 +189,12 @@
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td>Get Community:</td><td>public</td></tr>';
-			tbody += '<tr><td>Set Community:</td><td>private</td></tr>';
+			tbody += '<tr><td>Get Community:</td>';
+			tbody += '<td><input id = "getcomm" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
+			tbody += '<tr><td>Set Community:</td>';
+			tbody += '<td><input id = "setcomm" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -194,7 +221,7 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td><input id ="lang_11" style ="width:40%" type = "button"  onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}
@@ -205,11 +232,25 @@
 			<td width ="75%"></td></tr>';
 			for(var j = 1;j<5;j++){
 				tbody += '<tr><td>Trap'+ j +' ip:</td>';
-				tbody += '<td><input id = "addr'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
+				tbody += '<td><input id = "trap'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
 				tbody += '</td></tr>';
 			}
 			tbody += '<tr><td><input id ="lang_13" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableInform() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="25%" id ="lang_14"></td>\
+			<td width ="75%"></td></tr>';
+			for(var j = 1;j<5;j++){
+				tbody += '<tr><td>Trap'+ j +' ip:</td>';
+				tbody += '<td><input id = "inform'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
+				tbody += '</td></tr>';
+			}
+			tbody += '<tr><td><input id ="lang_15" type = "button" style ="width:40%" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

@@ -1,9 +1,9 @@
 #ifndef MB_LOOP_H
 #define MB_LOOP_H
 
-#include "mb_output.h"
+#include "mb_line.h"
 
-class Mb_Loop : public Mb_Output
+class Mb_Loop : public Mb_Line
 {
 public:
     explicit Mb_Loop(QObject *parent = nullptr);
@@ -11,6 +11,7 @@ public:
 
 protected:
     void loop_update();
+    void loop_setting(ushort addr, ushort value);
 
 private:
     void loop_dataObj(vshort &vs, int id);

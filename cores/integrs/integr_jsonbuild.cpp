@@ -19,10 +19,10 @@ Integr_JsonBuild *Integr_JsonBuild::bulid()
     return sington;
 }
 
-QByteArray Integr_JsonBuild::getJson(uchar addr)
-{    
-    mDataContent = cm::masterDev()->cfg.param.jsonContent;
-    QByteArray array; QJsonObject json = getJsonObject(addr);
+// dc 0 使用系统配置， 1读的参数 2 所有参数 3网页数据
+QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
+{
+    QByteArray array; QJsonObject json = getJsonObject(addr, dc);
     if(!json.isEmpty()) {
         QJsonDocument doc(json);
         array = doc.toJson(QJsonDocument::Compact);
@@ -31,19 +31,24 @@ QByteArray Integr_JsonBuild::getJson(uchar addr)
     return array;
 }
 
-QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
+QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 {
-    sDevData *dev = cm::devData(addr);  QJsonObject json;
-    //if(!addr) netAddr(cm::dataPacket()->net[0], "net_addr", json);
+    if(dc) mDataContent = dc;
+    else mDataContent = cm::masterDev()->cfg.param.jsonContent;
+    sDevData *dev = cm::devData(addr); QJsonObject json;
     if(dev->offLine > 0 || addr == 0) {
         //json.insert("company", "CLEVER");
-        faultCode(dev, json);
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
-        devInfo(dev->cfg, "pdu_info", json);
-        uutInfo(dev->cfg.uut, "uut_info", json);
-        verInfo(dev->cfg.vers, "pdu_version", json);
+
+        if(dc > 1) {
+            faultCode(dev, json);
+            devInfo(dev->cfg, "pdu_info", json);
+            uutInfo(dev->cfg.uut, "uut_info", json);
+            verInfo(dev->cfg.vers, "pdu_version", json);
+            if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
+        }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
@@ -55,7 +60,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr)
 
 void Integr_JsonBuild::saveJson(uchar addr)
 {
-    QJsonObject json = getJsonObject(addr);
+    QJsonObject json = getJsonObject(addr, 2);
     QString dir = "/tmp/download/dia/metadata/"; cm::execute("mkdir -p "+dir);
     QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
@@ -96,7 +101,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 
     if(mDataContent == 0){
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r);
@@ -105,6 +110,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
         arrayAppend(it.max, size, key+"_alarm_max", json, r);
         arrayAppend(it.crMin, size, key+"_warn_min", json, r);
         arrayAppend(it.crMax, size, key+"_warn_max", json, r);
+        arrayAppend(it.hda, size, key+"_hda_en", json);
     }
 }
 
@@ -112,7 +118,7 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 {
     QJsonArray array;
     for(int i=0; i<size; ++i) {
-        if(strlen(ptr[i])) array.append(ptr[i]);
+        array.append(ptr[i]); //if(strlen(ptr[i]))
     } if(array.size()) json.insert(key, array);
 }
 
@@ -123,7 +129,7 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
 
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.alarm[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.alarm, size, key+"_alarm", json);
@@ -143,7 +149,7 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
     //arrayAppend(it.sw, size, key+"_state", json);
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.timingEn[i];
-    } else if(mDataContent == 1) dc = true;
+    } else if(mDataContent > 1) dc = true;
 
     if(dc) {
         arrayAppend(it.timingEn, size, key+"_timing_en", json);
@@ -152,23 +158,23 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
     }
 }
 
-void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int relay)
+void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int type)
 {
     QJsonObject obj;  int size = it.size;
     alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
     alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
 
-    if(1 == relay) relayUnit(it.relay, "relay", obj);
-    else if(3 == relay) groupRelayUnit(it.relay, "group_relay", obj);
-    else if(2 == relay) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
-
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
-    if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
-    strListAppend(it.name, size, "name", obj);
+
+    if(3 == type) relayUnit(it.relay, "relay", obj);
+    else if(4 == type) groupRelayUnit(it.relay, "group_relay", obj);
+    else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
+    else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
+    if(type > 2) strListAppend(it.name, size, "name", obj);
 
     json.insert(key, obj);
 }
@@ -207,11 +213,22 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
-    if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-    if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
-    alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
-    alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+    if(mDataContent < 3) {
+        if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
+        if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
+        alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+        alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+    } else {
+        sAlarmUnit tem=it.tem, hum = it.hum;
+        if(!tem.size) tem.size = hum.size = 2;
+        arrayAppend(it.door, 2, "door", obj);
+        arrayAppend(it.water, 1, "water", obj);
+        arrayAppend(it.smoke, 1, "smoke", obj);
+        alarmUnit(tem, "tem", obj, COM_RATE_TEM);
+        alarmUnit(hum, "hum", obj, COM_RATE_HUM);
+    }
+
     if(obj.size()) json.insert(key, obj);
 }
 
@@ -242,17 +259,28 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
     obj.insert("dev_mode", it.param.devMode/r);
+    obj.insert("language", it.param.language/r);
 
     obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
     obj.insert("loop_num", it.nums.loopNum/r);
     obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
+    obj.insert("board_num", it.nums.boardNum/r);
+    obj.insert("group_en", it.param.groupEn/r);
+    obj.insert("cascade_addr", it.param.cascadeAddr/r);
+
+    QJsonArray loopEnd, loopStart;
+    for(uint i=0; i<it.nums.loopNum; ++i) {
+        loopEnd.append(it.nums.loopEnds[i]);
+        loopStart.append(it.nums.loopStarts[i]+1);
+    }
+    obj.insert("loop_ends", loopEnd);
+    obj.insert("loop_start", loopStart);
 
     QJsonArray ops;
     for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
-    obj.insert("ops_num", ops);
-    json.insert(key, obj);
+    obj.insert("ops_num", ops); json.insert(key, obj);
 }
 
 
@@ -268,43 +296,43 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     if(obj.size()) json.insert(key, obj);
 }
 
+void Integr_JsonBuild::webGroupData(sDevData *it, QJsonObject &obj)
+{
+    sObjData group = it->group;
+    group.size = group.pow.size = GROUP_NUM;
+    group.relay.size = it->output.relay.size ? GROUP_NUM:0;
+    ObjData(group, "group_item_list", obj, 4);
+
+    sObjData dual = it->dual;
+    group.size = group.pow.size = it->output.size;
+    ObjData(dual, "dual_item_list", obj, 5);
+}
+
 void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    //it->line.size = it->line.vol.size=it->line.cur.size=it->line.pow.size=3;//////////==========
-    ObjData(it->line, "line_item_list", obj);
-
-    //it->loop.size = 6;///////=============
-    //it->loop.size = it->loop.vol.size=it->loop.cur.size=it->loop.pow.size=it->loop.relay.size=6;
+    ObjData(it->line, "line_item_list", obj, 1);
     ObjData(it->loop, "loop_item_list", obj, 2);
+    ObjData(it->output, "output_item_list", obj, 3);
 
-    //it->group.size = 8;/////////////////==============
-    //it->group.size = it->group.vol.size=it->group.cur.size=it->group.pow.size=it->group.relay.size=8;
-    ObjData(it->group, "group_item_list", obj, 3);
-
-    //it->dual.size = 48;/////////////////============
-    //it->dual.size = it->dual.vol.size=it->dual.cur.size=it->dual.pow.size=it->dual.relay.size=48;
-    ObjData(it->dual, "dual_item_list", obj);
-
-    //it->output.size = 48;///////////////==========
-    //it->output.size = it->output.vol.size=it->output.cur.size=it->output.pow.size=it->output.relay.size=48;
-    ObjData(it->output, "output_item_list", obj, 1);
+    if(mDataContent < 3) {
+        ObjData(it->group, "group_item_list", obj, 4);
+        ObjData(it->dual, "dual_item_list", obj, 5);
+    } else webGroupData(it, obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
-    //it->env.tem.size = 2;////////////////===========
-    //it->env.hum.size = 2;////////////////============
     envData(it->env, "env_item_list", obj);
     json.insert(key, obj);
 }
 
-void Integr_JsonBuild::netAddr(const sNetAddr &it, const QString &key, QJsonObject &json)
+void Integr_JsonBuild::netAddr(const sNetInterface &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("mode", it.dhcp);
-    obj.insert("ip", it.ip);
-    obj.insert("mask", it.mask);
-    obj.insert("gw", it.gw);
-    obj.insert("dns", it.dns);
-    // obj.insert("mac", it.mac);
+    obj.insert("mode", it.inet.dhcp);
+    obj.insert("ip", it.inet.ip);
+    obj.insert("mask", it.inet.mask);
+    obj.insert("gw", it.inet.gw);
+    obj.insert("dns", it.inet.dns);
+    obj.insert("mac", it.mac);
     json.insert(key, obj);
 }

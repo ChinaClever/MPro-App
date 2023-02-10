@@ -82,7 +82,7 @@ QString Web_Obj::log_hda(const QString &start, const QString &end, int addr, int
 
 QString Web_Obj::metaData(uint addr)
 {
-    return mRpc->pduMetaData(addr);
+    return mRpc->pduMetaData(addr, 3);
 }
 
 QString Web_Obj::execute(const QString &cmd)

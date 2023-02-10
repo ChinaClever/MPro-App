@@ -8,6 +8,7 @@ HEADERS += \
     $$PWD/mb_control.h \
     $$PWD/mb_core.h \
     $$PWD/mb_env.h \
+    $$PWD/mb_group.h \
     $$PWD/mb_line.h \
     $$PWD/mb_loop.h \
     $$PWD/mb_object.h \
@@ -21,6 +22,7 @@ SOURCES += \
     $$PWD/mb_control.cpp \
     $$PWD/mb_core.cpp \
     $$PWD/mb_env.cpp \
+    $$PWD/mb_group.cpp \
     $$PWD/mb_line.cpp \
     $$PWD/mb_loop.cpp \
     $$PWD/mb_object.cpp \

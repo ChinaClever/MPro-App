@@ -21,16 +21,18 @@ private:
 
     bool upAlarmIndex(sDataItem &index);
     bool setAlarm(const QVariant &value);
+    bool ctrlOutput(const QVariant &value);
 
     bool setName(int type,const QVariant &value);
-    bool relayCtrl(int type, const QVariant &value);
-    bool relayCtrl(const QVariant &value);
+    bool relayDualCtrl(const QVariant &value);
+    bool relayGroupCtrl(const QVariant &value);
     bool setOutputName(const QVariant &value);
 
 
 private:
     struct sIndex {
         uchar addr;
+        uchar rw;
         uchar fc;
         uchar id;
         uchar type;

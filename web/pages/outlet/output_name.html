@@ -51,18 +51,48 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
 		let dev_dis = 0;
 		let read = 1;
 		let lang = new Array();
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		let output_info_ = new Array();
+		let output_num;
 		let output_name =new Array();
 		let dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let slave_num;
+
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		if(pdu_cfg.cfgValue(100,0,0,0) != null){
+			ParseData();
+		}
+		function read_data(){
+			for (let i = 1; i < output_num + 1; i++) {
+				output_name[i] = output_info_[i - 1][11];
+			}
+		}
 		function lang_init(){
 			for(let i = 1;i<9;i++){
 				lang[i] = new Array();
@@ -128,12 +158,6 @@
 			}
 		}
 		read_data();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < output_num + 1;i++){
-				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-			}
-		}
 		lang_init();
 		$('.table-striped').html(buildTable(output_num));
 		$('.devname').html(buildSel(slave_num+1));
@@ -145,13 +169,16 @@
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
 			let val = ipt.value;
-			rpc.call('pduSetParam',[addr_,22,1,number,number,val]);
-			flash_html(ipt);
+
+			pdu_cfg.setCfg(22,1,val,number,addr);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
+			ipt.blur();
 		}
 
 		function flash_html(par)
 		{
-			read_output_param(0);
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
