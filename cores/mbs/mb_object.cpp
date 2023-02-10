@@ -36,6 +36,9 @@ void Mb_Object::upDevInfo()
     vs << dev->cfg.nums.boardNum;
 
     vs << dev->hz;
+    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
+    vs << timestamp/0xffff; vs << timestamp%0xffff;
+
     vs << dev->status;
     vs << dev->tg.pow.value;
     vs << dev->tg.artPow;
@@ -43,8 +46,6 @@ void Mb_Object::upDevInfo()
     vs << dev->tg.ele/0xffff;
     vs << dev->tg.ele%0xffff;
 
-    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
-    vs << timestamp/0xffff; vs << timestamp%0xffff;
     setRegs(0, vs);
 }
 
