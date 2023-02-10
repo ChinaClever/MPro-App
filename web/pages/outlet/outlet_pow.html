@@ -61,7 +61,8 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let  read  = 1;
+		let phase = 3,pow = 4;
+		let read  = 1;
 		let dev_dis = 0;
 		let childnum = 0;
 		let lang = new Array();
@@ -89,9 +90,7 @@
 				}
 			}
 		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
+		ParseData();
 		let output_arr = [19,18,16,14,15,21,20,13,0,0,17];
 		function read_data(){
 			for (let i = 1; i < output_num + 1; i++) {
@@ -276,7 +275,7 @@
 			}else{
 				number1 = number;
 			}
-			pdu_cfg.setData(3,4,sub,number1,stat);
+			pdu_cfg.setData(phase,pow,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);
@@ -327,7 +326,7 @@
 			}else{
 				document.getElementById(ipt.id).value = parseFloat(ipt.value).toFixed(3);
 			}
-			pdu_cfg.setData(3,4,sub,number1,stat);
+			pdu_cfg.setData(phase,pow,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);
@@ -381,7 +380,6 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0;
 		function putdata(){
 			for(let i = 0;i < output_num;i++){
 				document.getElementById('c' + i).innerHTML = parseFloat(output_info[i+1][1]).toFixed(3);

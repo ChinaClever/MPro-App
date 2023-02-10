@@ -52,32 +52,58 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
-	<script src="../../include/js/fn_public.js"></script>
     <script>
-		var  read  = 1,dt = 0;
-		var mode = 0;
+		let pdu_cfg = top.pdu_cfg_;
+		let group_num = top.group_num_;
+		let language;
+		let group = 4,pow = 4;
+		let read  = 1;
+		let mode = 0;
 		let dev_dis = 0;
-		let pow_mark = new Array();
-		var len  = data_name.length -1;
-		var dev_name =new Array();
-		var group_name =new Array();
-		var group_info = new Array();
-		var lang = new Array();
-		var length = 13;
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let dev_name =new Array();
+		let group_name =new Array();
+		let group_info = new Array();
+		let group_info_ = new Array();
+		let lang = new Array();
+		let slave_num;
+		let addr = pdu_cfg.addr;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<group_num;i++){
+				group_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.group_item_list){
+					group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		let group_arr = [13,12,10,8,9,15,14,7,0,0,11];
+		ParseData();
 		read_data();
 		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_info[i] =  new Array();
-				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				for(var j = 0;j <len;j++){
-					group_info[i][j] = (sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[j + 1]+addr+'_'+i));
+				let j = 0;
+				for(let key of group_arr){
+					if(j == 8 || j == 9){
+
+					}else{
+						group_info[i][j] = group_info_[i - 1][key];
+						// console.log(group_info[i][j] , group_info_[i - 1][key]);
+					}
+					j++;
 				}
+				group_name[i] = group_info_[i - 1][5];
 			}
 		}
 		lang_init();
@@ -159,17 +185,19 @@
 				else{
 					cs.bgColor = '';
 				}
-				if(i == group_num){
-					if(pow_mark[0] ==1){
-						document.getElementById('d'+(i)).checked = true;
-					}else{
-						document.getElementById('d'+(i)).checked = false;
-					}
-					if(pow_mark[1] ==1){
-						document.getElementById('j'+(i)).checked = true;
-					}else{
-						document.getElementById('j'+(i)).checked = false;
-					}
+			}
+		}
+		function showdata_(){
+			var cs = 0;
+			for(var i = 1 ;i < group_num + 1;i++){
+				cs = document.getElementById('c'+(i -1));
+				if(group_info[i][2] ==1 || group_info[i][2] ==8){
+					cs.bgColor = 'red';
+				}else if(group_info[i][2] == 2 || group_info[i][2] == 4){
+					cs.bgColor = 'yellow';
+				}
+				else{
+					cs.bgColor = '';
 				}
 			}
 		}
@@ -207,31 +235,12 @@
 				}
 			}
 		}
-		function read_group_pow_data(){
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(i >= (group_num + 1)){
-					clearInterval(time1);
-				}
-				if(i <= group_num){
-					rpc.call('pduReadData',[addr,group,pow_,dt,i]);
-					rpc.call('pduReadData',[addr,group,pow_,1,i]);
-					rpc.call('pduReadData',[addr,group,pow_,8,i]);
-					rpc.call('pduReadData',[addr,group,pow_,11,i]);
-				}
-				i++;
-			},10);
-		}
 		function flash_html(par)
 		{
-			read_group_pow_data();
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				$('.table-striped').html(buildTable(group_num));
-				showdata();
-				lang_fun();
-			},500);
+			par.parentNode.parentNode.parentNode.remove();
+			$('.table-striped').html(buildTable(group_num));
+			showdata();
+			lang_fun();
 		}
 		function cked(ckd)
 		{
@@ -247,32 +256,26 @@
 				sub = 11;
 			}
 			if(ckd.checked == true){
-				if(number == group_num +1){
-					if(sub ==8){
-						pow_mark[0] = 1;
-					}else{
-						pow_mark[1] = 1;
-					}
-				}
 				stat = '1';
 			}else{
-				if(number == group_num +1){
-					if(sub ==8){
-						pow_mark[0] = 0;
-					}else{
-						pow_mark[1] = 0;
-					}
-				}
 				stat = '0';
 			}
 			if(number == group_num +1){
 				number1 = 0;
+				for(let i = 0;i<group_num;i++){
+					if(ckd.checked == true){
+						document.getElementById(type1+(i)).checked = true;
+					}else{
+						document.getElementById(type1+(i)).checked = false;
+					}
+				}
 			}else{
 				number1 = number;
 			}
-			dt = sub;
-			rpc.call('pduSetData',[addr_,group,pow_,sub,number1,stat]);
-			flash_html(ckd);
+			pdu_cfg.setData(group,pow,sub,number1,stat);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 		}
 		function clearNum(obj){
 			obj.value = obj.value.replace(/[^\d.]/g,""); 
@@ -295,7 +298,7 @@
 				number1 = number;
 				if(data1>data2 || data2>data3 || data3>data4){
 					alert("input data error");
-					showdata();
+					flash_html(ipt);
 					return ;
 				}
 			}
@@ -303,16 +306,30 @@
 				sub = 2;
 			}else if(type1 === 'f'){
 				sub = 5;
+				childnum = 6;
 			}else if(type1 === 'g'){
 				sub = 6;
+				childnum = 7;
 			}else if(type1 === 'h'){
 				sub = 7;
+				childnum = 8;
 			}else if(type1 === 'i'){
 				sub = 4;
+				childnum = 9;
 			}
-			dt = sub;
-			rpc.call('pduSetData',[addr_,group,pow_,sub,number1,stat]);
-			flash_html(ipt);
+			if(number1 == 0){
+				for(let i = 0;i<group_num;i++){
+					document.getElementById(type1+(i)).value = parseFloat(ipt.value).toFixed(3);
+				}
+				document.getElementById(type1 + group_num).value = "";
+			}else{
+				document.getElementById(ipt.id).value = parseFloat(ipt.value).toFixed(3);
+			}
+			pdu_cfg.setData(group,pow,sub,number1,stat);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
+			ipt.blur();
 		}
 		function buildTable(rows) {
 			var thead = '',
@@ -374,28 +391,16 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		var state_ = 0;
 		function putdata(){
 			for(let i = 0;i < group_num;i++){
-				state_ = document.getElementById('c' + i);
-				state_.innerHTML =parseFloat(group_info[i+1][0]).toFixed(3);
-				state_ = document.getElementById('f' + i);
-				state_.value =parseFloat(group_info[i+1][4]).toFixed(3);
-				state_ = document.getElementById('g' + i);
-				state_.value =parseFloat(group_info[i+1][5]).toFixed(3);
-				state_ = document.getElementById('h' + i);
-				state_.value =parseFloat(group_info[i+1][6]).toFixed(3);
-				state_ = document.getElementById('i' + i);
-				state_.value =parseFloat(group_info[i+1][3]).toFixed(3);
+				document.getElementById('c' + i).innerHTML =parseFloat(group_info[i+1][0]).toFixed(3);
 			}
 		}
 		setInterval(function(){
-			read_group_pow_data();
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+			ParseData();
+			read_data();
+			putdata();
+			showdata_();
 		},2000);
     </script>
 </body>
