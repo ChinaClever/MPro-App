@@ -127,6 +127,7 @@
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
 						pdu_cfg.setCfg(18,11 + i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();

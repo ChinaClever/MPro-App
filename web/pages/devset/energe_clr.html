@@ -50,18 +50,40 @@
 		</div>
 
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
 		var read =0;
+		let addr = pdu_cfg.addr;
 		let dev_dis = 0;
 		let energe_val = new Array();
 		let ckd_state = new Array();
 		let output_name = new Array();
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		let output_info_ = new Array();
+		let output_num;
 		let dev_name =new Array();
-		let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		let slave_num;
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		ParseData();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<13;i++){
@@ -95,12 +117,12 @@
 		}
 		read_data();
 		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
+				output_name[i] = output_info_[i - 1][11];
 				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				energe_val[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+addr+'_'+i));
-				ckd_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[9]+data_name[11]+addr+'_'+i));
+				energe_val[i] = output_name[i] = output_info_[i - 1][10];
+				ckd_state[i] = output_name[i] = output_info_[i - 1][11];
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));

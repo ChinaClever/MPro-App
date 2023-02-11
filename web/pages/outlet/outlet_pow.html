@@ -60,6 +60,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
 		let language;
 		let phase = 3,pow = 4;
 		let read  = 1;
@@ -72,7 +73,6 @@
 		let output_info = new Array();
 		let output_info_ = new Array();
 		let slave_num;
-		let addr = pdu_cfg.addr;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);

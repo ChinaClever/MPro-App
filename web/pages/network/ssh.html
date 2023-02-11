@@ -31,18 +31,26 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_ssh_data(default_addr);
-		},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.sshCfg();
+		let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 		var mode_set = new Array("","");
 		var ssh_data = new Array();
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<ssh_name.length;j++){
-					ssh_data[j] = sessionStorage.getItem(ssh_name[j]);
+					ssh_data[j] = pdu_cfg.cfgValue(45,j,0,addr);
 			}
 		}
 		lang_init();
@@ -72,12 +80,12 @@
 				}
 			}
 		}
-		$('.ssh').html(buildTable());
-		lang_fun();
 		setTimeout(function(){
+			$('.ssh').html(buildTable());
+			lang_fun();
 			read_data();
 			showdata();
-		},600);
+		},500);
 		function showdata(){
 			for(var i = 1;i< ssh_name.length;i++){
 				document.getElementById(ssh_name[i]).value = ssh_data[i];
@@ -95,9 +103,9 @@
 						alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
 						return ;
 					}else{
-						rpc.call('pduSetParam',[default_addr,45,3,0,0,ssh_name]);
-						rpc.call('pduSetParam',[default_addr,45,4,0,0,ssh_psd]);
-						rpc.call('pduSetParam',[default_addr,45,5,0,0,0]);
+						pdu_cfg.setCfg(45,3,ssh_name,0,addr);
+						pdu_cfg.setCfg(45,4,ssh_psd,0,addr);
+						pdu_cfg.setCfg(45,4,0,0,addr);
 					}
 				}else {
 					alert("username or password error!");
@@ -110,18 +118,19 @@
 			if(confirm("请确认是否保存此次修改。")){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,45,i,0,0,btn.value]);
+						pdu_cfg.setCfg(45,i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_ssh_data(default_addr);
+			pdu_cfg.sshCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function validataForm(opt){
 
@@ -145,7 +154,7 @@
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id ="SshName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id ="SshPsd" type="text" onfocus = \'this.type="password"\'  style ="width:24.5%" minlength="8" maxlength="16" autocomplete="off" onblur = "validataForm(this)" placeholder="密码"></td></tr>';
+			tbody += '<td><form><input id ="SshPsd" type="text" onfocus = \'this.type="password"\'  style ="width:24.5%" minlength="8" maxlength="16" autocomplete="off" onblur = "validataForm(this)" placeholder="密码"></form></td></tr>';
 			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:50%"  onclick = "SetVal()"></td></tr>';
 			tbody += '<tr><td><input type = "button" id  ="Test" ></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

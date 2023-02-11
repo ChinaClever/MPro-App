@@ -76,9 +76,7 @@
 			let group_info_ = new Array();
 			let slave_num;
 			let addr = pdu_cfg.addr;
-			for(let j = 1;j<group_num + 1;j++){
-				pdu.getCfg(25,j,0,addr);
-			}
+			pdu_cfg.OutInGroup();
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);
@@ -98,7 +96,7 @@
 			function read_data() {
 				for (var i = 1; i < group_num + 1; i++) {
 					group_name[i] = group_info_[i - 1][5];
-					group_data[i] = pdu_cfg.cfgValue(25,j,0,addr);
+					group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
 				}
 			}
 			function lang_init() {
@@ -133,9 +131,9 @@
 				if (read == 0) {
 					document.getElementById("lang_2").innerHTML = lang[10][language];
 				}
-			if(dev_dis == 0){
-				document.getElementById("dev_sel").style.display="";
-			}
+				if(dev_dis == 0){
+					document.getElementById("dev_sel").style.display="";
+				}
 			}
 			setTimeout(function(){
 				ParseData();
@@ -145,7 +143,6 @@
 				$('.devname').html(buildSel((slave_num + 1)));
 				lang_fun();
 				modeset();
-				showdata();
 			},500);
 			function buildSel(rows) {
 				var tbody = '';
@@ -217,12 +214,10 @@
 				}
 			}
 			function flash_html(par) {
-				read_sw_data(addr);
 				setTimeout(function () {
 					par.parentNode.parentNode.parentNode.remove();
 					read_data();
 					$('.table-striped').html(buildTable(group_num));
-					showdata();
 					lang_fun();
 				}, 800);
 			}
@@ -295,10 +290,10 @@
 					tbody += '<tr id = "tr' + i + '">';
 					tbody += '<td id = "a' + i + '">' + (parseInt(i) + 1) + '</td>';
 					tbody += '<td id = "b' + i + '" >' + group_name[i + 1] + '</td>';
-					tbody += '<td id = "c' + i + '">' + group_data[i + 1][0] + '</td>';
+					tbody += '<td id = "c' + i + '">' + group_data[i + 1] + '</td>';
 					// tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "d' + i + '"></input></td>';
-					tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
-					tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>';
+					tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+					tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
 					tbody += '</tr>';
 					if (i === rows - 1) {
 						i++;
@@ -307,8 +302,8 @@
 						tbody += '<td id = "b' + i + '">统一设置</td>';
 						tbody += '<td id = "c' + i + '"></td>';
 						// tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "d' + i + '"></input></td>'; 9
-						tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
-						tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[10][language] + '</button></td>'; 9
+						tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
+						tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>'; 9
 						tbody += '</tr>';
 					}
 				}
