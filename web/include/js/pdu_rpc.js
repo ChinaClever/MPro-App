@@ -420,6 +420,10 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(48, fcs);
         this.getCfgList(49, fcs_);
     }
+    diagnosticsCfg(){
+        let fcs = [1,2,3,6,7,8];
+        this.getCfgList(93, fcs);
+    }
 }
 
 // 日志操作接口
@@ -445,8 +449,8 @@ class PduLog extends  PduCfgs{
         return this.rpc.json_rpc_get(method, params);
     }
 
-    log_value(addr, fc, start, end) {
-        var key = addr+'_'+82+'_'+fc+'_'+start+'_'+end;
+    log_value(addr, fc) {
+        var key = addr+'_'+82+'_'+fc;
         return this.rpc.json_rpc_value(key);
     }
 }

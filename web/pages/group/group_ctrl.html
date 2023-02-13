@@ -264,7 +264,7 @@
 					} else {
 						num = 0;
 					}
-					rpc.call('pduSetData', [addr, group, switch_, 1, num, stat]);
+					pdu_cfg.setData(group,switch_,1,num,stat);
 					flash_html(btn);
 				} else { }
 			}

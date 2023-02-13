@@ -34,20 +34,28 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_net_diagnostics_data();
-		},100);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
 		let diagn_data = new Array();
 		let lang = new Array();
 		let time1 = 0;
 		let time2 = 0;
+		let net_diagn = new Array("","NetAddr","RequstNum","Ping","Ping1","","Host","Timeout","Router","Router1");
+		pdu_cfg.diagnosticsCfg();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<9;j++){
 				if(j < 4 || j > 5){
-					diagn_data[j] = sessionStorage.getItem(net_diagn[j]);
+					diagn_data[j] = pdu_cfg.cfgValue(93,j,0,addr);
 				}
 			}
 		}
@@ -80,10 +88,10 @@
 			document.getElementById("Ping").value  = lang[5][language];
 			document.getElementById("Router").value  = lang[10][language];
 		}
-		$('.ping').html(buildTableRtu());
-		$('.router').html(buildTableTcp());
-		lang_fun();
 		setTimeout(function(){
+			$('.ping').html(buildTableRtu());
+			$('.router').html(buildTableTcp());
+			lang_fun();
 			read_data();
 			showdata();
 		},500);
@@ -102,8 +110,9 @@
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
 						if(i == 3 || i == 8){
-							sessionStorage.setItem(net_diagn[btn],"");
-							rpc.call('pduReadParam',[default_addr,93,i,0,0]);
+							let key = '0_93_'+ i +'_0_0';
+							pdu_cfg.rpc.root_map.set(key, 0);
+							pdu_cfg.getCfg(93,i,0,addr)
 							document.getElementById(net_diagn[i+1]).innerHTML  = lang[12][language];
 							diagn_read(i);
 						}
@@ -115,14 +124,15 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,93,i,0,0,btn.value]);
+						pdu_cfg.setCfg(93,i,btn.value,0,addr);
+						btn.blur();
 						flash_html();
 					}
 				}
 			}else{}
 		}
 		function flash_html(){
-			read_net_diagnostics_data();
+			pdu_cfg.diagnosticsCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -132,6 +142,8 @@
 			let text_info="";
 			let text_num = 0;
 			let time1 = setInterval(function(){
+				let key = '0_93_'+ btn +'_0_0';
+				pdu_cfg.cfgValue(93,btn,0,addr);
 				text_info = sessionStorage.getItem(net_diagn[btn]);
 				if(text_info !="" || text_num == 15){
 					clearInterval(time1);
