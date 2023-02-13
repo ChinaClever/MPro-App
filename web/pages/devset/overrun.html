@@ -47,18 +47,41 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		let output = 3,switch_ = 1;
 		let read = 0;
 		let dev_dis = 0;
 		let lang = new Array();
-		let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		let output_num;
 		let overrun_state =new Array();
+		let output_info_ =new Array();
 		let state_ = new Array();
 		let dev_name = new Array();
 		let output_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		var slave_num ;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		ParseData();
 		function lang_init(){
 			for(let i = 1;i<13;i++){
 				lang[i] = new Array();
@@ -78,11 +101,6 @@
 			dev_name[0] = lang[11][language];
 			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[12][language] + i;
-			}
-		}
-		function read_overrun_state(addr){
-			for(let i = 1;i<=output_num;i++){
-				rpc.call("pduReadData",[addr,output,switch_,6,i]);
 			}
 		}
 		function lang_fun(){
@@ -132,10 +150,9 @@
 		lang_init();
 		read_data();
 		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
 			for(var i = 1 ;i < output_num + 1;i++){
-				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				overrun_state[i] = parseInt(sessionStorage.getItem(type_name[output]+data_type[switch_]+alarm_name[6]+addr+'_'+i));
+				output_name[i] = output_info_[i - 1][12];
+				overrun_state[i] =  output_info_[i - 1][27];
 				if(overrun_state[i] == 0){
 					state_[i] = lang[9][language];
 				}else{
@@ -163,7 +180,10 @@
 					val = '0';
 					ipt.value =lang[9][language];
 				}
-				rpc.call('pduSetData',[addr_,output,switch_,6,number,val]);
+				pdu_cfg.setData(output,switch_,6,number,val);
+				setTimeout(() => {
+					PduMetaData.meta_workDown(pdu_cfg);
+				}, 100);
 				flash_html(ipt);
 			}else{
 				flash_html(ipt);
@@ -172,8 +192,8 @@
 
 		function flash_html(par)
 		{
-			read_overrun_state(addr);
 			setTimeout(function(){
+				ParseData();
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));

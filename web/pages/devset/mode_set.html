@@ -36,12 +36,11 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		var read =0;
 		let addr;
-		let cfg = 13;
+		let cfg = 13,num = 12;
 		pdu_cfg.modesetCfg();
 		var mode_data = new Array();
 		let lang = new Array();
@@ -59,7 +58,24 @@
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			addr = pdu_cfg.cascade_addr;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		ParseData();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			slave_num1 = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		lang_init();
@@ -106,29 +122,29 @@
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
+		let modeset_arr = [3,4,7,21,8,9,10];
 		function read_data(){
-			mode_data[0] = parseInt(sessionStorage.getItem(cfg_name[3] + default_addr));
-			mode_data[1] = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			mode_data[2] = parseInt(sessionStorage.getItem(cfg_name[7] + default_addr));
-			mode_data[3] = parseInt(sessionStorage.getItem(cfg_name[21] + default_addr));
-			mode_data[4] = parseInt(sessionStorage.getItem(cfg_name[8] + default_addr));
-			mode_data[5] = parseInt(sessionStorage.getItem(cfg_name[9] + default_addr));
-			mode_data[6] = parseInt(sessionStorage.getItem(cfg_name[10] + default_addr));
-			slave_num1 = parseInt(sessionStorage.getItem(type_info[5]+ "Num" + default_addr));
+			for(let i = 0;i<modeset_arr.length;i++){
+				mode_data[i] = pdu_cfg.cfgValue(cfg,modeset_arr[i],0,addr);
+			}
 		}
-		$('.mode_set').html(buildTableMode());
-		$('.sw_set').html(buildTableSw());
-		lang_fun();
-		read_data();
-		showdata();
+		setTimeout(function(){
+			$('.mode_set').html(buildTableMode());
+			$('.sw_set').html(buildTableSw());
+			lang_fun();
+			read_data();
+			showdata();
+		},500);
 		function showdata(){
 			for(let i = 0;i<id_val1.length;i++){
 				if(i == 0){
 					if(mode_data[0] == 0){
 						document.getElementById(id_val1[1]).disabled = true;
 						document.getElementById("slave").disabled = true;
+						document.getElementById("slave_").style.display = "none";
 					}else{
-						document.getElementById(id_val1[1]).disabled = false
+						document.getElementById(id_val1[1]).disabled = false;
+						document.getElementById("slave").disabled = false;
 						if(mode_data[1] != 0){
 							document.getElementById("slave_").style.display = "none";
 						}else{
@@ -143,11 +159,12 @@
 		}
 		function SetData(btn){
 			let mds_data = 0;
-			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否修改此项。")){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
-						rpc.call("pduSetParam",[default_addr,cfg,i,0,0,mds_data]);
+						pdu_cfg.setCfg(cfg,i,btn.value,0,addr);
+						PduMetaData.meta_workDown(pdu_cfg);
+						btn.blur();
 					}
 				}
 				flash_html();
@@ -157,9 +174,9 @@
 		}
 		function Set(btn){
 			let mds_data = 0;
-			mds_data = parseInt(btn.value);
 			if(confirm("请确认是否修改此项。")){
-				rpc.call("pduSetParam",[default_addr,num,5,0,0,mds_data]);
+				pdu_cfg.setCfg(num,5,btn.value,0,addr);
+				btn.blur();
 				flash_html();
 			}else{
 				showdata();
@@ -168,6 +185,7 @@
 		function flash_html(){
 			pdu_cfg.modesetCfg();
 			setTimeout(function(){
+				ParseData();
 				read_data();
 				showdata();
 			},500);
