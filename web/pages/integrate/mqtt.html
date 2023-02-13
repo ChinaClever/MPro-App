@@ -35,7 +35,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
-		let addr = pdu_cfg.addr;
+		let addr;
 		let language;
 		pdu_cfg.mqttCfg();
 		var enable = new Array("","mqtt","mqtts","ws","wss");
@@ -49,6 +49,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
 		}
 		ParseData();
 		lang_init();
