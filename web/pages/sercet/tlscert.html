@@ -98,7 +98,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr = pdu_cfg.addr;
+		let addr;
 		pdu_cfg.tlscert();
 		let tls_info = new Array("","Before","After","SN","KeyLength");
 		let tls_info1 = new Array("","Nation","State","Place","Oragnize","Uint","Name","Mail");
@@ -109,6 +109,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function upload_data(){

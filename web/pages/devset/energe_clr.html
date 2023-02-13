@@ -50,7 +50,6 @@
 		</div>
 
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
@@ -58,6 +57,7 @@
 		var read =0;
 		let addr = pdu_cfg.addr;
 		let dev_dis = 0;
+		let output = 3,energe_ = 9;
 		let energe_val = new Array();
 		let ckd_state = new Array();
 		let output_name = new Array();
@@ -119,10 +119,9 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
-				output_name[i] = output_info_[i - 1][11];
-				output_name[i] = sessionStorage.getItem("OutputName"+ addr +'_'+i);
-				energe_val[i] = output_name[i] = output_info_[i - 1][10];
-				ckd_state[i] = output_name[i] = output_info_[i - 1][11];
+				output_name[i] = output_info_[i - 1][12];
+				energe_val[i] = output_info_[i - 1][10];
+				ckd_state[i] = output_info_[i - 1][11];
 			}
 		}
 		$('.table-striped').html(buildTable(output_num));
@@ -132,8 +131,6 @@
 		var state_ = 0;
 		function show_data(){
 			for(let i = 0;i < output_num;i++){
-				state_ = document.getElementById('c' + i);
-				state_.innerHTML=parseFloat(energe_val[i + 1]).toFixed(2);
 				state_ = document.getElementById('f' + i);
 				if(ckd_state[i+1] ==  1){
 					state_.checked = true;
@@ -145,44 +142,42 @@
 		function cked(ckd)
 		{
 			var stat = 0,number1 = 0;
-			let sub = 0;
+			let sub = 11;
 			var addr_ = addr + 0 * 256;
+			var type1 = ckd.id.substr(0,1);
 			var number = parseInt(ckd.id.slice(1))+1;
-			if(confirm("您已更改表单，请确认提交！"))
-			{
-				sub = 11;
+			if(ckd.checked == true){
+				stat = '1';
+			}else{
+				stat = '0';
+			}
+			if(number == output_num +1){
+				number1 = 0;
+				for(let i = 0;i<output_num;i++){
 				if(ckd.checked == true){
-					if(number == output_num +1){
-						energe_mark = 1;
-					}
-					stat = '1';
+					document.getElementById(type1+(i)).checked = true;
 				}else{
-					if(number == output_num +1){
-						energe_mark = 0;
-					}
-					stat = '0';
+					document.getElementById(type1+(i)).checked = false;
 				}
-				if(number == output_num +1){
-					number1 = 0;
-				}else{
-					number1 = number;
-				}
-				dt = sub;
-				rpc.call('pduSetData',[addr_,output,9,sub,number1,stat]);
-				flash_html(ckd);
-			}else{}
+			}
+			}else{
+				number1 = number;
+			}
+			pdu_cfg.setData(output,energe_,sub,number1,stat);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
 		}
 
-		function flash_html(par)
+		function flash_html()
 		{
-			read_energe_data();
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				read_data();
 				$('.table-striped').html(buildTable(output_num));
 				show_data();
 				lang_fun();
-			},800);
+			},500);
 		}
 		function btn_click(btn){
 			let num = parseInt(btn.id.slice(1))+1;
@@ -191,12 +186,15 @@
 			if(retVal == true)
 			{
 				if(num !== output_num + 1){
-					rpc.call('pduSetData',[addr,output,energe_,1,num,stat]);
 				}
 				else{
-					rpc.call('pduSetData',[addr,output,energe_,1,0,stat]);
+					num = 0;
 				}
-				flash_html(par);
+				pdu_cfg.setData(output,5,1,num,stat);
+				setTimeout(() => {
+					PduMetaData.meta_workDown(pdu_cfg);
+				}, 100);
+				btn.blur();
 			}else{}
 		}
 		function buildSel(rows)
@@ -282,12 +280,15 @@
 				rpc.call('pduReadData',[addr,output,9,11,i]);
 			}
 		}
+		function putdata(){
+			for(let i = 0;i < output_num;i++){
+				document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+			}
+		}
 		setInterval(function(){
-			read_energe_data();
-			setTimeout(function(){
-				read_data();
-				show_data();
-			},800);
+			ParseData();
+			read_data();
+			putdata();
 		},2000);
 		
     </script>

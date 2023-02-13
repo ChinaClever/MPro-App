@@ -42,7 +42,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr = pdu_cfg.addr;
+		let addr;
 		pdu_cfg.whiteList();
 		let mode_set = new Array("","");
 		let ctrl_data = new Array();
@@ -57,6 +57,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function lang_init(){
