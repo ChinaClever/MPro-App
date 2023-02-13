@@ -424,6 +424,10 @@ class PduCfgs extends PduCfgObj {
         let fcs = [1,2,3,6,7,8];
         this.getCfgList(93, fcs);
     }
+    modesetCfg(){
+        let fcs = [3,4,7,8,9,10,21];
+        this.getCfgList(13, fcs);
+    }
 }
 
 // 日志操作接口
