@@ -49,23 +49,46 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let group_num = top.group_num_;
+		let language;
 		let dev_dis = 0;
-		function read_group_param_data(addr){
-			for(let i = 1;i<= group_num;i++){
-				rpc.call('pduReadParam',[addr,23,1,i,i]);
-			}
-		}
 		let read = 1;
 		let lang = new Array();
 		let group_name =new Array();
 		let group_data =new Array();
+		let group_info_ = new Array();
 		let dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
+		var slave_num;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.OutInGroup();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<group_num;i++){
+				group_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.group_item_list){
+					group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		function read_data(){
+			for (var i = 1; i < group_num + 1; i++) {
+				group_name[i] = group_info_[i - 1][5];
+				group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
+			}
+		}
 		function lang_init(){
 			for(let i = 1;i<7;i++){
 				lang[i] = new Array();
@@ -131,38 +154,32 @@
 				}
 			}
 		}
-		read_data();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < group_num + 1;i++){
-				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				group_data[i]= sessionStorage.getItem(type_name[25]+ addr +'_'+i);
-			}
-		}
-		lang_init();
-		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel((slave_num+1)));
-		lang_fun();
-		modeset();
+		setTimeout(function(){
+			ParseData();
+			read_data();
+			lang_init();
+			$('.table-striped').html(buildTable(group_num));
+			$('.devname').html(buildSel((slave_num+1)));
+			lang_fun();
+			modeset();
+		},500);
 		function setdata(ipt)
 		{
-			var opt_val = parseInt(document.getElementById("ms").value);
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			let val = ipt.value;
-			rpc.call('pduSetParam',[addr_,23,1,number,number,val]);
-			flash_html(ipt);
+			pdu_cfg.setCfg(23,1,ipt.value,number,addr_);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg);
+			}, 100);
+			ipt.blur();
 		}
 
 		function flash_html(par)
 		{
-			read_group_param_data(0);
-			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				$('.table-striped').html(buildTable(group_num));
-				lang_fun_();
-			},500);
+			par.parentNode.parentNode.parentNode.remove();
+			read_data();
+			$('.table-striped').html(buildTable(group_num));
+			lang_fun_();
 		}
 		function buildSel(rows)
 		{

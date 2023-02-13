@@ -381,6 +381,49 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(21, fcs);
         this.getCfgList(28, fcs);
     }
+    OutInGroup(){
+        for(let j = 1;j<8 + 1;j++){
+            this.getCfg(25,j,0,this.addr);
+        }
+    }
+    baseCfg(){
+        var fcs = [10,11];
+        for(let i=0;i<8;i++){
+            this.getCfgIds(41, i, 0, 1);
+        }
+        this.getCfgList(41, fcs);
+    }
+    webCfg(){
+        var fcs = [1,2,3,4,5];
+        this.getCfgList(42, fcs);
+    }
+    ntpCfg(){
+        var fcs = [1,2,3,4,5,6];
+        this.getCfgList(43, fcs);
+    }
+    smtpCfg(){
+        var fcs = [1,2,3,4,6,7,8];
+        this.getCfgList(44, fcs);
+        this.getCfgIds(44, 5, 1, 4);
+    }
+    sshCfg(){
+        var fcs = [1,2,3,4,5];
+        this.getCfgList(45, fcs);
+    }
+    syslogCfg(){
+        var fcs = [1,2,3];
+        this.getCfgList(46, fcs);
+    }
+    radiusCfg(){
+        let fcs = [1,2,3,4,5,6];
+        let fcs_ = [1,2,3];
+        this.getCfgList(48, fcs);
+        this.getCfgList(49, fcs_);
+    }
+    diagnosticsCfg(){
+        let fcs = [1,2,3,6,7,8];
+        this.getCfgList(93, fcs);
+    }
 }
 
 // 日志操作接口
@@ -406,8 +449,8 @@ class PduLog extends  PduCfgs{
         return this.rpc.json_rpc_get(method, params);
     }
 
-    log_value(addr, fc, start, end) {
-        var key = addr+'_'+82+'_'+fc+'_'+start+'_'+end;
+    log_value(addr, fc) {
+        var key = addr+'_'+82+'_'+fc;
         return this.rpc.json_rpc_value(key);
     }
 }

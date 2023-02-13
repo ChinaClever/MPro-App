@@ -30,25 +30,33 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_smtp_data(default_addr);
-		},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		pdu_cfg.smtpCfg();
+		let smtp_name = new Array("","SmtpEn","SmtpServer","SmtpSendUsr","SmtpSendPsd","SmtpRecvUsr","SmtpPort","SmtpMode","SmtpState");
 		var mode_set = new Array("","");
 		var mode_name = new Array("TCP","SSL","TLS");
 		var smtp_data = new Array();
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<9;j++){
 				smtp_data[j] = new Array();
 				if(j ==5){
 					for(let i = 1;i<5;i++){
-						smtp_data[j][i] = sessionStorage.getItem(smtp_name[j] + i);
+						smtp_data[j][i] = pdu_cfg.cfgValue(44,j,i,addr);
 					}
 				}else{
-					smtp_data[j][1] = sessionStorage.getItem(smtp_name[j]);
+					smtp_data[j][1] = pdu_cfg.cfgValue(44,j,0,addr);
 				}
 			}
 		}
@@ -81,9 +89,9 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		$('.smtp').html(buildTable());
-		lang_fun();
 		setTimeout(function(){
+			$('.smtp').html(buildTable());
+			lang_fun();
 			read_data();
 			showdata();
 		},500);
@@ -119,26 +127,27 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<smtp_name.length;i++){
 					if(smtp_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,44,i,0,0,btn.value]);
+						pdu_cfg.setCfg(44,i,btn.value,0,addr);
 					}else{
 						for(let k = 1;k<5;k++){
 							if((smtp_name[i] + k) == btn.id){
-								rpc.call('pduSetParam',[default_addr,44,i,k,0,btn.value]);
+								pdu_cfg.setCfg(44,i,btn.value,k,addr);
 							}
 						}
 					}
 				}
+				btn.blur();
 				flash_html();
 			}else{
 				showdata();
 			}
 		}
 		function flash_html(){
-			read_smtp_data(default_addr);
+			pdu_cfg.smtpCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTable() {
 			var thead = '',tbody = '';

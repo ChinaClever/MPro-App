@@ -45,6 +45,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
+		let phase = 3,cur = 3;
 		let read  = 1;
 		let dev_dis = 0;
 		let childnum = 0;
@@ -74,9 +75,7 @@
 				}
 			}
 		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
+		ParseData();
 		let output_arr = [7,6,4,2,3,9,8,1,0,0,5];
 		function read_data(){
 			for (let i = 1; i < output_num + 1; i++) {
@@ -262,7 +261,7 @@
 			}else{
 				number1 = number;
 			}
-			pdu_cfg.setData(3,3,sub,number1,stat);
+			pdu_cfg.setData(phase,cur,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);
@@ -315,7 +314,7 @@
 			}else{
 				document.getElementById(ipt.id).value = parseFloat(ipt.value).toFixed(2);
 			}
-			pdu_cfg.setData(3,3,sub,number1,stat);
+			pdu_cfg.setData(phase,cur,sub,number1,stat);
 			setTimeout(() => {
 				PduMetaData.meta_workDown(pdu_cfg);
 			}, 100);

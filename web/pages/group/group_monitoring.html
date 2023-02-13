@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="../../doc-lib/solarized-light.css">
 		<link rel="stylesheet" href="../../doc-lib/doc.css">
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
-		<script src="../../include/js/rpc-over-websocket.js"></script>
+		<script src="../../include/js/pdu_rpc.js"></script>
 		<script src="../../include/js/public.min.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../include/js/fn_public.js"></script>
@@ -39,6 +39,12 @@
 			</div>
 		</div>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let group_num = top.group_num_;
+		let addr = pdu_cfg.addr;
+		let group_info_ = new Array();
+		let language;
+		let group = 4,pow = 4;
 		let dev_dis = 0;
 		var group_name = new Array();
 		var pow_val = new Array();
@@ -47,18 +53,34 @@
 		var AVpow_val = new Array();
 		var dev_name =new Array();
 		let lang = new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr));
-		read_data();
-		function read_data(){
-			dev_dis = parseInt(sessionStorage.getItem(cfg_name[4] + default_addr));
-			for(var i = 1 ;i < group_num + 1;i++){
-				group_name[i] = sessionStorage.getItem("GroupName"+ addr +'_'+i);
-				AVpow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[AVpow_]+data_name[1]+addr+'_'+i));
-				pow_val[i] = (sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[1]+addr+'_'+i));
-				pow_alarm[i] = parseInt(sessionStorage.getItem(type_name[group]+data_type[pow_]+data_name[3]+addr+'_'+i));
-				energe_val[i] = (sessionStorage.getItem(type_name[group]+data_type[energe_]+data_name[1]+addr+'_'+i));
+		var slave_num;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<group_num;i++){
+				group_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.group_item_list){
+					group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
+					j ++;
+				}
 			}
 		}
+		function read_data() {
+			for(var i = 1 ;i < group_num + 1;i++){
+				group_name[i] = group_info_[i - 1][5];
+				AVpow_val[i] = group_info_[i - 1][0];
+				pow_val[i] = group_info_[i - 1][13];
+				pow_alarm[i] = group_info_[i - 1][10];
+				energe_val[i] = group_info_[i - 1][1];
+			}
+		}
+		ParseData();
+		read_data();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<10;i++){
@@ -157,21 +179,16 @@
 		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
 		function putdata(){
 			for(let i = 0;i < group_num;i++){
-				state1_ = document.getElementById('c'+i);
-				state2_ = document.getElementById('d'+i);
-				state3_ = document.getElementById('e'+i);
-				state1_.innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
-				state2_.innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(3);
-				state3_.innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
+				document.getElementById('c'+i).innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
+				document.getElementById('d'+i).innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(3);
+				document.getElementById('e'+i).innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
 			}
 		}
 		setInterval(function(){
-			read_monitoring_data();
-			setTimeout(function(){
-				read_data();
-				putdata();
-				showdata();
-			},800);
+			ParseData();
+			read_data();
+			putdata();
+			showdata();
 		},2000);
     </script>
 </body>
