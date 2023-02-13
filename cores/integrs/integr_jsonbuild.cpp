@@ -168,6 +168,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
 
     arrayAppend(it.pf, size, "pf", obj, COM_RATE_PF);
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
+    arrayAppend(it.hdaEle, size, "hda_ele", obj, 1);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
 
