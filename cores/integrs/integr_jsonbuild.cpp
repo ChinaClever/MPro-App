@@ -338,7 +338,8 @@ void Integr_JsonBuild::netAddr(const sNetInterface &it, const QString &key, QJso
     obj.insert("dns", inet->dns);
     obj.insert("mac", it.mac);
 
-    inet = &(it.inet6); if(inet->en) {
+    inet = &(it.inet6);
+    if(inet->en || mDataContent > 2) {
         obj.insert("mode6", inet->dhcp);
         obj.insert("ip6", inet->ip);
         obj.insert("gw6", inet->gw);
