@@ -133,18 +133,20 @@
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
 				output_name[i] = dual_info_[i - 1][3];
-				output_name[i] = sessionStorage.getItem("DualName"+ dual_addr +'_'+i);
+				TotalPowVal[i] = dual_info_[i - 1][11];
+				TotalAVPowVal[i] = dual_info_[i - 1][0];
+				TotalEnergeVal[i] = dual_info_[i - 1][1];
+
+
 				PowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+dual_addr+'_'+i));
 				PowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+(dual_addr +1) +'_'+i));;
 				AlarmPowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+dual_addr+'_'+i));
 				AlarmPowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[3]+(dual_addr +1)+'_'+i));
 				AVPowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+dual_addr+'_'+i));
 				AVPowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[AVpow_]+data_name[1]+(dual_addr +1)+'_'+i));
-				TotalPowVal[i] = PowValA[i] + PowValB[i];
-				TotalAVPowVal[i] = AVPowValA[i] + AVPowValB[i];
+			
 				EnergeValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+dual_addr+'_'+i));
 				EnergeValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[energe_]+data_name[1]+(dual_addr +1)+'_'+i));
-				TotalEnergeVal[i] = EnergeValA[i] + EnergeValB[i];
 				if(TotalPowVal[i] != 0){
 					progress_width[i] = parseFloat(PowValA[i] * 100 /TotalPowVal[i]).toFixed(1);
 				}else{
