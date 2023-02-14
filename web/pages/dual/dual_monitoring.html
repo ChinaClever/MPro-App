@@ -42,6 +42,10 @@
 			</div>
 		</div>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = pdu_cfg.addr;
+		let language;
+		let dual_info_ = new Array();
 		let PowValA = new Array();
 		let PowValB = new Array();
 		let AlarmPowValA = new Array();
@@ -56,12 +60,30 @@
 		var output_name = new Array();
 		var Input_state = new Array("","","");
 		var State = new Array("","");
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+		var output_num;
 		var dev_name =new Array();
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+		var slave_num;
 		let dual_dev_name =  new Array();
 		let lang = new Array();
 		let progress_width = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+			let k = 0;
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.dual_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.dual_item_list[key][i];
+					j ++;
+				}
+			}
+		}
+		ParseData();
 		lang_init();
 		setTimeout(function(){
 			read_data();
