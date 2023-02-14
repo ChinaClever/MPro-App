@@ -17,6 +17,7 @@
 		<script src="../../include/js/public.min.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
+		<script src="../../include/js/pdu_rpc.js"></script>
 		<script src="../../include/js/chart.min.js"></script>
 		<style>
 			.box{
@@ -51,6 +52,7 @@
 					<!-- <div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div> -->
 					<script type="text/javascript">
+						let pdu_log = new PduLog;
 						let pdu_cfg = top.pdu_cfg_;
 						let group_num = top.group_num_;
 						let language;
@@ -215,7 +217,7 @@
 								fc = arr[1]+';'+arr[2]+';'+arr[3]+';';
 								start = arr[4];
 								end = arr[5];
-								pdu_cfg.log_hda(addr, fc, start, end);
+								pdu_log.log_hda(addr, fc, start, end);
 								alert("Is reading,please wait...");
 								read_data();
 							}else{}
@@ -226,9 +228,9 @@
 							fc = fc.slice(0,5);
 							fc = fc.replace(/;/g,"_");
 							let time1 = setInterval(function(){
-								if(pdu_cfg.log_value(addr, fc) != "" || pdu_cfg.log_value(addr, fc) != null){
+								if(pdu_log.log_value(addr, fc) != "" || pdu_log.log_value(addr, fc) != null){
 									clearInterval(time1);
-									log_str = window.JSON.parse(pdu_cfg.log_value(addr,fc));
+									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];

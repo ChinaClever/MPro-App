@@ -31,13 +31,25 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script>
-		let rpc = window.top.shareSocket;
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		var read =0;
+		let addr;
+		let uut = 11;
+		pdu_cfg.placesetCfg();
 		var place_data = new Array();
 		let lang = new Array();
 		let id_val = new Array("","room","addr","dev","qr","sn","dt");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		lang_init();
 		function lang_init(){
 			for(let i = 0;i<8;i++){
@@ -59,7 +71,7 @@
 		}
 		function read_data(){
 			for(let i = 1;i<7;i++){
-				place_data[i] = sessionStorage.getItem(uut_name[i] + default_addr);
+				place_data[i] = pdu_cfg.cfgValue(uut,i,0,addr);
 			}
 		}
 		$('.place_set').html(buildTable());
@@ -73,22 +85,22 @@
 		}
 		function SetData(btn){
 			let mds_data = 0;
-			mds_data = btn.value;
 			if(confirm("请确认是否修改此项。")){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
-						rpc.call("pduSetParam",[default_addr,uut,i,0,0,mds_data]);
+						pdu_cfg.setCfg(uut,i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_uut_info(default_addr);
+			pdu_cfg.placesetCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTable() {
 			var thead = '',tbody = '';

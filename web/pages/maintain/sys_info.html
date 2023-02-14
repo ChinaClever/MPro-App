@@ -37,19 +37,27 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_ver_info(default_addr);
-		},100);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
+		pdu_cfg.sysinfoCfg();
 		var mode_set = new Array("","");
 		var ver_data = new Array();
 		let lang = new Array();
+		let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 0;j<24;j++){
 				if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
-					ver_data[j] = sessionStorage.getItem(ver_name[j]);
+					ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
 				}
 			}
 		}
@@ -84,13 +92,15 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		$('.McInfo').html(buildTableMc());
-		$('.BoradInfo').html(buildTableBorad());
-		$('.CoreInfo').html(buildTableCore());
-		lang_fun();
-		read_data();
-		showdata();
-		function showdata(){
+		setTimeout(function(){
+			$('.McInfo').html(buildTableMc());
+			$('.BoradInfo').html(buildTableBorad());
+			$('.CoreInfo').html(buildTableCore());
+			lang_fun();
+			read_data();
+			ShowData();
+		},500);
+		function ShowData(){
 			for(var i = 0; i < (ver_name.length);i++){
 				if(ver_name[i] != ""){
 					document.getElementById(ver_name[i]).innerHTML = ver_data[i];

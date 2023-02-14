@@ -34,24 +34,34 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_usrs_data();
-		},100);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
+		pdu_cfg.usrinfoCfg();
 		let usr_mark = 0;
+		let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 		var opt_set = new Array();
 		var usrs_data = new Array();
 		var usrs_name_ = new Array("","","","","");
 		var jurisdiction = new Array();
 		let lang = new Array();
+		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+		var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		function read_data(){
 			for(var i = 0;i<5;i++){
-				usrs_name_[i] =  sessionStorage.getItem(user_info[1] + i);
+				usrs_name_[i] =  pdu_cfg.cfgValue(14,1,i,addr);
 				usrs_data[i+1] = new Array();
 				for(let j = 0; j<5;j++){
-					usrs_data[i+1][j] = sessionStorage.getItem(user_info[i+1] + j);
+					usrs_data[i+1][j] = pdu_cfg.cfgValue(14,i+1,j,addr);
 				}
 			}
 			for(let i = 0;i<5;i++){
@@ -96,12 +106,12 @@
 			read_data();
 			$('.usr').html(buildTable());
 			lang_fun();
-			showdata();
-		},1000);
+			ShowData();
+		},500);
 		function validataForm(opt){
 
 		}
-		function showdata(){
+		function ShowData(){
 			for(let i = 1;i<5;i++){
 				document.getElementById(user_info[i]).value = usrs_data[i][0];
 			}
@@ -121,7 +131,7 @@
 			let conpsd_ = document.getElementById("conpsd").value;
 			let jur_ = parseInt(document.getElementById("Jurisdiction").value);
 			for(let i = 0;i<5;i++){
-				if(usrs_data[1][i] == usr_){
+				if(usrs_data[1][i] == usr_&&usrs_data[2][i] == psd_&&usrs_data[3][i] == ident_ && usrs_data[4][i] == jur_){
 					alert("该用户已存在，请重新输入！");
 					return ;
 				}
@@ -134,10 +144,10 @@
 					jur_ = 2;
 				}
 				if(usr_!= "" && psd_ !="" && conpsd_ != "" && ident_ !="" && psd_ == conpsd_){
-					rpc.call('pduSetParam',[default_addr,14,1,val,0,usr_]);
-					rpc.call('pduSetParam',[default_addr,14,2,val,0,psd_]);
-					rpc.call('pduSetParam',[default_addr,14,3,val,0,ident_]);
-					rpc.call('pduSetParam',[default_addr,14,4,val,0,jur_]);
+					pdu_cfg.setCfg(14,1,usr_,val,addr);
+					pdu_cfg.setCfg(14,2,psd_,val,addr);
+					pdu_cfg.setCfg(14,3,ident_,val,addr);
+					pdu_cfg.setCfg(14,4,jur_,val,addr);
 					usr_mark = val;
 					flash_html();
 				}else{
@@ -147,15 +157,15 @@
 		}
 
 		function flash_html(){
-			read_usrs_data();
+			pdu_cfg.usrinfoCfg();
 			setTimeout(function(){
 				read_data();
 				$('.usr').html(buildTable());
 				lang_fun();
-				showdata();
+				ShowData();
 				document.getElementById("usrSel").value = usr_mark;
 				Set_(usr_mark);
-			},800);
+			},500);
 		}
 		function buildTable(){
 			var thead = '',tbody = '';
@@ -170,9 +180,9 @@
 			tbody += '<tr><td id = "lang_4"></td>';
 			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></td></tr>';
+			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></form></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
-			tbody += '<td><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></td></tr>';
+			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></form></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
 			tbody += '<td><input id ="Identify" type="text"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_8"></td>';
@@ -181,7 +191,7 @@
 				tbody +='<option value ="'+i+'">'+jurisdiction[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<td><input id="lang_18" type = "button" style ="width:50%"  onclick = "SetVal()"></td></tr>';
+			tbody += '<tr><td><input id="lang_18" type = "button" style ="width:50%"  onclick = "SetVal()"></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 			

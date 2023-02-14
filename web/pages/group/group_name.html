@@ -85,7 +85,7 @@
 		}
 		function read_data(){
 			for (var i = 1; i < group_num + 1; i++) {
-				group_name[i] = group_info_[i - 1][5];
+				group_name[i] = group_info_[i - 1][6];
 				group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
 			}
 		}

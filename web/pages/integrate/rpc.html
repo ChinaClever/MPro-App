@@ -40,7 +40,7 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let addr;
 		let language;
-		pdu_cfg.ampqCfg();
+		pdu_cfg.rpcCfg();
 		var mode_name = new Array("","TCP","WebSocket");
 		var mode_name1 = new Array("","HTTP");
 		var data_id  = new Array("json_mode","json_port","","xml_mode","xml_port");
@@ -76,7 +76,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_cfg.pdu_info.cascade_addr;
+			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		lang_init();

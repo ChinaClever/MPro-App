@@ -30,6 +30,8 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -90,7 +92,7 @@
 				output_name[i] = output_info_[i - 1][12];
 			}
 			for(var i = 1 ;i < group_num + 1;i++){
-				group_name[i] = group_info_[i - 1][5];
+				group_name[i] = group_info_[i - 1][6];
 				group_info[i] = pdu_cfg.cfgValue(25,i,0,addr);
 			}
 		}
