@@ -32,14 +32,17 @@
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
-		var pdu_cfg_ = new PduCfgs;
+		//var pdu_cfg_ = new PduLog;
+		var pdu_cfg_ = PduCore.build();
+		pdu_cfg_.meta_start();
+
 		var language_;
 		var dev_dis_;
 		var first_time = 0;
 		var group_num_ = 8;
-		setTimeout(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
-		},300);
+		// setTimeout(function(){
+		// 	PduMetaData.meta_workDown(pdu_cfg_);
+		// },300);
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',this.popstateFun,false);
 		function popstateFun(){
@@ -85,9 +88,10 @@
 				inletC_data[i][j] = 0;
 			}
 		}
-		setInterval(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
-		},2000);
+		// setInterval(function(){
+		// 	PduMetaData.meta_workDown(pdu_cfg_);
+		// },2000);
+
 	</script>
 </body>
 </html>

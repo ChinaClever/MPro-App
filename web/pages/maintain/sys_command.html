@@ -31,11 +31,21 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = pdu_cfg.addr;
+		let dev_dis;
 		let syscmd = new Array("","Reboot","Restore");
 		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<7;i++){
@@ -61,7 +71,7 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<syscmd.length;i++){
 					if(syscmd[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,96,i,0,0,btn.value]);
+						pdu_cfg.setCfg(96,i,0,0,dev_dis);
 					}
 				}
 			}else{}

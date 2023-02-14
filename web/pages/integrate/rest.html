@@ -38,7 +38,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
-		let addr = pdu_cfg.addr;
+		let addr;
 		let language;
 		pdu_cfg.httpPush();
 		var mode_set = new Array("禁用","POST","PUT");
@@ -50,6 +50,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function read_data(){
@@ -127,6 +128,7 @@
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
 						pdu_cfg.setCfg(18,11 + i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();

@@ -34,9 +34,15 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		var read =0;
+		let addr;
+		let cfg = 13;
+		pdu_cfg.modesetCfg();
 		var mode_data = new Array();
 		let lang = new Array();
 		var dev_name =new Array();
@@ -47,6 +53,15 @@
 		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
 		let slave_num1 = 0;
 		let device_num = 10;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.cascade_addr;
+		}
+		ParseData();
 		lang_init();
 		function lang_init(){
 			for(let i = 0;i<15;i++){
@@ -151,12 +166,11 @@
 			}
 		}
 		function flash_html(){
-			read_cfg_info(default_addr);
-			rpc.call('pduReadParam',[default_addr,num,5,0,0]);
+			pdu_cfg.modesetCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTableMode() {
 			var thead = '',tbody = '';

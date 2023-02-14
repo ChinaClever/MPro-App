@@ -13,7 +13,7 @@ Agent_Core::Agent_Core(QObject *parent)
     //if(mCfg->enV3) {
     //   startSnmpdV3();
     //} else {
-        startSnmpd();
+    startSnmpd();
     //}
 }
 
@@ -64,6 +64,7 @@ QByteArray Agent_Core::snmdConf()
 
 void Agent_Core::set_snmpdV3()
 {
+#if 0
     QString fmd = "\nrwuser %1\n createUser %1 MD5 \"%2\" %4 \"%3\"";
     QString cmd = fmd.arg(mCfg->usr, mCfg->pwd, mCfg->key, mCfg->encrypt?"AES":"DES");
     QString res = snmdConf(); int idx = res.indexOf("\nrwuser");
@@ -74,5 +75,40 @@ void Agent_Core::set_snmpdV3()
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         file.write(res.toLatin1());
     } file.close();
+#else
+    QString fn = "/usr/data/clever/cfg/snmpd.conf";
+    QString str, fmd; if(mCfg->enV3) {
+        str = "sed -i '57crwuser %1' " + fn;
+        system(str.arg(mCfg->usr).toStdString().c_str());
+
+        fmd = "sed -i '58ccreateUser %1 MD5 \"%2\" %4 \"%3\"' " + fn;
+        str = fmd.arg(mCfg->usr, mCfg->pwd, mCfg->key, mCfg->encrypt?"AES":"DES");
+        system(str.arg(mCfg->usr).toStdString().c_str());
+    } else {
+        QString str = "sed -i '57c ' " + fn;
+        system(str.toStdString().c_str());
+        str = "sed -i '58c ' " + fn;
+        system(str.toStdString().c_str());
+    }
+
+    str = "sed -i '32crocommunity %1' " + fn;
+    system(str.arg(mCfg->get).toStdString().c_str());
+
+    str = "sed -i '35crocommunity6 %1' " + fn;
+    system(str.arg(mCfg->get).toStdString().c_str());
+
+    str = "sed -i '38ccom2sec readonly default  %1' " + fn;
+    system(str.arg(mCfg->get).toStdString().c_str());
+
+    str = "sed -i '33crwcommunity %1' " + fn;
+    system(str.arg(mCfg->set).toStdString().c_str());
+
+    str = "sed -i '36crwcommunity6 %1' " + fn;
+    system(str.arg(mCfg->set).toStdString().c_str());
+
+    str = "sed -i '39com2sec readwrite default  %1' " + fn;
+    system(str.arg(mCfg->set).toStdString().c_str());
+
+#endif
 }
 

@@ -75,17 +75,15 @@
 				}
 			}
 		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
+		ParseData();
 		function read_data(){
 			for (let i = 1; i < output_num + 1; i++) {
-				output_name[i] = output_info_[i - 1][11];
-				swtich_state[i] = output_info_[i - 1][28];
+				output_name[i] = output_info_[i - 1][12];
+				swtich_state[i] = output_info_[i - 1][30];
 				cur_val[i] = output_info_[i - 1][7];
-				pow_val[i] = output_info_[i - 1][19];
+				pow_val[i] = output_info_[i - 1][20];
 				cur_alarm[i] = output_info_[i - 1][4];
-				pow_alarm[i] = output_info_[i - 1][16];
+				pow_alarm[i] = output_info_[i - 1][17];
 				pf_val[i] = output_info_[i - 1][12];
 				energe_val[i] = output_info_[i - 1][10];
 			}

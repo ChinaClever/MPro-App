@@ -14,9 +14,7 @@
 		<link rel="stylesheet" href="../../doc-lib/doc.css">
 
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
-		<script src="../../include/js/rpc-over-websocket.js"></script>
 		<script src="../../include/js/public.min.js"></script>
-		<script src="../../include/js/fn_public.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
 		<script src="../../include/js/chart.min.js"></script>
@@ -53,6 +51,10 @@
 					<!-- <div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div> -->
 					<script type="text/javascript">
+						let pdu_cfg = top.pdu_cfg_;
+						let group_num = top.group_num_;
+						let language;
+						let addr;
 						let log_data = new Array();
 						let dev_name_ = new Array();
 						let type_name_ = new Array();
@@ -61,10 +63,10 @@
 						let lang = new Array();
 						let get_arr = new Array("dev","type","topic","num","start_date","end_date");
 						let inlet_arr = new Array("A","B","C");
-						let phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-						let slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr)) +1 ;
-						let output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-						let loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
+						let phase_num;
+						let slave_num ;
+						let output_num ;
+						let loop_num ;
 						let num_type = 6;
 						let dataLabels = new Array();
 						let data_total = new Array();
@@ -78,6 +80,19 @@
 						let uint_arr_ = "";
 						let y_val = new Array("V","A","kW","kWh");
 						let y_val1 = new Array("°C","%");
+						let fc,start,end;
+						function ParseData(){
+							let DataString = pdu_cfg.meta_value();
+							let pdu_data = JSON.parse(DataString);
+							phase_num = pdu_data.pdu_info.line_num;
+							loop_num = pdu_data.pdu_info.loop_num;
+							slave_num = pdu_data.pdu_info.slave_num +1;
+							language = pdu_data.pdu_info.language;
+							output_num = pdu_data.pdu_info.output_num;
+							top.language_ = language;
+							dev_dis = pdu_data.pdu_info.cascade_addr;
+						}
+						ParseData();
 						lang_init();
 						data_init();
 						datetime();
@@ -196,8 +211,11 @@
 								}
 								arr[3] += 1;
 								arr[1] += 1;
-								sessionStorage.setItem("LogData" , "");
-								rpc.call('pduLogHda',[arr[0],82,arr[1]+';'+arr[2]+';'+arr[3]+';',arr[4],arr[5]]);
+								addr = arr[0];
+								fc = arr[1]+';'+arr[2]+';'+arr[3]+';';
+								start = arr[4];
+								end = arr[5];
+								pdu_cfg.log_hda(addr, fc, start, end);
 								alert("Is reading,please wait...");
 								read_data();
 							}else{}
@@ -205,10 +223,12 @@
 						function read_data(){
 							let t1 = parseInt(document.getElementById("type").value);
 							let t2 = parseInt(document.getElementById("topic").value);
+							fc = fc.slice(0,5);
+							fc = fc.replace(/;/g,"_");
 							let time1 = setInterval(function(){
-								if(sessionStorage.getItem("LogData") != ""){
+								if(pdu_cfg.log_value(addr, fc) != "" || pdu_cfg.log_value(addr, fc) != null){
 									clearInterval(time1);
-									log_str = window.JSON.parse(sessionStorage.getItem("LogData"));
+									log_str = window.JSON.parse(pdu_cfg.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];

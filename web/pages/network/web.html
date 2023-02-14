@@ -34,18 +34,27 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_web_service_data(default_addr);
-		},300);
-		var mode_set = new Array("","");
-		var service_data = new Array();
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
+		pdu_cfg.webCfg();
+		let mode_set = new Array("","");
+		let service_data = new Array();
 		let lang = new Array();
+		let web_service = new Array("","HttpEn","HttpPort","Redirect","HttpsEn","HttpsPort");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<6;j++){
-				service_data[j] = sessionStorage.getItem(web_service[j]);
+				service_data[j] = pdu_cfg.cfgValue(42,j,0,addr);
 			}
 		}
 		lang_init();
@@ -72,10 +81,10 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		$('.http').html(buildTableHttp());
-		$('.https').html(buildTableHttps());
-		lang_fun();
 		setTimeout(function(){
+			$('.http').html(buildTableHttp());
+			$('.https').html(buildTableHttps());
+			lang_fun();
 			read_data();
 			showdata();
 		},500);
@@ -98,7 +107,8 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<web_service.length;i++){
 					if(web_service[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,42,i,0,0,btn.value]);
+						pdu_cfg.setCfg(42,i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();
@@ -107,11 +117,11 @@
 			}
 		}
 		function flash_html(){
-			read_web_service_data(default_addr);
+			pdu_cfg.webCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTableHttp() {
 			var thead = '',tbody = '';

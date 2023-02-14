@@ -170,6 +170,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     arrayAppend(it.ele, size, "ele", obj, COM_RATE_ELE);
     arrayAppend(it.artPow, size, "apparent_pow", obj, COM_RATE_POW);
     arrayAppend(it.reactivePow, size, "reactive_pow", obj, COM_RATE_POW);
+    if(mDataContent > 1) arrayAppend(it.hdaEle, size, "hda_ele", obj, 1);
 
     if(3 == type) relayUnit(it.relay, "relay", obj);
     else if(4 == type) groupRelayUnit(it.relay, "group_relay", obj);
@@ -329,11 +330,22 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
 void Integr_JsonBuild::netAddr(const sNetInterface &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    obj.insert("mode", it.inet.dhcp);
-    obj.insert("ip", it.inet.ip);
-    obj.insert("mask", it.inet.mask);
-    obj.insert("gw", it.inet.gw);
-    obj.insert("dns", it.inet.dns);
+    const sNetAddr *inet = &(it.inet);
+    obj.insert("mode", inet->dhcp);
+    obj.insert("ip", inet->ip);
+    obj.insert("mask", inet->mask);
+    obj.insert("gw", inet->gw);
+    obj.insert("dns", inet->dns);
     obj.insert("mac", it.mac);
+
+    inet = &(it.inet6);
+    if(inet->en || mDataContent > 2) {
+        obj.insert("mode6", inet->dhcp);
+        obj.insert("ip6", inet->ip);
+        obj.insert("gw6", inet->gw);
+        obj.insert("dns6", inet->dns);
+        obj.insert("prefix6_len", inet->prefixLen);
+    }
+
     json.insert(key, obj);
 }

@@ -31,18 +31,27 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){
-			read_syslog_data(default_addr);
-		},300);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
+		pdu_cfg.syslogCfg();
 		var mode_set = new Array("","");
 		var syslog_data = new Array();
 		let lang = new Array();
+		let syslog_name = new Array("","SyslogEn","SyslogServer","SyslogPort");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_cfg.pdu_info.cascade_addr;
+		}
+		ParseData();
 		function read_data(){
 			for(var j = 1;j<syslog_name.length;j++){
-				syslog_data[j] = sessionStorage.getItem(syslog_name[j]);
+				syslog_data[j] = pdu_cfg.cfgValue(46,j,0,addr);
 			}
 		}
 		lang_init();
@@ -71,6 +80,8 @@
 		$('.ssh').html(buildTable());
 		lang_fun();
 		setTimeout(function(){
+			$('.ssh').html(buildTable());
+			lang_fun();
 			read_data();
 			showdata();
 		},500);
@@ -90,18 +101,19 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<syslog_name.length;i++){
 					if(syslog_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,46,i,0,0,btn.value]);
+						pdu_cfg.setCfg(46,i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_syslog_data(default_addr);
+			pdu_cfg.syslogCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
-			},800);
+			},500);
 		}
 		function buildTable() {
 			var thead = '',tbody = '';

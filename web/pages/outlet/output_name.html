@@ -85,12 +85,10 @@
 				}
 			}
 		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
+		ParseData();
 		function read_data(){
 			for (let i = 1; i < output_num + 1; i++) {
-				output_name[i] = output_info_[i - 1][11];
+				output_name[i] = output_info_[i - 1][12];
 			}
 		}
 		function lang_init(){
