@@ -162,7 +162,7 @@ class JsonRpc {
 class PduMetaData {
     constructor() {
         this.addr = 0;
-        this.rpc = JsonRpc.build();        
+        this.rpc = JsonRpc.build();
         setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }
 
@@ -427,6 +427,10 @@ class PduCfgs extends PduCfgObj {
     modesetCfg(){
         let fcs = [3,4,7,8,9,10,21];
         this.getCfgList(13, fcs);
+    }
+    placesetCfg() {
+        var fcs = [1,2,3,4,5,6,7];
+        this.getCfgList(11, fcs);
     }
 }
 
