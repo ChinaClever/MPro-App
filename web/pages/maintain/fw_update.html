@@ -49,7 +49,6 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr;
 		let lang = new Array();
 		let update_state = new Array(4);
 		let slave_name = new Array();
@@ -67,7 +66,6 @@
 			language = pdu_data.pdu_info.language;
 			slave_num = pdu_data.pdu_info.slave_num;
 			board_num = pdu_data.pdu_info.board_num;
-			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		lang_init();

@@ -40,7 +40,7 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		var read =0;
-		let addr;
+		let addr = 0;
 		let cfg = 13,num = 12;
 		pdu_cfg.modesetCfg();
 		var mode_data = new Array();
@@ -59,7 +59,6 @@
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();

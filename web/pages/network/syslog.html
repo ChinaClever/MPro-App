@@ -36,7 +36,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr;
+		let addr = 0;
 		pdu_cfg.syslogCfg();
 		var mode_set = new Array("","");
 		var syslog_data = new Array();
@@ -46,7 +46,6 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function read_data(){

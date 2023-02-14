@@ -46,7 +46,6 @@
 		let pdu_log = new PduLog;
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr;
 		let update_his = 3;
 		setTimeout(() => {
 			pdu_log.log_fun(update_his,1,0,0);
@@ -61,7 +60,6 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function lang_init(){
