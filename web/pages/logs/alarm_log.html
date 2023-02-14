@@ -49,7 +49,7 @@
 		let pdu_log = new PduLog;
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr;
+		let addr = 0;
 		let alarm_log = 1;
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
@@ -65,7 +65,6 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function lang_init(){

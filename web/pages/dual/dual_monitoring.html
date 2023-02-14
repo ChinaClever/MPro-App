@@ -136,7 +136,10 @@
 				TotalPowVal[i] = dual_info_[i - 1][11];
 				TotalAVPowVal[i] = dual_info_[i - 1][0];
 				TotalEnergeVal[i] = dual_info_[i - 1][1];
-
+				PowValA[i] = dual_info_[i - 1][20];
+				AlarmPowValA[i] = dual_info_[i - 1][20];
+				AVPowValA[i] = dual_info_[i - 1][20];
+				EnergeValA[i] = dual_info_[i - 1][10];
 
 				PowValA[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+dual_addr+'_'+i));
 				PowValB[i] = parseFloat(sessionStorage.getItem(type_name[output]+data_type[pow_]+data_name[1]+(dual_addr +1) +'_'+i));;

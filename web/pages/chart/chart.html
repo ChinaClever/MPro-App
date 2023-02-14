@@ -56,7 +56,7 @@
 						let pdu_cfg = top.pdu_cfg_;
 						let group_num = top.group_num_;
 						let language;
-						let addr;
+						let addr = 0;
 						let log_data = new Array();
 						let dev_name_ = new Array();
 						let type_name_ = new Array();
@@ -92,7 +92,6 @@
 							language = pdu_data.pdu_info.language;
 							output_num = pdu_data.pdu_info.output_num;
 							top.language_ = language;
-							dev_dis = pdu_data.pdu_info.cascade_addr;
 						}
 						ParseData();
 						lang_init();

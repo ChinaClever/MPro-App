@@ -34,11 +34,12 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr;
+		let addr = 0;
 		pdu_cfg.usrinfoCfg();
 		let usr_mark = 0;
 		let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
@@ -53,7 +54,6 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function read_data(){
