@@ -52,9 +52,14 @@
 		</div>
 
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
+    <script src="../../include/js/pdu_rpc.js"></script>
     <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let pdu_log = new PduLog;
+		let group_num = top.group_num_;
+		let language;
+		let addr;
 		let get_arr = new Array("dev","type","topic","num","start_date","end_date");
 		let lang = new Array();
 		let btn_name = new Array("jump","last","next","del","export");
@@ -65,15 +70,28 @@
 		let num_name_ = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
-		var phase_num = parseInt(sessionStorage.getItem("PhaseNum" + addr));
-		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + default_addr)) +1 ;
-		var output_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
-		var loop_num = parseInt(sessionStorage.getItem("LoopNum" + addr));
+		var phase_num;
+		var slave_num;
+		var output_num;
+		var loop_num;
 		let num_type = 6;
 		let dev_show = new Array();
 		let topic_show = new Array(13);
 		let unit_show = new Array("","","V","A","W","kWh","","","","","","°C","%");
 		let log_str ;
+		let fc,start,end;
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			phase_num = pdu_data.pdu_info.line_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			slave_num = pdu_data.pdu_info.slave_num +1;
+			language = pdu_data.pdu_info.language;
+			output_num = pdu_data.pdu_info.output_num;
+			top.language_ = language;
+			dev_dis = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
 		lang_init();
 		data_init();
 		function data_init(){
@@ -219,7 +237,9 @@
 		} 
 		function read_data(){
 			let time1 = setInterval(function(){
-				log_str = window.JSON.parse(sessionStorage.getItem("LogData"));
+				fc = fc.slice(0,5);
+				fc = fc.replace(/;/g,"_");
+				log_str = window.JSON.parse(pdu_log.log_value(addr, fc));
 				if(log_str != ""){
 					clearInterval(time1);
 					log_num = getJsonLength(log_str.logs);
@@ -282,8 +302,11 @@
 				}
 				arr[3] += 1;
 				arr[1] += 1;
-				sessionStorage.setItem("LogData" , "");
-				rpc.call('pduLogHda',[arr[0],82,arr[1]+';'+arr[2]+';'+arr[3]+';',arr[4],arr[5]]);
+				addr = arr[0];
+				fc = arr[1]+';'+arr[2]+';'+arr[3]+';';
+				start = arr[4];
+				end = arr[5];
+				pdu_log.log_hda(addr, fc, start, end);
 				read_data();
 			}else{}
 		}

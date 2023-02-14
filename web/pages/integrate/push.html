@@ -52,7 +52,7 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			addr = pdu_cfg.pdu_info.cascade_addr;
+			addr = pdu_data.pdu_info.cascade_addr;
 		}
 		ParseData();
 		function read_data(){

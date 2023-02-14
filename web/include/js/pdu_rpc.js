@@ -268,7 +268,7 @@ class PduCfgItem extends PduDataItem {
     }
 
     // 修改某个配置参数
-    setCfg(type, fc, value, id, addr) {
+    setCfg(type, fc, value, id, addr){
         var method = "pduSetParam"; 
         var params = [addr, type, fc, id, 0, value];
         return this.rpc.json_rpc_set(method, params);
@@ -432,6 +432,29 @@ class PduCfgs extends PduCfgObj {
         var fcs = [1,2,3,4,5,6,7];
         this.getCfgList(11, fcs);
     }
+    usrinfoCfg() {
+        for(let i = 1;i<6;i++){
+            this.getCfgIds(14, i, 0, 4);
+        }
+    }
+    sysinfoCfg() {
+        var fcs = [0,1,2,3,4,5,6,7,8,11,12,13,14,21,22,23];
+        this.getCfgList(30, fcs);
+    }
+    fwupdateCfg(slave_num,board_num) {
+      for(let i = 1;i<slave_num +1;i++){
+        this.getCfg(92,6,4,i);
+        this.getCfg(92,6,5,i);
+      }
+      for(let i = 1;i<board_num +1;i++){
+        this.getCfg(92,7,4,i);
+        this.getCfg(92,7,5,i);
+      }
+    }
+    logseetingCfg() {
+        var fcs = [1,2,3,4,5,6];
+        this.getCfgList(47, fcs);
+    }
 }
 
 // 日志操作接口
@@ -440,14 +463,14 @@ class PduLog extends  PduCfgs{
         super();
     }
 
-    log_get (fc, sub, cnt=0, id=0) {
-        var key = id+'_'+81+'_'+sub+'_'+fc+'_'+cnt;
+    log_get (fc, sub, id, cnt) {
+        var key = id+'_'+81+'_'+fc+'_'+sub+'_'+cnt;
         return this.rpc.json_rpc_value(key);
     }
 
-    log_fun(fc, sub, cnt=0, id=0) {
+    log_fun(fc, sub, id, cnt) {
         var method = "pduLogFun"; 
-        var params = [id, 81, sub, fc, cnt];
+        var params = [id, 81,fc, sub, cnt];
         return this.rpc.json_rpc_get(method, params);
     }
 

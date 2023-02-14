@@ -31,19 +31,29 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/rpc-over-websocket.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
-		setTimeout(function(){read_log_setting_data(default_addr)},150);
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr;
+		pdu_cfg.logseetingCfg();
+		let logset_name = new Array("","HistoryEn","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
 		var logset_data = new Array();
 		let lang = new Array();
 		var enable = new Array("","");
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+			addr = pdu_data.pdu_info.cascade_addr;
+		}
+		ParseData();
+		lang_init();
 		function read_data(){
 			for(var j = 1;j<logset_name.length;j++){
-				logset_data[j] = sessionStorage.getItem(logset_name[j]);
+				logset_data[j] = pdu_cfg.cfgValue(47,j,0,0);
 			}
 		}
-		lang_init();
 		function lang_init(){
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
@@ -67,10 +77,10 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		$('.log').html(buildTable());
-		lang_fun();
 		setTimeout(function(){
 			read_data();
+			$('.log').html(buildTable());
+			lang_fun();
 			showdata();
 		},500);
 		function showdata(){
@@ -83,14 +93,15 @@
 			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<logset_name.length;i++){
 					if(logset_name[i] == btn.id){
-						rpc.call('pduSetParam',[default_addr,47,i,0,0,btn.value]);
+						pdu_cfg.setCfg(47,i,btn.value,0,addr);
+						btn.blur();
 					}
 				}
 				flash_html();
 			}else{}
 		}
 		function flash_html(){
-			read_log_setting_data(default_addr);
+		pdu_cfg.logseetingCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();

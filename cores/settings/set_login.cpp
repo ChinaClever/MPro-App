@@ -49,13 +49,13 @@ bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
         cfg->writeCfg(key.arg(id), v, prefix);
     }
 
-//    if(ptr) {
-//        QByteArray str = v.toByteArray();
-//        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
+    if(ptr) {
+        QByteArray str = v.toByteArray();
+        qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
 //        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
 //        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
 //        Log_Core::bulid()->append(db);
-//    }
+    }
 
     return ret;
 }

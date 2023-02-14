@@ -306,7 +306,7 @@ void Integr_JsonBuild::webGroupData(sDevData *it, QJsonObject &obj)
     ObjData(group, "group_item_list", obj, 4);
 
     sObjData dual = it->dual;
-    group.size = group.pow.size = it->output.size;
+    dual.size = dual.pow.size = it->output.size;
     ObjData(dual, "dual_item_list", obj, 5);
 }
 
