@@ -73,32 +73,39 @@ void Cascade_Unserialize::unEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
     data.reserve[0][id] = obj.reserve[0];
 }
 
-void Cascade_Unserialize::unDevSize(uchar size, sObjData &data)
+void Cascade_Unserialize::unDevSize(int devSpec, uchar size, sObjData &data)
 {
-    data.size = size;
-    data.vol.size = size;
-    data.cur.size = size;
-    data.pow.size = size;
+    int num = size;
+    if((1==devSpec) || (devSpec == 3)) num = 0;
+    data.size = num;
+    data.vol.size = num;
+    data.cur.size = num;
+    data.pow.size = num;
+
+    if(devSpec < 3) size = 0;
     data.relay.size = size;
 }
 
 void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
 {
-    data->cfg = obj->cfg; //data->uut = obj->uut;
-    uchar size = data->line.size = obj->lineSize; unDevSize(size, data->line);
+    data->cfg = obj->cfg; int ds = data->cfg.param.devSpec; //data->uut = obj->uut;
+    uchar size = data->line.size = obj->lineSize; unDevSize(ds, size, data->line);
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
     data->line.relay.size = 0;
 
-    size = data->loop.size = obj->loopSize; unDevSize(size, data->loop);
-    for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);    
+    size = data->loop.size = obj->loopSize; unDevSize(ds, size, data->loop);
+    for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);
 
-    size = data->group.size = obj->groupSize; unDevSize(size, data->group);
+    size = data->group.size = obj->groupSize; unDevSize(ds, size, data->group);
     for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
+    if(4 != data->cfg.param.devSpec) data->group.relay.size = 0;
+    data->group.vol.size = data->group.cur.size = 0;
 
-    size = data->dual.size = obj->dualSize; unDevSize(size, data->dual);
+    size = data->dual.size = obj->dualSize; unDevSize(ds, size, data->dual);
     for(int i=0; i< size; ++i) unObjData(i, data->dual, obj->dual[i]);
+    data->dual.vol.size = data->dual.cur.size = 0;
 
-    size = data->output.size = obj->outputSize; unDevSize(size, data->output);
+    size = data->output.size = obj->outputSize; unDevSize(ds, size, data->output);
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
     data->output.vol.size = 0;
 

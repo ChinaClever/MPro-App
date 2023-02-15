@@ -17,7 +17,7 @@ private:
     void unObjData(uchar id, sObjData &data, c_sObjData &obj);
     void unEnvData(uchar id, sEnvData &data, c_sEnvData &obj);
     void unDevData(sDevData *data, c_sDevData *obj);
-    void unDevSize(uchar size, sObjData &data);
+    void unDevSize(int devSpec, uchar size, sObjData &data);
 };
 
 #endif // CASCADE_UNSERIALIZE_H
