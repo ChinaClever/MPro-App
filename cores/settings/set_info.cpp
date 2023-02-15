@@ -97,6 +97,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
+    if(it->cascadeAddr) {sCfgItem it; it.addr = 0; it.type  = 12; it.fc = 5; setCfgNum(it, 0);}
     //cout  << key << fc << value;
 
     return ret;
