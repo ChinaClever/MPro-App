@@ -113,7 +113,7 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
     case 6: value = dev->boards[it.id]; break;
-    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1;  break;
+    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id];  break;
     case 11: value = dev->loopStarts[it.id]+1;  break;
     case 12: value = dev->loopEnds[it.id]+1;  break;
     default: cout << it.fc; break;
@@ -138,7 +138,7 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
     if(7 == it.fc) {
-        int start = 0; if(it.id) start = dev->loopEnds[it.id-1]+1;
+        int start = 1; if(it.id) start = dev->loopEnds[it.id-1]+1;
         key = "loopStarts_" + QString::number(it.id);
         Cfg_Core::bulid()->devParamWrite(key, start, prefix);
         dev->loopStarts[it.id] = start;
