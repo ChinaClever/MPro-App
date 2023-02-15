@@ -21,7 +21,6 @@ Data_Core *Data_Core::bulid()
 void Data_Core::upAlarm()
 {
     Alarm_Updater::bulid()->run();
-    if(mDev->cfg.param.cascadeAddr) mDev->cfg.nums.slaveNum = 0;
 }
 
 void Data_Core::run()

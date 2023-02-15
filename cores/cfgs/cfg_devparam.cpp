@@ -116,6 +116,5 @@ void Cfg_devParam::initialParam()
     devNumRead(cfg->nums);
     uutInfoRead(cfg->uut);
     devParamRead(cfg->param);
-    if(cfg->param.cascadeAddr) cfg->nums.slaveNum = 0;
 }
 
