@@ -7,6 +7,7 @@ namespace cfg {
 struct _sAlarmIt
 {
     uchar en;
+    uchar size;
     uint rated;
     uint min; // 最小值
     uint max; // 最大值
@@ -22,7 +23,9 @@ struct _sAlarmIt
 struct _sRelayIt
 {
     uchar en;
+    uchar size;
     uint cnt; //继电器控制次数
+    uint maxCnt; // 继电器最大控制次数
     uchar offAlarm;
     uchar powerUpDelay;
     uchar resetDelay;
