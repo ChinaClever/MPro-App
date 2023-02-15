@@ -15,6 +15,7 @@
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
 	<script src="include/js/chart.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
 	<style>
 		.box {
 			border: 1px solid #C4C2C3;
@@ -35,7 +36,7 @@
 						id="lang_1"></span>
 					<ul id="dev_sel" style="float:right; padding-right:5%;font-family:courier;display: none;"><span
 							id="lang_2"></span><select class="devname" id="ms" style="width:100px;"
-							onChange="change(this);"></select></ul>
+							onChange="Change(this);"></select></ul>
 				</div>
 			</div>
 			<div class="phase_div1">
@@ -78,7 +79,7 @@
 
 				<br>
 				<ul style="padding-right:70%; font-family:courier;"><span id=""></span><select id="sel1"
-						style="width:100px;" onChange="change_mode(this);"></select></ul>
+						style="width:100px;" onChange="ChangeMode(this);"></select></ul>
 				<div id="container" style="width:90%; height:500px;">
 					<canvas id="chart" style="display: block; width: 90%; height: 410px;"></canvas>
 				</div>
@@ -114,7 +115,7 @@
 					Minu = date.getMinutes();
 					Hou = date.getHours();
 					let dataLabels = new Array();
-					function set_data_show(num) {
+					function SetDataShow(num) {
 						for (let j = 0; j < sample_num; j++) {
 							data_total[j] = top.total_data[num][j];
 							data_inlet1[j] = top.inletA_data[num][j];
@@ -124,12 +125,12 @@
 					}
 					setTimeout(() => {
 						top.first_time = 1;
-						chart_lang_init();
-						set_data_show(0);
+						ChartLangInit();
+						SetDataShow(0);
 						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
 					}, Tm1);
-					function chart_lang_init() {
+					function ChartLangInit() {
 						for (let i = 0; i < 16; i++) {
 							chart_lang[i] = new Array();
 						}
@@ -239,7 +240,7 @@
 							}
 						}
 					};
-					function create_new_chart() {
+					function CreateNewChart() {
 						if (mark_num[1] == 1) {
 							chart.data.datasets.pop();
 							chart.update();
@@ -260,9 +261,9 @@
 
 						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
-						time1 = setInterval(flash_chart, 3000);
+						time1 = setInterval(FlashChart, 3000);
 					}
-					function change_mode(obj) {
+					function ChangeMode(obj) {
 						chart_type = parseInt(obj.value);
 						clearInterval(time1);
 						uint_arr_ = uint_arr[chart_type];
@@ -273,8 +274,8 @@
 							mark_num[0] = 0;
 							mark_num[1]++;
 						}
-						create_new_chart();
-						set_data_show(chart_type);
+						CreateNewChart();
+						SetDataShow(chart_type);
 						if (chart_type == 0) {
 							config.data.datasets[0].data = data_inlet1;
 							config.data.datasets[1].data = data_inlet2;
@@ -288,7 +289,7 @@
 						config.options.scales.y.title.text = uint_arr_;
 						chart.update();
 					}
-					function flash_chart() {
+					function FlashChart() {
 						if (config.data.datasets.length > 0) {
 							date = new Date();
 							Seco = date.getSeconds();
@@ -315,7 +316,7 @@
 						}
 					}
 					
-					time1 = setInterval(flash_chart, 3000);
+					time1 = setInterval(FlashChart, 3000);
 					function getRandomNum(min, max) {
 						var range = max - min;
 						var rand = Math.random();
@@ -341,7 +342,6 @@
 		let sensor_info = new Array();
 		let total_info_ = new Array();
 		let freq_;
-		let dev_dis = 0;
 		let loop_se = new Array();
 		let total_info = new Array();
 		let system_info = new Array();
@@ -366,7 +366,6 @@
 			language = pdu_data.pdu_info.language;
 			top.language_ = language;
 			freq_ = pdu_data.pdu_info.pdu_hz;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<phase_num;i++){
 				phase_info_[i] = new Array();
@@ -405,17 +404,24 @@
 			LangInit();
 		},Tm2);
 		setTimeout(function(){
-			$('.total').html(buildTablePhase(0));
-			$('.p1').html(buildTablePhase(1));
-			$('.p2').html(buildTablePhase(2));
-			$('.p3').html(buildTablePhase(3));
-			$('.loop_table').html(buildTableLoop(loop_num));
-			$('.sensor_tab').html(buildTableSensor());
-			// $('.sys_table').html(buildTableSystem());
-			$('.devname').html(buildSel((slave_num + 1)));
-			read_data();
+			$('.total').html(BuildTablePhase(0));
+			$('.p1').html(BuildTablePhase(1));
+			$('.p2').html(BuildTablePhase(2));
+			$('.p3').html(BuildTablePhase(3));
+			$('.loop_table').html(BuildTableLoop(loop_num));
+			$('.sensor_tab').html(BuildTableSensor());
+			// $('.sys_table').html(BuildTableSystem());
+			$('.devname').html(BuildSel((slave_num + 1)));
+			ReadData();
 			LangFun();
 		},Tm1);
+		function Change(sel){
+			top.addr_ = parseInt(sel.value);
+			pdu_cfg.addr = parseInt(sel.value);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(top.addr_);
+			},100);
+		}
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
 		}
@@ -483,12 +489,12 @@
 					document.getElementById("lang_" + i).innerHTML = lang[i][language];
 				}
 			}
-			document.getElementById("ms").value = pdu_cfg.addr;
-			if (dev_dis == 0) {
+			document.getElementById("ms").value = top.addr_;
+			if (slave_num != 0) {
 				document.getElementById("dev_sel").style.display = "";
 			}
 		}
-		function read_chart_data() {
+		function ReadChartData() {
 			for (let i = 0; i < 3; i++) {
 				top.total_data[i] = top.total_data[i].slice(1, sample_num);
 				top.inletA_data[i] = top.inletA_data[i].slice(1, sample_num);
@@ -506,7 +512,7 @@
 		}
 		let phase_arr = [7,30,12,4,2,20,13];
 		let loop_arr = [1,0,8,3,30,20,12];
-		function read_data() {
+		function ReadData() {
 			total_info[0] = total_info_[4];
 			total_info[1] = total_info_[0];
 			total_info[2] = total_info_[2];
@@ -545,17 +551,17 @@
 			// system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
 			// system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
 			// system_info[4] = sessionStorage.getItem(ver_name[1]);
-			showdata();
-			read_chart_data();
+			ShowData();
+			ReadChartData();
 		}
-		function buildSel(rows) {
+		function BuildSel(rows) {
 			var tbody = '';
 			for (var i = 0; i < rows; i++) {
 				tbody += '<option id = "opt' + i + '"value ="' + i + '">' + dev_name[i] + '</option>';
 			}
 			return tbody;
 		}
-		function showdata() {
+		function ShowData() {
 			for (let i = 0; i < 4; i++) {
 				if (i < 2) {
 					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
@@ -616,7 +622,7 @@
 				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
 				// }
 				if (i < 4) {
-					if (parseInt(sensor_info[i]) > 1000) {
+					if (parseInt(sensor_info[i]) > 1000 || parseInt(sensor_info[i]) == 0) {
 						if (i % 2 == 0) {
 							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
 						} else {
@@ -639,14 +645,14 @@
 			// 	document.getElementById('dat' + (71 + i)).innerHTML = system_info[i];
 			// }
 		}
-		function modeset(modesel) {
+		function ModeSet(modesel) {
 			let ms = document.getElementById("sel");
 			let iptname = document.getElementsByTagName("input");
 			for (let i = 0; i < iptname.length; i++) {
 				iptname[i].disabled = true;
 			}
 		}
-		function buildTablePhase(obj) {
+		function BuildTablePhase(obj) {
 			let tbody = '';
 			if (obj == 0) {
 				for (let i = 0; i < 4; i++) {
@@ -676,7 +682,7 @@
 			}
 			return tbody;
 		}
-		function buildTableLoop(obj) {
+		function BuildTableLoop(obj) {
 			let tbody = '';
 			tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 			tbody += '<tr><td class="spacing" id="lang_8"></td>';
@@ -700,7 +706,7 @@
 			}
 			return tbody;
 		}
-		function buildTableSensor() {
+		function BuildTableSensor() {
 			let tbody = "";
 			tbody += '<tr><td width="20%" class="spacing" id="lang_17"></td>';
 			tbody += '<td width="30%" class="spacing" id="lang_18"></td>';
@@ -723,7 +729,7 @@
 			}
 			return tbody;
 		}
-		function buildTableSystem() {
+		function BuildTableSystem() {
 			let tbody = "";
 			for (let i = 0; i < 5; i++) {
 				if (i == 0) {
@@ -736,7 +742,7 @@
 		}
 		setInterval(function () {
 			ParseData();
-			read_data();
+			ReadData();
 		}, 2000);
 	</script>
 </body>

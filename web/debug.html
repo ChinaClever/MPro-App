@@ -58,18 +58,27 @@
 			</div>
 		</div>
     <script src="./include/js/jquery-1.11.3.min.js"></script>
-	<script src="./include/js/rpc-over-websocket.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="./include/js/fn_public.js"></script>
     <script src="./include/js/public.min.js"></script>
     <script>
+		let pdu_cfg_ = PduCore.build();
+		setTimeout(function(){
+			PduMetaData.meta_workDown(pdu_cfg_);
+			pdu_cfg_.debugCfg();
+		},300);
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
     	let distribution = new Array("6x8","4x12","8x6","12x4");
+		let phase = 1,loop = 2,output =3,envir = 6,num = 12,cfg = 13;
+		let vol_ = 2,cur_ = 3,pow_ = 4,tmp_=11,hum_ = 12;
+		let addr = 0;
 		let output_num;
 		let phase_num;
 		let loop_num;
 		let board_num;
+		var mark = 1;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -83,9 +92,6 @@
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
 		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
-		setTimeout(function(){
-			read_debug_data();
-		},300);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
 		}
@@ -95,19 +101,94 @@
 		$('.vol_table').html(buildTableVol());
 		let m = 0;
 		var Time1 = setInterval(function(){
-			read_data();
-			show_data();
-			m++;
-			if(m ==10){
+			ParseData();
+			if(m>=5){
 				clearInterval(Time1);
+				ShowData();
 			}
-		},500);
-		function read_data(){
-			let i = 0;
-			output_num = parseInt(sessionStorage.getItem("OutputNum" + default_addr));
-			phase_num = parseInt(sessionStorage.getItem("PhaseNum" + default_addr));
-			loop_num = parseInt(sessionStorage.getItem("LoopNum" + default_addr));
-			board_num =	 parseInt(sessionStorage.getItem("BoardNum" + default_addr));
+			m++;
+		},200);
+		let phase_info_ = new Array();
+		let loop_info_ = new Array();
+		let sensor_info_ = new Array();
+		let output_info_ = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg_.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				return;
+			}
+			phase_num = pdu_data.pdu_info.line_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			output_num = pdu_data.pdu_info.output_num;
+			board_num = pdu_data.pdu_info.board_num;
+			language = pdu_data.pdu_info.language;
+			let k = 0;
+			if(mark){
+				pdu_cfg_.debugVolData(output_num);
+				mark = 0;
+			}
+			for(let i = 0;i<phase_num;i++){
+				phase_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.line_item_list){
+					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let i = 0;i<loop_num;i++){
+				loop_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.loop_item_list){
+					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let i = 0;i<2;i++){
+				sensor_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.env_item_list){
+					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let i = 0;i<output_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.output_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
+					j ++;
+				}
+			}
+			for(i= 0;i<board_num;i++){
+				board_out[i] =  pdu_data.pdu_info.ops_num[i];
+			}
+			for(i= 0;i<loop_num;i++){
+				loop_out[i] = pdu_data.pdu_info.loop_array[i];
+			}
+			cfg_data[6] = pdu_data.net_addr.mac;
+			break_en = pdu_cfg_.cfgValue(cfg,11,0,addr);
+			cfg_data[0] = pdu_cfg_.cfgValue(cfg,13,0,addr);
+			cfg_data[1] = 0;
+			cfg_data[2] = 0;
+			cfg_data[3] = pdu_cfg_.cfgValue(cfg,9,0,addr);;
+			cfg_data[4] = pdu_cfg_.cfgValue(cfg,1,0,addr);
+			cfg_data[5] = pdu_cfg_.cfgValue(cfg,10,0,addr);
+			for(let i = 0;i<9;i++){
+				unite_data[i] = new Array();
+				unite_data[i][0] = pdu_cfg_.getValue(unite_name[i],unite_type[i],2,0);
+				unite_data[i][1] = pdu_cfg_.getValue(unite_name[i],unite_type[i],5,0);
+				unite_data[i][2] = pdu_cfg_.getValue(unite_name[i],unite_type[i],6,0);
+				unite_data[i][3] = pdu_cfg_.getValue(unite_name[i],unite_type[i],7,0);
+				unite_data[i][4] = pdu_cfg_.getValue(unite_name[i],unite_type[i],4,0);
+			}
+			for(i =1;i<=output_num;i++){
+				rating[i] = output_info_[i -1][6];
+				out_vol[i] = pdu_cfg_.getValue(output,vol_,1,i);
+				rating_[i] = rating[i];
+			}
+		}
+		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
 			document.getElementById("board_").value = board_num;
@@ -121,77 +202,11 @@
 			for(i =0;i<7;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
-
-			for(i= 0;i<board_num;i++){
-				board_out[i] = sessionStorage.getItem("BoardOutputNum" + '_' + (i));
-			}
-			for(i= 0;i<loop_num;i++){
-				loop_out[i] = sessionStorage.getItem("LoopOutputNum" + '_' + (i));
-			}
-			break_en = sessionStorage.getItem("BreakerEn" + default_addr);
-			cfg_data[0] = sessionStorage.getItem("Angle" + default_addr);
-			cfg_data[1] = 0;
-			cfg_data[2] = 0;
-			cfg_data[3] = 0;
-			cfg_data[4] = sessionStorage.getItem(cfg_name[1] + default_addr);
-			cfg_data[5] = sessionStorage.getItem("LanguageEn" + default_addr);
-			cfg_data[6] = sessionStorage.getItem(ip_mode[0]+ ip_addr[11]);
-			for(let i = 0;i<9;i++){
-				unite_data[i] = new Array();
-				unite_data[i][0] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[2] + 0 +'_'+0);
-				unite_data[i][1] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[5] + 0 +'_'+0);
-				unite_data[i][2] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[6] + 0 +'_'+0);
-				unite_data[i][3] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[7] + 0 +'_'+0);
-				unite_data[i][4] = sessionStorage.getItem(type_name[unite_name[i]]+ data_type[unite_type[i]] + data_name[4] + 0 +'_'+0);
-			}
-
-			for(i =1;i<=output_num;i++){
-				rating[i] = sessionStorage.getItem(type_name[output]+ data_type[cur_] + data_name[2] + 0 +'_'+i);
-				out_vol[i] = sessionStorage.getItem(type_name[output]+ data_type[vol_] + data_name[1] + 0 +'_'+i);
-				rating_[i] = rating[i];
-			}
-		}
-		function Set_(){
-			for(let i = 0;i<num_id.length;i ++){
-				if(num_id[i] != ""){
-					rpc.call("pduSetParam",[0,num,i,0,0,document.getElementById(num_id[i]).value]);
-					rpc.call("pduReadParam",[0,num,i,0,0]);
-				}
-			}
-			for(let i = 1;i < loop_num+1;i++){
-				rpc.call("pduSetParam",[0,num,7,(i -1),0,document.getElementById("out_num"+i).value]);
-				rpc.call("pduReadParam",[0,num,7,(i -1),0]);
-			}
-			for(let i = 1;i < board_num+1;i++){
-				rpc.call("pduSetParam",[0,num,6,(i -1),0,document.getElementById("board_num"+i).value]);
-				rpc.call("pduReadParam",[0,num,6,(i -1),0]);
-			}
-			rpc.call("pduSetParam",[0,cfg,11,0,0,document.getElementById("break_").value]);
-			rpc.call("pduReadParam",[0,cfg,11,0,0]);
-			rpc.call("pduSetParam",[0,cfg,13,0,0,document.getElementById("angle_").value]);
-			rpc.call("pduReadParam",[0,cfg,13,0,0]);
-			rpc.call("pduSetParam",[0,cfg,1,0,0,document.getElementById("ser_sel_").value]);
-			rpc.call("pduReadParam",[0,cfg,1,0,0]);
-			rpc.call("pduSetParam",[0,cfg,10,0,0,document.getElementById("language_").value]);
-			rpc.call("pduReadParam",[0,cfg,10,0,0]);
-			rpc.call("pduSetParam",[0,41,11,0,0,document.getElementById("mac_").value]);
-			rpc.call("pduReadParam",[0,41,11,0,0]);
-		}
-		function AllSet(){
 			for(let i = 0;i<9;i++){
 				for(let j = 0;j<5;j++){
-					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
-					}else{
-						rpc.call("pduSetData",[0,unite_name[i],unite_type[i],unite_sub[j],0,document.getElementById(unite_id[i]+j).value]);
-						rpc.call("pduReadData",[0,unite_name[i],unite_type[i],unite_sub[j],0]);
+					if( unite_data[i][j] != null){
+						document.getElementById(unite_id[i]+j).value = unite_data[i][j];
 					}
-				}
-			}
-		}
-		function show_data(){
-			for(let i = 0;i<9;i++){
-				for(let j = 0;j<5;j++){
-					document.getElementById(unite_id[i]+j).value = unite_data[i][j];
 				}
 			}
 			for(i =1;i<=output_num;i++){
@@ -203,6 +218,47 @@
 
 				}
 			}
+		}
+		function Set_(){
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg_);
+			}, 100);
+			for(let i = 0;i<num_id.length;i ++){
+				if(num_id[i] != ""){
+					pdu_cfg_.setCfg(num,i,document.getElementById(num_id[i]).value,0,addr);
+				}
+			}
+			for(let i = 1;i < loop_num+1;i++){
+				pdu_cfg_.setCfg(num,7,document.getElementById("out_num"+i).value,(i -1),addr);
+			}
+			for(let i = 1;i < board_num+1;i++){
+				pdu_cfg_.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
+			}
+
+			pdu_cfg_.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
+			pdu_cfg_.setCfg(cfg,13,document.getElementById("angle_").value,0,addr);
+			pdu_cfg_.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
+			pdu_cfg_.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
+			pdu_cfg_.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			pdu_cfg_.setCfg(41,11,document.getElementById("mac_").value,0,addr);
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg_);
+				pdu_cfg_.debugCfg();
+			}, 100);
+		}
+		function AllSet(){
+			for(let i = 0;i<9;i++){
+				for(let j = 0;j<5;j++){
+					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
+					}else{
+						pdu_cfg_.setData(unite_name[i],unite_type[i],unite_sub[j],0,document.getElementById(unite_id[i]+j).value);
+					}
+				}
+			}
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg_);
+				pdu_cfg_.debugCfg();
+			}, 100);
 		}
 		function cked(ckd){
 			var stat=0,type_ = 0;
@@ -235,20 +291,21 @@
 		}
 		function Set(){
 			for(let  i = 1;i<=output_num;i++){
-				rpc.call('pduSetData',[0,output,cur_,2,i,rating_[i]]);
+				pdu_cfg_.setData(output,cur_,2,i,rating_[i]);
 			}
+			setTimeout(() => {
+				PduMetaData.meta_workDown(pdu_cfg_);
+			}, 100);
 		}
 		setInterval(function(){
-			for(i =1;i<=output_num;i++){
-				rpc.call('pduReadData',[addr,output,vol_,1,i]);
-			}
+			pdu_cfg_.debugVolData(output_num);
 			setTimeout(function(){
 				for(i =1;i<=output_num;i++){
-					out_vol[i] = sessionStorage.getItem(type_name[output]+ data_type[vol_] + data_name[1] + 0 +'_'+i);
+					out_vol[i] = pdu_cfg_.getValue(output,vol_,1,i);
 					document.getElementById("vol" + i).innerHTML = out_vol[i];
 				}
 			},500);
-		},1000);
+		},2000);
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
@@ -277,7 +334,7 @@
 
 
 			tbody += '<tr><td>屏幕方向角:</td>';
-			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" value="'+cfg_data[0]+'">(0-0°水平,1-90°垂直,2-180°水平,3-270°垂直)</input></td></tr>';
+			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" value="'+cfg_data[0]+'">(0-0°水平,1-90°垂直,2-180°水平(翻转),3-270°垂直(翻转))</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
 			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
 			tbody += '<tr><td>IN/OUT口级联方式:</td>';

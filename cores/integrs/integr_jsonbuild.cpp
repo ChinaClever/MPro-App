@@ -174,6 +174,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
 
     if(3 == type) relayUnit(it.relay, "relay", obj);
     else if(4 == type) groupRelayUnit(it.relay, "group_relay", obj);
+    else if(5 == type) groupRelayUnit(it.relay, "dual_relay", obj);
     else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
     else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
     if(type > 2) strListAppend(it.name, size, "name", obj);
@@ -266,11 +267,13 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("pdu_hz", it.param.hz/r);
     obj.insert("op_num", it.nums.boardNum/r);
     obj.insert("loop_num", it.nums.loopNum/r);
-    obj.insert("slave_num", it.nums.slaveNum/r);
+    //obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
     obj.insert("board_num", it.nums.boardNum/r);
     obj.insert("group_en", it.param.groupEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
+    int num = cm::masterDev()->cfg.nums.slaveNum;
+    obj.insert("slave_num", num);
 
     QJsonArray loopEnd, loopStart;
     for(uint i=0; i<it.nums.loopNum; ++i) {
@@ -279,6 +282,12 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     }
     obj.insert("loop_ends", loopEnd);
     obj.insert("loop_start", loopStart);
+
+    QJsonArray loops;
+    for(uint i=0; i<it.nums.boardNum; ++i) {
+        int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
+        loops.append(num);
+    } obj.insert("loop_array", loops);
 
     QJsonArray ops;
     for(uint i=0; i<it.nums.boardNum; ++i) ops.append(it.nums.boards[i]);
@@ -307,6 +316,7 @@ void Integr_JsonBuild::webGroupData(sDevData *it, QJsonObject &obj)
 
     sObjData dual = it->dual;
     dual.size = dual.pow.size = it->output.size;
+    dual.relay.size = it->output.relay.size;
     ObjData(dual, "dual_item_list", obj, 5);
 }
 

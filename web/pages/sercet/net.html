@@ -65,7 +65,7 @@
 			}
 			lang[1] = ["网络白名单","","","",""];
 			lang[2] = ["网络白名单设置","","","",""];
-			lang[3] = ["网络白名单启用:","","","",""];
+			lang[3] = ["防火墙启用:","","","",""];
 			lang[4] = ["白名单MAC1:","","","",""];
 			lang[5] = ["白名单MAC2:","","","",""];
 			lang[6] = ["白名单MAC3:","","","",""];
@@ -190,9 +190,7 @@
 			tbody += '<tr><td id="lang_11" ></td>';
 			tbody += '<td><input id = "WlIp4" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td></td><td></td></tr>';
-			tbody += '<tr><td><input id="lang_12" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td><input id="lang_12" type = "button" style ="width:60%;display:none;"  onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

@@ -27,19 +27,21 @@
 	</div>
 	<div class="main-box">
 		<div class = "top-box">
-		<div align="right" ><p><span>Version</span><button  style = "width:5%;height: auto; line-height: 1.6;" value = "登出" onclick = "sign_out()">登出</button></p></div>
+		<div align="right" ><p><span>Version</span><i id = "ShutDown" class="iconfont icon-shutdown" style = "width:5%;height: auto; line-height: 1.6;padding-left:3%;padding-right: 3%;"onclick = "sign_out()"></i></p></div>
 		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
+		var addr_ = 0;
 		var pdu_cfg_ = PduCore.build();
-		setTimeout(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
-		},300);
 		var language_;
-		var dev_dis_;
 		var first_time = 0;
 		var group_num_ = 8;
+		var slave_addr_ = 0;
+		var dual_addr_ = 0;
+		setTimeout(function(){
+			PduMetaData.meta_workDown(addr_);
+		},300);
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',this.popstateFun,false);
 		function popstateFun(){
@@ -47,8 +49,14 @@
 		}
 		window.removeEventListener('popstate',this.popstateFun);
 		function sign_out(){
-			window.open(url_1,'_blank');
+			window.open(window.location.origin,'_blank');
 			closeWebPage();
+		}
+		document.getElementById("ShutDown").onmouseover=function(){
+			document.getElementById("ShutDown").style.color="red";
+		}
+		document.getElementById("ShutDown").onmouseout=function(){
+			document.getElementById("ShutDown").style.color="";
 		}
 		function closeWebPage(){
 			if (navigator.userAgent.indexOf("MSIE") > 0) {//close IE
@@ -86,7 +94,7 @@
 			}
 		}
 		setInterval(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
+			PduMetaData.meta_workDown(addr_);
 		},2000);
 
 	</script>
