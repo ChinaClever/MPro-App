@@ -53,6 +53,7 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if(it->en[id] || unit.txType == DTxType::TxWeb) {
         OP_Core::bulid()->relayCtrl(unit.id, unit.value);
+        it->sw[id] = unit.value;
     } else ret = false;
 
     return ret;
