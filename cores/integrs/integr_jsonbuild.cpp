@@ -216,10 +216,11 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
+    arrayAppend(it.isInsert, SENOR_NUM, "insert", obj);
     if(mDataContent < 3) {
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);        
         alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
         alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
