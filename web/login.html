@@ -22,15 +22,10 @@
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
     let time1_num = 0;
     let time2_num = 0;
+    let time3_num = 0;
     let user = 14;
     let web_service = 0;
-    setTimeout(function(){
-      obj.getCfg(13,10,0,0);
-      obj.getCfg(42,3,0,0);
-      obj.getCfg(14,1,0,0);
-      obj.getCfg(14,2,0,0);
-      obj.getCfg(14,3,0,0);
-    },300);
+    let user_name,identify;
     let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
@@ -56,17 +51,23 @@
         sign_in();
       }
     }
-    $('.center_form').html(BuildDiv('signin'));
-    var time = setTimeout(function (){
+    let time3 = setInterval(function(){
+      if(time3_num== 2 ){
+        clearInterval(time3);
+      }
       user_name = obj.cfgValue(user,1,0,0);
-      password = obj.cfgValue(user,2,0,0);
       identify = obj.cfgValue(user,3,0,0);
-      if(user_name == null && password ==null){
+      if(user_name == null ||  user_name == ""){
           GotoRegisterPage();
-        }
+          clearInterval(time3);
+      }else{
+         $('.center_form').html(BuildDiv('signin'));
+         clearInterval(time3);
+      }
       document.getElementById('username').value = '';
       document.getElementById('psd').value ='';
-    },1000);
+      time1_num ++;
+    },500);
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
@@ -125,9 +126,12 @@
         alert("输入有误请重新输入！");
       }
       else{
+        if(!pattern.test(usr) ||!pattern.test(psd)){
+          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
         obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
-          read_user_info();
           var div= document.getElementsByClassName('center_form');
           for(var i = 0; i<div[0].childElementCount;i++){
             div[0].removeChild(div[0].childNodes[i]);
@@ -153,7 +157,6 @@
         obj.setCfg(user,2,psd,0,0);
         obj.setCfg(user,3,ient,0,0);
         setTimeout(function(){
-          read_user_info();
           var div= document.getElementsByClassName('center_form');
           for(var i = 0; i<div[0].childElementCount;i++){
             div[0].removeChild(div[0].childNodes[i]);

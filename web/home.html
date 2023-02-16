@@ -86,8 +86,8 @@
 				<script type="text/javascript">
 					let pdu_cfg = top.pdu_cfg_;
 					let language;
-					let Tm1 = 950;
-					let Tm2 = 900;
+					let Tm1 = 350;//950;
+					let Tm2 = 200;//900;
 					if(top.first_time == 1){
 						Tm1 = 15;
 						Tm2 = 10;
@@ -123,7 +123,7 @@
 							data_inlet3[j] = top.inletC_data[num][j];
 						}
 					}
-					setTimeout(() => {
+					setTimeout(function(){
 						top.first_time = 1;
 						ChartLangInit();
 						SetDataShow(0);
@@ -359,7 +359,11 @@
 
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
+			let pdu_data;
+			if(DataString == null){
+				DataString = sessionStorage.getItem('0_100_0_0_0');
+			}
+			pdu_data = JSON.parse(DataString);
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			slave_num = pdu_data.pdu_info.slave_num;

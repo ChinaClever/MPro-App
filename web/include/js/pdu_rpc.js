@@ -71,9 +71,23 @@ class JsonRpc {
         var ws = new WebSocket(url);
         ws.onclose =  function (evt) {JsonRpc.socket_close(evt);};    
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
+        ws.onopen = function () {JsonRpc.socket_req();};
         return ws;
     }
-
+    static socket_req(){
+        var method = "pduReadParam"; 
+        var params = [0, 13, 10, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+        params = [0, 42, 3, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+        params = [0, 14, 1, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+        params = [0, 14, 3, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+        method = "pduMetaData"; 
+        params = [0, 100, 0, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+    }
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
@@ -102,6 +116,9 @@ class JsonRpc {
        // if(this.isSetting == false) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
             this.root_map.set(key, value);
+            if(key == '0_100_0_0_0'){
+                sessionStorage.setItem(key,value);
+            }
       //  } 
 
         return true;
