@@ -101,10 +101,6 @@
         "url": "dual_name.html"
       },
       {
-        "name": "机架控制",
-        "url": "dual_ctrl.html"
-      },
-      {
         "name": "机架定时",
         "url": "dual_timing.html"
       }      

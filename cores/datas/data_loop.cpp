@@ -16,8 +16,8 @@ void Data_Loop::loopWork()
     loopNum(); if(!num) return ;
     int size = mDev->cfg.nums.loopNum;
     for(int i=0; i<size; ++i) {
-        int start = mDev->cfg.nums.loopStarts[i];
-        int end = mDev->cfg.nums.loopEnds[i]+1;
+        int start = mDev->cfg.nums.loopStarts[i]-1;
+        int end = mDev->cfg.nums.loopEnds[i];
         loopData(i, start, end); //cout << start << end;
     }
 }

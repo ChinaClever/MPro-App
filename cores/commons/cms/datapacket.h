@@ -79,7 +79,8 @@ struct sRelayUnit
     uint timingEn[PACK_ARRAY_SIZE]; // 定时开关
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
-    uint reserve[6][PACK_ARRAY_SIZE]; // 预留
+    uint maxCnt[PACK_ARRAY_SIZE]; // 继电器最大控制次数
+    uint reserve[5][PACK_ARRAY_SIZE]; // 预留
 };
 
 

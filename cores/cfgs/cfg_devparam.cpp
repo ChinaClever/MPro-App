@@ -50,7 +50,7 @@ void Cfg_devParam::devNumRead(sDevNums &it)
 
     for(uint i=0; i<it.loopNum; ++i) {
         QString key = "loopStarts_" + QString::number(i);
-        it.loopStarts[i] = cfg->readCfg(key, 8*i, g).toUInt();
+        it.loopStarts[i] = cfg->readCfg(key, 8*i+1, g).toUInt();
 
         key = "loopEnds_" + QString::number(i);
         it.loopEnds[i] = cfg->readCfg(key, 8*(i+1), g).toUInt();

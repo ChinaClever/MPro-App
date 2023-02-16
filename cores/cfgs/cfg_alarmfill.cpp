@@ -13,6 +13,7 @@ Cfg_AlarmFill::Cfg_AlarmFill()
 
 void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
+    it.size = unit.size;
     it.en = unit.en[id];
     it.hda = unit.hda[id];
     it.rated = unit.rated[id];
@@ -29,8 +30,10 @@ void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 
 void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
+    it.size = unit.size;
     it.en = unit.en[id];
     it.cnt = unit.cnt[id];
+    it.maxCnt = unit.maxCnt[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.resetDelay = unit.resetDelay[id];

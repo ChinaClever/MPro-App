@@ -57,16 +57,22 @@
 			</div>
 		</div>
 		<script src="../../include/js/jquery-1.11.3.min.js"></script>
-		<script src="../../include/js/rpc-over-websocket.js"></script>
+		<script src="../../include/js/pdu_rpc.js"></script>
 		<script src="../../include/js/public.min.js"></script>
 		<script src="../../doc-lib/highlight.pack.js"></script>
 		<script src="../../doc-lib/doc.js"></script>
 		<script>
+			let pdu_cfg = top.pdu_cfg_;
+			let language;
+			let addr = pdu_cfg.addr;
+			let slave_addr = top.slave_addr_;
+			let dual_addr = top.dual_addr_;
+			let dual_info_ = new Array();
 			let read = 1;
 			let lang = new Array();
-			let dual_num = parseInt(sessionStorage.getItem("OutputNum" + addr));
+			let dual_num;
 			let dual_name = new Array();
-			var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + addr));
+			var slave_num;
 			function lang_init() {
 				for (let i = 1; i < 8; i++) {
 					lang[i] = new Array();
@@ -79,6 +85,24 @@
 				lang[6] = ["设置模式", "", "", "", ""];
 				lang[7] = ["机柜", "", "", "", ""];
 			}
+			function ParseData(){
+				let DataString = pdu_cfg.meta_value();
+				let pdu_data = JSON.parse(DataString);
+				dual_num = pdu_data.pdu_info.output_num;
+				slave_num = pdu_data.pdu_info.slave_num;
+				language = pdu_data.pdu_info.language;
+				dev_dis = pdu_data.pdu_info.cascade_addr;
+				let k = 0;
+				for(let i = 0;i<dual_num;i++){
+					dual_info_[i] = new Array();
+					let j = 0;
+					for(let key in pdu_data.pdu_data.dual_item_list){
+						dual_info_[i][j] = pdu_data.pdu_data.dual_item_list[key][i];
+						j ++;
+					}
+				}
+			}
+			ParseData();
 			function lang_fun() {
 				for (let j = 1; j < 6; j++) {
 					document.getElementById("lang_" + j).innerHTML = lang[j][language];
@@ -123,7 +147,7 @@
 			read_data();
 			function read_data() {
 				for (var i = 1; i < dual_num + 1; i++) {
-					dual_name[i] = sessionStorage.getItem("DualName" + addr + '_' + i);
+					dual_name[i] = dual_info_[i - 1][6];
 				}
 			}
 			lang_init();
@@ -136,12 +160,14 @@
 				// var addr_ = addr + 0 * 256;
 				var number = parseInt(ipt.id.slice(1)) + 1;
 				let val = ipt.value;
-				rpc.call('pduSetParam', [dual_addr, 24, 1, number, number, val]);
-				flash_html(ipt);
+				pdu_cfg.setCfg(24,1,val,number,dual_addr);
+				setTimeout(() => {
+					PduMetaData.meta_workDown(pdu_cfg);
+				}, 100);
+				ipt.blur();
 			}
 
 			function flash_html(par) {
-				read_dual_param_data(0);
 				setTimeout(function () {
 					par.parentNode.parentNode.parentNode.remove();
 					read_data();

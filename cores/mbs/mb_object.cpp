@@ -34,10 +34,10 @@ void Mb_Object::upDevInfo()
     vs << dev->cfg.nums.loopNum;
     vs << dev->cfg.nums.outputNum;
     vs << dev->cfg.nums.boardNum;
-    //qint64 timestamp = QDateTime::currentSecsSinceEpoch();
-    //vs << timestamp/0xffff; vs << timestamp%0xffff;
-
     vs << dev->hz;
+    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
+    vs << timestamp/0xffff; vs << timestamp%0xffff;
+
     vs << dev->status;
     vs << dev->tg.pow.value;
     vs << dev->tg.artPow;

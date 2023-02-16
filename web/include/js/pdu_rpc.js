@@ -101,6 +101,7 @@ class JsonRpc {
 
        // if(this.isSetting == false) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
+            console.log("recv",key);
             this.root_map.set(key, value);
       //  } 
 
@@ -157,17 +158,17 @@ class JsonRpc {
     }
 } //JsonRpc.build();
 
-
 // PDU整个JSON包操作类
 class PduMetaData {
     constructor() {
         this.addr = 0;
         this.rpc = JsonRpc.build();
-        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
-    }
+        // setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+    }  
 
     // 设置地址，并更新JSON数据
     setAddr(addr) {
+        g_addr = addr;
         this.addr = addr;
         this.meta_workDown();
     }
@@ -198,9 +199,10 @@ class PduMetaData {
     }
 
     // 定时器响应函数
-   static meta_workDown() {
+   static meta_workDown(addr) {
         var method = "pduMetaData"; 
-        var params = [this.addr, 100, 0, 0, 0];
+        var params = [addr, 100, 0, 0, 0];
+        console.log("send",method, params)
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();
@@ -454,6 +456,23 @@ class PduCfgs extends PduCfgObj {
     logseetingCfg() {
         var fcs = [1,2,3,4,5,6];
         this.getCfgList(47, fcs);
+    }
+    debugCfg(){
+        var fcs = [1,9,10,11,13];
+        let type_ = [1,1,1,2,2,2,3,6,6]; 
+        let topic_ = [2,3,4,2,3,4,3,11,12]; 
+        let fcs_ = [2,5,6,7,4];
+        this.getCfgList(13, fcs);
+        for(let i = 0;i<type_.length;i++){
+            for(let j of fcs_){
+                this.getData(type_[i],topic_[i],j,0);
+            }
+        }
+    }
+    debugVolData(output_num){
+        for(let i = 1;i<output_num +1;i++){
+            this.getData(3,2,1,i);
+        }
     }
 }
 
