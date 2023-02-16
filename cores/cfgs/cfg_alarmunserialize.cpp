@@ -13,6 +13,7 @@ Cfg_AlarmUnserialize::Cfg_AlarmUnserialize()
 
 void Cfg_AlarmUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 {
+    unit.size = it.size;
     unit.en[id] = it.en;
     unit.hda[id] = it.hda;
     unit.min[id] = it.min;
@@ -27,8 +28,10 @@ void Cfg_AlarmUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmI
 
 void Cfg_AlarmUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
+    unit.size = it.size;
     unit.en[id] = it.en;
     unit.cnt[id] = it.cnt;
+    unit.maxCnt[id] = it.maxCnt;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.resetDelay[id] = it.resetDelay;

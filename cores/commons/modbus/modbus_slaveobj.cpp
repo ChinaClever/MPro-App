@@ -50,7 +50,7 @@ void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int addr
                 continue;
             } setData(table, address+i, value);
             emit registerDataSig(address+i,value);
-            //cout << table << address+i << size << value;
+//            cout << table << address+i << size << value;
         }
 
         //QModbusDataUnit rcvData(table, address, size);
