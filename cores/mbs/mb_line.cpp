@@ -26,8 +26,8 @@ void Mb_Line::line_dataObj(vshort &vs, int id)
     vs << obj->pow.value[id];
     vs << obj->artPow[id];
     vs << obj->pf[id];
-    vs << obj->ele[id]/0xffff;
-    vs << obj->ele[id]%0xffff;
+    vs << (obj->ele[id] >> 16);
+    vs << (obj->ele[id] & 0xffff);
     vs << obj->reactivePow[id];
     vs << obj->lineVol[id];
     vs << 0;

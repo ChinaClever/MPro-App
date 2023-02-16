@@ -26,7 +26,7 @@ void Mb_Setting::upSetData()
     vs << mDevData->cfg.param.buzzerSw;
 
     qint64 timestamp = QDateTime::currentSecsSinceEpoch();
-    vs << timestamp/0xffff; vs << timestamp%0xffff;
+    vs << (timestamp >> 16); vs << (timestamp & 0xffff);
     vs << mDevData->cfg.param.drySw;
     setRegs(MbReg_Setting+1, vs);
 }
