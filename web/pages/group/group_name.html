@@ -37,8 +37,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" onclick ="readonlyset(this);"></button></span>
-								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id = "lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" onclick ="ReadOnlySet(this);"></button></span>
+								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id = "lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -57,7 +57,6 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let group_num = top.group_num_;
 		let language;
-		let dev_dis = 0;
 		let read = 1;
 		let lang = new Array();
 		let group_name =new Array();
@@ -72,7 +71,6 @@
 			let pdu_data = JSON.parse(DataString);
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<group_num;i++){
 				group_info_[i] = new Array();
@@ -83,13 +81,13 @@
 				}
 			}
 		}
-		function read_data(){
+		function ReadData(){
 			for (var i = 1; i < group_num + 1; i++) {
 				group_name[i] = group_info_[i - 1][6];
 				group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
 			}
 		}
-		function lang_init(){
+		function LangInit(){
 			for(let i = 1;i<7;i++){
 				lang[i] = new Array();
 			}
@@ -107,19 +105,19 @@
 				dev_name[i] =  lang[9][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(let j = 1;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[7][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		function lang_fun_(){
+		function LangFun_(){
 			for(let j = 4;j<7;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
@@ -132,7 +130,7 @@
 				iptname[i].disabled = true;
 			}
 		}
-		function readonlyset(ros){
+		function ReadOnlySet(ros){
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
@@ -156,14 +154,14 @@
 		}
 		setTimeout(function(){
 			ParseData();
-			read_data();
-			lang_init();
-			$('.table-striped').html(buildTable(group_num));
-			$('.devname').html(buildSel((slave_num+1)));
-			lang_fun();
+			ReadData();
+			LangInit();
+			$('.table-striped').html(BuildTable(group_num));
+			$('.devname').html(BuildSel((slave_num+1)));
+			LangFun();
 			modeset();
 		},500);
-		function setdata(ipt)
+		function SetData(ipt)
 		{
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
@@ -174,14 +172,14 @@
 			ipt.blur();
 		}
 
-		function flash_html(par)
+		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			read_data();
-			$('.table-striped').html(buildTable(group_num));
-			lang_fun_();
+			ReadData();
+			$('.table-striped').html(BuildTable(group_num));
+			LangFun_();
 		}
-		function buildSel(rows)
+		function BuildSel(rows)
 		{
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
@@ -190,7 +188,7 @@
 			}
 			return tbody;
 		}
-		function buildTable(rows) {
+		function BuildTable(rows) {
 			var thead = '',
 				tbody = '';
 			if(rows == 0){
@@ -207,7 +205,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i +'">'+group_data[i+1]+'</td>';
-				tbody += '<td><input type = "text" onchange ="setdata(this)" class = "input" id = "c'+ i + '" value = "'+group_name[i + 1]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "c'+ i + '" value = "'+group_name[i + 1]+'"></input></td>';
 				tbody += '</tr>';
 			}
 

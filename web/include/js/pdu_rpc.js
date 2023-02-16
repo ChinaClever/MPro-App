@@ -101,7 +101,6 @@ class JsonRpc {
 
        // if(this.isSetting == false) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
-            console.log("recv",key);
             this.root_map.set(key, value);
       //  } 
 
@@ -164,7 +163,7 @@ class PduMetaData {
         this.addr = 0;
         this.rpc = JsonRpc.build();
         // setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
-    }  
+    }    
 
     // 设置地址，并更新JSON数据
     setAddr(addr) {
@@ -202,7 +201,6 @@ class PduMetaData {
    static meta_workDown(addr) {
         var method = "pduMetaData"; 
         var params = [addr, 100, 0, 0, 0];
-        console.log("send",method, params)
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();

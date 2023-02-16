@@ -37,8 +37,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
-									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" id="lang_2"></button></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -62,7 +62,6 @@
 		let language;
 		let output_info_ = new Array();
 		var read  = 1;
-		let dev_dis = 0;
 		let lang = new Array();
 		let output_data = new Array();
 		let output_name = new Array();
@@ -77,7 +76,6 @@
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
@@ -89,7 +87,7 @@
 			}
 		}
 		ParseData();
-		function read_data(){
+		function ReadData(){
 			for (let i = 1; i < output_num + 1; i++) {
 				output_data[i] = new Array();
 				output_name[i] = output_info_[i - 1][12];
@@ -98,9 +96,9 @@
 				time_sw[i] = output_info_[i - 1][31];
 			}
 		}
-		read_data();
-		lang_init();
-		function lang_init(){
+		ReadData();
+		LangInit();
+		function LangInit(){
 			for(let i = 0;i<17;i++){
 				lang[i] = new Array();
 			}
@@ -126,7 +124,7 @@
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
@@ -134,17 +132,17 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel((slave_num+1)));
-		lang_fun();
-		modeset();
-		showdata();
-		datetime();
+		$('.table-striped').html(BuildTable(output_num));
+		$('.devname').html(BuildSel((slave_num+1)));
+		LangFun();
+		ModeSet();
+		ShowData();
+		DateTime();
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
@@ -152,7 +150,7 @@
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
 		}
-		function buildSel(rows)
+		function BuildSel(rows)
 		{
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
@@ -161,7 +159,7 @@
 			}
 			return tbody;
 		}
-		function modeset(){
+		function ModeSet(){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
 			var btnname = document.getElementsByTagName("button");
@@ -174,7 +172,7 @@
 				btnname[j].disabled = true;
 			}
 		}
-		function readonlyset(ros){
+		function ReadOnlySet(ros){
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
@@ -206,7 +204,7 @@
 				}
 			}
 		}
-		function showdata(){
+		function ShowData(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
 				var ss = document.getElementById('c'+(i -1));
@@ -222,7 +220,7 @@
 			}
 
 		}
-		function datetime(){
+		function DateTime(){
 			var today = new Date();
 			var yyyy = today.getFullYear();
 			var MM = today.getMonth() + 1;
@@ -230,31 +228,31 @@
 			var hh = today.getHours();
 			var mm = today.getMinutes();
 			var ss = today.getSeconds();
-			MM = checkTime(MM);
-			dd = checkTime(dd);
-			hh = checkTime(hh);
-			mm = checkTime(mm);
-			ss = checkTime(ss);
+			MM = CheckTime(MM);
+			dd = CheckTime(dd);
+			hh = CheckTime(hh);
+			mm = CheckTime(mm);
+			ss = CheckTime(ss);
 			var time = hh + ":" + mm+ ":" + ss;
 
 			for(let i = 0; i<output_num + 1;i++){
 				document.getElementById('f'+i).value = time;
 			}
 		}
-		function checkTime(i) {
+		function CheckTime(i) {
 			if (i < 10) {
 				i = "0" + i;
 			}
 			return i;
 		}
-		function flash_html(par)
+		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			read_data();
-			$('.table-striped').html(buildTable(output_num));
-			lang_fun();
-			showdata();
-			datetime();
+			ReadData();
+			$('.table-striped').html(BuildTable(output_num));
+			LangFun();
+			ShowData();
+			DateTime();
 		}
 		function cked(ckd)
 		{
@@ -285,7 +283,7 @@
 				}, 100);
 			}
 		}
-		function btn_click(btn)
+		function BtnClick(btn)
 		{
 			let type_ = 0;
 			let type1 = btn.id.substr(0,1);
@@ -315,7 +313,7 @@
 				}, 100);
 			}else{}
 		}
-		function buildTable(rows) {
+		function BuildTable(rows) {
 			var thead = '',
 				tbody = '';
 			for (var i = 0; i < rows; i++) {
@@ -338,8 +336,8 @@
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
-				tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
-				tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[13][language] + '</button></td>';
+				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
+				tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -350,8 +348,8 @@
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
-					tbody += '<td><button id = "g'+ i + '" onclick = btn_click(this) >' + lang[12][language] + '</button></td>';
-					tbody += '<td><button id = "h'+ i + '" onclick = btn_click(this) >' + lang[13][language] + '</button></td>';
+					tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
+					tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 					tbody += '</tr>';
 				}
 			}

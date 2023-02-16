@@ -41,12 +41,12 @@
 							<div class="panel-heading">
 								<i class="fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span><span style="padding-left: 35%;"><button
-										onclick="readonlyset(this);" id="lang_2"></button></span>
-								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+										onclick="ReadOnlySet(this);" id="lang_2"></button></span>
+								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="ModeSet();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 								<span id="dev_sel" style="float:right;display: none;"><span style="padding-right: 5px;" id="lang_3"></span><select
 										class="devname" id="ms" style="width:100px;"
-										onchange="change(this);"></select></span>
+										onchange="Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -67,7 +67,6 @@
 			let language;
 			let group = 4,switch_ = 1;
 			let read = 1;
-			let dev_dis = 0;
 			let sw_mark = 0;
 			let lang = new Array();
 			let group_data = new Array();
@@ -82,7 +81,6 @@
 				let pdu_data = JSON.parse(DataString);
 				slave_num = pdu_data.pdu_info.slave_num;
 				language = pdu_data.pdu_info.language;
-				dev_dis = pdu_data.pdu_info.cascade_addr;
 				let k = 0;
 				for(let i = 0;i<group_num;i++){
 					group_info_[i] = new Array();
@@ -93,13 +91,13 @@
 					}
 				}
 			}
-			function read_data() {
+			function ReadData() {
 				for (var i = 1; i < group_num + 1; i++) {
 					group_name[i] = group_info_[i - 1][6];
 					group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
 				}
 			}
-			function lang_init() {
+			function LangInit() {
 				for (let i = 0; i < 15; i++) {
 					lang[i] = new Array();
 				}
@@ -122,7 +120,7 @@
 					dev_name[i] = lang[13][language] + i;
 				}
 			}
-			function lang_fun() {
+			function LangFun() {
 				document.getElementById("ms").value = addr;
 				for (var i = 1; i < 8; i++) {
 					document.getElementById("lang_" + i).innerHTML = lang[i][language];
@@ -131,27 +129,34 @@
 				if (read == 0) {
 					document.getElementById("lang_2").innerHTML = lang[10][language];
 				}
-				if(dev_dis == 0){
+				if(slave_num != 0){
 					document.getElementById("dev_sel").style.display="";
 				}
 			}
+			function Change(sel){
+				top.addr_ = parseInt(sel.value);
+				pdu_cfg.addr = parseInt(sel.value);
+				setTimeout(function(){
+					PduMetaData.meta_workDown(top.addr_);
+				},100);
+			}
 			setTimeout(function(){
 				ParseData();
-				read_data();
-				lang_init();
-				$('.table-striped').html(buildTable(group_num));
-				$('.devname').html(buildSel((slave_num + 1)));
-				lang_fun();
-				modeset();
+				ReadData();
+				LangInit();
+				$('.table-striped').html(BuildTable(group_num));
+				$('.devname').html(BuildSel((slave_num + 1)));
+				LangFun();
+				ModeSet();
 			},500);
-			function buildSel(rows) {
+			function BuildSel(rows) {
 				var tbody = '';
 				for (var i = 0; i < rows; i++) {
 					tbody += '<option id = "opt' + i + '"value ="' + i + '">' + dev_name[i] + '</option>';
 				}
 				return tbody;
 			}
-			function modeset() {
+			function ModeSet() {
 				var ms = document.getElementById("sel");
 				var iptname = document.getElementsByTagName("input");
 				var btnname = document.getElementsByTagName("button");
@@ -162,7 +167,7 @@
 					btnname[j].disabled = true;
 				}
 			}
-			function readonlyset(ros) {
+			function ReadOnlySet(ros) {
 				if (read === 1) {
 					read = 0;
 					ros.style.backgroundColor = 'red';
@@ -190,7 +195,7 @@
 					}
 				}
 			}
-			function showdata() {
+			function ShowData() {
 				for (var i = 1; i < group_num + 1; i++) {
 					var ss = document.getElementById('d' + (i - 1));
 					if (group_data[i] == 1) {
@@ -208,20 +213,15 @@
 					}
 				}
 			}
-			function read_sw_data(addr) {
-				for (var i = 1; i < group_num + 1; i++) {
-					rpc.call('pduReadData', [addr, group, switch_, 8, i]);
-				}
-			}
-			function flash_html(par) {
+			function FlashHtml(par) {
 				setTimeout(function () {
 					par.parentNode.parentNode.parentNode.remove();
-					read_data();
-					$('.table-striped').html(buildTable(group_num));
-					lang_fun();
+					ReadData();
+					$('.table-striped').html(BuildTable(group_num));
+					LangFun();
 				}, 800);
 			}
-			function cked(ckd) {
+			function Cked(ckd) {
 				var stat;
 				var type1 = ckd.id.substr(0, 1);
 				var num = parseInt(ckd.id.slice(1)) + 1;
@@ -245,9 +245,9 @@
 					}
 					rpc.call('pduSetData', [addr, group, switch_, 8, num, stat]);
 				}
-				flash_html(ckd);
+				FlashHtml(ckd);
 			}
-			function btn_click(btn) {
+			function BtnClick(btn) {
 				var num = parseInt(btn.id.slice(1)) + 1;
 				var stat = 0;
 				var retVal = confirm("您已更改表单，请确认提交！");
@@ -265,10 +265,10 @@
 						num = 0;
 					}
 					pdu_cfg.setData(group,switch_,1,num,stat);
-					flash_html(btn);
+					FlashHtml(btn);
 				} else { }
 			}
-			function buildTable(rows) {
+			function BuildTable(rows) {
 				var thead = '',
 					tbody = '';
 				if (rows == 0) {
@@ -291,9 +291,9 @@
 					tbody += '<td id = "a' + i + '">' + (parseInt(i) + 1) + '</td>';
 					tbody += '<td id = "b' + i + '" >' + group_name[i + 1] + '</td>';
 					tbody += '<td id = "c' + i + '">' + group_data[i + 1] + '</td>';
-					// tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "d' + i + '"></input></td>';
-					tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
-					tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>';
+					// tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "d' + i + '"></input></td>';
+					tbody += '<td><button id = "e' + i + '" onclick = BtnClick(this) >' + lang[8][language] + '</button></td>';
+					tbody += '<td><button id = "f' + i + '" onclick = BtnClick(this) >' + lang[9][language] + '</button></td>';
 					tbody += '</tr>';
 					if (i === rows - 1) {
 						i++;
@@ -301,9 +301,9 @@
 						tbody += '<td id = "a' + i + '">' + (parseInt(i) + 1) + '</td>';
 						tbody += '<td id = "b' + i + '">统一设置</td>';
 						tbody += '<td id = "c' + i + '"></td>';
-						// tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "d' + i + '"></input></td>'; 9
-						tbody += '<td><button id = "e' + i + '" onclick = btn_click(this) >' + lang[8][language] + '</button></td>';
-						tbody += '<td><button id = "f' + i + '" onclick = btn_click(this) >' + lang[9][language] + '</button></td>'; 9
+						// tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "d' + i + '"></input></td>'; 9
+						tbody += '<td><button id = "e' + i + '" onclick = BtnClick(this) >' + lang[8][language] + '</button></td>';
+						tbody += '<td><button id = "f' + i + '" onclick = BtnClick(this) >' + lang[9][language] + '</button></td>'; 9
 						tbody += '</tr>';
 					}
 				}

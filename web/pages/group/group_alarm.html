@@ -38,10 +38,10 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" onclick ="readonlyset(this);"></button></span>
-								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
+								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" onclick ="ReadOnlyData(this);"></button></span>
+								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="ModeSet();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-									<span id="dev_sel" style = "float:right;display: none;"><span id="lang_3" style = "padding-right: 5px;"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+									<span id="dev_sel" style = "float:right;display: none;"><span id="lang_3" style = "padding-right: 5px;"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -63,7 +63,6 @@
 		let group = 4,pow = 4;
 		let read  = 1;
 		let mode = 0;
-		let dev_dis = 0;
 		let dev_name =new Array();
 		let group_name =new Array();
 		let group_info = new Array();
@@ -76,7 +75,6 @@
 			let pdu_data = JSON.parse(DataString);
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<group_num;i++){
 				group_info_[i] = new Array();
@@ -89,8 +87,8 @@
 		}
 		let group_arr = [14,13,11,9,10,16,15,8,0,0,12];
 		ParseData();
-		read_data();
-		function read_data(){
+		ReadData();
+		function ReadData(){
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_info[i] =  new Array();
 				let j = 0;
@@ -105,8 +103,8 @@
 				group_name[i] = group_info_[i - 1][6];
 			}
 		}
-		lang_init();
-		function lang_init(){
+		LangInit();
+		function LangInit(){
 			for(let i = 0;i<18;i++){
 				lang[i] = new Array();
 			}
@@ -132,24 +130,31 @@
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(var i = 1;i<14;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel((slave_num+1)));
-		showdata();
-		modeset();
-		lang_fun();
-		function buildSel(rows)
+		$('.table-striped').html(BuildTable(group_num));
+		$('.devname').html(BuildSel((slave_num+1)));
+		ShowData();
+		ModeSet();
+		LangFun();
+		function Change(sel){
+			top.addr_ = parseInt(sel.value);
+			pdu_cfg.addr = parseInt(sel.value);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(top.addr_);
+			},100);
+		}
+		function BuildSel(rows)
 		{
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
@@ -158,7 +163,7 @@
 			}
 			return tbody;
 		}
-		function showdata(){
+		function ShowData(){
 			var cs = 0 ,ss = 0;
 			for(var i = 1 ;i < group_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
@@ -186,7 +191,7 @@
 				}
 			}
 		}
-		function showdata_(){
+		function ShowData_(){
 			var cs = 0;
 			for(var i = 1 ;i < group_num + 1;i++){
 				cs = document.getElementById('c'+(i -1));
@@ -200,7 +205,7 @@
 				}
 			}
 		}
-		function modeset(modesel){
+		function ModeSet(modesel){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
 			for(var i = 0; i<iptname.length;i++)
@@ -208,7 +213,7 @@
 				iptname[i].disabled = true;
 			}
 		}
-		function readonlyset(ros){
+		function ReadOnlyData(ros){
 			if(read === 1){
 				read = 0;
 				// var ms = document.getElementById("sel");
@@ -237,9 +242,9 @@
 		function flash_html(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			$('.table-striped').html(buildTable(group_num));
-			showdata();
-			lang_fun();
+			$('.table-striped').html(BuildTable(group_num));
+			ShowData();
+			LangFun();
 		}
 		function cked(ckd)
 		{
@@ -330,7 +335,7 @@
 			}, 100);
 			ipt.blur();
 		}
-		function buildTable(rows) {
+		function BuildTable(rows) {
 			var thead = '',
 				tbody = '';
 			if(rows == 0){
@@ -390,16 +395,16 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		function putdata(){
+		function PutData(){
 			for(let i = 0;i < group_num;i++){
 				document.getElementById('c' + i).innerHTML =parseFloat(group_info[i+1][0]).toFixed(3);
 			}
 		}
 		setInterval(function(){
 			ParseData();
-			read_data();
-			putdata();
-			showdata_();
+			ReadData();
+			PutData();
+			ShowData_();
 		},2000);
     </script>
 </body>

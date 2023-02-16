@@ -35,8 +35,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left:35%;"><button onclick ="readonlyset(this);" id="lang_2"></button></span>
-								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="lang_1"></span><span style="padding-left:35%;"><button onclick ="ReadOnlySet(this);" id="lang_2"></button></span>
+								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -57,7 +57,6 @@
 		let language;
 		var read =0;
 		let addr = pdu_cfg.addr;
-		let dev_dis = 0;
 		let output = 3,energe_ = 9;
 		let energe_val = new Array();
 		let ckd_state = new Array();
@@ -73,7 +72,6 @@
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
@@ -85,8 +83,8 @@
 			}
 		}
 		ParseData();
-		lang_init();
-		function lang_init(){
+		LangInit();
+		function LangInit(){
 			for(let i = 1;i<13;i++){
 				lang[i] = new Array();
 			}
@@ -107,17 +105,17 @@
 				dev_name[i] =  lang[12][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		read_data();
-		function read_data(){
+		ReadData();
+		function ReadData(){
 			for(var i = 1 ;i < output_num + 1;i++)
 			{
 				output_name[i] = output_info_[i - 1][12];
@@ -125,12 +123,19 @@
 				ckd_state[i] = output_info_[i - 1][11];
 			}
 		}
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel((slave_num+1)));
-		lang_fun();
-		show_data();
+		$('.table-striped').html(BuildTable(output_num));
+		$('.devname').html(BuildSel((slave_num+1)));
+		LangFun();
+		ShowData();
 		var state_ = 0;
-		function show_data(){
+		function Change(sel){
+			top.addr_ = parseInt(sel.value);
+			pdu_cfg.addr = parseInt(sel.value);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(top.addr_);
+			},100);
+		}
+		function ShowData(){
 			for(let i = 0;i < output_num;i++){
 				state_ = document.getElementById('f' + i);
 				if(ckd_state[i+1] ==  1){
@@ -140,7 +145,7 @@
 				}
 			}
 		}
-		function cked(ckd)
+		function Cked(ckd)
 		{
 			var stat = 0,number1 = 0;
 			let sub = 11;
@@ -170,17 +175,17 @@
 			}, 100);
 		}
 
-		function flash_html()
+		function FlashHtml()
 		{
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
-				read_data();
-				$('.table-striped').html(buildTable(output_num));
-				show_data();
-				lang_fun();
+				ReadData();
+				$('.table-striped').html(BuildTable(output_num));
+				ShowData();
+				LangFun();
 			},500);
 		}
-		function btn_click(btn){
+		function BtnClick(btn){
 			let num = parseInt(btn.id.slice(1))+1;
 			let stat = 0;
 			var retVal = confirm("您已更改表单，请确认提交！");
@@ -198,7 +203,7 @@
 				btn.blur();
 			}else{}
 		}
-		function buildSel(rows)
+		function BuildSel(rows)
 		{
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
@@ -207,15 +212,15 @@
 			}
 			return tbody;
 		}
-		modeset();
-		function modeset(modesel){
+		ModeSet();
+		function ModeSet(modesel){
 			var btnname = document.getElementsByTagName("input");
 			for(var j = 0; j<btnname.length;j++)
 			{
 				btnname[j].disabled = true;
 			}
 		}
-		function readonlyset(ros){
+		function ReadOnlySet(ros){
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
@@ -237,7 +242,7 @@
 				}
 			}
 		}
-		function buildTable(rows) {
+		function BuildTable(rows) {
 			var thead = '',
 				tbody = '';
 
@@ -255,8 +260,8 @@
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "btn_click(this)" value="'+lang[10][language]+'"></input></td>';
+				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "BtnClick(this)" value="'+lang[10][language]+'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -265,8 +270,8 @@
 					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td id = "d'+ i + '"></td>';
-					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="cked(this)" id = "f'+ i + '"></input></td>';
-					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = btn_click(this) value="'+lang[10][language]+'"></input></td>';
+					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = BtnClick(this) value="'+lang[10][language]+'"></input></td>';
 					tbody += '</tr>';
 				}
 			}
@@ -274,22 +279,15 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		function read_energe_data(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				rpc.call('pduReadData',[addr,output,energe_,1,i]);
-				rpc.call('pduReadData',[addr,output,9,11,i]);
-			}
-		}
-		function putdata(){
+		function PutData(){
 			for(let i = 0;i < output_num;i++){
 				document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
 			}
 		}
 		setInterval(function(){
 			ParseData();
-			read_data();
-			putdata();
+			ReadData();
+			PutData();
 		},2000);
 		
     </script>
