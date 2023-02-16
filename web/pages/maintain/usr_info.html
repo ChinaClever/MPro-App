@@ -48,6 +48,7 @@
 		let usrs_name_ = new Array("","","","","");
 		let jurisdiction = new Array();
 		let lang = new Array();
+		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function ParseData(){
@@ -130,30 +131,34 @@
 			let ident_ = document.getElementById("Identify").value;
 			let conpsd_ = document.getElementById("conpsd").value;
 			let jur_ = parseInt(document.getElementById("Jurisdiction").value);
-			for(let i = 0;i<5;i++){
-				if(usrs_data[1][i] == usr_&&usrs_data[2][i] == psd_&&usrs_data[3][i] == ident_ && usrs_data[4][i] == jur_){
+			usr_mark = val;
+			if(jur_ != 0){
+				jur_ = 2;
+			}
+			if(!pattern_.test(usr_))
+			{
+				alert("请输入5-16位用户名");
+				return ;
+			}
+			if(!pattern.test(psd_) && psd_ == conpsd_){
+				alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+				return ;
+			}
+			if(!pattern.test(ident_)){
+				alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+				return ;
+			}
+			for(i = 0;i < 5;i++){
+				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
 					alert("该用户已存在，请重新输入！");
 					return ;
 				}
-			}
-			if(!pattern.test(psd_) ||!pattern.test(conpsd_) || !pattern.test(usr_)){
-				alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
-				return ;
-			}else{
-				if(jur_ != 0){
-					jur_ = 2;
-				}
-				if(usr_!= "" && psd_ !="" && conpsd_ != "" && ident_ !="" && psd_ == conpsd_){
-					pdu_cfg.setCfg(14,1,usr_,val,addr);
-					pdu_cfg.setCfg(14,2,psd_,val,addr);
-					pdu_cfg.setCfg(14,3,ident_,val,addr);
-					pdu_cfg.setCfg(14,4,jur_,val,addr);
-					usr_mark = val;
-					FlashHtml();
-				}else{
-					alert("username or password error!");
-				}
-			}
+			}	
+			pdu_cfg.setCfg(14,1,usr_,val,addr);
+			pdu_cfg.setCfg(14,2,psd_,val,addr);
+			pdu_cfg.setCfg(14,3,ident_,val,addr);
+			pdu_cfg.setCfg(14,4,jur_,val,addr);
+			FlashHtml();
 		}
 
 		function FlashHtml(){
@@ -167,6 +172,10 @@
 				Set_(usr_mark);
 			},500);
 		}
+
+		function Clear(obj){
+			obj.value = obj.value.replace(/[^\w_]/g,"");
+		}
 		function BuildTable(){
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
@@ -178,13 +187,13 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
-			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
+			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" onkeyup ="Clear(this)" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
 			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></form></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
 			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></form></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
-			tbody += '<td><input id ="Identify" type="text"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
+			tbody += '<td><input id ="Identify" type="text"  style ="width:24.5%" maxlength="16" autocomplete="off" onkeyup ="Clear(this)"  onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_8"></td>';
 			tbody += '<td><select id ="Jurisdiction">';
 			for(var i = 0; i<jurisdiction.length;i++){
