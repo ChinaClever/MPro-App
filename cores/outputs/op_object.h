@@ -43,6 +43,7 @@ private:
     bool curFaultCheck(uchar k, uchar i);
     void powFaultCheck(uchar k, uchar i);
     void eleFaultCheck(uchar k, uchar i);
+    void relayCheck(uint &sw, uint &src_sw, uint &cnt);
 
     void recoveryLog(int id, uint *cnt);
     void faultLog(int id, uint *cnt, uint value);
@@ -50,8 +51,9 @@ private:
     bool dataFiltering(uint &dest, uint &src, uint max, uint min=0);
 
 protected:
-    sOpIt *mOpData;
-    sDevData *mDev;
+    sOpIt *mOpData=nullptr;
+    sDevData *mDev=nullptr;
+    uint m_swCnt[99]={1};
 };
 
 #endif // OP_OBJECT_H

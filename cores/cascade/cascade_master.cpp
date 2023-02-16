@@ -33,9 +33,10 @@ void Cascade_Master::masterReadDevs()
         bool ret = masterRead(i); //cout << ret;
         if(!ret) ret = masterRead(i);
         setEndisable(i, ret, devData(i)->offLine);
+        if(hasCmdWrite()) return;
     }
 
-    if(runTime() > 48*60*60) t += 500;
+    if(runTime() > 48*60*60) if(!hasCmdWrite()) t += 500;
     t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
 }
 
