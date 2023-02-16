@@ -125,7 +125,7 @@
         alert("输入有误请重新输入！");
       }
       else{
-        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
+        obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
           read_user_info();
           var div= document.getElementsByClassName('center_form');
@@ -149,9 +149,9 @@
           alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
-        rpc.call('pduSetParam',[0,user,1,0,0,usr]);
-        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
-        rpc.call('pduSetParam',[0,user,3,0,0,ient]);
+        obj.setCfg(user,1,usr,0,0);
+        obj.setCfg(user,2,psd,0,0);
+        obj.setCfg(user,3,ient,0,0);
         setTimeout(function(){
           read_user_info();
           var div= document.getElementsByClassName('center_form');
