@@ -42,7 +42,7 @@ void OP_Updater::ota_reboot()
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
-    system("rm -rf /tmp/updater/clever");
+    system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
 }

@@ -69,9 +69,9 @@ void Ota_Usb::usb_run()
 
 void Ota_Usb::usb_otaSlot()
 {
-    QString dir = "/tmp/mass_storage/sda1/clever/";
+    QString dir = "/tmp/mass_storage/sda1/ota_apps/";
     cm::mdelay(234); bool ret = QFile::exists(dir + "ver.ini");
-    system("chmod 777 -R /tmp/mass_storage/sda1/clever");
+    system("chmod 777 -R /tmp/mass_storage/sda1/");
     qDebug() << "USB:" + dir << ret; if(ret) {
         sOtaFile it; it.fc = 21; it.path = dir;
         ota_updater(it, DOta_Usb, true);

@@ -25,10 +25,10 @@ void Ota_Net::startSlot(const QString &host)
 
 QString Ota_Net::unzip(const QString &fn)
 {
-    QString dst = "/tmp/updater/clever/"; cm::execute("mkdir -p " + dst);
+    QString dst = "/tmp/updater/ota_apps/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
     str = cm::execute(str.arg(fn)); throwMessage(str);
-    system("chmod 777 -R /tmp/updater/clever/");
+    system("chmod 777 -R /tmp/updater/ota_apps/");
     return dst;
 }
 
@@ -83,7 +83,7 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dir = "/tmp/updater/clever/";
+    QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/clever/");
     //QString fmd = "cp -af %1 /usr/data/clever/"; if(rootfsExists(dir))
@@ -137,7 +137,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
 void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
-    system("rm -rf /tmp/updater/clever");
+    system("rm -rf /tmp/updater/ota_apps");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
