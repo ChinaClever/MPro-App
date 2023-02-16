@@ -22,6 +22,7 @@ public:
     QByteArray transmit(uchar *sent, int len, int msecs=1000);
     QByteArray transmit(const QByteArray &array, int msecs=1000);
     QByteArray readSerial(int msecs=1000);
+    bool hasCmdWrite(){return mCmdList.size();}
     void cmsWrite(int msecs=1);
     bool waitForLock();
 

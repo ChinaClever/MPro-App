@@ -10,8 +10,9 @@
 OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
 {
     mOpData = new sOpIt;
-    memset(mOpData, 0, sizeof(sOpIt));
     mDev = cm::masterDev();
+    memset(mOpData, 0, sizeof(sOpIt));
+    for(int i=0; i<PACK_ARRAY_SIZE; ++i) m_swCnt[i] =1;
 }
 
 bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
@@ -166,6 +167,13 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     } else dest[id] = src[i];
 }
 
+void OP_Object::relayCheck(uint &dst_sw, uint &src_sw, uint &cnt)
+{
+    if(dst_sw != src_sw) {
+        if(cnt++) dst_sw = src_sw;
+    } else cnt = 0;
+}
+
 void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev; uchar k = 0;
@@ -178,7 +186,8 @@ void OP_Object::fillData(uchar addr)
         curFaultCheck(k, i);
         powFaultCheck(k, i);
         eleFaultCheck(k, i);
-        dev->output.relay.sw[k+i] = it->sw[i];
+        //dev->output.relay.sw[k+i] = it->sw[i];
+        relayCheck(dev->output.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 
     dev->offLine = 3;
@@ -197,8 +206,9 @@ void OP_Object::loop_fillData()
         volFaultCheck(k, i);
         curFaultCheck(k, i);
         powFaultCheck(k, i);
-        eleFaultCheck(k, i);
-        dev->loop.relay.sw[k+i] = it->sw[i];
+        eleFaultCheck(k, i);        
+        //dev->loop.relay.sw[k+i] = it->sw[i];
+        relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 
     dev->offLine = 3;
