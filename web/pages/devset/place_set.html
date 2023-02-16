@@ -49,8 +49,8 @@
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
-		lang_init();
-		function lang_init(){
+		LangInit();
+		function LangInit(){
 			for(let i = 0;i<8;i++){
 				lang[i] = new Array();
 			}
@@ -63,21 +63,21 @@
 			lang[7] = ["设备SN码:","","","",""];
 			lang[8] = ["设备类型:","","","",""];
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(let i = 1;i < 9; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
-		function read_data(){
+		function ReadData(){
 			for(let i = 1;i<7;i++){
 				place_data[i] = pdu_cfg.cfgValue(uut,i,0,addr);
 			}
 		}
-		$('.place_set').html(buildTable());
-		lang_fun();
-		read_data();
-		showdata();
-		function showdata(){
+		$('.place_set').html(BuildTable());
+		LangFun();
+		ReadData();
+		ShowData();
+		function ShowData(){
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
@@ -91,17 +91,17 @@
 						btn.blur();
 					}
 				}
-				flash_html();
+				FlashHtml();
 			}else{}
 		}
-		function flash_html(){
+		function FlashHtml(){
 			pdu_cfg.placesetCfg();
 			setTimeout(function(){
-				read_data();
-				showdata();
+				ReadData();
+				ShowData();
 			},500);
 		}
-		function buildTable() {
+		function BuildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';

@@ -27,7 +27,7 @@
 	</div>
 	<div class="main-box">
 		<div class = "top-box">
-		<div align="right" ><p><span>Version</span><i id = "ShutDown" class="iconfont icon-shutdown" style = "width:5%;height: auto; line-height: 1.6;padding-left:3%;padding-right: 3%;"onclick = "sign_out()"></i></p></div>
+		<div align="right" ><p><span>Version</span><i id = "ShutDown" class="iconfont icon-shutdown" style = "width:5%;height: auto; line-height: 1.6;padding-left:3%;padding-right: 3%;"onclick = "LogOut()"></i></p></div>
 		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
@@ -48,9 +48,10 @@
 			window.history.pushState(null,null,document.URL);
 		}
 		window.removeEventListener('popstate',this.popstateFun);
-		function sign_out(){
-			window.open(window.location.origin,'_blank');
-			closeWebPage();
+		function LogOut(){
+			window.event.returnValue = false;
+			window.open('/login.html','_self');
+			// closeWebPage();
 		}
 		document.getElementById("ShutDown").onmouseover=function(){
 			document.getElementById("ShutDown").style.color="red";
@@ -58,6 +59,17 @@
 		document.getElementById("ShutDown").onmouseout=function(){
 			document.getElementById("ShutDown").style.color="";
 		}
+		history.pushState(null, null, document.URL);
+		window.addEventListener('popstate', function () {
+			history.pushState(null, null, document.URL);
+		});
+		// window.history.pushState(null, null, document.URL);
+		// window.addEventListener('popstate', this.popstateFun,false);
+		// function popstateFun(){
+      	// 	//监听浏览器回退的回调
+		// 	window.history.pushState(null, null, document.URL); //想浏览器跳转记录中添加一条空记录
+		// }
+		// window.removeEventListener('popstate', this.popstateFun);
 		function closeWebPage(){
 			if (navigator.userAgent.indexOf("MSIE") > 0) {//close IE
 				if (navigator.userAgent.indexOf("MSIE 6.0") > 0) {
@@ -73,7 +85,7 @@
 				window.close();
 			} else {//close chrome;It is effective when it is only one.
 				window.opener = null;
-				window.open('', '_self');
+				window.open('', '_self','');
 				window.close();
 			}
 		}

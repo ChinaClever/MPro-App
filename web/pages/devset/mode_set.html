@@ -77,8 +77,8 @@
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
-		lang_init();
-		function lang_init(){
+		LangInit();
+		function LangInit(){
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
@@ -116,25 +116,25 @@
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(let i = 1;i < 9; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
 		let modeset_arr = [3,4,7,21,8,9,10];
-		function read_data(){
+		function ReadData(){
 			for(let i = 0;i<modeset_arr.length;i++){
 				mode_data[i] = pdu_cfg.cfgValue(cfg,modeset_arr[i],0,addr);
 			}
 		}
 		setTimeout(function(){
-			$('.mode_set').html(buildTableMode());
-			$('.sw_set').html(buildTableSw());
-			lang_fun();
-			read_data();
-			showdata();
+			$('.mode_set').html(BuildTableMode());
+			$('.sw_set').html(BuildTableSw());
+			LangFun();
+			ReadData();
+			ShowData();
 		},1000);
-		function showdata(){
+		function ShowData(){
 			for(let i = 0;i<id_val1.length;i++){
 				if(i == 0){
 					if(mode_data[0] == 0){
@@ -166,9 +166,9 @@
 						btn.blur();
 					}
 				}
-				flash_html();
+				FlashHtml();
 			}else{
-				showdata();
+				ShowData();
 			}
 		}
 		function Set(btn){
@@ -176,20 +176,20 @@
 			if(confirm("请确认是否修改此项。")){
 				pdu_cfg.setCfg(num,5,btn.value,0,addr);
 				btn.blur();
-				flash_html();
+				FlashHtml();
 			}else{
-				showdata();
+				ShowData();
 			}
 		}
-		function flash_html(){
+		function FlashHtml(){
 			pdu_cfg.modesetCfg();
 			setTimeout(function(){
 				ParseData();
-				read_data();
-				showdata();
+				ReadData();
+				ShowData();
 			},500);
 		}
-		function buildTableMode() {
+		function BuildTableMode() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';
@@ -213,7 +213,7 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		function buildTableSw() {
+		function BuildTableSw() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id = "lang_6"></td>\
 				<td width ="85%"></td></tr>';
