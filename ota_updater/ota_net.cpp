@@ -86,8 +86,8 @@ void Ota_Net::workDown(const QString &fn, int bit)
     QString dir = "/tmp/updater/clever/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/clever/");
-    QString fmd = "cp -af %1 /usr/data/clever/";
-    if(rootfsExists(dir)) fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
+    //QString fmd = "cp -af %1 /usr/data/clever/"; if(rootfsExists(dir))
+    QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     QString cmd = fmd.arg(dir); throwMessage(cmd);
     cmd = cm::execute(cmd); throwMessage(cmd);
 
