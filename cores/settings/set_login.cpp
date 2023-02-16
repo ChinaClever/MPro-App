@@ -98,5 +98,8 @@ bool Set_Login::loginCheck(const QString &str)
         Log_Core::bulid()->append(db);
     } //cout << ls << ret;
 
+    uint *ptr = &(cm::masterDev()->cfg.param.loginFailCnt);
+    if(ret) *ptr = 0; else {*ptr += 1;} setInfoCfg(17, *ptr);
+
     return ret;
 }

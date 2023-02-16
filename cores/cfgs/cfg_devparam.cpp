@@ -85,6 +85,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.backlightTime = cfg->readCfg("backlightTime", 6, g).toInt();
     it.jsonContent = cfg->readCfg("jsonContent", 1, g).toInt();
     it.jsonCompress = cfg->readCfg("jsonCompress", 0, g).toInt();
+    it.loginFailCnt = cfg->readCfg("loginFailCnt", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();

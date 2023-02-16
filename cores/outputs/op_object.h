@@ -53,7 +53,7 @@ private:
 protected:
     sOpIt *mOpData=nullptr;
     sDevData *mDev=nullptr;
-    uint m_swCnt[99]={1};
+    uint m_swCnt[PACK_ARRAY_SIZE];
 };
 
 #endif // OP_OBJECT_H
