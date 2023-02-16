@@ -28,7 +28,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_2"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -45,7 +45,6 @@
 		let group_info_ = new Array();
 		let language;
 		let group = 4,pow = 4;
-		let dev_dis = 0;
 		var group_name = new Array();
 		var pow_val = new Array();
 		var energe_val = new Array();
@@ -59,7 +58,6 @@
 			let pdu_data = JSON.parse(DataString);
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
 			let k = 0;
 			for(let i = 0;i<group_num;i++){
 				group_info_[i] = new Array();
@@ -70,7 +68,7 @@
 				}
 			}
 		}
-		function read_data() {
+		function ReadData() {
 			for(var i = 1 ;i < group_num + 1;i++){
 				group_name[i] = group_info_[i - 1][6];
 				AVpow_val[i] = group_info_[i - 1][0];
@@ -80,9 +78,9 @@
 			}
 		}
 		ParseData();
-		read_data();
-		lang_init();
-		function lang_init(){
+		ReadData();
+		LangInit();
+		function LangInit(){
 			for(let i = 1;i<10;i++){
 				lang[i] = new Array();
 			}
@@ -100,19 +98,26 @@
 				dev_name[i] =  lang[9][language] + i;
 			}
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(buildTable(group_num));
-		$('.devname').html(buildSel((slave_num+1)));
-		lang_fun();
-		function buildSel(rows)
+		$('.table-striped').html(BuildTable(group_num));
+		$('.devname').html(BuildSel((slave_num+1)));
+		LangFun();
+		function Change(sel){
+			top.addr_ = parseInt(sel.value);
+			pdu_cfg.addr = parseInt(sel.value);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(top.addr_);
+			},100);
+		}
+		function BuildSel(rows)
 		{
 			var tbody = '';
 			for(var i = 0;i<rows;i++)
@@ -121,7 +126,7 @@
 			}
 			return tbody;
 		}
-		function showdata(){
+		function ShowData(){
 			for(var i = 1 ;i < group_num+ 1;i++){
 				var ss = document.getElementById('c'+(i-1));
 				if(pow_alarm[i] == 2|| pow_alarm[i] == 4){
@@ -133,22 +138,7 @@
 				}
 			}
 		}
-		function read_monitoring_data(){
-			var j = 1;var i = 1;
-			var time1 = setInterval(function(){
-				if(i >= parseInt(group_num + 1)){
-					clearInterval(time1);
-				}
-				if(i <= group_num){
-					rpc.call('pduReadData',[addr,output,energe_,j,i]);
-					rpc.call('pduReadData',[addr,output,AVpow_,j,i]);
-					rpc.call('pduReadData',[addr,output,pow_,j,i]);
-					rpc.call('pduReadData',[addr,output,pow_,3,i]);
-				}
-				i++;
-			},1);
-		}
-		function buildTable(rows) {
+		function BuildTable(rows) {
 			var thead = '',tbody = '';
 			if(rows == 0){
 					thead = '<tr><td width ="8%" id="lang_3"></td>\
@@ -177,7 +167,7 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
-		function putdata(){
+		function PutData(){
 			for(let i = 0;i < group_num;i++){
 				document.getElementById('c'+i).innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
 				document.getElementById('d'+i).innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(3);
@@ -186,9 +176,9 @@
 		}
 		setInterval(function(){
 			ParseData();
-			read_data();
-			putdata();
-			showdata();
+			ReadData();
+			PutData();
+			ShowData();
 		},2000);
     </script>
 </body>

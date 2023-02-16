@@ -115,7 +115,7 @@
 			for(let j = 1;j<6;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(dev_dis == 0){
+			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
@@ -157,8 +157,8 @@
 		}
 		ReadData();
 		LangInit();
-		$('.table-striped').html(buildTable(output_num));
-		$('.devname').html(buildSel(slave_num+1));
+		$('.table-striped').html(BuildTable(output_num));
+		$('.devname').html(BuildSel(slave_num+1));
 		LangFun();
 		ModeSet();
 		function Change(sel){
@@ -187,7 +187,7 @@
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				ReadData();
-				$('.table-striped').html(buildTable(output_num));
+				$('.table-striped').html(BuildTable(output_num));
 				LangFun_();
 			},500);
 		}

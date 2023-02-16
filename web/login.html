@@ -18,16 +18,14 @@
 	<script src="./include/js/pdu_rpc.js"></script>
   <script>
     var obj = new PduCfgItem;
+		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
     let time1_num = 0;
     let time2_num = 0;
+    let time3_num = 0;
+    let user = 14;
     let web_service = 0;
-    setTimeout(function(){
-      obj.getCfg(13,10,0,0);
-      obj.getCfg(42,3,0,0);
-      obj.getCfg(14,1,0,0);
-      obj.getCfg(14,2,0,0);
-      obj.getCfg(14,3,0,0);
-    },300);
+    let user_name,identify;
     let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
@@ -43,7 +41,9 @@
       }
       time1_num ++;
     },50);
-      
+    function LangInit(){
+
+    }
     language = obj.cfgValue(13,10,0,0);
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
@@ -51,34 +51,47 @@
         sign_in();
       }
     }
-    $('.center_form').html(builddiv('signin'));
-    var time = setTimeout(function (){
-      user_name = obj.cfgValue(14,1,0,0);
-      password = obj.cfgValue(14,2,0,0);
-      identify = obj.cfgValue(14,3,0,0);
-      if(user_name == null && password ==null){
-          register();
-        }
+    let time3 = setInterval(function(){
+      if(time3_num== 2 ){
+        clearInterval(time3);
+      }
+      user_name = obj.cfgValue(user,1,0,0);
+      identify = obj.cfgValue(user,3,0,0);
+      if(user_name == null ||  user_name == ""){
+          GotoRegisterPage();
+          clearInterval(time3);
+      }else{
+         $('.center_form').html(BuildDiv('signin'));
+         clearInterval(time3);
+      }
       document.getElementById('username').value = '';
       document.getElementById('psd').value ='';
-    },1000);
+      time1_num ++;
+    },500);
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
+        if(!pattern.test(usr) ||!pattern.test(psd)){
+          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
         let userPsd = usr + ";" + psd;
-        obj.setCfg(14,11,userPsd,0,0);
+        obj.setCfg(user,11,userPsd,0,0);
         let time2 = setInterval(function(){
           if(time2_num== 10){
             clearInterval(time2);
           }
-          let ver = obj.cfgValue(14,11,0,0);
+          let ver = obj.cfgValue(user,11,0,0);
           if(ver === null || ver === ""){
           }else{
             if(ver  == 1){
               var key = '0_14_11_0_0';
               obj.rpc.root_map.set(key, 0);
               window.open('index.html','_self');
+              // window.opener = null;
+              // window.open('', '_self', '');
+              // window.close();
             }else{
               alert("用户名或密码输入有误，请重新输入！");
             }
@@ -95,14 +108,14 @@
       for(var i = 0; i<div[0].childElementCount;i++){
         div[0].removeChild(div[0].childNodes[i]);
       }
-      $('.center_form').html(builddiv('submite'));
+      $('.center_form').html(BuildDiv('submite'));
     }
-    function register(){
+    function GotoRegisterPage(){
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){
         div[0].removeChild(div[0].childNodes[i]);
       }
-      $('.center_form').html(builddiv('register'));
+      $('.center_form').html(BuildDiv('register'));
     }
     function submite1(){
       let usr = document.getElementById('username').value;
@@ -113,14 +126,17 @@
         alert("输入有误请重新输入！");
       }
       else{
-        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
+        if(!pattern.test(usr) ||!pattern.test(psd)){
+          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
+        obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
-          read_user_info();
           var div= document.getElementsByClassName('center_form');
           for(var i = 0; i<div[0].childElementCount;i++){
             div[0].removeChild(div[0].childNodes[i]);
           }
-          $('.center_form').html(builddiv('signin'));
+          $('.center_form').html(BuildDiv('signin'));
         },800);
       }
     }
@@ -133,16 +149,19 @@
         alert("输入有误请重新输入！");
       }
       else{
-        rpc.call('pduSetParam',[0,user,1,0,0,usr]);
-        rpc.call('pduSetParam',[0,user,2,0,0,psd]);
-        rpc.call('pduSetParam',[0,user,3,0,0,ient]);
+        if(!pattern.test(usr) ||!pattern.test(psd)){
+          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
+        obj.setCfg(user,1,usr,0,0);
+        obj.setCfg(user,2,psd,0,0);
+        obj.setCfg(user,3,ient,0,0);
         setTimeout(function(){
-          read_user_info();
           var div= document.getElementsByClassName('center_form');
           for(var i = 0; i<div[0].childElementCount;i++){
             div[0].removeChild(div[0].childNodes[i]);
           }
-          $('.center_form').html(builddiv('signin'));
+          $('.center_form').html(BuildDiv('signin'));
         },800);
       }
     }
@@ -207,7 +226,7 @@
 		// 	read_ver_info(default_addr);
 		// 	// read_phase_data(addr);
     // },500);
-    function builddiv(Reg){
+    function BuildDiv(Reg){
       var tbody = '';
       if(Reg === 'register')
       {

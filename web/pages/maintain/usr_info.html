@@ -43,20 +43,20 @@
 		pdu_cfg.usrinfoCfg();
 		let usr_mark = 0;
 		let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
-		var opt_set = new Array();
-		var usrs_data = new Array();
-		var usrs_name_ = new Array("","","","","");
-		var jurisdiction = new Array();
+		let opt_set = new Array();
+		let usrs_data = new Array();
+		let usrs_name_ = new Array("","","","","");
+		let jurisdiction = new Array();
 		let lang = new Array();
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
-		var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
-		function read_data(){
+		function ReadData(){
 			for(var i = 0;i<5;i++){
 				usrs_name_[i] =  pdu_cfg.cfgValue(14,1,i,addr);
 				usrs_data[i+1] = new Array();
@@ -70,7 +70,7 @@
 				}
 			}
 		}
-		function lang_init(){
+		function LangInit(){
 			for(let i = 0;i<19;i++){
 				lang[i] = new Array();
 			}
@@ -95,17 +95,17 @@
 			jurisdiction[0] = lang[13][language];
 			jurisdiction[1] = lang[14][language];
 		}
-		function lang_fun(){
+		function LangFun(){
 			for(var i = 1;i<9;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
 			document.getElementById("lang_18").value  = lang[18][language];
 		}
-		lang_init();
+		LangInit();
 		setTimeout(function(){
-			read_data();
-			$('.usr').html(buildTable());
-			lang_fun();
+			ReadData();
+			$('.usr').html(BuildTable());
+			LangFun();
 			ShowData();
 		},500);
 		function validataForm(opt){
@@ -136,8 +136,8 @@
 					return ;
 				}
 			}
-			if(!pattern.test(psd_) ||!pattern.test(conpsd_)){
-				alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+			if(!pattern.test(psd_) ||!pattern.test(conpsd_) || !pattern.test(usr_)){
+				alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
 				return ;
 			}else{
 				if(jur_ != 0){
@@ -149,25 +149,25 @@
 					pdu_cfg.setCfg(14,3,ident_,val,addr);
 					pdu_cfg.setCfg(14,4,jur_,val,addr);
 					usr_mark = val;
-					flash_html();
+					FlashHtml();
 				}else{
 					alert("username or password error!");
 				}
 			}
 		}
 
-		function flash_html(){
+		function FlashHtml(){
 			pdu_cfg.usrinfoCfg();
 			setTimeout(function(){
-				read_data();
-				$('.usr').html(buildTable());
-				lang_fun();
+				ReadData();
+				$('.usr').html(BuildTable());
+				LangFun();
 				ShowData();
 				document.getElementById("usrSel").value = usr_mark;
 				Set_(usr_mark);
 			},500);
 		}
-		function buildTable(){
+		function BuildTable(){
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
 			<td width ="85%"></td>/tr>';

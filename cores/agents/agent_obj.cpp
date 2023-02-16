@@ -3,11 +3,6 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-/*
- *
- *  Created on: 2022年10月1日
- *      Author: Lzy
- */
 #include "agent_obj.h"
 sAgentCfg Agent_Obj::snmpCfg;
 Agent_Obj::Agent_Obj(QObject *parent)

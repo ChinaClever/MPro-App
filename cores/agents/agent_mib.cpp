@@ -80,12 +80,10 @@ void Agent_Mib::appendNode(const sOidIt &it, uint oid)
     m_mib.append(str); //qDebug().noquote() << str ;
 }
 
-
 void Agent_Mib::appendModule(const sOidIt &it)
 {
     QStringList os = it.oid.split(".");
     QStringList ls = it.name.split("-");
-
     QString name = "pdu-"+ls.at(1);
     appendModule(name+"-dev", it.fieldId);
     for(int i=0; i<os.size()-1; i++) {

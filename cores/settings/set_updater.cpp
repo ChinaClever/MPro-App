@@ -60,7 +60,7 @@ void Set_Updater::ota_log()
 
 void Set_Updater::ota_logErr(const QString &fn)
 {    
-    QString dir = "/tmp/updater/clever/";
+    QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
         cfg.app_unpack(ver);

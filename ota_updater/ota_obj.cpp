@@ -8,7 +8,7 @@
 Ota_Obj::Ota_Obj(QObject *parent)
     : QObject{parent}
 {
-    system("mkdir -p /tmp/updater/clever");
+    system("mkdir -p /tmp/updater/ota_apps");
     QTimer::singleShot(1155,this,SLOT(runing_initFunSlot()));
 }
 
