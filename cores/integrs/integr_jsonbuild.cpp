@@ -271,6 +271,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("output_num", it.nums.outputNum/r);
     obj.insert("board_num", it.nums.boardNum/r);
     obj.insert("group_en", it.param.groupEn/r);
+    obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
