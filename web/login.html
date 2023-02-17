@@ -98,7 +98,7 @@
             }else if(ver == "0"){
               alert("用户名或密码输入有误，请重新输入！");
             }else{
-              let num =parseInt(ver)-100;
+              let num = ver.abs();
               alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
             }
             window.clearInterval(time2);
