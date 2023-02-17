@@ -50,7 +50,7 @@ double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
     return mIt.value / cm::decimal(mIt);
 }
 
-bool Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value)
+int Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value)
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
@@ -59,7 +59,7 @@ bool Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, dou
     return Set_Core::bulid()->setting(it);
 }
 
-bool Rpc_Method::pduCfgSet(int type, int fc, const QVariant &value, int id, int addr)
+int Rpc_Method::pduCfgSet(int type, int fc, const QVariant &value, int id, int addr)
 {
     sCfgItem it; it.addr = addr; it.type = type;
     it.txType = mTxType; it.fc = fc; it.id = id;

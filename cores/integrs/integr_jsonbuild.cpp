@@ -115,7 +115,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 }
 
 void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json)
-{
+{    
     QJsonArray array;
     for(int i=0; i<size; ++i) {
         array.append(ptr[i]); //if(strlen(ptr[i]))
