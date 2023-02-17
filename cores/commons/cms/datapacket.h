@@ -242,8 +242,7 @@ struct sParameter {
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
     uint jsonCompress; // 0：不压缩 1：压缩
-    uint loginFailCnt; //账号登陆连续错误次数
-    uint reserve[18];
+    uint reserve[19];
 };
 
 struct sRunTime

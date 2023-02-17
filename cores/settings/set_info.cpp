@@ -67,7 +67,6 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 14: ret = it->backlightType; break;
     case 15: ret = it->backlightTime; break;
     case 16: App_Core::bulid()->beep_once(); break;
-    case 17: ret = it->loginFailCnt; break;
     case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }
@@ -94,7 +93,6 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 14: key = "backlightType"; it->backlightType = value; break;
     case 15: key = "backlightTime"; it->backlightTime = value; break;
     case 16: App_Core::bulid()->beep_once(); break;
-    case 17: key = "loginFailCnt"; it->loginFailCnt = value; break;
     case 21: key = "jsonContent"; it->jsonContent = value; break;
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
