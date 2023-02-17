@@ -91,11 +91,11 @@
           let ver = obj.cfgValue(user,11,0,0);
           if(ver === null || ver === ""){
           }else{
-            if(ver  === "true"){
+            if(ver  === "1"){
               var key = '0_14_11_0_0';
               obj.rpc.root_map.set(key, "");
               window.open('index.html','_self');
-            }else if(ver == "false"){
+            }else if(ver == "0"){
               alert("用户名或密码输入有误，请重新输入！");
             }else{
               let num =parseInt(ver)-100;
