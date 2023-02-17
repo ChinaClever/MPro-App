@@ -102,7 +102,7 @@ int Set_Login::loginCheck(const QString &str)
 {
     QStringList ls = str.split(";");
     int ret = loginTryLock();
-    if(ret) return 100+ret;
+    if(ret) return 0-ret;
 
     if(ls.size() == 2) {
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
