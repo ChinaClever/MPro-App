@@ -93,7 +93,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
 {
     ushort reg = addr - MbReg_OutputRelay;
     int id = reg % 50 + 1;
-    if(reg > 50) {
+    if(reg >= 50) {
         OP_Core::bulid()->clearEle(id);
     } else {
          //sRelayUnit *obj = &(mDevData->output.relay);
