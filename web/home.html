@@ -44,14 +44,14 @@
 				<div class="phase_div">
 					<table class="phase_table total"></table>
 				</div>
-				<div class="phase" id="L1">
+				<div class="phase" id="L1" style="display: none;">
 					<table class="phase_table p1"></table>
 				</div>
-				<div class="phase " id="L2">
+				<div class="phase " id="L2" style="display: none;">
 					<table class="phase_table p2"></table>
 					</table>
 				</div>
-				<div class="phase" id="L3">
+				<div class="phase" id="L3" style="display: none;">
 					<table class="phase_table p3"></table>
 				</div>
 			</div>
@@ -566,6 +566,9 @@
 			return tbody;
 		}
 		function ShowData() {
+			for(let i = 1;i<= phase_num;i++){
+				document.getElementById("L"+i).style.display = "";
+			}
 			for (let i = 0; i < 4; i++) {
 				if (i < 2) {
 					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
