@@ -12,7 +12,7 @@ public:
 private:
     int loginTryLock();
     void loginLocking(bool ok);
-    bool loginAuth(const QStringList &ls);
+    int loginAuth(const QStringList &ls);
     int loginCheck(const QString &str);
 
 private:

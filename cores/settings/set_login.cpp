@@ -60,14 +60,13 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     return ret;
 }
 
-bool Set_Login::loginAuth(const QStringList &ls)
+int Set_Login::loginAuth(const QStringList &ls)
 {
-    bool ret = false;
-    for(int i=0; i<USER_NUM; ++i) {
+    int ret = 0; for(int i=0; i<USER_NUM; ++i) {
         sDevLogin *it = &(cm::dataPacket()->login[i]);
         QString usr = it->user, pwd = it->pwd;
         if((ls.first() == usr) && (ls.last() == pwd)) {
-            ret = true; break;
+            ret = 1; break;
         }
     }
     return ret;
@@ -87,6 +86,7 @@ int Set_Login::loginTryLock()
         int minutes = mDt.secsTo(dt) / 60;
         ret = (mFailCnt-4) * 10 - minutes;
         if(ret < 0) ret = 0;
+        //cout << ret << mFailCnt;
     }
 
     return ret;
@@ -122,7 +122,7 @@ int Set_Login::loginCheck(const QString &str)
         sEventItem db; db.event_type = QStringLiteral("用户登陆");
         db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         Log_Core::bulid()->append(db); ret = 1;
-    } else ret = 0; //cout << ls << ret;
+    } else ret = 0; // cout << ls << ret << mFailCnt;
 
     return ret;
 }
