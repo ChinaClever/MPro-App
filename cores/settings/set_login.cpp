@@ -28,9 +28,9 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
 }
 
 
-bool Set_Login::loginSet(uchar type, const QVariant &v, int id)
+int Set_Login::loginSet(uchar type, const QVariant &v, int id)
 {
-    QString key; bool ret = true;
+    QString key; int ret = true;
     QString prefix = "login"; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login[id]);
 
@@ -98,7 +98,7 @@ void Set_Login::loginLocking(bool ok)
     if(ok) mFailCnt=0; else mFailCnt += 1;
 }
 
-bool Set_Login::loginCheck(const QString &str)
+int Set_Login::loginCheck(const QString &str)
 {
     QStringList ls = str.split(";");
     int ret = loginTryLock();

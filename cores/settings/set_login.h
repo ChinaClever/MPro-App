@@ -7,13 +7,13 @@ class Set_Login : public Set_Info
 public:
     Set_Login();
     QVariant loginUsrPwd(int type, int id);
-    bool loginSet(uchar type, const QVariant &v, int id);
+    int loginSet(uchar type, const QVariant &v, int id);
 
 private:
     int loginTryLock();
     void loginLocking(bool ok);
     bool loginAuth(const QStringList &ls);
-    bool loginCheck(const QString &str);
+    int loginCheck(const QString &str);
 
 private:
     int mFailCnt=0;

@@ -96,7 +96,6 @@ void Integr_JsonBuild::faultCode(sDevData *dev, QJsonObject &json)
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
 {
     int size = it.size; bool dc = false;
-    if(mDataContent > 2) if(!size) size = OUTPUT_NUM;
     arrayAppend(it.value, size, key+"_value", json, r);
     arrayAppend(it.alarm, size, key+"_alarm_status", json);
 
@@ -125,7 +124,6 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
     int size = it.size; bool dc = false;
-    if(mDataContent > 2) if(!size) size = OUTPUT_NUM;
     arrayAppend(it.sw, size, key+"_state", json);
 
     if(mDataContent == 0) {
@@ -148,7 +146,6 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
 void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json)
 {
     int size = it.size; bool dc = false;
-    if(mDataContent > 2) if(!size) size = OUTPUT_NUM;
     //arrayAppend(it.sw, size, key+"_state", json);
     if(mDataContent == 0) {
         for(int i=0; i<size; ++i) dc |= it.timingEn[i];
@@ -164,8 +161,6 @@ void Integr_JsonBuild::groupRelayUnit(const sRelayUnit &it, const QString &key, 
 void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObject &json, int type)
 {
     QJsonObject obj;  int size = it.size;
-    if(mDataContent > 2) if(!size) size = OUTPUT_NUM;
-
     alarmUnit(it.vol, "vol", obj, COM_RATE_VOL);
     alarmUnit(it.cur, "cur", obj, COM_RATE_CUR);
     alarmUnit(it.pow, "pow", obj, COM_RATE_POW);
@@ -316,12 +311,12 @@ void Integr_JsonBuild::webGroupData(sDevData *it, QJsonObject &obj)
 {
     sObjData group = it->group;
     group.size = group.pow.size = GROUP_NUM;
-    group.relay.size = GROUP_NUM; //it->output.relay.size ? GROUP_NUM:0;
+    group.relay.size = it->output.relay.size ? GROUP_NUM:0;
     ObjData(group, "group_item_list", obj, 4);
 
     sObjData dual = it->dual;
-    dual.size = dual.pow.size = OUTPUT_NUM; //it->output.size;
-    dual.relay.size = OUTPUT_NUM; //it->output.relay.size;
+    dual.size = dual.pow.size = it->output.size;
+    dual.relay.size = it->output.relay.size;
     ObjData(dual, "dual_item_list", obj, 5);
 }
 
