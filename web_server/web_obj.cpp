@@ -55,12 +55,12 @@ double Web_Obj::getValue(uint addr, uint type, uint topic, uint sub, uint id)
     return res;
 }
 
-bool Web_Obj::setting(uint addr, uint type, uint topic, uint sub, uint id, double value)
+int Web_Obj::setting(uint addr, uint type, uint topic, uint sub, uint id, double value)
 {
     return mRpc->pduDataSet(addr, type, topic, sub, id, value);
 }
 
-bool Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint id, uint addr)
+int Web_Obj::setCfg(uint type, uint fc, const QVariant &value, uint id, uint addr)
 {
     return mRpc->pduCfgSet(type, fc, value, id, addr);
 }

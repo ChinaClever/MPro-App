@@ -57,12 +57,12 @@ double JsonRpc_Client::pduDataGet(uchar addr,  uchar type, uchar topic, uchar su
     return ret;
 }
 
-bool JsonRpc_Client::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value)
+int JsonRpc_Client::pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value)
 {
-    bool ret = false; if(!isConnected()) return ret;
+    int ret = false; if(!isConnected()) return ret;
     auto result = rpc_client->call("pduDataSet", addr, type, topic,sub, id, value);
     if (result->isSuccess()) {
-        ret = result->result().toBool();
+        ret = result->result().toInt();
     } else {
         qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
     }
@@ -83,12 +83,12 @@ QVariant JsonRpc_Client::pduCfgGet(uchar type, uchar fc, uchar id, uchar addr)
     return ret;
 }
 
-bool JsonRpc_Client::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id, uchar addr)
+int JsonRpc_Client::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id, uchar addr)
 {
-    bool ret = false; if(!isConnected()) return ret;
+    int ret = false; if(!isConnected()) return ret;
     auto result = rpc_client->call("pduCfgSet", type, fc, value, id, addr);
     if (result->isSuccess()) {
-        ret = result->result().toBool();
+        ret = result->result().toInt();
     } else {
         qDebug() << Q_FUNC_INFO << "RPC error:" << result->toString();
     }
