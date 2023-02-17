@@ -91,12 +91,15 @@
           let ver = obj.cfgValue(user,11,0,0);
           if(ver === null || ver === ""){
           }else{
-            if(ver  == 1){
+            if(ver  === "true"){
               var key = '0_14_11_0_0';
-              obj.rpc.root_map.set(key, 0);
+              obj.rpc.root_map.set(key, "");
               window.open('index.html','_self');
-            }else{
+            }else if(ver == "false"){
               alert("用户名或密码输入有误，请重新输入！");
+            }else{
+              let num =parseInt(ver)-100;
+              alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
             }
             window.clearInterval(time2);
           }
