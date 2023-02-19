@@ -71,46 +71,30 @@
 		let language;
 		let lang = new Array();
 		let phase_info = new Array();
-		let phase_info_ = new Array();
-		var phase_num;
-		var slave_num;
 		let type_arr = new Array("vol","cur","pow");
 		var dev_name =new Array();
+		let pdu_data;
+		let phase_arr = ["vol_value","vol_rated","vol_alarm_status","vol_alarm_max","vol_alarm_min","vol_warn_min","vol_warn_max","vol_alarm_enable","","","vol_hda_en","cur_value","cur_rated",
+		"cur_alarm_status","cur_alarm_max","cur_alarm_min","cur_warn_min","cur_warn_max","cur_alarm_enable","","","cur_hda_en","pow_value","pow_rated","pow_alarm_status","pow_alarm_max","pow_alarm_min","pow_warn_min","pow_alarm_max","pow_alarm_enable","","","pow_hda_en"];
 		let addr = pdu_cfg.addr;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			phase_num = pdu_data.pdu_info.line_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<phase_num;i++){
-				phase_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.line_item_list){
-					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
-					j ++;
-				}
-			}
-		}
-		if(pdu_cfg.cfgValue(100,0,0,0) != null){
-			ParseData();
-		}
-		let phase_arr = [30,29,27,25,26,32,31,24,0,0,28,7,6,4,2,3,9,8,1,0,0,5,20,19,17,15,16,22,21,14,0,0,18];
-		function ReadData(){
-			for (let i = 1; i < phase_num + 1; i++) {
+			for (let i = 1; i < pdu_data.pdu_info.line_num + 1; i++) {
 				phase_info[i] = new Array();
 				let j = 0;
 				for(let key of phase_arr){
 					if(j == 8 || j == 9 || j == 19 || j == 20 || j == 30 || j ==31){
 
 					}else{
-						phase_info[i][j] = phase_info_[i - 1][key];
+						phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i-1];
 					}
 					j++;
 				}
 			}
 		}
+		ParseData();
 		LangInit();
 		function LangInit(){
 			for(let i = 1;i<8;i++){
@@ -155,7 +139,7 @@
 			lang[37]  = ["主机", "", "", "", ""];
 			lang[38]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[37][language];
-			for(let i = 1;i<(slave_num + 1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num + 1);i++){
 				dev_name[i] =  lang[38][language] + i;
 			}
 		}
@@ -166,16 +150,15 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[36][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		ReadData();
-		$('.vol_table').html(BuildTableVol(phase_num));
-		$('.cur_table').html(BuildTableCur(phase_num));
-		$('.pow_table').html(BuildTablePow(phase_num));
-		$('.devname').html(BuildSel((slave_num + 1)));
+		$('.vol_table').html(BuildTableVol(pdu_data.pdu_info.line_num));
+		$('.cur_table').html(BuildTableCur(pdu_data.pdu_info.line_num));
+		$('.pow_table').html(BuildTablePow(pdu_data.pdu_info.line_num));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num + 1)));
 		LangFun();
 		ShowData();
 		ModeSet();
@@ -196,7 +179,7 @@
 			return tbody;
 		}
 		function ShowData(){
-			for(var i = 1 ;i < phase_num + 1;i++){
+			for(var i = 1 ;i < pdu_data.pdu_info.line_num + 1;i++){
 				for(var j = 0;j < 3;j++){
 					hs = document.getElementById(type_arr[j]+(i -1)).childNodes[3].firstChild;
 					ss = document.getElementById(type_arr[j]+(i -1)).childNodes[2].firstChild;
@@ -226,7 +209,7 @@
 			}
 		}
 		function ShowData_(){
-			for(var i = 1 ;i < phase_num + 1;i++){
+			for(var i = 1 ;i < pdu_data.pdu_info.line_num + 1;i++){
 				for(var j = 0;j < 3;j++){
 					cs = document.getElementById(type_arr[j]+(i -1)).childNodes[1];
 					if(phase_info[i][2 + j*11] == 2 || phase_info[i][2 + j*11] == 4){
@@ -279,11 +262,11 @@
 		{
 			par.parentNode.parentNode.parentNode.remove();
 			if(par.name == "pow"){
-				$('.pow_table').html(BuildTablePow(phase_num));
+				$('.pow_table').html(BuildTablePow(pdu_data.pdu_info.line_num));
 			}else if(par.name == "cur"){
-				$('.cur_table').html(BuildTableCur(phase_num));
+				$('.cur_table').html(BuildTableCur(pdu_data.pdu_info.line_num));
 			}else if(par.name == "vol"){
-				$('.vol_table').html(BuildTableVol(phase_num));
+				$('.vol_table').html(BuildTableVol(pdu_data.pdu_info.line_num));
 			}
 			ShowData();
 			LangFun();
@@ -315,9 +298,9 @@
 			}else{
 				stat = '0';
 			}
-			if(number == phase_num +1){
+			if(number == pdu_data.pdu_info.line_num +1){
 				number1 = 0;
-				for(let i = 0;i<phase_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.line_num;i++){
 					if(ckd.checked == true){
 						document.getElementById(ckd.name+(i)).childNodes[childnum].childNodes[0].checked = true;
 					}else{
@@ -348,7 +331,7 @@
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
 
-			if(number == phase_num +1){
+			if(number == pdu_data.pdu_info.line_num +1){
 				number1 = 0;
 
 			}else{
@@ -380,10 +363,10 @@
 				childnum = 8;
 			}
 			if(number1 == 0){
-				for(let i = 0;i<phase_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.line_num;i++){
 					document.getElementById(ipt.name+(i)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
 				}
-				document.getElementById(ipt.name + phase_num).childNodes[childnum].childNodes[0].value = "";
+				document.getElementById(ipt.name + pdu_data.pdu_info.line_num).childNodes[childnum].childNodes[0].value = "";
 			}else{
 				document.getElementById(ipt.name+(number -1)).childNodes[childnum].childNodes[0].value = parseFloat(ipt.value).toFixed((type -2)+1);
 			}
@@ -525,7 +508,7 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			for(let i = 0;i < phase_num;i++){
+			for(let i = 0;i < pdu_data.pdu_info.line_num;i++){
 				for(let j = 0;j<3;j++){
 					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(phase_info[i + 1][0 + j * 11])).toFixed(j+1);
 				}
@@ -533,7 +516,6 @@
 		}
 		let Time2 = setInterval(function(){
 			ParseData();
-			ReadData();
 			PutData();
 			ShowData_();
 		},500);

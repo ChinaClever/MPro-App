@@ -42,43 +42,16 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let group_num = top.group_num_;
 		let addr = pdu_cfg.addr;
-		let group_info_ = new Array();
 		let language;
 		let group = 4,pow = 4;
-		var group_name = new Array();
-		var pow_val = new Array();
-		var energe_val = new Array();
-		var pow_alarm = new Array();
-		var AVpow_val = new Array();
 		var dev_name =new Array();
 		let lang = new Array();
-		var slave_num;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
-			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<group_num;i++){
-				group_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.group_item_list){
-					group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
-					j ++;
-				}
-			}
-		}
-		function ReadData() {
-			for(var i = 1 ;i < group_num + 1;i++){
-				group_name[i] = group_info_[i - 1][6];
-				AVpow_val[i] = group_info_[i - 1][0];
-				pow_val[i] = group_info_[i - 1][14];
-				pow_alarm[i] = group_info_[i - 1][11];
-				energe_val[i] = group_info_[i - 1][1];
-			}
 		}
 		ParseData();
-		ReadData();
 		LangInit();
 		function LangInit(){
 			for(let i = 1;i<10;i++){
@@ -94,7 +67,7 @@
 			lang[8]  = ["主机", "", "", "", ""];
 			lang[9]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[8][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[9][language] + i;
 			}
 		}
@@ -102,13 +75,13 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
 		$('.table-striped').html(BuildTable(group_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
@@ -157,10 +130,10 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ group_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">' + parseFloat(pow_val[i+1]).toFixed(3) + '</td>';
-				tbody += '<td id = "d'+ i + '">'+ parseFloat(AVpow_val[i + 1]).toFixed(3) +'</td>';
-				tbody += '<td id = "e'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(2) + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ pdu_data.pdu_data.group_item_list.name[i] +'</td>';
+				tbody += '<td id = "c'+ i + '">' + parseFloat(pdu_data.pdu_data.group_item_list.pow_value[i]).toFixed(3) + '</td>';
+				tbody += '<td id = "d'+ i + '">'+ parseFloat(pdu_data.pdu_data.group_item_list.apparent_pow[i]).toFixed(3) +'</td>';
+				tbody += '<td id = "e'+ i + '">' + parseFloat(pdu_data.pdu_data.group_item_list.ele[i]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
@@ -169,14 +142,13 @@
 		var state1_ = 0,state2_ = 0,state3_ = 0,state4_ = 0;
 		function PutData(){
 			for(let i = 0;i < group_num;i++){
-				document.getElementById('c'+i).innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
-				document.getElementById('d'+i).innerHTML = (parseFloat(AVpow_val[i + 1])).toFixed(3);
-				document.getElementById('e'+i).innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
+				document.getElementById('c'+i).innerHTML = (parseFloat(pdu_data.pdu_data.group_item_list.pow_value[i])).toFixed(3);
+				document.getElementById('d'+i).innerHTML = (parseFloat(pdu_data.pdu_data.group_item_list.apparent_pow[i])).toFixed(3);
+				document.getElementById('e'+i).innerHTML = (parseFloat(epdu_data.pdu_data.group_item_list.ele[i])).toFixed(2);
 			}
 		}
 		setInterval(function(){
 			ParseData();
-			ReadData();
 			PutData();
 			ShowData();
 		},2000);

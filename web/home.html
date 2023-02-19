@@ -334,13 +334,10 @@
 		let phase_num;
 		let loop_num;
 		let slave_num;
-		let phase_info_ = new Array();
 		let loop_info_ = new Array();
-		let sensor_info_ = new Array();
 		let phase_info = new Array();
 		let loop_info = new Array();
 		let sensor_info = new Array();
-		let total_info_ = new Array();
 		let freq_;
 		let loop_se = new Array();
 		let total_info = new Array();
@@ -356,10 +353,14 @@
 		let Sys_state = new Array("正常", "告警", "故障");
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
-
+		let pdu_data;
+		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value","phase_voltage"];
+		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
+		let total_arr = ["pow","apparent_pow","ele"];
+		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
+		let sensor_id = [0,0,1,1,0,1,0,0];
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data;
 			if(DataString == null){
 				DataString = sessionStorage.getItem('0_100_0_0_0');
 			}
@@ -372,36 +373,40 @@
 			freq_ = pdu_data.pdu_info.pdu_hz;
 			let k = 0;
 			for(let i = 0;i<phase_num;i++){
-				phase_info_[i] = new Array();
+				phase_info[i] = new Array();
 				let j = 0;
-				for(let key in pdu_data.pdu_data.line_item_list){
-					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+				for(let key of phase_arr){
+					phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i];
 					j ++;
 				}
-			}
-			for(let i = 0;i<loop_num;i++){
-				loop_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.loop_item_list){
-					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let i = 0;i<2;i++){
-				sensor_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.env_item_list){
-					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let key in pdu_data.pdu_data.pdu_tg_data){
-				total_info_[k] = pdu_data.pdu_data.pdu_tg_data[key];
-				k++;
 			}
 			for(let i = 0;i<loop_num;i++){
 				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
 			}
+			for(let i = 0;i<loop_num;i++){
+				loop_info[i] = new Array();
+				loop_info[i][0] = "C" + (i + 1);
+				let j = 1;
+				for(let key of loop_arr){
+					if(j == 2){
+						loop_info[i][j] = loop_se[i];
+					}else{
+						loop_info[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+					}
+					j ++;
+				}
+			}
+			k = 0;
+			for(let key of sensor_arr){
+				sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id[k]];
+				k ++;
+			}
+			k = 0;
+			for(let key of total_arr){
+				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
+				k++;
+			}
+			total_info[3] = freq_;
 		}
 		setTimeout(function(){
 			ParseData();
@@ -514,42 +519,7 @@
 				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 			}
 		}
-		let phase_arr = [7,30,12,4,2,20,13];
-		let loop_arr = [1,0,8,3,30,20,12];
 		function ReadData() {
-			total_info[0] = total_info_[4];
-			total_info[1] = total_info_[0];
-			total_info[2] = total_info_[2];
-			total_info[3] = freq_;
-			for (let i = 0; i < phase_num; i++) {
-				phase_info[i] = new Array();
-				let j = 0;
-				for(let key of phase_arr){
-					phase_info[i][j] = phase_info_[i][key];
-					j++;
-				}
-			}
-			for (let i = 0; i < loop_num; i++) {
-				loop_info[i] = new Array();
-				loop_info[i][0] = "C" + (i + 1);
-				let j = 1;
-				for(let key of loop_arr){
-					if(j == 2){
-						loop_info[i][j] = loop_se[i];
-					}else{
-						loop_info[i][j] = loop_info_[i][key];
-					}
-					j++;
-				}
-			}
-			sensor_info[0] = sensor_info_[0][17];
-			sensor_info[1] = sensor_info_[0][7];
-			sensor_info[2] = sensor_info_[1][17];
-			sensor_info[3] = sensor_info_[1][7];
-			sensor_info[4] = sensor_info_[0][0];
-			sensor_info[5] = sensor_info_[1][0];
-			sensor_info[6] = sensor_info_[0][20];
-			sensor_info[7] = sensor_info_[0][10];
 			// system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
 			// system_info[1] = sessionStorage.getItem(uut_name[2] + addr);
 			// system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
@@ -628,8 +598,8 @@
 				// else {
 				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
 				// }
-				if (i < 4) {
-					if (parseInt(sensor_info[i]) > 1000 || parseInt(sensor_info[i]) == 0) {
+				if (i < 4) {//insert
+					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {
 						if (i % 2 == 0) {
 							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
 						} else {
