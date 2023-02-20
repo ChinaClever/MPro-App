@@ -16,6 +16,7 @@
   </div>
   <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/pdu_rpc.js"></script>
+	<script src="./include/js/crypto-js.min.js"></script>
   <script>
     var obj = new PduCfgItem;
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
@@ -27,6 +28,7 @@
     let user = 14;
     let web_service = 0;
     let user_name,identify;
+    let hasher = CryptoJS.algo.SHA256.create();
     let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
@@ -82,6 +84,7 @@
           alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         let userPsd = usr + ";" + psd;
         obj.setCfg(user,11,userPsd,0,0);
         let time2 = setInterval(function(){
@@ -136,6 +139,7 @@
           alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
           var div= document.getElementsByClassName('center_form');
@@ -168,6 +172,7 @@
           alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
           return ;
         }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,1,usr,0,0);
         obj.setCfg(user,2,psd,0,0);
         obj.setCfg(user,3,ient,0,0);
