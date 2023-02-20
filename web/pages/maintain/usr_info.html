@@ -49,6 +49,7 @@
 		let jurisdiction = new Array();
 		let lang = new Array();
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
+    	let hasher = CryptoJS.algo.SHA256.create();
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function ParseData(){
@@ -154,6 +155,7 @@
 					return ;
 				}
 			}	
+        	psd_ = CryptoJS.PBKDF2(psd_,psd_,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
 			pdu_cfg.setCfg(14,1,usr_,val,addr);
 			pdu_cfg.setCfg(14,2,psd_,val,addr);
 			pdu_cfg.setCfg(14,3,ident_,val,addr);
