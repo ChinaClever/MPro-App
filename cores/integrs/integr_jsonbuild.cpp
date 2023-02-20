@@ -287,7 +287,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     QJsonArray loops;
     for(uint i=0; i<it.nums.boardNum; ++i) {
         int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
-        loops.append(num);
+        loops.append(num+1);
     } obj.insert("loop_array", loops);
 
     QJsonArray ops;

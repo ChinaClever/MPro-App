@@ -114,7 +114,7 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
     case 6: value = dev->boards[it.id]; break;
-    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1;  break;
+    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1; break;
     case 11: value = dev->loopStarts[it.id]+1;  break;
     case 12: value = dev->loopEnds[it.id]+1;  break;
     default: cout << it.fc; break;
