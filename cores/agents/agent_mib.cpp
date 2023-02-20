@@ -36,7 +36,7 @@ void Agent_Mib::createHead()
 
             "--- ----------------------------------\n"
             "--- pdu MODULE-IDENTITY\n"
-            "---    LAST-UPDATED \"202303040000Z\"		-- March 4th, 2023\n"
+            "---    LAST-UPDATED \"202303040000Z\"\n"
             "---    ORGANIZATION \"pdu-snmp-subagent\"\n"
             "---    DESCRIPTION  \"Top-level of the SNMP pdu MIB tree.\"\n"
             "---    REVISION     \"202303040000Z\"\n"

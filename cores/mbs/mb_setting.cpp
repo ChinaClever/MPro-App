@@ -83,7 +83,7 @@ void Mb_Setting::timeSet(ushort addr, ushort &value)
 
 void Mb_Setting::restoreFactoryDefaults()
 {
-
+    Set_Core::bulid()->factoryRestore();
 }
 
 void Mb_Setting::registerRecvSlot(int address, ushort value)
