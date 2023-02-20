@@ -63,52 +63,18 @@
 		let phase = 3,switch_ = 1;
 		let language;
 		let  read  = 1;
-		let dev_dis = 0;
+		let pdu_data;
 		let pow_mark = new Array();
 		let Input_state = new Array("","","");
 		let State = new Array("","");
-		let switch_enable = new Array();
-		let switch_mode = new Array();
-		let swtich_state = new Array();
-		let swtich_alarm = new Array();
-		let output_name = new Array();
-		let seq_delay = new Array();
-		let reset_delay = new Array();
-		let output_info_ = new Array();
-		let output_num;
 		let dev_name =new Array();
-		let slave_num;
 		let lang = new Array();
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
 		}
 		ParseData();
-		function ReadData(){
-			for (let i = 1; i < output_num + 1; i++) {
-				output_name[i] = output_info_[i - 1][12];
-				swtich_state[i] = output_info_[i - 1][30];
-				swtich_alarm[i] = output_info_[i - 1][24];
-				seq_delay[i] = output_info_[i - 1][28];
-				reset_delay[i] = output_info_[i - 1][29];
-				switch_enable[i] = output_info_[i - 1][25];
-				switch_mode[i] = output_info_[i - 1][26];
-			}
-		}
-		ReadData();
 		LangInit();
 		function LangInit(){
 			for(let i = 1;i<21;i++){
@@ -135,7 +101,7 @@
 			lang[19]  = ["主机", "", "", "", ""];
 			lang[20]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[19][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<( pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[20][language] + i;
 			}
 			State[0] = lang[18][language];
@@ -151,13 +117,13 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
-			if(slave_num != 0){
+			if( pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(BuildTable(output_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+		$('.devname').html(BuildSel(( pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
@@ -224,26 +190,26 @@
 		}
 		function ShowData(){
 			var ss = 0,ms = 0,cs = 0;
-			for(var i = 1 ;i < output_num + 1;i++)
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num + 1;i++)
 			{
 				cs = document.getElementById('c'+(i -1));
 				ss = document.getElementById('e'+(i -1));
 				ms = document.getElementById('f'+(i -1));
-				if(switch_enable[i] === 0){
-					ss.checked = true;
-				}
-				else{
+				if(pdu_data.pdu_data.output_item_list.relay_enable[i-1] == 0){
 					ss.checked = false;
 				}
-				if(switch_mode[i] == 1){
+				else{
+					ss.checked = true;
+				}
+				if(pdu_data.pdu_data.output_item_list.relay_off_alarm[i-1] == 1){
 					ms.checked = true;
 				}
 				else{
 					ms.checked = false;
 				}
-				if(swtich_alarm[i] == 1 || swtich_alarm[i] == 8){
+				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
 					cs.bgColor = 'red';
-				}else if(swtich_alarm[i] == 2 || swtich_alarm[i] == 4){
+				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
 					cs.bgColor = 'yellow';
 				}
 				else{
@@ -253,12 +219,12 @@
 		}
 		function ShowData_(){
 			var cs = 0;
-			for(var i = 1 ;i < output_num + 1;i++)
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num + 1;i++)
 			{
 				cs = document.getElementById('c'+(i -1));
-				if(swtich_alarm[i] == 1 || swtich_alarm[i] == 8){
+				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
 					cs.bgColor = 'red';
-				}else if(swtich_alarm[i] == 2 || swtich_alarm[i] == 4){
+				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1]== 4){
 					cs.bgColor = 'yellow';
 				}
 				else{
@@ -269,7 +235,7 @@
 		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			$('.table-striped').html(BuildTable(output_num));
+			$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 			ShowData();
 			LangFun();
 		}
@@ -290,9 +256,9 @@
 			}else{
 				stat = '0';
 			}
-			if(number == output_num +1){
+			if(number == pdu_data.pdu_info.output_num +1){
 				number1 = 0;
-				for(let i = 0;i<output_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 					if(ckd.checked == true){
 						document.getElementById(type1+(i)).checked = true;
 					}else{
@@ -318,13 +284,13 @@
 			}else if(type1 === 'j'){
 				sub = 5;
 			}
-			if(num !== output_num + 1){
+			if(num !== pdu_data.pdu_info.output_num + 1){
 			}else{
 				num = 0;
-				for(let i = 0;i<output_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 					document.getElementById(type1+(i)).value = parseInt(ipt.value);
 				}
-				document.getElementById(type1 + output_num).value = "";
+				document.getElementById(type1 + pdu_data.pdu_info.output_num).value = "";
 			}
 			pdu_cfg.setData(phase,switch_,sub,num,stat);
 			setTimeout(() => {
@@ -349,7 +315,7 @@
 					stat = '2';
 				}
 
-				if(num !== output_num + 1){
+				if(num !== pdu_data.pdu_info.output_num + 1){
 				}else{
 					num = 0;
 				}
@@ -377,10 +343,10 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '" >'+output_name[i + 1]+'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" value = "'+seq_delay[i + 1]+'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "j'+ i + '" value = "'+reset_delay[i + 1]+'"></input></td>';
+				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.output_item_list.name[i]+'</td>';
+				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_powerup_delay[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + Input_state[0] + '</button></td>';
@@ -407,13 +373,12 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			for(let i = 0;i < output_num;i++){
-				document.getElementById('c' + i).innerHTML = State[swtich_state[i + 1]];
+			for(let i = 0;i < pdu_data.pdu_info.output_num;i++){
+				document.getElementById('c' + i).innerHTML = State[pdu_data.pdu_data.output_item_list.relay_state[i]];
 			}
 		}
 		setInterval(function(){
 			ParseData();
-			ReadData();
 			PutData();
 			ShowData_();
 		},2000);

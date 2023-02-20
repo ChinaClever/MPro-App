@@ -66,46 +66,14 @@
 		let read  = 1;
 		let childnum = 0;
 		let lang = new Array();
-		let output_num;
 		let dev_name =new Array();
-		let output_name =new Array();
-		let output_info = new Array();
-		let output_info_ = new Array();
-		let slave_num;
+		let pdu_data;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
 		}
 		ParseData();
-		let output_arr = [20,19,17,15,16,22,21,14,0,0,18];
-		function ReadData(){
-			for (let i = 1; i < output_num + 1; i++) {
-				output_info[i] = new Array();
-				let j = 1;
-				for(let key of output_arr){
-					if(j == 9 || j == 10){
-
-					}else{
-						output_info[i][j] = output_info_[i - 1][key];
-					}
-					j++;
-				}
-				output_name[i] = output_info_[i - 1][12];
-			}
-		}
-		ReadData();
 		lang_init();
 		function lang_init(){
 			for(let i = 1;i<19;i++){
@@ -130,7 +98,7 @@
 			lang[17]  = ["主机", "", "", "", ""];
 			lang[18]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[17][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[18][language] + i;
 			}
 		}
@@ -141,13 +109,13 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(BuildTable(output_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		ShowData();
 		LangFun();
 		ModeSet();
@@ -169,25 +137,25 @@
 		}
 		function ShowData(){
 			var cs = 0 ,ss = 0,hs=0;
-			for(var i = 1 ;i < output_num + 1;i++){
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num + 1;i++){
 				ss = document.getElementById('d'+(i -1));
 				cs = document.getElementById('c'+(i -1));
 				hs = document.getElementById('j'+(i -1));
-				if(output_info[i][8] === 1){
+				if(pdu_data.pdu_data.output_item_list.pow_alarm_enable[i-1] === 1){
 					ss.checked = true;
 				}
 				else{
 					ss.checked = false;
 				}
-				if(output_info[i][11] == 1){
+				if(pdu_data.pdu_data.output_item_list.pow_hda_en[i-1] == 1){
 					hs.checked = true;
 				}
 				else{
 					hs.checked = false;
 				}
-				if(output_info[i][3] == 1 || output_info[i][3] == 8){
+				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 1 || pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 8){
 					cs.bgColor = 'red';
-				}else if(output_info[i][3] == 2 || output_info[i][3] == 4){
+				}else if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2 || pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
 				}
 				else{
@@ -197,11 +165,11 @@
 		}
 		function ShowData_(){
 			var cs = 0;
-			for(var i = 1 ;i < output_num + 1;i++){
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num + 1;i++){
 				cs = document.getElementById('c'+(i -1));
-				if(output_info[i][3] == 1 || output_info[i][3] == 8){
+				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 1 || pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 8){
 					cs.bgColor = 'red';
-				}else if(output_info[i][3] == 2 || output_info[i][3] == 4){
+				}else if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2 || pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
 				}
 				else{
@@ -247,7 +215,7 @@
 		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			$('.table-striped').html(BuildTable(output_num));
+			$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 			ShowData();
 			LangFun();
 		}
@@ -268,9 +236,9 @@
 			}else{
 				stat = '0';
 			}
-			if(number == output_num +1){
+			if(number == pdu_data.pdu_info.output_num +1){
 				number1 = 0;
-				for(let i = 0;i<output_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 					if(ckd.checked == true){
 						document.getElementById(type1+(i)).checked = true;
 					}else{
@@ -299,7 +267,7 @@
 			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[9].childNodes[0].value);
-			if(number == output_num +1){
+			if(number == pdu_data.pdu_info.output_num +1){
 					number1 = 0;
 			}else{
 				number1 = number;
@@ -324,10 +292,10 @@
 				sub = 4;
 				childnum = 9;
 			}if(number1 == 0){
-				for(let i = 0;i<output_num;i++){
+				for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 					document.getElementById(type1+(i)).value = parseFloat(ipt.value).toFixed(3);
 				}
-				document.getElementById(type1 + output_num).value = "";
+				document.getElementById(type1 + pdu_data.pdu_info.output_num).value = "";
 			}else{
 				document.getElementById(ipt.id).value = parseFloat(ipt.value).toFixed(3);
 			}
@@ -355,15 +323,15 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">' + output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(output_info[i + 1][1]).toFixed(3) +'</td>';
+				tbody += '<td id = "b'+ i + '">' + pdu_data.pdu_data.output_item_list.name[i] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td id = "e'+ i +'">' + parseFloat(output_info[i + 1][2]).toFixed(3)+'</td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(output_info[i + 1][5]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(output_info[i + 1][6]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(output_info[i + 1][7]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(output_info[i + 1][4]).toFixed(3)  +'"></input></td>';
+				tbody += '<td id = "e'+ i +'">' + parseFloat(pdu_data.pdu_data.output_item_list.pow_rated[i]).toFixed(3)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_alarm_min[i])).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_warn_min[i])).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_warn_max[i])).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_alarm_max[i])).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -386,13 +354,12 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			for(let i = 0;i < output_num;i++){
-				document.getElementById('c' + i).innerHTML = parseFloat(output_info[i+1][1]).toFixed(3);
+			for(let i = 0;i < pdu_data.pdu_info.output_num;i++){
+				document.getElementById('c' + i).innerHTML = parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3);
 			}
 		}
 		setInterval(function(){
 			ParseData();
-			ReadData();
 			PutData();
 			ShowData_();
 		},2000);

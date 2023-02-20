@@ -42,51 +42,18 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		var output_name = new Array();
-		var cur_val = new Array();
-		var swtich_state = new Array();
-		var pow_val = new Array();
-		var cur_alarm = new Array();
-		var pow_alarm = new Array();
-		var pf_val = new Array();
-		var energe_val = new Array();
 		let output_info_ = new Array();
 		var State = new Array("","");
 		let lang = new Array();
-		var output_num;
 		var dev_name =new Array();
-		var slave_num;
+		let pdu_data;
 		let addr = pdu_cfg.addr;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
 		}
 		ParseData();
-		function ReadData(){
-			for (let i = 1; i < output_num + 1; i++) {
-				output_name[i] = output_info_[i - 1][12];
-				swtich_state[i] = output_info_[i - 1][30];
-				cur_val[i] = output_info_[i - 1][7];
-				pow_val[i] = output_info_[i - 1][20];
-				cur_alarm[i] = output_info_[i - 1][4];
-				pow_alarm[i] = output_info_[i - 1][17];
-				pf_val[i] = output_info_[i - 1][13];
-				energe_val[i] = output_info_[i - 1][10];
-			}
-		}
-		ReadData();
 		LangInit();
 		function LangInit(){
 			for(let i = 1;i<14;i++){
@@ -106,7 +73,7 @@
 			lang[12]  = ["主机", "", "", "", ""];
 			lang[13]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[12][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[13][language] + i;
 			}
 			State[0] = lang[11][language];
@@ -116,13 +83,13 @@
 			for(let j = 1;j<10;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(BuildTable(output_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		lang_fun();
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
@@ -141,20 +108,20 @@
 			return tbody;
 		}
 		function ShowData(){
-			for(var i = 1 ;i < output_num+ 1;i++){
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num+ 1;i++){
 				var ss = document.getElementById('d'+(i-1));
 				var cs = document.getElementById('e'+(i-1));
-				if(pow_alarm[i] == 2|| pow_alarm[i] == 4){
+				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
-				}else if(pow_alarm[i] == 1 || pow_alarm[i] == 8){
+				}else if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 1 || pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 8){
 					cs.bgColor = 'red';
 				}
 				else{
 					cs.bgColor = '';
 				}
-				if(cur_alarm[i] == 2|| cur_alarm[i] == 4){
+				if(pdu_data.pdu_data.output_item_list.cur_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.cur_alarm_status[i-1] == 4){
 					ss.bgColor = 'yellow';
-				}else if(cur_alarm[i] == 1 || cur_alarm[i] == 8){
+				}else if(pdu_data.pdu_data.output_item_list.cur_alarm_status[i-1] == 1 || pdu_data.pdu_data.output_item_list.cur_alarm_status[i-1] == 8){
 					ss.bgColor = 'red';
 				}else{
 					ss.bgColor = '';
@@ -175,32 +142,30 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[swtich_state[i + 1]] +'</td>';
-				tbody += '<td id = "d'+ i + '">' + parseFloat(cur_val[i+1]).toFixed(2) + '</td>';
-				tbody += '<td id = "e'+ i + '">'+ parseFloat(pow_val[i + 1]).toFixed(3) +'</td>';
-				tbody += '<td id = "f'+ i + '">'+ parseFloat(pf_val[i + 1]).toFixed(2) +'</td>';
-				tbody += '<td id = "g'+ i + '">' + parseFloat(energe_val[i + 1]).toFixed(2) + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ pdu_data.pdu_data.output_item_list.name[i] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
+				tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
+				tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
+				tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
+				tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
 				tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			for(let i = 0;i < output_num;i++){
-				document.getElementById('d'+i).innerHTML = (parseFloat(cur_val[i + 1])).toFixed(2);
-				document.getElementById('e'+i).innerHTML = (parseFloat(pow_val[i + 1])).toFixed(3);
-				document.getElementById('f'+i).innerHTML = (parseFloat(pf_val[i + 1])).toFixed(2);
-				document.getElementById('g'+i).innerHTML = (parseFloat(energe_val[i + 1])).toFixed(2);
-				document.getElementById('c'+i).innerHTML = State[swtich_state[i + 1]];
+			for(let i = 0;i < pdu_data.pdu_info.output_num;i++){
+				document.getElementById('d'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i])).toFixed(2);
+				document.getElementById('e'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i])).toFixed(3);
+				document.getElementById('f'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.pf[i])).toFixed(2);
+				document.getElementById('g'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.ele[i])).toFixed(2);
+				document.getElementById('c'+i).innerHTML = State[pdu_data.pdu_data.output_item_list.relay_state[i]];
 			}
 		}
 		setInterval(function(){
-			setTimeout(function(){
-				ReadData();
-				PutData();
-				ShowData();
-			},800);
+			ParseData();
+			PutData();
+			ShowData();
 		},2000);
     </script>
 </body>

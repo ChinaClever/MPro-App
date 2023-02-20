@@ -115,7 +115,7 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 }
 
 void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json)
-{
+{    
     QJsonArray array;
     for(int i=0; i<size; ++i) {
         array.append(ptr[i]); //if(strlen(ptr[i]))
@@ -215,11 +215,10 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
 
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj;
-    if(mDataContent < 3) {
+    QJsonObject obj; if(mDataContent < 3) {
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);        
         alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
         alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
@@ -232,6 +231,7 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         alarmUnit(hum, "hum", obj, COM_RATE_HUM);
     }
 
+    arrayAppend(it.isInsert, SENOR_NUM, "insert", obj);
     if(obj.size()) json.insert(key, obj);
 }
 
@@ -287,7 +287,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     QJsonArray loops;
     for(uint i=0; i<it.nums.boardNum; ++i) {
         int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
-        loops.append(num);
+        loops.append(num+1);
     } obj.insert("loop_array", loops);
 
     QJsonArray ops;

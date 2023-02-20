@@ -36,7 +36,7 @@ App_Buzzer::~App_Buzzer()
 void App_Buzzer::beep_once()
 {
     int *beep = mBeep; BEEP_ON(beep[0]);
-    QTimer::singleShot(300,this,SLOT(beep_offSlot()));
+    QTimer::singleShot(265,this,SLOT(beep_offSlot()));
 }
 
 void App_Buzzer::beep_initFunSlot()

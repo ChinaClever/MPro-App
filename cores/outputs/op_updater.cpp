@@ -26,7 +26,7 @@ bool OP_Updater::ota_start(const QString &fn)
 void OP_Updater::throwMessage(const QString &msg)
 {
     QString str = "ota updater outlet " + msg;
-    QString ip = cm::dataPacket()->ota.host;  //qDebug() << str;
+    QString ip = cm::dataPacket()->ota.host;  qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
@@ -124,7 +124,8 @@ bool OP_Updater::initOta(int id)
     QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
     if(!recv.contains("Start Updat")) {
         recv = transmit(cmd, sizeof(cmd), 5000);
-        if(!recv.contains("Start Updat")) isOta = false;
+        if(!recv.isEmpty()) isOta = false;
+        //if(!recv.contains("Start Updat")) isOta = false;
     } emit otaSig(id, recv);
     return isOta;
 }

@@ -16,8 +16,8 @@ public:
     QString metaData(uint addr);
     QString execute(const QString &cmd);
     QString getCfg(uint type, uint fc, uint id, uint addr);
-    bool setCfg(uint type, uint fc, const QVariant &value, uint id, uint addr);
-    bool setting(uint addr, uint type, uint topic, uint sub, uint id, double value);
+    int setCfg(uint type, uint fc, const QVariant &value, uint id, uint addr);
+    int setting(uint addr, uint type, uint topic, uint sub, uint id, double value);
     double getValue(uint addr, uint type, uint topic, uint sub, uint id);
     QVariant log_fun(uint type, uint fc, uint id, uint cnt);
     QString log_hda(const QString &start, const QString &end, int addr, int type, int topic, int index);

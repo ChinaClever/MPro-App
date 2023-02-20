@@ -57,43 +57,18 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let group_num = top.group_num_;
 		let addr = pdu_cfg.addr;
-		let group_info_ = new Array();
 		let language;
 		let group = 4,switch_ = 1;
 		var read  = 1;
 		let lang = new Array();
-		let group_data = new Array();
-		let group_name = new Array();
 		var dev_name =new Array();
-		var slave_num;
-		let time_sw = new Array();
-		let sw_mark = 0;
+		let pdu_data;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<group_num;i++){
-				group_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.group_item_list){
-					group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
-					j ++;
-				}
-			}
-		}
-		function ReadData() {
-			for (var i = 1; i < group_num + 1; i++) {
-				group_data[i] = new Array();
-				group_name[i] = group_info_[i - 1][6];
-				group_data[i][0] = group_info_[i - 1][4];
-				group_data[i][1] = group_info_[i - 1][3];
-				time_sw[i] = group_info_[i - 1][2];
-			}
 		}
 		ParseData();
-		ReadData();
 		LangInit();
 		function LangInit(){
 			for(let i = 0;i<15;i++){
@@ -117,7 +92,7 @@
 			lang[16]  = ["主机", "", "", "", ""];
 			lang[17]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[16][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
@@ -128,7 +103,7 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
@@ -141,7 +116,7 @@
 			},100);
 		}
 		$('.table-striped').html(BuildTable(group_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		ModeSet();
 		ShowData();
@@ -206,19 +181,12 @@
 				var ss = document.getElementById('c'+(i -1));
 				var cc = document.getElementById('d'+(i -1));
 				var hs = document.getElementById('i'+(i -1));
-				ss.innerHTML = group_data[i][0];
-				cc.innerHTML = group_data[i][1];
-				if(time_sw[i] == 0){
+				ss.innerHTML = pdu_data.pdu_data.group_item_list.group_relay_timing_on[i -1];
+				cc.innerHTML = pdu_data.pdu_data.group_item_list.group_relay_timing_off[i -1];
+				if(pdu_data.pdu_data.group_item_list.group_relay_timing_en[i -1] == 0){
 					hs.checked = false;
 				}else{
 					hs.checked = true;
-				}
-				if(i == group_num){
-					if(sw_mark ==1){
-						document.getElementById('i'+(i)).checked = true;
-					}else{
-						document.getElementById('i'+(i)).checked = false;
-					}
 				}
 			}
 
@@ -344,7 +312,7 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '" >'+group_name[i + 1]+'</td>';
+				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.group_item_list.name[i]+'</td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';

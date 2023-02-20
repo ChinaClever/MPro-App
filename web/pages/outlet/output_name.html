@@ -59,38 +59,17 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		let addr = pdu_cfg.addr;
-		let dev_dis = 0;
 		let read = 1;
 		let lang = new Array();
-		let output_info_ = new Array();
-		let output_num;
 		let output_name =new Array();
 		let dev_name =new Array();
-		let slave_num;
-
+		let pdu_data;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			dev_dis = pdu_data.pdu_info.cascade_addr;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
 		}
 		ParseData();
-		function ReadData(){
-			for (let i = 1; i < output_num + 1; i++) {
-				output_name[i] = output_info_[i - 1][12];
-			}
-		}
 		function LangInit(){
 			for(let i = 1;i<9;i++){
 				lang[i] = new Array();
@@ -104,7 +83,7 @@
 			lang[7]  = ["主机", "", "", "", ""];
 			lang[8]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[7][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[8][language] + i;
 			}
 			if(read == 0){
@@ -115,7 +94,7 @@
 			for(let j = 1;j<6;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
@@ -157,8 +136,8 @@
 		}
 		ReadData();
 		LangInit();
-		$('.table-striped').html(BuildTable(output_num));
-		$('.devname').html(BuildSel(slave_num+1));
+		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+		$('.devname').html(BuildSel(pdu_data.pdu_info.slave_num+1));
 		LangFun();
 		ModeSet();
 		function Change(sel){
@@ -186,8 +165,8 @@
 		{
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
-				ReadData();
-				$('.table-striped').html(BuildTable(output_num));
+				ParseData();
+				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				LangFun_();
 			},500);
 		}
@@ -213,7 +192,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td ></td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "b'+ i + '" value = "'+output_name[i + 1]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "b'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.name[i]+'"></input></td>';
 				tbody += '</tr>';
 			}
 

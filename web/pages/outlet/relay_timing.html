@@ -60,43 +60,16 @@
 		let addr = pdu_cfg.addr;
 		let phase = 3,switch_ = 1;
 		let language;
-		let output_info_ = new Array();
 		var read  = 1;
+		let pdu_data;
 		let lang = new Array();
-		let output_data = new Array();
-		let output_name = new Array();
 		var dev_name =new Array();
-		var output_num;
-		var slave_num;
-		let time_sw = new Array();
-		let sw_mark = 0;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
+			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
 		}
 		ParseData();
-		function ReadData(){
-			for (let i = 1; i < output_num + 1; i++) {
-				output_data[i] = new Array();
-				output_name[i] = output_info_[i - 1][12];
-				output_data[i][0] = output_info_[i - 1][33];
-				output_data[i][1] = output_info_[i - 1][32];
-				time_sw[i] = output_info_[i - 1][31];
-			}
-		}
-		ReadData();
 		LangInit();
 		function LangInit(){
 			for(let i = 0;i<17;i++){
@@ -120,7 +93,7 @@
 			lang[16]  = ["主机", "", "", "", ""];
 			lang[17]  = ["副机", "", "", "", ""];
 			dev_name[0] = lang[16][language];
-			for(let i = 1;i<(slave_num+1);i++){
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
 			}
 		}
@@ -128,17 +101,17 @@
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
-			document.getElementById("b" + output_num).innerHTML  = lang[15][language];
+			document.getElementById("b" + pdu_data.pdu_info.output_num).innerHTML  = lang[15][language];
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
-			if(slave_num != 0){
+			if(pdu_data.pdu_info.slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.table-striped').html(BuildTable(output_num));
-		$('.devname').html(BuildSel((slave_num+1)));
+		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		ModeSet();
 		ShowData();
@@ -205,14 +178,14 @@
 			}
 		}
 		function ShowData(){
-			for(var i = 1 ;i < output_num + 1;i++)
+			for(var i = 1 ;i < pdu_data.pdu_info.output_num + 1;i++)
 			{
 				var ss = document.getElementById('c'+(i -1));
 				var cc = document.getElementById('d'+(i -1));
 				var hs = document.getElementById('i'+(i -1));
-				ss.innerHTML = output_data[i][0];
-				cc.innerHTML = output_data[i][1];
-				if(time_sw[i] == 0){
+				ss.innerHTML = pdu_data.pdu_data.output_item_list.relay_timing_on[i -1];
+				cc.innerHTML = pdu_data.pdu_data.output_item_list.relay_timing_off[i -1];
+				if(pdu_data.pdu_data.output_item_list.relay_timing_en[i -1] == 0){
 					hs.checked = false;
 				}else{
 					hs.checked = true;
@@ -235,7 +208,7 @@
 			ss = CheckTime(ss);
 			var time = hh + ":" + mm+ ":" + ss;
 
-			for(let i = 0; i<output_num + 1;i++){
+			for(let i = 0; i<pdu_data.pdu_info.output_num + 1;i++){
 				document.getElementById('f'+i).value = time;
 			}
 		}
@@ -249,7 +222,7 @@
 		{
 			par.parentNode.parentNode.parentNode.remove();
 			ReadData();
-			$('.table-striped').html(BuildTable(output_num));
+			$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 			LangFun();
 			ShowData();
 			DateTime();
@@ -265,11 +238,11 @@
 				}else{
 					stat = '0';
 				}
-				if(num !== output_num + 1){
+				if(num !== pdu_data.pdu_info.output_num + 1){
 
 				}else{
 					num = 0;
-					for(let i = 0;i<output_num;i++){
+					for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 						if(ckd.checked == true){
 							document.getElementById(type1+(i)).checked = true;
 						}else{
@@ -299,10 +272,10 @@
 					val += " ";
 				}
 				val += document.getElementById('f'+ (num -1)).value;
-				if(num !== output_num + 1){
+				if(num !== pdu_data.pdu_info.output_num + 1){
 					document.getElementById(type_+(num -1)).innerHTML = val;
 				}else{
-					for(let i = 0;i<output_num;i++){
+					for(let i = 0;i<pdu_data.pdu_info.output_num;i++){
 						document.getElementById(type_+(i)).innerHTML = val;
 					}
 					num = 0;
@@ -330,7 +303,7 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '" >'+output_name[i + 1]+'</td>';
+				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.output_item_list.name[i]+'</td>';
 				tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';

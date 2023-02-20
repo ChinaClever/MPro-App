@@ -16,9 +16,11 @@
   </div>
   <script src="./include/js/jquery-1.11.3.min.js"></script>
 	<script src="./include/js/pdu_rpc.js"></script>
+	<script src="./include/js/crypto-js.min.js"></script>
   <script>
     var obj = new PduCfgItem;
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
     let time1_num = 0;
     let time2_num = 0;
@@ -26,6 +28,7 @@
     let user = 14;
     let web_service = 0;
     let user_name,identify;
+    let hasher = CryptoJS.algo.SHA256.create();
     let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
@@ -72,10 +75,16 @@
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
-        if(!pattern.test(usr) ||!pattern.test(psd)){
-          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+        if(!pattern_.test(usr))
+        {
+          alert("请输入5-16位用户名");
           return ;
         }
+        if(!pattern.test(psd)){
+          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         let userPsd = usr + ";" + psd;
         obj.setCfg(user,11,userPsd,0,0);
         let time2 = setInterval(function(){
@@ -85,22 +94,22 @@
           let ver = obj.cfgValue(user,11,0,0);
           if(ver === null || ver === ""){
           }else{
-            if(ver  == 1){
+            if(ver  === "1"){
               var key = '0_14_11_0_0';
-              obj.rpc.root_map.set(key, 0);
+              obj.rpc.root_map.set(key, "");
               window.open('index.html','_self');
-              // window.opener = null;
-              // window.open('', '_self', '');
-              // window.close();
-            }else{
+            }else if(ver == "0"){
               alert("用户名或密码输入有误，请重新输入！");
+            }else{
+              let num = Math.abs(ver);
+              alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
             }
             window.clearInterval(time2);
           }
           time2_num ++;
         },100);
       }else{
-        alert("user name or password is null");
+        alert("请输入用户名和密码后登陆");
       }    
     }
     function submite(){
@@ -126,10 +135,11 @@
         alert("输入有误请重新输入！");
       }
       else{
-        if(!pattern.test(usr) ||!pattern.test(psd)){
-          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+        if(!pattern.test(psd)){
+          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
           var div= document.getElementsByClassName('center_form');
@@ -149,10 +159,20 @@
         alert("输入有误请重新输入！");
       }
       else{
-        if(!pattern.test(usr) ||!pattern.test(psd)){
-          alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+        if(!pattern_.test(usr))
+        {
+          alert("请输入5-16位用户名");
           return ;
         }
+        if(!pattern.test(psd)){
+          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
+        if(!pattern.test(ient)){
+          alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+          return ;
+        }
+        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,1,usr,0,0);
         obj.setCfg(user,2,psd,0,0);
         obj.setCfg(user,3,ient,0,0);
@@ -173,13 +193,25 @@
       let usr = document.getElementById('username').value;
       var psd_val = document.getElementById("psd").value;
       if(usr != "" && psd_val !=""){
-        document.getElementById("sign_in").removeAttribute('disabled');
+        // document.getElementById("sign_in").removeAttribute('disabled');
         document.getElementById("sign_in").style.backgroundColor ="#8AA";
       }else{
-        document.getElementById("sign_in").setAttribute('disabled','');
+        // document.getElementById("sign_in").setAttribute('disabled','');
         document.getElementById("sign_in").style.backgroundColor ="#9CC";
       }
     }
+    function ClickEvent(){
+      document.getElementById("sign_in").style.color = "red";
+      setTimeout(function(){document.getElementById("sign_in").style.color = "#FFF"},1000);
+    }
+    setTimeout(function(){
+      document.getElementById("sign_in").onmouseover = function () {
+        document.getElementById("sign_in").style.border = "2px outset #E8E8E8";
+      }
+      document.getElementById("sign_in").onmouseout = function () {
+        document.getElementById("sign_in").style.border = "";
+      }
+    },1200);
     function validataForm(ipt)
     {
       var con = document.getElementById("conpsd");
@@ -220,35 +252,32 @@
         }
       }
     }
-    // var time1 = setTimeout(function(){
-    //   ReadHomeData();
-    //   // read_dev_name();
-		// 	read_ver_info(default_addr);
-		// 	// read_phase_data(addr);
-    // },500);
+    function Clear(obj){
+      obj.value = obj.value.replace(/[^\w_]/g,"");
+    }
     function BuildDiv(Reg){
       var tbody = '';
       if(Reg === 'register')
       {
         tbody += '<p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="username" maxlength="20"; placeholder="用户名" onblur = "validataForm(this)">';
+        tbody += '<p><input id ="username" type="username" maxlength="20"; onkeyup = "Clear(this)" placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button"  value = "注册" onclick="register1()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
         tbody += '<br/><p class="title"><span>登陆页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" placeholder="用户名" onkeyup = "Clear(this)" onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="20" autocomplete="off" oninput ="check();" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
-        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" disabled="" value = "登陆" onclick="sign_in()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "登陆" onclick="sign_in()"></input></p>';
       }else if(Reg === 'submite'){
         tbody += '<p class="title"><span>重置密码</span></p><p class="error" id = "Errinfo"></p>';
-        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" placeholder="用户名"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="20" onblur= "validataForm(this)" onkeyup = "Clear(this)" placeholder="用户名"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="新密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="20"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="20" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
-        tbody += '<p class = "signIn_btn"><input type = "button" value = "提交" onclick="submite1()"></input></p>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "提交" onclick="submite1()"></input></p>';
       }
       return tbody;
     }

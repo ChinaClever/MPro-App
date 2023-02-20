@@ -8,12 +8,12 @@ class Set_Core : public Set_Diagnose
 public:
     static Set_Core *bulid();
     QVariant getCfg(sCfgItem &it);
-    bool setting(sDataItem &it);
-    bool setCfg(sCfgItem &it, const QVariant &v);
+    int setting(sDataItem &it);
+    int setCfg(sCfgItem &it, const QVariant &v);
     void writeAlarm();
 
 private:
-    bool setParam(sCfgItem &it, const QVariant &v);
+    int setParam(sCfgItem &it, const QVariant &v);
 };
 
 #endif // SET_CORE_H

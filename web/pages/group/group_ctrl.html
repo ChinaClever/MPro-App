@@ -67,33 +67,19 @@
 			let language;
 			let group = 4,switch_ = 1;
 			let read = 1;
-			let sw_mark = 0;
 			let lang = new Array();
 			let group_data = new Array();
-			let group_name = new Array();
 			let dev_name = new Array();
-			let group_info_ = new Array();
-			let slave_num;
 			let addr = pdu_cfg.addr;
+			let pdu_data;
 			pdu_cfg.OutInGroup();
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
-				let pdu_data = JSON.parse(DataString);
-				slave_num = pdu_data.pdu_info.slave_num;
+				pdu_data = JSON.parse(DataString);
 				language = pdu_data.pdu_info.language;
-				let k = 0;
-				for(let i = 0;i<group_num;i++){
-					group_info_[i] = new Array();
-					let j = 0;
-					for(let key in pdu_data.pdu_data.group_item_list){
-						group_info_[i][j] = pdu_data.pdu_data.group_item_list[key][i];
-						j ++;
-					}
-				}
 			}
 			function ReadData() {
 				for (var i = 1; i < group_num + 1; i++) {
-					group_name[i] = group_info_[i - 1][6];
 					group_data[i] = pdu_cfg.cfgValue(25,i,0,addr);
 				}
 			}
@@ -116,7 +102,7 @@
 				lang[12] = ["主机", "", "", "", ""];
 				lang[13] = ["副机", "", "", "", ""];
 				dev_name[0] = lang[12][language];
-				for (let i = 1; i < (slave_num + 1); i++) {
+				for (let i = 1; i < (pdu_data.pdu_info.slave_num + 1); i++) {
 					dev_name[i] = lang[13][language] + i;
 				}
 			}
@@ -129,7 +115,7 @@
 				if (read == 0) {
 					document.getElementById("lang_2").innerHTML = lang[10][language];
 				}
-				if(slave_num != 0){
+				if(pdu_data.pdu_info.slave_num != 0){
 					document.getElementById("dev_sel").style.display="";
 				}
 			}
@@ -145,7 +131,7 @@
 				ReadData();
 				LangInit();
 				$('.table-striped').html(BuildTable(group_num));
-				$('.devname').html(BuildSel((slave_num + 1)));
+				$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num + 1)));
 				LangFun();
 				ModeSet();
 			},500);
@@ -204,13 +190,6 @@
 					else {
 						ss.checked = false;
 					}
-					if (i == group_num) {
-						if (sw_mark == 1) {
-							document.getElementById('d' + (i)).checked = true;
-						} else {
-							document.getElementById('d' + (i)).checked = false;
-						}
-					}
 				}
 			}
 			function FlashHtml(par) {
@@ -231,13 +210,6 @@
 					} else {
 						stat = '0';
 					}
-					if (num == group_num + 1) {
-						if (ckd.checked == true) {
-							sw_mark = 1;
-						} else {
-							sw_mark = 0;
-						}
-					}
 					if (num !== group_num + 1) {
 
 					} else {
@@ -256,16 +228,16 @@
 						stat = '1';
 					}
 					else if (btn.innerText == lang[10][language]) {
-						s
 						stat = '0';
 					}
-
 					if (num !== group_num + 1) {
 					} else {
 						num = 0;
 					}
 					pdu_cfg.setData(group,switch_,1,num,stat);
-					FlashHtml(btn);
+					setTimeout(() => {
+						PduMetaData.meta_workDown(pdu_cfg);
+					}, 100);
 				} else { }
 			}
 			function BuildTable(rows) {
@@ -289,7 +261,7 @@
 					}
 					tbody += '<tr id = "tr' + i + '">';
 					tbody += '<td id = "a' + i + '">' + (parseInt(i) + 1) + '</td>';
-					tbody += '<td id = "b' + i + '" >' + group_name[i + 1] + '</td>';
+					tbody += '<td id = "b' + i + '" >' + pdu_data.pdu_data.group_item_list.name[i] + '</td>';
 					tbody += '<td id = "c' + i + '">' + group_data[i + 1] + '</td>';
 					// tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "d' + i + '"></input></td>';
 					tbody += '<td><button id = "e' + i + '" onclick = BtnClick(this) >' + lang[8][language] + '</button></td>';

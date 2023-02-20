@@ -73,9 +73,9 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     return res;
 }
 
-bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
+int Set_Core::setParam(sCfgItem &it, const QVariant &v)
 {
-    bool ret = false; switch (it.type) {
+    int ret = false; switch (it.type) {
     case SFnCode::EOutput: case SFnCode::EGroup:
     case SFnCode::EDual: ret = outputSet(it, v); break;
     case SFnCode::EGroupSet: ret = groupSet(it, v); break;
@@ -118,9 +118,9 @@ bool Set_Core::setParam(sCfgItem &it, const QVariant &v)
 }
 
 
-bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
+int Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {
-    bool ret = false;
+    int ret = false;
     if(it.addr==0 || it.addr==0xff) {
         ret = setParam(it, v);
     }
@@ -133,9 +133,9 @@ bool Set_Core::setCfg(sCfgItem &it, const QVariant &v)
     return ret;
 }
 
-bool Set_Core::setting(sDataItem &it)
+int Set_Core::setting(sDataItem &it)
 {
-    bool ret = true;
+    int ret = true;
 
     if(it.rw) {
         if(it.addr==0 || it.addr==0xff) {
