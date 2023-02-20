@@ -71,10 +71,11 @@
 			let group_data = new Array();
 			let dev_name = new Array();
 			let addr = pdu_cfg.addr;
+			let pdu_data;
 			pdu_cfg.OutInGroup();
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
-				let pdu_data = JSON.parse(DataString);
+				pdu_data = JSON.parse(DataString);
 				language = pdu_data.pdu_info.language;
 			}
 			function ReadData() {
