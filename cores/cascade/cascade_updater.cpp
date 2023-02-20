@@ -17,7 +17,7 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 void Cascade_Updater::throwMessage(const QString &msg)
 {
     QString str = "updater cascade " + msg;
-    QString ip = cm::dataPacket()->ota.host;
+    QString ip = cm::dataPacket()->ota.host; qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
