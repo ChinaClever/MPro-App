@@ -56,10 +56,9 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
     if(value > it.max[i]) alarm = AlarmCode::Max;
-    if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
-    if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
+    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-
+    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
