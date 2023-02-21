@@ -68,7 +68,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
             it.alarm[i] = alarm;
         }
     } else it.cnt[i] = 0;
-    ret |= alarm;
+    if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
 
     return ret;
 }
