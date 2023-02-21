@@ -85,6 +85,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.backlightTime = cfg->readCfg("backlightTime", 6, g).toInt();
     it.jsonContent = cfg->readCfg("jsonContent", 1, g).toInt();
     it.jsonCompress = cfg->readCfg("jsonCompress", 0, g).toInt();
+    it.standNeutral = cfg->readCfg("standNeutral", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();
@@ -103,11 +104,31 @@ void Cfg_devParam::runTimeWrite()
     if(ret) devParamWrite("runTime", t, g);
 }
 
-
 void Cfg_devParam::devParamWrite(const QString& key, const QVariant &v, const QString& g)
 {
      Cfg_Obj *cfg = mDevCfg;
      cfg->writeCfg(key, v, g);
+}
+
+void Cfg_devParam::standNeutral(sParameter &it)
+{
+    if(it.standNeutral) {
+        QString dir = "/usr/data/clever/cfg/";
+        QString fn = "logo.png";
+        if(QFile::exists(dir+fn)) {
+            QString fmd = "mv %1 %2";
+            QString cmd = fmd.arg(dir+fn, dir+"logo.back");
+            system(cmd.toStdString().c_str());
+        }
+    } else {
+        QString dir = "/usr/data/clever/cfg/";
+        QString fn = "logo.back";
+        if(QFile::exists(dir+fn)) {
+            QString fmd = "mv %1 %2";
+            QString cmd = fmd.arg(dir+fn, dir+"logo.png");
+            system(cmd.toStdString().c_str());
+        }
+    }
 }
 
 void Cfg_devParam::initialParam()
@@ -116,5 +137,6 @@ void Cfg_devParam::initialParam()
     devNumRead(cfg->nums);
     uutInfoRead(cfg->uut);
     devParamRead(cfg->param);
+    standNeutral(cfg->param);
 }
 
