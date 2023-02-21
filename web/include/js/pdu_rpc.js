@@ -62,7 +62,7 @@ class JsonRpc {
     }
 
     static socket_close(evt) {
-        alert('json rpc websocket close');
+        //alert('json rpc websocket close');
     }    
 
     // 打开Websocket
@@ -93,7 +93,11 @@ class JsonRpc {
         var ret = true;
         if(this.ws.readyState == WebSocket.OPEN){     
             this.ws.send(msg);
-        } else ret = false;
+        } else {
+            ret = false;
+            this.ws.close();
+            this.ws = this.socket_open(); 
+        }
         return ret;
     }
 
