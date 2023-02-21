@@ -65,15 +65,21 @@ class JsonRpc {
         //alert('json rpc websocket close');
     }    
 
+    static socket_error(evt) {
+        //alert('json rpc websocket error');
+    }  
+
     // 打开Websocket
     socket_open() {        
         var url = this.rpc_url();
         var ws = new WebSocket(url);
-        ws.onclose =  function (evt) {JsonRpc.socket_close(evt);};    
+        ws.onclose = function (evt) {JsonRpc.socket_close(evt);};    
+        ws.onerror = function (evt) {JsonRpc.socket_error(evt);};   
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
         ws.onopen = function () {JsonRpc.socket_req();};
         return ws;
     }
+    
     static socket_req(){
         var method = "pduReadParam"; 
         var params = [0, 13, 10, 0, 0];
@@ -88,6 +94,7 @@ class JsonRpc {
         params = [0, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
     }
+
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
