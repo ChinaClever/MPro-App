@@ -295,6 +295,32 @@
 			}
 			rating_[num] = stat;
 		}
+		function upload_data(){
+			let  key = document.getElementById("info").value;
+			if(key != ""){
+				let fileObj = document.getElementById('inputkey').files[0];
+				if (!fileObj) return;
+				var f = fileObj, r = new FileReader();
+				r.readAsArrayBuffer(f);
+				r.onload = function() {
+					document.getElementById('inputkey').value = '';
+					document.getElementById('loading').innerText = 'Uploading...';
+					document.getElementById('loading').style.color = 'red';
+					fetch('/upload_logo?name=' + encodeURIComponent(f.name), {
+					method: 'POST',
+					body: r.result,
+					}).then(function(res) {
+					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
+					document.getElementById('loading').style.color = 'green';
+					document.getElementById("info").value = '';
+					flash_data();
+					});
+				};
+			}
+		}
+		function chosefile(){
+			document.getElementById("info").value = document.getElementById("inputkey").value;
+		}
 		function Set(){
 			for(let  i = 1;i<=output_num;i++){
 				pdu_cfg_.setData(output,cur_,2,i,rating_[i]);

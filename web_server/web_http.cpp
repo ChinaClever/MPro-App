@@ -217,15 +217,15 @@ void Web_Http::mgr_upload_small_file(struct mg_connection **c , struct mg_http_m
 
 void Web_Http::mgr_upload_big_file(struct mg_connection **c,struct mg_http_message **hm ,int *state ,FILE **fp,const char *path , char *file_path)
 {
-    //MG_INFO(("Got chunk len %lu", (unsigned long) (*hm)->chunk.len));
-    //MG_INFO(("Query string: [%.*s]", (int) (*hm)->query.len, (*hm)->query.ptr));
-    //MG_INFO(("Chunk data:\n%.*s", (int) (*hm)->chunk.len, (*hm)->chunk.ptr));
+    MG_INFO(("Got chunk len %lu", (unsigned long) (*hm)->chunk.len));
+    MG_INFO(("Query string: [%.*s]", (int) (*hm)->query.len, (*hm)->query.ptr));
+    MG_INFO(("Chunk data:\n%.*s", (int) (*hm)->chunk.len, (*hm)->chunk.ptr));
 
-    //printf("mgr_upload_big_file \n");
+    printf("mgr_upload_big_file \n");
     if(*state == 0){
         char name[FILE_LEN];
         mg_http_get_var(&(*hm)->query, "name", name, sizeof(name));
-//        printf("%s \n", name);
+        printf("%s \n", name);
         if (name[0] == '\0') {
             mg_http_reply(*c, 400, "", "%s", "name required");
         } else {
@@ -245,7 +245,7 @@ void Web_Http::mgr_upload_big_file(struct mg_connection **c,struct mg_http_messa
         *state = 0;//
         fclose(*fp);//
         *fp = NULL;//
-        //MG_INFO(("Last chunk received, sending response"));
+        MG_INFO(("Last chunk received, sending response"));
         mg_http_reply(*c, 200, "", "ok (chunked)\n");
         if(mg_http_match_uri(*hm, "/upload_fw")) {
             Web_Obj::bulid()->app_upgrade(file_path);

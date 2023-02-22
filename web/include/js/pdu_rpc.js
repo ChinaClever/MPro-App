@@ -375,7 +375,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(33, fcs);
     }
     udpPush(){
-        for(let i=1;i<6;i++){
+        for(let i=1;i<5;i++){
             this.getCfgIds(18, i, 1, 4);
         }
         let fcs = [8,9];
@@ -435,7 +435,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgIds(44, 5, 1, 4);
     }
     sshCfg(){
-        var fcs = [1,2,3,4,5];
+        var fcs = [1,2,3,4];
         this.getCfgList(45, fcs);
     }
     syslogCfg(){
