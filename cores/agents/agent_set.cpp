@@ -189,7 +189,7 @@ bool Agent_Set::ctrlOutput(const QVariant &value)
     unit.txType = DTxType::TxSnmp;
     uchar v=1; sIndex *it = &mIndex;
 
-    if(it->type) {
+    if(2 == it->type) {
         unit.topic = DTopic::Ele;
     } else {
         switch (it->subtopic) {

@@ -8,6 +8,7 @@ public:
     Set_Maintain();
 
     bool syscmd(int fc);
+    bool factoryRestore();
     QString backups(int fc);
     bool restores(int fc, const QVariant &v);
 
@@ -17,7 +18,6 @@ private:
     bool restory(const QString &fn);
     bool profileRestore(const QString &fn);
     bool batchRestore(const QString &fn);
-    bool factoryRestore();
 };
 
 #endif // SET_MAINTAIN_H

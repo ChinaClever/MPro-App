@@ -273,6 +273,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("group_en", it.param.groupEn/r);
     obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
+    obj.insert("stand_neutral", it.param.standNeutral/r);
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 
@@ -285,9 +286,9 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("loop_start", loopStart);
 
     QJsonArray loops;
-    for(uint i=0; i<it.nums.boardNum; ++i) {
+    for(uint i=0; i<LOOP_NUM; ++i) {
         int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
-        loops.append(num);
+        if(i<it.nums.loopNum) loops.append(num+1); else loops.append(0);
     } obj.insert("loop_array", loops);
 
     QJsonArray ops;

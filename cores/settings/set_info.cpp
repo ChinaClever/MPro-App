@@ -67,7 +67,8 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 14: ret = it->backlightType; break;
     case 15: ret = it->backlightTime; break;
     case 16: App_Core::bulid()->beep_once(); break;
-    case 21: ret = it->jsonContent; break;
+    case 17: ret = it->jsonContent; break;
+    case 21: ret = it->standNeutral; break;
     default: cout << type; break;
     }
 
@@ -93,6 +94,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 14: key = "backlightType"; it->backlightType = value; break;
     case 15: key = "backlightTime"; it->backlightTime = value; break;
     case 16: App_Core::bulid()->beep_once(); break;
+    case 17: key = "standNeutral"; it->standNeutral = value; break;
     case 21: key = "jsonContent"; it->jsonContent = value; break;
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
@@ -114,7 +116,7 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
     case 6: value = dev->boards[it.id]; break;
-    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1;  break;
+    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1; break;
     case 11: value = dev->loopStarts[it.id]+1;  break;
     case 12: value = dev->loopEnds[it.id]+1;  break;
     default: cout << it.fc; break;

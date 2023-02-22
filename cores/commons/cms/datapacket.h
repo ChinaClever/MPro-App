@@ -225,10 +225,10 @@ struct sParameter {
     uint language; // 0 中文 1 英文
     uint devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uint cascadeAddr; // 级联地址
-    uint  modbusRtuBr; // Modbus-Rtu 波特率
+    uint modbusRtuBr; // Modbus-Rtu 波特率
     uint modbusRtuAddr; // Modbus-Rtu 地址
     uint buzzerSw; // 蜂鸣器开关
-    uint  buzzerSec; // 消音时间
+    uint buzzerSec; // 消音时间
     uint drySw; // 报警干接点开关
     uint isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
@@ -242,7 +242,8 @@ struct sParameter {
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
     uint jsonCompress; // 0：不压缩 1：压缩
-    uint reserve[19];
+    uint standNeutral; // 0-标准,1-中性
+    uint reserve[18];
 };
 
 struct sRunTime
