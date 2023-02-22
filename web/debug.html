@@ -295,6 +295,51 @@
 			}
 			rating_[num] = stat;
 		}
+		var setStatus = function(text,id,ok) {
+			document.getElementById(id).innerText = text;
+			if(ok){
+				document.getElementById(id).style.color = 'green';
+			}else{
+				document.getElementById(id).style.color = 'red';
+			}
+				
+		};
+		var sendFileData = function(name, data, chunkSize,id){
+			var sendChunk = function(offset) {
+				var chunk = data.subarray(offset, offset + chunkSize) || '';
+				var opts = {method: 'POST', body: chunk};
+				var url = '/upload_logo?offset=' + offset + '&name=' + encodeURIComponent(name);
+				var ok = true;
+				setStatus(
+					'Uploading ' + name + ', bytes ' + offset + '..' +
+					(offset + chunk.length) + ' of ' + data.length,id,ok);
+				fetch(url, opts)
+					.then(function(res) {
+					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
+					ok = res.ok;
+					return res.text();
+					})
+					.then(function(text) {
+					if (!ok) setStatus('Error: ' + text,id,ok);
+					});
+			};
+			sendChunk(0);
+		};
+		function upload_data(){
+			let  key = document.getElementById("info").value;
+			if(key != ""){
+				let fileObj = document.getElementById('inputkey').files[0];
+				if (!fileObj) return;
+				var f = fileObj, r = new FileReader();
+				r.readAsArrayBuffer(f);
+				r.onload = function() {
+					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
+				};
+			}
+		}
+		function chosefile(){
+			document.getElementById("info").value = document.getElementById("inputkey").value;
+		}
 		function Set(){
 			for(let  i = 1;i<=output_num;i++){
 				pdu_cfg_.setData(output,cur_,2,i,rating_[i]);

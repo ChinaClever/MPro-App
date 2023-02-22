@@ -196,16 +196,26 @@
 		}
 		function Cked(ckd)
 		{
-			var stat=0,group = 0;
-			var type1 = ckd.id.substr(0,1);
-			var num = parseInt(ckd.id.slice(1))+1;
-				group = type1.charCodeAt() - 'c'.charCodeAt();
-				if(ckd.checked == true){
-					stat = '1';
-				}else{
-					stat = '0';
+			let stat=0,group = 0;
+			let type1 = ckd.id.substr(0,1);
+			let type_;
+			let num = parseInt(ckd.id.slice(1))+1;
+			group = type1.charCodeAt() - 'c'.charCodeAt();
+			if(ckd.checked == true){
+				stat = '1';
+				for(i = 0;i<group_num;i++){
+					type_ = String.fromCharCode('c'.charCodeAt()+ i);
+					if(i != group){
+						if(document.getElementById(type_+ (num - 1)).checked == true){
+							document.getElementById(type_+ (num - 1)).checked = false;
+							pdu_cfg.setCfg(26,i+1,'0',num,addr);
+						}
+					}
 				}
-				pdu_cfg.setCfg(26,group+1,stat,num,addr);
+			}else{
+				stat = '0';
+			}
+			pdu_cfg.setCfg(26,group+1,stat,num,addr);
 		}
 		function FlashHtml(par){
 			par.parentNode.parentNode.parentNode.remove();
@@ -220,27 +230,27 @@
 			if(rows == 0){
 				thead = '<tr><td width ="6%" id="lang_4">序号</td>\
 					<td width ="30%" id="lang_5">单元名称</td>\
+					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[8] +'</td></tr>';
+					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td></tr>';
 			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="6%" id="lang_4">序号</td>\
 					<td width ="30%" id="lang_5">单元名称</td>\
+					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
 					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[8] +'</td></tr>';
+					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';

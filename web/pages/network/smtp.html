@@ -25,6 +25,9 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left smtp"></table>
 					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left recv_email"></table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -78,19 +81,21 @@
 			lang[11] = ["SMTP端口:","","","",""];
 			lang[12] = ["工作模式:","","","",""];
 			lang[13] = ["错误状态:","","","",""];
-			lang[14] = ["禁用","","","",""];
-			lang[15] = ["启用","","","",""];
+			lang[14] = ["收件箱设置","","","",""];
+			lang[15] = ["禁用","","","",""];
+			lang[16] = ["启用","","","",""];
 
-			mode_set[0] = lang[14][language];
-			mode_set[1] = lang[15][language];
+			mode_set[0] = lang[15][language];
+			mode_set[1] = lang[16][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<14;j++){
+			for(let j = 1;j<15;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
 		setTimeout(function(){
 			$('.smtp').html(buildTable());
+			$('.recv_email').html(buildTableRecv());
 			lang_fun();
 			read_data();
 			showdata();
@@ -169,6 +174,24 @@
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><input id = "SmtpSendPsd" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_11" ></td>';
+			tbody += '<td><input id = "SmtpPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_12"></td>';
+			tbody += '<td><select id ="SmtpMode" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_name.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_13"></td>';
+			tbody += '<td id = "SmtpState"></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableRecv() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_14" ></td>\
+			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr1" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
@@ -181,17 +204,6 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_11" ></td>';
-			tbody += '<td><input id = "SmtpPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_12"></td>';
-			tbody += '<td><select id ="SmtpMode" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_name.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_name[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_13"></td>';
-			tbody += '<td id = "SmtpState"></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

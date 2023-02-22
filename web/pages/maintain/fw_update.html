@@ -157,6 +157,36 @@
 		}
 		$('.load').html(buildTable());
 		lang_fun();
+		var setStatus = function(text,id,ok) {
+			document.getElementById(id).innerText = text;
+			if(ok){
+				document.getElementById(id).style.color = 'green';
+			}else{
+				document.getElementById(id).style.color = 'red';
+			}
+				
+		};
+		var sendFileData = function(name, data, chunkSize,id){
+			var sendChunk = function(offset) {
+				var chunk = data.subarray(offset, offset + chunkSize) || '';
+				var opts = {method: 'POST', body: chunk};
+				var url = '/upload_fw?offset=' + offset + '&name=' + encodeURIComponent(name);
+				var ok = true;
+				setStatus(
+					'Uploading ' + name + ', bytes ' + offset + '..' +
+					(offset + chunk.length) + ' of ' + data.length,id,ok);
+				fetch(url, opts)
+					.then(function(res) {
+					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
+					ok = res.ok;
+					return res.text();
+					})
+					.then(function(text) {
+					if (!ok) setStatus('Error: ' + text,id,ok);
+					});
+			};
+			sendChunk(0);
+		};
 		function upload_data(){
 			let  key = document.getElementById("info").value;
 			if(key != ""){
@@ -165,18 +195,7 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
-					document.getElementById('inputkey').value = '';
-					document.getElementById('loading').innerText = 'Uploading...';
-					document.getElementById('loading').style.color = 'red';
-					fetch('/upload_fw?name=' + encodeURIComponent(f.name), {
-					method: 'POST',
-					body: r.result,
-					}).then(function(res) {
-					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
-					document.getElementById('loading').style.color = 'green';
-					document.getElementById("info").value = '';
-					flash_data();
-					});
+					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
 				};
 			}
 		}

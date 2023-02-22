@@ -111,20 +111,24 @@
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
-		var setStatus = function(text , ok , it) {
-			it.innerText = text;
-			if(ok) it.style.color = 'green';
-			else it.style.color = 'red';
+		var setStatus = function(text,id,ok) {
+			document.getElementById(id).innerText = text;
+			if(ok){
+				document.getElementById(id).style.color = 'green';
+			}else{
+				document.getElementById(id).style.color = 'red';
+			}
+				
 		};
-		var sendFileData = function(name, data, chunkSize , it) {
+		var sendFileData = function(name, data, chunkSize,id){
 			var sendChunk = function(offset) {
 				var chunk = data.subarray(offset, offset + chunkSize) || '';
 				var opts = {method: 'POST', body: chunk};
 				var url = '/upload?offset=' + offset + '&name=' + encodeURIComponent(name);
-				var ok;
+				var ok = true;
 				setStatus(
 					'Uploading ' + name + ', bytes ' + offset + '..' +
-					(offset + chunk.length) + ' of ' + data.length , ok , it);
+					(offset + chunk.length) + ' of ' + data.length,id,ok);
 				fetch(url, opts)
 					.then(function(res) {
 					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
@@ -132,7 +136,7 @@
 					return res.text();
 					})
 					.then(function(text) {
-					if (!ok) setStatus('Error: ' + text ,ok , it);
+					if (!ok) setStatus('Error: ' + text,id,ok);
 					});
 			};
 			sendChunk(0);
@@ -146,19 +150,7 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
-					let it = document.getElementById('loading');
-    				sendFileData(f.name, new Uint8Array(r.result), 2048 , it);
-					// document.getElementById('inputkey').value = '';
-					// document.getElementById('loading').innerText = 'Uploading...';
-					// document.getElementById('loading').style.color = 'red';
-					// fetch('/upload?offset=' + offset + '&name=' + encodeURIComponent(name), {
-					// method: 'POST',
-					// body: r.result,
-					// }).then(function(res) {
-					// document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
-					// document.getElementById('loading').style.color = 'green';
-					// document.getElementById("info").value = '';
-					//});
+    				sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
 				};
 			}
 			setTimeout(function(){
@@ -168,20 +160,7 @@
 					var f = fileObj, r = new FileReader();
 					r.readAsArrayBuffer(f);
 					r.onload = function() {
-						let it = document.getElementById('loading1');
-
-    					sendFileData(f.name, new Uint8Array(r.result), 2048 , it);
-						// document.getElementById('inputcert').value = '';
-						// document.getElementById('loading1').innerText = 'Uploading...';
-						// document.getElementById('loading1').style.color = 'red';
-						// fetch('/upload?name=' + encodeURIComponent(f1.name), {
-						// method: 'POST',
-						// body: r.result,
-						// }).then(function(res) {
-						// document.getElementById('loading1').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
-						// document.getElementById('loading1').style.color = 'green';
-						// document.getElementById("info1").value = '';
-						// });
+    					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading1");
 					};
 				}
 			},500);
