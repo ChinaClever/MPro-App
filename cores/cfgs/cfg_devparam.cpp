@@ -110,26 +110,6 @@ void Cfg_devParam::devParamWrite(const QString& key, const QVariant &v, const QS
      cfg->writeCfg(key, v, g);
 }
 
-void Cfg_devParam::standNeutral(sParameter &it)
-{
-    if(it.standNeutral) {
-        QString dir = "/usr/data/clever/cfg/";
-        QString fn = "logo.png";
-        if(QFile::exists(dir+fn)) {
-            QString fmd = "mv %1 %2";
-            QString cmd = fmd.arg(dir+fn, dir+"logo.back");
-            system(cmd.toStdString().c_str());
-        }
-    } else {
-        QString dir = "/usr/data/clever/cfg/";
-        QString fn = "logo.back";
-        if(QFile::exists(dir+fn)) {
-            QString fmd = "mv %1 %2";
-            QString cmd = fmd.arg(dir+fn, dir+"logo.png");
-            system(cmd.toStdString().c_str());
-        }
-    }
-}
 
 void Cfg_devParam::initialParam()
 {
@@ -137,6 +117,5 @@ void Cfg_devParam::initialParam()
     devNumRead(cfg->nums);
     uutInfoRead(cfg->uut);
     devParamRead(cfg->param);
-    standNeutral(cfg->param);
 }
 
