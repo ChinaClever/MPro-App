@@ -68,7 +68,7 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     int size;
-    uint en[PACK_ARRAY_SIZE];
+    uint en[PACK_ARRAY_SIZE]; // 关键设备保护 0 未启用  1 启用
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
     uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
@@ -80,7 +80,8 @@ struct sRelayUnit
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
     uint maxCnt[PACK_ARRAY_SIZE]; // 继电器最大控制次数
-    uint reserve[5][PACK_ARRAY_SIZE]; // 预留
+    uint lifeEn[PACK_ARRAY_SIZE]; // 继电器寿命次数报警使能
+    uint reserve[4][PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -445,7 +446,7 @@ struct sRelay
 {
     enum Type{Breaker, Relay};
     enum Mode{Standard, EnOffALarm};
-    enum Alarm{NoAlarm, OffALarm};
+    enum Alarm{NoAlarm, OffALarm, LifeAlarm};
     enum State{Off, On, Reset};
 };
 #endif

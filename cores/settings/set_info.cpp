@@ -67,8 +67,8 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 14: ret = it->backlightType; break;
     case 15: ret = it->backlightTime; break;
     case 16: App_Core::bulid()->beep_once(); break;
-    case 17: ret = it->jsonContent; break;
-    case 21: ret = it->standNeutral; break;
+    case 17: ret = it->standNeutral; break;
+    case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }
 

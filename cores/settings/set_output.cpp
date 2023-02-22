@@ -51,8 +51,9 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
-    if(it->en[id] || unit.txType == DTxType::TxWeb) {
+    if((0==it->en[id]) || (unit.txType == DTxType::TxWeb)) {
         OP_Core::bulid()->relayCtrl(unit.id, unit.value);
+        if(unit.value) it->cnt[id] += 1;
         it->sw[id] = unit.value;
     } else ret = false;
 
@@ -65,8 +66,9 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
     bool ret = false; int start = unit.type-1; int end = start + unit.id;
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
-        if(it->en[i] || unit.txType == DTxType::TxWeb) ret = true;
-        else {ret = false; break;}
+        if((0==it->en[i]) || (unit.txType == DTxType::TxWeb)){
+            if(unit.value) it->cnt[i] += 1; ret = true;
+        } else {ret = false; break;}
     }
 
     if(ret && unit.id) OP_Core::bulid()->relaysCtrl(start, end, unit.value);
@@ -82,6 +84,9 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
         for(int i=0; i<GROUP_NUM; ++i)
             ids << Data_Core::bulid()->outletByGroup(i);
     }
+
+    sRelayUnit *relay = &(cm::masterDev()->output.relay);
+    foreach (const auto &i, ids) if(unit.value) relay->cnt[i] += 1;
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
     if(it->en[id] || unit.txType == DTxType::TxWeb) {

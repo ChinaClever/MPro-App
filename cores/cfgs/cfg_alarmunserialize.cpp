@@ -32,6 +32,7 @@ void Cfg_AlarmUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayI
     unit.en[id] = it.en;
     unit.cnt[id] = it.cnt;
     unit.maxCnt[id] = it.maxCnt;
+    unit.lifeEn[id] = it.lifeEn;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.resetDelay[id] = it.resetDelay;
