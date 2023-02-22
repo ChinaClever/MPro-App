@@ -178,10 +178,14 @@
 			},500);
 		}
 		function Set(){
-			if(confirm("请确认是否生效当前设置。")){
+			if(confirm("修改当前账户，需要重启之后生效，请确认是否重启？")){
 				pdu_cfg.setCfg(16,17,0,0,addr);
 				flash_html();
-			}else{}
+				pdu_cfg.setCfg(96,1,0,0,addr);
+			}else{
+				pdu_cfg.setCfg(16,17,0,0,addr);
+				flash_html();
+			}
 		}
 		function buildTableV1_2() {
 			var thead = '',tbody = '';
