@@ -123,20 +123,12 @@
 					}).then(function(res) {
 					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
 					document.getElementById('loading').style.color = 'green';
-<<<<<<< HEAD
 					document.getElementById("info").value = '';
 					});
 				};
 			}
 			setTimeout(function(){
 				if(cert != ""){
-=======
-					document.getElementById('info').value= '';
-					});
-				};
-			}
-			setTimeout(function(){if(cert != ""){
->>>>>>> pmd
 					let fileObj = document.getElementById('inputcert').files[0];
 					if (!fileObj) return;
 					var f = fileObj, r = new FileReader();
@@ -151,11 +143,7 @@
 						}).then(function(res) {
 						document.getElementById('loading1').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
 						document.getElementById('loading1').style.color = 'green';
-<<<<<<< HEAD
 						document.getElementById("info1").value = '';
-=======
-						document.getElementById('info1').value= '';
->>>>>>> pmd
 						});
 					};
 				}
