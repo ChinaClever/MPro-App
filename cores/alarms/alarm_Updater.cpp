@@ -7,6 +7,7 @@
 #include "cfg_core.h"
 #include "log_core.h"
 #include "odbc_core.h"
+#include "alarm_log.h"
 
 Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
@@ -34,6 +35,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
         } else alarm = sRelay::NoAlarm; index.id = i;
         if((0==alarm) && it.lifeEn[i]) if(it.cnt[i] > it.maxCnt[i]) alarm = sRelay::LifeAlarm;
+        if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
     }
@@ -68,6 +70,8 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
             it.alarm[i] = alarm;
         }
     } else it.cnt[i] = 0;
+
+    if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
     if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
 
     return ret;
@@ -131,6 +135,7 @@ uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
         else if(value < it.min) alarm = AlarmCode::Min;
         else {alarm = AlarmCode::Ok;} index.id = 0;
         if(it.alarm != alarm) emit alarmSig(index, alarm);
+        if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
         it.alarm = alarm; ret |= alarm;
     }
     return ret;
@@ -178,6 +183,7 @@ bool Alarm_Updater::upSensorStatus(sDataItem &index, uint *ptr, int id)
         uchar alarm = 0; index.id = id;
         if(ptr[id] == 2) alarm = 1; else alarm = 0;
         if(ptr[id+2] != alarm) emit alarmSig(index, alarm);
+        if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
         ptr[id+2] = alarm; ret |= alarm;
     }
     return ret;
@@ -234,7 +240,8 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
-    bool ret = false; uchar *ptr = &cm::masterDev()->status;
+    bool ret = false;
+    uchar *ptr = &cm::masterDev()->status;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
     if(dev->offLine || addr==0) {
@@ -245,7 +252,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         if(dev->dtc.fault && !dev->alarm) dev->status = 2;
         if(dev->offLine <= 1) {dev->status = 3; if(!(*ptr)) *ptr=2;}
         dev->cfg.param.runStatus = dev->status;
-    }
+    } if(!ret) Alarm_Log::bulid()->currentAlarmClear(addr);
     return ret;
 }
 
