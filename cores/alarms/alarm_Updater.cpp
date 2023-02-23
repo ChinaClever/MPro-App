@@ -260,6 +260,7 @@ void Alarm_Updater::run()
 {
     int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
+    Alarm_Log::bulid()->generateQRcode();
     Log_Core::bulid()->log_addCnt();
     Odbc_Core::bulid()->addCnt();
 }

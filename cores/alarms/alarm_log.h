@@ -14,6 +14,7 @@ public:
     QString getCurrentAlarm(int addr);
     void currentAlarmClear(int addr){m_currentAlarm[addr].clear();}
     void appendAlarm(const sDataItem &index, uchar value);
+    void generateQRcode();
 
 protected slots:
     void alarmSlot(const sDataItem &index, uchar value);

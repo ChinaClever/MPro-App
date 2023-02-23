@@ -70,6 +70,16 @@ bool cm::pingNet(const QString& ip)
     return bPingSuccess;
 }
 
+bool cm::qrcodeGenerator(const QString& msg)
+{
+    QString fn = "/usr/data/clever/cfg/qrcode.png";
+    QString cmd = "qrencode -o %1 -s 6 '%2'";
+    QString qr = cmd.arg(fn, msg);
+    system(qr.toUtf8().data());
+    //qDebug() << qr;
+    return true;
+}
+
 /***
   *判断一个字符串是否为纯数字
   */

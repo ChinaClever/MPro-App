@@ -423,7 +423,7 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap,
-             ELog=81, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
+             EAlarm=80, ELog, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C
