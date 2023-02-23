@@ -47,11 +47,15 @@
 		setTimeout(function () {
 			PduMetaData.meta_workDown(addr_);
 		}, 300);
-		window.addEventListener('popstate',function(e){
-			e.preventDefault();
-			console.log("stop back");
+		window.history.pushState(null,null,document.URL);
+		window.addEventListener('popstate',function(){
+			window.history.pushState(null,null,document.URL);
 		});
-		window.removeEventListener('popstate',this.popstateFun);
+		// window.addEventListener('popstate',function(e){
+		// 	e.preventDefault();
+		// 	console.log("stop back");
+		// });
+		// window.removeEventListener('popstate',this.popstateFun);
 		function LogOut() {
 			window.opener = null;
 			window.open('login.html', '_self');
