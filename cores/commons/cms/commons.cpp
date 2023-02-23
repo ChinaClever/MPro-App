@@ -76,7 +76,7 @@ bool cm::qrcodeGenerator(const QString& msg)
     QString cmd = "qrencode -o %1 -s 6 '%2'";
     QString qr = cmd.arg(fn, msg);
     system(qr.toUtf8().data());
-    //qDebug() << qr;
+    cout << qr;
     return true;
 }
 
