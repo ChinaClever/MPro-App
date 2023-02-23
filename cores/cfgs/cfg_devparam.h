@@ -18,7 +18,6 @@ private:
     void devNumRead(sDevNums &it);
     void uutInfoRead(sUutInfo &uut);
     void devParamRead(sParameter &it);
-    void standNeutral(sParameter &it);
 
 private:
     Cfg_Obj *mDevCfg;

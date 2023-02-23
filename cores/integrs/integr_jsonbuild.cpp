@@ -139,6 +139,10 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
         arrayAppend(it.powerUpDelay, size, key+"_powerup_delay", json);
         arrayAppend(it.overrunOff, size, key+"_overrun_off", json);
         arrayAppend(it.timingEn, size, key+"_timing_en", json);
+
+        arrayAppend(it.cnt, size, key+"_use_cnt", json);
+        arrayAppend(it.maxCnt, size, key+"_max_cnt", json);
+        arrayAppend(it.lifeEn, size, key+"_life_alarm", json);
         strListAppend(it.timingOn, size, key+"_timing_on", json);
         strListAppend(it.timingOff, size, key+"_timing_off", json);
     }

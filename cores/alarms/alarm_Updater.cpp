@@ -33,6 +33,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
         if(state == sRelay::EnOffALarm) {
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
         } else alarm = sRelay::NoAlarm; index.id = i;
+        if((0==alarm) && it.lifeEn[i]) if(it.cnt[i] > it.maxCnt[i]) alarm = sRelay::LifeAlarm;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
     }

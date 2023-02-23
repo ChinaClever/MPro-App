@@ -31,6 +31,7 @@ struct _sRelayIt
     uchar resetDelay;
     uchar overrunOff;
     uchar timingEn;
+    uchar lifeEn;
     uchar reserve[6]; // 预留
     char timingOn[NAME_SIZE];
     char timingOff[NAME_SIZE];

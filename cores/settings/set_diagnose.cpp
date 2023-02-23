@@ -27,11 +27,12 @@ void Set_Diagnose::diasCopy()
     QString cmd = "mkdir -p " + dir; cm::execute(cmd);
     cmd = "rm -rf %1/*"; cm::execute(cmd.arg(dir));
     cmd = "mkdir -p " + dir +"/metadata";
-    cm::execute(cmd.toLocal8Bit().data());
-    Integr_JsonBuild::bulid()->saveJsons();
+    system(cmd.toStdString().c_str());
 
+    Integr_JsonBuild::bulid()->saveJsons();
     QString fmd = "cp -af %1 " + dir +"/";
-    cmd = fmd.arg("/usr/data/*"); cm::execute(cmd);
+    cmd = fmd.arg("/usr/data/*");
+    system(cmd.toStdString().c_str());
 }
 
 void Set_Diagnose::diascmds()
@@ -103,7 +104,7 @@ QVariant Set_Diagnose::net_diagnoseCfg(int fc)
 
     case 6: res = it->routeHost;  break;
     case 7: res = it->timeout; break;
-    case 8: res = cm::execute(QString("traceroute -w %1 %2").arg(it->timeout).arg(it->routeHost));  break;
+    case 8: res = cm::execute(QString("traceroute -w %1 %2").arg(it->timeout).arg(it->routeHost)); break;
     default: cout << fc; break;
     }
 

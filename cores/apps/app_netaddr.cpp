@@ -116,21 +116,15 @@ void App_NetAddr::inet_setIpV4()
             system(str.toStdString().c_str());
         }
 
-        if(dns.size()) {
-            if(QFile::exists("netcfg")) {
-                cmd = "netcfg -d %1";
-                str = cmd.arg(dns);
-            } else {
-                if(!QFile::exists("/tmp/resolv.conf")) {system("touch /tmp/resolv.conf");cm::mdelay(1);}
-                cmd = "sed -i '1cnameserver %1' /tmp/resolv.conf";
-                str = cmd.arg(dns);
-            } qDebug() << str;
+        if(dns.size() || dns2.size()) {
+            cmd = "netcfg -d \"%1 %2\"";
+            str = cmd.arg(dns, dns2); qDebug() << str;
             system(str.toStdString().c_str());
         }
 
         //if(dns2.size()) {
         //    cmd = "sed -i '2cnameserver %1' /tmp/resolv.conf";;
-        //    str = cmd.arg(dns); qDebug() << str;
+        //   str = cmd.arg(dns); qDebug() << str;
         //    system(str.toStdString().c_str());
         //}
     }
@@ -172,16 +166,22 @@ void App_NetAddr::inet_setIpV6()
             system(str.toStdString().c_str());
         }
 
-        if(dns.size()) {
-            if(QFile::exists("netcfg")) {
-                cmd = "netcfg -d %1/%2 eth0";
-                str = cmd.arg(dns).arg(mask);
-            } else {
-                cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
-                str = cmd.arg(dns);
-            }qDebug() << str;
+        if(dns.size() || dns2.size()) {
+            cmd = "netcfg -d \"%1 %2\"";
+            str = cmd.arg(dns, dns2); qDebug() << str;
             system(str.toStdString().c_str());
         }
+
+        //if(dns.size()) {
+        //    if(QFile::exists("netcfg")) {
+        //        cmd = "netcfg -d %1/%2 eth0";
+        //        str = cmd.arg(dns).arg(mask);
+        //    } else {
+        //        cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
+        //        str = cmd.arg(dns);
+        //    }qDebug() << str;
+        //    system(str.toStdString().c_str());
+        //}
 
         //if(dns2.size()) {
         //    cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
@@ -239,7 +239,7 @@ void App_NetAddr::inet_dnsCfg()
 
 void App_NetAddr::inet_updateInterface()
 {
-    sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg();
+    sNetInterface *net = &(cm::dataPacket()->net); //inet_dnsCfg();
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
 #if (QT_VERSION < QT_VERSION_CHECK(5,13,0))
