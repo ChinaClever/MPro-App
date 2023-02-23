@@ -121,9 +121,17 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				ParseData();
+				$('.table-striped').html(BuildTable(group_num));
+				LangFun();
+				ModeSet();
+				ShowData();
+			},500);
 		}
 		function BuildSel(rows)
 		{
@@ -319,7 +327,7 @@
 					<td width ="10%" id="lang_10"></td>\
 					<td width ="10%" id="lang_11"></td>\
 					<td width ="10%" id="lang_12"></td>\
-					<td width ="10%" id="lang_13"></td>';
+					<td width ="10%" id="lang_13"></td></tr>';
 			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
@@ -332,7 +340,7 @@
 					<td width ="10%" id="lang_10"></td>\
 					<td width ="10%" id="lang_11"></td>\
 					<td width ="10%" id="lang_12"></td>\
-					<td width ="10%" id="lang_13"></td>';
+					<td width ="10%" id="lang_13"></td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';

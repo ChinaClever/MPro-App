@@ -101,9 +101,9 @@ class JsonRpc {
         if(this.ws.readyState == WebSocket.OPEN){     
             this.ws.send(msg);
         } else {
-            ret = false;
-            this.ws.close();
-            this.ws = this.socket_open(); 
+            // ret = false;
+            // this.ws.close();
+            // this.ws = this.socket_open(); 
         }
         return ret;
     }

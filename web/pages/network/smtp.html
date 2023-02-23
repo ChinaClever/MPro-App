@@ -35,11 +35,16 @@
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/crypto-js.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		let addr = 0;
 		pdu_cfg.smtpCfg();
+		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
+		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
+		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+    	let hasher = CryptoJS.algo.SHA256.create();
 		let smtp_name = new Array("","SmtpEn","SmtpServer","SmtpSendUsr","SmtpSendPsd","SmtpRecvUsr","SmtpPort","SmtpMode","SmtpState");
 		var mode_set = new Array("","");
 		var mode_name = new Array("TCP","SSL","TLS");
@@ -51,6 +56,9 @@
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
+		function validataForm(opt){
+
+		}
 		function read_data(){
 			for(var j = 1;j<9;j++){
 				smtp_data[j] = new Array();
@@ -129,23 +137,31 @@
 			}
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
-				for(let i = 1;i<smtp_name.length;i++){
-					if(smtp_name[i] == btn.id){
-						pdu_cfg.setCfg(44,i,btn.value,0,addr);
+			for(let i = 1;i<smtp_name.length;i++){
+				let psd;
+				if(smtp_name[i] == btn.id){
+					if(smtp_name[i] == "SmtpSendPsd"){
+						psd = btn.value;
+						if(!pattern.test(psd)){
+							alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+							return ;
+						}else{
+							psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+							pdu_cfg.setCfg(44,i,psd,0,addr);
+						}
 					}else{
-						for(let k = 1;k<5;k++){
-							if((smtp_name[i] + k) == btn.id){
-								pdu_cfg.setCfg(44,i,btn.value,k,addr);
-							}
+						pdu_cfg.setCfg(44,i,btn.value,0,addr);
+					}
+				}else{
+					for(let k = 1;k<5;k++){
+						if((smtp_name[i] + k) == btn.id){
+							pdu_cfg.setCfg(44,i,btn.value,k,addr);
 						}
 					}
 				}
-				btn.blur();
-				flash_html();
-			}else{
-				showdata();
 			}
+			btn.blur();
+			flash_html();
 		}
 		function flash_html(){
 			pdu_cfg.smtpCfg();
@@ -172,7 +188,7 @@
 			tbody += '</td></tr>';
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "SmtpSendPsd" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '<td><form><input id ="SmtpSendPsd" onchange ="SetData(this)" type="password"  style ="width:24.5%" minlength="8" maxlength="16" autocomplete="off" onblur = "validataForm(this)" placeholder="密码"></form>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_11" ></td>';
 			tbody += '<td><input id = "SmtpPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';

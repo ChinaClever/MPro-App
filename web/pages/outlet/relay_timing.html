@@ -119,9 +119,18 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				ParseData();
+				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				LangFun();
+				ModeSet();
+				ShowData();
+				DateTime();
+			},500);
 		}
 		function BuildSel(rows)
 		{

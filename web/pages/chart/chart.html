@@ -147,6 +147,8 @@
 							}
 							topic_name_[0] = new Array(lang[15][language],lang[16][language],lang[17][language],lang[18][language]);
 							topic_name_[1] = new Array(lang[19][language],lang[20][language]);
+							topic_name_[2] = new Array(lang[24][language],lang[25][language],lang[26][language]);
+							topic_name_[3] = new Array(lang[25][language],lang[26][language]);
 							for(i = 0;i<phase_num;i++){
 								num_name_[0][i] = i+1;
 							}
@@ -186,8 +188,14 @@
 						function change(sel){
 							let i = parseInt(sel.value);
 							if(sel.id == get_arr[1]){
-								if(i < 5){
+								if(i<2){
 									$('.topicname').html(buildSel("topic",topic_name_[0].length,topic_name_[0]));
+									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
+								}else if(i == 2){
+									$('.topicname').html(buildSel("topic",topic_name_[2].length,topic_name_[2]));
+									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
+								}else if(i < 5){
+									$('.topicname').html(buildSel("topic",topic_name_[3].length,topic_name_[3]));
 									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
 								}else{
 									$('.topicname').html(buildSel("topic",topic_name_[1].length,topic_name_[1]));

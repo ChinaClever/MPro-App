@@ -128,9 +128,17 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				ParseData();
+				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				ShowData();
+				LangFun();
+				ModeSet();
+			},500);
 		}
 		function BuildSel(rows)
 		{
@@ -195,7 +203,7 @@
 				cs = document.getElementById('c'+(i -1));
 				ss = document.getElementById('e'+(i -1));
 				ms = document.getElementById('f'+(i -1));
-				if(pdu_data.pdu_data.output_item_list.relay_enable[i-1] == 0){
+				if(pdu_data.pdu_data.output_item_list.relay_enable[i-1] == 1){
 					ss.checked = false;
 				}
 				else{
@@ -252,9 +260,17 @@
 				sub = 2;
 			}
 			if(ckd.checked == true){
-				stat = '1';
+				if(sub == 8){
+					stat = '0';
+				}else{
+					stat = '1';
+				}
 			}else{
-				stat = '0';
+				if(sub == 8){
+					stat = '1';
+				}else{
+					stat = '0';
+				}
 			}
 			if(number == pdu_data.pdu_info.output_num +1){
 				number1 = 0;
