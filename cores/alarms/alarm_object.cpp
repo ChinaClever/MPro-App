@@ -206,7 +206,8 @@ bool Alarm_Object::relayUnitValue(sDataItem &index)
         case DSub::TimingEn: ptr = unit->timingEn; break;
         case DSub::RelayCnt: ptr = unit->cnt; break;
         case DSub::RelayEn: ptr = unit->en; break;
-        case DSub::DStamp: case DSub::DHda: break;
+        case DSub::DStamp: ptr = unit->maxCnt; break;
+        case DSub::DHda: ptr = unit->lifeEn; break;
         default: ret = false; break;
         }
     }

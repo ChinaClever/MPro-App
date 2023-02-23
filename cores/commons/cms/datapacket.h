@@ -68,7 +68,7 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     int size;
-    uint en[PACK_ARRAY_SIZE];
+    uint en[PACK_ARRAY_SIZE]; // 关键设备保护 0 未启用  1 启用
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
     uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
@@ -80,7 +80,8 @@ struct sRelayUnit
     char timingOn[PACK_ARRAY_SIZE][NAME_SIZE];
     char timingOff[PACK_ARRAY_SIZE][NAME_SIZE];
     uint maxCnt[PACK_ARRAY_SIZE]; // 继电器最大控制次数
-    uint reserve[5][PACK_ARRAY_SIZE]; // 预留
+    uint lifeEn[PACK_ARRAY_SIZE]; // 继电器寿命次数报警使能
+    uint reserve[4][PACK_ARRAY_SIZE]; // 预留
 };
 
 
@@ -225,10 +226,10 @@ struct sParameter {
     uint language; // 0 中文 1 英文
     uint devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
     uint cascadeAddr; // 级联地址
-    uint  modbusRtuBr; // Modbus-Rtu 波特率
+    uint modbusRtuBr; // Modbus-Rtu 波特率
     uint modbusRtuAddr; // Modbus-Rtu 地址
     uint buzzerSw; // 蜂鸣器开关
-    uint  buzzerSec; // 消音时间
+    uint buzzerSec; // 消音时间
     uint drySw; // 报警干接点开关
     uint isBreaker; // 0没有断路器 1有断路器
     uint screenAngle; // 屏幕方位角
@@ -242,7 +243,8 @@ struct sParameter {
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
     uint jsonCompress; // 0：不压缩 1：压缩
-    uint reserve[19];
+    uint standNeutral; // 0-标准,1-中性
+    uint reserve[18];
 };
 
 struct sRunTime
@@ -444,7 +446,7 @@ struct sRelay
 {
     enum Type{Breaker, Relay};
     enum Mode{Standard, EnOffALarm};
-    enum Alarm{NoAlarm, OffALarm};
+    enum Alarm{NoAlarm, OffALarm, LifeAlarm};
     enum State{Off, On, Reset};
 };
 #endif

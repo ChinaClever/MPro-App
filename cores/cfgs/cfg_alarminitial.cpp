@@ -85,8 +85,8 @@ void Cfg_AlarmInitial::initDevData(sDevData *dev)
     initObjData(dev->dual, OUTPUT_NUM, 20);
     initObjData(dev->group, GROUP_NUM, 14);
     initObjData(dev->output, OUTPUT_NUM, 10);
-    initRelayUnit(dev->dual.relay, OUTPUT_NUM);
-    initRelayUnit(dev->group.relay, GROUP_NUM);
+    //initRelayUnit(dev->dual.relay, OUTPUT_NUM);
+    //initRelayUnit(dev->group.relay, GROUP_NUM);
     initRelayUnit(dev->output.relay, OUTPUT_NUM);
     initTgObjData(dev->tg);
     initEnvData(dev->env);
@@ -95,7 +95,9 @@ void Cfg_AlarmInitial::initDevData(sDevData *dev)
 void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) {
-        it.en[i] = 1;
+        it.en[i] = 0;
+        it.lifeEn[i] = 1;
+        it.maxCnt[i] = 50000;
         it.resetDelay[i] = 5;
     }
 }

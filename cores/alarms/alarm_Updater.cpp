@@ -33,6 +33,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
         if(state == sRelay::EnOffALarm) {
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
         } else alarm = sRelay::NoAlarm; index.id = i;
+        if((0==alarm) && it.lifeEn[i]) if(it.cnt[i] > it.maxCnt[i]) alarm = sRelay::LifeAlarm;
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
         it.alarm[i] = alarm; ret |= alarm;
     }
@@ -56,10 +57,9 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
     if(value > it.max[i]) alarm = AlarmCode::Max;
-    if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
-    if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
+    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.min[i]) alarm = AlarmCode::Min;
-
+    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
@@ -68,7 +68,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
             it.alarm[i] = alarm;
         }
     } else it.cnt[i] = 0;
-    ret |= alarm;
+    if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
 
     return ret;
 }

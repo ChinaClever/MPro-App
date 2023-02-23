@@ -18,6 +18,10 @@
 	<script src="./include/js/pdu_rpc.js"></script>
 	<script src="./include/js/crypto-js.min.js"></script>
   <script>
+		window.history.pushState(null,null,document.URL);
+		window.addEventListener('popstate',function(){
+			window.history.pushState(null,null,document.URL);
+		});
     var obj = new PduCfgItem;
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;

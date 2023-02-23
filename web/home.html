@@ -586,18 +586,6 @@
 				}
 			}
 			for (let i = 0; i < head.length; i++) {
-				// if (sensor_info[i] == 2 || sensor_info[i] == 4) {
-				// 	document.getElementById('dat' + (63 + i)).bgColor = 'yellow';
-				// } else if (sensor_info[i] == 1 || sensor_info[i] == 8) {
-				// 	document.getElementById('dat' + (63 + i)).bgColor = 'red';
-				// }
-				// else if (sensor_info[i] == 65535) {
-				// 	document.getElementById('dat' + (63 + i)).color = 'green';
-				// 	sensor_info[i] = 0;
-				// }
-				// else {
-				// 	document.getElementById('dat' + (63 + i)).bgColor = '';
-				// }
 				if (i < 4) {//insert
 					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {
 						if (i % 2 == 0) {
@@ -618,9 +606,38 @@
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
-			// for (let i = 0; i < 5; i++) {
-			// 	document.getElementById('dat' + (71 + i)).innerHTML = system_info[i];
-			// }
+			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
+				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
+				}
+			}
+			for(let i = 0;i < loop_num;i++){
+				if(pdu_data.pdu_data.loop_item_list.breaker[i] == 0){
+					document.getElementById('dat' + (17 + 8*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (17 + 8*i)).bgColor = '';
+				}
+			}
+			for(let i = 0;i < phase_num;i++){
+				if(pdu_data.pdu_data.line_item_list.vol_alarm_status[i] == 2 || pdu_data.pdu_data.line_item_list.vol_alarm_status[i] == 4){
+					document.getElementById('dat' + (7 + 3*i)).style.backgroundColor = 'yellow';
+				}else if(pdu_data.pdu_data.line_item_list.vol_alarm_status[i] == 1 || pdu_data.pdu_data.line_item_list.vol_alarm_status[i] == 8){
+					document.getElementById('dat' + (7 + 3*i)).style.backgroundColor = 'red';
+				}else{
+					document.getElementById('dat' + (7 + 3*i)).style.backgroundColor ="";
+				}
+			}
 		}
 		function ModeSet(modesel) {
 			let ms = document.getElementById("sel");

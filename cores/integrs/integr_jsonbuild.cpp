@@ -139,6 +139,10 @@ void Integr_JsonBuild::relayUnit(const sRelayUnit &it, const QString &key, QJson
         arrayAppend(it.powerUpDelay, size, key+"_powerup_delay", json);
         arrayAppend(it.overrunOff, size, key+"_overrun_off", json);
         arrayAppend(it.timingEn, size, key+"_timing_en", json);
+
+        arrayAppend(it.cnt, size, key+"_use_cnt", json);
+        arrayAppend(it.maxCnt, size, key+"_max_cnt", json);
+        arrayAppend(it.lifeEn, size, key+"_life_alarm", json);
         strListAppend(it.timingOn, size, key+"_timing_on", json);
         strListAppend(it.timingOff, size, key+"_timing_off", json);
     }
@@ -273,6 +277,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("group_en", it.param.groupEn/r);
     obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
+    obj.insert("stand_neutral", it.param.standNeutral/r);
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 
@@ -285,9 +290,9 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("loop_start", loopStart);
 
     QJsonArray loops;
-    for(uint i=0; i<it.nums.boardNum; ++i) {
+    for(uint i=0; i<LOOP_NUM; ++i) {
         int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
-        loops.append(num+1);
+        if(i<it.nums.loopNum) loops.append(num+1); else loops.append(0);
     } obj.insert("loop_array", loops);
 
     QJsonArray ops;

@@ -33,6 +33,7 @@ void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
     it.size = unit.size;
     it.en = unit.en[id];
     it.cnt = unit.cnt[id];
+    it.lifeEn = unit.lifeEn[id];
     it.maxCnt = unit.maxCnt[id];
     it.offAlarm = unit.offAlarm[id];
     it.powerUpDelay = unit.powerUpDelay[id];

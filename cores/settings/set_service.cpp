@@ -137,7 +137,7 @@ QVariant Set_Service::sshCfg(int fc)
     case 3: ret = cfg->usr; break;
     case 4: ret = cfg->pwd; break;
     default: cout << fc; break;
-    }
+    } //cout << fc << ret;
 
     return ret;
 }

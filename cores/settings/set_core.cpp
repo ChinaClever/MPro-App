@@ -143,8 +143,8 @@ int Set_Core::setting(sDataItem &it)
                 ret = relaySet(it);
             } else {
                 ret = setAlarm(it);
-                if(ret) writeAlarm();
             }
+            if(ret) writeAlarm();
         }
 
         if(it.addr) {

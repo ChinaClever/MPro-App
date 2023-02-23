@@ -114,6 +114,7 @@ QString Alarm_Log::alarmRelay(uchar value)
     switch (value) {
     case sRelay::OffALarm: str = tr("断开"); break;
     case sRelay::NoAlarm: str = tr("恢复"); break;
+    case sRelay::LifeAlarm: str = tr("寿命"); break;
     }
     return str;
 }
