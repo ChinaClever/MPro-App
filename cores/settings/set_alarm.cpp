@@ -30,8 +30,7 @@ QString Set_Alarm::opSrc(uchar addr)
     } if(addr) {
         str = QStringLiteral("副机%1").arg(addr);
     } else str = QStringLiteral("本机");
-
-    return str;
+    return str+" ";
 }
 
 
