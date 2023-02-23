@@ -85,7 +85,7 @@ void Mb_Output::output_update()
     output_objUpdate();
     output_dataUpdate();
     output_alarmUpdate();
-    output_relayUpdate();
+    //output_relayUpdate();
     output_thresholdUpdate();
 }
 
