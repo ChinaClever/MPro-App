@@ -78,7 +78,7 @@ bool cm::qrcodeGenerator(const QString& msg)
     QString rm = "rm -f " +fn;
     system(rm.toUtf8().data());
     system(qr.toUtf8().data());
-    cout << qr;
+    //cout << qr;
     return true;
 }
 
