@@ -251,14 +251,9 @@ QVariant Set_Info::proStartupLog(const sCfgItem &it)
 
 bool Set_Info::qrcodeGenerator(const QString& msg)
 {
-    int s = 6; char *ptr = cm::masterDev()->cfg.uut.qrcode;
-    QString fn = "/usr/data/clever/cfg/qrcode.png";
-    QString cmd = "qrencode -o %1 -s %2 '%3'";
-    QString qr = cmd.arg(fn).arg(s).arg(msg);
+    char *ptr = cm::masterDev()->cfg.uut.qrcode;
     qstrcpy(ptr, msg.toUtf8().data());
-    system(qr.toUtf8().data());
     if(msg.isEmpty()) ptr[0] = 0;
-    qDebug() << qr;
-
+    cm::qrcodeGenerator(msg);
     return true;
 }

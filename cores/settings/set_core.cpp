@@ -67,6 +67,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::EPro: res = proStartupLog(it); break;
     case SFnCode::ERpc: res = rpcCfg(it.fc); break;
     case SFnCode::ELog: res = Log_Core::bulid()->logFun(it); break;
+    case SFnCode::EAlarm: res = Alarm_Log::bulid()->getCurrentAlarm(it.fc); break;
     default: cout << it.type; break;
     }
 

@@ -4,7 +4,6 @@
  *      Author: Lzy
  */
 #include "alarm_log.h"
-#include "log_core.h"
 
 Alarm_Log::Alarm_Log(QObject *parent)
     : QObject{parent}
@@ -20,6 +19,33 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
         sington = new Alarm_Log(parent);
     }
     return sington;
+}
+
+QString Alarm_Log::getCurrentAlarm(int addr)
+{
+    QString res; if(addr) {
+        res = m_currentAlarm[addr-1];
+    } else {
+        for(int i=0; i<DEV_NUM; ++i) {
+            if(m_currentAlarm[i].size())
+                res += m_currentAlarm[i] +"\n";
+        }
+    }
+    return res;
+}
+
+void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
+{
+    sAlarmItem it = alarmItem(index, value);
+    QString str = it.alarm_status +"; " + it.alarm_content;
+    m_currentAlarm[it.addr] = str;
+}
+
+void Alarm_Log::generateQRcode()
+{
+    static QString alarm; QString str = m_currentAlarm[0];
+    if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
+    if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); }
 }
 
 QString Alarm_Log::alarmType(const sDataItem &index)
@@ -126,7 +152,7 @@ QString Alarm_Log::alarmSensor(uchar value)
     return str;
 }
 
-void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
+sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
 {
     sAlarmItem it; it.alarm_status = tr("本机"); it.addr = index.addr;
     if(index.addr) it.alarm_status = tr("副机%1").arg(index.addr);
@@ -142,7 +168,12 @@ void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
         it.alarm_status += alarmStatus(value);
         it.alarm_content = alarmContent(index);
     }
+    return it;
+}
 
+void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
+{
+    sAlarmItem it = alarmItem(index, value);
     Log_Core::bulid()->append(it);
     //qDebug() << it.module << it.content;
 }
