@@ -195,7 +195,7 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
-					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
+					sendFileData(f.name, new Uint8Array(r.result), 10*1024*1024,"loading");
 				};
 			}
 		}
