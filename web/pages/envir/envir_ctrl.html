@@ -140,41 +140,40 @@
 			lang[7] = ["当前值","","","",""];
 			lang[8] = ["告警使能","","","",""];
 			lang[9] = ["历史记录","","","",""];
-			lang[10] = ["额定值","","","",""];
-			lang[11] = ["最小值","","","",""];
-			lang[12] = ["下临界","","","",""];
-			lang[13] = ["上临界","","","",""];
-			lang[14] = ["最大值","","","",""];
-			lang[15] = ["类型","","","",""];
-			lang[16] = ["状态","","","",""];
-			lang[17] = ["NA","","","",""];
-			lang[18] = ["开启","","","",""];
-			lang[19] = ["关闭","","","",""];
-			lang[20] = ["温度1","","","",""];
-			lang[21] = ["温度2","","","",""];
-			lang[22] = ["湿度1","","","",""];
-			lang[23] = ["湿度2","","","",""];
-			lang[24] = ["门禁1","","","",""];
-			lang[25] = ["门禁2","","","",""];
-			lang[26] = ["水禁","","","",""];
-			lang[27] = ["烟雾","","","",""];
-			lang[28] = ["设置模式","","","",""];
-			lang[29] = ["阅读模式","","","",""];
-			lang[30]  = ["主机", "", "", "", ""];
-			lang[31]  = ["副机", "", "", "", ""];
-			lang[32] = ["NA","","","",""];
-			lang[33] = ["正常", "", "", "", ""];
-			lang[34] = ["告警", "", "", "", ""];
-			dev_name[0] = lang[30][language];
+			lang[10] = ["最小值","","","",""];
+			lang[11] = ["下临界","","","",""];
+			lang[12] = ["上临界","","","",""];
+			lang[13] = ["最大值","","","",""];
+			lang[14] = ["类型","","","",""];
+			lang[15] = ["状态","","","",""];
+			lang[16] = ["NA","","","",""];
+			lang[17] = ["开启","","","",""];
+			lang[18] = ["关闭","","","",""];
+			lang[19] = ["温度1","","","",""];
+			lang[20] = ["温度2","","","",""];
+			lang[21] = ["湿度1","","","",""];
+			lang[22] = ["湿度2","","","",""];
+			lang[23] = ["门禁1","","","",""];
+			lang[24] = ["门禁2","","","",""];
+			lang[25] = ["水禁","","","",""];
+			lang[26] = ["烟雾","","","",""];
+			lang[27] = ["设置模式","","","",""];
+			lang[28] = ["阅读模式","","","",""];
+			lang[29]  = ["主机", "", "", "", ""];
+			lang[30]  = ["副机", "", "", "", ""];
+			lang[31] = ["NA","","","",""];
+			lang[32] = ["正常", "", "", "", ""];
+			lang[33] = ["告警", "", "", "", ""];
+			dev_name[0] = lang[29][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[31][language] + i;
 			}
 			for(let i =0;i<Sensor_state.length;i++){
-				Sensor_state[i] = lang[17 + i][language];
-				Sensor_state_[i] = lang[32 + i][language];
+				Sensor_state[i] = lang[16 + i][language];
+				Sensor_state_[i] = lang[31 + i][language];
 			}
 			for(let i =0;i<sensor_name.length;i++){
-				sensor_name[i] = lang[20 + i][language];
+				sensor_name[i] = lang[19 + i][language];
 			}
 		}
 		function Change(sel){
@@ -194,7 +193,7 @@
 			},500);
 		}
 		function LangFun(){
-			for(let j = 1;j<17;j++){
+			for(let j = 1;j<16;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if(read == 0){
@@ -274,7 +273,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = lang[28][language];
+				ros.innerHTML = lang[27][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -286,7 +285,7 @@
 				// ms.style.display = "none";
 				read = 1;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = lang[29][language];
+				ros.innerHTML = lang[28][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -344,10 +343,10 @@
 			let number1  = 0;
 			let id = 0;
 			let stat = ipt.value;
-			let data1 = parseFloat(ipt.parentNode.parentNode.childNodes[5].childNodes[0].value);
-			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
-			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
-			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
+			let data1 = parseFloat(ipt.parentNode.parentNode.childNodes[4].childNodes[0].value);
+			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[5].childNodes[0].value);
+			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
+			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			if(data1>data2 || data2>data3 || data3>data4){
 				alert("input data error");
 				FlashHtml(ipt);
@@ -387,15 +386,14 @@
 						<td width ="12%" id="lang_10"></td>\
 						<td width ="12%" id="lang_11"></td>\
 						<td width ="12%" id="lang_12"></td>\
-						<td width ="12%" id="lang_13"></td>\
-						<td width ="12%" id="lang_14"></td>';
+						<td width ="12%" id="lang_13"></td>';
 					}
 					tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "a'+ i + '">' + sensor_name[i]+'</td>';
 					tbody += '<td id = "b'+ i + '">'+ data[i][0]+'</td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "l'+ i + '"></input></td>';
-					tbody += '<td id = "d'+ i +'">' + data[i][1]+'</td>';
+					// tbody += '<td id = "d'+ i +'">' + data[i][1]+'</td>';
 					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (data[i][4])  +'"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (data[i][5])  +'"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (data[i][6]) +'"></input></td>';
@@ -410,9 +408,9 @@
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows ; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="10%" id="lang_15"></td>\
+					thead = '<tr><td width ="10%" id="lang_14"></td>\
 					<td width ="70%"></td>\
-					<td width ="20%" id="lang_16"></td>';
+					<td width ="20%" id="lang_15"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 4]+'</td>';

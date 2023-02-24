@@ -4,12 +4,10 @@
 .main-box,
 body,
 html {
-    height: 1070px;
-    overflow-y: auto;
+    height: 100%
 }
 
 .side-box {
-    height: 1070px;
     float: left;
     min-width: 180px;
     background: #2b333e
@@ -53,11 +51,17 @@ html {
 }
 
 .nav {
-    height: 800px;
     margin-top: 10px;
-    overflow-y:scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     white-space: nowrap
+}
+
+.nav::-webkit-scrollbar {
+    display: none;
+}
+.nav::-webkit-scrollbar-button {
+    display: none;
 }
 
 .nav-item {
