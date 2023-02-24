@@ -2121,7 +2121,7 @@ long mg_http_upload(struct mg_connection *c, struct mg_http_message *hm,
       mg_http_reply(c, 400, "", "offset required");
       res = -1;
     } else if (offset > 0 && current_size != (size_t) offset) {
-      mg_http_reply(c, 400, "", "%s: offset mismatch", path);
+      mg_http_reply(c, 400, "", "%s: %d %d offset mismatch", path ,current_size ,(size_t) offset);
       res = -2;
     } else if ((size_t) offset + hm->body.len > max_size) {
       mg_http_reply(c, 400, "", "%s: over max size of %lu", path,
@@ -4279,6 +4279,7 @@ static void mg_set_non_blocking_mode(MG_SOCKET_TYPE fd) {
 
 bool mg_open_listener(struct mg_connection *c, const char *url) {
   MG_SOCKET_TYPE fd = MG_INVALID_SOCKET;
+  //const int IPV6ONLY = 1;
   bool success = false;
   c->loc.port = mg_htons(mg_url_port(url));
   if (!mg_aton(mg_url_host(url), &c->loc)) {
@@ -4316,7 +4317,13 @@ bool mg_open_listener(struct mg_connection *c, const char *url) {
       // "Using SO_REUSEADDR and SO_EXCLUSIVEADDRUSE"
       MG_ERROR(("exclusiveaddruse: %d", MG_SOCK_ERR(rc)));
 #endif
-    } else if ((rc = bind(fd, &usa.sa, slen)) != 0) {
+    }
+//    else if(c->loc.is_ip6 &&
+//             (rc = setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, (const void *)&IPV6ONLY, sizeof IPV6ONLY)) != 0)
+//    {
+//        MG_ERROR(("IPV6ONLY V7.9: %d", MG_SOCK_ERR(rc)));
+//    }
+    else if ((rc = bind(fd, &usa.sa, slen)) != 0) {
       MG_ERROR(("bind: %d", MG_SOCK_ERR(rc)));
     } else if ((type == SOCK_STREAM &&
                 (rc = listen(fd, MG_SOCK_LISTEN_BACKLOG_SIZE)) != 0)) {
