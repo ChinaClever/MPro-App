@@ -1,77 +1,87 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
-		<meta name="renderer" content="webkit">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>network</title>
-		<link rel="stylesheet" href="../../include/css/public.min.css">
-		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
-		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
-		<style type="text/css">
-			.selectBox{
-				width: 40%;
-				height: 24px;
-				line-height: 24px;
-				background: #f72323;
-			}
-			.inputCase{
-				position: relative;
-				width: 100%;
-				height: 100%;
-				box-sizing: border-box;
-			}
-			.inputCase input.imitationSelect{
-				width: 100%;
-				height: 100%;
-				box-sizing: border-box;
-				border: 1px solid #ccc;
-				display: block;
-				text-indent: 20px;
-				cursor: default;
-			}
-			.inputCase i.fa{
-				position: absolute;
-				right: 10px;
-				top: 10px;
-				color: #007AFF;
-			}
-			.selectUl{
-				display: none;
-				padding: 0;
-				margin: 0;
-				border-bottom: 1px solid #ccc;
-				border-left: 1px solid #ccc;
-				border-right: 1px solid #ccc;
-                max-height: 150px;
-                overflow-y: auto;
-			}
-			.selectUl li{
-				height: 24px;
-				line-height: 24px;
-				list-style: none;
-				text-indent: 20px;
-				border-bottom: 1px solid #ccc;transition: all .5s ease 0s;
 
-			}
-			.selectUl li:hover{
-				background: #ddd;
-			}
-			.selectUl li:last-child{
-				border-bottom: 0 none;
-			}
-		</style>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>network</title>
+	<link rel="stylesheet" href="../../include/css/public.min.css">
+	<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+	<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	<style type="text/css">
+		.selectBox {
+			width: 40%;
+			height: 24px;
+			line-height: 24px;
+			background: #f72323;
+		}
+
+		.inputCase {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+		}
+
+		.inputCase input.imitationSelect {
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			display: block;
+			text-indent: 20px;
+			cursor: default;
+		}
+
+		.inputCase i.fa {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			color: #007AFF;
+		}
+
+		.selectUl {
+			display: none;
+			padding: 0;
+			margin: 0;
+			border-bottom: 1px solid #ccc;
+			border-left: 1px solid #ccc;
+			border-right: 1px solid #ccc;
+			max-height: 150px;
+			overflow-y: auto;
+		}
+
+		.selectUl li {
+			height: 24px;
+			line-height: 24px;
+			list-style: none;
+			text-indent: 20px;
+			border-bottom: 1px solid #ccc;
+			transition: all .5s ease 0s;
+
+		}
+
+		.selectUl li:hover {
+			background: #ddd;
+		}
+
+		.selectUl li:last-child {
+			border-bottom: 0 none;
+		}
+	</style>
+</head>
+
 <body>
 	<div class="page-cont">
 		<div class="section">
 			<div class="section-cont">
 				<div class="grid-row">
 					<div class="grid-col grid-col-7">
-						<div class = "panel panel-default">
-							<div class ="panel-heading">
-								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<i class="fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
 							</div>
 						</div>
@@ -86,125 +96,125 @@
 			</div>
 		</div>
 	</div>
-    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/timezone.js"></script>
 	<script src="../../include/js/pdu_rpc.js"></script>
-    <script src="../../include/js/public.min.js"></script>
-    <script src="../../include/js/timezone.js"></script>
-    <script>
-		let pdu_cfg = top.pdu_cfg_;
-		let language;
-		let addr = 0;
-		pdu_cfg.ntpCfg();
-		let ntp_info = new Array("","DevTime","TimeSetEn","NtpServer","TimeZone");
-		$(function(){
-			$(".selectBox .imitationSelect").on("click",function(){
+	<script src="../../include/js/public.min.js"></script>
+	<script>
+		$(function () {
+			$(".selectBox .imitationSelect").on("click", function () {
 				$(this).parent().next().toggle();//ul弹窗展开
 				$(this).next().toggleClass("fa-caret-up");//点击input选择适合，小图标动态切换
 				$(this).select();
-				if(this.value == ""){
+				if (this.value == "") {
 					this.value = ntp_data[4];
-				}else{
-					for(let i = 0; i<timezone_arr.length;i++){
-						if(document.getElementById("TimeZone").value == timezone_arr[i] &&  document.getElementById("TimeZone").value != ntp_data[4]){
+				} else {
+					for (let i = 0; i < timezone_arr.length; i++) {
+						if (document.getElementById("TimeZone").value == timezone_arr[i] && document.getElementById("TimeZone").value != ntp_data[4]) {
 							SetData(this);
 						}
 					}
 				}
-				if (event.stopPropagation) {   
+				if (event.stopPropagation) {
 					// 针对 Mozilla 和 Opera   
-					event.stopPropagation();   
-				}else if (window.event) {   
+					event.stopPropagation();
+				} else if (window.event) {
 					// 针对 IE   
-					window.event.cancelBubble = true;   
+					window.event.cancelBubble = true;
 				}   /*阻止事件传播，事件从点击的元素出发，向外（window）传播，
 					如果不写个阻止事件，会导致下面的document点击函数一起执行，导致显示失败*/
-					
+
 			});
-			$(".selectUl li").click(function(event){
+			$(".selectUl li").click(function (event) {
 				$(this).addClass("actived_li").siblings().removeClass("actived_li");//点击当前的添加。actived_li这个类；其他的移除这个类名
 				var data_val = $(this).data("val");//定义一个name属性，获取点击的元素属性赋值到当前，方便动态化传值
 				var data_id = $(this).data("id");//定义一个id属性，获取点击的元素属性赋值到当前，方便动态化传值
 				$(this).parent().prev().children().val(data_val); //把当前点击的name赋值到显示的input的val里面
-				$(this).parent().prev().children().data("val",data_val);//把当前点击的data-val赋值到显示的input的data-val里面
-				$(this).parent().prev().children().data("id",data_id);//把当前点击的data-id赋值到显示的input的data-id里面
-	
+				$(this).parent().prev().children().data("val", data_val);//把当前点击的data-val赋值到显示的input的data-val里面
+				$(this).parent().prev().children().data("id", data_id);//把当前点击的data-id赋值到显示的input的data-id里面
+
 			});
-			$(document).click(function(event){
+			$(document).click(function (event) {
 				$(".inputCase .fa").removeClass("fa-caret-up").addClass("fa-caret-down")//当点隐藏ul弹窗时候，把小图标恢复原状
 				$(".selectUl").hide();//当点击空白处，隐藏ul弹窗
 				$(".selectUl li").show();
-				if(document.getElementById("TimeZone").value != ntp_data[4]){
+				if (document.getElementById("TimeZone").value != ntp_data[4]) {
 					SetData(document.getElementById("TimeZone"));
 				}
 				// $(".selectBox .imitationSelect").val('');
 			});
-			$(".selectBox .imitationSelect").bind("input propertychange",()=>{
+			$(".selectBox .imitationSelect").bind("input propertychange", () => {
 				$(".selectUl li").hide()
-				let contain=$(".selectBox .imitationSelect").val();
+				let contain = $(".selectBox .imitationSelect").val();
 				// console.log($(this))
-				$(".selectUl li").filter(":contains('"+contain+"')").show();
+				$(".selectUl li").filter(":contains('" + contain + "')").show();
 			})
-			
+
 		})
 		//用$(this)来代指当前的操作对象，这样可以减少误差
-		let mode_set = new Array("","");
-		let ntp_data = new Array();
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = 0;
+		pdu_cfg.ntpCfg();
+		let ntp_info = new Array("", "DevTime", "TimeSetEn", "NtpServer", "TimeZone");
+		let mode_set = new Array("", "");
+		 let ntp_data = new Array();
 		let lang = new Array();
-		function ParseData(){
+		function ParseData() {
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
-		function read_data(){
-			for(var j = 1;j<5;j++){
-				ntp_data[j] = pdu_cfg.cfgValue(43,j,0,addr);
+		function read_data() {
+			for (var j = 1; j < 5; j++) {
+				ntp_data[j] = pdu_cfg.cfgValue(43, j, 0, addr);
 			}
 		}
 		lang_init();
-		function lang_init(){
-			for(let i = 1;i<14;i++){
+		function lang_init() {
+			for (let i = 1; i < 14; i++) {
 				lang[i] = new Array();
 			}
-			lang[1] = ["NTP服务","","","",""];
-			lang[2] = ["NTP设置","","","",""];
-			lang[3] = ["设备时间:","","","",""];
-			lang[4] = ["启用广播设置时间:","","","",""];
-			lang[5] = ["NTP服务器:","","","",""];
-			lang[6] = ["时区:","","","",""];
-			lang[7] = ["NTP同步","","","",""];
-			lang[8] = ["自定义设置","","","",""];
-			lang[9] = ["日期/时间:","","","",""];
-			lang[10] = ["获取本地时间","","","",""];
-			lang[11] = ["设置时间","","","",""];
-			lang[12] = ["禁用","","","",""];
-			lang[13] = ["启用","","","",""];
+			lang[1] = ["NTP服务", "", "", "", ""];
+			lang[2] = ["NTP设置", "", "", "", ""];
+			lang[3] = ["设备时间:", "", "", "", ""];
+			lang[4] = ["启用广播设置时间:", "", "", "", ""];
+			lang[5] = ["NTP服务器:", "", "", "", ""];
+			lang[6] = ["时区:", "", "", "", ""];
+			lang[7] = ["NTP同步", "", "", "", ""];
+			lang[8] = ["自定义设置", "", "", "", ""];
+			lang[9] = ["日期/时间:", "", "", "", ""];
+			lang[10] = ["获取本地时间", "", "", "", ""];
+			lang[11] = ["设置时间", "", "", "", ""];
+			lang[12] = ["禁用", "", "", "", ""];
+			lang[13] = ["启用", "", "", "", ""];
 
 			mode_set[0] = lang[12][language];
 			mode_set[1] = lang[13][language];
 		}
-		function lang_fun(){
-			for(let j = 1;j<12;j++){
-				if(j ==7 || j ==10 || j ==11){
-					document.getElementById("lang_" + j).value  = lang[j][language];
-				}else{
-					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+		function lang_fun() {
+			for (let j = 1; j < 12; j++) {
+				if (j == 7 || j == 10 || j == 11) {
+					document.getElementById("lang_" + j).value = lang[j][language];
+				} else {
+					document.getElementById("lang_" + j).innerHTML = lang[j][language];
 				}
 			}
 		}
-		setTimeout(function(){
-			$('.ntp').html(buildTableNtp());
-			$('.custom').html(buildTable());
+		$('.ntp').html(buildTableNtp());
+		$('.custom').html(buildTable());
+		setTimeout(function () {
 			lang_fun();
 			read_data();
 			showdata();
 			datetime();
-		},500);
-		function showdata(){
-			for(var i = 1; i < (ntp_info.length);i++){
-				if(i == 1){
+		}, 500);
+		function showdata() {
+			for (var i = 1; i < (ntp_info.length); i++) {
+				if (i == 1) {
 					document.getElementById(ntp_info[i]).innerHTML = ntp_data[i];
-				}else{
+				} else {
 					document.getElementById(ntp_info[i]).value = ntp_data[i];
 				}
 				// for(let i = 10;i<12;i++){
@@ -219,25 +229,25 @@
 			// 	document.getElementById("DateTime").disabled = true;
 			// }
 		}
-		function SetData(btn){
-			if(confirm("请确认是否选择此时区。")){
-				for(let i = 1;i<ntp_info.length;i++){
-					if(ntp_info[i] == btn.id){
-						pdu_cfg.setCfg(43,i,btn.value,0,addr);
+		function SetData(btn) {
+			if (confirm("请确认是否选择此时区。")) {
+				for (let i = 1; i < ntp_info.length; i++) {
+					if (ntp_info[i] == btn.id) {
+						pdu_cfg.setCfg(43, i, btn.value, 0, addr);
 						btn.blur();
 					}
 				}
 				flash_html();
-			}else{
+			} else {
 				showdata();
 			}
 		}
-		function flash_html(){
+		function flash_html() {
 			pdu_cfg.ntpCfg();
-			setTimeout(function(){
+			setTimeout(function () {
 				read_data();
 				showdata();
-			},500);
+			}, 500);
 		}
 		function checkTime(i) {
 			if (i < 10) {
@@ -245,7 +255,7 @@
 			}
 			return i;
 		}
-		function datetime(){
+		function datetime() {
 			var today = new Date();
 			var yyyy = today.getFullYear();
 			var MM = today.getMonth() + 1;
@@ -258,33 +268,33 @@
 			hh = checkTime(hh);
 			mm = checkTime(mm);
 			ss = checkTime(ss);
-			var time =yyyy+"-"+MM+"-"+dd+"T"+ hh + ":" + mm+ ":" + ss;
+			var time = yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm + ":" + ss;
 
 			document.getElementById('DateTime').value = time;
 		}
-		function Set(){
-			var sel =0;
-			if(confirm("请确认是否保存此次修改？")){
-				pdu_cfg.setCfg(43,5,0,0,addr);
+		function Set() {
+			var sel = 0;
+			if (confirm("请确认是否保存此次修改？")) {
+				pdu_cfg.setCfg(43, 5, 0, 0, addr);
 				flash_html();
-			}else{
+			} else {
 				showdata();
 			}
 		}
-		function SetTime(){
-			var sel =0;
+		function SetTime() {
+			var sel = 0;
 			let val = document.getElementById('DateTime').value;
-			if(confirm("请确认是否保存此次修改？")){
-				val = val.replace("T"," ");
-				pdu_cfg.setCfg(43,1,val,0,addr);
+			if (confirm("请确认是否保存此次修改？")) {
+				val = val.replace("T", " ");
+				pdu_cfg.setCfg(43, 1, val, 0, addr);
 				flash_html();
-			}else{
+			} else {
 				showdata();
 			}
 		}
-		
+
 		function buildTableNtp() {
-			var thead = '',tbody = '';
+			var thead = '', tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
@@ -295,27 +305,27 @@
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><div class="selectBox"><div class="inputCase"><input class="imitationSelect" type="text" id ="TimeZone"><i class="fa fa-caret-down"></i></div>';
 			tbody += '<ul class="selectUl">';
-			for(var i = 0; i<timezone_arr.length;i++){
-				if( i == 0){
-					tbody +='<li data-val="'+ timezone_arr[i]+'" data-id="'+(i+1)+'" class="actived_li">'+ timezone_arr[i]+'</li>';
-				}else{
-					tbody +='<li data-val="'+ timezone_arr[i]+'"  data-id="'+(i+1)+'">'+ timezone_arr[i]+'</li>';
+			for (var i = 0; i < timezone_arr.length; i++) {
+				if (i == 0) {
+					tbody += '<li data-val="' + timezone_arr[i] + '" data-id="' + (i + 1) + '" class="actived_li">' + timezone_arr[i] + '</li>';
+				} else {
+					tbody += '<li data-val="' + timezone_arr[i] + '"  data-id="' + (i + 1) + '">' + timezone_arr[i] + '</li>';
 				}
 			}
 			tbody += '</ul></div></td></tr>';
 			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
-				 + '<tbody>' + tbody + '</tbody>';
+				+ '<tbody>' + tbody + '</tbody>';
 		}
 		function buildTable() {
-			var thead = '',tbody = '';
+			var thead = '', tbody = '';
 			thead = '<tr><td width ="15%" id="lang_8" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td><select id ="TimeSetEn" style ="width:17%"  onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			for (var i = 0; i < mode_set.length; i++) {
+				tbody += '<option value ="' + i + '">' + mode_set[i] + '</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
@@ -324,16 +334,16 @@
 			tbody += '<td><input id="lang_11" type = "button" style ="width:12.5%"  onclick = "SetTime()"></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
-				 + '<tbody>' + tbody + '</tbody>';
+				+ '<tbody>' + tbody + '</tbody>';
 		}
-
-		// setInterval(function(){
-		// 	pdu_cfg.ntpCfg();
-		// 	setTimeout(function(){
-		// 		read_data();
-		// 		showdata();
-		// 	},500);
-		// },1000);
-    </script>
+		function PutData(){
+			document.getElementById("DevTime").innerHTML = pdu_cfg.cfgValue(43, 1, 0, addr);
+		}
+		setInterval(function(){
+			pdu_cfg.getCfg(43, 1, 0, addr);
+			setTimeout(PutData(),500);
+		},1000);
+	</script>
 </body>
+
 </html>
