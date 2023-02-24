@@ -228,29 +228,32 @@
 			var stat;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
-			if(type1 === 'i'){
-				if(ckd.checked == true){
-					stat = '1';
-				}else{
-					stat = '0';
-				}
-				if(num !== group_num + 1){
+			if(confirm("您已更改表单，请确认提交！"))
+			{
+				if(type1 === 'i'){
+					if(ckd.checked == true){
+						stat = '1';
+					}else{
+						stat = '0';
+					}
+					if(num !== group_num + 1){
 
-				}else{
-					num = 0;
-					for(let i = 0;i<group_num;i++){
-						if(ckd.checked == true){
-							document.getElementById(type1+(i)).checked = true;
-						}else{
-							document.getElementById(type1+(i)).checked = false;
+					}else{
+						num = 0;
+						for(let i = 0;i<group_num;i++){
+							if(ckd.checked == true){
+								document.getElementById(type1+(i)).checked = true;
+							}else{
+								document.getElementById(type1+(i)).checked = false;
+							}
 						}
 					}
+					pdu_cfg.setData(group,switch_,7,num,stat);
+					setTimeout(() => {
+						PduMetaData.meta_workDown(pdu_cfg);
+					}, 100);
 				}
-				pdu_cfg.setData(group,switch_,7,num,stat);
-				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
-				}, 100);
-			}
+			}else{}
 		}
 		function CheckTime(i) {
 			if (i < 10) {
@@ -273,16 +276,24 @@
 			var type1 = btn.id.substr(0,1);
 			var num = parseInt(btn.id.slice(1))+1;
 			var stat = 0,val = "";
-			var retVal = confirm("您已更改表单，请确认提交！");
-			if(retVal == true)
-			{
-				stat = type1.charCodeAt() - 'g'.charCodeAt() + 2;
-				type_ = String.fromCharCode('c'.charCodeAt()+ stat -2);
-				val = document.getElementById('e'+ (num -1)).value;
-				if(val != ""){
-					val += " ";
+			stat = type1.charCodeAt() - 'g'.charCodeAt() + 2;
+			type_ = String.fromCharCode('c'.charCodeAt()+ stat -2);
+			val = document.getElementById('e'+ (num -1)).value;
+			if(val != ""){
+				val += " ";
+			}
+			val += document.getElementById('f'+ (num -1)).value;
+			if(type1 == 'g'){
+				if(document.getElementById('d' + (num -1)).innerHTML == val){
+					alert("警告：不能选择同样的上下电时间，请重新提交！")
+					return;
 				}
-				val += document.getElementById('f'+ (num -1)).value;
+			}else{
+				if(document.getElementById('c' + (num -1)).innerHTML == val){
+					alert("警告：不能选择同样的上下电时间，请重新提交！")
+					return;
+				}
+			}
 				if(num !== group_num + 1){
 					document.getElementById(type_+(num -1)).innerHTML = val;
 				}else{
@@ -295,7 +306,6 @@
 				setTimeout(() => {
 					PduMetaData.meta_workDown(pdu_cfg);
 				}, 100);
-			}else{}
 		}
 		function BuildTable(rows) {
 			var thead = '',

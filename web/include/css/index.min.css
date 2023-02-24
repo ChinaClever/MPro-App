@@ -57,6 +57,13 @@ html {
     white-space: nowrap
 }
 
+.nav::-webkit-scrollbar {
+    display: none;
+}
+.nav::-webkit-scrollbar-button {
+    display: none;
+}
+
 .nav-item {
     border-left: 3px solid transparent;
     -webkit-user-select: none;
