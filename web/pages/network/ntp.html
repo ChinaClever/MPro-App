@@ -97,24 +97,24 @@
 		</div>
 	</div>
 	<script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/timezone.js"></script>
 	<script src="../../include/js/pdu_rpc.js"></script>
 	<script src="../../include/js/public.min.js"></script>
-	<script src="../../include/js/timezone.js"></script>
 	<script>
 		$(function () {
-			$(".selectBox .input.imitationSelect").on("click", function () {
+			$(".selectBox .imitationSelect").on("click", function () {
 				$(this).parent().next().toggle();//ul弹窗展开
 				$(this).next().toggleClass("fa-caret-up");//点击input选择适合，小图标动态切换
-				// $(this).select();
-				// if (this.value == "") {
-				// 	this.value = ntp_data[4];
-				// } else {
-				// 	for (let i = 0; i < timezone_arr.length; i++) {
-				// 		if (document.getElementById("TimeZone").value == timezone_arr[i] && document.getElementById("TimeZone").value != ntp_data[4]) {
-				// 			SetData(this);
-				// 		}
-				// 	}
-				// }
+				$(this).select();
+				if (this.value == "") {
+					this.value = ntp_data[4];
+				} else {
+					for (let i = 0; i < timezone_arr.length; i++) {
+						if (document.getElementById("TimeZone").value == timezone_arr[i] && document.getElementById("TimeZone").value != ntp_data[4]) {
+							SetData(this);
+						}
+					}
+				}
 				if (event.stopPropagation) {
 					// 针对 Mozilla 和 Opera   
 					event.stopPropagation();
@@ -158,7 +158,7 @@
 		pdu_cfg.ntpCfg();
 		let ntp_info = new Array("", "DevTime", "TimeSetEn", "NtpServer", "TimeZone");
 		let mode_set = new Array("", "");
-		let ntp_data = new Array();
+		 let ntp_data = new Array();
 		let lang = new Array();
 		function ParseData() {
 			let DataString = pdu_cfg.meta_value();
@@ -202,14 +202,14 @@
 				}
 			}
 		}
+		$('.ntp').html(buildTableNtp());
+		$('.custom').html(buildTable());
 		setTimeout(function () {
-			$('.ntp').html(buildTableNtp());
-			$('.custom').html(buildTable());
 			lang_fun();
 			read_data();
 			showdata();
 			datetime();
-		}, 50);
+		}, 500);
 		function showdata() {
 			for (var i = 1; i < (ntp_info.length); i++) {
 				if (i == 1) {
@@ -336,14 +336,13 @@
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}
-
-		// setInterval(function(){
-		// 	pdu_cfg.ntpCfg();
-		// 	setTimeout(function(){
-		// 		read_data();
-		// 		showdata();
-		// 	},500);
-		// },1000);
+		function PutData(){
+			document.getElementById("DevTime").innerHTML = pdu_cfg.cfgValue(43, 1, 0, addr);
+		}
+		setInterval(function(){
+			pdu_cfg.getCfg(43, 1, 0, addr);
+			setTimeout(PutData(),500);
+		},1000);
 	</script>
 </body>
 

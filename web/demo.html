@@ -56,24 +56,16 @@
 				border-bottom: 0 none;
 			}
 		</style>
-		<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">
+		<!-- <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css"> -->
 	</head>
+	<script src="./include/js/timezone.js"></script>
 	<body>
         <div class="selectBox">
         	<div class="inputCase">
-				<input class="imitationSelect" type="text" value="橘子" >
+				<input class="imitationSelect" type="text" id="TimeZone" >
 				<i class="fa fa-caret-down"></i>
 			</div>
 			<ul class="selectUl">
-				<li data-val="橘子" data-id="1" class="actived_li">橘子</li>
-				<li data-val="苹果" data-id="2">苹果</li>
-				<li data-val="桃子" data-id="3">桃子</li>
-				<li data-val="苹果" data-id="2">苹果</li>
-				<li data-val="桃子" data-id="3">桃子</li>
-				<li data-val="苹果" data-id="2">苹果</li>
-				<li data-val="桃子" data-id="3">桃子</li>
-				<li data-val="苹果" data-id="2">苹果</li>
-				<li data-val="桃子" data-id="3">桃子</li>
 			</ul>
         </div>
 		<script src="https://libs.cdnjs.net/jquery/3.5.1/jquery.min.js"></script>
@@ -81,7 +73,18 @@
 			$(function(){
 				$(".selectBox .imitationSelect").on("click",function(){
 					$(this).parent().next().toggle();//ul弹窗展开
-					$(this).next().toggleClass("fa-caret-up")//点击input选择适合，小图标动态切换
+					
+					$(this).select();
+					if (this.value == "") {
+						this.value = ntp_data[4];
+					} else {
+						for (let i = 0; i < timezone_arr.length; i++) {
+							if (document.getElementById("TimeZone").value == timezone_arr[i] && document.getElementById("TimeZone").value != ntp_data[4]) {
+							 console.log("choose")
+								// SetData(this);
+							}
+						}
+					}$(this).next().toggleClass("fa-caret-up")//点击input选择适合，小图标动态切换
 					if (event.stopPropagation) {   
 			        	// 针对 Mozilla 和 Opera   
 			        	event.stopPropagation();   
@@ -105,6 +108,9 @@
 					$(".inputCase .fa").removeClass("fa-caret-up").addClass("fa-caret-down")//当点隐藏ul弹窗时候，把小图标恢复原状
                     $(".selectUl").hide();//当点击空白处，隐藏ul弹窗
                     $(".selectUl li").show()
+					if (document.getElementById("TimeZone").value != ntp_data[4]) {
+						SetData(document.getElementById("TimeZone"));
+					}
                     // $(".selectBox .imitationSelect").val('');
 				});
                 $(".selectBox .imitationSelect").bind("input propertychange",()=>{
@@ -116,6 +122,19 @@
                 })
                 
 			})
+			let ntp_data=new Array(0,0,0,4,0,0)
+			$('.selectUl').html(BuildTable());
+			function BuildTable(){
+				var tbody ="";
+				for (var i = 0; i < timezone_arr.length; i++) {
+					if (i == 0) {
+						tbody += '<li data-val="' + timezone_arr[i] + '" data-id="' + (i + 1) + '" class="actived_li">' + timezone_arr[i] + '</li>';
+					} else {
+						tbody += '<li data-val="' + timezone_arr[i] + '"  data-id="' + (i + 1) + '">' + timezone_arr[i] + '</li>';
+					}
+				}
+				return tbody;
+			}
 			//用$(this)来代指当前的操作对象，这样可以减少误差
 		</script>
 	</body>
