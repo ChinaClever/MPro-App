@@ -19,12 +19,12 @@ App_SensorBox::~App_SensorBox()
 
 bool App_SensorBox::box_open()
 {
-    bool ret = cm::masterDev()->cfg.param.sensorBoxEn;
-    if(ret) {
+    bool ret = false;
+    if(cm::masterDev()->cfg.param.sensorBoxEn) {
         qint32 baudRate = QSerialPort::Baud19200;
         if(!mSerial) mSerial = new SerialPort(this);
         ret = mSerial->isOpened();
-        if(!ret) ret = mSerial->openSerial("/dev/ttyS5", baudRate);
+        if(!ret) ret = mSerial->openSerial("/dev/ttyS4", baudRate);
     }
     return ret;
 }
@@ -45,7 +45,6 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
     bool ret = true;
     uchar *ptr = (uchar *)array.data();
     sEnvData *env = &(cm::masterDev()->env);
-
     if((*ptr++ == 0x01) && (*ptr++ == 0x03))  {
         int len = getShort(ptr); ptr += 2;
         ushort isInsert = getShort(ptr); ptr += 2;
@@ -53,7 +52,7 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         env->hum.value[2] = getShort(ptr); ptr += 2;
         env->tem.value[3] = getShort(ptr); ptr += 2;
         env->hum.value[3] = getShort(ptr); ptr += 2;
-        ptr += 8; int k=0, j=4; // 报警上下限
+        ptr += 8;  int k=0, j=4;// 报警上下限
         ushort alarm = getShort(ptr); //ptr += 2;
 
         env->isInsert[2] = (isInsert >> k++) & 1;
@@ -67,7 +66,7 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         if(env->water[0]) env->water[0] += (alarm >> j++) & 1;
         if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
         if(env->door[1]) env->door[1] += (alarm >> j++) & 1;
-    } else ret = false;
+    } else  ret = false;
 
     return ret;
 }
@@ -78,19 +77,35 @@ bool App_SensorBox::box_readData()
     uchar cmd[] = {0x01, 0x03, 0x00, 0x00, 0x00, 0x0B, 0x04, 0x0D};
     QByteArray recv = mSerial->transmit(cmd, sizeof(cmd));
     if(recv.size() > 20) res = box_recvPacket(recv);
-
     int t = 0; if(cm::runTime() > 48*60*60) {
-        t = QRandomGenerator::global()->bounded(565);
-    } cm::mdelay(t + 360);
+        t = QRandomGenerator::global()->bounded(865);
+    } cm::mdelay(t + 765);
     return res;
+}
+
+void App_SensorBox::box_offline()
+{
+    ushort isInsert = 0, k = 0;
+    sEnvData *env = &(cm::masterDev()->env);
+    env->isInsert[2] = (isInsert >> k++) & 1;
+    env->isInsert[3] = (isInsert >> k++) & 1;
+    env->smoke[0] = (isInsert >> k++) & 1;
+    env->water[0] = (isInsert >> k++) & 1;
+    env->door[0] = (isInsert >> k++) & 1;
+    env->door[1] = (isInsert >> k++) & 1;
 }
 
 void App_SensorBox::sensorBox_run()
 {
     while(box_isRun) {
+        //cm::masterDev()->cfg.param.sensorBoxEn = 1;
         if(cm::masterDev()->cfg.param.sensorBoxEn) {
-            box_open();
-            box_readData();
+            bool ret = box_open();
+            if(ret){
+                ret = box_readData();
+                if(!ret) ret = box_readData();
+                if(!ret) box_offline();
+            }
         } else {
             box_close();
             cm::mdelay(360);
