@@ -35,7 +35,9 @@ void Mb_Object::upDevInfo()
     vs << dev->cfg.nums.outputNum;
     vs << dev->cfg.nums.boardNum;
     vs << dev->hz;
-    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
+
+    //qint64 timestamp = QDateTime::currentSecsSinceEpoch();
+    qint64 timestamp = QDateTime::currentDateTime().toSecsSinceEpoch();
     vs << (timestamp>> 16); vs << (timestamp&0xffff);
 
     vs << dev->status;
