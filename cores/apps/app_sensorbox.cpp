@@ -98,7 +98,6 @@ void App_SensorBox::box_offline()
 void App_SensorBox::sensorBox_run()
 {
     while(box_isRun) {
-        //cm::masterDev()->cfg.param.sensorBoxEn = 1;
         if(cm::masterDev()->cfg.param.sensorBoxEn) {
             bool ret = box_open();
             if(ret){
