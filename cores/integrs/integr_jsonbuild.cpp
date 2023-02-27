@@ -222,7 +222,7 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
     QJsonObject obj; if(mDataContent < 3) {
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);        
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
         alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
         alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
@@ -241,18 +241,18 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
 
 void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj; int dc = mDataContent;
-    if(strlen(it.usr)||(dc>2)) obj.insert("usr", it.usr);
-    if(strlen(it.md5)||(dc>2)) obj.insert("md5", it.md5);
-    if(strlen(it.ver)||(dc>2)) obj.insert("ver", it.ver);
-    if(strlen(it.dev)||(dc>2)) obj.insert("dev", it.dev);
-    if(strlen(it.remark)||(dc>2)) obj.insert("remark", it.remark);
-    if(strlen(it.hwVersion)||(dc>2)) obj.insert("hwVersion", it.hwVersion);
-    if(strlen(it.oldVersion)||(dc>2)) obj.insert("oldVersion", it.oldVersion);
-    if(strlen(it.compileDate)||(dc>2)) obj.insert("compileDate", it.compileDate);
-    if(strlen(it.releaseDate)||(dc>2)) obj.insert("releaseDate", it.releaseDate);
-    if(strlen(it.upgradeDate)||(dc>2)) obj.insert("upgradeDate", it.upgradeDate);
-    if(strlen(it.serialNumber)||(dc>2)) obj.insert("serialNumber", it.serialNumber);
+    QJsonObject obj;
+    obj.insert("usr", it.usr);
+    obj.insert("md5", it.md5);
+    obj.insert("ver", it.ver);
+    obj.insert("dev", it.dev);
+    obj.insert("remark", it.remark);
+    obj.insert("hwVersion", it.hwVersion);
+    obj.insert("oldVersion", it.oldVersion);
+    obj.insert("compileDate", it.compileDate);
+    obj.insert("releaseDate", it.releaseDate);
+    obj.insert("upgradeDate", it.upgradeDate);
+    obj.insert("serialNumber", it.serialNumber);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
@@ -304,13 +304,13 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 
 void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj; int dc = mDataContent;
-    if(strlen(it.sn)||(dc>2)) obj.insert("sn", it.sn);
-    if(strlen(it.room)||(dc>2)) obj.insert("room", it.room);
-    if(strlen(it.devName)||(dc>2)) obj.insert("name", it.devName);
-    if(strlen(it.qrcode)||(dc>2)) obj.insert("qrcode", it.qrcode);
-    if(strlen(it.devType)||(dc>2)) obj.insert("pdu_type", it.devType);
-    if(strlen(it.location)||(dc>2)) obj.insert("location", it.location);
+    QJsonObject obj;
+    obj.insert("sn", it.sn);
+    obj.insert("room", it.room);
+    obj.insert("name", it.devName);
+    obj.insert("qrcode", it.qrcode);
+    obj.insert("pdu_type", it.devType);
+    obj.insert("location", it.location);
     if(obj.size()) json.insert(key, obj);
 }
 
