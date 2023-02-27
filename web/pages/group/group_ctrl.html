@@ -125,13 +125,14 @@
 				addr = pdu_cfg.addr;
 				setTimeout(function(){
 					PduMetaData.meta_workDown(top.addr_);
+					pdu_cfg.OutInGroup();
 				},100);
 				setTimeout(function(){
 					ParseData();
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.group_num));
+					ReadData();
+					$('.table-striped').html(BuildTable(group_num));
 					LangFun();
 					ModeSet();
-					ShowData();
 				},500);
 			}
 			setTimeout(function(){
@@ -186,17 +187,6 @@
 					}
 					for (var j = 1; j < btnname.length; j++) {
 						btnname[j].disabled = true;
-					}
-				}
-			}
-			function ShowData() {
-				for (var i = 1; i < group_num + 1; i++) {
-					var ss = document.getElementById('d' + (i - 1));
-					if (group_data[i] == 1) {
-						ss.checked = true;
-					}
-					else {
-						ss.checked = false;
 					}
 				}
 			}

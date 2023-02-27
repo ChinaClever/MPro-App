@@ -110,7 +110,7 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
-		function modeset(modesel){
+		function ModeSet(modesel){
 			var ms = document.getElementById("sel");
 			var iptname = document.getElementsByTagName("input");
 			for(var i = 0; i<iptname.length;i++)
@@ -147,21 +147,22 @@
 			$('.table-striped').html(BuildTable(group_num));
 			$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 			LangFun();
-			modeset();
+			ModeSet();
 		},500);
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
+				pdu_cfg.OutInGroup();
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
 			setTimeout(function(){
 				ParseData();
-				$('.table-striped').html(BuildTable(pdu_data.pdu_info.group_num));
+				ReadData();
+				$('.table-striped').html(BuildTable(group_num));
 				LangFun();
 				ModeSet();
-				ShowData();
 			},500);
 		}
 		function SetData(ipt)

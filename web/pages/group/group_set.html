@@ -135,10 +135,12 @@
 				addr = pdu_cfg.addr;
 				setTimeout(function(){
 					PduMetaData.meta_workDown(top.addr_);
+					pdu_cfg.OutInGroup();
 				},100);
 				setTimeout(function(){
 					ParseData();
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.group_num));
+					ReadData();
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 					LangFun();
 					ModeSet();
 					ShowData();

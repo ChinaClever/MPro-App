@@ -92,8 +92,8 @@
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
 			setTimeout(function(){
+				$('.table-striped').html(BuildTable(group_num));
 				ParseData();
-				$('.table-striped').html(BuildTable(pdu_data.pdu_info.group_num));
 				LangFun();
 				ShowData();
 			},500);
