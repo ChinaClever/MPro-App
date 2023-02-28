@@ -73,7 +73,7 @@ bool Ota_Net::up_rootfs(const QString &path)
         throwMessage(str); cm::mdelay(100);
         ota->rootfs.progress = 100;
         ota->rootfs.isRun = 0;
-        cout << ota->rootfs.progress;
+        //cout << ota->rootfs.progress;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
     } else ret = false;
 
