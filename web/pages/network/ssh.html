@@ -114,7 +114,8 @@
 						pdu_cfg.setCfg(45,5,0,0,addr);
 					}
 				}else {
-					alert("username or password error!");
+					pdu_cfg.setCfg(45,3,"",0,addr);
+					pdu_cfg.setCfg(45,4,"",0,addr);
 				}
 			}
 		}

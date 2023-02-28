@@ -55,18 +55,18 @@
 						<div class ="phase_div2" id="lang_26"></div>
 						<table style="width:99%;height:35%; ">
 							<tr>
-								<td style=" width: 46%;">
+								<td style=" width: 98%;">
 									<div style=" width: 96%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#E8E8E8;">
 										<div style="text-align:left; padding-left:20px; padding-top:8px; height:50px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_27"></div>
 										<table class = "new_table" style="height:32px; width:96%; line-height:45px; font-size:14px;"></table>
 									</div>
 								</td>
-								<td style="width: 46%;">
+								<!-- <td style="width: 46%;">
 									<div style=" width: 96%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:35%; background:#E8E8E8;">
 										<div style="text-align:left; padding-left:20px; padding-top:8px; height:50px; border-bottom:#e1dfdf 2px solid; font-size:14px;" id="lang_35"></div>
 										<table class = "set_table" style="height:32px; width: 97%;line-height:35px;font-size:14px;"></table>
 									</div>
-								</td>
+								</td> -->
 							</tr>
 						</table>
 						<div style="padding-left:40px;" ><input type = "checkbox"  onclick="openupdate(this)"><label id = "lang_44"></label></div>
@@ -236,7 +236,10 @@
 		}
 		function lang_fun(obj){
 			for(var i = 1;i<47;i++){
-				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
+				if((i>34 && i < 38) ||(i>39 && i<43)){
+				}else{
+					document.getElementById("lang_" + i).innerHTML  = lang[i][language];
+				}
 			}
 		}
 		function read_data(){
@@ -255,7 +258,7 @@
 			$('.issue_table').html(buildTableCert(1));
 			$('.cert_table').html(buildTableCert1());
 			$('.new_table').html(buildTableNew());
-			$('.set_table').html(buildTableNew1());
+			// $('.set_table').html(buildTableNew1());
 			lang_fun(1);
 			showdata();
 		},500);
@@ -324,6 +327,9 @@
 					tbody +='<td><input id="ipt'+i +'"  onchange = "SetData(this)" style="width:80%;background:#F8F8F8;border:1px;"></input></td></tr>';
 				}
 			}
+			tbody +='<tr><td style="padding-left:20px;style="width:32%;" id="lang_38" style="font-weight:bold"></td><td>RSA</td></tr>';
+			tbody +='<tr><td class="spacing" style="width:32%; padding-left:20px;"id="lang_39"></td><td>2048 bits</td></tr>';
+			tbody +='<tr><td  colspan= "2" align="center"><button id="lang_43" onclick = "create();" ></button></td></tr>';
 			return tbody;
 		}
 		function buildTableNew1(){

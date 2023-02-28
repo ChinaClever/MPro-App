@@ -92,6 +92,7 @@
 			lang[14] = ["收件箱设置","","","",""];
 			lang[15] = ["禁用","","","",""];
 			lang[16] = ["启用","","","",""];
+			lang[17] = ["邮箱测试","","","",""];
 
 			mode_set[0] = lang[15][language];
 			mode_set[1] = lang[16][language];
@@ -100,6 +101,7 @@
 			for(let j = 1;j<15;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("lang_17").value  = lang[17][language];
 		}
 		setTimeout(function(){
 			$('.smtp').html(buildTable());
@@ -142,13 +144,15 @@
 				if(smtp_name[i] == btn.id){
 					if(smtp_name[i] == "SmtpSendPsd"){
 						psd = btn.value;
-						if(!pattern.test(psd)){
-							alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
-							return ;
-						}else{
-							psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+						// if(!pattern.test(psd)){
+						// 	alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+						// 	return ;
+						// }else{
+							if(btn.value != ""){
+								psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+							}
 							pdu_cfg.setCfg(44,i,psd,0,addr);
-						}
+						// }
 					}else{
 						pdu_cfg.setCfg(44,i,btn.value,0,addr);
 					}
@@ -169,6 +173,9 @@
 				read_data();
 				showdata();
 			},500);
+		}
+		function Set(){
+			pdu_cfg.setCfg(44,11,0,0,addr);
 		}
 		function buildTable() {
 			var thead = '',tbody = '';
@@ -201,6 +208,7 @@
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_13"></td>';
 			tbody += '<td id = "SmtpState"></td></tr>';
+			tbody += '<tr><td><input id ="lang_17" style ="width:40%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

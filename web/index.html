@@ -16,6 +16,7 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
+	<script src="include/js/public.min.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
 </head>
 
@@ -29,9 +30,14 @@
 	<div class="main-box">
 		<div class="top-box">
 			<div align="right">
-				<p><span>Version</span><i id="ShutDown" class="iconfont icon-shutdown"
-						style="width:5%;height: auto; line-height: 1.6;padding-left:3%;padding-right: 3%;"
-						onclick="LogOut()"></i></p>
+				<p>
+					<span>working-status:</span><span></span>
+					<i id="ShutDown1" class="iconfont icon-alarm"style="width:5%;height: auto; line-height: 1.6;padding-right: 1.5%;"onclick="LogOut()"></i>
+					<i id="ShutDown" class="iconfont icon-shutdown"style="width:5%;height: auto; line-height: 1.6;padding-right: 1.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
+					<span>PDU series:</span><span style="width:15%;line-height: 1.6;padding-right: 1.5%;"></span><span>PDU Version:</span><span style="line-height: 1.6;padding-right: 1.5%;"></span><br/>
+					<span>PDU uptime:</span><span style="width:15%;line-height: 1.6;padding-right: 1.5%;"></span><span>PDU location:</span><span style="line-height: 1.6;padding-right: 1.5%;"></span><br/>
+					
+				</p>
 			</div>
 		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
