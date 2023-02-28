@@ -234,7 +234,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 
     if(ptr){
         QByteArray array = v.toByteArray();
-        qstrcpy(ptr, array.data());
+        qstrncpy(ptr, array.data(), NAME_SIZE);
         if(it.fc == 1) {
             QString key = QString::number(id+1);
             Cfg_Com *cfg = Cfg_Com::bulid();

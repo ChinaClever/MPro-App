@@ -222,7 +222,7 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
     QJsonObject obj; if(mDataContent < 3) {
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
-        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);        
+        if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
         alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
         alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
@@ -242,17 +242,17 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
 void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    if(strlen(it.usr)) obj.insert("usr", it.usr);
-    if(strlen(it.md5)) obj.insert("md5", it.md5);
-    if(strlen(it.ver)) obj.insert("ver", it.ver);
-    if(strlen(it.dev)) obj.insert("dev", it.dev);
-    if(strlen(it.remark)) obj.insert("remark", it.remark);
-    if(strlen(it.hwVersion)) obj.insert("hwVersion", it.hwVersion);
-    if(strlen(it.oldVersion)) obj.insert("oldVersion", it.oldVersion);
-    if(strlen(it.compileDate)) obj.insert("compileDate", it.compileDate);
-    if(strlen(it.releaseDate)) obj.insert("releaseDate", it.releaseDate);
-    if(strlen(it.upgradeDate)) obj.insert("upgradeDate", it.upgradeDate);
-    if(strlen(it.serialNumber)) obj.insert("serialNumber", it.serialNumber);
+    obj.insert("usr", it.usr);
+    obj.insert("md5", it.md5);
+    obj.insert("ver", it.ver);
+    obj.insert("dev", it.dev);
+    obj.insert("remark", it.remark);
+    obj.insert("hwVersion", it.hwVersion);
+    obj.insert("oldVersion", it.oldVersion);
+    obj.insert("compileDate", it.compileDate);
+    obj.insert("releaseDate", it.releaseDate);
+    obj.insert("upgradeDate", it.upgradeDate);
+    obj.insert("serialNumber", it.serialNumber);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
@@ -278,6 +278,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
     obj.insert("stand_neutral", it.param.standNeutral/r);
+    obj.insert("run_time", it.param.runTime/r);
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 
@@ -304,12 +305,12 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj;
-    if(strlen(it.sn)) obj.insert("sn", it.sn);
-    if(strlen(it.room)) obj.insert("room", it.room);
-    if(strlen(it.devName)) obj.insert("name", it.devName);
-    if(strlen(it.qrcode)) obj.insert("qrcode", it.qrcode);
-    if(strlen(it.devType)) obj.insert("pdu_type", it.devType);
-    if(strlen(it.location)) obj.insert("location", it.location);
+    obj.insert("sn", it.sn);
+    obj.insert("room", it.room);
+    obj.insert("name", it.devName);
+    obj.insert("qrcode", it.qrcode);
+    obj.insert("pdu_type", it.devType);
+    obj.insert("location", it.location);
     if(obj.size()) json.insert(key, obj);
 }
 

@@ -86,7 +86,7 @@ void App_Smtp::smtp_run()
 {
     if(!smtp_isRun) {
         smtp_isRun = true;
-        cm::mdelay(500);
+        //cm::mdelay(500);
         sendMail();
         smtp_isRun = false;
     }
