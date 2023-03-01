@@ -81,7 +81,7 @@ void Data_Dual::disDualAlarm()
         it->vol.en[i] = 0;
         it->cur.en[i] = 0;
         it->pow.en[i] = 0;
-        it->relay.en[i] = 0;
+        it->relay.disabled[i] = 0;
         it->relay.offAlarm[i] = 0;
         it->relay.timingEn[i] = 0;
         it->relay.overrunOff[i] = 0;

@@ -31,10 +31,10 @@ void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &
 {
     unit.size = it.size;
     unit.sw[id] = it.sw;
-    unit.en[id] = it.en;
     unit.cnt[id] = it.cnt;
     unit.lifeEn[id] = it.lifeEn;
     unit.maxCnt[id] = it.maxCnt;
+    unit.disabled[id] = it.disabled;
     unit.offAlarm[id] = it.offAlarm;
     unit.powerUpDelay[id] = it.powerUpDelay;
     unit.overrunOff[id] = it.overrunOff;

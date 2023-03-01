@@ -68,7 +68,7 @@ struct sAlarmUnit
 struct sRelayUnit
 {
     int size;
-    uint en[PACK_ARRAY_SIZE]; // 关键设备保护 0 未启用  1 启用
+    uint disabled[PACK_ARRAY_SIZE]; // 关键设备保护 0 未启用  1 启用
     uint sw[PACK_ARRAY_SIZE]; // 开关状态 0:断开；1:通；2:复位
     uint cnt[PACK_ARRAY_SIZE]; // 继电器控制次数
     uint offAlarm[PACK_ARRAY_SIZE]; // 0 表示未启用  1 表示断开报警
