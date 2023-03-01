@@ -209,7 +209,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i +'">'+group_data[i+1]+'</td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "c'+ i + '" value = "'+pdu_data.pdu_data.group_item_list.name[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" maxlength="14" id = "c'+ i + '" value = "'+pdu_data.pdu_data.group_item_list.name[i]+'"></input></td>';
 				tbody += '</tr>';
 			}
 
