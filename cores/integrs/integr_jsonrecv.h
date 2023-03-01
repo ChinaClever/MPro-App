@@ -30,10 +30,10 @@ public:
     bool company(const QJsonObject &object);
     bool versionNumber(const QJsonObject &object);
 
-    double getDataItem(const QJsonObject &object);
-    bool setDataItem(const QJsonObject &object);    
-    bool setCfgItem(const QJsonObject &object);
-    QVariant getCfgItem(const QJsonObject &object);
+    double pduDataGet(const QJsonObject &object);
+    bool pduDataSet(const QJsonObject &object);    
+    bool pduCfgSet(const QJsonObject &object);
+    QVariant pduCfgGet(const QJsonObject &object);
     bool analyticalData(const QJsonObject &object);
 
 private:
