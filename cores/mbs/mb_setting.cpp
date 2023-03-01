@@ -62,7 +62,7 @@ void Mb_Setting::startSet(ushort addr, ushort &value)
     case MbReg_SetBuzzer: buzzerSw(value); break;
     case MbReg_SetDry: drySw(value); break;
     case MbReg_SetEle: OP_Core::bulid()->clearEle(0); break;
-    case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
+    //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
     }
 }
 

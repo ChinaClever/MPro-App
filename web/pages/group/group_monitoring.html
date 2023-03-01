@@ -87,9 +87,16 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				$('.table-striped').html(BuildTable(group_num));
+				ParseData();
+				LangFun();
+				ShowData();
+			},500);
 		}
 		function BuildSel(rows)
 		{
@@ -103,9 +110,9 @@
 		function ShowData(){
 			for(var i = 1 ;i < group_num+ 1;i++){
 				var ss = document.getElementById('c'+(i-1));
-				if(pow_alarm[i] == 2|| pow_alarm[i] == 4){
+				if(pdu_data.pdu_data.group_item_list.pow_alarm_status[i - 1] == 2|| pdu_data.pdu_data.group_item_list.pow_alarm_status[i - 1] == 4){
 					ss.bgColor = 'yellow';
-				}else if(pow_alarm[i] == 1 || pow_alarm[i] == 8){
+				}else if(pdu_data.pdu_data.group_item_list.pow_alarm_status[i - 1]== 1 || pdu_data.pdu_data.group_item_list.pow_alarm_status[i - 1] == 8){
 					ss.bgColor = 'red';
 				}else{
 					ss.bgColor = '';
@@ -119,7 +126,7 @@
 					<td width ="32%" id="lang_4"></td>\
 					<td width ="20%" id="lang_5"></td>\
 					<td width ="20%" id="lang_6"></td>\
-					<td width ="20%" id="lang_7"></td>';
+					<td width ="20%" id="lang_7"></td></tr>';
 			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
@@ -127,7 +134,7 @@
 					<td width ="32%" id="lang_4"></td>\
 					<td width ="20%" id="lang_5"></td>\
 					<td width ="20%" id="lang_6"></td>\
-					<td width ="20%" id="lang_7"></td>';
+					<td width ="20%" id="lang_7"></td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';

@@ -16,12 +16,12 @@ Set_Output::Set_Output()
 void Set_Output::relayOpLog(const sDataItem &it)
 {
     QString str = QStringLiteral("全部");
-    if(it.id) str = QStringLiteral("第%１ ").arg(it.id);
+    if(it.id) str = QStringLiteral("第%１").arg(it.id);
     switch (it.subtopic) {
     case DSub::Value:
         if(it.type == DType::Group) str += QStringLiteral("组开关 ");
         else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
-        else str += QStringLiteral("输出位继电器 ");
+        else str += QStringLiteral(" 输出位继电器 ");
         if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
         break;
     case DSub::Rated:
@@ -41,8 +41,8 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
     sEventItem db;
     db.event_content = str;
-    db.event_type = QStringLiteral("继电器设置");
-    db.event_type += opSrc(it.addr);
+    db.event_type = opSrc(it.addr);
+    db.event_type += QStringLiteral("继电器 控制");
     Log_Core::bulid()->append(db);
 }
 
@@ -234,7 +234,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
 
     if(ptr){
         QByteArray array = v.toByteArray();
-        qstrcpy(ptr, array.data());
+        qstrncpy(ptr, array.data(), NAME_SIZE);
         if(it.fc == 1) {
             QString key = QString::number(id+1);
             Cfg_Com *cfg = Cfg_Com::bulid();

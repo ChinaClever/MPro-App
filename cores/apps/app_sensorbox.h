@@ -13,6 +13,7 @@ public:
 private:
     bool box_open();
     void box_close();
+    void box_offline();
     bool box_readData();
     ushort getShort(uchar *ptr);
     bool box_recvPacket(const QByteArray &array);

@@ -58,28 +58,20 @@
 		let lang = new Array();
 		let output_num;
 		let overrun_state =new Array();
-		let output_info_ =new Array();
 		let state_ = new Array();
 		let dev_name = new Array();
-		let output_name =new Array();
 		var slave_num ;
+		let pdu_data;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
+			pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
+			for(let i = 1;i<output_num + 1;i++){
+				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
 			}
 		}
-		ParseData();
 		function LangInit(){
 			for(let i = 1;i<13;i++){
 				lang[i] = new Array();
@@ -104,9 +96,17 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				ParseData();
+				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				LangFun();
+				ShowData();
+				ModeSet();
+			},500);
 		}
 		function LangFun(){
 			for(let j = 1;j<8;j++){
@@ -152,20 +152,18 @@
 				}
 			}
 		}
-		LangInit();
-		ReadData();
 		function ReadData(){
-			for(var i = 1 ;i < output_num + 1;i++){
-				output_name[i] = output_info_[i - 1][12];
-				overrun_state[i] =  output_info_[i - 1][27];
+			for(let i = 1;i<output_num + 1;i++){
 				if(overrun_state[i] == 0){
 					state_[i] = lang[9][language];
 				}else{
 					state_[i] = lang[10][language];
 				}
-				
 			}
 		}
+		ParseData();
+		LangInit();
+		ReadData();
 		$('.table-striped').html(BuildTable(output_num));
 		$('.devname').html(BuildSel((slave_num+1)));
 		LangFun();
@@ -199,11 +197,11 @@
 		{
 			setTimeout(function(){
 				ParseData();
-				par.parentNode.parentNode.parentNode.remove();
 				ReadData();
+				par.parentNode.parentNode.parentNode.remove();
 				$('.table-striped').html(BuildTable(output_num));
 				LangFun_();
-			},500);
+			},800);
 		}
 		function BuildSel(rows)
 		{
@@ -228,7 +226,7 @@
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">' + output_name[i+1] + '</td>';
+				tbody += '<td id = "b'+ i + '">' + pdu_data.pdu_data.output_item_list.name[i] + '</td>';
 				tbody += '<td ></td>';
 				tbody += '<td id = "c'+ i + '">' + lang[10 - overrun_state[i + 1]][language] + '</td>';
 				tbody += '<td><input type = "button" onclick ="SetData(this)" id = "d'+ i + '" value = "'+ state_[i + 1] +'"></input></td>';

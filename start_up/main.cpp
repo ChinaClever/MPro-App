@@ -8,6 +8,7 @@
 
 static void initSystem()
 {
+    system("rm /tmp/messages");
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("chmod 777 -R /usr/data/clever");

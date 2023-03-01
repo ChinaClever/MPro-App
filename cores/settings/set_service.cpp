@@ -99,6 +99,7 @@ QVariant Set_Service::smtpCfg(int fc, int id)
     case 6: ret = it->port; break;
     case 7: ret = it->ct; break;
     case 8: ret = it->lastErr; break;
+    case 11: ret = App_Core::bulid()->smtp_testMail(); break;
     default: cout << fc; break;
     }
     return ret;

@@ -186,8 +186,8 @@ void OP_Object::fillData(uchar addr)
         curFaultCheck(k, i);
         powFaultCheck(k, i);
         eleFaultCheck(k, i);
-        //dev->output.relay.sw[k+i] = it->sw[i];
-        relayCheck(dev->output.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
+        dev->output.relay.sw[k+i] = it->sw[i];
+        //relayCheck(dev->output.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 
     dev->offLine = 3;
@@ -207,8 +207,8 @@ void OP_Object::loop_fillData()
         curFaultCheck(k, i);
         powFaultCheck(k, i);
         eleFaultCheck(k, i);        
-        //dev->loop.relay.sw[k+i] = it->sw[i];
-        relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
+        dev->loop.relay.sw[k+i] = it->sw[i];
+        //relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 
     dev->offLine = 3;

@@ -101,9 +101,9 @@ class JsonRpc {
         if(this.ws.readyState == WebSocket.OPEN){     
             this.ws.send(msg);
         } else {
-            ret = false;
-            this.ws.close();
-            this.ws = this.socket_open(); 
+            // ret = false;
+            // this.ws.close();
+            // this.ws = this.socket_open(); 
         }
         return ret;
     }
@@ -426,7 +426,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(42, fcs);
     }
     ntpCfg(){
-        var fcs = [1,2,3,4,5,6];
+        var fcs = [1,2,3,4];
         this.getCfgList(43, fcs);
     }
     smtpCfg(){

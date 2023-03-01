@@ -27,16 +27,22 @@ void Mb_Object::upDevInfo()
 {
     sDevData *dev = mDevData;
     vshort vs; //initFucRegs();
-    vs << 1 << 0; // 通讯协议版本
+    vs << 1 << 0 << 0 << 0; // 通讯协议版本
+
+    QDateTime dt = QDateTime::currentDateTime();
+    vs << dt.date().year();
+    vs << dt.date().month();
+    vs << dt.date().day();
+    vs << dt.time().hour();
+    vs << dt.time().minute();
+    vs << dt.time().second();
 
     vs << dev->cfg.param.devSpec; // 设备规格
     vs << dev->cfg.nums.lineNum;
     vs << dev->cfg.nums.loopNum;
     vs << dev->cfg.nums.outputNum;
     vs << dev->cfg.nums.boardNum;
-    vs << dev->hz;
-    qint64 timestamp = QDateTime::currentSecsSinceEpoch();
-    vs << (timestamp>> 16); vs << (timestamp&0xffff);
+    vs << dev->hz << 0 << 0;
 
     vs << dev->status;
     vs << dev->tg.pow.value;

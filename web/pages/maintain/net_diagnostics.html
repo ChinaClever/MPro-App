@@ -139,13 +139,10 @@
 			},1000);
 		}
 		function diagn_read(btn){
-			let text_info="";
 			let text_num = 0;
 			let time1 = setInterval(function(){
-				let key = '0_93_'+ btn +'_0_0';
-				pdu_cfg.cfgValue(93,btn,0,addr);
-				text_info = sessionStorage.getItem(net_diagn[btn]);
-				if(text_info !="" || text_num == 15){
+				diagn_data[btn] = pdu_cfg.cfgValue(93,btn,0,addr);
+				if(diagn_data[btn] != 0 || text_num == 15){
 					clearInterval(time1);
 					read_data();
 					showdata_(btn);

@@ -3,7 +3,7 @@
     "name": "首页",
     "icon": "icon-homepage_fill",
     "base": "",
-    "url": "home.html"
+    "url": "pages/home.html"
   },
   {
     "name": "输入",

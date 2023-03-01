@@ -53,14 +53,14 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
 bool Ota_Net::rootfsExists(const QString &path)
 {
     bool ret = false; QString dir = path + "rootfs";
-    QStringList fns = File::entryList(dir); //cout << dir << fns;
-    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;
+    QStringList fns = File::entryList(dir); //cout << dir << fns << ret;
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;    
     return ret;
 }
 
 bool Ota_Net::up_rootfs(const QString &path)
 {
-    bool ret =  rootfsExists(path); if(ret) {
+    bool ret = rootfsExists(path); if(ret) {
         QString fmd = "system-update %1/xImage %1/rootfs.squashfs";
         sOtaUpdater *ota = &cm::dataPacket()->ota;
         setbit(ota->work, DOta_Rootfs);
@@ -73,7 +73,7 @@ bool Ota_Net::up_rootfs(const QString &path)
         throwMessage(str); cm::mdelay(100);
         ota->rootfs.progress = 100;
         ota->rootfs.isRun = 0;
-        cout << ota->rootfs.progress;
+        //cout << ota->rootfs.progress;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
     } else ret = false;
 
@@ -86,11 +86,8 @@ void Ota_Net::workDown(const QString &fn, int bit)
     QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/clever/");
-    QString fmd = "cp -af %1 /usr/data/clever/";
-    QString cmd = fmd.arg(dir);  throwMessage(cmd);
-    if(!rootfsExists(dir)) system(cmd.toStdString().c_str());
-    fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
-    cmd = cm::execute(cmd); throwMessage(cmd);
+    QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
+    QString cmd = fmd.arg(dir); cmd = cm::execute(cmd); throwMessage(cmd);
 
     up_rootfs(dir);
     clrbit(mOta->work, bit);

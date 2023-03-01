@@ -89,7 +89,7 @@ bool Set_Updater::ota_cascade(const QString &fn)
     sParameter *ptr = &(cm::masterDev()->cfg.param);
     uchar dm = ptr->devMode; if((dm>0) && (dm<3)) {
         if(ptr->cascadeAddr==0) {
-            for(int i=1; i<num; ++i) {
+            for(int i=1; i<=num; ++i) {
                 if(cm::devData(i)->offLine) ret = true;
             } if(ret) {
                 sOtaFile it; it.fc = 1; QString path = fn;

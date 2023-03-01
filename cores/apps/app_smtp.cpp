@@ -13,18 +13,25 @@ App_Smtp::App_Smtp(QObject *parent)
 
 }
 
-void App_Smtp::smtp_sendMail(const QString &content)
+void App_Smtp::smtp_sendMail(const QString &content, bool ok)
 {
-    if(smtpCfg.en) {
+    if(smtpCfg.en || ok) {
         mList << content;
-        // if(!smtp_isRun) QTimer::singleShot(1345,this,SLOT(smtp_run()));
-        if(!smtp_isRun) QtConcurrent::run(this, &App_Smtp::smtp_run);
+         if(!smtp_isRun) QTimer::singleShot(1345,this,SLOT(smtp_run()));
+        //if(!smtp_isRun) QtConcurrent::run(this, &App_Smtp::smtp_run);
     }
+}
+
+bool App_Smtp::smtp_testMail()
+{
+    QString msg = "this is test mail";
+    smtp_sendMail(msg, true);
+    return true;
 }
 
 void App_Smtp::sendMail()
 {
-    if(!smtpCfg.en) return;
+    //if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
 
     MimeMessage message;
@@ -79,7 +86,7 @@ void App_Smtp::smtp_run()
 {
     if(!smtp_isRun) {
         smtp_isRun = true;
-        cm::mdelay(500);
+        //cm::mdelay(500);
         sendMail();
         smtp_isRun = false;
     }

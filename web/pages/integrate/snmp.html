@@ -45,6 +45,7 @@
 	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
+		let pattern_ = /^[a-zA-Z0-9]{8,16}$/;
 		let pdu_cfg = top.pdu_cfg_;
 		let addr = 0;
 		let language;
@@ -158,6 +159,12 @@
 		function SetData(btn){
 			for(let i = 0;i<snmp_name.length;i++){
 				if(snmp_name[i] == btn.id){
+					if(btn.id  == "psd" || btn.id == "parity"){
+						if(!pattern_.test(btn.value) && btn.value != ""){
+							alert("请输入8-16位字符");
+							return ;
+						}
+					}
 					pdu_cfg.setCfg(16,i,btn.value,0,addr);
 				}else if(trap_name[i] == btn.id){
 					pdu_cfg.setCfg(16,21,btn.value,0,addr);

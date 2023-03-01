@@ -16,7 +16,7 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 
 void Cascade_Updater::throwMessage(const QString &msg)
 {
-    QString str = "updater cascade " + msg;
+    QString str = "cascade updater " + msg;
     QString ip = cm::dataPacket()->ota.host; qDebug() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
@@ -24,10 +24,10 @@ void Cascade_Updater::throwMessage(const QString &msg)
 bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
 {
     sOtaUpIt *up = &(cm::dataPacket()->ota.slave);
-    bool ret = false; int max = 10*1024; int i=0, pro=0;
+    bool ret = false; int max = 3*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
-        ret = otaSendInit(addr, it); cm::mdelay(5);
+        ret = otaSendInit(addr, it); cm::mdelay(150);
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
@@ -66,7 +66,7 @@ void Cascade_Updater::ota_updates()
 
 bool Cascade_Updater::otaSendInit(int addr, const sOtaFile &it)
 {
-    isOta = true; waitForLock(); cm::mdelay(200);
+    isOta = true; waitForLock(); cm::mdelay(200); mCnt = 0;
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << it.fc << it.dev <<it.path << it.file << it.md5 << it.sig << it.size << END_CRC;
     QByteArray recv = tranData(fc_otaStart, addr, array);
@@ -86,11 +86,11 @@ bool Cascade_Updater::otaSendPacket( int addr, const QByteArray &array)
 
 bool Cascade_Updater::otaSendData(uchar fn, int addr, const QByteArray &array)
 {
-    bool ret = true;
-    QByteArray recv = tranData(fn, addr, array); cm::mdelay(5);
+    bool ret = true; mCnt++;
+    QByteArray recv = tranData(fn, addr, array); cm::mdelay(165);
     if(recv.isEmpty() || recv.contains("Receive Packet Failure")) {
-        throwMessage(tr("Error: addr=%1: ota send data %2 recv failed: %3")
-                     .arg(addr).arg(fn).arg(recv.data())); ret = false;
+        throwMessage(tr("cascade error: addr=%1: fn=%2 cnt=%3 ota send len:%4 recv failed: %5")
+                     .arg(addr).arg(fn).arg(mCnt).arg(array.size()).arg(recv.data())); ret = false;
     } //emit otaSendSig(addr, recv);
     return ret;
 }
@@ -142,13 +142,8 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
         qDebug() << cm::execute(str.arg(fn));
         system("chmod 777 -R /usr/data/clever/");
         system("chmod 777 -R /tmp/updater/ota_apps/");
-
-        QString fmd = "cp -af %1 /usr/data/clever/";
+        QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
-        system(cmd.toStdString().c_str());
-
-        fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
-        cmd = fmd.arg(dir); throwMessage(cmd);
         str = cm::execute(cmd); throwMessage(str);
         Set_Core::bulid()->ota_updater(11, fn);
         otaRootfs(dir);

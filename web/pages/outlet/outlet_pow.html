@@ -84,14 +84,14 @@
 			lang[3] = ["设备选择:","","","",""];
 			lang[4] = ["序号","","","",""];
 			lang[5] = ["单元名称","","","",""];
-			lang[6] = ["有功功率(KW)","","","",""];
+			lang[6] = ["有功功率(kW)","","","",""];
 			lang[7] = ["告警使能","","","",""];
 			lang[8] = ["历史记录","","","",""];
-			lang[9] = ["额定值(KW)","","","",""];
-			lang[10] = ["最小值(KW)","","","",""];
-			lang[11] = ["下临界(KW)","","","",""];
-			lang[12] = ["上临界(KW)","","","",""];
-			lang[13] = ["最大值(KW)","","","",""];
+			lang[9] = ["额定值(kW)","","","",""];
+			lang[10] = ["最小值(kW)","","","",""];
+			lang[11] = ["下临界(kW)","","","",""];
+			lang[12] = ["上临界(kW)","","","",""];
+			lang[13] = ["最大值(kW)","","","",""];
 			lang[14] = ["设置模式","","","",""];
 			lang[15] = ["阅读模式","","","",""];
 			lang[16] = ["统一设置","","","",""];
@@ -122,9 +122,17 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(top.addr_);
 			},100);
+			setTimeout(function(){
+				ParseData();
+				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				ShowData();
+				LangFun();
+				ModeSet();
+			},500);
 		}
 		function BuildSel(rows)
 		{
@@ -327,7 +335,7 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td id = "e'+ i +'">' + parseFloat(pdu_data.pdu_data.output_item_list.pow_rated[i]).toFixed(3)+'</td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_rated[i])).toFixed(3)  +'"></input></td>';
 				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_alarm_min[i])).toFixed(3)  +'"></input></td>';
 				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_warn_min[i])).toFixed(3)  +'"></input></td>';
 				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (parseFloat(pdu_data.pdu_data.output_item_list.pow_warn_max[i])).toFixed(3)  +'"></input></td>';
@@ -341,7 +349,7 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-					tbody += '<td id = "e'+ i + '"></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "e'+ i + '"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
 					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="SetData(this)" oninput = "if(value>3.520){value=3.520};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
