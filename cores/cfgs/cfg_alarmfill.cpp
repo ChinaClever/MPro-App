@@ -31,7 +31,7 @@ void Cfg_AlarmFill::upAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmIt &it)
 void Cfg_AlarmFill::upRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     it.size = unit.size;
-    it.en = unit.en[id];
+    it.disabled = unit.disabled[id];
     it.cnt = unit.cnt[id];
     it.lifeEn = unit.lifeEn[id];
     it.maxCnt = unit.maxCnt[id];

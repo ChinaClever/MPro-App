@@ -109,7 +109,7 @@ void Agent_Get::addRelayUnit(uchar addr, const QString &oidPrefix,
     int id = 1; QString oid = oidPrefix + ".1.";
     QString name = tr("%1-%2-relay-").arg(oidName).arg(index+1);
     addOidValue(addr, id++, oid, name+"switch", it.sw[index]);
-    addOidValue(addr, id++, oid, name+"enable", it.en[index]);
+    addOidValue(addr, id++, oid, name+"disabled", it.disabled[index]);
     addOidValue(addr, id++, oid, name+"alarm-status", it.alarm[index], false);
     addOidValue(addr, id++, oid, name+"off-alarm", it.offAlarm[index]);
     addOidValue(addr, id++, oid, name+"up-delay", it.powerUpDelay[index]);

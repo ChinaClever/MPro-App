@@ -47,7 +47,7 @@ void Data_Group::disGroupAlarm(int id)
     mDev->group.vol.en[id] = 0;
     mDev->group.cur.en[id] = 0;
     mDev->group.pow.en[id] = 0;
-    mDev->group.relay.en[id] = 0;
+    mDev->group.relay.disabled[id] = 0;
     mDev->group.relay.offAlarm[id] = 0;
     mDev->group.relay.timingEn[id] = 0;
     mDev->group.relay.overrunOff[id] = 0;

@@ -86,10 +86,10 @@ QByteArray SerialPort::readSerial(int msecs)
     QByteArray rcv, array;
     if(mSerial->isReadable()) {
         //mSerial->waitForReadyRead(msecs);
-        for(int i=0; i<msecs; i+=10) {
+        for(int i=0; i<msecs; i+=50) {
             rcv = mSerial->readAll();
             if(rcv.size()) break;
-            else cm::mdelay(10);
+            else cm::mdelay(50);
         }
 
         do{

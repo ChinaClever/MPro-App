@@ -8,6 +8,7 @@
 Ota_Obj::Ota_Obj(QObject *parent)
     : QObject{parent}
 {
+    system("mkdir -p /tmp/rsa/");
     system("mkdir -p /tmp/updater/ota_apps");
     QTimer::singleShot(1155,this,SLOT(runing_initFunSlot()));
 }
@@ -46,9 +47,9 @@ void Ota_Obj::runing_onTimeoutDone()
 
 void Ota_Obj::sign_init()
 {
-    system("echo '' > /tmp/signature.sig");
-    system("echo '' > /tmp/public.pem");
-    QString fmd = "echo '%1' > /tmp/public.pem";
+    system("echo '' > /tmp/rsa/signature.sig");
+    system("echo '' > /tmp/rsa/public.pem");
+    QString fmd = "echo '%1' > /tmp/rsa/public.pem";
     QString pubkey = "-----BEGIN PUBLIC KEY-----\n"
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuvQJUSeObNKKQYhh5fvB\n"
             "wi6NCnCZ+P679TekB4+o808YOHOFpQvVDc9glzqDmUMIkG7bzL+/43A6zY7ja+gn\n"
@@ -59,17 +60,18 @@ void Ota_Obj::sign_init()
             "bQIDAQAB\n"
             "-----END PUBLIC KEY-----";
     system(fmd.arg(pubkey).toLocal8Bit());
+    cout << fmd.arg(pubkey);
 }
 
 
 bool Ota_Obj::sign_verify(const sOtaFile &it)
 {
     bool ret = false; sign_init();
-    QString pubKey = "/tmp/public.pem";
-    QString fmd = "echo '%1' > /tmp/signature.sig";
-    QString cmd = fmd.arg(it.sig); system(cmd.toLocal8Bit());
-    system("openssl base64 -A -d -in /tmp/signature.sig -out /tmp/sign.sig");
-    fmd = "openssl dgst -sha256 -verify %1 -signature /tmp/sign.sig %2";
+    QString pubKey = "/tmp/rsa/public.pem";
+    QString fmd = "echo '%1' > /tmp/rsa/signature.sig";
+    QString cmd = fmd.arg(it.sig); system(cmd.toLocal8Bit()); cout << cmd;
+    system("openssl base64 -A -d -in /tmp/rsa/signature.sig -out /tmp/rsa/sign.sig");
+    fmd = "openssl dgst -sha256 -verify %1 -signature /tmp/rsa/sign.sig %2";
     cmd = fmd.arg(pubKey, it.path + it.file); QString str = cm::execute(cmd);
     if(str.contains("Verified OK")) ret = true; else qDebug() << str;
     return ret;

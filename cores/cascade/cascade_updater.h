@@ -44,6 +44,7 @@ protected:
     bool isOta;
 
 private:
+    int mCnt;
     int mSize;
     QFile *mFile;
     sOtaFile mIt;
