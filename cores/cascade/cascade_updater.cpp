@@ -86,8 +86,8 @@ bool Cascade_Updater::otaSendPacket( int addr, const QByteArray &array)
 
 bool Cascade_Updater::otaSendData(uchar fn, int addr, const QByteArray &array)
 {
-    bool ret = true; mCnt++;
-    QByteArray recv = tranData(fn, addr, array); cm::mdelay(165);
+    bool ret = true; cm::mdelay(165); mCnt++;
+    QByteArray recv = tranData(fn, addr, array);
     if(recv.isEmpty() || recv.contains("Receive Packet Failure")) {
         throwMessage(tr("cascade error: addr=%1: fn=%2 cnt=%3 ota send len:%4 recv failed: %5")
                      .arg(addr).arg(fn).arg(mCnt).arg(array.size()).arg(recv.data())); ret = false;
