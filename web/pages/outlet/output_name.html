@@ -198,7 +198,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td ></td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "b'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.name[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" maxlength="14" class = "input" id = "b'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.name[i]+'"></input></td>';
 				tbody += '</tr>';
 			}
 
