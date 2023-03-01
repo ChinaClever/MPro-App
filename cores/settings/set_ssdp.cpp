@@ -69,10 +69,11 @@ void Set_Ssdp::recvSwVersion()
     QString fmt = "sw_version:%1; date:%2; usr:%3; md5:%4; Outlet:";
 
     int num = cm::masterDev()->cfg.nums.slaveNum;
-    for(int i=0; i<=num; i++) {
+    for(int i=0; i<=num; i++) {        
+        int op = cm::devData(i)->cfg.nums.boardNum;
         sVersions *ver = &(cm::devData(i)->cfg.vers);
         QString str = fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
-        for (int k = 0; k < 6; ++k) {
+        for (int k = 0; k < op; ++k) {
             str += QString::number(ver->opVers[k]/10.0, 'f',1) +"; ";
         }
         item.data = str.toUtf8();
