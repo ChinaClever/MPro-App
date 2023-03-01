@@ -175,7 +175,7 @@
 			cfg_data[6] = pdu_data.net_addr.mac;
 			break_en = pdu_cfg_.cfgValue(cfg,11,0,addr);
 			cfg_data[0] = pdu_cfg_.cfgValue(cfg,13,0,addr);
-			cfg_data[1] = 0;
+			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
 			cfg_data[2] = 0;
 			cfg_data[3] = pdu_cfg_.cfgValue(cfg,9,0,addr);;
 			cfg_data[4] = pdu_cfg_.cfgValue(cfg,1,0,addr);
