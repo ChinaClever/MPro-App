@@ -27,7 +27,7 @@ class JsonRpc {
         var host = window.location.host;
         //var port = window.location.port; if(port) port = ':' + port;
         if(window.location.protocol == "https:") {protocol = "wss"; this.timeOut = 210;}     
-        var url = protocol+'://'+host+'/websocket'; alert(url);
+        var url = protocol+'://'+host+'/websocket'; //alert(url);
         return url;
     }
 
