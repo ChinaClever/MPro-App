@@ -6,7 +6,7 @@
 	<meta name="renderer" content="webkit">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
-	<title>Pro</title>
+	<title>MPDU</title>
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="icon" href="include/images/logo.png">
 	<link rel="stylesheet" href="include/css/public.min.css">
@@ -17,30 +17,36 @@
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
+	<style>
+		label{
+			text-align: left;
+		}
+	</style>
 </head>
 
 <body>
-	<div class="body-top" style="position: relative; z-index: 0;">
-		<div class="side-box" style="position: relative; z-index: 2;width: 4%;">
+	<div class="body-top" style="position: absolute; z-index: 1;">
+		<div class="side-box" style="position: relative; z-index: 2;width: 4%;display: none;">
 			<a class="sys-title" href="javascript:;">
 				<img class="logo" src="include/images/logo.png" alt="logo">
 			</a>
 		</div>
 		<div style="position: relative; z-index: 1;">
-			<p align="right">
-				<span id="lang_1">working-status:</span><span></span>
-				<i id="lang_2" class="fa fa-language"style="height: auto; line-height: 2;padding-right: 1.5%;"title = "Chinese" onclick="ChoseLang()"></i>
-				<i id="lang_3" class="fa fa-bell"style="height: auto; line-height: 2;padding-right: 1.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
-				<i id="lang_4" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 1.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
-				<span style="width:15%;font-size:4px;line-height: 10px;"><span id="lang_5">PDU series:</span><span style="width:15%;font-size:4px;line-height: 0.5;padding-right: 1.5%;"></span><span id="lang_6" style="font-size:4px;">PDU Version:</span><span style="font-size:4px;line-height: 1.6;padding-right: 1.5%;"></span></span><br/>
-				<span style="width:15%;font-size:4px;line-height: 10px;"><span id="lang_7">PDU uptime:</span><span style="width:15%;font-size:4px;line-height: 0.5;padding-right: 1.5%;"></span><span id="lang_8" style="font-size:4px;">PDU location:</span><span style="font-size:4px;line-height: 1.6;padding-right: 1.5%;"></span></span><br/>
+			<p align="right" style="background-image: url(include/images/title.png);">
+				<i id="language" class="fa fa-language"style="height: 18px; line-height: 1;padding-right: 0.8%;"title = "Chinese" onclick="ChoseLang()"></i>
+				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 1;padding-right: 0.8%;"title = "AlarmLog" onclick="AlramNow()"></i>
+				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
+				<label style="width:19%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:56%;"></label><label id ="version" style="width:44%;"></label></label><br>
+				<label style="width:19%;font-size:12px;line-height:12px;display:inline-flex;"><label  id ="uptime" style="width:56%;"></label><label id ="status" style="width:44%;" ></label></label>
 			</p>
 		</div>
 	</div>
-	<div class="side-box">
+	<div class="side-box"style="position: relative; z-index: 0;" >
+		<a class="sys-title" href="javascript:;"></a>
 		<ul class="nav" id="nav"></ul>
 	</div>
-	<div class="main-box">
+	<div class="main-box"style="position: relative; z-index: 0;">
+		<a class="sys-title" href="javascript:;"></a>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
@@ -55,6 +61,10 @@
 		var inletA_data = new Array(3);
 		var inletB_data = new Array(3);
 		var inletC_data = new Array(3);
+		var series_data = new Array("","A","B","C","D");
+		var run_status = new Array();
+		let pdu_data;
+		let lang =new Array();
 		for (let i = 0; i < 3; i++) {
 			total_data[i] = new Array(3);
 			inletA_data[i] = new Array(3);
@@ -71,10 +81,11 @@
 			PduMetaData.meta_workDown(addr_);
 		}, 300);
 		function ParseData(){
-			let DataString = pdu_cfg.meta_value();
+			let DataString = pdu_cfg_.meta_value();
 			if(DataString == null){
 				DataString = sessionStorage.getItem('0_100_0_0_0');
 			}
+			pdu_data = JSON.parse(DataString);
 			language_ = pdu_data.pdu_info.language;
 			addr_ = pdu_data.addr;
 		}
@@ -82,26 +93,54 @@
 			for (let i = 0; i < lang.length; i++) {
 				lang[i] = new Array();
 			}
-			lang[1] = ["工作状态：", "Working status:", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
-			lang[2] = ["中文", "", "", "", ""];
-			lang[3] = ["当前告警", "", "", "", ""];
-			lang[4] = ["登出", "", "", "", ""];
-			lang[5] = ["产品系列：", "PDU series:", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
-			lang[6] = ["软件版本：", "PDU version:", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
-			lang[7] = ["运行时长：", "PDU uptime:", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
-			lang[8] = ["PDU位置:", "PDU location:", "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
-			lang[9] = ["英文", "", "", "", ""];
-			lang[10] = ["正常", "", "", "", ""];
-			lang[11] = ["告警", "", "", "", ""];
-			lang[12] = ["断开", "", "", "", ""];
-			lang[13] = ["闭合", "", "", "", ""];
+			lang[1] = ["产品系列：", "PDU series: ", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
+			lang[2] = ["软件版本：", "PDU version: ", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
+			lang[3] = ["运行时长：", "PDU uptime: ", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
+			lang[4] = ["工作状态：", "Working status: ", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
+			lang[5] = ["中文", "", "", "", ""];
+			lang[6] = ["英文", "", "", "", ""];
+			lang[7] = ["当前告警", "", "", "", ""];
+			lang[8] = ["登出", "", "", "", ""];
+			lang[9] = ["正常", "", "", "", ""];
+			lang[10] = ["告警", "", "", "", ""];
+			lang[11] = ["断开", "", "", "", ""];
+			lang[12] = ["闭合", "", "", "", ""];
+			lang[13] = ["天", "", "", "", ""];
+			lang[14] = ["小时", "", "", "", ""];
+			lang[15] = ["分钟", "", "", "", ""];
+			run_status[0] = lang[9][language_];
+			run_status[1] = lang[10][language_];
 		}
 		function ShowData(){
-
+			document.getElementById("language").style.title = lang[language_ +5][language_];
+			document.getElementById("alramNow").style.title = lang[7][language_];
+			document.getElementById("logOut").style.title = lang[8][language_];
+			document.getElementById("status").innerHTML = run_status[pdu_data.status];
+			document.getElementById("series").innerHTML = lang[1][language_] + pdu_data.uut_info.pdu_type + "("+series_data[pdu_data.pdu_info.pdu_spec]+")";
+			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
+			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
+			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
 		}
-		// ParseData();
-		// LangInit();
-		// ShowData();
+		ParseData();
+		LangInit();
+		ShowData();
+		function TimeConvert(min){
+			let time_show;
+			let day_,hour_,min_;
+			if(min>=1440){
+				day_ = parseInt(min / 1440);
+				hour_ = parseInt((min % 1440) / 60);
+				min_ = parseInt(min % 60);
+				time_show = day_ + lang[13][language_]+ hour_ + lang[14][language_] + min_ + lang[15][language_];
+			}else if(min>=60){
+				hour_ =  parseInt(min/60);
+				min_ = min%60;
+				time_show = hour_ + lang[14][language_] + min_ + lang[15][language_];
+			}else{
+				time_show = min + lang[15][language_];
+			}
+			return time_show;
+		}
 		function ChoseLang(){
 			if(language_ = 1){
 				language_ = 0;
@@ -129,11 +168,11 @@
 			closeWebPage();
 			window.history.replaceState({}, document.title, window.location.origin);
 		}
-		document.getElementById("lang_4").onmouseover = function () {
-			document.getElementById("lang_4").style.color = "red";
+		document.getElementById("logOut").onmouseover = function () {
+			document.getElementById("logOut").style.color = "red";
 		}
-		document.getElementById("lang_4").onmouseout = function () {
-			document.getElementById("lang_4").style.color = "";
+		document.getElementById("logOut").onmouseout = function () {
+			document.getElementById("logOut").style.color = "";
 		}
 		function closeWebPage() {
 			if (navigator.userAgent.indexOf("MSIE") > 0) {//close IE
