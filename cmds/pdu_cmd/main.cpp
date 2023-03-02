@@ -13,14 +13,14 @@ void usage()
     using namespace std;
     cout << "*******************************************************" <<endl;
     cout << "* usage: of pdu_cmd" <<endl;
-    cout << "*    pduRelaysCtrl   addr  start  num    on"  <<endl;
-    cout << "*    pduDataGet      addr  type   topic  sub    id" <<endl;
-    cout << "*    pduDataSet      addr  type   topic  sub    id  value" <<endl;
-    cout << "*    pduCfgSet       type  fc     value  [id]   [addr] " <<endl;
-    cout << "*    pduCfgGet       type  fc     [id]   [addr]" <<endl;
-    cout << "*    pduLogFun       type  fc     [id]   [cnt]" <<endl;
-    cout << "*    pduLogHda       start [end]  [addr] [type] [topic] [id]"<<endl;
-    cout << "*    pduMetaData     [addr]  " <<endl;
+    cout << "*    pduRelaysCtrl   addr   start  num    on"  <<endl;
+    cout << "*    pduDataGet      addr   type   topic  sub    id" <<endl;
+    cout << "*    pduDataSet      addr   type   topic  sub    id  value" <<endl;
+    cout << "*    pduCfgSet       type   fc     value  [id]   [addr] " <<endl;
+    cout << "*    pduCfgGet       type   fc     [id]   [addr]" <<endl;
+    cout << "*    pduLogFun       type   fc     [id]   [cnt]" <<endl;
+    cout << "*    pduLogHda       start  [end]  [addr] [type] [topic] [id]"<<endl;
+    cout << "*    pduMetaData     [addr] [dc]" <<endl;
     cout << "*******************************************************" <<endl;
 }
 
@@ -93,7 +93,8 @@ void pduMetaData(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
     uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
-    std::cout << rpc->pduMetaData(addr, 2).toStdString() << std::endl;
+    uchar dc = 0;if(ls.size()>1) dc = ls.at(1).toInt();
+    std::cout << rpc->pduMetaData(addr, dc).toStdString() << std::endl;
 }
 
 void pduLogFun(const QStringList &ls)

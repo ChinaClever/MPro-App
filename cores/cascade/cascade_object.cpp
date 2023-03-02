@@ -14,8 +14,8 @@ Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 
 void Cascade_Object::setAddress()
 {
-    uchar addr = 1; sParameter *p = &(cm::masterDev()->cfg.param);
-    if(p->devMode < DevMode::DM_Rtu) addr = p->cascadeAddr;
+    sParameter *p = &(cm::masterDev()->cfg.param);
+    uchar addr = 1; if(p->devMode) addr = p->cascadeAddr;
     mSelfAddr = addr;
 }
 

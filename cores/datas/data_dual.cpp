@@ -13,7 +13,7 @@ Data_Dual::Data_Dual()
 int Data_Dual::setDualSize(int id)
 {
     int size = 0;
-    if(mDev->cfg.param.devMode == DevMode::DM_Dual) {
+    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
         size = mDev->cfg.nums.outputNum;
         //mDev->cfg.nums.slaveNum = 1;
     }
@@ -30,7 +30,7 @@ int Data_Dual::setDualSize(int id)
 void Data_Dual::dualWork()
 {
     if(mDev->cfg.param.cascadeAddr) {dualTiming(0); return;}
-    if(mDev->cfg.param.devMode == DevMode::DM_Dual) {
+    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
         int num = mDev->cfg.nums.slaveNum;
         for (int i=0; i <= num; i += 2) {
             int size = setDualSize(i);

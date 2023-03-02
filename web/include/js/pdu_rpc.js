@@ -25,9 +25,9 @@ class JsonRpc {
     rpc_url() {
         var protocol = "ws";        
         var host = window.location.host;
-        var port = window.location.port; if(port) port = ':' + port;
+        //var port = window.location.port; if(port) port = ':' + port;
         if(window.location.protocol == "https:") {protocol = "wss"; this.timeOut = 210;}     
-        var url = protocol+'://'+host+port+'/websocket'; //alert(url);
+        var url = protocol+'://'+host+'/websocket'; alert(url);
         return url;
     }
 
@@ -101,9 +101,9 @@ class JsonRpc {
         if(this.ws.readyState == WebSocket.OPEN){     
             this.ws.send(msg);
         } else {
-            // ret = false;
-            // this.ws.close();
-            // this.ws = this.socket_open(); 
+             ret = false;
+             this.ws.close();
+             this.ws = this.socket_open(); 
         }
         return ret;
     }

@@ -41,7 +41,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     sModbusSetting *cfg = &(Mb_Core::modbusCfg);
     QString prefix = "modbus";  QString key;
     bool ret = true; switch (fc) {
-    case 1: key = "enRtu"; cfg->enRtu = value; break;
+    case 1: key = "enRtu"; cfg->enRtu = value; if(value) setInfoCfg(3, 0); break;
     case 2: key = "addr"; cfg->addr = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
     case 3: key = "baud"; value = toBaud(value); cm::masterDev()->cfg.param.modbusRtuBr = cfg->baud = value; break;
     case 4: key = "parity"; value = toParity(value); cfg->parity = value;  /*mb->setRtu(1, value);*/ break;
