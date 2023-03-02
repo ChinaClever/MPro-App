@@ -29,7 +29,7 @@ void Cfg_AlarmUnserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, cfg::_sAlarmI
 void Cfg_AlarmUnserialize::unRelayUnit(uchar id, sRelayUnit &unit, cfg::_sRelayIt &it)
 {
     unit.size = it.size;
-    unit.en[id] = it.en;
+    unit.disabled[id] = it.disabled;
     unit.cnt[id] = it.cnt;
     unit.maxCnt[id] = it.maxCnt;
     unit.lifeEn[id] = it.lifeEn;

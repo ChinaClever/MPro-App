@@ -16,30 +16,31 @@
 
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/index.min.js"></script>
-	<script src="include/js/public.min.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
 </head>
 
 <body>
+	<div class="body-top" style="position: relative; z-index: 0;">
+		<div class="side-box" style="position: relative; z-index: 2;width: 4%;">
+			<a class="sys-title" href="javascript:;">
+				<img class="logo" src="include/images/logo.png" alt="logo">
+			</a>
+		</div>
+		<div style="position: relative; z-index: 1;">
+			<p align="right">
+				<span id="lang_1">working-status:</span><span></span>
+				<i id="lang_2" class="fa fa-language"style="height: auto; line-height: 2;padding-right: 1.5%;"title = "Chinese" onclick="ChoseLang()"></i>
+				<i id="lang_3" class="fa fa-bell"style="height: auto; line-height: 2;padding-right: 1.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
+				<i id="lang_4" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 1.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
+				<span style="width:15%;font-size:4px;line-height: 10px;"><span id="lang_5">PDU series:</span><span style="width:15%;font-size:4px;line-height: 0.5;padding-right: 1.5%;"></span><span id="lang_6" style="font-size:4px;">PDU Version:</span><span style="font-size:4px;line-height: 1.6;padding-right: 1.5%;"></span></span><br/>
+				<span style="width:15%;font-size:4px;line-height: 10px;"><span id="lang_7">PDU uptime:</span><span style="width:15%;font-size:4px;line-height: 0.5;padding-right: 1.5%;"></span><span id="lang_8" style="font-size:4px;">PDU location:</span><span style="font-size:4px;line-height: 1.6;padding-right: 1.5%;"></span></span><br/>
+			</p>
+		</div>
+	</div>
 	<div class="side-box">
-		<a class="sys-title" href="javascript:;">
-			<img class="logo" src="include/images/logo.png" alt="logo">
-		</a>
 		<ul class="nav" id="nav"></ul>
 	</div>
 	<div class="main-box">
-		<div class="top-box">
-			<div align="right">
-				<p>
-					<span>working-status:</span><span></span>
-					<i id="ShutDown1" class="iconfont icon-alarm"style="width:5%;height: auto; line-height: 1.6;padding-right: 1.5%;"onclick="LogOut()"></i>
-					<i id="ShutDown" class="iconfont icon-shutdown"style="width:5%;height: auto; line-height: 1.6;padding-right: 1.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
-					<span>PDU series:</span><span style="width:15%;line-height: 1.6;padding-right: 1.5%;"></span><span>PDU Version:</span><span style="line-height: 1.6;padding-right: 1.5%;"></span><br/>
-					<span>PDU uptime:</span><span style="width:15%;line-height: 1.6;padding-right: 1.5%;"></span><span>PDU location:</span><span style="line-height: 1.6;padding-right: 1.5%;"></span><br/>
-					
-				</p>
-			</div>
-		</div>
 		<iframe id="mainCont" name="mainCont" frameborder="0"></iframe>
 	</div>
 	<script>
@@ -50,24 +51,89 @@
 		var group_num_ = 8;
 		var slave_addr_ = 0;
 		var dual_addr_ = 0;
+		var total_data = new Array(3);
+		var inletA_data = new Array(3);
+		var inletB_data = new Array(3);
+		var inletC_data = new Array(3);
+		for (let i = 0; i < 3; i++) {
+			total_data[i] = new Array(3);
+			inletA_data[i] = new Array(3);
+			inletB_data[i] = new Array(3);
+			inletC_data[i] = new Array(3);
+			for (let j = 0; j < 50; j++) {
+				total_data[i][j] = 0;
+				inletA_data[i][j] = 0;
+				inletB_data[i][j] = 0;
+				inletC_data[i][j] = 0;
+			}
+		}
 		setTimeout(function () {
 			PduMetaData.meta_workDown(addr_);
 		}, 300);
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			if(DataString == null){
+				DataString = sessionStorage.getItem('0_100_0_0_0');
+			}
+			language_ = pdu_data.pdu_info.language;
+			addr_ = pdu_data.addr;
+		}
+		function LangInit() {
+			for (let i = 0; i < lang.length; i++) {
+				lang[i] = new Array();
+			}
+			lang[1] = ["工作状态：", "Working status:", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
+			lang[2] = ["中文", "", "", "", ""];
+			lang[3] = ["当前告警", "", "", "", ""];
+			lang[4] = ["登出", "", "", "", ""];
+			lang[5] = ["产品系列：", "PDU series:", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
+			lang[6] = ["软件版本：", "PDU version:", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
+			lang[7] = ["运行时长：", "PDU uptime:", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
+			lang[8] = ["PDU位置:", "PDU location:", "PDU Position:", "PDU должность:", "Posición PDU:", "Posición PDU:"];
+			lang[9] = ["英文", "", "", "", ""];
+			lang[10] = ["正常", "", "", "", ""];
+			lang[11] = ["告警", "", "", "", ""];
+			lang[12] = ["断开", "", "", "", ""];
+			lang[13] = ["闭合", "", "", "", ""];
+		}
+		function ShowData(){
+
+		}
+		// ParseData();
+		// LangInit();
+		// ShowData();
+		function ChoseLang(){
+			if(language_ = 1){
+				language_ = 0;
+			}else{
+				language_ = 1;
+			}
+			pdu_cfg.setCfg(13,10,language_,0,addr_);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(addr_);
+			},300);
+			setTimeout(function(){
+				window.location.reload();
+			},1000);
+		}
 		window.history.pushState(null,null,document.URL);
 		window.addEventListener('popstate',function(){
 			window.history.pushState(null,null,document.URL);
 		});
+		function AlramNow(){
+    		$("#mainCont").attr("src", "pages/logs/alarm_now.html");
+		}
 		function LogOut() {
 			window.opener = null;
 			window.open('login.html', '_self');
 			closeWebPage();
 			window.history.replaceState({}, document.title, window.location.origin);
 		}
-		document.getElementById("ShutDown").onmouseover = function () {
-			document.getElementById("ShutDown").style.color = "red";
+		document.getElementById("lang_4").onmouseover = function () {
+			document.getElementById("lang_4").style.color = "red";
 		}
-		document.getElementById("ShutDown").onmouseout = function () {
-			document.getElementById("ShutDown").style.color = "";
+		document.getElementById("lang_4").onmouseout = function () {
+			document.getElementById("lang_4").style.color = "";
 		}
 		function closeWebPage() {
 			if (navigator.userAgent.indexOf("MSIE") > 0) {//close IE
@@ -86,22 +152,6 @@
 				window.opener = null;
 				window.open('', '_self', '');
 				window.close();
-			}
-		}
-		var total_data = new Array(3);
-		var inletA_data = new Array(3);
-		var inletB_data = new Array(3);
-		var inletC_data = new Array(3);
-		for (let i = 0; i < 3; i++) {
-			total_data[i] = new Array(3);
-			inletA_data[i] = new Array(3);
-			inletB_data[i] = new Array(3);
-			inletC_data[i] = new Array(3);
-			for (let j = 0; j < 50; j++) {
-				total_data[i][j] = 0;
-				inletA_data[i][j] = 0;
-				inletB_data[i][j] = 0;
-				inletC_data[i][j] = 0;
 			}
 		}
 		setInterval(function () {

@@ -19,7 +19,7 @@ public slots:
     Q_INVOKABLE QString pduCfgGet(int type, int fc, int id=0, int addr=0);
     Q_INVOKABLE QString pduLogFun(int type, int fc, int id=0, int cnt=0);
     Q_INVOKABLE bool pduRelaysCtrl(int addr, int start, int num, int on);
-    Q_INVOKABLE QString pduMetaData(int addr=0, int dc=2);
+    Q_INVOKABLE QString pduMetaData(int addr=0, int dc=0);
     Q_INVOKABLE QString execute(const QString &cmd);
 
 signals:

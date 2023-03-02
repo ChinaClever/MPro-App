@@ -95,7 +95,7 @@ void Cfg_AlarmInitial::initDevData(sDevData *dev)
 void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) {
-        it.en[i] = 0;
+        it.disabled[i] = 0;
         it.lifeEn[i] = 1;
         it.maxCnt[i] = 50000;
         it.resetDelay[i] = 5;

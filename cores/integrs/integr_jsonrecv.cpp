@@ -140,9 +140,9 @@ bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDa
     return ret;
 }
 
-bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
+bool Integr_JsonRecv::pduDataSet(const QJsonObject &object)
 {
-    QString key = "setDataItem"; sDataItem it;
+    QString key = "pduDataSet"; sDataItem it;
     bool ret = dataItem(key, object, it);
     if (ret) {
         it.rw = 1;
@@ -152,9 +152,9 @@ bool Integr_JsonRecv::setDataItem(const QJsonObject &object)
     return ret;
 }
 
-double Integr_JsonRecv::getDataItem(const QJsonObject &object)
+double Integr_JsonRecv::pduDataGet(const QJsonObject &object)
 {
-    QString key = "getDataItem"; sDataItem it;
+    QString key = "pduDataGet"; sDataItem it;
     if (dataItem(key, object, it)) {
         if(it.id) it.id -= 1;
         Set_Core::bulid()->upMetaData(it);
@@ -178,9 +178,9 @@ bool Integr_JsonRecv::cfgItem(const QString key, const QJsonObject &object, sCfg
 }
 
 
-bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
+bool Integr_JsonRecv::pduCfgSet(const QJsonObject &object)
 {
-    QString key = "setCfgItem"; sCfgItem it;
+    QString key = "pduCfgSet"; sCfgItem it;
     bool ret = cfgItem(key, object, it);
     if (ret) {
         QJsonObject obj = getObject(object, key);
@@ -191,9 +191,9 @@ bool Integr_JsonRecv::setCfgItem(const QJsonObject &object)
     return ret;
 }
 
-QVariant Integr_JsonRecv::getCfgItem(const QJsonObject &object)
+QVariant Integr_JsonRecv::pduCfgGet(const QJsonObject &object)
 {
-    QString key = "getCfgItem";
+    QString key = "pduCfgGet";
     QVariant res; sCfgItem it;
     if(cfgItem(key, object, it)) {
         res = Set_Core::bulid()->getCfg(it);
@@ -205,8 +205,8 @@ bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
 {
     bool ret = versionNumber(object);
     if(ret) {
-        setDataItem(object);
-        setCfgItem(object);
+        pduDataSet(object);
+        pduCfgSet(object);
     }
 
     return ret;
@@ -239,9 +239,9 @@ QVariant Integr_JsonRecv::reply(const QByteArray &msg)
     QJsonObject object; QVariant res;
     bool ret = checkInput(msg, object);
     if(ret) {
-        QString key = "getDataItem";
-        if (object.contains(key)) res = getDataItem(object);
-        else res = getCfgItem(object);
+        QString key = "pduDataGet";
+        if (object.contains(key)) res = pduDataGet(object);
+        else res = pduCfgGet(object);
     }
     return res;
 }
