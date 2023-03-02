@@ -224,7 +224,7 @@ struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uint runStatus; // 运行状态 0：正常 1：告警 2：故障 3: 离线
     uint language; // 0 中文 1 英文
-    uint devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
+    uint devMode; // 0：禁用级联 1：启用级联 2：机柜双电源
     uint cascadeAddr; // 级联地址
     uint modbusRtuBr; // Modbus-Rtu 波特率
     uint modbusRtuAddr; // Modbus-Rtu 地址
@@ -401,7 +401,7 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
+enum EDevMode{DM_Rtu, DM_Cascade, DM_Dual};
 
 struct sDataItem
 {

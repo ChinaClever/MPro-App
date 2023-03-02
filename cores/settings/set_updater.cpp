@@ -83,11 +83,10 @@ void Set_Updater::ota_logErr(const QString &fn)
 }
 
 bool Set_Updater::ota_cascade(const QString &fn)
-{
-    bool ret = false;
+{    
     int num = cm::masterDev()->cfg.nums.slaveNum;
     sParameter *ptr = &(cm::masterDev()->cfg.param);
-    uchar dm = ptr->devMode; if((dm>0) && (dm<3)) {
+    bool ret = false; if(ptr->devMode) {
         if(ptr->cascadeAddr==0) {
             for(int i=1; i<=num; ++i) {
                 if(cm::devData(i)->offLine) ret = true;
