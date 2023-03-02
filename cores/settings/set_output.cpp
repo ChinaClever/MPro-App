@@ -67,7 +67,7 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if((0==it->disabled[i]) || (unit.txType == DTxType::TxWeb)){
-            if(unit.value) it->cnt[i] += 1; ret = true;
+            ret = true; if(unit.value) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
 
