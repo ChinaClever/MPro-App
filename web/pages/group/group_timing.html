@@ -213,7 +213,7 @@
 			hh = CheckTime(hh);
 			mm = CheckTime(mm);
 			ss = CheckTime(ss);
-			var time = hh + ":" + mm+ ":" + ss;
+			var time = hh + ":" + mm;
 
 			for(let i = 0; i<group_num + 1;i++){
 				document.getElementById('f'+i).value = time;
@@ -336,7 +336,7 @@
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
-				tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+				tbody += '<td width ="10%"><input  type = "time"  id = "f'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 				tbody += '</tr>';
@@ -348,7 +348,7 @@
 					tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
-					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+					tbody += '<td width ="10%"><input  type = "time"  id = "f'+ i + '"></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
 					tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 					tbody += '</tr>';

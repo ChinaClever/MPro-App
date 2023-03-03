@@ -70,8 +70,8 @@
     <script>
 		let pdu_cfg_ = PduCore.build();
 		setTimeout(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
 			pdu_cfg_.debugCfg();
+			PduMetaData.meta_workDown(pdu_cfg_);
 		},300);
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
@@ -85,6 +85,7 @@
 		let loop_num;
 		let board_num;
 		var mark = 1;
+		let pdu_data;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -93,9 +94,9 @@
 		let rating_ = new Array();
 		let out_vol = new Array(49);
 		let unite_data = new Array();
-		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
-		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
-		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
+		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
+		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
+		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
 		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
@@ -104,23 +105,11 @@
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
-		$('.vol_table').html(buildTableVol());
-		let m = 0;
-		var Time1 = setInterval(function(){
-			ParseData();
-			if(m>=5){
-				clearInterval(Time1);
-				ShowData();
-			}
-			m++;
-		},200);
-		let phase_info_ = new Array();
-		let loop_info_ = new Array();
-		let sensor_info_ = new Array();
+		$('.vol_table').html(buildTableVol());ase_info_ = new Array();
 		let output_info_ = new Array();
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
-			let pdu_data = JSON.parse(DataString);
+			pdu_data = JSON.parse(DataString);
 			if(pdu_data == null){
 				return;
 			}
@@ -133,30 +122,6 @@
 			if(mark){
 				pdu_cfg_.debugVolData(output_num);
 				mark = 0;
-			}
-			for(let i = 0;i<phase_num;i++){
-				phase_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.line_item_list){
-					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let i = 0;i<loop_num;i++){
-				loop_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.loop_item_list){
-					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let i = 0;i<2;i++){
-				sensor_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.env_item_list){
-					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
-					j ++;
-				}
 			}
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
@@ -180,7 +145,7 @@
 			cfg_data[3] = pdu_cfg_.cfgValue(cfg,9,0,addr);;
 			cfg_data[4] = pdu_cfg_.cfgValue(cfg,1,0,addr);
 			cfg_data[5] = pdu_cfg_.cfgValue(cfg,10,0,addr);
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_cfg_.getValue(unite_name[i],unite_type[i],2,0);
 				unite_data[i][1] = pdu_cfg_.getValue(unite_name[i],unite_type[i],5,0);
@@ -194,6 +159,16 @@
 				rating_[i] = rating[i];
 			}
 		}
+		let m = 0;
+		var Time1 = setInterval(function(){
+			ParseData();
+			if(m>=10 || unite_data[9][4] !=null){
+				clearInterval(Time1);
+				ShowData();
+			}
+			m++;
+		},200);
+		let ph
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
@@ -208,7 +183,7 @@
 			for(i =0;i<7;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				for(let j = 0;j<5;j++){
 					if( unite_data[i][j] != null){
 						document.getElementById(unite_id[i]+j).value = unite_data[i][j];
@@ -253,7 +228,7 @@
 			}, 100);
 		}
 		function AllSet(){
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
@@ -448,12 +423,17 @@
 				<td><input id = "'+unite_id[6]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[6]+3+'" style ="width:60.5%" type = "text"  value ="16"></input></td>\
 				<td><input id = "'+unite_id[6]+4+'" style ="width:60.5%" type = "text"  value ="16"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" value ="40"></input></td>\
+			tbody += '<tr><td>8</td><td>输出位功率(kW)</td><td><input id = "'+unite_id[9]+0+'" style ="width:60.5%" type = "text" value ="2.20"></input></td>\
+				<td><input id = "'+unite_id[9]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
+				<td><input id = "'+unite_id[9]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
+				<td><input id = "'+unite_id[9]+3+'" style ="width:60.5%" type = "text"  value ="1.76"></input></td>\
+				<td><input id = "'+unite_id[9]+4+'" style ="width:60.5%" type = "text"  value ="2.20"></input></td><td></td></tr>';
+			tbody += '<tr><td>9</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" value ="40"></input></td>\
 				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" value ="40"></input"></td>\
 				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>9</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" value ="90"></input></td>\
+			tbody += '<tr><td>10</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" value ="90"></input></td>\
 				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text"  value ="90"></input></td>\

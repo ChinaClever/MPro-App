@@ -103,7 +103,7 @@
 			if(show_num < 20){
 				start_ = 0;
 			}else{
-				start_ = log_num - (page_num)*20 -1 ;
+				start_ = log_num - (page_num)*20 -1;
 			}
 			for(var i = 0 ;i <show_num ;i++)
 			{
@@ -127,14 +127,14 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(alarm_log,2,start_,show_num);
-		},500);
+		},700);
 
 		setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},800);
+		},1000);
 
 		function flash_html(par)
 		{
@@ -184,7 +184,6 @@
 			}else{}
     	}
 		function setData(btn){
-			let start_ = 0;
 			if(btn.id == "jump"){
 				let p = parseInt(document.getElementById("page").value);
 				if(p == page_num || p > page_size){

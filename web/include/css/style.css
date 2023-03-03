@@ -23,7 +23,6 @@
   top: 45%;
   transform: translate(-50%, -50%);
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  /* display: flex; */
 }
 .inner_box div {
   float: left;
@@ -32,7 +31,7 @@
 .inner_box .center_form {
   width: 450px;
   height: 350px;
-  background-color:rgb(232,232,232);
+  background-color:rgb(255,255,255,0.2);
   border-radius: 10px;
   /* background-color: rgba(179, 187, 186, 0.575); */
   box-shadow: 0px 0px 3px rgb(217, 224, 224);
@@ -41,34 +40,39 @@
   height: 50px;
   width: 449px;
   text-align: center;
+  color: rgb(255, 255, 255);
 }
 .title {
   height: 50px !important;
   line-height: 50px;
   border-radius: 10px;
-  background-color: rgb(232,232,232);
+  /* background-color:rgb(255,255,255,0.2); */
   /* margin-bottom: 40px; */
   font-weight: 800;
   font-size: 25px;
 }
 span{
-  color:rgb(56,56,56);
+  color:rgb(240,240,240);
 }
 input {
   width: 280px;
   margin: 10px 50px 0px 40px;
-  height: 35px;
+  height: 40px;
   padding-left: 20px;
   /* background: none; */
-  border: none;
-  color :rgb(64,64,64);
-  border-bottom: 1px solid #fff;
+  background-color: rgb(255,255,255,0.2);
+  color :rgb(240,240,240);
+  border: 1px solid #fff;
+  box-sizing:border-box;
+  border-radius: 5px;
   font-size: 15px;
-  ime-mode:disabled;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+input::placeholder{
+  color:rgb(240,240,240);
+}
 a{
-  color :rgb(104,104,104);
+  color :rgb(240,240,240);
   font-size: 18px;
 }
 /* remember me */
@@ -110,6 +114,7 @@ a{
 .signIn_btn input{
   font-size: 20px;
   color:#FFF;
-  background-color: #99cccc;
+  border: none;
+  background-color: #568aee;
   text-align: center;
 }

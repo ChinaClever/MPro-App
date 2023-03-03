@@ -126,6 +126,7 @@
 					document.getElementById(smtp_name[i]).innerHTML = smtp_data[i][1];
 				}
 			}
+			document.getElementById("lang_17").disabled = false;
 			if(parseInt(smtp_data[1][1]) == 0){
 				for(let j = 2;j<8;j++){
 					if(j == 5){
@@ -136,6 +137,7 @@
 						document.getElementById(smtp_name[j]).disabled = true;
 					}
 				}
+				document.getElementById("lang_17").disabled = true;
 			}
 		}
 		function SetData(btn){
@@ -175,7 +177,11 @@
 			},500);
 		}
 		function Set(){
-			pdu_cfg.setCfg(44,11,0,0,addr);
+			if(document.getElementById("SmtpRecvUsr1").value == ""||document.getElementById("SmtpRecvUsr2").value == ""||document.getElementById("SmtpRecvUsr3").value ==""||document.getElementById("SmtpRecvUsr4").value ==""){
+				alert("请输入至少一个邮箱账号！");
+			}else{
+				pdu_cfg.setCfg(44,11,0,0,addr);
+			}
 		}
 		function buildTable() {
 			var thead = '',tbody = '';
@@ -208,7 +214,6 @@
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_13"></td>';
 			tbody += '<td id = "SmtpState"></td></tr>';
-			tbody += '<tr><td><input id ="lang_17" style ="width:40%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -228,6 +233,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
+			tbody += '<tr><td><input id ="lang_17" style ="width:40%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
