@@ -57,6 +57,7 @@
 		var group_num_ = 8;
 		var slave_addr_ = 0;
 		var dual_addr_ = 0;
+		var login_permit_ = 1;
 		var total_data = new Array(3);
 		var inletA_data = new Array(3);
 		var inletB_data = new Array(3);
@@ -83,11 +84,11 @@
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
 			if(DataString == null){
-				DataString = sessionStorage.getItem('0_100_0_0_0');
+				DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
 			}
 			pdu_data = JSON.parse(DataString);
+			// login_permit_ = pdu_data.login_permit;
 			language_ = pdu_data.pdu_info.language;
-			addr_ = pdu_data.addr;
 		}
 		function LangInit() {
 			for (let i = 0; i < lang.length; i++) {
@@ -111,19 +112,6 @@
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
 		}
-		function ShowData(){
-			document.getElementById("language").style.title = lang[language_ +5][language_];
-			document.getElementById("alramNow").style.title = lang[7][language_];
-			document.getElementById("logOut").style.title = lang[8][language_];
-			document.getElementById("status").innerHTML = run_status[pdu_data.status];
-			document.getElementById("series").innerHTML = lang[1][language_] + pdu_data.uut_info.pdu_type + "("+series_data[pdu_data.pdu_info.pdu_spec]+")";
-			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
-			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
-			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
-		}
-		ParseData();
-		LangInit();
-		ShowData();
 		function TimeConvert(min){
 			let time_show;
 			let day_,hour_,min_;
@@ -141,6 +129,24 @@
 			}
 			return time_show;
 		}
+		function ShowData(){
+			document.getElementById("language").title = lang[language_ +5][language_];
+			document.getElementById("alramNow").title = lang[7][language_];
+			document.getElementById("logOut").title = lang[8][language_];
+			document.getElementById("status").innerHTML = run_status[pdu_data.status];
+			document.getElementById("series").innerHTML = lang[1][language_] + pdu_data.uut_info.pdu_type + "("+series_data[pdu_data.pdu_info.pdu_spec]+")";
+			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
+			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
+			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
+			if(pdu_data.status ==1){
+				document.getElementById("alramNow").style.color = "red";
+			}else{
+				document.getElementById("alramNow").style.color = "";
+			}
+		}
+		ParseData();
+		LangInit();
+		ShowData();
 		function ChoseLang(){
 			if(language_ = 1){
 				language_ = 0;
@@ -155,10 +161,10 @@
 				window.location.reload();
 			},1000);
 		}
-		window.history.pushState(null,null,document.URL);
-		window.addEventListener('popstate',function(){
-			window.history.pushState(null,null,document.URL);
-		});
+		// window.history.pushState(null,null,document.URL);
+		// window.addEventListener('popstate',function(){
+		// 	window.history.pushState(null,null,document.URL);
+		// });
 		function AlramNow(){
     		$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 		}
@@ -193,6 +199,10 @@
 				window.close();
 			}
 		}
+		setInterval(function () {
+			ParseData();
+			ShowData();
+		},1000);
 		setInterval(function () {
 			PduMetaData.meta_workDown(addr_);
 		}, 2000);

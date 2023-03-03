@@ -62,7 +62,7 @@ class JsonRpc {
     }
 
     static socket_close(evt) {
-        //alert('json rpc websocket close');
+        alert('json rpc websocket close');
     }    
 
     static socket_error(evt) {
@@ -102,8 +102,8 @@ class JsonRpc {
             this.ws.send(msg);
         } else {
              ret = false;
-             this.ws.close();
-             this.ws = this.socket_open(); 
+             //this.ws.close();
+             //this.ws = this.socket_open(); 
         }
         return ret;
     }
@@ -485,8 +485,8 @@ class PduCfgs extends PduCfgObj {
     }
     debugCfg(){
         var fcs = [1,9,10,11,13];
-        let type_ = [1,1,1,2,2,2,3,6,6]; 
-        let topic_ = [2,3,4,2,3,4,3,11,12]; 
+        let type_ = [1,1,1,2,2,2,3,6,6,3]; 
+        let topic_ = [2,3,4,2,3,4,3,11,12,4]; 
         let fcs_ = [2,5,6,7,4];
         this.getCfgList(13, fcs);
         for(let i = 0;i<type_.length;i++){
