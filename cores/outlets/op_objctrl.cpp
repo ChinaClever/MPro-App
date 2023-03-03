@@ -17,7 +17,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
         sRelayUnit *unit = &(mDev->output.relay); mList << id;
-        if(id){id--;} int t = unit->powerUpDelay[id]; if(!t) t = 5;
+        if(id){id--;} int t = unit->resetDelay[id]; if(!t) t = 5;
         QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
 }

@@ -36,7 +36,7 @@ void Mb_Output::output_dataUpdate()
     appendData(size, obj->pow.value, vs);
     appendData(size, obj->artPow, vs);
     appendData(size, obj->pf, vs);
-    appendData2(size, obj->ele, vs);
+    appendData2(size, obj->ele, vs);       
     appendData(size, obj->relay.sw, vs);
     appendData(size, obj->reactivePow, vs);
     setRegs(MbReg_OutputData, vs);

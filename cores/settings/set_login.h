@@ -8,6 +8,7 @@ public:
     Set_Login();
     QVariant loginUsrPwd(int type, int id);
     int loginSet(uchar type, const QVariant &v, int id);
+    int loginPermit(){return mPermit;}
 
 private:
     int loginTryLock();
@@ -18,6 +19,7 @@ private:
 private:
     int mFailCnt=0;
     QDateTime mDt;
+    int mPermit=0;
 };
 
 #endif // SET_LOGIN_H

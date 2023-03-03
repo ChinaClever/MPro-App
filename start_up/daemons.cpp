@@ -28,7 +28,7 @@ Daemons *Daemons::bulid()
 
 void Daemons::start_proc()
 {
-    mdelay(152); initFun();
+    initFun(); //mdelay(152);
     proc_start(mProcs->core, "cores");
     proc_start(mProcs->awtk, "awtk");
     proc_start(mProcs->web, "web_server");
