@@ -102,7 +102,7 @@ void Data_Object::loopData(int id, int start, int end)
     uint *ptr = mDev->output.vol.value; uint sw = 0;
     if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
     for(int i=start; i<end; ++i) if(ptr[i] > 50 *COM_RATE_VOL) sw = 1;
-    mDev->loop.relay.sw[id] = sw;
+    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
 }
 
 void Data_Object::lineData(int id, int start, int end)

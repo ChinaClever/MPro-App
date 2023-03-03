@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "integr_jsonbuild.h"
+#include "set_core.h"
 
 Integr_JsonBuild::Integr_JsonBuild()
 {
@@ -43,11 +44,13 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("status", dev->status);
 
         if(dc > 1) {
+            online(json);
             faultCode(dev, json);
             devInfo(dev->cfg, "pdu_info", json);
             uutInfo(dev->cfg.uut, "uut_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
+            if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit());
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
@@ -60,7 +63,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 
 void Integr_JsonBuild::saveJson(uchar addr)
 {
-    QJsonObject json = getJsonObject(addr, 2);
+    QJsonObject json = getJsonObject(addr, 3);
     QString dir = "/tmp/download/dia/metadata/"; cm::execute("mkdir -p "+dir);
     QString fn = dir + QString::number(addr); QFile file(fn+".json");
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
@@ -91,6 +94,16 @@ void Integr_JsonBuild::faultCode(sDevData *dev, QJsonObject &json)
 {
     int size = dev->output.size;
     if(dev->dtc.fault) arrayAppend(dev->dtc.code, size, "fault_code", json);
+}
+
+void Integr_JsonBuild::online(QJsonObject &json)
+{
+    int size = DEV_NUM/10;
+    uint array[DEV_NUM] = {0};
+    for(int i=0; i<size; ++i) {
+        sDevData *dev = cm::devData(i);
+        array[i] = dev->offLine>1?1:0;
+    } arrayAppend(array, size, "online", json);
 }
 
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)

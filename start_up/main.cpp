@@ -6,11 +6,26 @@
 #include <QCoreApplication>
 #include "daemons.h"
 
+static void createDirectory()
+{
+    system("mkdir -p /tmp/updater");
+    system("mkdir -p /tmp/download");
+    system("mkdir -p /usr/data/upload");
+    system("mkdir -p /usr/data/etc/ssl");
+    system("mkdir -p /usr/data/etc/ssh");
+    system("mkdir -p /usr/data/etc/snmp");
+    system("mkdir -p /usr/data/clever/bin");
+    system("mkdir -p /usr/data/clever/app");
+    system("mkdir -p /usr/data/clever/cfg");
+    system("mkdir -p /usr/data/clever/doc");
+    system("mkdir -p /usr/data/clever/awtk");
+    system("mkdir -p /usr/data/clever/certs");
+    system("mkdir -p /usr/data/clever/outlet");
+    system("mkdir -p /usr/data/clever/drivers");
+}
+
 static void initSystem()
 {
-    system("rm /tmp/messages");
-    system("cmd_fb enable /dev/fb0");
-    system("cmd_fb display /dev/fb0");
     system("chmod 777 -R /usr/data/clever");
     system("chmod 777 -R /usr/data/etc/snmp");
     system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
@@ -25,7 +40,7 @@ static void initSystem()
 
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
-    system(cmd.toLocal8Bit().data());
+    system(cmd.toLocal8Bit().data()); createDirectory();
 }
 
 static void init_netWork()
@@ -50,32 +65,27 @@ static void init_netWork()
     //system("dhclient");
 }
 
-static void createDirectory()
+
+static void start_init()
 {
-    system("mkdir -p /tmp/updater");
-    system("mkdir -p /tmp/download");
-    system("mkdir -p /usr/data/upload");
-    system("mkdir -p /usr/data/etc/ssl");
-    system("mkdir -p /usr/data/etc/ssh");
-    system("mkdir -p /usr/data/etc/snmp");
-    system("mkdir -p /usr/data/clever/bin");
-    system("mkdir -p /usr/data/clever/app");
-    system("mkdir -p /usr/data/clever/cfg");
-    system("mkdir -p /usr/data/clever/doc");
-    system("mkdir -p /usr/data/clever/awtk");
-    system("mkdir -p /usr/data/clever/certs");
-    system("mkdir -p /usr/data/clever/outlet");
-    system("mkdir -p /usr/data/clever/drivers");
+    int min = 350; int max = 10*1024;
+    //system("mount -o remount,rw /usr/data/");
+    QString fn = "/usr/data/clever/cfg/proc_log.txt";
+    QFile file(fn); int size = file.size();
+    if(size < min) initSystem();
+    else if(size > max) file.remove();
+    system("cmd_fb enable /dev/fb0");
+    system("cmd_fb display /dev/fb0");
+    system("rm /tmp/messages");
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    createDirectory();
-    init_netWork();
-    initSystem();
 
+    start_init();
+    init_netWork();
     Daemons::bulid();
 #endif
     return a.exec();

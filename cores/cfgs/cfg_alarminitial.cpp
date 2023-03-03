@@ -20,8 +20,7 @@ bool Cfg_AlarmInitial::initialData()
 void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
-        it.en[i] = 1;
-        it.rated[i] = rated;
+        it.en[i] = 1; it.rated[i] = rated;
         it.max[i] = it.crMax[i] = rated * 1.2;
         it.min[i] = it.crMin[i] = rated * 0.8;
     }
@@ -31,8 +30,8 @@ void Cfg_AlarmInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1;
-        it.rated[i] = rated;
         it.max[i] = rated;
+        it.rated[i] = rated;
         it.crMax[i] = rated * 0.8;
     }
 }
@@ -96,7 +95,7 @@ void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
 {
     for(int i=0; i<size; ++i) {
         it.disabled[i] = 0;
-        it.lifeEn[i] = 1;
+        it.lifeEn[i] = 0;
         it.maxCnt[i] = 50000;
         it.resetDelay[i] = 5;
     }
