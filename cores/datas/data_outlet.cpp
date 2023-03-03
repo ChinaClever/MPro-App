@@ -12,12 +12,10 @@ Data_Outlet::Data_Outlet()
 
 void Data_Outlet::outletNums()
 {    
-    sObjData *obj = &(mDev->output); int size = 0; obj->vol.size =0; int num = 0;
-    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];
-    if(0 == size) size = mDev->cfg.nums.outputNum;
+    sObjData *obj = &(mDev->output); int size = 0; obj->vol.size =0;
+    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];    
+    mDev->cfg.nums.outputNum = size; if(obj->size) size = obj->size;
     obj->size = obj->cur.size = obj->pow.size = obj->relay.size = size;
-    for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) num += mDev->cfg.nums.boards[i];
-    mDev->cfg.nums.outputNum = num;
 
     switch (mDev->cfg.param.devSpec) {
     case 1: obj->size = obj->cur.size = obj->pow.size = obj->relay.size = 0;break;
