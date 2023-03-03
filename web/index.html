@@ -57,6 +57,7 @@
 		var group_num_ = 8;
 		var slave_addr_ = 0;
 		var dual_addr_ = 0;
+		var login_permit_ = 1;
 		var total_data = new Array(3);
 		var inletA_data = new Array(3);
 		var inletB_data = new Array(3);
@@ -86,6 +87,7 @@
 				DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
 			}
 			pdu_data = JSON.parse(DataString);
+			// login_permit_ = pdu_data.login_permit;
 			language_ = pdu_data.pdu_info.language;
 		}
 		function LangInit() {

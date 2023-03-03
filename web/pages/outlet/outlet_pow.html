@@ -38,7 +38,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" id="lang_2"></button></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" style="display: none;" id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="ModeSet();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
@@ -68,6 +68,13 @@
 		let lang = new Array();
 		let dev_name =new Array();
 		let pdu_data;
+		if(top.login_permit_ == 0){
+			document.getElementById("lang_1").style.display="";
+			document.getElementById("lang_2").style.display="";
+		}else{
+			document.getElementById("lang_1").style.display="none";
+			document.getElementById("lang_2").style.display="none";
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);

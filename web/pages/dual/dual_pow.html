@@ -40,7 +40,7 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<i class="fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" onclick="readonlyset(this);"></button></span>
+								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" style="display: none;" onclick="readonlyset(this);"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 								<span style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
@@ -79,6 +79,13 @@
 			var lang = new Array();
 			var slave_num;
 			let dual_arr = [14,13,11,9,10,16,15,8,0,0,12];
+			if(top.login_permit_ == 0){
+				document.getElementById("lang_1").style.display="";
+				document.getElementById("lang_2").style.display="";
+			}else{
+				document.getElementById("lang_1").style.display="none";
+				document.getElementById("lang_2").style.display="none";
+			}
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);
