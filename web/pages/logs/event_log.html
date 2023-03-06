@@ -32,7 +32,7 @@
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "del" onclick="setData(this)">
+							<input type ="button" name = "del" style = "width:11%" id  = "del" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
@@ -151,7 +151,10 @@
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
-
+			if(top.login_permit_ == 0){
+			}else{
+				 $("input[name=del]").attr("disabled","disabled");
+			}
 		}
 		function saveArrayDataToExcel() {
 			let str = '';

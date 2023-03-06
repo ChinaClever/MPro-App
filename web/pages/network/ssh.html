@@ -98,6 +98,11 @@
 			document.getElementById("SshPsd").focus();
 			document.getElementById("Test").focus();
 			document.getElementById("Test").style.display ="none";
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetVal(){
 			if(confirm("是否创建此账户。")){

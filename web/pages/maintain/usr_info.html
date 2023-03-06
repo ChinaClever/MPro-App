@@ -119,6 +119,11 @@
 				document.getElementById(user_info[i]).value = usrs_data[i][0];
 			}
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function Set_(opt){
 			for(let i = 1;i<5;i++){
