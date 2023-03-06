@@ -139,6 +139,11 @@
 				}
 				document.getElementById("lang_17").disabled = true;
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			for(let i = 1;i<smtp_name.length;i++){

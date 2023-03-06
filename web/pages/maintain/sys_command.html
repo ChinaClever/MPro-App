@@ -63,6 +63,10 @@
 			}
 			document.getElementById("Reboot").value  = lang[5][language];
 			document.getElementById("Restore").value  = lang[6][language];
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+			}
 		}
 		$('.set').html(buildTable());
 		lang_fun();

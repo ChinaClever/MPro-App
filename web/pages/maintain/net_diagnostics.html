@@ -101,6 +101,11 @@
 					document.getElementById(net_diagn[i]).value = diagn_data[i];
 				}
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function showdata_(btn){
 			document.getElementById(net_diagn[parseInt(btn) +1]).innerHTML = diagn_data[parseInt(btn)];

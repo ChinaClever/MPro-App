@@ -113,6 +113,11 @@
 			}else{
 				lab1.disabled =false;
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function flash_html(){
 			pdu_cfg.rpcCfg();

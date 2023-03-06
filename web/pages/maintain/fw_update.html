@@ -136,6 +136,11 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("button").attr("disabled","disabled");
+			}
 		}
 		function show_data(){
 			let i = 0;

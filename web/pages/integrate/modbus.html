@@ -134,6 +134,11 @@
 				lab.disabled = false;
 				btn2[modbus_data[11]].selected = true;
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
