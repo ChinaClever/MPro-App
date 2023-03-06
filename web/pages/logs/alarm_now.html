@@ -49,10 +49,9 @@
 		let pdu_log = new PduLog;
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
-		let addr = 0;
-		let alarm_log = 1;
+		let addr = top.addr_;
 		setTimeout(() => {
-			pdu_log.log_fun(alarm_log,1,0,0);
+			pdu_log.getCfg(80,0,0,addr);
 		}, 300);
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
@@ -99,7 +98,8 @@
 		$('.table-striped').html(buildTable(0));
 		lang_fun();
 		function read_data(){
-			let log_str = window.JSON.parse(pdu_log.log_get(alarm_log,2,start_,show_num));
+			let log_str = window.JSON.parse(pdu_log.cfgValue(80,0,0,addr));
+			log_num = log_str.length;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -117,17 +117,17 @@
 				}
 			}
 		}
-		setTimeout(function(){
-			log_num = parseInt(pdu_log.log_get(alarm_log,1,start_,show_num));
-			if(log_num > 20){
-				show_num = 20;
-				start_ = (log_num-20);
-			}else{
-				show_num = log_num;
-				start_= 0;
-			}
-			pdu_log.log_fun(alarm_log,2,start_,show_num);
-		},500);
+		// setTimeout(function(){
+		// 	log_num = parseInt(pdu_log.log_get(alarm_log,1,start_,show_num));
+		// 	if(log_num > 20){
+		// 		show_num = 20;
+		// 		start_ = (log_num-20);
+		// 	}else{
+		// 		show_num = log_num;
+		// 		start_= 0;
+		// 	}
+		// 	pdu_log.log_fun(alarm_log,2,start_,show_num);
+		// },500);
 
 		setTimeout(function(){
 			read_data();
