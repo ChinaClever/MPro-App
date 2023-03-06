@@ -28,7 +28,7 @@ QString Alarm_Log::getCurrentAlarm(int addr)
     } else {
         for(int i=0; i<DEV_NUM; ++i) {
             if(m_currentAlarm[i].size())
-                res += m_currentAlarm[i] +"\n";
+                res += m_currentAlarm[i];
         }
     }
     return res;
