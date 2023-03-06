@@ -62,7 +62,7 @@ class JsonRpc {
     }
 
     static socket_close(evt) {
-        alert('json rpc websocket close');
+        //alert('json rpc websocket close');
     }    
 
     static socket_error(evt) {
