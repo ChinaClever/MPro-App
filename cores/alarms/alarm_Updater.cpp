@@ -241,9 +241,11 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
     bool ret = false;
-    uchar *ptr = &cm::masterDev()->status;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
+    uchar *ptr = &cm::masterDev()->status;
+    Alarm_Log::bulid()->currentAlarmClear(addr);
+
     if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 1:0;

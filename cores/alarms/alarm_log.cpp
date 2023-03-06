@@ -38,7 +38,8 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
     QString str = it.alarm_status +"; " + it.alarm_content;
-    m_currentAlarm[it.addr] += str + "\n";
+    if(str.size()) m_currentAlarm[it.addr] += str + "\n";
+    //cout << m_currentAlarm[it.addr].size() << str;
 }
 
 void Alarm_Log::generateQRcode()
