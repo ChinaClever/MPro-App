@@ -29,8 +29,8 @@ void Data_Loop::loopNum()
     obj->size = obj->relay.size = obj->cur.size = obj->pow.size = size;
     for(int i=0; i<obj->size; ++i) obj->relay.offAlarm[i] = sRelay::OffALarm;
     if(!mDev->cfg.param.isBreaker) {
-        obj->relay.size = 0;
         for(int i=0; i<obj->size; ++i) obj->relay.sw[i] = 2;
+        obj->relay.size = 0;
     }
 }
 
