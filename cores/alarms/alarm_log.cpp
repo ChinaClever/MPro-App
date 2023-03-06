@@ -28,7 +28,7 @@ QString Alarm_Log::getCurrentAlarm(int addr)
     } else {
         for(int i=0; i<DEV_NUM; ++i) {
             if(m_currentAlarm[i].size())
-                res += m_currentAlarm[i] +"\n";
+                res += m_currentAlarm[i];
         }
     }
     return res;
@@ -38,7 +38,7 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
     QString str = it.alarm_status +"; " + it.alarm_content;
-    m_currentAlarm[it.addr] = str;
+    m_currentAlarm[it.addr] += str + "\n";
 }
 
 void Alarm_Log::generateQRcode()

@@ -74,8 +74,8 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
 
     switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "port";  cfg->port = v.toInt(); break;
-    case 3: key = "host";  cfg->host = v.toString();  break;
+    case 3: key = "port";  cfg->port = v.toInt(); break;
+    case 2: key = "host";  cfg->host = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
