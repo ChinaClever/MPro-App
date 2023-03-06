@@ -102,8 +102,8 @@ class JsonRpc {
             this.ws.send(msg);
         } else {
              ret = false;
-             //this.ws.close();
-             //this.ws = this.socket_open(); 
+             this.ws.close();
+             this.ws = this.socket_open(); 
         }
         return ret;
     }
