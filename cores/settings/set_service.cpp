@@ -27,7 +27,6 @@ QVariant Set_Service::logCfg(int fc)
     return ret;
 }
 
-
 bool Set_Service::logSet(int fc, const QVariant &v)
 {   
     sLogCfg *cfg = &Log_Core::cfg;
@@ -49,7 +48,6 @@ bool Set_Service::logSet(int fc, const QVariant &v)
     return ret;
 }
 
-
 QVariant Set_Service::syslogCfg(int fc)
 {
     QVariant ret;
@@ -63,8 +61,6 @@ QVariant Set_Service::syslogCfg(int fc)
 
     return ret;
 }
-
-
 
 bool Set_Service::syslogSet(int fc, const QVariant &v)
 {
@@ -279,7 +275,6 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
     return ret;
 }
 
-
 QVariant Set_Service::ldapCfg(int fc)
 {
     sLdapCfg *cfg = &App_Ldap::ldapCfg;
@@ -292,7 +287,6 @@ QVariant Set_Service::ldapCfg(int fc)
 
     return ret;
 }
-
 
 bool Set_Service::ldapSet(int fc, const QVariant &v)
 {
