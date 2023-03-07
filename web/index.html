@@ -166,7 +166,11 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-    		$("#mainCont").attr("src", "pages/logs/alarm_now.html");
+			if(pdu_data.status ==1){
+    			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
+			}else{
+				alert("当前无告警日志！");
+			}
 		}
 		function LogOut() {
 			window.opener = null;

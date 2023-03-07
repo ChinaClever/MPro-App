@@ -155,6 +155,10 @@
 				alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
 				return ;
 			}
+			if(ient_ == psd_){
+			alert("输入的验证信息和密码不能是同一个，请重新输入");
+			return ;
+			}
 			for(i = 0;i < 5;i++){
 				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
 					alert("该用户已存在，请重新输入！");

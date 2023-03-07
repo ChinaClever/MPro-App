@@ -31,8 +31,10 @@
 .inner_box .center_form {
   width: 450px;
   height: 350px;
-  background-color:rgb(255,255,255,0.2);
+  /* background-color:rgb(255,255,255,0.2); */
   border-radius: 10px;
+  background-image: url(../images/login_.png);
+  background-size: contain;
   /* background-color: rgba(179, 187, 186, 0.575); */
   box-shadow: 0px 0px 3px rgb(217, 224, 224);
 }
@@ -69,7 +71,7 @@ input {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 input::placeholder{
-  color:rgb(240,240,240);
+  color:rgb(255,255,255);
 }
 a{
   color :rgb(240,240,240);
