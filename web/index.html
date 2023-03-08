@@ -51,6 +51,7 @@
 	</div>
 	<script>
 		var addr_ = 0;
+		var pdu_metadata_ = new PduMetaData();
 		var pdu_cfg_ = PduCore.build();
 		var language_;
 		var first_time = 0;
@@ -79,7 +80,7 @@
 			}
 		}
 		setTimeout(function () {
-			PduMetaData.meta_workDown(addr_);
+			PduMetaData.meta_workDown(pdu_cfg_);
 		}, 300);
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
@@ -155,7 +156,7 @@
 			}
 			pdu_cfg.setCfg(13,10,language_,0,addr_);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(addr_);
+				PduMetaData.meta_workDown(pdu_cfg_);
 			},300);
 			setTimeout(function(){
 				window.location.reload();
@@ -208,7 +209,7 @@
 			ShowData();
 		},1000);
 		setInterval(function () {
-			PduMetaData.meta_workDown(addr_);
+			PduMetaData.meta_workDown(pdu_cfg_);
 		}, 2000);
 
 	</script>

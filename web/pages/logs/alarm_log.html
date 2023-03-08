@@ -53,7 +53,7 @@
 		let alarm_log = 1;
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
-		}, 300);
+		}, 500);
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
 		let btn_name = new Array("jump","last","next","del","export");
@@ -127,14 +127,14 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(alarm_log,2,start_,show_num);
-		},700);
+		},800);
 
 		setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},1000);
+		},1100);
 
 		function flash_html(par)
 		{

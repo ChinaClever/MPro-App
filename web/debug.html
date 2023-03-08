@@ -68,11 +68,12 @@
     <script src="./include/js/fn_public.js"></script>
     <script src="./include/js/public.min.js"></script>
     <script>
+		var pdu_metadata_ = new PduMetaData();
 		let pdu_cfg_ = PduCore.build();
 		setTimeout(function(){
 			pdu_cfg_.debugCfg();
 			PduMetaData.meta_workDown(pdu_cfg_);
-		},300);
+		},1000);
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
@@ -162,7 +163,7 @@
 		let m = 0;
 		var Time1 = setInterval(function(){
 			ParseData();
-			if(m>=10 || unite_data[9][4] !=null){
+			if(m>=20 || unite_data[9][4] !=null){
 				clearInterval(Time1);
 				ShowData();
 			}

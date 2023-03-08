@@ -51,6 +51,7 @@
 	<script src="../../include/js/pdu_rpc.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let language;
 		let addr = pdu_cfg.addr;
 		let output = 3,switch_ = 1;
@@ -105,7 +106,7 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();
