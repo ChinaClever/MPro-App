@@ -56,6 +56,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let group_num = top.group_num_;
+		let pdu_metadata = new PduMetaData();
 		let language;
 		let read = 1;
 		let lang = new Array();
@@ -162,7 +163,7 @@
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
 				pdu_cfg.OutInGroup();
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();

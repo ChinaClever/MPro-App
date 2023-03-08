@@ -54,6 +54,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let language;
 		var read =0;
 		let addr = pdu_cfg.addr;
@@ -140,7 +141,7 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();

@@ -62,11 +62,11 @@ class JsonRpc {
     }
 
     static socket_close(evt) {
-        //alert('json rpc websocket close');
+        alert('json rpc websocket close');
     }    
 
     static socket_error(evt) {
-        //alert('json rpc websocket error');
+        alert('json rpc websocket error');
     }  
 
     // 打开Websocket
@@ -98,7 +98,7 @@ class JsonRpc {
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
-        if(this.ws.readyState == WebSocket.OPEN){     
+        if(this.ws.readyState == WebSocket.OPEN){
             this.ws.send(msg);
         } else {
              ret = false;
@@ -226,9 +226,9 @@ class PduMetaData {
     }
 
     // 定时器响应函数
-   static meta_workDown(addr) {
+   static meta_workDown(data) {
         var method = "pduMetaData"; 
-        var params = [addr, 100, 0, 0, 0];
+        var params = [data.addr, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();
@@ -236,9 +236,10 @@ class PduMetaData {
 
 // PDU实时数据操作类
 class PduDataItem extends PduMetaData{
-    constructor() {
-        super();  
-    }
+// class PduDataItem extends PduMetaData{
+//     constructor() {
+//         super();  
+//     }
 
     // 根据地址获取某个具体实时数据
     getValueByAddr(addr, type, topic, sub, id) {

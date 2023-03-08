@@ -66,7 +66,7 @@
       }
     }
     let time3 = setInterval(function(){
-      if(time3_num >= 3){
+      if(time3_num >= 25){
           GotoRegisterPage();
           clearInterval(time3);
       }
@@ -205,13 +205,13 @@
     function check(){
       let usr = document.getElementById('username').value;
       var psd_val = document.getElementById("psd").value;
-      if(usr != "" && psd_val !=""){
-        // document.getElementById("sign_in").removeAttribute('disabled');
-        document.getElementById("sign_in").style.backgroundColor ="#8AA";
-      }else{
-        // document.getElementById("sign_in").setAttribute('disabled','');
-        document.getElementById("sign_in").style.backgroundColor ="#568aee";
-      }
+      // if(usr != "" && psd_val !=""){
+      //   // document.getElementById("sign_in").removeAttribute('disabled');
+      //   document.getElementById("sign_in").style.backgroundColor ="#8AA";
+      // }else{
+      //   // document.getElementById("sign_in").setAttribute('disabled','');
+      //   document.getElementById("sign_in").style.backgroundColor ="#568aee";
+      // }
     }
     function ClickEvent(){
       document.getElementById("sign_in").style.color = "red";
@@ -219,10 +219,10 @@
     }
     setTimeout(function(){
       document.getElementById("sign_in").onmouseover = function () {
-        document.getElementById("sign_in").style.border = "2px outset #E8E8E8";
+        document.getElementById("sign_in").style.backgroundColor = "#2460cc";
       }
       document.getElementById("sign_in").onmouseout = function () {
-        document.getElementById("sign_in").style.border = "";
+        document.getElementById("sign_in").style.backgroundColor = "#568aee";
       }
     },1200);
     function validataForm(ipt)
