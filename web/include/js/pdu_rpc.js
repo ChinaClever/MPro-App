@@ -237,7 +237,7 @@ class PduMetaData {
 // PDU实时数据操作类
 class PduDataItem extends PduMetaData{
 // class PduDataItem extends PduMetaData{
-//     constructor() {
+//     constructor() {`
 //         super();  
 //     }
 
@@ -382,7 +382,8 @@ class PduCfgs extends PduCfgObj {
         let fcs = [8,9];
         this.getCfgList(18, fcs);
     }
-    httpPush(){
+    httpPush()
+    {
         let fcs = [11,12,13,14,15,16];
         this.getCfgList(18, fcs);
     }
