@@ -56,7 +56,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和8表示已报警 2和4表示预警
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和4表示已报警 2和3表示预警
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
