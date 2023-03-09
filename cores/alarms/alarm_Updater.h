@@ -35,6 +35,9 @@ private:
     bool upSensorStatus(sDataItem &index, uint *ptr, int id=0);
     bool upSensors(sDataItem &index, sEnvData &it);
     bool upDevAlarm(uchar addr);
+
+private:
+    int mCrAlarm=0;
 };
 
 #endif // ALARM_UPDATER_H
