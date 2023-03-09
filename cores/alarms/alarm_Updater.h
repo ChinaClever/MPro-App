@@ -12,11 +12,13 @@ public:
 
 signals:
     void alarmSig(const sDataItem &index, uchar value);
+    void runSig();
 
 public slots:
     void run();
 
 private:
+    bool upCorrectData(int i, sAlarmUnit &it);
     bool upRelayUnit(sDataItem &index, sRelayUnit &it);
     bool upAlarmItem(sDataItem &index, int i, sAlarmUnit &it);
     void upPeakValue(sDataItem &index, int i, sAlarmUnit &it);

@@ -13,6 +13,7 @@ Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
 {
     qRegisterMetaType<sDataItem>("sDataItem");
+    connect(this, &Alarm_Updater::runSig, this, &Alarm_Updater::run);
 }
 
 Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
@@ -53,9 +54,18 @@ void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
     }
 }
 
+bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
+{
+    it.max[i] = qMin(it.max[i], it.rated[i]);
+    it.crMax[i] = qMin(it.max[i], it.crMax[i]);
+    it.crMin[i] = qMin(it.crMin[i], it.crMax[i]);
+    it.min[i] = qMin(it.crMin[i], it.min[i]);
+    return false;
+}
+
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 {
-    bool ret = false;
+    bool ret = upCorrectData(i, it);
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
     if(value > it.max[i]) alarm = AlarmCode::Max;
