@@ -59,9 +59,9 @@ void Cfg_AlarmInitial::setTgUnit(sTgUnit &it, uint rated)
 
 void Cfg_AlarmInitial::initTgObjData(sTgObjData &it)
 {
-    setTgVol(it.vol, 220*COM_RATE_VOL);
-    setTgUnit(it.cur, 32*COM_RATE_CUR);
-    setTgUnit(it.pow, 220*32);
+    setTgVol(it.vol, 600*COM_RATE_VOL);
+    setTgUnit(it.cur, 80*COM_RATE_CUR);
+    setTgUnit(it.pow, 600*80);
 }
 
 void Cfg_AlarmInitial::initEnvData(sEnvData &it)
@@ -73,6 +73,9 @@ void Cfg_AlarmInitial::initEnvData(sEnvData &it)
     for(int i=0; i<size; ++i) {
         it.tem.crMax[i] = 60*COM_RATE_TEM;
         it.hum.crMax[i] = 99*COM_RATE_HUM;
+
+        it.tem.rated[i] = 100*COM_RATE_TEM;
+        it.hum.rated[i] = 100*COM_RATE_HUM;
     }
 }
 
@@ -82,7 +85,7 @@ void Cfg_AlarmInitial::initDevData(sDevData *dev)
     initObjData(dev->line, LINE_NUM, 32);
     initObjData(dev->loop, LOOP_NUM, 16);
     initObjData(dev->dual, OUTPUT_NUM, 20);
-    initObjData(dev->group, GROUP_NUM, 14);
+    initObjData(dev->group, GROUP_NUM, 64);
     initObjData(dev->output, OUTPUT_NUM, 10);
     //initRelayUnit(dev->dual.relay, OUTPUT_NUM);
     //initRelayUnit(dev->group.relay, GROUP_NUM);

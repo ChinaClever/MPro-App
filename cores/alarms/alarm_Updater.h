@@ -12,11 +12,13 @@ public:
 
 signals:
     void alarmSig(const sDataItem &index, uchar value);
+    void runSig();
 
 public slots:
     void run();
 
 private:
+    bool upCorrectData(int i, sAlarmUnit &it);
     bool upRelayUnit(sDataItem &index, sRelayUnit &it);
     bool upAlarmItem(sDataItem &index, int i, sAlarmUnit &it);
     void upPeakValue(sDataItem &index, int i, sAlarmUnit &it);
@@ -33,6 +35,9 @@ private:
     bool upSensorStatus(sDataItem &index, uint *ptr, int id=0);
     bool upSensors(sDataItem &index, sEnvData &it);
     bool upDevAlarm(uchar addr);
+
+private:
+    int mCrAlarm=0;
 };
 
 #endif // ALARM_UPDATER_H

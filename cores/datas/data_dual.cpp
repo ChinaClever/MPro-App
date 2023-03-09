@@ -67,6 +67,7 @@ void Data_Dual::dualData(int id)
         dest->vol.value[i] = (src1->vol.value[i] + src2->vol.value[i])/2;
         dest->cur.value[i] = src1->cur.value[i] + src2->cur.value[i];
         dest->pow.value[i] = src1->pow.value[i] + src2->pow.value[i];
+        dest->pow.rated[i] = src1->pow.rated[i] + src2->pow.rated[i];
         dest->reactivePow[i] = src1->reactivePow[i] + src2->reactivePow[i];
         dest->artPow[i] = src1->artPow[i] + src2->artPow[i];
         dest->ele[i] = src1->ele[i] + src2->ele[i];

@@ -56,7 +56,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和8表示已报警 2和4表示预警
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和4表示已报警 2和3表示预警
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -293,7 +293,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：告警 2：故障 3: 离线
+    uchar status; // 0：正常 1：预警 2：告警 3: 故障 4：离线
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据

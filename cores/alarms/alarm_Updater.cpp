@@ -13,6 +13,7 @@ Alarm_Updater::Alarm_Updater(QObject *parent)
     : QObject{parent}
 {
     qRegisterMetaType<sDataItem>("sDataItem");
+    connect(this, &Alarm_Updater::runSig, this, &Alarm_Updater::run);
 }
 
 Alarm_Updater *Alarm_Updater::bulid(QObject *parent)
@@ -48,14 +49,22 @@ void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
     if(index.addr) return ;
     if((it.value[i] > it.peakMax[i]) && (it.value[i] < 5*it.max[i])){
         it.peakStamp[i] = QDateTime::currentSecsSinceEpoch();
-        it.peakMax[i] = it.value[i];
-        Cfg_Core::bulid()->writeAlarms();
+        it.peakMax[i] = it.value[i]; Cfg_Core::bulid()->writeAlarms();
     }
+}
+
+bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
+{
+    it.max[i] = qMin(it.max[i], it.rated[i]);
+    it.crMax[i] = qMin(it.max[i], it.crMax[i]);
+    it.crMin[i] = qMin(it.crMin[i], it.crMax[i]);
+    it.min[i] = qMin(it.crMin[i], it.min[i]);
+    return false;
 }
 
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 {
-    bool ret = false;
+    bool ret = upCorrectData(i, it);
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
     if(value > it.max[i]) alarm = AlarmCode::Max;
@@ -73,6 +82,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 
     if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
     if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
+    else if(alarm) mCrAlarm = 1;
 
     return ret;
 }
@@ -128,15 +138,18 @@ bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 uchar Alarm_Updater::upTgUnit(sDataItem &index, sTgUnit &it)
 {
     bool ret = false; if(it.en) {
-        uint value = it.value; uchar alarm;
+        uchar alarm = AlarmCode::Ok;
+        uint value = it.value; index.id = 0;
         if(value > it.max) alarm = AlarmCode::Max;
         else if(value > it.crMax) alarm = AlarmCode::CrMax;
-        else if(value < it.crMin) alarm = AlarmCode::CrMin;
+        if(value < it.crMin) alarm = AlarmCode::CrMin;
         else if(value < it.min) alarm = AlarmCode::Min;
-        else {alarm = AlarmCode::Ok;} index.id = 0;
+
         if(it.alarm != alarm) emit alarmSig(index, alarm);
         if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
-        it.alarm = alarm; ret |= alarm;
+        if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
+        else if(alarm) mCrAlarm = 1;
+        it.alarm = alarm;
     }
     return ret;
 }
@@ -240,19 +253,22 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
-    bool ret = false;
-    uchar *ptr = &cm::masterDev()->status;
+    bool ret = mCrAlarm = 0;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
+    uchar *ptr = &cm::masterDev()->status;
+    Alarm_Log::bulid()->currentAlarmClear(addr);
+
     if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
-        dev->alarm = ret ? 1:0;
+        dev->alarm = ret ? 2:0;
         dev->status = dev->alarm;
         if(addr == 0) dev->offLine = 5;
-        if(dev->dtc.fault && !dev->alarm) dev->status = 2;
-        if(dev->offLine <= 1) {dev->status = 3; if(!(*ptr)) *ptr=2;}
+        if(!ret && mCrAlarm) dev->status = 1;
+        if(dev->dtc.fault && !dev->status) dev->status = 3;
+        if(dev->offLine <= 1) {dev->status = 4; if(!(*ptr)) *ptr=3;}
         dev->cfg.param.runStatus = dev->status;
-    } if(!ret) Alarm_Log::bulid()->currentAlarmClear(addr);
+    }
     return ret;
 }
 
