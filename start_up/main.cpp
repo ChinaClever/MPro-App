@@ -70,16 +70,15 @@ static void start_init()
 {
     int cnt = 0;  //system("mount -o remount,rw /usr/data/");
     QFile file("/usr/data/clever/cfg/proc_cnt.ini");
-    if(file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
-        cnt = file.readAll().toInt();
+    if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        cnt = file.readAll().toInt(); file.seek(0);
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); system("sync");
-
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm /tmp/messages");
-    if(cnt < 10) initSystem();
+    if(cnt < 5) initSystem();
 }
 
 int main(int argc, char *argv[])

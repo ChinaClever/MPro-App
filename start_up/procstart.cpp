@@ -33,7 +33,7 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
         proc_md5(proc, fn);
         QString cmd = fn + " &";
         system(cmd.toLatin1().data());
-        qDebug() << "proc start " +cmd;
+        qDebug() << "process start " +cmd;
         proc_log(app +" startup");
     } else qDebug() << "proc start err:" << fn;
 }

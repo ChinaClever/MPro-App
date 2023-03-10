@@ -23,7 +23,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-        if(cm::masterDev()->startCnt < 1000) {
+        if(cm::masterDev()->startCnt < 1500) {
             sEventItem it;
             it.event_type = tr("系统事件");
             it.event_content = tr("系统启动");;
