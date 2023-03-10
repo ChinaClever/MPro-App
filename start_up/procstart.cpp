@@ -40,11 +40,7 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
 
 void ProcStart::proc_log(const QString &arg)
 {
-    QString fn = "/tmp/proc_log.txt";
-#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "proc_log.txt";
-#endif
-
+    QString fn = "/tmp/process_log";
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
     QString str = t + arg; QString fmd = "echo '%1' >> %2 ";
     QString cmd = fmd.arg(str, fn);
