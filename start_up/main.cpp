@@ -68,22 +68,23 @@ static void init_netWork()
 
 static void start_init()
 {
-    int min = 350; int max = 10*1024;
-    //system("mount -o remount,rw /usr/data/");
-    QString fn = "/usr/data/clever/cfg/proc_log.txt";
-    QFile file(fn); int size = file.size();
-    if(size < min) initSystem();
-    else if(size > max) file.remove();
+    int cnt = 0;  //system("mount -o remount,rw /usr/data/");
+    QFile file("/usr/data/clever/cfg/proc_cnt.ini");
+    if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        cnt = file.readAll().toInt(); file.seek(0);
+        QString str = QString::number(cnt+1);
+        file.write(str.toStdString().c_str());
+    } file.close(); system("sync");
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm /tmp/messages");
+    if(cnt < 5) initSystem();
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-
     start_init();
     init_netWork();
     Daemons::bulid();

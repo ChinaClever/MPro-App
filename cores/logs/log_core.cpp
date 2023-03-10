@@ -23,11 +23,12 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-
-        sEventItem it;
-        it.event_type = tr("系统事件");
-        it.event_content = tr("系统启动");;
-        sington->append(it);
+        if(cm::masterDev()->startCnt < 1500) {
+            sEventItem it;
+            it.event_type = tr("系统事件");
+            it.event_content = tr("系统启动");;
+            sington->append(it);
+        }
     }
     return sington;
 }
@@ -87,24 +88,26 @@ void Log_Core::run()
 {
     if(!isRun) {
         isRun = true;
-        QTimer::singleShot(350,this, SLOT(saveLogSlot()));
+        QTimer::singleShot(567,this, SLOT(saveLogSlot()));
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
     }
 }
 
 void Log_Core::saveLogSlot()
 {
-    QWriteLocker locker(mRwLock); Db_Tran t;
+    QWriteLocker locker(mRwLock);
+    QSqlDatabase::database().transaction(); //Db_Tran t;
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    cm::mdelay(10); isRun = false;
+    QSqlDatabase::database().commit(); cm::mdelay(10);
+    system("sync"); isRun = false;
 }
 
 void Log_Core::timeoutDone()
 {
-    int cnt = 1; Db_Tran t;
+    int cnt = 1; Db_Tran t; system("sync");
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);

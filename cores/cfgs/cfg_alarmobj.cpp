@@ -30,6 +30,7 @@ bool Cfg_AlarmObj::saveAlarms()
         QByteArray array = toDataStream();
         file.write(qCompress(array));
     } file.close(); isRun = false;
+    system("sync");
     return ret;
 }
 

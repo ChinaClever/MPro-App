@@ -212,10 +212,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
 QString Set_Info::process_log()
 {
-    QString fn = "usr/data/clever/cfg/proc_log.txt";
-#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "proc_log.txt";
-#endif
+    QString fn = "/tmp/proc_log.txt";
     QFile file(fn); QByteArray array;
     if(file.open(QIODevice::ReadOnly)) {
         array =  file.readAll();

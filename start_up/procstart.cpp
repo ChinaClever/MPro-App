@@ -26,28 +26,27 @@ void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
 void ProcStart::proc_start(sRunTime &proc, const QString &app)
 {
     QString path = ""; //"/usr/data/clever/app/";
-    QString fn = path + app;    
+    QString fn = path + app;
     if(proc_isRun(app)) return;
     if(QFile::exists(app)) {
         proc_time(proc);
         proc_md5(proc, fn);
         QString cmd = fn + " &";
         system(cmd.toLatin1().data());
-        qDebug() << "proc start " +cmd;
+        qDebug() << "process start " +cmd;
         proc_log(app +" startup");
     } else qDebug() << "proc start err:" << fn;
 }
 
 void ProcStart::proc_log(const QString &arg)
 {
-    QString fn = "/usr/data/clever/cfg/proc_log.txt";
+    QString fn = "/tmp/proc_log.txt";
 #if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
     fn = "proc_log.txt";
 #endif
 
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz\t");
-    QString str = t + arg;
-    QString fmd = "echo '%1' >> %2 ";
+    QString str = t + arg; QString fmd = "echo '%1' >> %2 ";
     QString cmd = fmd.arg(str, fn);
     system(cmd.toLatin1().data());
 }

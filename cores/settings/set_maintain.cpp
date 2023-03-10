@@ -30,8 +30,8 @@ bool Set_Maintain::factoryRestore()
 
     QStringList fns;
     QString dir = "/usr/data/clever/cfg/";
-    fns << "logs.db" << "proc_log.txt";
-    fns << "cfg.ini" << "inet.ini" << "alarm.cfg";
+    fns << "logs.db" << "alarm.cfg";// << "proc_cnt.ini";
+    fns << "cfg.ini" << "inet.ini";
 
     foreach (const auto &fn, fns) {
         QString fmd = "rm -f %1%2";
@@ -85,8 +85,8 @@ QString Set_Maintain::batchBackup()
 {
     QStringList fns;
     QString dir = "usr/data/clever/cfg/";
-    fns << "logs.db" << "proc_log.txt" << "qrcode.png";
     fns << "mac.ini" << "inet.ini" << "devParam.ini";
+    fns << "logs.db" << "qrcode.png" << "proc_cnt.ini";
 
     QString zip = profileBackup();
     foreach (const auto &fn, fns) {
