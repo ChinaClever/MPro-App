@@ -310,7 +310,8 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
-    uint reserve[10];
+    uint startCnt; // 设备启动次数
+    uint reserve[9];
 };
 
 

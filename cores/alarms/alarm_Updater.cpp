@@ -49,7 +49,7 @@ void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
     if(index.addr) return ;
     if((it.value[i] > it.peakMax[i]) && (it.value[i] < 5*it.max[i])){
         it.peakStamp[i] = QDateTime::currentSecsSinceEpoch();
-        it.peakMax[i] = it.value[i]; Cfg_Core::bulid()->writeAlarms();
+        it.peakMax[i] = it.value[i]; //Cfg_Core::bulid()->writeAlarms();
     }
 }
 
