@@ -333,6 +333,14 @@
 				}
 			},500);
 		},2000);
+
+		function Set(btn){
+			let mds_data = 0;
+				pdu_cfg_.setCfg(num,4,btn.value,0,addr);
+				btn.blur();
+				ShowData();
+			
+		}
 	
 		function power_calculation(){
 			/*power calculation*/
@@ -375,7 +383,7 @@
 			tbody += '<tr><td>相位数:</td>';
 			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
 			tbody += '<tr><td>执行板数量:</td>';
-			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" value="'+board_num+'"></input></td></tr>';
+			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" onchange = "Set(this)" value="'+board_num+'"></input></td></tr>';
 			tbody += '<tr><td>每块执行板的输出位数量:</td>';
 			tbody += '<td><input id = "board_num1" style ="width:2.5%" type = "text" value="'+board_out[0]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num2" style ="width:2.5%;" type = "text" value="'+board_out[1]+'"></input>';
