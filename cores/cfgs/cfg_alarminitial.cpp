@@ -39,7 +39,7 @@ void Cfg_AlarmInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 void Cfg_AlarmInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
     setAlarmUnit(it.pow, size, 220*curRated);
-    setVolAlarm(it.vol, size, 276*COM_RATE_VOL);
+    setVolAlarm(it.vol, size, 286*COM_RATE_VOL);
     setAlarmUnit(it.cur, size, curRated*COM_RATE_CUR);
 }
 
