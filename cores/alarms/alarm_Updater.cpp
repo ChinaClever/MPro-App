@@ -262,11 +262,11 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
     if(dev->offLine || addr==0) {
         ret = upDevData(index, dev);
         dev->alarm = ret ? 2:0;
-        dev->status = dev->alarm;
-        if(addr == 0) dev->offLine = 5;
+        dev->status = dev->alarm;        
         if(!ret && mCrAlarm) dev->status = 1;
-        if(dev->dtc.fault && !dev->status) dev->status = 3;
-        if(dev->offLine <= 1) {dev->status = 4; if(!(*ptr)) *ptr=3;}
+        if(dev->dtc.fault && !dev->status) dev->status = 4;
+        if(dev->offLine <= 1) {dev->status = 5; if(!(*ptr)) *ptr=3;}
+        if(!addr){dev->offLine = 5; if(cm::dataPacket()->ota.work) dev->status = 3;}
         dev->cfg.param.runStatus = dev->status;
     }
     return ret;
