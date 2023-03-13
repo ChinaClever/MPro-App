@@ -212,7 +212,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
 QString Set_Info::process_log()
 {
-    QString fn = "/tmp/proc_log.txt";
+    QString fn = "/tmp/process_log";
     QFile file(fn); QByteArray array;
     if(file.open(QIODevice::ReadOnly)) {
         array =  file.readAll();

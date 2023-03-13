@@ -69,6 +69,7 @@ static void init_netWork()
 static void start_init()
 {
     int cnt = 0;  //system("mount -o remount,rw /usr/data/");
+    system("mv /tmp/messages /tmp/kernel_messages");
     QFile file("/usr/data/clever/cfg/proc_cnt.ini");
     if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
         cnt = file.readAll().toInt(); file.seek(0);
@@ -77,7 +78,6 @@ static void start_init()
     } file.close(); system("sync");
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
-    system("rm /tmp/messages");
     if(cnt < 5) initSystem();
 }
 

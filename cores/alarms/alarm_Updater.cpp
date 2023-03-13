@@ -55,7 +55,7 @@ void Alarm_Updater::upPeakValue(sDataItem &index, int i, sAlarmUnit &it)
 
 bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
 {
-    it.max[i] = qMin(it.max[i], it.rated[i]);
+    if(it.rated[i]) it.max[i] = qMin(it.max[i]*1.0, it.rated[i]*1.3);
     it.crMax[i] = qMin(it.max[i], it.crMax[i]);
     it.crMin[i] = qMin(it.crMin[i], it.crMax[i]);
     it.min[i] = qMin(it.crMin[i], it.min[i]);
