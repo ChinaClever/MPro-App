@@ -20,6 +20,10 @@ void App_RunTime::runing_initFunSlot()
     sRunTime *run = &(cm::masterDev()->proc.core);
     qstrcpy(run->start, t.toLatin1().data());
     cm::buildDateTime(run->compileTime);
+
+    QString fn = "/usr/data/clever/cfg/proc_cnt.ini";
+    int cnt = cm::execute("cat "+fn).toInt();
+    cm::masterDev()->startCnt = cnt;
 }
 
 void App_RunTime::runing_onTimeoutDone()

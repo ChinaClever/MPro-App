@@ -67,7 +67,7 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if((0==it->disabled[i]) || (unit.txType == DTxType::TxWeb)){
-            if(unit.value) it->cnt[i] += 1; ret = true;
+            ret = true; if(unit.value) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
 
@@ -78,7 +78,7 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
 bool Set_Output::groupCtrl(const sDataItem &unit)
 {
     QList<int> ids;
-    bool ret = true;  int id = unit.id; if(id) {
+    bool ret = true; int id = unit.id; if(id) {
         ids = Data_Core::bulid()->outletByGroup(id-1);
     } else {
         for(int i=0; i<GROUP_NUM; ++i)
@@ -89,7 +89,7 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
     foreach (const auto &i, ids) if(unit.value) relay->cnt[i] += 1;
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
-    if(it->disabled[id] || unit.txType == DTxType::TxWeb) {
+    if(0==it->disabled[id] || unit.txType == DTxType::TxWeb) {
         OP_Core::bulid()->relaysCtrl(ids, unit.value);
     } else ret = false;
 

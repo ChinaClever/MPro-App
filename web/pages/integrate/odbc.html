@@ -155,6 +155,11 @@
 				}
 			}
 			document.getElementById(red_name[red_name.length-1]).innerHTML = redis_data[10];
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function flash_html(){
 			pdu_cfg.odbcCfg();

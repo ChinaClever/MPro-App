@@ -56,7 +56,7 @@ struct sAlarmUnit
 
     uint min[PACK_ARRAY_SIZE]; // 最小值
     uint max[PACK_ARRAY_SIZE]; // 最大值
-    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和8表示已报警 2和4表示预警
+    uint alarm[PACK_ARRAY_SIZE]; // 报警值 0表示未报警  1和4表示已报警 2和3表示预警
 
     uint crMin[PACK_ARRAY_SIZE]; // 最小值
     uint crMax[PACK_ARRAY_SIZE]; // 最大值
@@ -224,7 +224,7 @@ struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
     uint runStatus; // 运行状态 0：正常 1：告警 2：故障 3: 离线
     uint language; // 0 中文 1 英文
-    uint devMode; // 0：标准 1：级联 2：机柜双电源 3：RTU
+    uint devMode; // 0：禁用级联 1：启用级联 2：机柜双电源
     uint cascadeAddr; // 级联地址
     uint modbusRtuBr; // Modbus-Rtu 波特率
     uint modbusRtuAddr; // Modbus-Rtu 地址
@@ -293,7 +293,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：告警 2：故障 3: 离线
+    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：离线
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
@@ -310,7 +310,8 @@ struct sDevData
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
     uint hz; // 电压频率
-    uint reserve[10];
+    uint startCnt; // 设备启动次数
+    uint reserve[9];
 };
 
 
@@ -401,7 +402,7 @@ enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
-enum DevMode{DM_Standard, DM_Cascade, DM_Dual, DM_Rtu};
+enum EDevMode{DM_Rtu, DM_Cascade, DM_Dual};
 
 struct sDataItem
 {

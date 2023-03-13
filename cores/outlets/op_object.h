@@ -43,7 +43,7 @@ private:
     bool curFaultCheck(uchar k, uchar i);
     void powFaultCheck(uchar k, uchar i);
     void eleFaultCheck(uchar k, uchar i);
-    void relayCheck(uint &sw, uint &src_sw, uint &cnt);
+    void relayCheck(uint &sw, uint &src_sw);
 
     void recoveryLog(int id, uint *cnt);
     void faultLog(int id, uint *cnt, uint value);
@@ -53,7 +53,6 @@ private:
 protected:
     sOpIt *mOpData=nullptr;
     sDevData *mDev=nullptr;
-    uint m_swCnt[PACK_ARRAY_SIZE];
 };
 
 #endif // OP_OBJECT_H

@@ -19,6 +19,9 @@ public:
     void sys_logAlarm(const QString& msg);
     void sys_logInfo(const QString& msg);
 
+public slots:
+    void sys_open();
+
 protected:
     void sys_initfun();
     QReadWriteLock *mRwLock;

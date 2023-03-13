@@ -66,7 +66,7 @@ struct _sDevData
     _sObjData loop[LOOP_NUM]; // 回路数据
 
     uchar groupSize;
-    _sObjData group[LOOP_NUM]; // 回路数据
+    _sObjData group[GROUP_NUM]; // 回路数据
 
     uchar dualSize;
     _sObjData dual[OUTPUT_NUM]; //双电源数据

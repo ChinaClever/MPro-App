@@ -47,7 +47,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
             sEventItem it; it.event_type = tr("级联"); it.addr = addr;
             it.event_content = tr("副机 %1 连接正常").arg(addr);
             Log_Core::bulid()->append(it);
-        } v = 5;
+        } if(cm::runTime() > 48*60*60) v = 5; else v = 2;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("级联"); it.addr = addr;

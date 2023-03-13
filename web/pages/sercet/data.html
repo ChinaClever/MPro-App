@@ -152,6 +152,11 @@
 				default:
 				break;
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			if(confirm("请确认是否开启此功能。")){

@@ -53,8 +53,8 @@ void App_Sensor::env_workDown()
         if(th[i] >= 0) {
             if(read(th[i], t, sizeof(t)) < 0) {
                 env->isInsert[i] = 0;
-                env->tem.value[i] = 0;
-                env->hum.value[i] = 0;
+                //env->tem.value[i] = 0;
+                //env->hum.value[i] = 0;
             } else {
                 env->isInsert[i] = 1;
                 sscanf(t, "%d:%d", v, v+1);

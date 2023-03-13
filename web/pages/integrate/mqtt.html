@@ -126,6 +126,11 @@
 				}
 			}
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function flash_html(){
 			pdu_cfg.mqttCfg();

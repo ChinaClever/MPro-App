@@ -30,6 +30,7 @@ private:
     void netAddr(const sNetInterface &it, const QString &key, QJsonObject &json);
     void groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
     void webGroupData(sDevData *it, QJsonObject &obj);
+    void online(QJsonObject &json);
 
 private:
     int mDataContent;

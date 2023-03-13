@@ -12,7 +12,7 @@ OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
     mOpData = new sOpIt;
     mDev = cm::masterDev();
     memset(mOpData, 0, sizeof(sOpIt));
-    for(int i=0; i<PACK_ARRAY_SIZE; ++i) m_swCnt[i] =1;
+    //for(int i=0; i<PACK_ARRAY_SIZE; ++i) m_swCnt[i] =1;
 }
 
 bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
@@ -154,7 +154,7 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
     if(mOpData->type) dest = mDev->loop.ele;
-    if(dest[id] && src[i]) {
+    if((dest[id] && src[i]) && (src[i] < 1000)){
         if(src[i] - dest[id] > 2) {
             ret = false;
             faultLog(id, cnt, src[i]);
@@ -167,32 +167,33 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     } else dest[id] = src[i];
 }
 
-void OP_Object::relayCheck(uint &dst_sw, uint &src_sw, uint &cnt)
+void OP_Object::relayCheck(uint &dst_sw, uint &src_sw)
 {
-    if(dst_sw != src_sw) {
-        if(cnt++) dst_sw = src_sw;
-    } else cnt = 0;
+    if(mDev->cfg.param.devSpec < 3) dst_sw = 2;
+    else dst_sw = src_sw;
+
+    //if(dst_sw != src_sw) {
+    //    if(cnt++) dst_sw = src_sw;
+    //} else cnt = 0;
 }
 
 void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev; uchar k = 0;
-    sOpIt *it = mOpData; mDev->dtc.fault = 0;
-    dev->cfg.nums.boards[addr] = it->size; addr -= 1;
+    sOpIt *it = mOpData; mDev->dtc.fault = 0; addr -= 1;
     for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
-
     for(int i=0; i<it->size; ++i) {
         volFaultCheck(k, i);
         curFaultCheck(k, i);
         powFaultCheck(k, i);
         eleFaultCheck(k, i);
-        dev->output.relay.sw[k+i] = it->sw[i];
-        //relayCheck(dev->output.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
+        //dev->output.relay.sw[k+i] = it->sw[i];
+        relayCheck(dev->output.relay.sw[k+i], it->sw[i]);
     }
 
     dev->offLine = 3;
     dev->rtu.hzs[addr] = it->hz;
-    dev->cfg.nums.boards[addr] = it->size;
+    //dev->cfg.nums.boards[addr] = it->size;
     dev->cfg.vers.opVers[addr] = it->version;
     dev->rtu.chipStates[addr] = it->chipStatus;
     for(int i=0; i<4; ++i) dev->rtu.offLines[i] = it->ens[i];

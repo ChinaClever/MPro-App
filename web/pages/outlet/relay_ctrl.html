@@ -37,7 +37,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" id="lang_2"></button></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" style="display: none;"id="lang_2"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select style ="width:10%;"  onchange ="ModeSet();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
@@ -59,6 +59,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let addr = pdu_cfg.addr;
 		let phase = 3,switch_ = 1;
 		let language;
@@ -69,6 +70,13 @@
 		let State = new Array("","");
 		let dev_name =new Array();
 		let lang = new Array();
+		if(top.login_permit_ == 0){
+			document.getElementById("lang_1").style.display="";
+			document.getElementById("lang_2").style.display="";
+		}else{
+			document.getElementById("lang_1").style.display="none";
+			document.getElementById("lang_2").style.display="none";
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
@@ -130,7 +138,7 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();
@@ -221,7 +229,7 @@
 					cs.bgColor = 'yellow';
 				}
 				else{
-					cs.bgColor = '';
+					cs.bgColor = 'green';
 				}
 			}
 		}
@@ -236,7 +244,7 @@
 					cs.bgColor = 'yellow';
 				}
 				else{
-					cs.bgColor = '';
+					cs.bgColor = 'green';
 				}
 			}
 		}
@@ -354,7 +362,7 @@
 				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.output_item_list.name[i]+'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_powerup_delay[i]+'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + Input_state[0] + '</button></td>';
@@ -368,7 +376,7 @@
 					tbody += '<td id = "b'+ i + '">'+lang[16][language]+'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" ></input></td>';
-					tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "j'+ i + '" ></input></td>';
+					tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" ></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + Input_state[0] + '</button></td>';

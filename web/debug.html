@@ -68,11 +68,12 @@
     <script src="./include/js/fn_public.js"></script>
     <script src="./include/js/public.min.js"></script>
     <script>
+		var pdu_metadata_ = new PduMetaData();
 		let pdu_cfg_ = PduCore.build();
 		setTimeout(function(){
-			PduMetaData.meta_workDown(pdu_cfg_);
 			pdu_cfg_.debugCfg();
-		},300);
+			PduMetaData.meta_workDown(pdu_cfg_);
+		},1000);
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
@@ -85,6 +86,7 @@
 		let loop_num;
 		let board_num;
 		var mark = 1;
+		let pdu_data;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -93,9 +95,9 @@
 		let rating_ = new Array();
 		let out_vol = new Array(49);
 		let unite_data = new Array();
-		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir);
-		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_);
-		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_");
+		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
+		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
+		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
 		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
@@ -104,23 +106,11 @@
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
-		$('.vol_table').html(buildTableVol());
-		let m = 0;
-		var Time1 = setInterval(function(){
-			ParseData();
-			if(m>=5){
-				clearInterval(Time1);
-				ShowData();
-			}
-			m++;
-		},200);
-		let phase_info_ = new Array();
-		let loop_info_ = new Array();
-		let sensor_info_ = new Array();
+		$('.vol_table').html(buildTableVol());ase_info_ = new Array();
 		let output_info_ = new Array();
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
-			let pdu_data = JSON.parse(DataString);
+			pdu_data = JSON.parse(DataString);
 			if(pdu_data == null){
 				return;
 			}
@@ -133,30 +123,6 @@
 			if(mark){
 				pdu_cfg_.debugVolData(output_num);
 				mark = 0;
-			}
-			for(let i = 0;i<phase_num;i++){
-				phase_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.line_item_list){
-					phase_info_[i][j] = pdu_data.pdu_data.line_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let i = 0;i<loop_num;i++){
-				loop_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.loop_item_list){
-					loop_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
-					j ++;
-				}
-			}
-			for(let i = 0;i<2;i++){
-				sensor_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.env_item_list){
-					sensor_info_[i][j] = pdu_data.pdu_data.env_item_list[key][i];
-					j ++;
-				}
 			}
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
@@ -180,7 +146,7 @@
 			cfg_data[3] = pdu_cfg_.cfgValue(cfg,9,0,addr);;
 			cfg_data[4] = pdu_cfg_.cfgValue(cfg,1,0,addr);
 			cfg_data[5] = pdu_cfg_.cfgValue(cfg,10,0,addr);
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_cfg_.getValue(unite_name[i],unite_type[i],2,0);
 				unite_data[i][1] = pdu_cfg_.getValue(unite_name[i],unite_type[i],5,0);
@@ -194,6 +160,16 @@
 				rating_[i] = rating[i];
 			}
 		}
+		let m = 0;
+		var Time1 = setInterval(function(){
+			ParseData();
+			if(m>=20 || unite_data[9][4] !=null){
+				clearInterval(Time1);
+				ShowData();
+			}
+			m++;
+		},200);
+		let ph
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
@@ -208,7 +184,7 @@
 			for(i =0;i<7;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				for(let j = 0;j<5;j++){
 					if( unite_data[i][j] != null){
 						document.getElementById(unite_id[i]+j).value = unite_data[i][j];
@@ -253,7 +229,7 @@
 			}, 100);
 		}
 		function AllSet(){
-			for(let i = 0;i<9;i++){
+			for(let i = 0;i<10;i++){
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
@@ -357,49 +333,86 @@
 				}
 			},500);
 		},2000);
+
+	
+		function power_calculation(){
+			/*power calculation*/
+			document.getElementById("phase_pow_"+0).value =parseFloat((parseInt(document.getElementById("phase_vol_"+0).value) * parseFloat(document.getElementById("phase_cur_"+0).value))/1000).toFixed(3);
+			document.getElementById("phase_pow_"+3).value =parseFloat(parseFloat(document.getElementById("phase_pow_"+0).value)*0.8).toFixed(3);
+			document.getElementById("phase_pow_"+4).value =document.getElementById("phase_pow_"+0).value;
+
+			document.getElementById("loop_pow_"+0).value =parseFloat((parseInt(document.getElementById("loop_vol_"+0).value) * parseFloat(document.getElementById("loop_cur_"+0).value))/1000).toFixed(3);
+			document.getElementById("loop_pow_"+3).value =parseFloat(parseFloat(document.getElementById("loop_pow_"+0).value)*0.8).toFixed(3);
+			document.getElementById("loop_pow_"+4).value =document.getElementById("loop_pow_"+0).value;
+
+			document.getElementById("out_put_pow_"+0).value =parseFloat((parseInt(document.getElementById("loop_vol_"+0).value) * parseFloat(document.getElementById("output_cur_"+0).value))/1000).toFixed(3);
+			document.getElementById("out_put_pow_"+3).value =parseFloat(parseFloat(document.getElementById("out_put_pow_"+0).value)*0.8).toFixed(3);
+			document.getElementById("out_put_pow_"+4).value =document.getElementById("out_put_pow_"+0).value;
+
+			/*current calculation*/
+			document.getElementById("phase_cur_"+3).value =parseFloat(parseFloat(document.getElementById("phase_cur_"+0).value)*0.8).toFixed(2);
+			document.getElementById("phase_cur_"+4).value =document.getElementById("phase_cur_"+0).value;
+
+			document.getElementById("loop_cur_"+3).value =parseFloat(parseFloat(document.getElementById("loop_cur_"+0).value)*0.8).toFixed(2);
+			document.getElementById("loop_cur_"+4).value =document.getElementById("loop_cur_"+0).value;
+
+			document.getElementById("output_cur_"+3).value =parseFloat(parseFloat(document.getElementById("output_cur_"+0).value)*0.8).toFixed(2);
+			document.getElementById("output_cur_"+4).value =document.getElementById("output_cur_"+0).value;
+
+			/*voltage calculation*/
+			document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(2);
+			document.getElementById("phase_vol_"+4).value =document.getElementById("phase_vol_"+0).value;
+
+			document.getElementById("loop_vol_"+3).value =parseFloat(parseFloat(document.getElementById("loop_vol_"+0).value)*0.8).toFixed(2);
+			document.getElementById("loop_vol_"+4).value =document.getElementById("loop_vol_"+0).value;
+
+			AllSet();
+		}
+
+
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
 			<td width ="75%"></td></tr>';
 			tbody += '<tr><td>相位数:</td>';
-			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
+			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" onchange = "Set_()"  oninput = "if(value>3){value=3}"value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
 			tbody += '<tr><td>执行板数量:</td>';
-			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" value="'+board_num+'"></input></td></tr>';
+			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" onchange = "Set_()" oninput = "if(value>4){value=4}"value="'+board_num+'"></input></td></tr>';
 			tbody += '<tr><td>每块执行板的输出位数量:</td>';
-			tbody += '<td><input id = "board_num1" style ="width:2.5%" type = "text" value="'+board_out[0]+'"></input>';
+			tbody += '<td><input id = "board_num1" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+board_out[0]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num2" style ="width:2.5%;" type = "text" value="'+board_out[1]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num3" style ="width:2.5%;" type = "text" value="'+board_out[2]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "board_num4" style ="width:2.5%;" type = "text" value="'+board_out[3]+'"></input></td></tr>';
 			tbody += '<tr><td>回路数量:</td>';
-			tbody += '<td><input id = "loop_" style ="width:2.5%" type = "text" value="'+loop_num+'"></input></td></tr>';
+			tbody += '<td><input id = "loop_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+loop_num+'"></input></td></tr>';
 			tbody += '<tr><td>每个回路的输出位数量:</td>';
-			tbody += '<td><input id = "out_num1" style ="width:2.5%" type = "text" value="'+loop_out[0]+'"></input>';
+			tbody += '<td><input id = "out_num1" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+loop_out[0]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num2" style ="width:2.5%;" type = "text" value="'+loop_out[1]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num3" style ="width:2.5%;" type = "text" value="'+loop_out[2]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num4" style ="width:2.5%;" type = "text" value="'+loop_out[3]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num5" style ="width:2.5%;" type = "text" value="'+loop_out[4]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num6" style ="width:2.5%;" type = "text" value="'+loop_out[5]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带断路器:</td>';
-			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
+			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" onchange = "Set_()" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 
 			tbody += '<tr><td>屏幕方向角:</td>';
-			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" value="'+cfg_data[0]+'">(0-0°垂直,1-90°水平,2-180°垂直(翻转),3-270°水平(翻转))</input></td></tr>';
+			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_()"  value="'+cfg_data[0]+'">(0-0°垂直,1-90°水平,2-180°垂直(翻转),3-270°水平(翻转))</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
-			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
+			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_()"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
 			tbody += '<tr><td>IN/OUT口级联方式:</td>';
-			tbody += '<td><input id = "cascade_" style ="width:2.5%" type = "text" value="'+cfg_data[2]+'">(0-网络一带三,1-modbus)</input></td></tr>';
+			tbody += '<td><input id = "cascade_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'">(0-网络一带三,1-modbus)</input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
-			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
+			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
 			tbody += '<tr><td>设备系列选择:</td>';
-			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
+			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 			tbody += '<tr><td>语言选择:</td>';
-			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
+			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
-			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" value="'+cfg_data[6]+'"></input></td></tr>';
+			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[6]+'"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
@@ -413,12 +426,12 @@
 			<td width ="8%"></td>\
 			<td width ="8%"></td><td width ="47%"></td></tr>';
 			tbody += '<tr><td width ="5%">序号</td><td width ="8%">数据类型</td><td width ="8%" >额定值</td><td width ="8%" >最小值</td><td>下临界值</td><td>上临界值</td><td>最大值</td><td></td></tr>';
-			tbody += '<tr><td>1</td><td>相电压(V)</td><td><input id = "'+unite_id[0]+0+'" style ="width:60.5%" type = "text" value ="220"></input></td>\
+			tbody += '<tr><td>1</td><td>相电压(V)</td><td><input id = "'+unite_id[0]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="220"></input></td>\
 				<td><input id = "'+unite_id[0]+1+'" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "'+unite_id[0]+2+'" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "'+unite_id[0]+3+'" style ="width:60.5%" type = "text" value ="240"></input></td>\
 				<td><input id = "'+unite_id[0]+4+'" style ="width:60.5%" type = "text" value ="240"></input></td><td></td></tr>';
-			tbody += '<tr><td>2</td><td>相电流(A)</td><td><input id = "'+unite_id[1]+0+'" style ="width:60.5%" type = "text" value ="63"></input></td>\
+			tbody += '<tr><td>2</td><td>相电流(A)</td><td><input id = "'+unite_id[1]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="63"></input></td>\
 				<td><input id = "'+unite_id[1]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[1]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[1]+3+'" style ="width:60.5%" type = "text" value ="63"></input></td>\
@@ -428,12 +441,12 @@
 				<td><input id = "'+unite_id[2]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[2]+3+'" style ="width:60.5%" type = "text" value ="14.080"></input></td>\
 				<td><input id = "'+unite_id[2]+4+'" style ="width:60.5%" type = "text" value ="14.080"></input></td><td></td></tr>';
-			tbody += '<tr><td>4</td><td>回路电压(V)</td><td><input id = "'+unite_id[3]+0+'" style ="width:60.5%" type = "text" value ="220"></input></td>\
+			tbody += '<tr><td>4</td><td>回路电压(V)</td><td><input id = "'+unite_id[3]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="220"></input></td>\
 				<td><input id = "'+unite_id[3]+1+'" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "'+unite_id[3]+2+'" style ="width:60.5%" type = "text" value ="80"></input></td>\
 				<td><input id = "'+unite_id[3]+3+'" style ="width:60.5%" type = "text" value ="240"></input></td>\
 				<td><input id = "'+unite_id[3]+4+'" style ="width:60.5%" type = "text" value ="240"></input></td><td></td></tr>';
-			tbody += '<tr><td>5</td><td>回路电流(A)</td><td><input id = "'+unite_id[4]+0+'" style ="width:60.5%" type = "text" value ="32"></input></td>\
+			tbody += '<tr><td>5</td><td>回路电流(A)</td><td><input id = "'+unite_id[4]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="32"></input></td>\
 				<td><input id = "'+unite_id[4]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[4]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[4]+3+'" style ="width:60.5%" type = "text" value ="32"></input></td>\
@@ -443,17 +456,22 @@
 				<td><input id = "'+unite_id[5]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[5]+3+'" style ="width:60.5%" type = "text" value ="7.040"></input></td>\
 				<td><input id = "'+unite_id[5]+4+'" style ="width:60.5%" type = "text" value ="7.040"></input></td><td></td></tr>';
-			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "'+unite_id[6]+0+'" style ="width:60.5%" type = "text" value ="16"></input></td>\
+			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "'+unite_id[6]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="16"></input></td>\
 				<td><input id = "'+unite_id[6]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[6]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[6]+3+'" style ="width:60.5%" type = "text"  value ="16"></input></td>\
 				<td><input id = "'+unite_id[6]+4+'" style ="width:60.5%" type = "text"  value ="16"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" value ="40"></input></td>\
+			tbody += '<tr><td>8</td><td>输出位功率(kW)</td><td><input id = "'+unite_id[9]+0+'" style ="width:60.5%" type = "text" value ="2.20"></input></td>\
+				<td><input id = "'+unite_id[9]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
+				<td><input id = "'+unite_id[9]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
+				<td><input id = "'+unite_id[9]+3+'" style ="width:60.5%" type = "text"  value ="1.76"></input></td>\
+				<td><input id = "'+unite_id[9]+4+'" style ="width:60.5%" type = "text"  value ="2.20"></input></td><td></td></tr>';
+			tbody += '<tr><td>9</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="40"></input></td>\
 				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" value ="40"></input"></td>\
 				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>9</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" value ="90"></input></td>\
+			tbody += '<tr><td>10</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="90"></input></td>\
 				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text"  value ="90"></input></td>\

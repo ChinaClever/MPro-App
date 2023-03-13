@@ -37,7 +37,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" id="lang_2"></button></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" style="display: none;"id="lang_2"></button></span>
 									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
@@ -57,6 +57,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let addr = pdu_cfg.addr;
 		let phase = 3,switch_ = 1;
 		let language;
@@ -64,6 +65,13 @@
 		let pdu_data;
 		let lang = new Array();
 		var dev_name =new Array();
+		if(top.login_permit_ == 0){
+			document.getElementById("lang_1").style.display="";
+			document.getElementById("lang_2").style.display="";
+		}else{
+			document.getElementById("lang_1").style.display="none";
+			document.getElementById("lang_2").style.display="none";
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
@@ -121,7 +129,7 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();
@@ -215,7 +223,7 @@
 			hh = CheckTime(hh);
 			mm = CheckTime(mm);
 			ss = CheckTime(ss);
-			var time = hh + ":" + mm+ ":" + ss;
+			var time = hh + ":" + mm;
 
 			for(let i = 0; i<pdu_data.pdu_info.output_num + 1;i++){
 				document.getElementById('f'+i).value = time;
@@ -328,7 +336,7 @@
 				tbody += '<td id = "c'+ i + '"></td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
-				tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+				tbody += '<td width ="10%"><input  type = "time" id = "f'+ i + '"></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
 				tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 				tbody += '</tr>';
@@ -340,7 +348,7 @@
 					tbody += '<td><input  type = "checkbox" onchange ="cked(this)" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '<td colspan = "2" id = "c'+ i + '"></td>';
 					tbody += '<td width ="10%"><input  type = "date"  id = "e'+ i + '"></td>';
-					tbody += '<td width ="10%"><input  type = "time" step ="1"   id = "f'+ i + '"></td>';
+					tbody += '<td width ="10%"><input  type = "time" id = "f'+ i + '"></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + lang[12][language] + '</button></td>';
 					tbody += '<td><button id = "h'+ i + '" onclick = BtnClick(this) >' + lang[13][language] + '</button></td>';
 					tbody += '</tr>';

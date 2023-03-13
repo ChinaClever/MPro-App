@@ -37,7 +37,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" onclick ="ReadonlySet(this);"></button></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_2" style ="display: none;" onclick ="ReadonlySet(this);"></button></span>
 								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id = "lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
@@ -57,6 +57,7 @@
 	<script src="../../doc-lib/doc.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let language;
 		let addr = pdu_cfg.addr;
 		let read = 1;
@@ -64,6 +65,13 @@
 		let output_name =new Array();
 		let dev_name =new Array();
 		let pdu_data;
+		if(top.login_permit_ == 0){
+			document.getElementById("lang_1").style.display="";
+			document.getElementById("lang_2").style.display="";
+		}else{
+			document.getElementById("lang_1").style.display="none";
+			document.getElementById("lang_2").style.display="none";
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
@@ -144,7 +152,7 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
+				PduMetaData.meta_workDown(pdu_cfg);
 			},100);
 			setTimeout(function(){
 				ParseData();

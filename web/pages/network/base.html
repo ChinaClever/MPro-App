@@ -170,6 +170,11 @@
 					document.getElementById("lang_19").disabled = true;
 				}
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			let info_name_ = 0,id = 0;

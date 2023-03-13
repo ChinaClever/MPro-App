@@ -81,18 +81,22 @@
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+				$("textarea").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			let mds_data = 0;
-			if(confirm("请确认是否修改此项。")){
-				for(let  i = 0;i < id_val.length;i++){
-					if(id_val[i] == btn.id){
-						pdu_cfg.setCfg(uut,i,btn.value,0,addr);
-						btn.blur();
-					}
+			for(let  i = 0;i < id_val.length;i++){
+				if(id_val[i] == btn.id){
+					pdu_cfg.setCfg(uut,i,btn.value,0,addr);
+					btn.blur();
 				}
-				FlashHtml();
-			}else{}
+			}
+			FlashHtml();
 		}
 		function FlashHtml(){
 			pdu_cfg.placesetCfg();
@@ -106,7 +110,7 @@
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
-			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" maxlength="16" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
 			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
@@ -118,7 +122,7 @@
 			tbody += '<td><input id = "sn" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_8"></td>';
-			tbody += '<td><input id = "dt" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '<td><input id = "dt" style ="width:24.5%" type = "text" readonly ="true" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_6"></td>';
 			tbody += '<td><textarea id = "qr"  style="height:90px;width:24.5%;resize: none;" rows="4" cols="37" onchange = "SetData(this)" autofocus></textarea>';

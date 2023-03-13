@@ -13,7 +13,7 @@ Data_Dual::Data_Dual()
 int Data_Dual::setDualSize(int id)
 {
     int size = 0;
-    if(mDev->cfg.param.devMode == DevMode::DM_Dual) {
+    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
         size = mDev->cfg.nums.outputNum;
         //mDev->cfg.nums.slaveNum = 1;
     }
@@ -30,7 +30,7 @@ int Data_Dual::setDualSize(int id)
 void Data_Dual::dualWork()
 {
     if(mDev->cfg.param.cascadeAddr) {dualTiming(0); return;}
-    if(mDev->cfg.param.devMode == DevMode::DM_Dual) {
+    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
         int num = mDev->cfg.nums.slaveNum;
         for (int i=0; i <= num; i += 2) {
             int size = setDualSize(i);
@@ -67,6 +67,7 @@ void Data_Dual::dualData(int id)
         dest->vol.value[i] = (src1->vol.value[i] + src2->vol.value[i])/2;
         dest->cur.value[i] = src1->cur.value[i] + src2->cur.value[i];
         dest->pow.value[i] = src1->pow.value[i] + src2->pow.value[i];
+        dest->pow.rated[i] = src1->pow.rated[i] + src2->pow.rated[i];
         dest->reactivePow[i] = src1->reactivePow[i] + src2->reactivePow[i];
         dest->artPow[i] = src1->artPow[i] + src2->artPow[i];
         dest->ele[i] = src1->ele[i] + src2->ele[i];

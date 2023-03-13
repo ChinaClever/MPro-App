@@ -8,7 +8,6 @@ class ProcStart
 {
 public:
     explicit ProcStart();
-
     static void mdelay(int msec);
     void proc_log(const QString &arg);
     static bool proc_isRun(const QString &p);

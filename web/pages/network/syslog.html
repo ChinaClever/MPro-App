@@ -93,11 +93,15 @@
 				document.getElementById(syslog_name[2]).disabled = true;
 				document.getElementById(syslog_name[3]).disabled = true;
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否开启此功能。")){
 				for(let i = 1;i<syslog_name.length;i++){
 					if(syslog_name[i] == btn.id){
 						pdu_cfg.setCfg(46,i,btn.value,0,addr);
@@ -105,7 +109,6 @@
 					}
 				}
 				flash_html();
-			}else{}
 		}
 		function flash_html(){
 			pdu_cfg.syslogCfg();

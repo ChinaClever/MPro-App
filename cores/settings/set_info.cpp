@@ -99,7 +99,8 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
-    if(it->cascadeAddr) {sCfgItem it; it.addr = 0; it.type  = 12; it.fc = 5; setCfgNum(it, 0);}
+    if(it->cascadeAddr) {sCfgItem it; it.addr = 0; it.type  = 12; it.fc = 5; ret=setCfgNum(it, 0);}
+    if((1 == fc) && value) {ret=modbusSet(1, 0);}
     //cout  << key << fc << value;
 
     return ret;
@@ -134,7 +135,10 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break; case 7: break;
-    case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
+    case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value;
+        cout << it.id << value;
+        break;
+
     case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
     case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value+1;  break;
     default: ret = false; cout << it.fc; break;
@@ -208,10 +212,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
 
 QString Set_Info::process_log()
 {
-    QString fn = "usr/data/clever/cfg/proc_log.txt";
-#if (QT_VERSION > QT_VERSION_CHECK(5,13,0))
-    fn = "proc_log.txt";
-#endif
+    QString fn = "/tmp/process_log";
     QFile file(fn); QByteArray array;
     if(file.open(QIODevice::ReadOnly)) {
         array =  file.readAll();

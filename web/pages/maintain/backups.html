@@ -78,6 +78,11 @@
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("button").attr("disabled","disabled");
+			}
 		}
 		$('.backup').html(buildTable());
 		lang_fun();

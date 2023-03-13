@@ -19,6 +19,7 @@ protected:
     bool setInfoCfg(int fc, int value);
     QVariant softwareVersion(int addr, int type);
     QVariant proStartupLog(const sCfgItem &it);
+    virtual bool modbusSet(uchar, int){return false;};
 
 private:
     bool qrcodeGenerator(const QString& msg);

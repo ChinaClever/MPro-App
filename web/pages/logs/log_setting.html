@@ -87,6 +87,11 @@
 			for(let i = 1;i<logset_name.length;i++){
 				document.getElementById(logset_name[i]).value =  logset_data[i];
 			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;

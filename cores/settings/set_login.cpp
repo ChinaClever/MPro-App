@@ -66,11 +66,12 @@ int Set_Login::loginAuth(const QStringList &ls)
         sDevLogin *it = &(cm::dataPacket()->login[i]);
         QString usr = it->user, pwd = it->pwd;
         if((ls.first() == usr) && (ls.last() == pwd)) {
-            ret = 1; break;
+            ret = 1; mPermit = it->permit; break;
         }
     }
     return ret;
 }
+
 
 /**
  * 1、输入五次账号密码锁定十分钟。

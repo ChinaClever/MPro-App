@@ -38,6 +38,7 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
+		let pdu_metadata = new PduMetaData();
 		let language;
 		var read =0;
 		let addr = 0;
@@ -83,8 +84,8 @@
 				lang[i] = new Array();
 			}
 			lang[1] = ["模式设置","","","",""];
-			lang[2] = ["模式设置","","","",""];
-			lang[3] = ["设备模式:","","","",""];
+			lang[2] = ["级联设置","","","",""];
+			lang[3] = ["设备级联:","","","",""];
 			lang[4] = ["级联地址:","","","",""];
 			lang[5] = ["副机数量:","","","",""];
 			lang[6] = ["其他设置","","","",""];
@@ -93,9 +94,9 @@
 			lang[9] = ["总功率记录功能:","","","",""];
 			lang[10] = ["禁用","","","",""];
 			lang[11] = ["启用","","","",""];
-			lang[12] = ["标准","","","",""];
-			lang[13] = ["级联","","","",""];
-			lang[14] = ["机柜双电源","","","",""];
+			lang[12] = ["禁用","","","",""];
+			lang[13] = ["启用","","","",""];
+			lang[14] = ["机架","","","",""];
 			lang[15] = ["RTU","","","",""];
 			lang[16]  = ["主机", "", "", "", ""];
 			lang[17]  = ["副机", "", "", "", ""];
@@ -103,7 +104,7 @@
 			lang[19]  = ["最少", "", "", "", ""];
 			lang[20]  = ["最多", "", "", "", ""];
 
-			for(let j = 0;j < 4;j++){
+			for(let j = 0;j < 3;j++){
 				mode_set[j] = lang[12 +j][language];
 			}
 			opt_val[0] = lang[10][language];
@@ -154,6 +155,11 @@
 				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
+			}
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
 			}
 		}
 		function SetData(btn){
@@ -206,7 +212,7 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr id ="slave_" style ="display:none;"><td id = "lang_5"></td>';
-			tbody += '<td><input id = "slave" style ="width:24.5%" type = "text" onchange = "Set(this)" oninput = "if(value>10){value=10}" placeholder="1~10"></input>';
+			tbody += '<td><input id = "slave" style ="width:24.5%" type = "text" onchange = "Set(this)" oninput = "if(value>9){value=9}" placeholder="1~10"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

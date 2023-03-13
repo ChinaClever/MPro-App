@@ -50,8 +50,10 @@ void Set_Diagnose::diascmds()
     sys_cmd("lsmod", "kernel-modules");
     sys_cmd("cat /proc/modules", "kernel-modules");
 
-    sys_cmd("cat /proc/loadavg", "load-and-uptime");
     sys_cmd("cat /proc/uptime", "load-and-uptime");
+    sys_cmd("cat /proc/loadavg", "load-and-uptime");
+    sys_cmd("cat /tmp/process_log", "process-start-log");
+    sys_cmd("cat /tmp/kernel_messages", "kernel-messages");
 
     sys_cmd("free", "memory");
     sys_cmd("cat /proc/meminfo", "memory");

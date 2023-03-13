@@ -25,9 +25,9 @@ class JsonRpc {
     rpc_url() {
         var protocol = "ws";        
         var host = window.location.host;
-        var port = window.location.port; if(port) port = ':' + port;
+        //var port = window.location.port; if(port) port = ':' + port;
         if(window.location.protocol == "https:") {protocol = "wss"; this.timeOut = 210;}     
-        var url = protocol+'://'+host+port+'/websocket'; //alert(url);
+        var url = protocol+'://'+host+'/websocket'; //alert(url);
         return url;
     }
 
@@ -98,12 +98,12 @@ class JsonRpc {
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
-        if(this.ws.readyState == WebSocket.OPEN){     
+        if(this.ws.readyState == WebSocket.OPEN){
             this.ws.send(msg);
         } else {
-            // ret = false;
-            // this.ws.close();
-            // this.ws = this.socket_open(); 
+             ret = false;
+             this.ws.close();
+             this.ws = this.socket_open(); 
         }
         return ret;
     }
@@ -226,9 +226,9 @@ class PduMetaData {
     }
 
     // 定时器响应函数
-   static meta_workDown(addr) {
+   static meta_workDown(data) {
         var method = "pduMetaData"; 
-        var params = [addr, 100, 0, 0, 0];
+        var params = [data.addr, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();
@@ -236,9 +236,10 @@ class PduMetaData {
 
 // PDU实时数据操作类
 class PduDataItem extends PduMetaData{
-    constructor() {
-        super();  
-    }
+// class PduDataItem extends PduMetaData{
+//     constructor() {`
+//         super();  
+//     }
 
     // 根据地址获取某个具体实时数据
     getValueByAddr(addr, type, topic, sub, id) {
@@ -381,7 +382,8 @@ class PduCfgs extends PduCfgObj {
         let fcs = [8,9];
         this.getCfgList(18, fcs);
     }
-    httpPush(){
+    httpPush()
+    {
         let fcs = [11,12,13,14,15,16];
         this.getCfgList(18, fcs);
     }
@@ -485,8 +487,8 @@ class PduCfgs extends PduCfgObj {
     }
     debugCfg(){
         var fcs = [1,9,10,11,13];
-        let type_ = [1,1,1,2,2,2,3,6,6]; 
-        let topic_ = [2,3,4,2,3,4,3,11,12]; 
+        let type_ = [1,1,1,2,2,2,3,6,6,3]; 
+        let topic_ = [2,3,4,2,3,4,3,11,12,4]; 
         let fcs_ = [2,5,6,7,4];
         this.getCfgList(13, fcs);
         for(let i = 0;i<type_.length;i++){

@@ -27,7 +27,6 @@ QVariant Set_Service::logCfg(int fc)
     return ret;
 }
 
-
 bool Set_Service::logSet(int fc, const QVariant &v)
 {   
     sLogCfg *cfg = &Log_Core::cfg;
@@ -49,7 +48,6 @@ bool Set_Service::logSet(int fc, const QVariant &v)
     return ret;
 }
 
-
 QVariant Set_Service::syslogCfg(int fc)
 {
     QVariant ret;
@@ -64,8 +62,6 @@ QVariant Set_Service::syslogCfg(int fc)
     return ret;
 }
 
-
-
 bool Set_Service::syslogSet(int fc, const QVariant &v)
 {
     bool ret = true;
@@ -74,8 +70,8 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
 
     switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
-    case 2: key = "port";  cfg->port = v.toInt(); break;
-    case 3: key = "host";  cfg->host = v.toString();  break;
+    case 3: key = "port";  cfg->port = v.toInt(); break;
+    case 2: key = "host";  cfg->host = v.toString(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -279,7 +275,6 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
     return ret;
 }
 
-
 QVariant Set_Service::ldapCfg(int fc)
 {
     sLdapCfg *cfg = &App_Ldap::ldapCfg;
@@ -292,7 +287,6 @@ QVariant Set_Service::ldapCfg(int fc)
 
     return ret;
 }
-
 
 bool Set_Service::ldapSet(int fc, const QVariant &v)
 {
