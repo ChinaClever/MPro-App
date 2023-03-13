@@ -128,7 +128,7 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否开启此功能。")){
+			if(confirm("请确认是否开启此功能，此功能需要重启后才能生效！")){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
 						pdu_cfg.setCfg(18,11 + i,btn.value,0,addr);
