@@ -518,6 +518,9 @@
 			top.total_data[2][49] = 0;
 			for (let i = 0; i < 3; i++) {
 				top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+				if(pdu_data.pdu_info.line_num == (i+1)){
+					break;
+				}
 				top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
 				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 			}

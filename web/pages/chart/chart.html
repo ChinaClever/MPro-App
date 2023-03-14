@@ -140,15 +140,15 @@
 								}else{
 									dev_name_[i] = lang[8][language] + i;
 								}
-							}
+							}	
 							for(i = 0;i<num_type;i++){
 								type_name_[i] = lang[9 + i][language]+lang[22][language];
 								num_name_[i] = new Array();
 							}
 							topic_name_[0] = new Array(lang[15][language],lang[16][language],lang[17][language],lang[18][language]);
 							topic_name_[1] = new Array(lang[19][language],lang[20][language]);
-							topic_name_[2] = new Array(lang[24][language],lang[25][language],lang[26][language]);
-							topic_name_[3] = new Array(lang[25][language],lang[26][language]);
+							topic_name_[2] = new Array(lang[16][language],lang[17][language],lang[18][language]);
+							topic_name_[3] = new Array(lang[17][language],lang[18][language]);
 							for(i = 0;i<phase_num;i++){
 								num_name_[0][i] = i+1;
 							}
@@ -384,9 +384,7 @@
 							set_data_show(chart_type);
 							config.data.datasets[0].label = total_name;
 							config.data.datasets[0].data = data_total;
-							config.data.datasets[1].data = data_inlet1;
-							config.data.datasets[2].data = data_inlet2;
-							config.data.datasets[3].data = data_inlet3;
+
 							chart.update();
 						}
 						function flash_chart() {
