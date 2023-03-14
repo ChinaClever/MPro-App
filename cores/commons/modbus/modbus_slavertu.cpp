@@ -19,7 +19,7 @@ bool Modbus_SlaveRtu::connectRtu(const sModbusSetting &cfg)
     }
 
     if(ret) initModbusSerial(cfg);
-    if(ret) setAddress(cfg.addr);
+    if(ret) setAddress(cfg.addrRtu);
     if(ret) ret = connectDevice();
     return ret;
 }

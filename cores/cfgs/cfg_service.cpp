@@ -330,21 +330,22 @@ void Cfg_Service::modbus()
     int *ptr = nullptr; int value = 0;
     QString prefix = "modbus"; QString key;
     sModbusSetting *cfg = &(Mb_Core::modbusCfg);
-    for(int i=0; i<13; ++i) {
+    for(int i=0; i<15; ++i) {
         switch (i) {
         case 1: key = "enRtu";  ptr = &cfg->enRtu; value = 0; break;
-        case 2: key = "addr";  ptr = &cfg->addr; value = 1; break;
+        case 2: key = "addrRtu";  ptr = &cfg->addrRtu; value = 1; break;
         case 3: key = "baud";  ptr = &cfg->baud; value = 9600; break;
         case 4: key = "parity";  ptr = &cfg->parity; value = 0; break;
         case 5: key = "dataBits";  ptr = &cfg->dataBits; value = 8;  break;
         case 6: key = "stopBits";  ptr = &cfg->stopBits; value = 1; break;
         case 11: key = "enTcp";  ptr = &cfg->enTcp; value = 0;  break;
         case 12: key = "port";  ptr = &cfg->port; value = 502; break;
+        case 13: key = "addrTcp";  ptr = &cfg->addrTcp; value = 1; break;
         default: key.clear(); break;
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
     } sParameter *param = &(cm::masterDev()->cfg.param);
-    param->modbusRtuAddr = cfg->addr;
+    param->modbusRtuAddr = cfg->addrRtu;
     param->modbusRtuBr = cfg->baud;
 }
 

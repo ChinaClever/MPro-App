@@ -22,7 +22,7 @@ void Mb_Setting::mbSetUpdate()
 void Mb_Setting::upSetData()
 {
     vshort vs;
-    vs << Mb_Core::modbusCfg.addr;
+    vs << Mb_Core::modbusCfg.addrRtu;
     vs << mDevData->cfg.param.buzzerSw;
     setRegs(MbReg_Setting+1, vs);
 
@@ -36,7 +36,7 @@ void Mb_Setting::upSetData()
 void Mb_Setting::addrSet(ushort &v)
 {
     Cfg_Com::bulid()->writeCfg("addr", v, "modbus");
-    Mb_Core::modbusCfg.addr = v; setAddress(v);
+    Mb_Core::modbusCfg.addrRtu = v; setAddress(v);
     mDevData->cfg.param.modbusRtuAddr = v;
     cout << "modbus set addr OK" << v;
 }
