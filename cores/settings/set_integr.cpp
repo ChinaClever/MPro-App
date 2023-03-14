@@ -75,7 +75,7 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
     case 13: res = cfg->pwd; break;
     case 14: res = cfg->key; break;
     case 15: res = cfg->encrypt; break;
-    case 21: res = cfg->trap[id]; cout << res; break;
+    case 21: res = cfg->trap[id]; cout << id << res; break;
     case 22: res = cfg->inform[id]; break;
     default: cout << fc; break;
     }

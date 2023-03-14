@@ -39,7 +39,7 @@ bool Set_Maintain::factoryRestore()
         QString fmd = "rm -rf %1%2";
         QString cmd = fmd.arg(dir, fn);
         system(cmd.toLocal8Bit().data());
-    } system("reboot"); //cm::mdelay(650);
+    } system("sync"); system("reboot");
 
     return true;
 }
