@@ -21,7 +21,7 @@ enum {
 #define RGB_OFF(fd) write(fd,"off",3)
 
 App_Led::App_Led(QObject *parent)
-    : App_Buzzer{parent}
+    : App_Key{parent}
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(QFile::exists("/sys/clever/led/red/switch")) {        
@@ -52,8 +52,9 @@ void App_Led::led_initFun()
 
 void App_Led::led_delayOff()
 {
-    int *rgb = mRgb;
-    for(int i=0; i<500; ++i) {
+    int *rgb = mRgb; int t = 500;
+    if(cm::masterDev()->status > 3) t /= 2;
+    for(int i=0; i<t; ++i) {
         if(mLedIsRun) cm::mdelay(1);
     }
 
@@ -62,7 +63,7 @@ void App_Led::led_delayOff()
         cm::mdelay(1);
     }
 
-    for(int i=0; i<500; ++i) {
+    for(int i=0; i<t; ++i) {
         if(mLedIsRun) cm::mdelay(1);
     }
 }

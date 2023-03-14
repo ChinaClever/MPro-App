@@ -23,21 +23,22 @@ bool Set_Maintain::syscmd(int fc)
 
 bool Set_Maintain::factoryRestore()
 {
-    sEventItem it;
-    it.event_type = QStringLiteral("恢复");
-    it.event_content = QStringLiteral("恢复出厂设置");
-    Log_Core::bulid()->append(it);
+    //sEventItem it;
+    //it.event_type = QStringLiteral("恢复");
+    //it.event_content = QStringLiteral("恢复出厂设置");
+    //Log_Core::bulid()->append(it);
 
     QStringList fns;
     QString dir = "/usr/data/clever/cfg/";
-    fns << "logs.db" << "alarm.cfg";// << "proc_cnt.ini";
+    system("chmod 777 /usr/data/clever/cfg/*");
+    fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini";
     fns << "cfg.ini" << "inet.ini";
 
     foreach (const auto &fn, fns) {
-        QString fmd = "rm -f %1%2";
+        QString fmd = "rm -rf %1%2";
         QString cmd = fmd.arg(dir, fn);
         system(cmd.toLocal8Bit().data());
-    } cm::mdelay(650); system("reboot");
+    } system("reboot"); //cm::mdelay(650);
 
     return true;
 }

@@ -8,13 +8,13 @@ class App_Sensor : public App_Led
 public:
     explicit App_Sensor(QObject *parent = nullptr);
     ~App_Sensor();
+    void env_run();
 
 private:
     void env_workDown();
     void env_initFun();
     void env_close();
     void env_delay();
-    void env_run();
 
 private:
     bool mEnvIsRun=true;

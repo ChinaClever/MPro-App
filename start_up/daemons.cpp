@@ -27,8 +27,8 @@ Daemons *Daemons::bulid()
 }
 
 void Daemons::start_proc()
-{
-    initFun(); //mdelay(152);
+{     
+    initFun(); //factoryRestore();
     proc_start(mProcs->core, "cores");
     proc_start(mProcs->awtk, "awtk");
     proc_start(mProcs->web, "web_server");

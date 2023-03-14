@@ -12,7 +12,6 @@ struct sNtpCfg {
 
 class App_Ntp : public App_Nftables
 {
-    Q_OBJECT
 public:
     explicit App_Ntp(QObject *parent = nullptr);
     static sNtpCfg ntpCfg;
@@ -23,7 +22,6 @@ public:
     QString ntp_time();
     bool ntpdate();
 
-private slots:
     void ntp_initSlot();
     void ntp_recvSlot(const QByteArray &array){if(ntpCfg.udp_en) ntp_time(array);}
 
