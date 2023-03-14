@@ -75,7 +75,7 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
     case 13: res = cfg->pwd; break;
     case 14: res = cfg->key; break;
     case 15: res = cfg->encrypt; break;
-    case 21: res = cfg->trap[id]; break;
+    case 21: res = cfg->trap[id]; cout << res; break;
     case 22: res = cfg->inform[id]; break;
     default: cout << fc; break;
     }
@@ -97,7 +97,7 @@ bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
     case 14: key = "key"; cfg->key = v.toString(); break;
     case 15: key = "encrypt"; cfg->encrypt = v.toInt(); break;
     case 17: Agent_Core::bulid()->set_snmpdV3(); break;
-    case 21: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); break;
+    case 21: key = "trap_" + QString::number(id); cfg->trap[id] = v.toString(); cout << v << id; break;
     case 22: key = "inform_" + QString::number(id); cfg->inform[id] = v.toString(); break;
     default: ret = false; cout << fc; break;
     }

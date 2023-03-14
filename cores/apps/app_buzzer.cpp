@@ -66,7 +66,7 @@ void App_Buzzer::beep_workDown()
     int sw = dev->cfg.param.buzzerSw;
     if(dev->alarm && (sw==1)) {
         if(!mBeepRun) {
-            BEEP_TRIGGER(mBeep[1], "300");
+            BEEP_TRIGGER(mBeep[1], "450");
             mBeepRun = true;
         }
     } else if(mBeepRun) beep_offSlot();
