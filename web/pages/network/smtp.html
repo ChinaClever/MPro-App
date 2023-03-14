@@ -182,7 +182,7 @@
 			},500);
 		}
 		function Set(){
-			if(document.getElementById("SmtpRecvUsr1").value == ""||document.getElementById("SmtpRecvUsr2").value == ""||document.getElementById("SmtpRecvUsr3").value ==""||document.getElementById("SmtpRecvUsr4").value ==""){
+			if(document.getElementById("SmtpRecvUsr1").value == ""&&document.getElementById("SmtpRecvUsr2").value == ""&&document.getElementById("SmtpRecvUsr3").value ==""&&document.getElementById("SmtpRecvUsr4").value ==""){
 				alert("请输入至少一个邮箱账号！");
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);

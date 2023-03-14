@@ -378,6 +378,9 @@
 				for(let key of phase_arr){
 					phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i];
 					j ++;
+				if(j > 5){
+					break;
+				}
 				}
 			}
 			for(let i = 0;i<loop_num;i++){
