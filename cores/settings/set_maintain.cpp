@@ -31,6 +31,7 @@ bool Set_Maintain::factoryRestore()
     QStringList fns;
     QString dir = "/usr/data/clever/cfg/";
     system("chmod 777 /usr/data/clever/cfg/*");
+    system("echo '1' > /usr/data/clever/cfg/factoryRestore");
     fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini";
     fns << "cfg.ini" << "inet.ini";
 
