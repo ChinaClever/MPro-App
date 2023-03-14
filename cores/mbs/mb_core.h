@@ -14,7 +14,7 @@ public:
     void setRtu(int parameter, const QVariant &value);
     sModbusSetting *cfg() {return mCfg;}
     static sModbusSetting modbusCfg;
-     void setTcpAddress(int addr);
+    void setTcpAddress(int addr);
     void setAddress(int addr);
     void setPort(int port);
 

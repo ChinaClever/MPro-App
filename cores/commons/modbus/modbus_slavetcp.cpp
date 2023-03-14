@@ -23,10 +23,10 @@ bool Modbus_SlaveTcp::connectTcp(int addr, int port)
 {
     if(!mDev) {
         mDev = new QModbusTcpServer(this);
-        setAddress(addr);
+        //setAddress(addr);
         initUnitMap();
         initConnects();
-    }
+    }setAddress(addr);
 
     return connectModbusTcp(port);;
 }
