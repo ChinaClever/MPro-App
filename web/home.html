@@ -522,6 +522,9 @@
 					break;
 				}
 				top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
+				if(pdu_data.pdu_info.line_num == (i+2)){
+					break;
+				}				
 				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 			}
 		}
