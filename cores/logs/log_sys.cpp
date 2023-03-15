@@ -2,7 +2,7 @@
 #include "commons.h"
 #include <syslog.h>
 
-#define CLEVER_LOG_TAG "MPDU_Pro"
+#define CLEVER_LOG_TAG "clever"
 #define CLEVER_LOG_FLAGS (LOG_CONS | LOG_NDELAY)
 #define CLEVER_FACILITY (LOG_LOCAL6)
 // #define CLEVER_FACILITY (LOG_USER)
@@ -29,23 +29,29 @@ Log_Sys::Log_Sys(QObject *parent)
 
 void Log_Sys::sys_logInfo(const QString& msg)
 {
-    char *str = msg.toUtf8().data();
-    if(sysLogCfg.en==2) CLEVER_INFO(str);
+    char *str = msg.toUtf8().data(); //cout << msg;
+    if(sysLogCfg.en==2) CLEVER_INFO("%s", str);
 }
 
 void Log_Sys::sys_logAlarm(const QString& msg)
 {
     char *str = msg.toUtf8().data();
-    if(sysLogCfg.en) CLEVER_WARNING(str);
+    if(sysLogCfg.en) CLEVER_WARNING("%s", str);
+}
+
+void Log_Sys::sys_open()
+{
+    CLEVER_OPEN();
 }
 
 void Log_Sys::sys_initfun()
 {
     sSysLogCfg *cfg = &sysLogCfg;
-    if(QFile::exists("rsyslogcfg") && cfg->en) {
+    QString fn = "/usr/data/clever/bin/";
+    if(QFile::exists(fn+"rsyslogcfg") && cfg->en) {
         QString fmd = "rsyslogcfg udp %1 %2 7";
         QString cmd = fmd.arg(cfg->host).arg(cfg->port);
-        system(cmd.toLocal8Bit().data());
-        cm::mdelay(1); CLEVER_OPEN();
+        system(cmd.toLocal8Bit().data()); //cout << cmd;
+        QTimer::singleShot(567,this, &Log_Sys::sys_open);
     }
 }

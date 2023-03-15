@@ -85,3 +85,5 @@ void ProcStart::mdelay(int msec)
     QTimer::singleShot(msec, &loop, SLOT(quit()));
     loop.exec();
 }
+
+

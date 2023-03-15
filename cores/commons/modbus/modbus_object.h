@@ -15,12 +15,13 @@ struct sModbusSetting {
     int baud = QSerialPort::Baud9600;
     int dataBits = QSerialPort::Data8;
     int stopBits = QSerialPort::OneStop;
-    int addr = 1;
+    int addrRtu = 1;
 
     int enTcp = false;
     QHostAddress host = QHostAddress::Any;
     int responseTime = 1000;
     int numberOfRetries = 3;
+    int addrTcp = 1;
     int port = 502;
 };
 typedef QVector<ushort> vshort;

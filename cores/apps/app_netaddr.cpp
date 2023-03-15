@@ -9,7 +9,7 @@
 App_NetAddr::App_NetAddr(QObject *parent)
     : App_SensorBox{parent}
 {
-    QTimer::singleShot(1,this,SLOT(inet_initFunSlot()));
+    QTimer::singleShot(1,this,&App_NetAddr::inet_initFunSlot);
 }
 
 void App_NetAddr::inet_initFunSlot()
@@ -72,9 +72,9 @@ void App_NetAddr::inet_setInterface()
     if(!inet_isRun) {
         inet_isRun = true;
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-        QTimer::singleShot(10,this,SLOT(inet_setInterfaceSlot()));
+        QTimer::singleShot(10,this,&App_NetAddr::inet_setInterfaceSlot);
 #endif
-        QTimer::singleShot(350,this,SLOT(inet_updateInterface()));
+        QTimer::singleShot(350,this,&App_NetAddr::inet_updateInterface);
     }
 }
 

@@ -403,7 +403,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(16, fcs);
     }
     modbusCfg() {
-        var fcs = [1,2,3,4,5,6,11,12];
+        var fcs = [1,2,3,4,5,6,11,12,13];
         this.getCfgList(15, fcs);
     }
     odbcCfg() {

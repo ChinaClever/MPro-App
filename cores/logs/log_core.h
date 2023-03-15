@@ -24,6 +24,7 @@ public:
     void log_hdaEle(const sDataItem &it);
     void log_hda(const sDataItem &it);
     void log_addCnt() {mCnt++;}
+    void factoryRestore();
     static sLogCfg cfg;
 
 private slots:

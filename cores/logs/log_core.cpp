@@ -24,13 +24,23 @@ Log_Core *Log_Core::bulid(QObject *parent)
     if(!sington) {
         sington = new Log_Core(parent);
         if(cm::masterDev()->startCnt < 1500) {
-            sEventItem it;
+            sEventItem it; it.addr = 0;
             it.event_type = tr("系统事件");
             it.event_content = tr("系统启动");;
             sington->append(it);
         }
     }
     return sington;
+}
+
+void Log_Core::factoryRestore()
+{
+    QString fn = "/usr/data/clever/cfg/factoryRestore";
+    sEventItem it; if(QFile::exists(fn)) {
+        it.event_type = QStringLiteral("恢复");
+        it.event_content = QStringLiteral("恢复出厂设置");
+        append(it); cm::execute("rm -rf " + fn);
+    }
 }
 
 void Log_Core::append(const sAlarmItem &it)
@@ -78,6 +88,7 @@ void Log_Core::log_hdaEle(const sDataItem &it)
 void Log_Core::initFunSlot()
 {
     sys_initfun();
+    factoryRestore();
     mHda = Db_Hda::bulid();
     mOta = Db_Ota::bulid();
     mEvent = Db_Event::bulid();

@@ -38,8 +38,14 @@ void Mb_Core::initFunSlot()
 
 void Mb_Core::setAddress(int addr)
 {
-    mCfg->addr = addr;
+    mCfg->addrRtu = addr;
     mRtu->setAddress(addr);
+}
+
+void Mb_Core::setTcpAddress(int addr)
+{
+    mCfg->addrTcp = addr;
+    mTcp->setAddress(addr);
 }
 
 void Mb_Core::setPort(int port)
@@ -63,9 +69,8 @@ void Mb_Core::setRtu(int parameter, const QVariant &value)
 
 void Mb_Core::connectTcpSlot()
 {
-    bool ret = false;
-    mTcp->disconnectModbus();
-    if(mCfg->enTcp) ret =mTcp->connectTcp(mCfg->port);
+    bool ret = false; mTcp->disconnectModbus();
+    if(mCfg->enTcp) ret =mTcp->connectTcp(mCfg->addrTcp, mCfg->port);
     if(ret) mTcp->mbUpdates();
 }
 
@@ -76,7 +81,7 @@ void Mb_Core::connectRtuSlot()
     if(res == EDevMode::DM_Rtu && mCfg->enRtu) {
         ret = mRtu->connectRtu(*mCfg);
         if(ret) mRtu->mbUpdates();
-        else cout << mCfg->addr << ret;
+        else cout << mCfg->addrRtu << ret;
     }
 }
 

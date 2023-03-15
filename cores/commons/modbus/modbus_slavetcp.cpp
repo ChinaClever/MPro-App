@@ -19,14 +19,14 @@ bool Modbus_SlaveTcp::connectModbusTcp(int port)
     return ret;
 }
 
-bool Modbus_SlaveTcp::connectTcp(int port)
+bool Modbus_SlaveTcp::connectTcp(int addr, int port)
 {
     if(!mDev) {
         mDev = new QModbusTcpServer(this);
-        setAddress(1);
+        //setAddress(addr);
         initUnitMap();
         initConnects();
-    }
+    }setAddress(addr);
 
     return connectModbusTcp(port);;
 }
