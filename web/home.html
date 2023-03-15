@@ -362,8 +362,10 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			if(DataString == null){
-				DataString = sessionStorage.getItem('0_100_0_0_0');
+				setTimeout(function(){ParseData()}, pdu_cfg.getTimeOut());
+				return ;
 			}
+
 			pdu_data = JSON.parse(DataString);
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;

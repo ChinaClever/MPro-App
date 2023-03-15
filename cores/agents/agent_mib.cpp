@@ -8,7 +8,7 @@
 Agent_Mib::Agent_Mib()
 {
     createHead();
-    m_module = "mpro";
+    //m_module = "mpro";
 }
 
 Agent_Mib *Agent_Mib::bulid()

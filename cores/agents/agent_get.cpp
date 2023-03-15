@@ -192,6 +192,7 @@ void Agent_Get::addDoors(uchar addr, const QString &oidPrefix, sEnvData &it)
 
 void Agent_Get::addDevData(uchar addr, sDevData *it)
 {
+    Agent_Mib::bulid()->initModule();
     QString name = tr("pdu-%1-").arg(addr);
     addDevInfo(addr, name, it->cfg);
 

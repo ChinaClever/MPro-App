@@ -13,14 +13,14 @@ Web_Rpc::Web_Rpc(QObject *parent) : QObject{parent}
 
 char* Web_Rpc::pduReadData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     double value = mObj->getValue(its.at(0), its.at(1), its.at(2),its.at(3), its.at(4));
     return responRpcData(its, value);
 }
 
 char *Web_Rpc::pduMetaData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     QString value = mObj->metaData(its.at(0));
     return responRpcString(its, value);
 }
@@ -59,7 +59,7 @@ char* Web_Rpc::responRpcString(const QVector<uint> &ls, const QString &value)
 
 char *Web_Rpc::pduReadParam(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     QString value = mObj->getCfg(its.at(1), its.at(2), its.at(3), its.at(0));
     return responRpcString(its, value);
 }
