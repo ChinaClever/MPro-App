@@ -7,6 +7,7 @@ class Agent_Mib
     Agent_Mib();
 public:
     static Agent_Mib *bulid();
+    void initModule(){m_module = "mpro";}
     void appendNode(const sOidIt &it, uint oid);
     void save();
 
