@@ -5,13 +5,11 @@
 
 class App_Buzzer : public QObject
 {
-    Q_OBJECT
 public:
     explicit App_Buzzer(QObject *parent = nullptr);
     ~App_Buzzer();
     void beep_once();
 
-private slots:
     void beep_offSlot();
     void beep_workDown();
     void beep_initFunSlot();

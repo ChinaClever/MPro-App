@@ -23,13 +23,14 @@ int Set_Integr::modbusCfg(uchar fc)
     sModbusSetting *cfg = &(Mb_Core::modbusCfg);
     int res = 0; switch (fc) {
     case 1: res = cfg->enRtu; break;
-    case 2: res = cfg->addr; break;
+    case 2: res = cfg->addrRtu; break;
     case 3: res = baudTo(cfg->baud); break;
     case 4: res = parityTo(cfg->parity); break;
     case 5: res = dataBitsTo(cfg->dataBits); break;
     case 6: res = stopBitsTo(cfg->stopBits); break;
     case 11: res = cfg->enTcp; break;
     case 12: res = cfg->port; break;
+    case 13: res = cfg->addrTcp; break;
     default: cout << fc; break;
     }
 
@@ -42,7 +43,7 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     QString prefix = "modbus";  QString key;
     bool ret = true; switch (fc) {
     case 1: key = "enRtu"; cfg->enRtu = value; if(value) setInfoCfg(3, 0); break;
-    case 2: key = "addr"; cfg->addr = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
+    case 2: key = "addrRtu"; cfg->addrRtu = value; cm::masterDev()->cfg.param.modbusRtuAddr = value; break;
     case 3: key = "baud"; value = toBaud(value); cm::masterDev()->cfg.param.modbusRtuBr = cfg->baud = value; break;
     case 4: key = "parity"; value = toParity(value); cfg->parity = value;  /*mb->setRtu(1, value);*/ break;
     case 5: key = "dataBits"; value = toDataBits(value); cfg->dataBits = value; /*mb->setRtu(3, value);*/ break;
@@ -51,7 +52,8 @@ bool Set_Integr::modbusSet(uchar fc, int value)
 
     case 11: key = "enTcp"; cfg->enTcp = value; break;
     case 12: key = "port"; cfg->port = value; break;
-    case 13: emit Mb_Core::bulid()->connectTcpSig(); break;
+    case 13: key = "addrTcp"; cfg->addrTcp = value; break;
+    case 14: emit Mb_Core::bulid()->connectTcpSig(); break;
     default: ret = false; cout << fc; break;
     }
 

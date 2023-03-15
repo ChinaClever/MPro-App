@@ -81,17 +81,17 @@ class JsonRpc {
     }
     
     static socket_req(){
-        var method = "pduReadParam"; 
-        var params = [0, 13, 10, 0, 0];
+        var method = "pduMetaData"; 
+        var params = [0, 100, 0, 0, 0];
+        JsonRpc.build().json_rpc_get(method, params);
+        method = "pduReadParam"; 
+        params = [0, 13, 10, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
         params = [0, 42, 3, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
         params = [0, 14, 1, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
         params = [0, 14, 3, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
-        method = "pduMetaData"; 
-        params = [0, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
     }
 
@@ -403,7 +403,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(16, fcs);
     }
     modbusCfg() {
-        var fcs = [1,2,3,4,5,6,11,12];
+        var fcs = [1,2,3,4,5,6,11,12,13];
         this.getCfgList(15, fcs);
     }
     odbcCfg() {

@@ -9,7 +9,7 @@ sWhiteListCfg App_WhiteList::whiteListCfg;
 App_WhiteList::App_WhiteList(QObject *parent)
     : App_Start{parent}
 {
-    QTimer::singleShot(1,this,SLOT(internetFirewall()));
+    QTimer::singleShot(1,this,&App_WhiteList::internetFirewall);
 }
 
 void App_WhiteList::internetFirewall()

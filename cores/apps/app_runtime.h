@@ -5,11 +5,8 @@
 
 class App_RunTime : public App_Ssh
 {
-    Q_OBJECT
 public:
     explicit App_RunTime(QObject *parent = nullptr);
-
-private slots:
     void runing_initFunSlot();
     void runing_onTimeoutDone();
 

@@ -17,7 +17,7 @@ void App_Smtp::smtp_sendMail(const QString &content, bool ok)
 {
     if(smtpCfg.en || ok) {
         mList << content;
-         if(!smtp_isRun) QTimer::singleShot(1345,this,SLOT(smtp_run()));
+         if(!smtp_isRun) QTimer::singleShot(1345,this,&App_Smtp::smtp_run);
         //if(!smtp_isRun) QtConcurrent::run(this, &App_Smtp::smtp_run);
     }
 }

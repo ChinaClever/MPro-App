@@ -4,13 +4,11 @@
 
 class App_NetAddr: public App_SensorBox
 {
-    Q_OBJECT
 public:
     explicit App_NetAddr(QObject *parent = nullptr);
     void inet_setInterface();
     void inet_saveCfg(int fc);
 
-private slots:
     void inet_initFunSlot();
     void inet_updateInterface();
     void inet_setInterfaceSlot();

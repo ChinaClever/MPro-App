@@ -172,9 +172,9 @@
 					}
 					pdu_cfg.setCfg(16,i,btn.value,0,addr);
 				}else if(trap_name[i] == btn.id){
-					pdu_cfg.setCfg(16,21,btn.value,0,addr);
+					pdu_cfg.setCfg(16,21,btn.value,i,addr);
 				}else if(inform_name[i] == btn.id){
-					pdu_cfg.setCfg(16,22,btn.value,0,addr);
+					pdu_cfg.setCfg(16,22,btn.value,i,addr);
 				}
 			}
 			btn.blur();

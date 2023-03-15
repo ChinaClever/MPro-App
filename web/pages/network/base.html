@@ -96,10 +96,12 @@
 			lang[20] = ["禁用","","","",""];
 			lang[21] = ["启用","","","",""];
 			lang[22] = ["静态IP","","","",""];
+			lang[23] = ["DHCP","","","",""];
 
 			state_set[0] = lang[20][language];
 			state_set[1] = lang[21][language];
 			mode_set[0] = lang[22][language];
+			mode_set[1] = lang[23][language];
 		}
 		function lang_fun(){
 			for(let j = 1;j<20;j++){
@@ -167,7 +169,7 @@
 						if(i!=3)
 							document.getElementById(info_name[i]+'1').disabled = true;
 					}
-					document.getElementById("lang_19").disabled = true;
+					document.getElementById("lang_19").disabled = false;
 				}
 			}
 			if(top.login_permit_ == 0){

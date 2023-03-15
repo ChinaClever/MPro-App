@@ -28,7 +28,8 @@ static void initSystem()
 {
     system("chmod 777 -R /usr/data/clever");
     system("chmod 777 -R /usr/data/etc/snmp");
-    system("echo 3 > /proc/sys/vm/drop_caches"); system("sync");
+    system("rm /usr/data/etc/snmp/snmpd.conf");
+    system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 
@@ -38,9 +39,13 @@ static void initSystem()
     cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
+    cmd = "ln -s /usr/data/etc/snmp/snmpd.conf ";
+    cmd += "/usr/data/etc/snmp/snmpd.conf";
+    system(cmd.toLocal8Bit().data());
+
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
-    system(cmd.toLocal8Bit().data()); createDirectory();
+    system(cmd.toLocal8Bit().data()); createDirectory(); system("sync");
 }
 
 static void init_netWork()

@@ -9,7 +9,7 @@ sSshCfg App_Ssh::sshCfg;
 App_Ssh::App_Ssh(QObject *parent)
     : App_Smtp{parent}
 {
-    QTimer::singleShot(111,this,SLOT(ssh_initFunSlot()));
+    QTimer::singleShot(111,this,&App_Ssh::ssh_initFunSlot);
 }
 
 void App_Ssh::ssh_initFunSlot()

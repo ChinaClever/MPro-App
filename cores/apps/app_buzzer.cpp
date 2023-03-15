@@ -21,7 +21,7 @@ App_Buzzer::App_Buzzer(QObject *parent)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(QFile::exists("/sys/clever/beep/switch")) {
-        QTimer::singleShot(1,this,SLOT(beep_initFunSlot()));
+        QTimer::singleShot(1,this,&App_Buzzer::beep_initFunSlot);
     } else cout << "beep error";
 #endif
 }
@@ -36,7 +36,7 @@ App_Buzzer::~App_Buzzer()
 void App_Buzzer::beep_once()
 {
     int *beep = mBeep; BEEP_ON(beep[0]);
-    QTimer::singleShot(213,this,SLOT(beep_offSlot()));
+    QTimer::singleShot(213,this,&App_Buzzer::beep_offSlot);
 }
 
 void App_Buzzer::beep_initFunSlot()
@@ -49,7 +49,7 @@ void App_Buzzer::beep_initFunSlot()
     if(beep[1] < 0) perror("open beep trigger");
 
     mBeepTimer = new QTimer(this); mBeepTimer->start(1000);
-    connect(mBeepTimer, SIGNAL(timeout()), this, SLOT(beep_onTimeoutDone()));
+    connect(mBeepTimer, &QTimer::timeout, this, &App_Buzzer::beep_onTimeoutDone);
 }
 
 void App_Buzzer::beep_offSlot()
@@ -66,7 +66,7 @@ void App_Buzzer::beep_workDown()
     int sw = dev->cfg.param.buzzerSw;
     if(dev->alarm && (sw==1)) {
         if(!mBeepRun) {
-            BEEP_TRIGGER(mBeep[1], "500");
+            BEEP_TRIGGER(mBeep[1], "450");
             mBeepRun = true;
         }
     } else if(mBeepRun) beep_offSlot();

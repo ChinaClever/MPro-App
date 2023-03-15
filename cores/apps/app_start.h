@@ -5,12 +5,10 @@
 
 class App_Start : public App_RunTime
 {
-    Q_OBJECT
 public:
     explicit App_Start(QObject *parent = nullptr);
     ~App_Start();
 
-private slots:
     void initSysSlot();
     void initFunSlot();
     void startThreadSlot();

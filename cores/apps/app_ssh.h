@@ -13,7 +13,6 @@ struct sSshCfg {
 
 class App_Ssh : public App_Smtp
 {
-    Q_OBJECT
 public:
     explicit App_Ssh(QObject *parent = nullptr);
     static sSshCfg sshCfg;
@@ -23,7 +22,7 @@ private:
     void ssh_delUser();
     bool ssh_addrUser();
 
-private slots:
+public:
     void ssh_initFunSlot();
 };
 

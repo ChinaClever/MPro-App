@@ -9,13 +9,13 @@
 App_RunTime::App_RunTime(QObject *parent)
     : App_Ssh{parent}
 {
-    QTimer::singleShot(75,this,SLOT(runing_initFunSlot()));
+    QTimer::singleShot(75,this,&App_RunTime::runing_initFunSlot);
 }
 
 void App_RunTime::runing_initFunSlot()
 {
     mTimer = new QTimer(this); mTimer->start(1000);
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(runing_onTimeoutDone()));
+    connect(mTimer, &QTimer::timeout, this, &App_RunTime::runing_onTimeoutDone);
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     sRunTime *run = &(cm::masterDev()->proc.core);
     qstrcpy(run->start, t.toLatin1().data());

@@ -58,7 +58,8 @@ void pduDataSet(const QStringList &ls)
         uchar sub = ls.at(k++).toInt();
         uchar id = ls.at(k++).toInt();
         double value = ls.at(k++).toDouble();
-        qDebug() << rpc->pduDataSet(addr, type, topic, sub, id, value);
+        bool res = rpc->pduDataSet(addr, type, topic, sub, id, value);
+        qDebug() <<  res;
     } else qCritical() << "pduDataSet Parameter error";
 }
 
@@ -85,7 +86,8 @@ void pduCfgSet(const QStringList &ls)
         QString value = ls.at(k++);
         uchar id = 0; if(ls.size() > 3) id = ls.at(k++).toInt();
         uchar addr = 0; if(ls.size() > 4) addr = ls.at(k++).toInt();
-        qDebug() << rpc->pduCfgSet(type, fc, value, id, addr);
+        bool res = rpc->pduCfgSet(type, fc, value, id, addr);
+        qDebug() << res;
     } else qCritical() << "pduCfgSet Parameter error";
 }
 

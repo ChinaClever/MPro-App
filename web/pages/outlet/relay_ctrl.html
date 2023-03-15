@@ -224,12 +224,15 @@
 					ms.checked = false;
 				}
 				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
-					cs.bgColor = 'red';
+					//cs.bgColor = 'red';
+					cs.style.color = 'red';
 				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
-					cs.bgColor = 'yellow';
+					//cs.bgColor = 'yellow';
+					cs.style.color = 'yellow';
 				}
 				else{
-					cs.bgColor = 'green';
+					cs.bgColor = '';
+					cs.style.color = 'green';
 				}
 			}
 		}
@@ -239,12 +242,15 @@
 			{
 				cs = document.getElementById('c'+(i -1));
 				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
-					cs.bgColor = 'red';
+					//cs.bgColor = 'red';
+					cs.style.color = 'red';
 				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1]== 4){
-					cs.bgColor = 'yellow';
+					//cs.bgColor = 'yellow';
+					cs.style.color = 'yellow';
 				}
 				else{
-					cs.bgColor = 'green';
+					cs.bgColor = '';
+					cs.style.color = 'green';
 				}
 			}
 		}
