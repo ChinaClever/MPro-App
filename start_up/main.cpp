@@ -39,7 +39,7 @@ static void initSystem()
     cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
-    cmd = "ln -s /usr/data/etc/snmp/snmpd.conf ";
+    cmd = "ln -s /usr/data/clever/cfg/snmpd.conf ";
     cmd += "/usr/data/etc/snmp/snmpd.conf";
     system(cmd.toLocal8Bit().data());
 
