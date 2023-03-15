@@ -54,13 +54,12 @@ static void init_netWork()
     QString fn =  "/usr/data/clever/cfg/mac.ini";
     if(QFile::exists(fn)) { QFile file(fn);
         if(file.open(QIODevice::ReadOnly)) mac = file.readAll();
-    } else system("echo '00:00:00:00:00:01' > /usr/data/clever/cfg/mac.ini");
-
-    if(!mac.contains(deMac)) {
-        system("ip link set eth0 down");
-        QString cmd = "ip link set eth0 address " + mac.mid(0, 17);
-        system(cmd.toStdString().c_str()); qDebug() << cmd;
-    }
+        file.close(); if(!mac.contains(deMac)) {
+            system("ip link set eth0 down");
+            QString cmd = "ip link set eth0 address " + mac.mid(0, 17);
+            system(cmd.toStdString().c_str()); qDebug() << cmd;
+        }
+    } //else system("echo '00:00:00:00:00:01' > /usr/data/clever/cfg/mac.ini");
 
     system("ip link set eth0 up");
     //system("ip a flush dev eth0"); //　清掉所有IP地址
