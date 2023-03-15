@@ -117,7 +117,11 @@
 			var iptname = document.getElementsByTagName("input");
 			for(var i = 0; i<iptname.length;i++)
 			{
-				iptname[i].disabled = true;
+				if(read ==1){
+					iptname[i].disabled = true;
+				}else{
+					iptname[i].disabled = false;
+				}
 			}
 		}
 		function ReadonlySet(ros){
