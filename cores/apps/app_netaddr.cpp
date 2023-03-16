@@ -136,7 +136,7 @@ void App_NetAddr::inet_setIpV6()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet.dhcp) {
-        QString cmd = "dhclient -6 eth0";
+        QString cmd = "dhclient -6 eth0 &";
         qDebug() << cmd << system(cmd.toStdString().c_str());
     } else {
         QString fn = net->name;
