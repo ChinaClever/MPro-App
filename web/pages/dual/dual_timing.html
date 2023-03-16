@@ -62,7 +62,7 @@
 		let dual = 5,switch_ = 1;
 		let addr = pdu_cfg.addr;
 		let slave_addr = top.slave_addr_;
-		let dual_addr = top.slave_addr_;
+		let dual_addr = top.dual_addr_;
 		let dual_info_ = new Array();
 		var read  = 1;
 		let lang = new Array();
@@ -79,6 +79,7 @@
 			document.getElementById("lang_1").style.display="none";
 			document.getElementById("lang_2").style.display="none";
 		}
+		pdu_cfg.setAddr(dual_addr);
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);

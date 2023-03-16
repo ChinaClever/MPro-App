@@ -90,6 +90,7 @@
 				lang[6] = ["设置模式", "", "", "", ""];
 				lang[7] = ["机柜", "", "", "", ""];
 			}
+			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);

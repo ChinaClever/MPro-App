@@ -68,6 +68,8 @@
 		let dual_dev_name =  new Array();
 		let lang = new Array();
 		let progress_width = new Array();
+		pdu_cfg.setAddr(dual_addr);
+
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);

@@ -50,8 +50,12 @@
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
+
+
+
+
 		ParseData();
-		lang_init();
+		lang_init();		
 		function lang_init(){
 			for(let i = 1;i<20;i++){
 				lang[i] = new Array();
@@ -91,6 +95,9 @@
 		}
 
 		function read_data(){
+			setInterval(function () {
+				mqtt_data[10] =pdu_cfg.getCfg(19,10);
+		 	}, 2500);
 			for(var j = 1;j<12;j++){
 				mqtt_data[j] = pdu_cfg.cfgValue(19,j,0,addr);
 			}
@@ -126,10 +133,10 @@
 				}
 			}
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function flash_html(){
