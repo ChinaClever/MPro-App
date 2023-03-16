@@ -21,6 +21,7 @@ int Data_Dual::setDualSize(int id)
     sObjData *obj =  &(cm::devData(id)->dual); // &(mDev->dual);
     obj->vol.size = obj->cur.size = 0;
     obj->size = obj->pow.size = size;
+
     if(size & mDev->output.relay.size) size = mDev->cfg.nums.outputNum; else size = 0;
     obj->relay.size = size;
     return obj->size;
@@ -62,7 +63,7 @@ void Data_Dual::dualData(int id)
 {
     sObjData *dest = &(cm::devData(id)->dual);
     sObjData *src1 = &(cm::devData(id)->output);
-    sObjData *src2 = &(cm::devData(id+1)->dual);
+    sObjData *src2 = &(cm::devData(id+1)->output);
     for(int i=0; i<dest->size; ++i) {
         dest->vol.value[i] = (src1->vol.value[i] + src2->vol.value[i])/2;
         dest->cur.value[i] = src1->cur.value[i] + src2->cur.value[i];
