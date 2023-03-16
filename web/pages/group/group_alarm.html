@@ -131,7 +131,8 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
-			addr = pdu_cfg.addr;
+			pdu_cfg.setAddr(sel.value);
+			//addr = pdu_cfg.addr;
 			setTimeout(function(){
 				PduMetaData.meta_workDown(pdu_cfg);
 			},100);

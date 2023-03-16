@@ -86,6 +86,7 @@
 				document.getElementById("lang_1").style.display="none";
 				document.getElementById("lang_2").style.display="none";
 			}
+			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);

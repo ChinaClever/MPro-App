@@ -107,7 +107,7 @@ class JsonRpc {
         var ret = true;
         if(this.ws.readyState == WebSocket.OPEN){
             this.ws.send(msg);
-        } else {
+        } else if(JsonRpc._errCnt++ > 2) {
              ret = false;
              this.ws.close();
              this.ws = this.socket_open(); 
@@ -172,50 +172,56 @@ class JsonRpc {
 
 // PDU整个JSON包操作类
 class PduMetaData {
-    //static g_addr = 0;
+    static m_addr = 0;
     constructor() {
-        this.addr = 0;
         this.rpc = JsonRpc.build();
-        // setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+        this.addr = PduMetaData.m_addr;
+        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }    
 
     // 设置地址，并更新JSON数据
     setAddr(addr) {
-        g_addr = addr;
         this.addr = addr;
-        this.meta_workDown();
+        PduMetaData.m_addr = addr;
+        PduMetaData.meta_workDown();
     }
 
     getAddr() {
         return this.addr;
     }
-
+ 
     getTimeOut() {
         return this.rpc.getTimeOut();
     }
 
-    // 获取JSON包中某个字段具体的值
-    // meta_value(type, fc, id=null) {
-    meta_value() {
-        var key = this.addr+'_'+100+'_'+0+'_'+0+'_'+0;
+    // 获取JSON包中某个字段具体的值    
+    meta_value(addr=PduMetaData.m_addr) {
+        var key = addr+'_'+100+'_'+0+'_'+0+'_'+0;
         var res = this.rpc.json_rpc_value(key);
-        // if(res != null) {
-        //     res = res.get(type).get(fc);
-        //     if(id != null) res = res.get(id);
-
-        // }
+        //if(res) res = JSON.parse(res); 
         return res;
     }
 
+     meta_Json_value(type, fc, id=null) {
+        var res = meta_value();
+        if(res) {
+             res = res.get(type).get(fc);
+             if(id != null) res = res.get(id);
+        }
+        return res;
+    }
+
+
     // 启动定时刷新JSON包数据
-    meta_start() {
+    meta_start(addr=PduMetaData.m_addr) {
+        this.addr = addr;
         setInterval(function(){PduMetaData.meta_workDown()}, 1940+this.getTimeOut());  
     }
 
     // 定时器响应函数
-   static meta_workDown(data) {
+   static meta_workDown(addr=PduMetaData.m_addr) {
         var method = "pduMetaData"; 
-        var params = [data.addr, 100, 0, 0, 0];
+        var params = [addr, 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
    }
 } //new PduMetaData().meta_start();
@@ -537,9 +543,6 @@ class PduCore extends PduCfgs {
     // 清除所有数据
     clear() {
         this.rpc.clear();
-    }
-    getTimeOut() {
-        return this.rpc.getTimeOut();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 

@@ -120,10 +120,10 @@
 				}
 			}
 			document.getElementById(id_name[id_name.length-2]).innerHTML = amqp_data[11];
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function flash_html(){

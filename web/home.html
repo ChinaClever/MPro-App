@@ -432,9 +432,10 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
-			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
-			},100);
+			pdu_cfg.setAddr(sel.value);
+			//setTimeout(function(){
+			//	PduMetaData.meta_workDown(top.addr_);
+			//},100);
 		}
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
@@ -561,7 +562,7 @@
 
 			}
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][6]).toFixed(1);
+				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
 				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
@@ -675,12 +676,12 @@
 				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
 				tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >U' + obj + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L' + ((obj + 1) <= phase_num ? (obj + 1) : 1) + ':</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
-				tbody += '<span class = "span_unit">V</span></td></tr>';
+				tbody += '<span class = "span_unit">kW</span></td></tr>';
 				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
 				tbody += '<span class = "span_unit"></span></td></tr>';
