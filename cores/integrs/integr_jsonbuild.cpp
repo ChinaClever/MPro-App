@@ -56,7 +56,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
     } else {
-
+        cout << dev->offLine;
     }
     return json;
 }
