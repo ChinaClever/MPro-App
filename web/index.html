@@ -26,7 +26,7 @@
 
 <body>
 	<div class="body-top" style="position: absolute; z-index: 1;">
-		<div class="side-box" style="position: relative; z-index: 2;width: 4%;display: none;">
+		<div class="side-box" id="logo_" style="position: relative; z-index: 2;width: 4%;display: none;">
 			<a class="sys-title" href="javascript:;">
 				<img class="logo" src="include/images/logo.png" alt="logo">
 			</a>
@@ -87,11 +87,20 @@
 
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
-			// if(DataString == null){
-			// 	DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
-			// }
+			 if(DataString == null){
+			 	DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
+			}
 
 			pdu_data = JSON.parse(DataString);
+		
+			var Time1 = setInterval(function () {
+				if(pdu_data == null){
+					clearInterval(Time1);
+					ParseData();
+					ShowData();
+				}
+			},100);	
+			
 			if(pdu_data) {
 				login_permit_ = pdu_data.login_permit;
 				language_ = pdu_data.pdu_info.language;
@@ -162,6 +171,7 @@
 			}else{
 				document.getElementById("alramNow").style.color = "";
 			}
+			// document.getElementById("logo_").style.display ="";
 		}
 		ParseData();
 		LangInit();
@@ -174,7 +184,7 @@
 			}
 			pdu_cfg.setCfg(13,10,language_,0,addr_);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg_);
+				PduMetaData.meta_workDown();
 			},300);
 			setTimeout(function(){
 				window.location.reload();

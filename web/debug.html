@@ -207,7 +207,7 @@
 		}
 		function Set_(){
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_obj);
+				PduMetaData.meta_workDown();
 			}, 100);
 			for(let i = 0;i<num_id.length;i ++){
 				if(num_id[i] != ""){
@@ -229,7 +229,7 @@
 			pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
 			pdu_obj.setCfg(41,11,document.getElementById("mac_").value,0,addr);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_obj);
+				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
 			}, 100);
 		}
@@ -243,7 +243,7 @@
 				}
 			}
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_obj);
+				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
 			}, 100);
 		}
@@ -326,7 +326,7 @@
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_obj);
+				PduMetaData.meta_workDown();
 			}, 100);
 		}
 		setInterval(function(){

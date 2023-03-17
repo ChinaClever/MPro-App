@@ -81,11 +81,11 @@
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 				$("textarea").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function SetData(btn){

@@ -50,6 +50,11 @@
 		var dev_name =new Array();
 		let pdu_data;
 		let addr = pdu_cfg.addr;
+		if(top.login_permit_ == 1){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);			

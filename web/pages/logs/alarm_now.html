@@ -55,7 +55,7 @@
 		}, 300);
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
-		let btn_name = new Array("jump","last","next","del","export");
+		let btn_name = new Array("jump","last","next","del","export","alarm");
 		let log_data = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
@@ -71,7 +71,7 @@
 			for(i = 1;i<31;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["告警日志","","","",""];
+			lang[1] = ["当前告警","","","",""];
 			lang[2] = ["序号","","","",""];
 			lang[3] = ["时间","","","",""];
 			lang[4] = ["问题描述","","","",""];
@@ -85,6 +85,7 @@
 			lang[12] = ["删除日志","","","",""];
 			lang[13] = ["导出","","","",""];
 			lang[14] = ["条","","","",""];
+			lang[15] = ["alarm","","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<9;j++){

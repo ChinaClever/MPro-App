@@ -65,12 +65,12 @@
 		let output_name =new Array();
 		let dev_name =new Array();
 		let pdu_data;
-		if(top.login_permit_ == 0){
-			document.getElementById("lang_1").style.display="";
-			document.getElementById("lang_2").style.display="";
-		}else{
-			document.getElementById("lang_1").style.display="none";
+		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+			document.getElementById("lang_2").style.display="";
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -157,7 +157,7 @@
 			pdu_cfg.setAddr(sel.value);
 			//addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			},100);
 			setTimeout(function(){
 				ParseData();
@@ -175,7 +175,7 @@
 
 			pdu_cfg.setCfg(22,1,val,number,addr);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			}, 100);
 			ipt.blur();
 		}

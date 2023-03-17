@@ -91,6 +91,12 @@
 			top.language_ = language;
 			dev_dis = pdu_data.pdu_info.cascade_addr;
 		}
+		if(top.login_permit_ == 1){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+			$("input[name=del]").attr("disabled","disabled");
+		}else{
+		}
 		ParseData();
 		lang_init();
 		data_init();

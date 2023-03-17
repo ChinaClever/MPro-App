@@ -94,10 +94,15 @@
 			document.getElementById("lang_14").value  = lang[14][language];
 		}
 
-		function read_data(){
-			setInterval(function () {
-				mqtt_data[10] =pdu_cfg.getCfg(19,10);
+		setInterval(function () {
+			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
+				document.getElementById("lang_12").innerHTML =	lang[21][language];
+			}else{
+				document.getElementById("lang_12").innerHTML =	lang[20][language];
+			}
 		 	}, 2500);
+		function read_data(){
+
 			for(var j = 1;j<12;j++){
 				mqtt_data[j] = pdu_cfg.cfgValue(19,j,0,addr);
 			}
@@ -106,6 +111,7 @@
 			}else{
 				mqtt_data[10] = lang[20][language];
 			}
+
 		}
 		setTimeout(function(){
 			read_data();

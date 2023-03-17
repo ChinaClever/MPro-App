@@ -93,6 +93,11 @@
 							output_num = pdu_data.pdu_info.output_num;
 							top.language_ = language;
 						}
+						if(top.login_permit_ == 1){
+							$("input").attr("disabled","disabled");
+							$("select").attr("disabled","disabled");
+						}else{
+						}
 						ParseData();
 						lang_init();
 						data_init();

@@ -273,10 +273,10 @@
 			document.getElementById("dat16").innerHTML = tls_data[4];
 			document.getElementById("dat17").innerHTML = tls_data[1];
 			document.getElementById("dat18").innerHTML = tls_data[2];
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function create(){

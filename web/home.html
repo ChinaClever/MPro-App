@@ -115,6 +115,11 @@
 					Minu = date.getMinutes();
 					Hou = date.getHours();
 					let dataLabels = new Array();
+					if(top.login_permit_ == 1){
+						$("input").attr("disabled","disabled");
+						$("select").attr("disabled","disabled");
+					}else{
+					}
 					function SetDataShow(num) {
 						for (let j = 0; j < sample_num; j++) {
 							data_total[j] = top.total_data[num][j];
@@ -432,10 +437,15 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
-			pdu_cfg.setAddr(sel.value);
+			pdu_cfg.setAddr(pdu_cfg.addr);
 			//setTimeout(function(){
 			//	PduMetaData.meta_workDown(top.addr_);
 			//},100);
+			setTimeout(function(){
+				ParseData();
+				ShowData();
+				LangFun();
+			},500);
 		}
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
@@ -468,7 +478,7 @@
 			lang[22] = ["湿度1", "Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
 			lang[23] = ["温度2", "Temperature 2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
 			lang[24] = ["湿度2", "Humidity 2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
-			lang[25] = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+			lang[25] = ["门禁1", "Doohttps://192.168.10.96/index.htmlr1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
 			lang[26] = ["门禁2", "Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
 			lang[27] = ["水浸", "Water", "Eau", "погружение", "Inmersión", "الفيضانات"];
 			lang[28] = ["烟雾", "Smoke", "Fumée", "дым", "Humo", "دخان"];

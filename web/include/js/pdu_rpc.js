@@ -134,8 +134,8 @@ class JsonRpc {
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
         const json = Object.fromEntries(this.root_map);
-        var sessionStorage = window.sessionStorage;
-        sessionStorage.setItem('root_map',JSON.stringify(json));
+        //var sessionStorage = window.sessionStorage;
+        //sessionStorage.setItem('root_map',JSON.stringify(json));
 
         return true;
     }
@@ -196,9 +196,13 @@ class PduMetaData {
 
     // 获取JSON包中某个字段具体的值    
     meta_value(addr=PduMetaData.m_addr) {
-        var key = addr+'_'+100+'_'+0+'_'+0+'_'+0;
-        var res = this.rpc.json_rpc_value(key);
-        //if(res) res = JSON.parse(res); 
+        var key = parseInt(addr)+'_'+100+'_'+0+'_'+0+'_'+0;
+        var res = this.rpc.json_rpc_value(key);        
+        if(res == null) {
+            key = 0+'_'+100+'_'+0+'_'+0+'_'+0;
+            res = this.rpc.json_rpc_value(key);
+        }
+
         return res;
     }
 
@@ -218,12 +222,12 @@ class PduMetaData {
         setInterval(function(){PduMetaData.meta_workDown()}, 1940+this.getTimeOut());  
     }
 
-    // 定时器响应函数
-   static meta_workDown(addr=PduMetaData.m_addr) {
+     // 定时器响应函数
+    static meta_workDown(addr=PduMetaData.m_addr) {
         var method = "pduMetaData"; 
-        var params = [addr, 100, 0, 0, 0];
+        var params = [parseInt(addr), 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
-   }
+   }  
 } //new PduMetaData().meta_start();
 
 

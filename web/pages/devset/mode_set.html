@@ -156,10 +156,10 @@
 				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
 			}
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function SetData(btn){
@@ -168,7 +168,7 @@
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
 						pdu_cfg.setCfg(cfg,i,btn.value,0,addr);
-						PduMetaData.meta_workDown(pdu_cfg);
+						PduMetaData.meta_workDown();
 						btn.blur();
 					}
 				}

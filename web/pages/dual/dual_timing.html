@@ -72,12 +72,12 @@
 		var dual_num = parseInt(sessionStorage.getItem("OutputNum" + dual_addr));
 		var slave_num = parseInt(sessionStorage.getItem("SlaveNum" + dual_addr));
 		let time_sw = new Array();
-		if(top.login_permit_ == 0){
-			document.getElementById("lang_1").style.display="";
-			document.getElementById("lang_2").style.display="";
-		}else{
-			document.getElementById("lang_1").style.display="none";
+		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+			document.getElementById("lang_2").style.display="";
 		}
 		pdu_cfg.setAddr(dual_addr);
 		function ParseData(){
@@ -278,7 +278,7 @@
 					}
 					pdu_cfg.setData(dual,switch_,7,num,stat);
 					setTimeout(() => {
-						PduMetaData.meta_workDown(pdu_cfg);
+						PduMetaData.meta_workDown();
 					}, 100);
 				}
 			}else{}
@@ -317,7 +317,7 @@
 				}
 				pdu_cfg.setCfg(24,stat,val,num,dual_addr);
 				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
+					PduMetaData.meta_workDown();
 				}, 100);
 		}
 		function change(opt){

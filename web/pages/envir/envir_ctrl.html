@@ -88,12 +88,12 @@
 		let tem_arr = ["tem_value","tem_rated","tem_alarm_status","tem_alarm_max","tem_alarm_min","tem_warn_min","tem_warn_max","tem_alarm_enable","","","tem_hda_en"];
 		let hum_arr = ["hum_value","hum_rated","hum_alarm_status","hum_alarm_max","hum_alarm_min","hum_warn_min","hum_warn_max","hum_alarm_enable","","","hum_hda_en"];
 		let k = 0;
-		if(top.login_permit_ == 0){
-			document.getElementById("lang_1").style.display="";
-			document.getElementById("lang_2").style.display="";
-		}else{
-			document.getElementById("lang_1").style.display="none";
+		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		 	document.getElementById("lang_2").style.display="";
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -187,9 +187,10 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			pdu_cfg.setAddr(pdu_cfg.addr);
 			addr = pdu_cfg.addr;
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			},100);
 			setTimeout(function(){
 				ParseData();
@@ -334,7 +335,7 @@
 			}
 			pdu_cfg.setData(6,number1,type,id,stat);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			}, 100);
 		}
 		function ClearNum(obj){
@@ -378,7 +379,7 @@
 
 			pdu_cfg.setData(6,number1,sub,id,stat);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			}, 100);
 			ipt.blur();
 		}
