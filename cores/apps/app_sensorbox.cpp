@@ -66,7 +66,8 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         if(env->water[0]) env->water[0] += (alarm >> j++) & 1;
         if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
         if(env->door[1]) env->door[1] += (alarm >> j++) & 1;
-    } else  ret = false;
+    } else  ret = false;    
+    //cout << ret << env->isInsert[2] << env->isInsert[3];
 
     return ret;
 }
@@ -98,9 +99,8 @@ void App_SensorBox::box_offline()
 void App_SensorBox::sensorBox_run()
 {
     while(box_isRun) {
-        //cm::masterDev()->cfg.param.sensorBoxEn = 1;
         if(cm::masterDev()->cfg.param.sensorBoxEn) {
-            bool ret = box_open(); //cout << ret;
+            bool ret = box_open();
             if(ret){
                 ret = box_readData();
                 if(!ret) ret = box_readData();
