@@ -222,7 +222,7 @@ struct sUutInfo {
 
 struct sParameter {
     uint devSpec; // 设备规格 A\B\C\D
-    uint runStatus; // 运行状态 0：正常 1：告警 2：故障 3: 离线
+    uint runStatus; // 运行状态 0：正常 1：预警 2：告警 3: 升级 4：故障 5：离线
     uint language; // 0 中文 1 英文
     uint devMode; // 0：禁用级联 1：启用级联 2：机柜双电源
     uint cascadeAddr; // 级联地址

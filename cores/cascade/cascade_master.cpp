@@ -30,7 +30,7 @@ void Cascade_Master::masterReadDevs()
     using namespace cm; int t = 100;
     uint size = masterDev()->cfg.nums.slaveNum;
     for(uint i=1; i<=size; ++i) {
-        bool ret = masterRead(i); //cout << ret;
+        bool ret = masterRead(i); // cout << ret << i;
         if(!ret) ret = masterRead(i);
         setEndisable(i, ret, devData(i)->offLine);
         if(hasCmdWrite()) return;
@@ -53,7 +53,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
             sEventItem it; it.event_type = tr("级联"); it.addr = addr;
             it.event_content = tr("副机 %1 掉线").arg(addr);
             Log_Core::bulid()->append(it);
-        }
+        } cout << addr << ret << v;
     } cm::mdelay(355);
 }
 

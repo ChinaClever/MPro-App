@@ -56,7 +56,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("version", JSON_VERSION);
     } else {
-
+        cout << dev->offLine;
     }
     return json;
 }
@@ -239,8 +239,8 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
         alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
-        sAlarmUnit tem=it.tem, hum = it.hum;
-        if(!tem.size) tem.size = hum.size = 2;
+        sAlarmUnit tem=it.tem, hum=it.hum;
+        tem.size = hum.size = SENOR_NUM;
         arrayAppend(it.door, 2, "door", obj);
         arrayAppend(it.water, 1, "water", obj);
         arrayAppend(it.smoke, 1, "smoke", obj);
