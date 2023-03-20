@@ -25,13 +25,13 @@ class JsonRpc {
 
     rpc_map() {
         var map = new Map();
-        var sessionStorage = window.sessionStorage;
-        var value = sessionStorage.getItem("root_map");
-        if(value != null) {
-            let json = JSON.parse(value);
-            let arr = Object.entries(json);
-            map = new Map(arr);
-        }   
+        //var sessionStorage = window.sessionStorage;
+        //var value = sessionStorage.getItem("root_map");
+        //if(value != null) {
+        //    let json = JSON.parse(value);
+        //    let arr = Object.entries(json);
+        //    map = new Map(arr);
+        //}   
         
         return map;
     }
@@ -87,12 +87,12 @@ class JsonRpc {
     }
     
     static socket_req(){
-        //var method = "pduMetaData"; 
-        //var params = [0, 100, 0, 0, 0];        
-        //JsonRpc.socket_reqSend(method, params);
+        var method = "pduMetaData"; 
+        var params = [0, 100, 0, 0, 0];        
+        JsonRpc.socket_reqSend(method, params);
 
-        var method = "pduReadParam"; 
-        var params = [0, 13, 10, 0, 0];
+        method = "pduReadParam"; 
+        params = [0, 13, 10, 0, 0];
         JsonRpc.socket_reqSend(method, params);
         params = [0, 42, 3, 0, 0];
         JsonRpc.socket_reqSend(method, params);

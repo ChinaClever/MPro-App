@@ -75,15 +75,15 @@
 		let dev_name =new Array();
 		let pdu_data;
 		let sensor_info_ = new Array();
-    	let sensor_name = new Array("","","","","","","","");
+    	let sensor_name = new Array("","","","","","","","","","","","");
     	let data = new Array();
 		let type_num = 0;
 		let lang = new Array();
-		let table_len = 4;
+		let table_len = 8;
 		let Sensor_state = new Array("", "", "");
 		let Sensor_state_ = new Array("", "", "");
 		let addr = pdu_cfg.addr;
-		let num_arr = [0,1,0,1,0,1,0,0];
+		let num_arr = [0,1,2,3,0,1,2,3,0,1,0,0];
 		let other_arr = ["door","door","smoke","water"];
 		let tem_arr = ["tem_value","tem_rated","tem_alarm_status","tem_alarm_max","tem_alarm_min","tem_warn_min","tem_warn_max","tem_alarm_enable","","","tem_hda_en"];
 		let hum_arr = ["hum_value","hum_rated","hum_alarm_status","hum_alarm_max","hum_alarm_min","hum_warn_min","hum_warn_max","hum_alarm_enable","","","hum_hda_en"];
@@ -99,9 +99,9 @@
 			let DataString = pdu_cfg.meta_value();
 			 pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			for(let i = 0; i<8;i++){
+			for(let i = 0; i<12;i++){
 				data[i] = new Array();
-				if(i<2){
+				if(i<4){
 					k = 0;
 					for(let key of tem_arr){
 						if(k == 8 || k == 9){
@@ -110,7 +110,7 @@
 						}
 						k++;
 					}
-				}else if(i<4){
+				}else if(i<8){
 					k = 0;
 					for(let key of hum_arr){
 						if(k == 8 || k == 9){
@@ -120,16 +120,21 @@
 						k++;
 					}
 				}else{
-					data[i][0] = pdu_data.pdu_data.env_item_list[other_arr[i-4]][num_arr[i]];
+					data[i][0] = pdu_data.pdu_data.env_item_list[other_arr[i-8]][num_arr[i]];
 				}
 			}
-			for(let i = 0;i<2;i++){
+			for(let i = 0;i<4;i++){
 				if(pdu_data.pdu_data.env_item_list.insert[i] == 0){
-					data[i*1][0] = "NA";
-					data[i*1 +2][0] = "NA";
+					if(data[i*1][0] == 65535 ||data[i*1][0] == 0){
+						data[i*1][0] = "NA";
+					}
+					if(data[i*1 +4][0] == 65535||data[i*1 +4][0] == 0){
+						data[i*1 +4][0] = "NA";
+					}
+
 				}else{
 					data[i*1][0] += "°C";
-					data[i*1 + 2][0]  += "%";
+					data[i*1 + 4][0]  += "%";
 				}
 			}
 		}
@@ -159,26 +164,34 @@
 			lang[18] = ["关闭","","","",""];
 			lang[19] = ["温度1","","","",""];
 			lang[20] = ["温度2","","","",""];
-			lang[21] = ["湿度1","","","",""];
-			lang[22] = ["湿度2","","","",""];
-			lang[23] = ["门禁1","","","",""];
-			lang[24] = ["门禁2","","","",""];
-			lang[25] = ["水禁","","","",""];
-			lang[26] = ["烟雾","","","",""];
-			lang[27] = ["设置模式","","","",""];
-			lang[28] = ["阅读模式","","","",""];
-			lang[29]  = ["主机", "", "", "", ""];
-			lang[30]  = ["副机", "", "", "", ""];
-			lang[31] = ["NA","","","",""];
-			lang[32] = ["正常", "", "", "", ""];
-			lang[33] = ["告警", "", "", "", ""];
-			dev_name[0] = lang[29][language];
+			lang[21] = ["温度3","","","",""];
+			lang[22] = ["温度4","","","",""];
+			lang[23] = ["湿度1","","","",""];
+			lang[24] = ["湿度2","","","",""];
+			lang[25] = ["湿度3","","","",""];
+			lang[26] = ["湿度4","","","",""];
+			lang[27] = ["门禁1","","","",""];
+			lang[28] = ["门禁2","","","",""];
+			lang[29] = ["水禁","","","",""];
+			lang[30] = ["烟雾","","","",""];
+			lang[31] = ["设置模式","","","",""];
+			lang[32] = ["阅读模式","","","",""];
+			lang[33]  = ["主机", "", "", "", ""];
+			lang[34]  = ["副机", "", "", "", ""];
+			lang[35] = ["NA","","","",""];
+			lang[36] = ["正常", "", "", "", ""];
+			lang[37] = ["告警", "", "", "", ""];
+			//lang[38] = ["湿度设置","","","",""];
+
+			
+
+			dev_name[0] = lang[33][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
-				dev_name[i] =  lang[31][language] + i;
+				dev_name[i] =  lang[34][language] + i;
 			}
 			for(let i =0;i<Sensor_state.length;i++){
 				Sensor_state[i] = lang[16 + i][language];
-				Sensor_state_[i] = lang[31 + i][language];
+				Sensor_state_[i] = lang[35 + i][language];
 			}
 			for(let i =0;i<sensor_name.length;i++){
 				sensor_name[i] = lang[19 + i][language];
@@ -187,15 +200,15 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
-			pdu_cfg.setAddr(pdu_cfg.addr);
 			addr = pdu_cfg.addr;
+			pdu_cfg.setAddr(addr);
 			setTimeout(function(){
 				PduMetaData.meta_workDown();
 			},100);
 			setTimeout(function(){
 				ParseData();
 				$('.tmp_hum_table').html(BuildTableTH(table_len));
-				$('.oth_table').html(BuildTableOth(table_len));
+				$('.oth_table').html(BuildTableOth(table_len-4));
 				ShowData();
 				LangFun();
 				ModeSet();
@@ -206,15 +219,15 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if(read == 0){
-				document.getElementById("lang_2").innerHTML  = lang[28][language];
+				document.getElementById("lang_2").innerHTML  = lang[32][language];
 			}
-			if(pdu_data.pdu_info.dev_mode == 0){
+			//if(pdu_data.pdu_info.dev_mode == 0){
 				document.getElementById("dev_sel").style.display="";
-			}
+			//}
 			document.getElementById("ms").value = addr;
 		}
 		$('.tmp_hum_table').html(BuildTableTH(table_len));
-		$('.oth_table').html(BuildTableOth(table_len));
+		$('.oth_table').html(BuildTableOth(table_len-4));
 		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		function BuildSel(rows)
@@ -282,7 +295,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
-				ros.innerHTML = lang[27][language];
+				ros.innerHTML = lang[31][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -294,7 +307,7 @@
 				// ms.style.display = "none";
 				read = 1;
 				ros.style.backgroundColor = '';
-				ros.innerHTML = lang[28][language];
+				ros.innerHTML = lang[32][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
 				{
@@ -422,9 +435,9 @@
 					<td width ="20%" id="lang_15"></td>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 4]+'</td>';
+					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
 					tbody += '<td id = "j'+ i + '"></td>';
-					tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+4][0]] +'</td>';
+					tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+8][0]] +'</td>';
 					tbody += '</tr>';
 			}
 			return '<thead>' + thead + '</thead>'
