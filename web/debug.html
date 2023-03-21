@@ -81,18 +81,18 @@
 		let phase = 1,loop = 2,output =3,envir = 6,num = 12,cfg = 13;
 		let vol_ = 2,cur_ = 3,pow_ = 4,tmp_=11,hum_ = 12;
 		let addr = 0;
-		let output_num;
-		let phase_num;
-		let loop_num;
-		let board_num;
+		let output_num = "";
+		let phase_num= "";
+		let loop_num= "";
+		let board_num= "";
 		var mark = 1;
-		let pdu_data;
+		let pdu_data= "";
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
 		let break_en = 0;
 		let rating = new Array();
-		let rating_ = new Array();
+		let rating_ = new Array();;
 		let out_vol = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
@@ -141,6 +141,9 @@
 			}
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = pdu_data.pdu_info.loop_array[i];
+			}
+			for(i= 0;i<10;i++){
+				cfg_data[i] = "";
 			}
 			cfg_data[5] = pdu_data.net_addr.mac;
 			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
@@ -365,12 +368,12 @@
 			document.getElementById("output_cur_"+4).value =document.getElementById("output_cur_"+0).value;
 
 			/*voltage calculation*/
-			document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(2);
+		/*	document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(2);
 			document.getElementById("phase_vol_"+4).value =document.getElementById("phase_vol_"+0).value;
 
 			document.getElementById("loop_vol_"+3).value =parseFloat(parseFloat(document.getElementById("loop_vol_"+0).value)*0.8).toFixed(2);
 			document.getElementById("loop_vol_"+4).value =document.getElementById("loop_vol_"+0).value;
-
+		*/
 			AllSet();
 		}
 
@@ -380,7 +383,7 @@
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
 			<td width ="75%"></td></tr>';
 			tbody += '<tr><td>相位数:</td>';
-			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" onchange = "Set_()"  oninput = "if(value>3){value=3}"value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
+			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" onchange = "Set_()"  oninput = "if(value>3){value=3} if(value<3){value=1}"value="'+phase_num+'"></input>(1-单相,3-三相)</td></tr>';
 			tbody += '<tr><td>执行板数量:</td>';
 			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" onchange = "Set_()" oninput = "if(value>4){value=4}"value="'+board_num+'"></input></td></tr>';
 			tbody += '<tr><td>每块执行板的输出位数量:</td>';

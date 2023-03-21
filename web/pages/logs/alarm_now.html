@@ -28,13 +28,13 @@
 					</div>
 					<div>
 						<br/>
-						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
+					<!----	<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "del" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
-						</span>
+						</span> -->
 					</div>
 					<div class="grid-col grid-col-7 " style ="height: 100px;">
 					</div>
@@ -51,14 +51,15 @@
 		let language;
 		let addr = top.addr_;
 		setTimeout(() => {
-			pdu_log.getCfg(80,0,0,addr);
+			pdu_cfg.getCfg(80,0,0,addr);
 		}, 300);
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
 		let btn_name = new Array("jump","last","next","del","export");
 		let log_data = new Array();
+		let log_str = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
-		let show_num = 0;
+		let show_num = 1;
 		let start_ = 0;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -84,23 +85,26 @@
 			lang[11] = ["下一页","","","",""];
 			lang[12] = ["删除日志","","","",""];
 			lang[13] = ["导出","","","",""];
-			lang[14] = ["条","","","",""];
+			lang[14] = ["告警信息","","","",""];
 			//lang[14] = ["告警","","","",""];
 		}
 		function lang_fun(){
-			for(let j = 1;j<9;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
-			}
-			for(let i = 0;i<btn_name.length;i++){
-				document.getElementById(btn_name[i]).value = lang[9+i][language];
-			}
+		//	for(let j = 1;j<9;j++){
+				document.getElementById("lang_1" ).innerHTML  = lang[1][language];
+				document.getElementById("lang_14").innerHTML  = lang[14][language];
+		//	}
+			//for(let i = 0;i<btn_name.length;i++){
+			//	document.getElementById(btn_name[i]).value = lang[9+i][language];
+			//}
 		}
 		lang_init();
 		$('.table-striped').html(buildTable(0));
 		lang_fun();
 		function read_data(){
-			let log_str = window.JSON.parse(pdu_log.cfgValue(80,0,0,addr));
-			log_num = log_str.length;
+			//let log_str = window.JSON.parse(pdu_log.cfgValue(80,0,0,addr));
+			log_str = pdu_cfg.cfgValue(80,0,0,addr);
+			//alert(log_str);
+			/*log_num = log_str.length;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -115,8 +119,8 @@
 					}else{
 						log_data[i][j] = log_str.logs[start_+ (show_num - i)][j];
 					}
-				}
-			}
+				}let log_str = pdu_cfg.cfgValue(80,0,0,addr);
+			}*/
 		}
 		// setTimeout(function(){
 		// 	log_num = parseInt(pdu_log.log_get(alarm_log,1,start_,show_num));
@@ -140,15 +144,15 @@
 		function flash_html(par)
 		{
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
 				$('.table-striped').html(buildTable(show_num));
 				lang_fun();
 				showdata();
-			},800);
+			},400);
 		}
 		function showdata(){
-			if(log_num % 20 == 0){
+		/*	if(log_num % 20 == 0){
 				page_size = parseInt(log_num/20);
 			}else{
 				page_size = parseInt(log_num/20) + 1;
@@ -158,10 +162,11 @@
 			let p_n = document.getElementById("page_num");
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
-			p_n.innerHTML = page_size;
+			p_n.innerHTML = page_size;*/
+			document.getElementById("alart").innerText = log_str;
 
 		}
-		function saveArrayDataToExcel() {
+	/*	function saveArrayDataToExcel() {
 			var retVal = confirm("请确认是否导出此表单");
 			let str = '';
 			if(retVal == true)
@@ -183,8 +188,8 @@
 				link.download =  "alarm_log_"+ page_num +".csv";
 				link.click();
 			}else{}
-    	}
-		function setData(btn){
+    	}*/
+		/*function setData(btn){
 			let start_ = 0;
 			if(btn.id == "jump"){
 				let p = parseInt(document.getElementById("page").value);
@@ -234,15 +239,17 @@
 			}else{
 
 			}
-		}
+		}*/
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-				thead = '<tr><td width ="5%" id = "lang_2"></td>\
-					<td width ="15%" id = "lang_3"></td>\
-					<td width ="25%" id = "lang_4"></td>\
-					<td width ="55%" id = "lang_5"></td>';
-			for (var i = 0; i < rows; i++) {
+				//thead = '<tr><td width ="5%" id = "lang_2"></td>\
+				//	<td width ="15%" id = "lang_3"></td>\
+				//	<td width ="25%" id = "lang_4"></td>\
+				//	<td width ="55%" id = "lang_5"></td>';
+				tbody += '<tr><td id = "lang_14"></td>';
+				tbody += '<td><textarea id = "alart"  style="height:200px;width:50%;resize: none;" rows="4" cols="37" readonly ="true" autofocus></textarea>';
+		/*	for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr><td width ="5%" id = "lang_2"></td>\
 					<td width ="15%" id = "lang_3"></td>\
@@ -256,7 +263,7 @@
 				tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
 				tbody += '</tr>';
 			}
-
+		*/
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
