@@ -32,7 +32,6 @@ void App_NetAddr::inet_initFunSlot()
     } inet_setInterface();
 }
 
-
 void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
 {
     Cfg_Obj *cfg = mInetCfg;
