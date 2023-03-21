@@ -12,7 +12,7 @@ public:
     QString alarmType(const sDataItem &index);
 
     QString getCurrentAlarm(int addr);
-    void currentAlarmClear(int addr){m_currentAlarm[addr].clear();}
+    void currentAlarmClear(int addr){m_id=0; m_currentAlarm[addr].clear();}
     void appendAlarm(const sDataItem &index, uchar value);
     void generateQRcode();
 
@@ -27,6 +27,7 @@ private:
     sAlarmItem alarmItem(const sDataItem &index, uchar value);
 
 private:
+    int m_id = 0;
     QString m_currentAlarm[DEV_NUM];
 };
 

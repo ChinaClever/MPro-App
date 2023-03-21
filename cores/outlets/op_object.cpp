@@ -85,7 +85,7 @@ bool OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
     } else {
         cnt[id] += 1;
         dtc[id] |= code;
-        mDev->dtc.fault = 5;
+        mDev->dtc.fault = 16;
     }
     return f;
 }
