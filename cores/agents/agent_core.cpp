@@ -9,12 +9,8 @@
 Agent_Core::Agent_Core(QObject *parent)
     : Agent_Trap{parent}
 {
-    mCfg = &snmpCfg;
-    //if(mCfg->enV3) {
-    //   startSnmpdV3();
-    //} else {
-    startSnmpd();
-    //}
+    mCfg = &snmpCfg; startSnmpd();
+    QTimer::singleShot(1333,this,&Agent_Core::startSnmpdV3);
 }
 
 Agent_Core *Agent_Core::bulid(QObject *parent)
@@ -28,7 +24,21 @@ Agent_Core *Agent_Core::bulid(QObject *parent)
 
 void Agent_Core::startSnmpdV3()
 {
-    qDebug() << "startSnmpdV3"  << mCfg->enV3;
+    QString id = "oldEngineID ";
+    //if(!mCfg->enV3) return; cout << mCfg->enV3;
+    system("chmod 777 /usr/data/etc/snmp/snmpd.conf");
+    QString dst = "/usr/data/clever/cfg/snmpd.conf";
+    QString src = "/usr/data/etc/snmp/snmpd.conf";
+    for(int i=0; i<3; ++i) {
+        QString cmd = "sed -n '%1p' " + src; char buf[256]={0};
+        FILE *fp = popen(cmd.arg(32+i).toStdString().c_str(),"r");
+        fread(buf,1,256,fp); pclose(fp); QString res(buf);
+        cmd = "sed -i '%1c%2' " + dst; //cout << res;
+        //cout << cm::execute(cmd.arg(60+i).arg(res).remove("\n"));
+        cmd = cmd.arg(60+i).arg(res.remove("\n")); //cout << cmd;
+        system(cmd.toStdString().c_str());
+        if(res.contains(id)) mCfg->oldEngineID = res.remove(id);
+    } if(mCfg->enV3) qDebug() << "SNMP V3 " << id << mCfg->oldEngineID;
 }
 
 void Agent_Core::startSnmpd()
@@ -106,7 +116,7 @@ void Agent_Core::set_snmpdV3()
     str = "sed -i '36crwcommunity6 %1' " + fn;
     system(str.arg(mCfg->set).toStdString().c_str());
 
-    str = "sed -i '39com2sec readwrite default  %1' " + fn;
+    str = "sed -i '39ccom2sec readwrite default  %1' " + fn;
     system(str.arg(mCfg->set).toStdString().c_str());
 
 #endif

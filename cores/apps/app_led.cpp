@@ -54,7 +54,7 @@ void App_Led::led_delayOff()
 {
     int *rgb = mRgb; int t = 500;
     int status = cm::masterDev()->status;
-    if(status == 3) t /= 4;
+    if(status == 3) t /= 5;
     for(int i=0; i<t; ++i) {
         if(mLedIsRun) cm::mdelay(1);
     }
