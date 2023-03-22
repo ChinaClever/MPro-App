@@ -8,7 +8,7 @@
 Agent_Get::Agent_Get(QObject *parent) : Agent_Obj{parent}
 {
     if((snmpCfg.enV3) || (snmpCfg.enV2)) {
-        QTimer::singleShot(5255,this,SLOT(addOidSlot()));
+        QTimer::singleShot(5255,this,&Agent_Get::addOidSlot);
     }
 }
 

@@ -12,7 +12,6 @@ public:
     static Agent_Core *bulid(QObject *parent = nullptr);
     void set_snmpdV3();
 
-
 private:
     QByteArray snmdConf();
      void startSnmpd();

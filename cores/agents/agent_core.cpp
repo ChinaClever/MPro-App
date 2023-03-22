@@ -25,7 +25,7 @@ Agent_Core *Agent_Core::bulid(QObject *parent)
 void Agent_Core::startSnmpdV3()
 {
     QString id = "oldEngineID ";
-    //if(!mCfg->enV3) return; cout << mCfg->enV3;
+    if(!mCfg->enV3) return; cout << mCfg->enV3;
     system("chmod 777 /usr/data/etc/snmp/snmpd.conf");
     QString dst = "/usr/data/clever/cfg/snmpd.conf";
     QString src = "/usr/data/etc/snmp/snmpd.conf";

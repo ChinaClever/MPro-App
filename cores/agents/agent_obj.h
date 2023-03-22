@@ -19,11 +19,9 @@ struct sAgentCfg {
 
 class Agent_Obj : public QObject
 {
-    Q_OBJECT
 public:
     explicit Agent_Obj(QObject *parent = nullptr);
     static sAgentCfg snmpCfg;
-private slots:
     void initAgentSlot();
 
 protected:

@@ -5,11 +5,8 @@
 
 class Agent_Get : public Agent_Obj
 {
-    Q_OBJECT
 public:
     explicit Agent_Get(QObject *parent = nullptr);
-
-private slots:
     void addOidSlot();
 
 private:

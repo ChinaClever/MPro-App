@@ -10,7 +10,7 @@ Agent_Set::Agent_Set(QObject *parent)
     : Agent_Get{parent}
 {
     if((snmpCfg.enV3) || (snmpCfg.enV2)) {
-        QTimer::singleShot(5550,this,SLOT(initSetSlot()));
+        QTimer::singleShot(5550,this,&Agent_Set::initSetSlot);
     }
 }
 
