@@ -39,9 +39,9 @@ static void initSystem()
     cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
-    cmd = "ln -s /usr/data/clever/cfg/snmpd.conf ";
-    cmd += "/usr/data/etc/snmp/snmpd.conf";
-    system(cmd.toLocal8Bit().data());
+    //cmd = "ln -s /usr/data/clever/cfg/snmpd.conf ";
+    //cmd += "/usr/data/etc/snmp/snmpd.conf";
+    //system(cmd.toLocal8Bit().data());
 
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";

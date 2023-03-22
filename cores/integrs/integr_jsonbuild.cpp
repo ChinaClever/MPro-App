@@ -50,7 +50,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             uutInfo(dev->cfg.uut, "uut_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
-            if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit());
+            if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
