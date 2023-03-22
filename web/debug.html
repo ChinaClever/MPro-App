@@ -69,6 +69,13 @@
     <script src="./include/js/public.min.js"></script>
     <script>
 		//var pdu_metadata_ = new PduMetaData();
+		//https重定向到http
+		var target_protocol = "http:";
+		if(window.location.protocol != target_protocol){
+			window.location.href = target_protocol +
+			window.location.href.substring(window.location.protocol.length);
+		}
+
 		let pdu_obj = PduCore.build();
 		setTimeout(function(){
 			pdu_obj.debugCfg();
@@ -98,7 +105,7 @@
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
-		let name_cfg_ = new Array("angle_","ver_mode_",/*"cascade_",*/"serson_box_","ser_sel_","language_","mac_");
+		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
@@ -145,14 +152,15 @@
 			for(i= 0;i<10;i++){
 				cfg_data[i] = "";
 			}
-			cfg_data[5] = pdu_data.net_addr.mac;
+			cfg_data[6] = pdu_data.net_addr.mac;
 			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
 			cfg_data[0] = pdu_obj.cfgValue(cfg,13,0,addr);
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
-			//cfg_data[2] = 0;
-			cfg_data[2] = pdu_obj.cfgValue(cfg,9,0,addr);;
-			cfg_data[3] = pdu_obj.cfgValue(cfg,1,0,addr);
-			cfg_data[4] = pdu_obj.cfgValue(cfg,10,0,addr);
+			cfg_data[2] = pdu_data.uut_info.pdu_type;
+			//cfg_data[2] = pdu_obj.cfgValue(11,6,0,addr);
+			cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
+			cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
+			cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
 			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_obj.getValue(unite_name[i],unite_type[i],2,0);
@@ -188,7 +196,7 @@
 				document.getElementById("board_num"+i).value = board_out[i - 1];
 			}
 			document.getElementById("break_").value = break_en;
-			for(i =0;i<6;i++){
+			for(i =0;i<7;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
 			for(let i = 0;i<10;i++){
@@ -224,7 +232,7 @@
 				pdu_obj.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
 			}
 			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,addr);
-
+			pdu_obj.setCfg(11,6,document.getElementById("dev_type_").value,0,addr);
 			pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
 			pdu_obj.setCfg(cfg,13,document.getElementById("angle_").value,0,addr);
 			pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
@@ -409,18 +417,18 @@
 			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_()"  value="'+cfg_data[0]+'">(0-0°垂直,1-90°水平,2-180°垂直(翻转),3-270°水平(翻转))</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
 			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_()"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
-			//tbody += '<tr><td>IN/OUT口级联方式:</td>';
-			//tbody += '<td><input id = "cascade_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'">(0-网络一带三,1-modbus)</input></td></tr>';
+			tbody += '<tr><td>设备类型:</td>';
+			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
-			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'">(0-不带,1-带)</input></td></tr>';
+			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
 			tbody += '<tr><td>设备系列选择:</td>';
-			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
+			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 			tbody += '<tr><td>语言选择:</td>';
-			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[4]+'"></input>(0-中文,1-英文)</td></tr>';
+			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
-			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input></td></tr>';
+			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[6]+'"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

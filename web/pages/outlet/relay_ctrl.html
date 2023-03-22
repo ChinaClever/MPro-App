@@ -241,7 +241,11 @@
 				}
 				else{
 					cs.bgColor = '';
+
 					cs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i -1]] == "关"){
+						cs.style.color = 'black';
+					}				
 				}
 			}
 		}
@@ -260,6 +264,9 @@
 				else{
 					cs.bgColor = '';
 					cs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+						cs.style.color = 'black';
+					}				
 				}
 			}
 		}

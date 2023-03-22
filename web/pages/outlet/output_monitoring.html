@@ -112,7 +112,7 @@
 				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				ShowData();
 				LangFun();
-			},500);
+			},400);
 		}
 		function BuildSel(rows)
 		{
@@ -138,6 +138,10 @@
 				else{
 					hs.bgColor = '';
 					hs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+						hs.style.color = 'black';
+					}
+					
 				}
 				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
@@ -194,7 +198,7 @@
 			ParseData();
 			PutData();
 			ShowData();
-		},2000);
+		},700);
     </script>
 </body>
 </html>

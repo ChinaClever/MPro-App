@@ -155,7 +155,7 @@
 					if(i!=3)
 						document.getElementById(info_name[i]+'1').disabled = true;
 				}
-				document.getElementById("lang_19").disabled = true;
+				document.getElementById("lang_19").disabled = false;
 			}else{
 				document.getElementById(info_name[1]+'1').disabled = false;
 				if(parseInt(ip_info[1][1]) == 0){
@@ -295,7 +295,7 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_15" ></td>';
-			tbody += '<td><input id = "addr1"  style ="width:24.5%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "addr1"  style ="width:24.5%" type = "text" maxlength = "15"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_16" ></td>';
 			tbody += '<td><input id = "gateway1" style ="width:24.5%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
