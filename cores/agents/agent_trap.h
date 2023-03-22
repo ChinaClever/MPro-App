@@ -5,16 +5,13 @@
 
 class Agent_Trap : public Agent_Set
 {
-    Q_OBJECT
 public:
     explicit Agent_Trap(QObject *parent = nullptr);
 
-private slots:
+private:
+    void timeoutDone();
     void initTrapSlot();
     void alarmSlot(const sDataItem &index, uchar value);
-    void timeoutDone();
-
-private:
     void sendTrap(const QString &ip, const QString &dstOid,
                   const QString &oid, const QString &msg);
 

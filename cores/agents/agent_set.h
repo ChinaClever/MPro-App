@@ -5,13 +5,10 @@
 
 class Agent_Set : public Agent_Get
 {
-    Q_OBJECT
 public:
     explicit Agent_Set(QObject *parent = nullptr);
-
-private slots:
-    void initSetSlot();
     void snmpSetSlot(uint addr, const QSNMPOid &oid, const QVariant &value);
+    void initSetSlot();
 
 private:
     bool toIndex(uint addr, const QSNMPOid &oid);

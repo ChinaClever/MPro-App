@@ -29,7 +29,7 @@ void Cascade_Core::initFunSlot()
 void Cascade_Core::workFun()
 {
     uchar addr = getAddress();
-    cmsWrite(95); if(addr) {
+    cmsWrite(195); if(addr) {
         QByteArray rcv = readSerial();
         if(rcv.size() > 6) {
             rcv = qUncompress(rcv);
