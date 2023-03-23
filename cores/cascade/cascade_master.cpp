@@ -53,7 +53,8 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
             sEventItem it; it.event_type = tr("级联"); it.addr = addr;
             it.event_content = tr("副机 %1 掉线").arg(addr);
             Log_Core::bulid()->append(it);
-        } cout << addr << ret << v;
+            cout << addr << ret << v;
+        }
     } cm::mdelay(355);
 }
 
