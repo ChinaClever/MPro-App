@@ -335,12 +335,12 @@
 			}else{
 				type = 11;
 			}
-			if(number <= 2){
+			if(number <= 4){
 				number1  = 11;
 			}else{
 				number1  = 12;
 			}
-			id  = parseInt(number-1) % 2 + 1;
+			id  = parseInt(number-1) % 4 + 1;
 			if(ckd.checked == true){
 				stat = 1;
 			}else{
@@ -374,12 +374,12 @@
 				FlashHtml(ipt);
 				return ;
 			}
-			if(number <= 2){
+			if(number <= 4){
 				number1  = 11;
 			}else{
 				number1  = 12;
 			}
-			id  = parseInt(number - 1)%2 + 1;
+			id  = parseInt(number - 1)%4 + 1;
 			if(type1 === 'e'){
 				sub = 5;
 			}else if(type1 === 'f'){
