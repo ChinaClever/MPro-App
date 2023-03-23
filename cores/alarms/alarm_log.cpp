@@ -46,6 +46,7 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];
+    if(str.size()) str = str.split("\n").first();
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); }
 }

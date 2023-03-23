@@ -17,8 +17,11 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
         sRelayUnit *unit = &(mDev->output.relay); mList << id;
-        if(id){id--;} int t = unit->resetDelay[id]; if(!t) t = 5;
-        QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
+        QList<int> os,cs; if(id) id--; else {
+            for(int i=0; i<unit->size; ++i) if(unit->sw[i]) os << i+1; else cs << i+1;
+            if(cs.size()) mList = os;
+        } int t = unit->resetDelay[id]; if(!t) t = 5;
+        if(unit->sw[id]) QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
 }
 
