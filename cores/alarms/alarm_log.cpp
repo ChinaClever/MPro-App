@@ -43,6 +43,12 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
     //cout << m_currentAlarm[it.addr].size() << str;
 }
 
+void Alarm_Log::appendSlaveOffline(int addr)
+{
+    QString str = tr("副机%1离线").arg(addr);
+    m_currentAlarm[0] += str + "\n";
+}
+
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];

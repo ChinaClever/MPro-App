@@ -92,6 +92,12 @@ void Cfg_devParam::devParamRead(sParameter &it)
     if(it.buzzerSw) it.buzzerSw = 1;
 }
 
+void Cfg_devParam::devParamRestoreFactory()
+{
+    devParamWrite("buzzerSw", 1, "devParams");
+
+}
+
 void Cfg_devParam::runTimeWrite()
 {
     QString g = "devParams";
