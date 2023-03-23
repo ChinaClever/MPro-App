@@ -359,7 +359,7 @@
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 		let pdu_data;
-		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value","phase_voltage"];
+		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele"];
 		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
@@ -385,9 +385,9 @@
 				for(let key of phase_arr){
 					phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i];
 					j ++;
-				if(j > 5){
-					break;
-				}
+				//if(j > 5){
+				//	break;
+				//}
 				}
 			}
 			for(let i = 0;i<loop_num;i++){
@@ -529,17 +529,19 @@
 			top.total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
 			top.total_data[1][49] = 0;
 			top.total_data[2][49] = 0;
-			for (let i = 0; i < 3; i++) {
-				top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
-				if(pdu_data.pdu_info.line_num == (i+1)){
-					break;
+			if(pdu_data.pdu_info.line_num == 3){
+				for (let i = 0; i < 3; i++) {
+					top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);			
+					top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 				}
-				top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
-				if(pdu_data.pdu_info.line_num == (i+2)){
-					break;
-				}				
-				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
+			}else{
+				for ( i = 0; i < 3; i++) {
+					top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					top.inletB_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);			
+					top.inletC_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
 			}
+		}
 		}
 		function ReadData() {
 			// system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
