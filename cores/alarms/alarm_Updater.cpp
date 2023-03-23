@@ -267,7 +267,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         if(!ret && mCrAlarm) dev->status = 1;
         if(dev->dtc.fault) dev->status = 4;        
         if(cm::dataPacket()->ota.work) dev->status = 3;
-    } else if(dev->offLine <= 1) { dev->status = 5; if(!(*ptr)) *ptr=4;}
+    } else if(dev->offLine <= 1) { dev->status = 5; if(!(*ptr)) *ptr=5;}
     dev->cfg.param.runStatus = dev->status;
 
     return ret;

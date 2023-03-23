@@ -38,7 +38,7 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
     QString str = QString::number(++m_id) +"、";
-    str += it.alarm_status +"; " + it.alarm_content;
+    str += it.alarm_status + it.alarm_content;
     if(str.size()) m_currentAlarm[it.addr] += str + "\n";
     //cout << m_currentAlarm[it.addr].size() << str;
 }
@@ -92,7 +92,7 @@ QString Alarm_Log::alarmStatus(uchar value)
     case AlarmCode::CrMax: state = tr("过高预警"); break;
     case AlarmCode::Max: state = tr("过高告警");  break;
     }
-    return state;
+    return state+"; ";
 }
 
 QString Alarm_Log::alarmContent(const sDataItem &index)
@@ -133,7 +133,7 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
                     .arg(suffix);
         } else qDebug() << Q_FUNC_INFO;
     }
-    return str;
+    return str+"; ";
 }
 
 
@@ -145,14 +145,14 @@ QString Alarm_Log::alarmRelay(uchar value)
     case sRelay::NoAlarm: str = tr("恢复"); break;
     case sRelay::LifeAlarm: str = tr("寿命"); break;
     }
-    return str;
+    return str+"; ";
 }
 
 QString Alarm_Log::alarmSensor(uchar value)
 {
     QString str = tr("恢复正常");
     if(value) str = tr("告警");
-    return str;
+    return str+"; ";
 }
 
 sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
