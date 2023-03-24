@@ -9,6 +9,7 @@ public:
 
     void groupWrite();
     void runTimeWrite();
+    void devParamRestoreFactory();
     void devParamWrite(const QString &key, const QVariant &v, const QString &g);
 
 protected:
