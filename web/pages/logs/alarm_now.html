@@ -58,6 +58,7 @@
 		let btn_name = new Array("jump","last","next","del","export");
 		let log_data = new Array();
 		let log_str = new Array();
+		let strArrayy = new Array();
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 1;
 		let start_ = 0;
@@ -74,9 +75,9 @@
 			}
 			lang[1] = ["当前告警","","","",""];
 			lang[2] = ["序号","","","",""];
-			lang[3] = ["时间","","","",""];
-			lang[4] = ["问题描述","","","",""];
-			lang[5] = ["详细信息","","","",""];
+			//lang[3] = ["时间","","","",""];
+			//lang[4] = ["问题描述","","","",""];
+			lang[3] = ["详细信息","","","",""];
 			lang[6] = ["日志大小：","","","",""];
 			lang[7] = ["页","","","",""];
 			lang[8] = ["/页","","","",""];
@@ -89,10 +90,11 @@
 			//lang[14] = ["告警","","","",""];
 		}
 		function lang_fun(){
-		//	for(let j = 1;j<9;j++){
-				document.getElementById("lang_1" ).innerHTML  = lang[1][language];
-				document.getElementById("lang_14").innerHTML  = lang[14][language];
-		//	}
+			for(let j = 1;j<4;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			//	document.getElementById("lang_1" ).innerHTML  = lang[1][language];
+				//document.getElementById("lang_14").innerHTML  = lang[14][language];
+			}
 			//for(let i = 0;i<btn_name.length;i++){
 			//	document.getElementById(btn_name[i]).value = lang[9+i][language];
 			//}
@@ -106,6 +108,10 @@
 
 			//let log_str = window.JSON.parse(pdu_log.cfgValue(80,0,0,addr));
 			log_str = pdu_cfg.cfgValue(80,0,0,addr);
+			strArrayy = log_str.split("\n");
+
+
+			//alert(strArrayy);
 
 
 
@@ -144,7 +150,8 @@
 
 		setTimeout(function(){
 			read_data();
-			$('.table-striped').html(buildTable(show_num));
+			
+			$('.table-striped').html(buildTable(strArrayy.length-1));
 			lang_fun();
 			showdata();
 		},300);
@@ -154,7 +161,8 @@
 			setTimeout(function(){
 				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
 				read_data();
-				$('.table-striped').html(buildTable(show_num));
+		
+				$('.table-striped').html(buildTable(strArrayy.length-1));
 				lang_fun();
 				showdata();
 			},200);
@@ -171,7 +179,10 @@
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;*/
-			document.getElementById("alart").innerText = log_str;
+			// for(var i=0; i<strArrayy.length;i++){
+			// 	document.getElementById("alart"+ i).innerHTML = ;
+			// }
+			//document.getElementById("alart").innerText = strArrayy;
 
 		}
 		//$(function(){
@@ -255,27 +266,25 @@
 		function buildTable(rows) {
 			var thead = '',
 				tbody = '';
-				//thead = '<tr><td width ="5%" id = "lang_2"></td>\
-				//	<td width ="15%" id = "lang_3"></td>\
-				//	<td width ="25%" id = "lang_4"></td>\
-				//	<td width ="55%" id = "lang_5"></td>';
-				tbody += '<tr><td id = "lang_14"></td>';
-				tbody += '<td><textarea id = "alart"  style="height:400px;width:75%;resize: none; white-space:pre-wrap;" rows="4" cols="37" readonly ="true"   autofocus></textarea>';
-		/*	for (var i = 0; i < rows; i++) {
-				if (i === 0) {
-					thead = '<tr><td width ="5%" id = "lang_2"></td>\
-					<td width ="15%" id = "lang_3"></td>\
-					<td width ="25%" id = "lang_4"></td>\
-					<td width ="55%" id = "lang_5"></td>';
-				}
-				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + ((page_num - 1)*20+(i+1)) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ log_data[i][0] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ log_data[i][1] +'</td>';
-				tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
+				thead = '<tr><td width ="5%" id = "lang_2"></td>\
+					<td width ="55%" id = "lang_3"></td>\ ';
+
+				//tbody += '<td><textarea id = "alart"  style="height:400px;width:75%;resize: none; white-space:pre-wrap;" rows="4" cols="37" readonly ="true"   autofocus></textarea>';
+			for (var i = 1; i < rows; i++) {
+				//if (i === 0) {
+				//	thead = '<tr><td width ="5%" id = "lang_2"></td>\
+				//	<td width ="55%" id = "lang_3"></td>\ ';
+				//}
+				//tbody += '<tr><td id = "lang_14"></td>';
+				//tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<tr><td >'+i+'</td>';
+				tbody += '<td id = "alart '+ i +' ">'+strArrayy[i]+'</td>';
+				//tbody += '<td id = "b'+ i + '">'+ log_data[i][0] +'</td>';
+				//tbody += '<td id = "c'+ i + '">'+ log_data[i][1] +'</td>';
+				//tbody += '<td id = "d'+ i + '">'+ log_data[i][2] +'</td>';
 				tbody += '</tr>';
 			}
-		*/
+		
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
