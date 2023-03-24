@@ -37,8 +37,8 @@ QString Alarm_Log::getCurrentAlarm(int addr)
 void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
-    QString str = QString::number(++m_id) +"、";
-    str += it.alarm_status + it.alarm_content;
+    //QString str = QString::number(++m_id) +"、";
+    QString str = it.alarm_status + it.alarm_content;
     if(str.size()) m_currentAlarm[it.addr] += str + "\n";
     //cout << m_currentAlarm[it.addr].size() << str;
 }
