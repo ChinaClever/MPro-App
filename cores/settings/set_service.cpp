@@ -110,7 +110,7 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
     case 1: key = "en"; it->en = v.toInt(); break;
     case 2: key = "host";  it->host = v.toString(); break;
     case 3: key = "from";  it->from = v.toString();  break;
-    case 4: key = "pwd";  it->pwd =v.toString();  break;
+    case 4: key = "pwd";  it->pwd =v.toString(); break;
     case 5: key = "to_"+QString::number(id); it->to[id] =v.toString();  break;
     case 6: key = "port";  it->port =v.toInt();  break;
     case 7: key = "ct";  it->ct =v.toInt();  break;

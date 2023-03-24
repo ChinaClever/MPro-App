@@ -10,7 +10,7 @@ App_Ntp::App_Ntp(QObject *parent)
     : App_Nftables{parent}
 {
     mUdp = new Net_Udp(this);
-    QTimer::singleShot(55,this,&App_Ntp::ntp_initSlot);
+    QTimer::singleShot(556,this,&App_Ntp::ntp_initSlot);
     connect(mUdp, &Net_Udp::recvSig, this, &App_Ntp::ntp_recvSlot);
 }
 
@@ -18,7 +18,8 @@ void App_Ntp::ntp_initSlot()
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(ntpCfg.udp_en) mUdp->bind(123);
-    ntp_timeZone(ntpCfg.time_zone);
+    qDebug() << "tz_zone=" << cm::execute("printenv TZ");
+    //ntp_timeZone(ntpCfg.time_zone);
 #endif
 }
 
@@ -38,8 +39,10 @@ QString App_Ntp::ntp_time()
 void App_Ntp::ntp_timeZone(const QString &zone)
 {
     ntpCfg.time_zone = zone;
-    QString cmd = "export TZ='%1'";
+    QString cmd = "echo 'export TZ=%1' ";
+    cmd += "> /usr/data/etc/tz_zone.sh";
     system(cmd.arg(zone).toLocal8Bit().data());
+    qDebug() << cmd.arg(zone) << getenv("TZ");
 }
 
 bool App_Ntp::ntp_time(const QString &t)
@@ -58,8 +61,9 @@ bool App_Ntp::ntpdate()
 {
     bool ret = true;
     if(ntpCfg.ntp_host.size()) {
+        QString zone = getenv("TZ");
         QString cmd = QString("ntpdate %1").arg(ntpCfg.ntp_host);
-        qDebug() << cmd; system(cmd.toStdString().c_str());
+        qDebug() << cmd << "TZ="+zone; system(cmd.toStdString().c_str());
     } else ret = false;
     return ret;
 }
