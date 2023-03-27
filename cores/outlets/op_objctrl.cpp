@@ -15,11 +15,13 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     if(id) {
         if(sRelay::On == on) openSwitch(id-1); else closeSwitch(id-1);
     } else orderCtrl(on, 1);
-
     if(sRelay::Reset == on) {
-        sRelayUnit *unit = &(mDev->output.relay);
-        if(id) { if(unit->sw[id-1]) mList << id; } else {
-            for(int i=0; i<unit->size; ++i) if(1 ==unit->sw[i]) mList << i+1;
+         QList<int> os,cs; sRelayUnit *unit = &(mDev->output.relay); mList << id;
+        if(id) {
+            if(sRelay::On != unit->sw[--id]) mList.takeLast();
+        } else {
+            for(int i=0; i<unit->size; ++i) if(sRelay::On == unit->sw[i]) os << i+1; else cs << i+1;
+            if(cs.size()) mList = os; //cout << cs << os << mList;
         } int t = unit->resetDelay[id]; if(!t) t = 5;
         if(mList.size()) QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
@@ -27,7 +29,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
 
 void OP_ObjCtrl::relayResetSlot()
 {
-    if(mList.size()) {
+    while(mList.size()) {
         int id = mList.takeFirst();
         relayCtrl(id, sRelay::On);
     }
@@ -35,7 +37,7 @@ void OP_ObjCtrl::relayResetSlot()
 
 void OP_ObjCtrl::orderCtrl(int on, uchar all)
 {
-    if(on) openAllSwitch(all); else closeAllSwitch(all);
+    if(sRelay::On==on) openAllSwitch(all); else closeAllSwitch(all);
 }
 
 void OP_ObjCtrl::clearEle(int id)
