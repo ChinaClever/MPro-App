@@ -53,7 +53,7 @@ void Cfg_Service::smtp()
     sSmtpCfg *cfg = &App_Smtp::smtpCfg;
     QString prefix = "smtp";  QString key;
     QString *str = nullptr; int *ptr = nullptr;
-    for(int i=1; i<8; ++i) {
+    for(int i=2; i<8; ++i) {
         switch (i) {
         case 2: key = "host"; str = &cfg->host; break;
         case 3: key = "from"; str = &cfg->from; break;
@@ -66,6 +66,7 @@ void Cfg_Service::smtp()
 
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
         else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+        ptr = nullptr; str = nullptr;
     }
 
     for(int i=0; i<SMTP_TO_SIZE; ++i) {
@@ -94,6 +95,7 @@ void Cfg_Service::snmp()
 
         if(str) *str = mCfg->readCfg(key, "", prefix).toString();
         else if(ptr) *ptr = mCfg->readCfg(key, 0, prefix).toInt();
+        ptr = nullptr; str = nullptr;
     }
 
     if(cfg->get.isEmpty()) cfg->get = "public";
@@ -438,7 +440,7 @@ void Cfg_Service::push()
         if(key.size()) {
             if(ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
             else *str = mCfg->readCfg(key, "", prefix).toString();
-            ptr = nullptr;
+            ptr = nullptr; str = nullptr;
         }
     }
 

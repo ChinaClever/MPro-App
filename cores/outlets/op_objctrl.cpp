@@ -15,13 +15,13 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     if(id) {
         if(sRelay::On == on) openSwitch(id-1); else closeSwitch(id-1);
     } else orderCtrl(on, 1);
+
     if(sRelay::Reset == on) {
-        sRelayUnit *unit = &(mDev->output.relay); mList << id;
-        QList<int> os,cs; if(id) id--; else {
-            for(int i=0; i<unit->size; ++i) if(unit->sw[i]) os << i+1; else cs << i+1;
-            if(cs.size()) mList = os;
+        sRelayUnit *unit = &(mDev->output.relay);
+        if(id) { if(unit->sw[id-1]) mList << id; } else {
+            for(int i=0; i<unit->size; ++i) if(1 ==unit->sw[i]) mList << i+1;
         } int t = unit->resetDelay[id]; if(!t) t = 5;
-        if(unit->sw[id]) QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
+        if(mList.size()) QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
 }
 
