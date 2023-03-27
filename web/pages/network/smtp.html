@@ -156,7 +156,7 @@
 						// 	return ;
 						// }else{
 							if(btn.value != ""){
-								psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+								//psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
 							}
 							pdu_cfg.setCfg(44,i,psd,0,addr);
 						// }

@@ -244,9 +244,10 @@
 									clearInterval(time1);
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
+									data_total = [];
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];
-										data_total[i] = parseFloat(log_str.logs[i][5]).toFixed(1);
+										data_total[i] = parseFloat(log_str.logs[i][5]).toFixed(3);
 									}
 									if(parseInt(log_str.logs[0][2]) ==1){
 										label_text  = inlet_arr[parseInt(log_str.logs[0][4]) -1] + lang[9][language]+topic_show[parseInt(log_str.logs[0][3])];
