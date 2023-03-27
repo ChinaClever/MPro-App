@@ -17,9 +17,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
     } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
          QList<int> os,cs; sRelayUnit *unit = &(mDev->output.relay); mList << id;
-        if(id) {
-            if(sRelay::On != unit->sw[--id]) mList.takeLast();
-        } else {
+        if(id) { if(sRelay::On != unit->sw[--id]) mList.takeLast(); } else {
             for(int i=0; i<unit->size; ++i) if(sRelay::On == unit->sw[i]) os << i+1; else cs << i+1;
             if(cs.size()) mList = os; //cout << cs << os << mList;
         } int t = unit->resetDelay[id]; if(!t) t = 5;
