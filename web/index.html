@@ -26,15 +26,15 @@
 
 <body>
 	<div class="body-top" style="position: absolute; z-index: 1;">
-		<div class="side-box" style="position: relative; z-index: 2;width: 4%;display: none;">
+		<div class="side-box" id="logo_" style="position: relative; z-index: 2;width: 4%;display: none;">
 			<a class="sys-title" href="javascript:;">
 				<img class="logo" src="include/images/logo.png" alt="logo">
 			</a>
 		</div>
 		<div style="position: relative; z-index: 1;">
 			<p align="right" style="background-image: url(include/images/title.png);">
-				<i id="language" class="fa fa-language"style="height: 18px; line-height: 1;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
 				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 1;padding-right: 3.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
+				<i id="language" class="fa fa-language"style="height: 18px; line-height: 1;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
 				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
 				<label style="width:19%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:56%;"></label><label id ="version" style="width:44%;"></label></label><br>
 				<label style="width:19%;font-size:12px;line-height:12px;display:inline-flex;"><label  id ="uptime" style="width:56%;"></label><label id ="status" style="width:44%;" ></label></label>
@@ -51,14 +51,16 @@
 	</div>
 	<script>
 		var addr_ = 0;
-		var pdu_metadata_ = new PduMetaData();
-		var pdu_cfg_ = PduCore.build();
-		var language_;
+		//var pdu_metadata_ = new PduMetaData();
+		var pdu_cfg_ = PduCore.build();		
+		pdu_cfg_.meta_start();
+
+		var language_ = 0;
 		var first_time = 0;
 		var group_num_ = 8;
 		var slave_addr_ = 0;
 		var dual_addr_ = 0;
-		var login_permit_ = 1;
+		var login_permit_ = 0;
 		var total_data = new Array(3);
 		var inletA_data = new Array(3);
 		var inletB_data = new Array(3);
@@ -79,17 +81,21 @@
 				inletC_data[i][j] = 0;
 			}
 		}
-		setTimeout(function () {
-			PduMetaData.meta_workDown(pdu_cfg_);
-		}, 300);
+		 setTimeout(function () {
+		 	PduMetaData.meta_workDown(); //pdu_cfg_
+		 }, 300);
+
+
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
-			if(DataString == null){
-				DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
+			 if(DataString == null){
+			 	DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
 			}
-			pdu_data = JSON.parse(DataString);
-			login_permit_ = pdu_data.login_permit;
-			language_ = pdu_data.pdu_info.language;
+			pdu_data = JSON.parse(DataString);			
+			if(pdu_data) {
+				login_permit_ = pdu_data.login_permit;
+				language_ = pdu_data.pdu_info.language;
+			}
 		}
 		function LangInit() {
 			for (let i = 0; i < lang.length; i++) {
@@ -110,10 +116,10 @@
 			lang[13] = ["天", "", "", "", ""];
 			lang[14] = ["小时", "", "", "", ""];
 			lang[15] = ["分钟", "", "", "", ""];
-			lang[16] = ["报警", "", "", "", ""];
+			lang[16] = ["告警", "", "", "", ""];
 			lang[17] = ["升级", "", "", "", ""];
 			lang[18] = ["故障", "", "", "", ""];
-			lang[19] = ["离线", "", "", "", ""];
+			lang[19] = ["副机离线", "", "", "", ""];
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
 			run_status[2] = lang[16][language_];
@@ -153,13 +159,21 @@
 				document.getElementById("alramNow").style.color = "yellow";
 			}else if(pdu_data.status ==2){
 				document.getElementById("alramNow").style.color = "red";
+			}else if(pdu_data.status ==3){
+				document.getElementById("alramNow").style.color = "blue";
 			}else{
-				document.getElementById("alramNow").style.color = "";
+				document.getElementById("alramNow").style.color = "red";	
 			}
+			// document.getElementById("logo_").style.display ="";
+			//if(pdu_data.status ==5){
+			//	setTimeout(function(){
+			//		alert("离线!");
+			//},200);
+			//}
 		}
-		ParseData();
+		//ParseData();
 		LangInit();
-		ShowData();
+		//ShowData();
 		function ChoseLang(){
 			if(language_ = 1){
 				language_ = 0;
@@ -168,7 +182,7 @@
 			}
 			pdu_cfg.setCfg(13,10,language_,0,addr_);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg_);
+				PduMetaData.meta_workDown();
 			},300);
 			setTimeout(function(){
 				window.location.reload();
@@ -179,7 +193,7 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-			if(pdu_data.status ==1){
+			if(pdu_data.status ==2){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 			}else{
 				alert("当前无告警日志！");
@@ -217,12 +231,15 @@
 			}
 		}
 		setInterval(function () {
-			ParseData();
-			ShowData();
+			let v = pdu_cfg_.meta_value();
+			if(v) {
+				ParseData();
+				ShowData();
+			}
 		},1000);
-		setInterval(function () {
-			PduMetaData.meta_workDown(pdu_cfg_);
-		}, 2000);
+		// setInterval(function () {
+		// 	PduMetaData.meta_workDown(pdu_cfg_);
+		// }, 2000);
 
 	</script>
 </body>

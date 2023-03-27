@@ -12,17 +12,16 @@ struct sAgentCfg {
     QString pwd;
     QString key;
     int encrypt; // 0:DES 1:AES
+    QString oldEngineID;
     QString trap[SNMP_TRAP_SIZE];
     QString inform[SNMP_TRAP_SIZE];
 };
 
 class Agent_Obj : public QObject
 {
-    Q_OBJECT
 public:
     explicit Agent_Obj(QObject *parent = nullptr);
     static sAgentCfg snmpCfg;
-private slots:
     void initAgentSlot();
 
 protected:

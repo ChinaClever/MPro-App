@@ -131,10 +131,10 @@
 			if(parseInt(push_data[8][1]) == 0){
 				document.getElementById(select_name[9]).disabled = true;
 			}
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function SetData(btn){
@@ -166,7 +166,7 @@
 			},500);
 		}
 		function Set(){
-			if(confirm("请确认是否生效当前设置。")){
+			if(confirm("设置成功，请重启设备!!")){
 				pdu_cfg.setCfg(18,10,0,0,addr);
 			}else{}
 		}

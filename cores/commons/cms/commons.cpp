@@ -73,7 +73,7 @@ bool cm::pingNet(const QString& ip)
 bool cm::qrcodeGenerator(const QString& msg)
 {
     QString fn = "/usr/data/clever/cfg/qrcode.png";
-    QString cmd = "qrencode -o %1 -s 6 '%2'";
+    QString cmd = "qrencode -o %1 -s 5 '%2'";
     QString qr = cmd.arg(fn, msg);
     QString rm = "rm -f " +fn;
     system(rm.toUtf8().data());

@@ -85,7 +85,7 @@ bool OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
     } else {
         cnt[id] += 1;
         dtc[id] |= code;
-        mDev->dtc.fault = 1;
+        mDev->dtc.fault = 16;
     }
     return f;
 }
@@ -96,8 +96,10 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
     uint *src = mOpData->vol;
     uint *cnt = mDev->dtc.cnt[0];
     uint *dest = mDev->output.vol.value;
+    int devSpec = mDev->cfg.param.devSpec;
+    int isBreaker = mDev->cfg.param.isBreaker;
     if(mOpData->type) dest = mDev->loop.vol.value;
-    if(!mDev->cfg.param.isBreaker) min = COM_MIN_VOL;
+    if(!isBreaker) if((2==devSpec) || (4==devSpec)) min = COM_MIN_VOL;
     bool ret = dataFiltering(dest[id], src[i], COM_MAX_VOL, min);
     if(src[i] == 16*COM_RATE_VOL) {ret = false; /*dest[id] = 0;*/}
     if(!faultCode(id, ret, cnt, FaultCode::DTC_VOL)) {
@@ -180,7 +182,8 @@ void OP_Object::relayCheck(uint &dst_sw, uint &src_sw)
 void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev; uchar k = 0;
-    sOpIt *it = mOpData; mDev->dtc.fault = 0; addr -= 1;
+    sOpIt *it = mOpData; addr -= 1;
+    if(mDev->dtc.fault) mDev->dtc.fault -= 1;
     for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
     for(int i=0; i<it->size; ++i) {
         volFaultCheck(k, i);
@@ -191,18 +194,19 @@ void OP_Object::fillData(uchar addr)
         relayCheck(dev->output.relay.sw[k+i], it->sw[i]);
     }
 
-    dev->offLine = 3;
+    dev->offLine = 5;
     dev->rtu.hzs[addr] = it->hz;
     //dev->cfg.nums.boards[addr] = it->size;
     dev->cfg.vers.opVers[addr] = it->version;
     dev->rtu.chipStates[addr] = it->chipStatus;
-    for(int i=0; i<4; ++i) dev->rtu.offLines[i] = it->ens[i];
+    for(int i=0; i<8; ++i) dev->rtu.offLines[i] = it->ens[i];
 }
 
 void OP_Object::loop_fillData()
 {
     sDevData *dev = mDev; uchar k = 0;
-    sOpIt *it = mOpData; mDev->dtc.fault = 0;
+    sOpIt *it = mOpData; //mDev->dtc.fault = 0;
+    if(mDev->dtc.fault) mDev->dtc.fault -= 1;
     for(int i=0; i<it->size; ++i) {
         volFaultCheck(k, i);
         curFaultCheck(k, i);
@@ -212,7 +216,7 @@ void OP_Object::loop_fillData()
         //relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 
-    dev->offLine = 3;
+    dev->offLine = 5;
     dev->rtu.hzs[0] = it->hz;
     dev->cfg.vers.opVers[0] = it->version;
 }

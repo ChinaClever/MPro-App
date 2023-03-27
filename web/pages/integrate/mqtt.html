@@ -50,8 +50,12 @@
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
+
+
+
+
 		ParseData();
-		lang_init();
+		lang_init();		
 		function lang_init(){
 			for(let i = 1;i<20;i++){
 				lang[i] = new Array();
@@ -90,7 +94,15 @@
 			document.getElementById("lang_14").value  = lang[14][language];
 		}
 
+		setInterval(function () {
+			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
+				document.getElementById("lang_12").innerHTML =	lang[21][language];
+			}else{
+				document.getElementById("lang_12").innerHTML =	lang[20][language];
+			}
+		 	}, 2500);
 		function read_data(){
+
 			for(var j = 1;j<12;j++){
 				mqtt_data[j] = pdu_cfg.cfgValue(19,j,0,addr);
 			}
@@ -99,6 +111,7 @@
 			}else{
 				mqtt_data[10] = lang[20][language];
 			}
+
 		}
 		setTimeout(function(){
 			read_data();
@@ -126,10 +139,10 @@
 				}
 			}
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function flash_html(){

@@ -42,6 +42,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let pdu_metadata = new PduMetaData();
+
 		let language;
 		let output_info_ = new Array();
 		var State = new Array("","");
@@ -49,10 +50,15 @@
 		var dev_name =new Array();
 		let pdu_data;
 		let addr = pdu_cfg.addr;
+		if(top.login_permit_ == 1){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
-			pdu_data = JSON.parse(DataString);
-			language = pdu_data.pdu_info.language;
+			pdu_data = JSON.parse(DataString);			
+			if(pdu_data) language = pdu_data.pdu_info.language;
 		}
 		ParseData();
 		LangInit();
@@ -96,15 +102,17 @@
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
-			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg);
-			},100);
+			pdu_cfg.setAddr(addr);
+
+			//setTimeout(function(){
+			//	PduMetaData.meta_workDown(pdu_cfg);
+			//},100);
 			setTimeout(function(){
 				ParseData();
 				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				ShowData();
 				LangFun();
-			},500);
+			},400);
 		}
 		function BuildSel(rows)
 		{
@@ -130,6 +138,10 @@
 				else{
 					hs.bgColor = '';
 					hs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+						hs.style.color = 'black';
+					}
+					
 				}
 				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
@@ -186,7 +198,7 @@
 			ParseData();
 			PutData();
 			ShowData();
-		},2000);
+		},700);
     </script>
 </body>
 </html>

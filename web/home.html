@@ -115,6 +115,11 @@
 					Minu = date.getMinutes();
 					Hou = date.getHours();
 					let dataLabels = new Array();
+					if(top.login_permit_ == 1){
+						$("input").attr("disabled","disabled");
+						$("select").attr("disabled","disabled");
+					}else{
+					}
 					function SetDataShow(num) {
 						for (let j = 0; j < sample_num; j++) {
 							data_total[j] = top.total_data[num][j];
@@ -304,7 +309,7 @@
 							data_inlet1.push(top.inletA_data[chart_type][49]);
 							data_inlet2.push(top.inletB_data[chart_type][49]);
 							data_inlet3.push(top.inletC_data[chart_type][49]);
-							if (chart_type == 0) {
+							if (chart_type == 1) {
 								data_total.shift();
 							}
 							dataLabels.shift();
@@ -354,7 +359,7 @@
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 		let pdu_data;
-		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value","phase_voltage"];
+		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele"];
 		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
@@ -362,8 +367,10 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			if(DataString == null){
-				DataString = sessionStorage.getItem('0_100_0_0_0');
+				setTimeout(function(){ParseData()}, pdu_cfg.getTimeOut());
+				return ;
 			}
+
 			pdu_data = JSON.parse(DataString);
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
@@ -378,9 +385,9 @@
 				for(let key of phase_arr){
 					phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i];
 					j ++;
-				if(j > 5){
-					break;
-				}
+				//if(j > 5){
+				//	break;
+				//}
 				}
 			}
 			for(let i = 0;i<loop_num;i++){
@@ -430,9 +437,15 @@
 		function Change(sel){
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
+			pdu_cfg.setAddr(pdu_cfg.addr);
+			//setTimeout(function(){
+			//	PduMetaData.meta_workDown(top.addr_);
+			//},100);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(top.addr_);
-			},100);
+				ParseData();
+				ShowData();
+				LangFun();
+			},500);
 		}
 		function delay() {
 			for (let i = 0; i < 50; i++) { }
@@ -465,7 +478,7 @@
 			lang[22] = ["湿度1", "Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
 			lang[23] = ["温度2", "Temperature 2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
 			lang[24] = ["湿度2", "Humidity 2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
-			lang[25] = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+			lang[25] = ["门禁1", "Doohttps://192.168.10.96/index.htmlr1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
 			lang[26] = ["门禁2", "Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
 			lang[27] = ["水浸", "Water", "Eau", "погружение", "Inmersión", "الفيضانات"];
 			lang[28] = ["烟雾", "Smoke", "Fumée", "дым", "Humo", "دخان"];
@@ -516,17 +529,19 @@
 			top.total_data[0][49] = parseFloat(total_info[0]).toFixed(2);
 			top.total_data[1][49] = 0;
 			top.total_data[2][49] = 0;
-			for (let i = 0; i < 3; i++) {
-				top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
-				if(pdu_data.pdu_info.line_num == (i+1)){
-					break;
+			if(pdu_data.pdu_info.line_num == 3){
+				for (let i = 0; i < 3; i++) {
+					top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);			
+					top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
 				}
-				top.inletB_data[i][49] = parseFloat(phase_info[1][sample_[i]]).toFixed(2);
-				if(pdu_data.pdu_info.line_num == (i+2)){
-					break;
-				}				
-				top.inletC_data[i][49] = parseFloat(phase_info[2][sample_[i]]).toFixed(2);
+			}else{
+				for ( i = 0; i < 3; i++) {
+					top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					top.inletB_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);			
+					top.inletC_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
 			}
+		}
 		}
 		function ReadData() {
 			// system_info[0] = Sys_state[parseInt(sessionStorage.getItem(cfg_name[2] + addr))];
@@ -559,7 +574,7 @@
 
 			}
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][6]).toFixed(1);
+				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
 				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
@@ -673,13 +688,13 @@
 				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
 				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
 				tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-N:</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >U' + obj + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >L' + obj + '-L' + ((obj + 1) <= phase_num ? (obj + 1) : 1) + ':</span>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
-				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF:</span>';
+				tbody += '<span class = "span_unit">kW</span></td></tr>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF' + obj + ':</span>';
 				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
 				tbody += '<span class = "span_unit"></span></td></tr>';
 			}

@@ -55,12 +55,12 @@
 		let pdu_data;
 		let en_state=new Array();
 		pdu_cfg.OutInGroup();
-		if(top.login_permit_ == 0){
-			document.getElementById("lang_1").style.display="";
-			document.getElementById("lang_2").style.display="";
-		}else{
-			document.getElementById("lang_1").style.display="none";
+		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+			document.getElementById("lang_2").style.display="";
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -123,9 +123,13 @@
 		},500);
 		function ShowData(){
 			if(!group_mode){
-				document.getElementById("lang_2").style.display = "none";
+				if(top.login_permit_ == 1){
+					document.getElementById("lang_2").style.display = "none";
+				}
 			}else{
-				document.getElementById("lang_2").style.display = "";
+				if(top.login_permit_ == 0){
+					document.getElementById("lang_2").style.display = "";
+				}
 			}
 			for(let i=1;i<group_num+1;i++){
 				let num_ = 'b'.charCodeAt(0) +i;
@@ -141,8 +145,9 @@
 				top.addr_ = parseInt(sel.value);
 				pdu_cfg.addr = parseInt(sel.value);
 				addr = pdu_cfg.addr;
+				pdu_cfg.setAddr(addr);
 				setTimeout(function(){
-					PduMetaData.meta_workDown(pdu_cfg);
+					//PduMetaData.meta_workDown();
 					pdu_cfg.OutInGroup();
 				},100);
 				setTimeout(function(){
@@ -157,7 +162,9 @@
 				pdu_cfg.setCfg(13,8,sel.value,0,addr);
 				if(sel.value == 1){
 					group_mode =1;
-					document.getElementById("lang_2").style.display = "";
+					if(top.login_permit_ != 1){
+						document.getElementById("lang_2").style.display = "";
+					}					
 				}else{
 					group_mode =1;
 					document.getElementById("lang_2").style.display = "none";

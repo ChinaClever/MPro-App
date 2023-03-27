@@ -70,12 +70,12 @@
 		let State = new Array("","");
 		let dev_name =new Array();
 		let lang = new Array();
-		if(top.login_permit_ == 0){
-			document.getElementById("lang_1").style.display="";
-			document.getElementById("lang_2").style.display="";
-		}else{
-			document.getElementById("lang_1").style.display="none";
+		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+			document.getElementById("lang_2").style.display="";
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -137,8 +137,9 @@
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
+			pdu_cfg.setAddr(addr);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			},100);
 			setTimeout(function(){
 				ParseData();
@@ -165,11 +166,19 @@
 			var btnname = document.getElementsByTagName("button");
 			for(var i = 0; i<iptname.length;i++)
 			{
-				iptname[i].disabled = true;
+				if(read ==1){
+					iptname[i].disabled = true;
+				}else{
+					iptname[i].disabled = false;
+				}
 			}
 			for(var j = 1; j<btnname.length;j++)
 			{
-				btnname[j].disabled = true;
+				if(read ==1){
+					btnname[j].disabled = true;
+				}else{
+					btnname[j].disabled = false;
+				}
 			}
 		}
 		function ReadOnlySet(ros){
@@ -232,7 +241,11 @@
 				}
 				else{
 					cs.bgColor = '';
+
 					cs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i -1]] == "关"){
+						cs.style.color = 'black';
+					}				
 				}
 			}
 		}
@@ -251,6 +264,9 @@
 				else{
 					cs.bgColor = '';
 					cs.style.color = 'green';
+					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+						cs.style.color = 'black';
+					}				
 				}
 			}
 		}
@@ -292,7 +308,7 @@
 			}
 			pdu_cfg.setData(phase,switch_,sub,number1,stat);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			}, 100);
 		}
 		function SetData(ipt)
@@ -316,7 +332,7 @@
 			}
 			pdu_cfg.setData(phase,switch_,sub,num,stat);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			}, 100);
 			ipt.blur();
 		}
@@ -343,7 +359,7 @@
 				}
 				pdu_cfg.setData(phase,switch_,1,num,stat);
 				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
+					PduMetaData.meta_workDown();
 				}, 100);
 			}else{}
 		}

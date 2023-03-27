@@ -71,12 +71,12 @@
 			let dual_num;
 			let dual_name = new Array();
 			var slave_num;
-			if(top.login_permit_ == 0){
-				document.getElementById("lang_1").style.display="";
-				document.getElementById("lang_2").style.display="";
-			}else{
-				document.getElementById("lang_1").style.display="none";
+			if(top.login_permit_ == 1){
 				document.getElementById("lang_2").style.display="none";
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}else{
+				document.getElementById("lang_2").style.display="";
 			}
 			function lang_init() {
 				for (let i = 1; i < 8; i++) {
@@ -90,6 +90,7 @@
 				lang[6] = ["设置模式", "", "", "", ""];
 				lang[7] = ["机柜", "", "", "", ""];
 			}
+			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);
@@ -168,7 +169,7 @@
 				let val = ipt.value;
 				pdu_cfg.setCfg(24,1,val,number,dual_addr);
 				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
+					PduMetaData.meta_workDown();
 				}, 100);
 				ipt.blur();
 			}

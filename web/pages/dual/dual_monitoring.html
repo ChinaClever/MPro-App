@@ -68,6 +68,12 @@
 		let dual_dev_name =  new Array();
 		let lang = new Array();
 		let progress_width = new Array();
+		pdu_cfg.setAddr(dual_addr);
+		if(top.login_permit_ == 1){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);

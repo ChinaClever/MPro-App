@@ -39,8 +39,8 @@
     let user = 14;
     let web_service = 0;
     let user_name = "",identify = "";
-    let hasher = CryptoJS.algo.SHA256.create();
-    let time1 = setInterval(function(){
+    //let hasher = CryptoJS.algo.SHA256.create();
+   /* let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
       }
@@ -54,7 +54,7 @@
         clearInterval(time1);
       }
       time1_num ++;
-    },50);
+    },50);*/
     function LangInit(){
 
     }
@@ -62,7 +62,11 @@
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
       if(keyNum == 13){
-        sign_in();
+        if(obj.cfgValue(user,1,0,0) == null ||obj.cfgValue(user,1,0,0) == ''){
+          register1();
+        }else{
+          sign_in();
+        }
       }
     }
     let time3 = setInterval(function(){
@@ -93,7 +97,7 @@
           alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
-        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+       // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         let userPsd = usr + ";" + psd;
         obj.setCfg(user,11,userPsd,0,0);
         let time2 = setInterval(function(){
@@ -110,8 +114,8 @@
             }else if(ver == "0"){
               alert("用户名或密码输入有误，请重新输入！");
             }else{
-              let num = Math.abs(ver);
-              alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
+             // let num = Math.abs(ver);
+            //  alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
             }
             window.clearInterval(time2);
           }
@@ -148,7 +152,7 @@
           alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
           return ;
         }
-        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+       // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,2,psd,0,0);
         setTimeout(function(){
           var div= document.getElementsByClassName('center_form');
@@ -185,7 +189,7 @@
           alert("验证信息为重设密码时使用，请勿设置与密码一致。");
           return ;
         }
-        psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+       // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,1,usr,0,0);
         obj.setCfg(user,2,psd,0,0);
         obj.setCfg(user,3,ient,0,0);

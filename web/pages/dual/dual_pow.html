@@ -79,13 +79,14 @@
 			var lang = new Array();
 			var slave_num;
 			let dual_arr = [14,13,11,9,10,16,15,8,0,0,12];
-			if(top.login_permit_ == 0){
-				document.getElementById("lang_1").style.display="";
-				document.getElementById("lang_2").style.display="";
-			}else{
-				document.getElementById("lang_1").style.display="none";
+			if(top.login_permit_ == 1){
 				document.getElementById("lang_2").style.display="none";
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}else{
+				document.getElementById("lang_2").style.display="";
 			}
+			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				let pdu_data = JSON.parse(DataString);
@@ -276,7 +277,7 @@
 				}
 				pdu_cfg.setData(dual,pow_,sub,number1,stat);
 				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
+					PduMetaData.meta_workDown();
 				}, 100);
 		}
 			function clearNum(obj) {
@@ -328,7 +329,7 @@
 				}
 				pdu_cfg.setData(dual,pow_,sub,number1,stat);
 				setTimeout(() => {
-					PduMetaData.meta_workDown(pdu_cfg);
+					PduMetaData.meta_workDown();
 				}, 100);
 				ipt.blur();
 			}

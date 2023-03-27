@@ -13,14 +13,14 @@ Web_Rpc::Web_Rpc(QObject *parent) : QObject{parent}
 
 char* Web_Rpc::pduReadData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     double value = mObj->getValue(its.at(0), its.at(1), its.at(2),its.at(3), its.at(4));
     return responRpcData(its, value);
 }
 
 char *Web_Rpc::pduMetaData(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     QString value = mObj->metaData(its.at(0));
     return responRpcString(its, value);
 }
@@ -38,7 +38,8 @@ char* Web_Rpc::pduSetData(mg_str &r)
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5);
     if(value.toString().isNull()) value = mObj->getNumber(r, 5);
-    //double value = mObj->getString(r, 5).toDouble();  //qDebug() << its << value;
+    //cout << its << value;  ////////===============
+    //double value = mObj->getString(r, 5).toDouble();  cout << its << value;
     mObj->setting(its.at(0), its.at(1), its.at(2), its.at(3), its.at(4), value.toDouble());
     return responRpcData(its, value.toDouble()); // ret?1:0
 }
@@ -59,7 +60,7 @@ char* Web_Rpc::responRpcString(const QVector<uint> &ls, const QString &value)
 
 char *Web_Rpc::pduReadParam(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5);
+    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
     QString value = mObj->getCfg(its.at(1), its.at(2), its.at(3), its.at(0));
     return responRpcString(its, value);
 }
@@ -68,7 +69,7 @@ char *Web_Rpc::pduSetParam(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5);
-    if(value.toString().isNull()) value = mObj->getNumber(r, 5);
+    if(value.toString().isNull()) value = mObj->getNumber(r, 5); //cout << its << value;
     int ret = mObj->setCfg(its.at(1), its.at(2), value,its.at(3), its.at(0));
     if(its.at(1) == 14 && its.at(2) == 11) value = ret; //?1:0;
     return responRpcString(its, value.toString());

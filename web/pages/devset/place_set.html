@@ -81,11 +81,11 @@
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 				$("textarea").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function SetData(btn){
@@ -105,18 +105,34 @@
 				ShowData();
 			},500);
 		}
+		//限制中文15字，英文30字
+		var checklength = function(dom,maxlength){
+			var l = 0;
+			for(var i=0; i< dom.value.length;i++){
+				if(/[\u4e00-\u9fa5]/.test(dom.value[i])){
+					l += 2;
+				}else{
+					l++;
+				}
+				if(l > maxlength){
+					dom.value = dom.value.substr(0,i);
+					break;
+				}
+			}
+
+		};
 		function BuildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
-			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" maxlength="16" ></input>';
+			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_5"></td>';
-			tbody += '<td><input id = "dev" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';
+			tbody += '<td><input id = "dev" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_7"></td>';
 			tbody += '<td><input id = "sn" style ="width:24.5%" type = "text" onchange = "SetData(this)" ></input>';

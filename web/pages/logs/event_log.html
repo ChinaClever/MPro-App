@@ -128,7 +128,7 @@
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},800);
+		},2200);
 		function flash_html(par)
 		{
 			setTimeout(function(){
@@ -151,9 +151,11 @@
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
-			if(top.login_permit_ == 0){
+			if(top.login_permit_ == 1){
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+				$("input[name=del]").attr("disabled","disabled");
 			}else{
-				 $("input[name=del]").attr("disabled","disabled");
 			}
 		}
 		function saveArrayDataToExcel() {

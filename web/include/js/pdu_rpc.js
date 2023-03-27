@@ -4,12 +4,14 @@
  *      Author: Lzy
  */
 class JsonRpc {
+    static _errCnt = 0;
     static _instance = null;
+
     constructor() {
         this.rpcid = 0; 
         this.timeOut = 65; // HTTP最小超时时间 
         this.isSetting = false; // 是否在设置模式
-        this.root_map = new Map(); // 唯一的Map表，此表会存储所有的数据
+        this.root_map = this.rpc_map(); // 唯一的Map表，此表会存储所有的数据
         this.ws = this.socket_open(); // 自动建立连接
     }
 
@@ -21,6 +23,20 @@ class JsonRpc {
         return JsonRpc._instance
     }
 
+    rpc_map() {
+        var map = new Map();
+        //var sessionStorage = window.sessionStorage;
+        //var value = sessionStorage.getItem("root_map");
+        //if(value != null) {
+        //    let json = JSON.parse(value);
+        //    let arr = Object.entries(json);
+        //    map = new Map(arr);
+        //}   
+        
+        return map;
+    }
+
+
     // 自动生成URL
     rpc_url() {
         var protocol = "ws";        
@@ -31,26 +47,10 @@ class JsonRpc {
         return url;
     }
 
+    getRootMap() {
+        return this.root_map;
+    }
     
-    asyncSleep(delay) {
-        return new Promise((resolve) => setTimeout(resolve, delay));
-    }
-
-    // 异步延时
-    async sleep(ms) {
-        //var dateBegin = new Date().getTime();
-        await this.asyncSleep(ms);
-        //var res = this.timeFn(dateBegin); 
-        //console.log("After waiting" + res);
-    }
-
-    // 同步延时
-    delay(ms) {
-         var waitForMillisecond = ms;           
-         var endTime = new Date().getTime() + parseInt(waitForMillisecond, 10);
-         while(new Date().getTime() < endTime ) {;}     
-    }
-
     // 获取至少所需的连接时间
     getTimeOut() {
         return this.timeOut;
@@ -62,37 +62,44 @@ class JsonRpc {
     }
 
     static socket_close(evt) {
-        //alert('json rpc websocket close');
+        if(JsonRpc._errCnt++ > 10) alert('json rpc websocket close');
     }    
 
     static socket_error(evt) {
-        //alert('json rpc websocket error');
+        if(JsonRpc._errCnt++ > 10) alert('json rpc websocket error');
     }  
 
     // 打开Websocket
     socket_open() {        
         var url = this.rpc_url();
-        var ws = new WebSocket(url);
+        var ws = new WebSocket(url); JsonRpc._errCnt = 0;
         ws.onclose = function (evt) {JsonRpc.socket_close(evt);};    
         ws.onerror = function (evt) {JsonRpc.socket_error(evt);};   
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
         ws.onopen = function () {JsonRpc.socket_req();};
         return ws;
     }
+
+    static socket_reqSend(method, params) {
+        var obj = JsonRpc.build(); var map = obj.getRootMap();
+        var key = params[0]+'_'+params[1]+'_'+params[2]+'_'+params[3]+'_'+params[4];
+        if(!map.has(key)) obj.json_rpc_get(method, params);
+    }
     
     static socket_req(){
         var method = "pduMetaData"; 
-        var params = [0, 100, 0, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
+        var params = [0, 100, 0, 0, 0];        
+        JsonRpc.socket_reqSend(method, params);
+
         method = "pduReadParam"; 
         params = [0, 13, 10, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
+        JsonRpc.socket_reqSend(method, params);
         params = [0, 42, 3, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
+        JsonRpc.socket_reqSend(method, params);
         params = [0, 14, 1, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
+        JsonRpc.socket_reqSend(method, params);
         params = [0, 14, 3, 0, 0];
-        JsonRpc.build().json_rpc_get(method, params);
+        JsonRpc.socket_reqSend(method, params);
     }
 
     // WS套接字发送数据
@@ -100,7 +107,7 @@ class JsonRpc {
         var ret = true;
         if(this.ws.readyState == WebSocket.OPEN){
             this.ws.send(msg);
-        } else {
+        } else if(JsonRpc._errCnt++ > 2) {
              ret = false;
              this.ws.close();
              this.ws = this.socket_open(); 
@@ -124,13 +131,11 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
-       // if(this.isSetting == false) {
-            var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
-            this.root_map.set(key, value);
-            if(key == '0_100_0_0_0'){
-                sessionStorage.setItem(key,value);
-            }
-      //  } 
+        var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
+        this.root_map.set(key, value);
+        const json = Object.fromEntries(this.root_map);
+        //var sessionStorage = window.sessionStorage;
+        //sessionStorage.setItem('root_map',JSON.stringify(json));
 
         return true;
     }
@@ -163,74 +168,66 @@ class JsonRpc {
         }
         return res;        
     }
-
-   // 计算两个时间差 dateBegin 开始时间
-    timeFn(dateBegin) {
-        //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
-        var dateEnd = new Date();//获取当前时间
-        var dateDiff = dateEnd.getTime() - dateBegin;//时间差的毫秒数
-        var dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数
-        var leave1=dateDiff%(24*3600*1000)  //计算天数后剩余的毫秒数
-        var hours=Math.floor(leave1/(3600*1000))//计算出小时数
-        //计算相差分钟数
-        var leave2=leave1%(3600*1000)  //计算小时数后剩余的毫秒数
-        var minutes=Math.floor(leave2/(60*1000))//计算相差分钟数
-        //计算相差秒数
-        var leave3=leave2%(60*1000)   //计算分钟数后剩余的毫秒数
-        var seconds=Math.round(leave3/1000)
-        var leave4=leave3%(60*1000)   //计算分钟数后剩余的毫秒数
-        var minseconds=Math.round(leave4/1000)
-        var timeFn = "耗时："+dayDiff+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒"+minseconds+"毫秒";
-        return timeFn;
-    }
 } //JsonRpc.build();
 
 // PDU整个JSON包操作类
 class PduMetaData {
+    static m_addr = 0;
     constructor() {
-        this.addr = 0;
         this.rpc = JsonRpc.build();
-        // setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
+        this.addr = PduMetaData.m_addr;
+        setTimeout(function(){PduMetaData.meta_workDown()}, this.getTimeOut());
     }    
 
     // 设置地址，并更新JSON数据
     setAddr(addr) {
-        g_addr = addr;
         this.addr = addr;
-        this.meta_workDown();
+        PduMetaData.m_addr = addr;
+        PduMetaData.meta_workDown();
     }
 
     getAddr() {
         return this.addr;
     }
-
+ 
     getTimeOut() {
         return this.rpc.getTimeOut();
     }
 
-    // 获取JSON包中某个字段具体的值
-    // meta_value(type, fc, id=null) {
-    meta_value() {
-        var key = this.addr+'_'+100+'_'+0+'_'+0+'_'+0;
-        var res = this.rpc.json_rpc_value(key);
-        // if(res != null) {
-        //     res = res.get(type).get(fc);
-        //     if(id != null) res = res.get(id);
-        // }
+    // 获取JSON包中某个字段具体的值    
+    meta_value(addr=PduMetaData.m_addr) {
+        var key = parseInt(addr)+'_'+100+'_'+0+'_'+0+'_'+0;
+        var res = this.rpc.json_rpc_value(key);        
+        if(res == null) {
+            key = 0+'_'+100+'_'+0+'_'+0+'_'+0;
+            res = this.rpc.json_rpc_value(key);
+        }
+
         return res;
     }
 
+     meta_Json_value(type, fc, id=null) {
+        var res = meta_value();
+        if(res) {
+             res = res.get(type).get(fc);
+             if(id != null) res = res.get(id);
+        }
+        return res;
+    }
+
+
     // 启动定时刷新JSON包数据
-    meta_start() {
+    meta_start(addr=PduMetaData.m_addr) {
+        this.addr = addr;
         setInterval(function(){PduMetaData.meta_workDown()}, 1940+this.getTimeOut());  
     }
 
-    // 定时器响应函数
-   static meta_workDown(data) {
+     // 定时器响应函数
+    static meta_workDown(addr=PduMetaData.m_addr) {
         var method = "pduMetaData"; 
-        var params = [data.addr, 100, 0, 0, 0];
+        var params = [parseInt(addr), 100, 0, 0, 0];
         JsonRpc.build().json_rpc_get(method, params);
-   }
+   }  
 } //new PduMetaData().meta_start();
 
 
@@ -550,26 +547,6 @@ class PduCore extends PduCfgs {
     // 清除所有数据
     clear() {
         this.rpc.clear();
-    }
-
-    // 异步延时
-    msleep(ms) { 
-        this.rpc.sleep(ms);
-    }
-
-    // 同步延时
-    mdelay(ms) {
-        this.rpc.delay(ms);
-    }
-
-    // 计算耗时时间
-    timeCnt(dateBegin) {
-        this.rpc.timeFn(dateBegin);
-    }
-
-    demo() {
-        //this.mqttCfg();
-        this.swVersion();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 

@@ -32,4 +32,6 @@ private:
     JsonRpc_Client *mRpc;
 };
 
+#define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
+
 #endif // WEB_OBJ_H

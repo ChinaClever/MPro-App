@@ -37,14 +37,22 @@ QString Alarm_Log::getCurrentAlarm(int addr)
 void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
-    QString str = it.alarm_status +"; " + it.alarm_content;
+    //QString str = QString::number(++m_id) +"、";
+    QString str = it.alarm_status + it.alarm_content;
     if(str.size()) m_currentAlarm[it.addr] += str + "\n";
     //cout << m_currentAlarm[it.addr].size() << str;
+}
+
+void Alarm_Log::appendSlaveOffline(int addr)
+{
+    QString str = tr("副机%1离线").arg(addr);
+    m_currentAlarm[0] += str + "\n";
 }
 
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];
+    if(str.size()) str = str.split("\n").first();
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); }
 }
@@ -90,7 +98,7 @@ QString Alarm_Log::alarmStatus(uchar value)
     case AlarmCode::CrMax: state = tr("过高预警"); break;
     case AlarmCode::Max: state = tr("过高告警");  break;
     }
-    return state;
+    return state+"; ";
 }
 
 QString Alarm_Log::alarmContent(const sDataItem &index)
@@ -131,7 +139,7 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
                     .arg(suffix);
         } else qDebug() << Q_FUNC_INFO;
     }
-    return str;
+    return str+"; ";
 }
 
 
@@ -143,14 +151,14 @@ QString Alarm_Log::alarmRelay(uchar value)
     case sRelay::NoAlarm: str = tr("恢复"); break;
     case sRelay::LifeAlarm: str = tr("寿命"); break;
     }
-    return str;
+    return str+"; ";
 }
 
 QString Alarm_Log::alarmSensor(uchar value)
 {
     QString str = tr("恢复正常");
     if(value) str = tr("告警");
-    return str;
+    return str+"; ";
 }
 
 sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)

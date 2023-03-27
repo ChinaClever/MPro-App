@@ -53,6 +53,11 @@
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
+		if(top.login_permit_ == 1){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		}		
 		ParseData();
 		LangInit();
 		function LangInit(){
@@ -89,8 +94,9 @@
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
+			pdu_cfg.setAddr(addr);
 			setTimeout(function(){
-				PduMetaData.meta_workDown(pdu_cfg);
+				PduMetaData.meta_workDown();
 			},100);
 			setTimeout(function(){
 				$('.table-striped').html(BuildTable(group_num));

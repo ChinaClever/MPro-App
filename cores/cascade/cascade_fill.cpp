@@ -96,7 +96,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     size = obj->outputSize = data->output.size;
     for(int i=0; i< size; ++i) upObjData(i, data->output, obj->output[i]);
 
-    obj->envSize = data->env.size; if(!size) size = SENOR_NUM;
+    size = SENOR_NUM; //obj->envSize = data->env.size; if(!size) size = SENOR_NUM;
     for(int i=0; i< size; ++i) upEnvData(i, data->env, obj->env[i]);
 
     obj->dtc = data->dtc;

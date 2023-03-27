@@ -68,12 +68,19 @@
     <script src="./include/js/fn_public.js"></script>
     <script src="./include/js/public.min.js"></script>
     <script>
-		var pdu_metadata_ = new PduMetaData();
-		let pdu_cfg_ = PduCore.build();
+		//var pdu_metadata_ = new PduMetaData();
+		//https重定向到http
+		var target_protocol = "http:";
+		if(window.location.protocol != target_protocol){
+			window.location.href = target_protocol +
+			window.location.href.substring(window.location.protocol.length);
+		}
+
+		let pdu_obj = PduCore.build();
 		setTimeout(function(){
-			pdu_cfg_.debugCfg();
-			PduMetaData.meta_workDown(pdu_cfg_);
-		},1000);
+			pdu_obj.debugCfg();
+			PduMetaData.meta_workDown(0);
+		},200);
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
@@ -81,24 +88,24 @@
 		let phase = 1,loop = 2,output =3,envir = 6,num = 12,cfg = 13;
 		let vol_ = 2,cur_ = 3,pow_ = 4,tmp_=11,hum_ = 12;
 		let addr = 0;
-		let output_num;
-		let phase_num;
-		let loop_num;
-		let board_num;
+		let output_num = "";
+		let phase_num= "";
+		let loop_num= "";
+		let board_num= "";
 		var mark = 1;
-		let pdu_data;
+		let pdu_data= "";
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
 		let break_en = 0;
 		let rating = new Array();
-		let rating_ = new Array();
+		let rating_ = new Array();;
 		let out_vol = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
-		let name_cfg_ = new Array("angle_","ver_mode_","cascade_","serson_box_","ser_sel_","language_","mac_");
+		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
@@ -109,19 +116,23 @@
 		$('.vol_table').html(buildTableVol());ase_info_ = new Array();
 		let output_info_ = new Array();
 		function ParseData(){
-			let DataString = pdu_cfg_.meta_value();
+			let DataString = pdu_obj.meta_value();
 			pdu_data = JSON.parse(DataString);
 			if(pdu_data == null){
 				return;
 			}
+
+			//phase_num = pdu_obj.meta_Json_value(pdu_info, line_num);
+
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			output_num = pdu_data.pdu_info.output_num;
 			board_num = pdu_data.pdu_info.board_num;
 			language = pdu_data.pdu_info.language;
+
 			let k = 0;
 			if(mark){
-				pdu_cfg_.debugVolData(output_num);
+				pdu_obj.debugVolData(output_num);
 				mark = 0;
 			}
 			for(let i = 0;i<output_num;i++){
@@ -138,25 +149,29 @@
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = pdu_data.pdu_info.loop_array[i];
 			}
+			for(i= 0;i<10;i++){
+				cfg_data[i] = "";
+			}
 			cfg_data[6] = pdu_data.net_addr.mac;
-			break_en = pdu_cfg_.cfgValue(cfg,11,0,addr);
-			cfg_data[0] = pdu_cfg_.cfgValue(cfg,13,0,addr);
+			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
+			cfg_data[0] = pdu_obj.cfgValue(cfg,13,0,addr);
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
-			cfg_data[2] = 0;
-			cfg_data[3] = pdu_cfg_.cfgValue(cfg,9,0,addr);;
-			cfg_data[4] = pdu_cfg_.cfgValue(cfg,1,0,addr);
-			cfg_data[5] = pdu_cfg_.cfgValue(cfg,10,0,addr);
+			cfg_data[2] = pdu_data.uut_info.pdu_type;
+			//cfg_data[2] = pdu_obj.cfgValue(11,6,0,addr);
+			cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
+			cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
+			cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
 			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
-				unite_data[i][0] = pdu_cfg_.getValue(unite_name[i],unite_type[i],2,0);
-				unite_data[i][1] = pdu_cfg_.getValue(unite_name[i],unite_type[i],5,0);
-				unite_data[i][2] = pdu_cfg_.getValue(unite_name[i],unite_type[i],6,0);
-				unite_data[i][3] = pdu_cfg_.getValue(unite_name[i],unite_type[i],7,0);
-				unite_data[i][4] = pdu_cfg_.getValue(unite_name[i],unite_type[i],4,0);
+				unite_data[i][0] = pdu_obj.getValue(unite_name[i],unite_type[i],2,0);
+				unite_data[i][1] = pdu_obj.getValue(unite_name[i],unite_type[i],5,0);
+				unite_data[i][2] = pdu_obj.getValue(unite_name[i],unite_type[i],6,0);
+				unite_data[i][3] = pdu_obj.getValue(unite_name[i],unite_type[i],7,0);
+				unite_data[i][4] = pdu_obj.getValue(unite_name[i],unite_type[i],4,0);
 			}
 			for(i =1;i<=output_num;i++){
 				rating[i] = output_info_[i -1][6];
-				out_vol[i] = pdu_cfg_.getValue(output,vol_,1,i);
+				out_vol[i] = pdu_obj.getValue(output,vol_,1,i);
 				rating_[i] = rating[i];
 			}
 		}
@@ -168,7 +183,7 @@
 				ShowData();
 			}
 			m++;
-		},200);
+		},800);
 		let ph
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
@@ -203,30 +218,30 @@
 		}
 		function Set_(){
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg_);
+				PduMetaData.meta_workDown();
 			}, 100);
 			for(let i = 0;i<num_id.length;i ++){
 				if(num_id[i] != ""){
-					pdu_cfg_.setCfg(num,i,document.getElementById(num_id[i]).value,0,addr);
+					pdu_obj.setCfg(num,i,document.getElementById(num_id[i]).value,0,addr);
 				}
 			}
 			for(let i = 1;i < loop_num+1;i++){
-				pdu_cfg_.setCfg(num,7,document.getElementById("out_num"+i).value,(i -1),addr);
+				pdu_obj.setCfg(num,7,document.getElementById("out_num"+i).value,(i -1),addr);
 			}
 			for(let i = 1;i < board_num+1;i++){
-				pdu_cfg_.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
+				pdu_obj.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
 			}
-			pdu_cfg_.setCfg(cfg,17,document.getElementById("ver_mode_").value,addr);
-
-			pdu_cfg_.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
-			pdu_cfg_.setCfg(cfg,13,document.getElementById("angle_").value,0,addr);
-			pdu_cfg_.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
-			pdu_cfg_.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
-			pdu_cfg_.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
-			pdu_cfg_.setCfg(41,11,document.getElementById("mac_").value,0,addr);
+			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,addr);
+			pdu_obj.setCfg(11,6,document.getElementById("dev_type_").value,0,addr);
+			pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
+			pdu_obj.setCfg(cfg,13,document.getElementById("angle_").value,0,addr);
+			pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
+			pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
+			pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			pdu_obj.setCfg(41,11,document.getElementById("mac_").value,0,addr);
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg_);
-				pdu_cfg_.debugCfg();
+				PduMetaData.meta_workDown();
+				pdu_obj.debugCfg();
 			}, 100);
 		}
 		function AllSet(){
@@ -234,13 +249,13 @@
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
-						pdu_cfg_.setData(unite_name[i],unite_type[i],unite_sub[j],0,document.getElementById(unite_id[i]+j).value);
+						pdu_obj.setData(unite_name[i],unite_type[i],unite_sub[j],0,document.getElementById(unite_id[i]+j).value);
 					}
 				}
 			}
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg_);
-				pdu_cfg_.debugCfg();
+				PduMetaData.meta_workDown();
+				pdu_obj.debugCfg();
 			}, 100);
 		}
 		function cked(ckd){
@@ -319,17 +334,17 @@
 		}
 		function Set(){
 			for(let  i = 1;i<=output_num;i++){
-				pdu_cfg_.setData(output,cur_,2,i,rating_[i]);
+				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}
 			setTimeout(() => {
-				PduMetaData.meta_workDown(pdu_cfg_);
+				PduMetaData.meta_workDown();
 			}, 100);
 		}
 		setInterval(function(){
-			pdu_cfg_.debugVolData(output_num);
+			pdu_obj.debugVolData(output_num);
 			setTimeout(function(){
 				for(i =1;i<=output_num;i++){
-					out_vol[i] = pdu_cfg_.getValue(output,vol_,1,i);
+					out_vol[i] = pdu_obj.getValue(output,vol_,1,i);
 					document.getElementById("vol" + i).innerHTML = out_vol[i];
 				}
 			},500);
@@ -361,12 +376,12 @@
 			document.getElementById("output_cur_"+4).value =document.getElementById("output_cur_"+0).value;
 
 			/*voltage calculation*/
-			document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(2);
+		/*	document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(2);
 			document.getElementById("phase_vol_"+4).value =document.getElementById("phase_vol_"+0).value;
 
 			document.getElementById("loop_vol_"+3).value =parseFloat(parseFloat(document.getElementById("loop_vol_"+0).value)*0.8).toFixed(2);
 			document.getElementById("loop_vol_"+4).value =document.getElementById("loop_vol_"+0).value;
-
+		*/
 			AllSet();
 		}
 
@@ -376,7 +391,7 @@
 			thead = '<tr><td width ="25%" style="font-size:20px;">设置</td>\
 			<td width ="75%"></td></tr>';
 			tbody += '<tr><td>相位数:</td>';
-			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" onchange = "Set_()"  oninput = "if(value>3){value=3}"value="'+phase_num+'"></input>(1-单相,2-双火线,3-三相)</td></tr>';
+			tbody += '<td><input id = "phase_" style ="width:2.5%" type = "text" onchange = "Set_()"  oninput = "if(value>3){value=3} if(value<3){value=1}"value="'+phase_num+'"></input>(1-单相,3-三相)</td></tr>';
 			tbody += '<tr><td>执行板数量:</td>';
 			tbody += '<td><input id = "board_" style ="width:2.5%" type = "text" onchange = "Set_()" oninput = "if(value>4){value=4}"value="'+board_num+'"></input></td></tr>';
 			tbody += '<tr><td>每块执行板的输出位数量:</td>';
@@ -402,8 +417,8 @@
 			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_()"  value="'+cfg_data[0]+'">(0-0°垂直,1-90°水平,2-180°垂直(翻转),3-270°水平(翻转))</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
 			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_()"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
-			tbody += '<tr><td>IN/OUT口级联方式:</td>';
-			tbody += '<td><input id = "cascade_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'">(0-网络一带三,1-modbus)</input></td></tr>';
+			tbody += '<tr><td>设备类型:</td>';
+			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
 			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
 			tbody += '<tr><td>设备系列选择:</td>';

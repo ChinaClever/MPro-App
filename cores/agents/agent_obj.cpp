@@ -9,7 +9,7 @@ Agent_Obj::Agent_Obj(QObject *parent)
     : QObject{parent}
 {
     mMib = Agent_Mib::bulid();
-    QTimer::singleShot(1355,this,SLOT(initAgentSlot()));
+    QTimer::singleShot(1355,this,&Agent_Obj::initAgentSlot);
 }
 
 void Agent_Obj::initAgentSlot()

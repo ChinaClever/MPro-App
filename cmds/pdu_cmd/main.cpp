@@ -59,7 +59,7 @@ void pduDataSet(const QStringList &ls)
         uchar id = ls.at(k++).toInt();
         double value = ls.at(k++).toDouble();
         bool res = rpc->pduDataSet(addr, type, topic, sub, id, value);
-        qDebug() <<  res;
+        qDebug().noquote() <<  res;
     } else qCritical() << "pduDataSet Parameter error";
 }
 
@@ -72,7 +72,7 @@ void pduCfgGet(const QStringList &ls)
         uchar fc = ls.at(k++).toInt();
         uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
         uchar addr = 0; if(ls.size() > 3) addr = ls.at(k++).toInt();
-        qDebug() << rpc->pduCfgGet(type, fc, id, addr).toString();
+        qDebug().noquote() << rpc->pduCfgGet(type, fc, id, addr).toString();
     } else qCritical() << "pduCfgGet Parameter error";
 }
 
@@ -87,7 +87,7 @@ void pduCfgSet(const QStringList &ls)
         uchar id = 0; if(ls.size() > 3) id = ls.at(k++).toInt();
         uchar addr = 0; if(ls.size() > 4) addr = ls.at(k++).toInt();
         bool res = rpc->pduCfgSet(type, fc, value, id, addr);
-        qDebug() << res;
+        qDebug().noquote() << res;
     } else qCritical() << "pduCfgSet Parameter error";
 }
 
@@ -96,7 +96,7 @@ void pduMetaData(const QStringList &ls)
     SshRpcClient *rpc = SshRpcClient::bulid();
     uchar addr = 0; if(ls.size()) addr = ls.first().toInt();
     uchar dc = 0;if(ls.size()>1) dc = ls.at(1).toInt();
-    std::cout << rpc->pduMetaData(addr, dc).toStdString() << std::endl;
+    qDebug().noquote() << rpc->pduMetaData(addr, dc);
 }
 
 void pduLogFun(const QStringList &ls)
@@ -107,7 +107,7 @@ void pduLogFun(const QStringList &ls)
         uchar fc = ls.at(k++).toInt();
         uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
-        std::cout << rpc->pduLogFun(type, fc, id, sub).toStdString() << std::endl;
+        qDebug().noquote() << rpc->pduLogFun(type, fc, id, sub);
     } else qCritical() << "pduLogFun Parameter error";
 }
 
@@ -121,7 +121,7 @@ void pduLogHda(const QStringList &ls)
         uchar type = 0; if(ls.size() > 3) type = ls.at(k++).toInt();
         uchar topic = 0; if(ls.size() > 4) topic = ls.at(k++).toInt();
         uchar index = 0; if(ls.size() > 5) index = ls.at(k++).toInt();
-        std::cout << rpc->pduLogHda(start, end, addr, type, topic, index).toStdString() << std::endl;
+        qDebug().noquote() << rpc->pduLogHda(start, end, addr, type, topic, index);
     } else qCritical() << "pduLogHda Parameter error";
 }
 

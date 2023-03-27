@@ -11,7 +11,7 @@ Agent_Trap::Agent_Trap(QObject *parent)
     : Agent_Set{parent}
 {
     if((snmpCfg.enV3) || (snmpCfg.enV2)) {
-        QTimer::singleShot(6550,this,SLOT(initTrapSlot()));
+        QTimer::singleShot(6550,this,&Agent_Trap::initTrapSlot);
     }
 }
 
@@ -23,7 +23,7 @@ void Agent_Trap::initTrapSlot()
 
     timer = new QTimer(this);
     //timer->start(3000); ////==========
-    connect(timer, SIGNAL(timeout()), this, SLOT(timeoutDone()));
+    connect(timer, &QTimer::timeout, this, &Agent_Trap::timeoutDone);
 }
 
 void Agent_Trap::timeoutDone()

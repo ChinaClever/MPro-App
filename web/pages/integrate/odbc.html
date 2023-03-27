@@ -99,7 +99,13 @@
 			}
 			// document.getElementById("lang_14").value  = lang[14][language];
 		}
-
+		setInterval(function () {
+			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
+				document.getElementById("lang_23").innerHTML =	lang[27][language];
+			}else{
+				document.getElementById("lang_23").innerHTML =	lang[26][language];
+			}
+		 	}, 2500);
 		function read_data(){
 			for(var j = 1;j<11;j++){
 				odbc_data[j] = pdu_cfg.cfgValue(21,j,0,addr);
@@ -155,10 +161,10 @@
 				}
 			}
 			document.getElementById(red_name[red_name.length-1]).innerHTML = redis_data[10];
-			if(top.login_permit_ == 0){
-			}else{
+			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+			}else{
 			}
 		}
 		function flash_html(){
