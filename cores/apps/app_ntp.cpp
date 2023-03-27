@@ -18,8 +18,7 @@ void App_Ntp::ntp_initSlot()
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(ntpCfg.udp_en) mUdp->bind(123);
-    qDebug() << "tz_zone=" << cm::execute("printenv TZ");
-    //ntp_timeZone(ntpCfg.time_zone);
+    ntp_timeZone(ntpCfg.time_zone);
 #endif
 }
 
@@ -39,10 +38,11 @@ QString App_Ntp::ntp_time()
 void App_Ntp::ntp_timeZone(const QString &zone)
 {
     ntpCfg.time_zone = zone;
-    QString cmd = "echo 'export TZ=%1' ";
-    cmd += "> /usr/data/etc/tz_zone.sh";
+    system("rm -rf /usr/data/etc/localtime");
+    QString cmd = "ln -s /usr/share/zoneinfo/%1";
+    cmd += " /usr/data/etc/localtime";
     system(cmd.arg(zone).toLocal8Bit().data());
-    qDebug() << cmd.arg(zone) << getenv("TZ");
+    //qDebug() << cmd.arg(zone);
 }
 
 bool App_Ntp::ntp_time(const QString &t)
@@ -52,7 +52,7 @@ bool App_Ntp::ntp_time(const QString &t)
     QDateTime localDate = QDateTime::fromString("2022-09-01 10:40:00", "yyyy-MM-dd hh:mm:ss");
     if(dt > localDate) {
         QString qstrDateTime = QString("date -s '%1'").arg(t); qDebug() << qstrDateTime;
-        system(qstrDateTime.toStdString().c_str()); system("hwclock -w"); system("sync");
+        system(qstrDateTime.toStdString().c_str()); system("hwclock -w -u"); system("sync");
     }else ret = false;
     return ret;
 }
@@ -61,9 +61,8 @@ bool App_Ntp::ntpdate()
 {
     bool ret = true;
     if(ntpCfg.ntp_host.size()) {
-        QString zone = getenv("TZ");
         QString cmd = QString("ntpdate %1").arg(ntpCfg.ntp_host);
-        qDebug() << cmd << "TZ="+zone; system(cmd.toStdString().c_str());
+        qDebug() << cmd; system(cmd.toStdString().c_str());
     } else ret = false;
     return ret;
 }

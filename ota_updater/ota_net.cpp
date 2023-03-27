@@ -126,8 +126,8 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
             QString fn = it.path + it.file;
             QString cmd = "rm -f " + fn;
             system(cmd.toLocal8Bit());
-            cmd_updater(fn, 400); //cm::mdelay(10);
-            //system("sync"); system("reboot");
+            cmd_updater(fn, 400); cm::mdelay(1100);
+            system("sync"); system("reboot");
         }
     } clrbit(mOta->work, bit);
 }
