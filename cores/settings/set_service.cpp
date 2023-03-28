@@ -114,6 +114,7 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
     case 5: key = "to_"+QString::number(id); it->to[id] =v.toString();  break;
     case 6: key = "port";  it->port =v.toInt();  break;
     case 7: key = "ct";  it->ct =v.toInt();  break;
+    case 11: ret = App_Core::bulid()->smtp_testMail(); break;
     default: ret = false; cout << fc << v; break;
     }
 
