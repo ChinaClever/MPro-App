@@ -76,10 +76,20 @@
 		}else{
 			document.getElementById("lang_2").style.display="";
 		}
+		function hidden(){
+			//for(let i =1; i< 8; i++){
+			//	document.getElementById("lang_" + i).style.display = "none";	
+			//}
+			//document.getElementById("dev_sel").style.display = "none";
+			document.getElementsByClassName("page-cont")[0].style.display = "none";		
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+			}
 		}
 		ParseData();
 		LangInit();
@@ -122,6 +132,7 @@
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
+
 		}
 		$('.table-striped').html(BuildTable(group_num));
 		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));

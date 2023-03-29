@@ -44,7 +44,7 @@
 		let group_num = top.group_num_;
 		let addr = pdu_cfg.addr;
 		let language;
-		let group = 4,pow = 4;
+		let group = 4,pow = 4;dev_sel
 		var dev_name =new Array();
 		let lang = new Array();
 		let pdu_data;
@@ -57,7 +57,14 @@
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 		}else{
-		}		
+		}	
+		function hidden(){
+			//for(let i =1; i< 8; i++){
+			//	document.getElementById("lang_" + i).style.display = "none";	
+			//}
+			//document.getElementById("dev_sel").style.display = "none";
+			document.getElementsByClassName("page-cont")[0].style.display = "none";		
+		}
 		ParseData();
 		LangInit();
 		function LangInit(){
@@ -86,6 +93,11 @@
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
+
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+			}	
+			
 		}
 		$('.table-striped').html(BuildTable(group_num));
 		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
