@@ -71,6 +71,8 @@
 			let dual_num;
 			let dual_name = new Array();
 			var slave_num;
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
 			if(top.login_permit_ == 1){
 				document.getElementById("lang_2").style.display="none";
 				$("input").attr("disabled","disabled");
@@ -161,7 +163,8 @@
 			read_data();
 			function read_data() {
 				for (var i = 1; i < dual_num + 1; i++) {
-					dual_name[i] = dual_info_[i - 1][6];
+					//dual_name[i] = dual_info_[i - 1][6];
+					dual_name[i] = pdu_data.pdu_data.dual_item_list.name[i-1];
 				}
 			}
 			lang_init();

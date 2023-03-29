@@ -85,7 +85,7 @@
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
-			if(pdu_data.pdu_info.pdu_spec == 1){
+			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 2){
 				hidden();
 			}
 		}
