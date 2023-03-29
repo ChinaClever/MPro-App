@@ -10,7 +10,7 @@ sSmtpCfg App_Smtp::smtpCfg;
 App_Smtp::App_Smtp(QObject *parent)
     : App_Radius{parent}
 {
-
+    //QTimer::singleShot(5432,this,&App_Smtp::smtp_testMail);
 }
 
 void App_Smtp::smtp_sendMail(const QString &content, bool ok)
@@ -33,6 +33,13 @@ void App_Smtp::sendMail()
 {
     //if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
+
+    //cfg->port = 25;
+    //cfg->host = "smtp.qq.com";
+    //cfg->pwd = "hltwgrkymjcbbjcd";
+    //cfg->from ="luozhiyong131@qq.com";
+    //cfg->ct = 0; cfg->en = 1;
+    //cfg->to[0] = "517345026@qq.com";
 
     MimeMessage message;
     EmailAddress sender(cfg->from);
@@ -65,21 +72,25 @@ void App_Smtp::sendMail()
 
     SmtpClient smtp(cfg->host, cfg->port, ct);
     smtp.connectToHost();
-    if (!smtp.waitForReadyConnected()) {
+    if (!smtp.waitForReadyConnected(5000)) {
         cfg->lastErr += "Failed to connect to host!" + cfg->host;
+        smtp.quit(); return;
     }
 
     smtp.login(cfg->from, cfg->pwd);
-    if (!smtp.waitForAuthenticated()) {
+    if (!smtp.waitForAuthenticated(5000)) {
         smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
-        if (!smtp.waitForAuthenticated()) cfg->lastErr += " Failed to login!" + cfg->from;
+        //smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthLogin);
+        if (!smtp.waitForAuthenticated(5000)) cfg->lastErr += " Failed to login!" + cfg->from;
+        smtp.quit(); return;
     }
 
     smtp.sendMail(message);
-    if (!smtp.waitForMailSent()) {
+    if (!smtp.waitForMailSent(5000)) {
         cfg->lastErr += " Failed to send mail!";
     }
     smtp.quit();
+    cout << cfg->lastErr;
 }
 
 void App_Smtp::smtp_run()

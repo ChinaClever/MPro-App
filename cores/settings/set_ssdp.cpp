@@ -63,16 +63,20 @@ bool Set_Ssdp::checkInput(const sSdpIt &it)
 
 void Set_Ssdp::recvSwVersion()
 {
-    sSdpIt item; item.fc = 11;
+    sSdpIt item; item.fc = 11; QString str;
     item.ip = cm::dataPacket()->net.inet.ip;
     item.room = cm::masterDev()->cfg.uut.room;
     QString fmt = "sw_version:%1; date:%2; usr:%3; md5:%4; Outlet:";
+    //int devMode = cm::masterDev()->cfg.param.devMode;
+    //int addr =cm::masterDev()->cfg.param.cascadeAddr;
+    //if(devMode) if(addr) return;
 
     int num = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<=num; i++) {        
         int op = cm::devData(i)->cfg.nums.boardNum;
         sVersions *ver = &(cm::devData(i)->cfg.vers);
-        QString str = fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
+        str = "addr:" + QString::number(i); //else str.clear();
+        str += fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
         for (int k = 0; k < op; ++k) {
             str += QString::number(ver->opVers[k]/10.0, 'f',1) +"; ";
         }

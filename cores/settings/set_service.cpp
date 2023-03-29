@@ -114,6 +114,7 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
     case 5: key = "to_"+QString::number(id); it->to[id] =v.toString();  break;
     case 6: key = "port";  it->port =v.toInt();  break;
     case 7: key = "ct";  it->ct =v.toInt();  break;
+    case 11: ret = App_Core::bulid()->smtp_testMail(); break;
     default: ret = false; cout << fc << v; break;
     }
 
@@ -134,7 +135,7 @@ QVariant Set_Service::sshCfg(int fc)
     case 3: ret = cfg->usr; break;
     case 4: ret = cfg->pwd; break;
     default: cout << fc; break;
-    } //cout << fc << ret;
+    }
 
     return ret;
 }
@@ -153,7 +154,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     case 4: key = "pwd";  cfg->pwd = v.toString();  break;
     case 5: ret = obj->ssh_save(); break;
     default: ret = false; cout << fc; break;
-    }
+    } cout << fc << v;
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();

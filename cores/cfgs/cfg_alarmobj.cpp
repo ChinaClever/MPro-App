@@ -29,8 +29,8 @@ bool Cfg_AlarmObj::saveAlarms()
     if(ret) {
         QByteArray array = toDataStream();
         file.write(qCompress(array));
-    } file.close(); isRun = false;
-    system("sync");
+    }  Alarm_Updater::bulid()->upDevAlarm(0);
+    file.close(); system("sync");isRun = false;
     return ret;
 }
 

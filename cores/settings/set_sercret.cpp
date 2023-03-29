@@ -102,7 +102,7 @@ bool Set_Sercret::setWhiteList(uchar fc, const QVariant &v)
     case 9: key = "ip4";  cfg->ip[3] = v.toString(); break;
     case 10: App_Core::bulid()->internetFirewall(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
-    }
+    } //cout << fc << key << v;
 
     if(ret) {
         Cfg_Com *cfg = Cfg_Com::bulid();

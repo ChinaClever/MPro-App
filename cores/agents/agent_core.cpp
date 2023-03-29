@@ -93,7 +93,7 @@ void Agent_Core::set_snmpdV3()
 
         fmd = "sed -i '58ccreateUser %1 MD5 \"%2\" %4 \"%3\"' " + fn;
         str = fmd.arg(mCfg->usr, mCfg->pwd, mCfg->key, mCfg->encrypt?"AES":"DES");
-        system(str.arg(mCfg->usr).toStdString().c_str());
+        system(str.toStdString().c_str());
     } else {
         for(int i=57; i<63; ++i) {
             QString str = "sed -i '%1c ' " + fn;

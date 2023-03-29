@@ -44,12 +44,13 @@ void App_Core::initVer()
         qstrcpy(ver->md5, it.md5.toUtf8().data());
         qstrcpy(ver->usr, it.usr.toUtf8().data());
         qstrcpy(ver->dev, it.dev.toUtf8().data());
-        qstrcpy(ver->remark, it.remark.toUtf8().data());
         qstrcpy(ver->hwVersion, it.hw.toUtf8().data());
         qstrcpy(ver->serialNumber, it.sn.toUtf8().data());
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
+        qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark)-3);
+        //cout << sizeof(ver->remark) << it.remark << ver->remark;
     } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
 }
 

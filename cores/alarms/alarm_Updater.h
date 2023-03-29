@@ -9,6 +9,7 @@ class Alarm_Updater : public QObject
     explicit Alarm_Updater(QObject *parent = nullptr);
 public:
     static Alarm_Updater *bulid(QObject *parent = nullptr);
+    bool upDevAlarm(uchar addr);
 
 signals:
     void alarmSig(const sDataItem &index, uchar value);
@@ -34,7 +35,6 @@ private:
 
     bool upSensorStatus(sDataItem &index, uint *ptr, int id=0);
     bool upSensors(sDataItem &index, sEnvData &it);
-    bool upDevAlarm(uchar addr);
 
 private:
     int mCrAlarm=0;
