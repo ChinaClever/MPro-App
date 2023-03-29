@@ -183,7 +183,22 @@
 				}, 100);
 				ipt.blur();
 			}
+			//限制中文15字，英文30字
+			var checklength = function(dom,maxlength){
+				var l = 0;
+				for(var i=0; i< dom.value.length;i++){
+					if(/[\u4e00-\u9fa5]/.test(dom.value[i])){
+						l += 2;
+					}else{
+						l++;
+					}
+					if(l > maxlength){
+						dom.value = dom.value.substr(0,i);
+						break;
+					}
+				}
 
+			};
 			function flash_html(par) {
 				setTimeout(function () {
 					par.parentNode.parentNode.parentNode.remove();
@@ -213,7 +228,7 @@
 					tbody += '<tr id = "tr' + i + '">';
 					tbody += '<td id = "a' + i + '">' + (parseInt(i) + 1) + '</td>';
 					tbody += '<td ></td>';
-					tbody += '<td><input type = "text" onchange ="setdata(this)" maxlength="14" class = "input" id = "b' + i + '" value = "' + dual_name[i + 1] + '"></input></td>';
+					tbody += '<td><input type = "text" onchange ="setdata(this)" onkeyup = "checklength(this,30)" class = "input" id = "b' + i + '" value = "' + dual_name[i + 1] + '"></input></td>';
 					tbody += '</tr>';
 				}
 

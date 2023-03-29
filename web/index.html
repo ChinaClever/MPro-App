@@ -193,7 +193,7 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-			if(pdu_data.status ==2 || pdu_data.status ==5){
+			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 			}else{
 				alert("当前无告警日志！");
