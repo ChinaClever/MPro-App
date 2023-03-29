@@ -60,10 +60,17 @@
 		}else{
 			document.getElementById("lang_2").style.display="";
 		}
+		function hidden(){
+			document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+			}
 		}
 		ParseData();
 		LangInit();

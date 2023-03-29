@@ -86,6 +86,10 @@
 			}else{
 				document.getElementById("lang_2").style.display="";
 			}
+			function hidden(){
+				document.getElementsByClassName("page-cont")[0].style.display = "none";	
+				document.getElementsByClassName("section-cont")[0].style.display = "none";	
+			}
 			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
@@ -94,6 +98,9 @@
 				slave_num = pdu_data.pdu_info.slave_num;
 				language = pdu_data.pdu_info.language;
 				dev_dis = pdu_data.pdu_info.cascade_addr;
+				if(pdu_data.pdu_info.pdu_spec == 1){
+					hidden();
+				}
 				let k = 0;
 				for(let i = 0;i<dual_num;i++){
 					dual_info_[i] = new Array();

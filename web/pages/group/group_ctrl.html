@@ -80,11 +80,17 @@
 			}else{
 				document.getElementById("lang_2").style.display="";
 			}
+			function hidden(){
+				document.getElementsByClassName("page-cont")[0].style.display = "none";		
+			}
 			pdu_cfg.OutInGroup();
 			function ParseData(){
 				let DataString = pdu_cfg.meta_value();
 				pdu_data = JSON.parse(DataString);
 				language = pdu_data.pdu_info.language;
+				if(pdu_data.pdu_info.pdu_spec == 1){
+					hidden();
+				}
 			}
 			function ReadData() {
 				for (var i = 1; i < group_num + 1; i++) {

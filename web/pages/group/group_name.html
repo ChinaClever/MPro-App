@@ -64,6 +64,7 @@
 		let dev_name =new Array();
 		let pdu_data;
 		let addr = pdu_cfg.addr;
+
 		pdu_cfg.OutInGroup();
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
@@ -72,11 +73,24 @@
 		}else{
 			document.getElementById("lang_2").style.display="";
 		}
+		function hidden(){
+			document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+			document.getElementsByClassName("section")[0].style.display = "none";	
+			document.getElementsByClassName("grid-row")[0].style.display = "none";	
+			document.getElementsByClassName("panel-heading")[0].style.display = "none";
+			document.getElementsByClassName("panel")[0].style.display = "none";
+			document.getElementsByClassName("fa-lg")[0].style.display = "none";	
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 			let k = 0;
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+			}
+
 		}
 		function ReadData(){
 			for (var i = 1; i < group_num + 1; i++) {
@@ -112,6 +126,7 @@
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
+
 		}
 		function LangFun_(){
 			for(let j = 4;j<7;j++){

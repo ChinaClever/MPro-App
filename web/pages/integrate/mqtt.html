@@ -165,7 +165,7 @@
 		}
 		function Set(){
 			var sel =0;
-			if(confirm("请确认是否生效当前设置。")){
+			if(confirm("MQTT开启或禁用后需要重启才能生效,请确认是否生效当前设置!")){
 				pdu_cfg.setCfg(19,20,ipt.value,0,addr);
 			}else{}
 		}

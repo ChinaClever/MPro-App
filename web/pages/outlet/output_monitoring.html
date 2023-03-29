@@ -55,10 +55,22 @@
 			$("select").attr("disabled","disabled");
 		}else{
 		}
+		function hidden(){
+			document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+			//document.getElementsByClassName("section")[0].style.display = "none";	
+			//document.getElementsByClassName("grid-row")[0].style.display = "none";	
+			//document.getElementsByClassName("panel-heading")[0].style.display = "none";
+			//document.getElementsByClassName("panel")[0].style.display = "none";
+			//document.getElementsByClassName("fa-lg")[0].style.display = "none";
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);			
 			if(pdu_data) language = pdu_data.pdu_info.language;
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+			}
 		}
 		ParseData();
 		LangInit();
@@ -94,6 +106,7 @@
 				document.getElementById("dev_sel").style.display="";
 			}
 			document.getElementById("ms").value = addr;
+	
 		}
 		$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
