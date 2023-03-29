@@ -9,7 +9,7 @@
 Rpc_Method::Rpc_Method(QObject *parent)
     : QObject{parent}
 {
-    setTxType(DTxType::TxRpc);
+    //setTxType(DTxType::TxRpc);
 }
 
 Rpc_Method *Rpc_Method::bulid(QObject *parent)
@@ -50,19 +50,19 @@ double Rpc_Method::pduDataGet(int addr,  int type, int topic, int sub, int id)
     return mIt.value / cm::decimal(mIt);
 }
 
-int Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value)
+int Rpc_Method::pduDataSet(int addr,  int type, int topic, int sub, int id, double value, int txType)
 {
     sDataItem it; it.addr = addr; it.type = type;
     it.topic = topic; it.subtopic = sub; it.id = id; it.rw = 1;
-    it.value = value * cm::decimal(it); it.txType = mTxType;
+    it.value = value * cm::decimal(it); it.txType = txType;
     //cout << addr << type << topic << sub << id << it.value << it.value * cm::decimal(it);
     return Set_Core::bulid()->setting(it);
 }
 
-int Rpc_Method::pduCfgSet(int type, int fc, const QVariant &value, int id, int addr)
+int Rpc_Method::pduCfgSet(int type, int fc, const QVariant &value, int id, int addr, int txType)
 {
     sCfgItem it; it.addr = addr; it.type = type;
-    it.txType = mTxType; it.fc = fc; it.id = id;
+    it.txType = txType; it.fc = fc; it.id = id;
     return Set_Core::bulid()->setCfg(it, value);
 }
 

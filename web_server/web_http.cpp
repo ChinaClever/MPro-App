@@ -129,8 +129,8 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mgr_download_file(c , hm , "/index.html/cfg_backup.zip");
         }else if(mg_http_match_uri(hm, "/index.html/diagnosis.zip")){
             mgr_download_file(c , hm , "/index.html/diagnosis.zip");
-        }else if(mg_http_match_uri(hm, "/index.html/modbus.docx")){
-            mgr_download_file(c , hm , "/index.html/modbus.docx");
+        }else if(mg_http_match_uri(hm, "/index.html/modbus.xlsx")){
+            mgr_download_file(c , hm , "/index.html/modbus.xlsx");
         }else if(mg_http_match_uri(hm, "/index.html/snmp.mib")){
             mgr_download_file(c , hm , "/index.html/snmp.mib");
         }else if(mg_http_match_uri(hm, "/upload")){
@@ -220,8 +220,8 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
         mg_http_serve_file(c , hm , Web_Obj::bulid()->backup(1).toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/diagnosis.zip" , path)){
         mg_http_serve_file(c , hm , Web_Obj::bulid()->diag().toLatin1().data() , &opts);
-    }else if(0 == strcmp("/index.html/modbus.docx" , path)){
-        mg_http_serve_file(c , hm , "/usr/data/clever/doc/modbus.docx" , &opts);
+    }else if(0 == strcmp("/index.html/modbus.xlsx" , path)){
+        mg_http_serve_file(c , hm , "/usr/data/clever/doc/modbus.xlsx" , &opts);
     }else if(0 == strcmp("/index.html/snmp.mib" , path)){
         opts.mime_types = "mib=a/b,txt=c/d";
         mg_http_serve_file(c , hm , "/usr/data/clever/doc/snmp.mib" , &opts);

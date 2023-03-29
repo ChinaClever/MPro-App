@@ -489,6 +489,7 @@ void JQHttpServer::Session::replyFile(const QString &filePath, const int &httpSt
         return;
     }
 
+    file->seek(0);
     replyBodySize_ = file->size();
 
     const auto &&data = replyFileFormat
