@@ -301,8 +301,10 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
         //loopEnd.append(it.nums.loopEnds[i]);
         //loopStart.append(it.nums.loopStarts[i]);
 
-        if(i) start += it.nums.loopEachNum[i-1];
-        end += it.nums.loopEachNum[i];
+        if(it.param.devSpec > 1) {
+            if(i) start += it.nums.loopEachNum[i-1];
+            end += it.nums.loopEachNum[i];
+        } else start = end = 0;
         loopEnd.append(end);
         loopStart.append(start);
     }

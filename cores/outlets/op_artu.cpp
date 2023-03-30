@@ -24,9 +24,11 @@ bool OP_ARtu::loop_recvPacket(const QByteArray &array, sOpIt *it)
         ptr = toShort(ptr, op, it->vol);
         ptr = toShort(ptr, op, it->cur);
         ptr = toShort(ptr, op, it->pow);
+        ptr = toOutputEle(ptr, op, it->ele);
         ushort sw = *ptr++; // 开关状态 1表示开，0表示关
-        for(int i=0; i<op; ++i)  it->sw[i] = (sw >> (7-i)) & 1;
+        for(int i=0; i<op; ++i)  it->sw[i] = (sw >> (op-i)) & 1;
         it->version = *ptr++; it->type = 1;
+        //cout << sw << *ptr++ << *ptr++;
 
         for(int i=0; i<op; ++i) {
             it->activePow[i] = it->vol[i] * it->cur[i] / 100.0;
@@ -74,11 +76,11 @@ bool OP_ARtu::loop_readData()
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA9, 0xB9, 0x01};
     cmd[2] = addr; for(int i=0; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd));
-    if((recv.size() == 61) && (recv.at(2) == addr)) {
+    QByteArray recv = transmit(cmd, sizeof(cmd)); //cout << recv.size();
+    if((recv.size() >= 61) && (recv.at(2) == addr)) {
         res = loop_recvPacket(recv, mOpData);
         if(res) loop_fillData();
-    } cout << res;
+    } else cout << recv.size();
 
     return loop_setEndisable(res, mOpData->ens[0]);
 }

@@ -10,7 +10,8 @@ public:
 
 protected:
     void loopData(int id, int start, int end);
-    void lineData(int id, int start, int end);    
+    void lineData(int id, int start, int end);
+    void loopBreaker(int id);
 
     uint calPf(int id, sObjData &obj);
     uint summation(const uint *ptr, int start, int end);

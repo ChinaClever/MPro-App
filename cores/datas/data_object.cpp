@@ -12,9 +12,9 @@ Data_Object::Data_Object()
 
 uint Data_Object::summation(const uint *ptr, const QList<int> &ls)
 {
-     uint ret = 0;
-     foreach(auto i, ls) ret += ptr[i];
-     return ret;
+    uint ret = 0;
+    foreach(auto i, ls) ret += ptr[i];
+    return ret;
 }
 
 uint Data_Object::summation(const uint *ptr, int start, int end)
@@ -36,16 +36,16 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 
 uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
 {
-     QList<uint> list;  uint ret = 0;
-     foreach(auto i, ls) if(ptr[i]) list << ptr[i];
-     if(list.size()) {
-         std::sort(list.begin(), list.end());
-         int k = (list.size() + 1) / 2;
-         if(k < list.size()) ret = list.at(k);
-         else ret = list.last();
-     } if(ret < 50*COM_RATE_VOL) ret = 0;
+    QList<uint> list;  uint ret = 0;
+    foreach(auto i, ls) if(ptr[i]) list << ptr[i];
+    if(list.size()) {
+        std::sort(list.begin(), list.end());
+        int k = (list.size() + 1) / 2;
+        if(k < list.size()) ret = list.at(k);
+        else ret = list.last();
+    } if(ret < 50*COM_RATE_VOL) ret = 0;
 
-     return ret;
+    return ret;
 }
 uint Data_Object::averageValue(const uint *ptr, int start, int end)
 {   
@@ -102,6 +102,14 @@ void Data_Object::loopData(int id, int start, int end)
     uint *ptr = mDev->output.vol.value; uint sw = 0;
     if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
     for(int i=start; i<end; ++i) if(ptr[i] > 50 *COM_RATE_VOL) sw = 1;
+    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
+}
+
+void Data_Object::loopBreaker(int id)
+{
+    uint sw = 0; mDev->cfg.nums.loopEachNum[id] = 0;
+    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
+    if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;
     if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
 }
 

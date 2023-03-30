@@ -208,11 +208,12 @@ void OP_Object::loop_fillData()
     sOpIt *it = mOpData; //mDev->dtc.fault = 0;
     if(mDev->dtc.fault) mDev->dtc.fault -= 1;
     for(int i=0; i<it->size; ++i) {
-        volFaultCheck(k, i);
+        if(it->vol[i] < 50*COM_RATE_VOL) it->vol[i] = 0;
+        volFaultCheck(k, i);        
         curFaultCheck(k, i);
         powFaultCheck(k, i);
-        eleFaultCheck(k, i);        
-        dev->loop.relay.sw[k+i] = it->sw[i];
+        eleFaultCheck(k, i);                
+        //dev->loop.relay.sw[k+i] = it->sw[i];
         //relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }
 

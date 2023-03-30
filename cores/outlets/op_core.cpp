@@ -9,7 +9,6 @@ OP_Core::OP_Core(QObject *parent)
     : OP_ZRtu{parent}
 {
     qint32 baudRate = QSerialPort::Baud19200;
-    //qint32 baudRate = QSerialPort::Baud9600;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     bool ret = openSerial("/dev/ttyUSB0", baudRate);
 #else
