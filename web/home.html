@@ -351,7 +351,7 @@
 		let lang = new Array(36);
 		let dev_name = new Array();
 		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
-		let stat_ = new Array("", "");
+		let stat_ = new Array("", "", "");
 		let serial_ = new Array("D", "A", "B", "C", "D");
 		let Sensor_state = new Array("NA", "", "");
 		let Sensor_state_ = new Array("NA", "", "");
@@ -361,6 +361,7 @@
 		let pdu_data;
 		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
+		let loop_arr1 = ["apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele"];
 		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
 		let sensor_id = [0,0,1,1,0,1,0,0];
@@ -397,13 +398,24 @@
 				loop_info[i] = new Array();
 				loop_info[i][0] = "C" + (i + 1);
 				let j = 1;
-				for(let key of loop_arr){
-					if(j == 2){
-						loop_info[i][j] = loop_se[i];
-					}else{
-						loop_info[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+				if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
+					for(let key of loop_arr){
+						if(j == 2){
+							loop_info[i][j] = loop_se[i];
+						}else{
+							loop_info[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+						}
+						j ++;
 					}
-					j ++;
+				}else{
+					for(let key of loop_arr1){
+						if(j == 1){
+							loop_info[i][j] = loop_se[i];
+						}else{
+							loop_info[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+						}
+						j ++;
+					}
 				}
 			}
 			k = 0;
@@ -438,9 +450,9 @@
 			top.addr_ = parseInt(sel.value);
 			pdu_cfg.addr = parseInt(sel.value);
 			pdu_cfg.setAddr(pdu_cfg.addr);
-			//setTimeout(function(){
-			//	PduMetaData.meta_workDown(top.addr_);
-			//},100);
+			setTimeout(function(){
+				PduMetaData.meta_workDown(top.addr_);
+			},100);
 			setTimeout(function(){
 				ParseData();
 				ShowData();
@@ -507,11 +519,17 @@
 			Sensor_state[2] = lang[41][language];
 			stat_[0] = lang[42][language];
 			stat_[1] = lang[43][language];
+			stat_[2] = "-";
 		}
 		function LangFun() {
 			for (var i = 1; i < 36; i++) {
 				if ((i != 6 && i < 29) || i > 34) {
-					document.getElementById("lang_" + i).innerHTML = lang[i][language];
+					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){
+						continue;
+					}else{
+						document.getElementById("lang_" + i).innerHTML = lang[i][language];
+					}
+
 				}
 			}
 			document.getElementById("ms").value = top.addr_;
@@ -591,7 +609,8 @@
 				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
 			}
 			for (let i = 0; i < loop_num; i++) {
-				for (j = 0; j < 8; j++) {
+				if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
+					for (j = 0; j < 8; j++) {
 					if (j > 2 && j != 5 && j != 7) {
 						if (j == 6) {
 							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit[j];
@@ -607,7 +626,27 @@
 							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = loop_info[i][j];
 						}
 					}
+				}					
+				}else{
+					for (j = 0; j < 7; j++) {
+					if (j > 1 && j != 4 && j != 6) {
+						if (j == 5) {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit[j];
+						} else {
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit[j];
+						}
+					} else if (j == 4 || j == 6) {
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit[j];
+					} else {
+						//if (j == 1) {
+					//		document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i][j]];
+					//	} else {
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = loop_info[i][j];
+					//	}
+					}
 				}
+				}
+
 			}
 			for (let i = 0; i < head.length; i++) {
 				if (i < 4) {//insert
@@ -647,6 +686,9 @@
 				}
 			}
 			for(let i = 0;i < loop_num;i++){
+				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){
+					break;
+				}
 				if(pdu_data.pdu_data.loop_item_list.breaker[i] == 0){
 					document.getElementById('dat' + (17 + 8*i)).bgColor = 'red';
 				}else{
@@ -702,6 +744,7 @@
 		}
 		function BuildTableLoop(obj) {
 			let tbody = '';
+			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 			tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 			tbody += '<tr><td class="spacing" id="lang_8"></td>';
 			tbody += '<td class="spacing" id="lang_9"></td>';
@@ -710,19 +753,32 @@
 			tbody += '<td class="spacing" id="lang_12"></td>';
 			tbody += '<td class="spacing" id="lang_13"></td>';
 			tbody += '<td class="spacing" id="lang_14"></td>';
-			tbody += '<td class="spacing" id="lang_15"></td></tr>';
-			for (let i = 0; i < obj; i++) {
-				if (i % 2 == 0) {
-					tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
-				} else {
-					tbody += '<tr id = "tr' + i + '">';
-				}
-				for (let j = 0; j < 8; j++) {
-					tbody += '<td class="spacing" id="dat' + (16 + i * 8 + j) + '"></td>';
-				}
-				tbody += '</tr>';
+			tbody += '<td class="spacing" id="lang_15"></td></tr>';			
+			}else{
+				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
+				tbody += '<tr><td class="spacing" id="lang_8"></td>';
+				//tbody += '<td class="spacing" id="lang_9"></td>';
+				tbody += '<td class="spacing" id="lang_10"></td>';
+				tbody += '<td class="spacing" id="lang_11"></td>';
+				tbody += '<td class="spacing" id="lang_12"></td>';
+				tbody += '<td class="spacing" id="lang_13"></td>';
+				tbody += '<td class="spacing" id="lang_14"></td>';
+				tbody += '<td class="spacing" id="lang_15"></td></tr>';
 			}
-			return tbody;
+				for (let i = 0; i < obj; i++) {
+					if (i % 2 == 0) {
+						tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
+					} else {
+						tbody += '<tr id = "tr' + i + '">';
+					}
+					for (let j = 0; j < 8; j++) {
+						tbody += '<td class="spacing" id="dat' + (16 + i * 8 + j) + '"></td>';
+					}
+					tbody += '</tr>';
+				}
+				return tbody;
+			
+			
 		}
 		function BuildTableSensor() {
 			let tbody = "";

@@ -58,19 +58,22 @@
 		function hidden(){
 			document.getElementsByClassName("page-cont")[0].style.display = "none";	
 			document.getElementsByClassName("section-cont")[0].style.display = "none";	
-			//document.getElementsByClassName("section")[0].style.display = "none";	
-			//document.getElementsByClassName("grid-row")[0].style.display = "none";	
-			//document.getElementsByClassName("panel-heading")[0].style.display = "none";
-			//document.getElementsByClassName("panel")[0].style.display = "none";
-			//document.getElementsByClassName("fa-lg")[0].style.display = "none";
 		}
+		//function B_series(){
+			//document.getElementById("c").style.display = "none";
+			//document.getElementById("lang_5").style.display = "none";
+		//}
+
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);			
 			if(pdu_data) language = pdu_data.pdu_info.language;
-			if(pdu_data.pdu_info.pdu_spec == 1){
+			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
 			}
+			//if(pdu_data.pdu_info.pdu_spec == 2){
+			//	B_series();
+			//}
 		}
 		ParseData();
 		LangInit();
@@ -100,6 +103,9 @@
 		}
 		function LangFun(){
 			for(let j = 1;j<10;j++){
+				if(pdu_data.pdu_info.pdu_spec == 2 && j == 5){
+					continue;
+				}
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if(pdu_data.pdu_info.slave_num != 0){
@@ -175,25 +181,49 @@
 		}
 		function BuildTable(rows) {
 			var thead = '',tbody = '';
+
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="8%" id="lang_3"></td>\
-					<td width ="32%" id="lang_4"></td>\
-					<td width ="12%" id="lang_5"></td>\
-					<td width ="12%" id="lang_6"></td>\
-					<td width ="12%" id="lang_7"></td>\
-					<td width ="12%" id="lang_8"></td>\
-					<td width ="12%" id="lang_9"></td>';
+					if(pdu_data.pdu_info.pdu_spec != 2){
+						thead += '<tr><td width ="8%" id="lang_3"></td>'
+						thead +='<td width ="32%" id="lang_4"></td>'					
+						thead +='<td width ="12%" id="lang_5"></td>'
+						thead +='<td width ="12%" id="lang_6"></td>'
+						thead +='<td width ="12%" id="lang_7"></td>'
+						thead +='<td width ="12%" id="lang_8"></td>'
+						thead +='<td width ="12%" id="lang_9"></td>';
+					}else{
+						thead += '<tr><td width ="8%" id="lang_3"></td>'
+						thead +='<td width ="32%" id="lang_4"></td>'					
+						thead +='<td width ="12%" id="lang_6"></td>'
+						thead +='<td width ="12%" id="lang_7"></td>'
+						thead +='<td width ="12%" id="lang_8"></td>'
+						thead +='<td width ="12%" id="lang_9"></td>';
+					}
+
 				}
-				tbody += '<tr id = "tr'+ i + '">';
-				tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
-				tbody += '<td id = "b'+ i + '">'+ pdu_data.pdu_data.output_item_list.name[i] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
-				tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
-				tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
-				tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
-				tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
-				tbody += '</tr>';
+				if(pdu_data.pdu_info.pdu_spec != 2){
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
+					tbody += '<td id = "b'+ i + '">'+ pdu_data.pdu_data.output_item_list.name[i] +'</td>';
+					tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
+					tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
+					tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
+					tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
+					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
+					tbody += '</tr>';					
+				}else{
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (i+1) + '</td>';
+					tbody += '<td id = "b'+ i + '">'+ pdu_data.pdu_data.output_item_list.name[i] +'</td>';
+					//tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
+					tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
+					tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
+					tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
+					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
+					tbody += '</tr>';
+				}
+
 			}
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

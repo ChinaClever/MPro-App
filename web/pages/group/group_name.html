@@ -87,7 +87,7 @@
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 			let k = 0;
-			if(pdu_data.pdu_info.pdu_spec == 1){
+			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
 			}
 
@@ -199,7 +199,22 @@
 			}, 100);
 			ipt.blur();
 		}
+		//限制中文15字，英文30字
+		var checklength = function(dom,maxlength){
+			var l = 0;
+			for(var i=0; i< dom.value.length;i++){
+				if(/[\u4e00-\u9fa5]/.test(dom.value[i])){
+					l += 2;
+				}else{
+					l++;
+				}
+				if(l > maxlength){
+					dom.value = dom.value.substr(0,i);
+					break;
+				}
+			}
 
+		};
 		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
@@ -233,7 +248,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i +'">'+group_data[i+1]+'</td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" maxlength="14" id = "c'+ i + '" value = "'+pdu_data.pdu_data.group_item_list.name[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" onkeyup = "checklength(this,30)" id = "c'+ i + '" value = "'+pdu_data.pdu_data.group_item_list.name[i]+'"></input></td>';
 				tbody += '</tr>';
 			}
 
