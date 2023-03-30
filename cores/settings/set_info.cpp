@@ -117,9 +117,11 @@ int Set_Info::devCfgNum(const sCfgItem &it)
     case 4: value = dev->boardNum; break;
     case 5: value = dev->slaveNum; break;
     case 6: value = dev->boards[it.id]; break;
-    case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1; break;
-    case 11: value = dev->loopStarts[it.id]+1;  break;
-    case 12: value = dev->loopEnds[it.id]+1;  break;
+    case 7: value = dev->loopEachNum[it.id]; break;
+
+    //case 7: value = dev->loopEnds[it.id] - dev->loopStarts[it.id]+1; break;
+    //case 11: value = dev->loopStarts[it.id]+1;  break;
+    //case 12: value = dev->loopEnds[it.id]+1;  break;
     default: cout << it.fc; break;
     } //cout << it.fc << it.id << value;
     return value;
@@ -134,24 +136,27 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     case DType::Loop: key = "loopNum"; dev->loopNum = value; break;
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
-    case 5: key = "slaveNum"; dev->slaveNum = value; break; case 7: break;
+    case 5: key = "slaveNum"; dev->slaveNum = value; break;
     case 6: key = "boards_" + QString::number(it.id); dev->boards[it.id] = value; break;
-    case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
-    case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value+1;  break;
+    case 7: key = "loopEachNum_" + QString::number(it.id); dev->loopEachNum[it.id] = value; break;
+    //case 11: key = "loopStarts_" + QString::number(it.id); dev->loopStarts[it.id] = value;  break;
+    //case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value+1;  break;
     default: ret = false; cout << it.fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
 
-    if(7 == it.fc) {
-        int start = 1; if(it.id) start = dev->loopEnds[it.id-1]+1;
-        key = "loopStarts_" + QString::number(it.id);
-        Cfg_Core::bulid()->devParamWrite(key, start, prefix);
-        dev->loopStarts[it.id] = start;
+//    if(7 == it.fc) {
+//        int start = 1; if(it.id) start = dev->loopEnds[it.id-1]+1;
+//        key = "loopStarts_" + QString::number(it.id);
+//        Cfg_Core::bulid()->devParamWrite(key, start, prefix);
+//        dev->loopStarts[it.id] = start;
 
-        int end = dev->loopEnds[it.id] = dev->loopStarts[it.id]+value-1;
-        key = "loopEnds_" + QString::number(it.id);
-        Cfg_Core::bulid()->devParamWrite(key, end, prefix);
-        //cout << it.id << "loopStarts_" << start << "loopEnds_" << end;
-    } else if(6 == it.fc) {
+//        int end = dev->loopEnds[it.id] = dev->loopStarts[it.id]+value-1;
+//        key = "loopEnds_" + QString::number(it.id);
+//        Cfg_Core::bulid()->devParamWrite(key, end, prefix);
+//        //cout << it.id << "loopStarts_" << start << "loopEnds_" << end;
+//    } else
+
+        if(6 == it.fc) {
         int num = 0; key = "outputNum";
         for(uint i=0; i<dev->boardNum; ++i) num += dev->boards[it.id];
         dev->outputNum = num; Cfg_Core::bulid()->devParamWrite(key, num, prefix);        

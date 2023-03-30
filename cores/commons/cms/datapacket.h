@@ -186,8 +186,9 @@ struct sDevNums
     uint loopNum; // 回路数量
     uint outputNum;   //　输出位数量
     uchar boards[DEV_NUM]; //　每块执行板的输出位数量
-    uchar loopEnds[LOOP_NUM]; //
-    uchar loopStarts[LOOP_NUM];
+    uchar loopEachNum[2*LOOP_NUM]; // 每个回路数量
+    //uchar loopEnds[LOOP_NUM]; //
+    //uchar loopStarts[LOOP_NUM];
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint reserve[20];

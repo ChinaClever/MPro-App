@@ -15,9 +15,14 @@ void Data_Loop::loopWork()
     int num = mDev->cfg.nums.boardNum;
     loopNum(); if(!num) return ;
     int size = mDev->cfg.nums.loopNum;
+    int start=0, end=0;
+
     for(int i=0; i<size; ++i) {
-        int start = mDev->cfg.nums.loopStarts[i]-1;
-        int end = mDev->cfg.nums.loopEnds[i];
+        //int start = mDev->cfg.nums.loopStarts[i]-1;
+        //int end = mDev->cfg.nums.loopEnds[i];
+
+        if(i) start += mDev->cfg.nums.loopEachNum[i-1];
+        end += mDev->cfg.nums.loopEachNum[i];
         loopData(i, start, end); //cout << start << end;
     }
 }
