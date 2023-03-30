@@ -78,7 +78,7 @@ bool OP_ARtu::loop_readData()
     if((recv.size() == 61) && (recv.at(2) == addr)) {
         res = loop_recvPacket(recv, mOpData);
         if(res) loop_fillData();
-    }
+    } cout << res;
 
     return loop_setEndisable(res, mOpData->ens[0]);
 }
