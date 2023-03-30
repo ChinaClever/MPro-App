@@ -39,10 +39,6 @@ static void initSystem()
     cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
-    //cmd = "ln -s /usr/data/clever/cfg/snmpd.conf ";
-    //cmd += "/usr/data/etc/snmp/snmpd.conf";
-    //system(cmd.toLocal8Bit().data());
-
     cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
     system(cmd.toLocal8Bit().data()); createDirectory(); system("sync");
@@ -80,9 +76,14 @@ static void start_init()
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); system("sync");
+
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
-    if(cnt < 5) initSystem();
+    if(cnt < 5) initSystem(); else {
+        system("mkdir -p /tmp/updater");
+        system("mkdir -p /tmp/download");
+        system("echo 3 > /proc/sys/vm/drop_caches");
+    }
 }
 
 int main(int argc, char *argv[])
