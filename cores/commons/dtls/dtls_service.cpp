@@ -45,6 +45,7 @@ Dtls_Service::Dtls_Service(QObject *parent) : QObject{parent}
     serverConfiguration = QSslConfiguration::defaultDtlsConfiguration();
     serverConfiguration.setPreSharedKeyIdentityHint("DTLS service");
     serverConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
+    serverConfiguration.setProtocol(QSsl::DtlsV1_2OrLater);
 }
 
 Dtls_Service::~Dtls_Service()
