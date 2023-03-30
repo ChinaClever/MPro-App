@@ -22,14 +22,17 @@ void Set_Alarm::setAlarmLog(sDataItem &unit)
     Odbc_Core::bulid()->threshold(unit);
 }
 
-QString Set_Alarm::opSrc(uchar addr)
+QString Set_Alarm::opSrc(uchar addr, uchar txType)
 {
     QString str;
+    if(DTxType::TxWeb == txType) str = QStringLiteral("[Web操作] ");
+    else str = QStringLiteral("[协议控制] ");
+
     if(addr == 0xff) {
-        str = QStringLiteral("所有级联设备");
+        str += QStringLiteral("所有级联设备");
     } if(addr) {
-        str = QStringLiteral("副机%1").arg(addr);
-    } else str = QStringLiteral("本机");
+        str += QStringLiteral("副机%1").arg(addr);
+    } else str += QStringLiteral("本机");
     return str+" ";
 }
 
@@ -72,7 +75,7 @@ void Set_Alarm::oplog(const sDataItem &it)
     sEventItem db;
     db.addr = it.addr;
     db.event_content = content;
-    db.event_type = QStringLiteral("告警设置:");
-    db.event_type += opSrc(it.addr);
+    db.event_type = opSrc(it.addr, it.txType);
+    db.event_type += QStringLiteral("告警设置;");
     Log_Core::bulid()->append(db);
 }

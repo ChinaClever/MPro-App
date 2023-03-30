@@ -489,6 +489,7 @@ void JQHttpServer::Session::replyFile(const QString &filePath, const int &httpSt
         return;
     }
 
+    file->seek(0);
     replyBodySize_ = file->size();
 
     const auto &&data = replyFileFormat
@@ -1127,7 +1128,7 @@ bool JQHttpServer::SslServerManage::listen(
     sslConfiguration_->setPeerVerifyDepth( 1 );
     sslConfiguration_->setLocalCertificate( sslCertificate );
     sslConfiguration_->setPrivateKey( sslKey );
-    sslConfiguration_->setProtocol(QSsl::AnyProtocol);  //TlsV1_1OrLater
+    sslConfiguration_->setProtocol(QSsl::TlsV1_1OrLater);
     sslConfiguration_->setCaCertificates( caCertificates );
 
     return this->initialize();

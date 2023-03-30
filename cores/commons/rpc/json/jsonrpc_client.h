@@ -18,11 +18,11 @@ public:
     void close();
 
     double pduDataGet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id);
-    int pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value);
+    int pduDataSet(uchar addr,  uchar type, uchar topic, uchar sub, uchar id, double value, int txType);
     QString pduLogHda(const QString &start, const QString &end, int addr, int type, int topic, int index);
 
     QVariant pduCfgGet(uchar type, uchar fc, uchar id=0, uchar addr=0);
-    int pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id=0, uchar addr=0);
+    int pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id=0, uchar addr=0, int txType=0);
     bool pduRelaysCtrl(int addr, int start, int num, uchar on);
     QString pduLogFun(uchar type, uchar fc, int id, int cnt=30);
     QString execute(const QString &cmd);

@@ -295,18 +295,24 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 
+    int start=1, end=0;
     QJsonArray loopEnd, loopStart;
     for(uint i=0; i<it.nums.loopNum; ++i) {
-        loopEnd.append(it.nums.loopEnds[i]);
-        loopStart.append(it.nums.loopStarts[i]);
+        //loopEnd.append(it.nums.loopEnds[i]);
+        //loopStart.append(it.nums.loopStarts[i]);
+
+        if(i) start += it.nums.loopEachNum[i-1];
+        end += it.nums.loopEachNum[i];
+        loopEnd.append(end);
+        loopStart.append(start);
     }
     obj.insert("loop_ends", loopEnd);
     obj.insert("loop_start", loopStart);
 
     QJsonArray loops;
     for(uint i=0; i<LOOP_NUM; ++i) {
-        int num = it.nums.loopEnds[i] - it.nums.loopStarts[i];
-        if(i<it.nums.loopNum) loops.append(num+1); else loops.append(0);
+        int num = it.nums.loopEachNum[i]; //it.nums.loopEnds[i] - it.nums.loopStarts[i];
+        if(i<it.nums.loopNum) loops.append(num); else loops.append(0);
     } obj.insert("loop_array", loops);
 
     QJsonArray ops;

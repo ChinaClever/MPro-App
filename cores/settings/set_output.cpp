@@ -41,7 +41,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
     sEventItem db;
     db.event_content = str;
-    db.event_type = opSrc(it.addr);
+    db.event_type = opSrc(it.addr, it.txType);
     db.event_type += QStringLiteral("继电器 控制");
     Log_Core::bulid()->append(db);
 }
@@ -174,7 +174,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 
     sEventItem db;
     db.event_content = str;
-    db.event_type = opSrc(it.addr);
+    db.event_type = opSrc(it.addr, it.txType);
     db.event_type += op;
     Log_Core::bulid()->append(db);
 }
