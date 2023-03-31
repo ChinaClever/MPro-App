@@ -195,7 +195,6 @@ bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
             Odbc_Core::bulid()->data(index);
         } else it.hum.alarm[i] = AlarmCode::Ok;
     }
-
     return ret;
 }
 
