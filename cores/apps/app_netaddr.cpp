@@ -79,7 +79,6 @@ void App_NetAddr::inet_setInterfaceSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_setIpV4(); //inet_saveCfg();
 
-    //net->inet6.en = 1; ////======
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
     cm::mdelay(1); inet_isRun = false;
