@@ -120,7 +120,7 @@
 			}
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(confirm("请确认是否开启此功能,该功能需要设备重启后才能生效!")){
 				for(let i = 1;i<white_list.length;i++){
 					if(white_list[i] == btn.id){
 						pdu_cfg.setCfg(33,i,btn.value,0,addr);
@@ -164,16 +164,16 @@
 			thead = '<tr><td width ="15%" id="lang_13" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td ><input id = "WlMac1" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td ><input id = "WlMac1" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0:0:0:0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "WlMac2" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "WlMac2" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0:0:0:0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "WlMac3" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "WlMac3" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0:0:0:0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><input id = "WlMac4" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "WlMac4" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0:0:0:0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

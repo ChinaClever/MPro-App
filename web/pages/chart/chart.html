@@ -153,7 +153,8 @@
 							topic_name_[0] = new Array(lang[15][language],lang[16][language],lang[17][language],lang[18][language]);
 							topic_name_[1] = new Array(lang[19][language],lang[20][language]);
 							topic_name_[2] = new Array(lang[16][language],lang[17][language],lang[18][language]);
-							topic_name_[3] = new Array(lang[17][language],lang[18][language]);
+							topic_name_[3] = new Array(lang[17][language]);
+							topic_name_[4] = new Array(lang[15][language],lang[16][language],lang[17][language]);
 							for(i = 0;i<phase_num;i++){
 								num_name_[0][i] = i+1;
 							}
@@ -193,10 +194,14 @@
 						function change(sel){
 							let i = parseInt(sel.value);
 							if(sel.id == get_arr[1]){
-								if(i<2){
+								if(i == 0){
 									$('.topicname').html(buildSel("topic",topic_name_[0].length,topic_name_[0]));
 									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
-								}else if(i == 2){
+								}else if(i == 1){
+									$('.topicname').html(buildSel("topic",topic_name_[4].length,topic_name_[4]));
+									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
+								}
+								 else if(i == 2){
 									$('.topicname').html(buildSel("topic",topic_name_[2].length,topic_name_[2]));
 									$('.num').html(buildSel("num",num_name_[i].length,num_name_[i]));
 								}else if(i < 5){
@@ -221,14 +226,25 @@
 								if(arr[1]<5){
 									arr[2] += 2;
 								}else{
-									arr[2] += 10;
-								}
+									arr[2] += 11;
+								}							
 								arr[3] += 1;
 								arr[1] += 1;
+								if(arr[1] == 3){
+									arr[2] += 1;
+								}else if(arr[1] == 4 ||arr[1] == 5){
+									arr[2] += 2;
+								}
 								addr = arr[0];
 								fc = arr[1]+';'+arr[2]+';'+arr[3]+';';
 								start = arr[4];
 								end = arr[5];
+								if(arr[2] < 6){
+									fc = fc.slice(0,5);
+								}else{
+									fc = fc.slice(0,6);
+								}
+								//fc = fc.replace(/;/g,"_");
 								pdu_log.log_hda(addr, fc, start, end);
 								alert("Is reading,please wait...");
 								read_data();
@@ -237,7 +253,7 @@
 						function read_data(){
 							let t1 = parseInt(document.getElementById("type").value);
 							let t2 = parseInt(document.getElementById("topic").value);
-							fc = fc.slice(0,5);
+
 							fc = fc.replace(/;/g,"_");
 							let time1 = setInterval(function(){
 								if(pdu_log.log_value(addr, fc) != "" || pdu_log.log_value(addr, fc) != null){
@@ -252,7 +268,7 @@
 									if(parseInt(log_str.logs[0][2]) ==1){
 										label_text  = inlet_arr[parseInt(log_str.logs[0][4]) -1] + lang[9][language]+topic_show[parseInt(log_str.logs[0][3])];
 									}else{
-										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][3])+topic_show[parseInt(log_str.logs[0][3])];
+										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][4])+topic_show[parseInt(log_str.logs[0][3])];
 									}
 									if(parseInt(log_str.logs[0][3]) == 5){
 										type_text = "bar";
@@ -260,7 +276,14 @@
 										type_text = "line";
 									}
 									if(t1 < 5){
-										uint_arr_ = y_val[t2];
+										if(t1 < 2){
+											uint_arr_ = y_val[t2];
+										}else if(t1 == 2){
+											uint_arr_ = y_val[t2+1];						
+										}else{
+											uint_arr_ = y_val[t2+2];
+										}
+										
 									}else{
 										uint_arr_ = y_val1[t2];
 									}
