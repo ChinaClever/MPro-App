@@ -12,7 +12,7 @@ protected:
 
 private:
     void dualWorkdown(int type);
-    void dualTgWork();
+    void dualTgWork(int id);
 
 
     int setDualSize(int id, int type);

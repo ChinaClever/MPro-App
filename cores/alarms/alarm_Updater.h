@@ -35,6 +35,7 @@ private:
 
     bool upSensorStatus(sDataItem &index, uint *ptr, int id=0);
     bool upSensors(sDataItem &index, sEnvData &it);
+    bool upCabData(sDataItem &index, sDevData *it);
 
 private:
     int mCrAlarm=0;
