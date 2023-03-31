@@ -11,14 +11,14 @@ Cascade_Unserialize::Cascade_Unserialize(QObject *parent) : Cascade_Updater{pare
 }
 
 
-void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
+void Cascade_Unserialize::unCabAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
 {
     unit.size = it.size;
     unit.en[id] = it.en;
     unit.hda[id] = it.hda;
     unit.min[id] = it.min;
     unit.max[id] = it.max;
-    unit.value[id] = it.value;
+    //unit.value[id] = it.value;
     unit.rated[id] = it.rated;
     unit.crMin[id] = it.crMin;
     unit.crMax[id] = it.crMax;
@@ -26,6 +26,13 @@ void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &
     unit.peakStamp[id] = it.peakStamp;
     unit.reserve[0][id] = it.reserve[0];
 }
+
+void Cascade_Unserialize::unAlarmUnit(uchar id, sAlarmUnit &unit, c_sAlarmUnit &it)
+{
+    unit.value[id] = it.value;
+    unCabAlarmUnit(id, unit, it);
+}
+
 
 void Cascade_Unserialize::unRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
 {
@@ -62,6 +69,18 @@ void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
     data.reactivePow[id] = obj.reactivePow;
     data.reserve[0][id] = obj.reserve[0];
 }
+
+void Cascade_Unserialize::unCabData(uchar id, sObjData &data, c_sObjData &obj)
+{
+    data.name[id][0] = 0;
+    qstrcpy(data.name[id], obj.name);
+    unCabAlarmUnit(id, data.vol, obj.vol);
+    unCabAlarmUnit(id, data.cur, obj.cur);
+    unCabAlarmUnit(id, data.pow, obj.pow);
+    unRelayUnit(id, data.relay, obj.relay);
+    data.hdaEle[id] = obj.hdaEle;
+}
+
 
 void Cascade_Unserialize::unEnvData(uchar id, sEnvData &data, c_sEnvData &obj)
 {
@@ -106,8 +125,16 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->group.vol.size = data->group.cur.size = 0;
 
     size = data->dual.size = obj->dualSize; //unDevSize(ds, size, data->dual);
-    for(int i=0; i< size; ++i) unObjData(i, data->dual, obj->dual[i]);
+    for(int i=0; i< size; ++i)  unCabData(i, data->dual, obj->dual[i]);
     data->dual.vol.size = data->dual.cur.size = 0;
+
+    size = data->cabLine.size = obj->cabLineSize; //unDevSize(ds, size, data->dual);
+    for(int i=0; i< size; ++i)  unCabData(i, data->cabLine, obj->cabLine[i]);
+    data->cabLine.vol.size = data->cabLine.cur.size = 0;
+
+    size = data->cabLoop.size = obj->cabLoopSize; //unDevSize(ds, size, data->dual);
+    for(int i=0; i< size; ++i)  unCabData(i, data->cabLoop, obj->cabLoop[i]);
+    data->cabLoop.vol.size = data->cabLoop.cur.size = 0;
 
     size = data->output.size = obj->outputSize; //unDevSize(ds, size, data->output);
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
@@ -120,6 +147,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->dtc = obj->dtc;
     data->rtu = obj->rtu;
     data->tg = obj->tg;
+    data->cabTg = obj->cabTg;
     data->lps = obj->lps;
     data->dc = obj->dc;
     data->hz = obj->hz;

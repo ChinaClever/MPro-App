@@ -11,9 +11,13 @@ protected:
     void dualWork();
 
 private:
-    void dualData(int id);
+    void dualWorkdown(int type);
+    void dualTgWork();
+
+
+    int setDualSize(int id, int type);
+    void dualData(int id, int type);
     void dualTiming(int id);
-    int setDualSize(int id);
     void disDualAlarm();
 };
 

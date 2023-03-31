@@ -187,8 +187,6 @@ struct sDevNums
     uint outputNum;   //　输出位数量
     uchar boards[DEV_NUM]; //　每块执行板的输出位数量
     uchar loopEachNum[2*LOOP_NUM]; // 每个回路数量
-    //uchar loopEnds[LOOP_NUM]; //
-    //uchar loopStarts[LOOP_NUM];
     uchar boardSpecs[LOOP_NUM];  // 各执行板的规格
     uchar group[GROUP_NUM][OUTPUT_NUM];
     uint reserve[20];
@@ -301,12 +299,17 @@ struct sDevData
     struct sObjData group; //组数据
     struct sObjData output; //位数据
     struct sObjData dual; //双电源
+    struct sObjData cabLoop; //机柜回路 ////======
+    struct sObjData cabLine; //机柜相 ////======
     struct sTgObjData tg; // 统计数据
+    struct sTgObjData cabTg; // 机柜统计
     struct sEnvData env; // 环境数据
     struct sRtuBoard rtu; // 执行板
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
     struct sProcState proc; // 进程状态
+    struct sObjData reserveObj[6]; ////======
+    struct sTgObjData reserveTg[3]; ////======
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位
@@ -396,7 +399,7 @@ struct sDataPacket
 };
 
 
-enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor};
+enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor, CabTg=11, CabLine, CabLoop};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};

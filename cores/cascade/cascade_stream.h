@@ -67,6 +67,12 @@ struct _sDevData
     uchar dualSize;
     _sObjData dual[OUTPUT_NUM]; //双电源数据
 
+    uchar cabLineSize;
+    _sObjData cabLine[LINE_NUM]; //机柜相
+
+    uchar cabLoopSize;
+    _sObjData cabLoop[LOOP_NUM]; //机柜回路
+
     uchar outputSize;
     _sObjData output[OUTPUT_NUM]; //位数据
 
@@ -74,7 +80,8 @@ struct _sDevData
     _sEnvData env[SENOR_NUM]; // 环境数据
     sFaultCode dtc; // 故障码
     sRtuBoard rtu; // 传输情况
-    sTgObjData tg; // 回路数据
+    sTgObjData tg; // 设备统计数据
+    sTgObjData cabTg; // 机柜统计数据
     sProcState proc;
 
     uchar lps; // 防雷开关
