@@ -29,7 +29,7 @@ void Ssdp_Obj::ssdpClose()
 bool Ssdp_Obj::ssdpBind(bool en)
 {
     if(isOpen) return isOpen; //else cout << "ssdp bind port";
-    //system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0"); cm::mdelay(1);
+    system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0"); cm::mdelay(1);
     auto ok = mSocket->bind(QHostAddress::AnyIPv4, mPort, QUdpSocket::ShareAddress);
     if(ok) ok = mSocket->joinMulticastGroup(mAddress);
     else cout << "ssdp bind port error" << mSocket->errorString();
