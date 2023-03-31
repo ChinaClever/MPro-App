@@ -186,7 +186,7 @@
 			for(i = 0;i<output_num;i++){
 				num_name_[4][i] = i+1;
 			}
-			for(i = 0;i<2;i++){
+			for(i = 0;i<4;i++){
 				num_name_[5][i] = i+1;
 			}
 		}
@@ -257,7 +257,7 @@
 		} 
 		function read_data(){
 			let time1 = setInterval(function(){
-				fc = fc.slice(0,5);
+				//fc = fc.slice(0,5);
 				fc = fc.replace(/;/g,"_");
 				log_str = window.JSON.parse(pdu_log.log_value(addr, fc));
 				if(log_str != ""){
@@ -331,6 +331,11 @@
 				fc = arr[1]+';'+arr[2]+';'+arr[3]+';';
 				start = arr[4];
 				end = arr[5];
+				if(arr[2] < 6){
+					fc = fc.slice(0,5);
+				}else{
+					fc = fc.slice(0,6);
+				}
 				pdu_log.log_hda(addr, fc, start, end);
 				read_data();
 			}else{}

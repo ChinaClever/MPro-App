@@ -225,6 +225,7 @@
 								}
 								if(arr[1]<5){
 									arr[2] += 2;
+								//	arr[3] += 1;
 								}else{
 									arr[2] += 11;
 								}							
@@ -244,7 +245,6 @@
 								}else{
 									fc = fc.slice(0,6);
 								}
-								//fc = fc.replace(/;/g,"_");
 								pdu_log.log_hda(addr, fc, start, end);
 								alert("Is reading,please wait...");
 								read_data();
@@ -267,8 +267,10 @@
 									}
 									if(parseInt(log_str.logs[0][2]) ==1){
 										label_text  = inlet_arr[parseInt(log_str.logs[0][4]) -1] + lang[9][language]+topic_show[parseInt(log_str.logs[0][3])];
+									}else if(parseInt(log_str.logs[0][2]) ==6){
+										label_text  = topic_show[parseInt(log_str.logs[0][3])] + parseInt(log_str.logs[0][4]);
 									}else{
-										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][4])+topic_show[parseInt(log_str.logs[0][3])];
+										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][4])+topic_show[parseInt(log_str.logs[0][3])];	
 									}
 									if(parseInt(log_str.logs[0][3]) == 5){
 										type_text = "bar";
