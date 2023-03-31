@@ -15,6 +15,7 @@ void Data_Loop::loopWork()
     int start=0, end=0; loopNum();
     int size = mDev->cfg.nums.loopNum;
     //int num = mDev->cfg.nums.boardNum; if(!num) return ;
+    for(int i=size; i<LOOP_NUM; ++i) mDev->cfg.nums.loopEachNum[i] = 0;
 
     for(int i=0; i<size; ++i) {
         if(mDev->cfg.param.devSpec > 1) {

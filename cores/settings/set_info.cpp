@@ -143,9 +143,12 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     //case 12: key = "loopEnds_" + QString::number(it.id); dev->loopEnds[it.id] = value+1;  break;
     default: ret = false; cout << it.fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
-    //cout << key << it.fc << it.id << value;
+    cout << key << it.fc << it.id << value;
 
-    if(6 == it.fc) {
+    if(4 == it.fc) {
+        int size = dev->loopNum;
+        for(int i=size; i<LOOP_NUM; ++i) dev->loopEachNum[i] = 0;
+    } else  if(6 == it.fc) {
         int num = 0; key = "outputNum";
         for(uint i=0; i<dev->boardNum; ++i) num += dev->boards[it.id];
         dev->outputNum = num; Cfg_Core::bulid()->devParamWrite(key, num, prefix);
