@@ -88,7 +88,8 @@ class JsonRpc {
     
     static socket_req(){
         var method = "pduMetaData"; 
-        var params = [0, 100, 0, 0, 0];        
+        var params = [0, 100, 0, 0, 0];   
+        //obj.json_rpc_get(method, params);     
         JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
