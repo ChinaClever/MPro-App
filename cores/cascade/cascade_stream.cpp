@@ -34,6 +34,12 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->dualSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->dual[i]);
 
+    size = ptr->cabLineSize; in << size;
+    for(int i=0; i<size; ++i) in << toByteArray(ptr->cabLine[i]);
+
+    size = ptr->cabLoopSize; in << size;
+    for(int i=0; i<size; ++i) in << toByteArray(ptr->cabLoop[i]);
+
     size = ptr->outputSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
@@ -41,6 +47,7 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
 
     in << toByteArray(ptr->tg);
+    in << toByteArray(ptr->cabTg);
     in << toByteArray(ptr->rtu);
     in << toByteArray(ptr->dtc);
     in << toByteArray(ptr->cfg);
@@ -72,6 +79,12 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     out >> size; ptr->dualSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->dual[i] = toStruct<c_sObjData>(v);}
 
+    out >> size; ptr->cabLineSize = size;
+    for(int i=0; i<size; ++i) {out >> v; ptr->cabLine[i] = toStruct<c_sObjData>(v);}
+
+    out >> size; ptr->cabLoopSize = size;
+    for(int i=0; i<size; ++i) {out >> v; ptr->cabLoop[i] = toStruct<c_sObjData>(v);}
+
     out >> size; ptr->outputSize = size;
     for(int i=0; i<size; ++i) {out >> v; ptr->output[i] = toStruct<c_sObjData>(v);}
 
@@ -79,6 +92,7 @@ QDataStream& operator>>(QDataStream& out, Cascade_Stream& data)
     for(int i=0; i<size; ++i) {out >> v; ptr->env[i] = toStruct<c_sEnvData>(v);}
 
     out >> v; ptr->tg = toStruct<sTgObjData>(v);
+    out >> v; ptr->cabTg = toStruct<sTgObjData>(v);
     out >> v; ptr->rtu = toStruct<sRtuBoard>(v);
     out >> v; ptr->dtc = toStruct<sFaultCode>(v);
     out >> v; ptr->cfg = toStruct<sDevCfg>(v);

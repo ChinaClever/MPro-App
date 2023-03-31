@@ -93,6 +93,12 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     size = obj->dualSize = data->dual.size;
     for(int i=0; i< size; ++i) upObjData(i, data->dual, obj->dual[i]);
 
+    size = obj->cabLineSize = data->cabLine.size;
+    for(int i=0; i< size; ++i) upObjData(i, data->cabLine, obj->cabLine[i]);
+
+    size = obj->cabLoopSize = data->cabLoop.size;
+    for(int i=0; i< size; ++i) upObjData(i, data->cabLoop, obj->cabLoop[i]);
+
     size = obj->outputSize = data->output.size;
     for(int i=0; i< size; ++i) upObjData(i, data->output, obj->output[i]);
 
@@ -102,6 +108,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     obj->dtc = data->dtc;
     obj->rtu = data->rtu;
     obj->tg = data->tg;
+    obj->cabTg = data->cabTg;
     obj->lps = data->lps;
     obj->dc = data->dc;
     obj->hz = data->hz;
