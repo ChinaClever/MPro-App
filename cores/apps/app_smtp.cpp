@@ -34,12 +34,16 @@ void App_Smtp::sendMail()
     //if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
 
-    //cfg->port = 25;
-    //cfg->host = "smtp.qq.com";
-    //cfg->pwd = "hltwgrkymjcbbjcd";
-    //cfg->from ="luozhiyong131@qq.com";
-    //cfg->ct = 0; cfg->en = 1;
-    //cfg->to[0] = "517345026@qq.com";
+//    cfg->port = 25;
+//    cfg->host = "smtp.qq.com";
+//    cfg->pwd = "hltwgrkymjcbbjcd";
+//    //cfg->pwd = "Lzy123456";
+//    cfg->from ="luozhiyong131@qq.com";
+//    cfg->ct = 0; cfg->en = 1;
+//    cfg->to[0] = "517345026@qq.com";
+
+//    cfg->port = 465;
+//    cfg->ct = 1;
 
     MimeMessage message;
     EmailAddress sender(cfg->from);
@@ -71,13 +75,14 @@ void App_Smtp::sendMail()
     }
 
     SmtpClient smtp(cfg->host, cfg->port, ct);
-    smtp.connectToHost();
+    smtp.connectToHost(); //cout <<"AAAAAAAAAAAA";
     if (!smtp.waitForReadyConnected(5000)) {
         cfg->lastErr += "Failed to connect to host!" + cfg->host;
         smtp.quit(); return;
     }
 
     smtp.login(cfg->from, cfg->pwd);
+    // cout <<"BBBBBBBBBBBBBB";
     if (!smtp.waitForAuthenticated(5000)) {
         smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
         //smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthLogin);
@@ -85,6 +90,7 @@ void App_Smtp::sendMail()
         smtp.quit(); return;
     }
 
+    // cout <<"CCCCCCCCCCCCCCCCCC";
     smtp.sendMail(message);
     if (!smtp.waitForMailSent(5000)) {
         cfg->lastErr += " Failed to send mail!";

@@ -237,6 +237,7 @@ void SmtpClient::setConnectionType(ConnectionType ct)
     case SslConnection:
     case TlsConnection:
         socket = new QSslSocket(this);
+        ((QSslSocket*) socket)->ignoreSslErrors();
         connect(socket, SIGNAL(encrypted()),
                 this, SLOT(socketEncrypted()));
         break;

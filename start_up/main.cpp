@@ -26,8 +26,9 @@ static void createDirectory()
 
 static void initSystem()
 {
-    system("chmod 777 -R /usr/data/clever");
-    system("chmod 777 -R /usr/data/etc/snmp");
+    system("cmd_fb enable /dev/fb0");
+    system("cmd_fb display /dev/fb0");
+    system("chmod 755 -R /usr/data/clever");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");

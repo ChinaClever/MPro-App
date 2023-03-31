@@ -27,16 +27,17 @@ OP_Core *OP_Core::bulid(QObject *parent)
 void OP_Core::run()
 {
     while (isRun) {
+        bool ret = 0;
         int size = mDev->cfg.nums.boardNum; // cout << size;
-        bool ret = 0; if(size) {
+        if(1 == mDev->cfg.param.devSpec) {
+            ret |= loop_readData();
+        } else if(size) {
             for(int i=0; i<size; ++i) {
                 cmsWrite(175);
                 ota_updates();
                 ret |= readData(i+1);
             }
-        } else {
-            ret |= loop_readData();
-        } cm::mdelay(10);
+        }  cm::mdelay(10);
         if(ret) mDev->dtc.fault = 1;
     }
 }
