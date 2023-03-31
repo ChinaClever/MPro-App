@@ -25,13 +25,13 @@ class JsonRpc {
 
     rpc_map() {
         var map = new Map();
-        //var sessionStorage = window.sessionStorage;
-        //var value = sessionStorage.getItem("root_map");
-        //if(value != null) {
-        //    let json = JSON.parse(value);
-        //    let arr = Object.entries(json);
-        //    map = new Map(arr);
-        //}   
+        var sessionStorage = window.sessionStorage;
+        var value = sessionStorage.getItem("root_map");
+        if(value != null) {
+            let json = JSON.parse(value);
+            let arr = Object.entries(json);
+            map = new Map(arr);
+        }   
         
         return map;
     }
@@ -134,8 +134,8 @@ class JsonRpc {
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
         const json = Object.fromEntries(this.root_map);
-        //var sessionStorage = window.sessionStorage;
-        //sessionStorage.setItem('root_map',JSON.stringify(json));
+        var sessionStorage = window.sessionStorage;
+        sessionStorage.setItem('root_map',JSON.stringify(json));
 
         return true;
     }
