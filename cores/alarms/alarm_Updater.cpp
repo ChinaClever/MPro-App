@@ -106,7 +106,7 @@ void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
 {
     for(int i=0; i<it.size; ++i) {
         if(it.hdaEle[i]) {
-            index.id = i;            
+            index.id = i;
             index.value = it.ele[i];
             index.subtopic = DSub::Value;
             Log_Core::bulid()->log_hdaEle(index);
@@ -169,24 +169,32 @@ bool Alarm_Updater::upTgObjData(sDataItem &index, sTgObjData &it)
     return ret;
 }
 
-
 bool Alarm_Updater::upEnvData(sDataItem &index, sEnvData &it)
 {
     bool ret = false;
     index.topic = DTopic::Tem;
     for(int i=0; i<SENOR_NUM; ++i) {
-        if(it.tem.en[i] && it.isInsert[i]) {
-            ret |= upAlarmItem(index, i, it.tem);
+        if(it.isInsert[i]) {
+            index.subtopic = DSub::Value;
+            index.value = it.tem.value[i]; index.id = i;
+            if(it.tem.hda[i]) Log_Core::bulid()->log_hda(index);
+            if(it.tem.en[i]) ret |= upAlarmItem(index, i, it.tem);
+            else it.tem.alarm[i] = AlarmCode::Ok;
+            Odbc_Core::bulid()->data(index);
         } else it.tem.alarm[i] = AlarmCode::Ok;
     }
 
     index.topic = DTopic::Hum;
     for(int i=0; i<SENOR_NUM; ++i) {
-        if(it.hum.en[i] && it.isInsert[i]) {
-            ret |= upAlarmItem(index, i, it.hum);
+        if(it.isInsert[i]) {
+            index.subtopic = DSub::Value;
+            index.value = it.hum.value[i]; index.id = i;
+            if(it.hum.hda[i]) Log_Core::bulid()->log_hda(index);
+            if(it.hum.en[i]) ret |= upAlarmItem(index, i, it.hum);
+            else it.hum.alarm[i] = AlarmCode::Ok;
+            Odbc_Core::bulid()->data(index);
         } else it.hum.alarm[i] = AlarmCode::Ok;
     }
-
     return ret;
 }
 
@@ -265,7 +273,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         dev->alarm = ret ? 2:0;
         dev->status = dev->alarm;
         if(!ret && mCrAlarm) dev->status = 1;
-        if(dev->dtc.fault) dev->status = 4;        
+        if(dev->dtc.fault) dev->status = 4;
         if(cm::dataPacket()->ota.work) dev->status = 3;
     } else if(dev->offLine <= 1) {
         dev->status = 5; if(!(*ptr)) *ptr=5;
