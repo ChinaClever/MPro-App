@@ -20,15 +20,15 @@ int Data_Dual::setDualSize(int id, int type)
         obj =  &(cm::devData(id)->dual);
         break;
 
-//    case DType::CabLine:
-//        size = mDev->cfg.nums.lineNum;
-//        obj =  &(cm::devData(id)->cabLoop);
-//        break;
+    case DType::CabLine:
+        size = mDev->cfg.nums.lineNum;
+        obj =  &(cm::devData(id)->cabLoop);
+        break;
 
-//    case DType::CabLoop:
-//        size = mDev->cfg.nums.loopNum;
-//        obj =  &(cm::devData(id)->cabLoop);
-//        break;
+    case DType::CabLoop:
+        size = mDev->cfg.nums.loopNum;
+        obj =  &(cm::devData(id)->cabLoop);
+        break;
     }
 
     if(obj) {
@@ -74,17 +74,17 @@ void Data_Dual::dualData(int id, int type)
         src2 = &(cm::devData(id+1)->output);
         break;
 
-//    case DType::CabLine:
-//        dest = &(cm::devData(id)->cabLine);
-//        src1 = &(cm::devData(id)->line);
-//        src2 = &(cm::devData(id+1)->line);
-//        break;
+    case DType::CabLine:
+        dest = &(cm::devData(id)->cabLine);
+        src1 = &(cm::devData(id)->line);
+        src2 = &(cm::devData(id+1)->line);
+        break;
 
-//    case DType::CabLoop:
-//        dest = &(cm::devData(id)->cabLoop);
-//        src1 = &(cm::devData(id)->loop);
-//        src2 = &(cm::devData(id+1)->loop);
-//        break;
+    case DType::CabLoop:
+        dest = &(cm::devData(id)->cabLoop);
+        src1 = &(cm::devData(id)->loop);
+        src2 = &(cm::devData(id+1)->loop);
+        break;
     }
 
     for(int i=0; i<dest->size; ++i) {

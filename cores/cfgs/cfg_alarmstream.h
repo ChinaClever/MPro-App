@@ -71,6 +71,12 @@ struct _sDevData
     uchar dualSize;
     _sObjData dual[OUTPUT_NUM]; //双电源数据
 
+    uchar cabLineSize;
+    _sObjData cabLine[LINE_NUM]; //机柜相
+
+    uchar cabLoopSize;
+    _sObjData cabLoop[LOOP_NUM]; //机柜回路
+
     uchar outputSize;
     _sObjData output[OUTPUT_NUM]; //位数据
 
