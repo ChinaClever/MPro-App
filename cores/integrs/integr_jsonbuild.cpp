@@ -298,9 +298,6 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     int start=1, end=0;
     QJsonArray loopEnd, loopStart;
     for(uint i=0; i<it.nums.loopNum; ++i) {
-        //loopEnd.append(it.nums.loopEnds[i]);
-        //loopStart.append(it.nums.loopStarts[i]);
-
         if(it.param.devSpec > 1) {
             if(i) start += it.nums.loopEachNum[i-1];
             end += it.nums.loopEachNum[i];
@@ -313,7 +310,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 
     QJsonArray loops;
     for(uint i=0; i<LOOP_NUM; ++i) {
-        int num = it.nums.loopEachNum[i]; //it.nums.loopEnds[i] - it.nums.loopStarts[i];
+        int num = it.nums.loopEachNum[i];
         if(i<it.nums.loopNum) loops.append(num); else loops.append(0);
     } obj.insert("loop_array", loops);
 

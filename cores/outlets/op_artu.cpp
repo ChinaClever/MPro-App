@@ -77,10 +77,10 @@ bool OP_ARtu::loop_readData()
     cmd[2] = addr; for(int i=0; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
     QByteArray recv = transmit(cmd, sizeof(cmd)); //cout << recv.size();
-    if((recv.size() >= 61) && (recv.at(2) == addr)) {
+    if((recv.size() == 62) && (recv.at(2) == addr)) {
         res = loop_recvPacket(recv, mOpData);
         if(res) loop_fillData();
-    } else cout << recv.size();
+    } else if(recv.size()) cout << recv.size();
 
     return loop_setEndisable(res, mOpData->ens[0]);
 }
