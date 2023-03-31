@@ -150,7 +150,7 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
         for(int i=size; i<LOOP_NUM; ++i) dev->loopEachNum[i] = 0;
     } else if(6 == it.fc) {
         int num = 0; key = "outputNum";
-        for(uint i=0; i<dev->boardNum; ++i) num += dev->boards[it.id];
+        for(uint i=0; i<dev->boardNum; ++i) num += dev->boards[i];
         dev->outputNum = num; Cfg_Core::bulid()->devParamWrite(key, num, prefix);
     }
 
