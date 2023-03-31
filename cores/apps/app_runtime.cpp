@@ -30,6 +30,10 @@ void App_RunTime::runing_onTimeoutDone()
 {
     sRunTime *param = &(cm::masterDev()->proc.core);
     param->runSec += 1; if(0 == (param->runSec % 60)) {
-        Cfg_Core::bulid()->runTimeWrite();
+        Cfg_Core::bulid()->runTimeWrite();        
+    }
+
+    if(6 == (param->runSec%(60*60))) { system("sync");
+        system("echo 3 > /proc/sys/vm/drop_caches");
     }
 }
