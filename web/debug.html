@@ -231,7 +231,7 @@
 			for(let i = 1;i < board_num+1;i++){
 				pdu_obj.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
 			}
-			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,addr);
+			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
 			pdu_obj.setCfg(11,6,document.getElementById("dev_type_").value,0,addr);
 			pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
 			pdu_obj.setCfg(cfg,13,document.getElementById("angle_").value,0,addr);

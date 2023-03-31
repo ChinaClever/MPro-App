@@ -153,6 +153,8 @@
 			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
+			//document.getElementById("MPDU").title = pdu_data.uut_info.pdu_type;
+			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
 			}else if(pdu_data.status ==1){
