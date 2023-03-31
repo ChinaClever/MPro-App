@@ -392,7 +392,11 @@
 				}
 			}
 			for(let i = 0;i<loop_num;i++){
-				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
+				if(pdu_data.pdu_info.pdu_spec == 1){
+					loop_se[i] = "-" + "-" + "-";	
+				}else{
+					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
+				}
 			}
 			for(let i = 0;i<loop_num;i++){
 				loop_info[i] = new Array();
@@ -745,15 +749,15 @@
 		function BuildTableLoop(obj) {
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
-			tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-			tbody += '<tr><td class="spacing" id="lang_8"></td>';
-			tbody += '<td class="spacing" id="lang_9"></td>';
-			tbody += '<td class="spacing" id="lang_10"></td>';
-			tbody += '<td class="spacing" id="lang_11"></td>';
-			tbody += '<td class="spacing" id="lang_12"></td>';
-			tbody += '<td class="spacing" id="lang_13"></td>';
-			tbody += '<td class="spacing" id="lang_14"></td>';
-			tbody += '<td class="spacing" id="lang_15"></td></tr>';			
+				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
+				tbody += '<tr><td class="spacing" id="lang_8"></td>';
+				tbody += '<td class="spacing" id="lang_9"></td>';
+				tbody += '<td class="spacing" id="lang_10"></td>';
+				tbody += '<td class="spacing" id="lang_11"></td>';
+				tbody += '<td class="spacing" id="lang_12"></td>';
+				tbody += '<td class="spacing" id="lang_13"></td>';
+				tbody += '<td class="spacing" id="lang_14"></td>';
+				tbody += '<td class="spacing" id="lang_15"></td></tr>';			
 			}else{
 				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 				tbody += '<tr><td class="spacing" id="lang_8"></td>';
