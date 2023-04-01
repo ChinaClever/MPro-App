@@ -67,9 +67,20 @@ static void init_netWork()
 }
 
 
+static void init_mem()
+{
+    system("echo 38912 > /proc/sys/vm/min_free_kbytes");
+    system("echo 200 > /proc/sys/vm/vfs_cache_pressure");
+    system("echo 3 > /proc/sys/vm/dirty_background_ratio");
+    system("echo 6 > /proc/sys/vm/dirty_ratio");
+    system("echo 1 > /proc/sys/vm/panic_on_oom");
+    system("echo 3 >/proc/sys/vm/drop_caches");
+}
+
+
 static void start_init()
 {
-    int cnt = 0;  //system("mount -o remount,rw /usr/data/");
+    int cnt = 0; init_mem(); //system("mount -o remount,rw /usr/data/");
     system("mv /tmp/messages /tmp/kernel_messages");
     QFile file("/usr/data/clever/cfg/proc_cnt.ini");
     if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
@@ -83,7 +94,6 @@ static void start_init()
     if(cnt < 5) initSystem(); else {
         system("mkdir -p /tmp/updater");
         system("mkdir -p /tmp/download");
-        system("echo 3 > /proc/sys/vm/drop_caches");
     }
 }
 
