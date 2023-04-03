@@ -78,6 +78,7 @@ void App_NetAddr::inet_setInterfaceSlot()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_setIpV4(); //inet_saveCfg();
+    cout << net->inet6.en << net->inet6.dhcp;
 
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
@@ -91,7 +92,7 @@ void App_NetAddr::inet_setIpV4()
         net->inet.ip[0] = 0;
         QString cmd = "udhcpc"; //"dhclient -4 eth0 &";
         qDebug() << cmd << system(cmd.toStdString().c_str());
-        QTimer::singleShot(3210,this,&App_NetAddr::inet_updateInterface);
+        QTimer::singleShot(1210,this,&App_NetAddr::inet_updateInterface);
     } else {
         QString fn = net->name;
         QString ip = net->inet.ip;
@@ -136,9 +137,9 @@ void App_NetAddr::inet_setIpV6()
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet6.dhcp) {
         net->inet6.ip[0] = 0;
-        QString cmd = "dhclient -6 eth0 &";
+        QString cmd = "udhcpc6 &"; //"dhclient -6 eth0 &";
         qDebug() << cmd << system(cmd.toStdString().c_str());
-        QTimer::singleShot(6543,this,&App_NetAddr::inet_updateInterface);
+        QTimer::singleShot(1543,this,&App_NetAddr::inet_updateInterface);
     } else {
         QString fn = net->name;
         QString ip = net->inet6.ip;
@@ -153,8 +154,7 @@ void App_NetAddr::inet_setIpV6()
         } else {
             cmd = "ip -6 addr add %1/%2 dev %3";
             str = cmd.arg(ip).arg(mask).arg(fn);
-        } qDebug() << str;
-        system(str.toStdString().c_str());
+        } qDebug() << str; system(str.toStdString().c_str());
 
         if(gw.size()) {
             if(QFile::exists("netcfg")) {
@@ -282,7 +282,7 @@ void App_NetAddr::inet_updateInterface()
         }
     }
 
-    if(0==qstrlen(net->inet.ip) || 0==qstrlen(net->inet6.ip)) {
-        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
-    }
+//    if(0==qstrlen(net->inet.ip) || 0==qstrlen(net->inet6.ip)) {
+//        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
+//    }
 }

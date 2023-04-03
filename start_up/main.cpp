@@ -84,21 +84,22 @@ static void init_mem()
 
 static void start_init()
 {
-    int cnt = 0; init_mem(); //system("mount -o remount,rw /usr/data/");
+    int cnt = 0; init_mem();
+    //system("mount -o remount,rw /usr/data/");
     system("mv /tmp/messages /tmp/kernel_messages");
     QFile file("/usr/data/clever/cfg/proc_cnt.ini");
     if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
         cnt = file.readAll().toInt(); file.seek(0);
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
-    } file.close(); system("sync");
+    } file.close(); initSystem(); //system("sync");
 
-    system("cmd_fb enable /dev/fb0");
-    system("cmd_fb display /dev/fb0");
-    if(cnt < 5) initSystem(); else {
-        system("mkdir -p /tmp/updater");
-        system("mkdir -p /tmp/download");
-    }
+//    system("cmd_fb enable /dev/fb0");
+//    system("cmd_fb display /dev/fb0");
+//    if(cnt < 5) initSystem(); else {
+//        system("mkdir -p /tmp/updater");
+//        system("mkdir -p /tmp/download");
+//    }
 }
 
 int main(int argc, char *argv[])

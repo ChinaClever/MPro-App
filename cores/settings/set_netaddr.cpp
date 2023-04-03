@@ -51,7 +51,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     case 7: ptr = inet->dns2; break;
     case 11: ptr = net->mac; system(QStringLiteral("echo '%1' > /usr/data/clever/cfg/mac.ini").arg(v.toString()).toLocal8Bit().data()); break;
     default: res = false; cout << it.fc; break;
-    } //cout << it.id << it.fc << v;
+    } cout << it.id << it.fc << v;
 
     if(ptr) {
         QByteArray array = v.toByteArray();
