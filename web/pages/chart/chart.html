@@ -241,7 +241,11 @@
 								start = arr[4];
 								end = arr[5];
 								if(arr[2] < 6){
-									fc = fc.slice(0,5);
+									if(arr[3] > 9){								
+										fc = fc.slice(0,6);
+									}else{
+										fc = fc.slice(0,5);	
+									}
 								}else{
 									fc = fc.slice(0,6);
 								}
@@ -258,7 +262,11 @@
 							let time1 = setInterval(function(){
 								if(pdu_log.log_value(addr, fc) != "" || pdu_log.log_value(addr, fc) != null){
 									clearInterval(time1);
+									if(pdu_log.log_value(addr,fc) == "" || pdu_log.log_value(addr,fc) == null){
+										alert("未开启历史数据或此时间段没有数据！");
+									}
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
+	
 									log_num = getJsonLength(log_str.logs);
 									data_total = [];
 									for(let i = 0;i<log_num;i++){
