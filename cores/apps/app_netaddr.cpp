@@ -78,7 +78,6 @@ void App_NetAddr::inet_setInterfaceSlot()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_setIpV4(); //inet_saveCfg();
-    cout << net->inet6.en << net->inet6.dhcp;
 
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
@@ -136,10 +135,11 @@ void App_NetAddr::inet_setIpV6()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet6.dhcp) {
-        net->inet6.ip[0] = 0;
-        QString cmd = "udhcpc6 &"; //"dhclient -6 eth0 &";
-        qDebug() << cmd << system(cmd.toStdString().c_str());
-        QTimer::singleShot(1543,this,&App_NetAddr::inet_updateInterface);
+        //net->inet6.ip[0] = 0;
+        //QString cmd = "udhcpc6 &"; //"dhclient -6 eth0 &";
+        //qDebug() << cmd << system(cmd.toStdString().c_str());
+        //QTimer::singleShot(432,this,&App_NetAddr::inet_setIpV4);
+        //QTimer::singleShot(1543,this,&App_NetAddr::inet_updateInterface);
     } else {
         QString fn = net->name;
         QString ip = net->inet6.ip;
@@ -172,35 +172,13 @@ void App_NetAddr::inet_setIpV6()
             str = cmd.arg(dns, dns2); qDebug() << str;
             system(str.toStdString().c_str());
         }
-
-        //if(dns.size()) {
-        //    if(QFile::exists("netcfg")) {
-        //        cmd = "netcfg -d %1/%2 eth0";
-        //        str = cmd.arg(dns).arg(mask);
-        //    } else {
-        //        cmd = "sed -i '3cnameserver %1' /tmp/resolv.conf";;
-        //        str = cmd.arg(dns);
-        //    }qDebug() << str;
-        //    system(str.toStdString().c_str());
-        //}
-
-        //if(dns2.size()) {
-        //    cmd = "sed -i '4cnameserver %1' /tmp/resolv.conf";;
-        //    str = cmd.arg(dns); qDebug() << str;
-        //    system(str.toStdString().c_str());
-        //}
     }
 
-    //inet_writeCfg(net->inet6, "IPV6");
 }
 
 void App_NetAddr::inet_saveCfg(int fc)
 {
     sNetInterface *net = &(cm::dataPacket()->net);
-    //QString fmd = "echo '%1' > /usr/data/clever/cfg/mac.ini";
-    //QString cmd = fmd.arg(net->mac).remove("\n"); //qDebug() << cmd;
-    //system(cmd.toLocal8Bit().data());
-
     if(fc) inet_writeCfg(net->inet6, "IPV6");
     else inet_writeCfg(net->inet, "IPV4");
 }
@@ -263,14 +241,10 @@ void App_NetAddr::inet_updateInterface()
                     break;
 
                 case QAbstractSocket::IPv6Protocol:
-                    if(hostIp.toString().contains("%eth0")) {
+                    if((0==net->inet6.en) || net->inet6.dhcp) {
                         qstrcpy(net->inet6.ip, hostIp.toString().remove("%eth0").toLatin1().constData()); //获取ip
                         qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
                         net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
-                    } else {
-                        qsnprintf(net->inet6.global, NAME_SIZE, "%s/%d",
-                                   hostIp.toString().toLatin1().constData(),
-                                   entry.prefixLength());
                     }
                     break;
 
@@ -282,7 +256,7 @@ void App_NetAddr::inet_updateInterface()
         }
     }
 
-//    if(0==qstrlen(net->inet.ip) || 0==qstrlen(net->inet6.ip)) {
-//        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
-//    }
+    if(0==qstrlen(net->inet.ip) || 0==qstrlen(net->inet6.ip)) {
+        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
+    }
 }
