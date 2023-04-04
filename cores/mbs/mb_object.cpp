@@ -83,7 +83,7 @@ bool Mb_Object::alarmUnitCheck(int reg, int id, sAlarmUnit *unit, ushort v)
     case 2: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
     case 3: if((v > unit->crMax[id]) || (v < unit->min[id])) ret = false; break;
     case 4: if(v > unit->crMin[id]) ret = false; break;
-    }
+    } if(id >= unit->size) ret = false;
 
     return ret;
 }
