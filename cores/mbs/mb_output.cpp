@@ -112,6 +112,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
     }
 }
 
+
 void Mb_Output::output_setting(ushort addr, ushort value)
 {
     ushort reg = addr - MbReg_OutputThreshol;
@@ -126,13 +127,16 @@ void Mb_Output::output_setting(ushort addr, ushort value)
     default: OP_Core::bulid()->setDelay(id+1, value); return;
     }
 
-    switch (reg%250/50) {
+    reg = reg%250/50; switch (reg) {
     case 0: ptr = unit->en; break;
     case 1: ptr = unit->max; break;
     case 2: ptr = unit->crMax; break;
     case 3: ptr = unit->crMin; break;
     case 4: ptr = unit->min; break;
     default: cout << addr; break;
-    } if(ptr) ptr[id] = value;
+    }
+
+    bool ret = alarmUnitCheck(reg, id, unit, value);
+    if(ptr && ret) ptr[id] = value;
 }
 
