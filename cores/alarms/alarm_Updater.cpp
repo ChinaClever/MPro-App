@@ -228,6 +228,25 @@ bool Alarm_Updater::upSensors(sDataItem &index, sEnvData &it)
     return ret;
 }
 
+bool Alarm_Updater::upCabData(sDataItem &index, sDevData *it)
+{
+    bool ret = false;
+
+    index.type = DType::Dual;
+    ret |= upObjData(index, it->dual);
+
+    index.type = DType::CabLine;
+    ret |= upObjData(index, it->cabLine);
+
+    index.type = DType::CabLoop;
+    ret |= upObjData(index, it->cabLoop);
+
+    index.type = DType::CabTg;
+    ret |= upTgObjData(index, it->cabTg);
+
+    return ret;
+}
+
 bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 {
     bool ret = false;
@@ -244,9 +263,6 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     index.type = DType::Group;
     ret |= upObjData(index, it->group);
 
-    index.type = DType::Dual;
-    ret |= upObjData(index, it->dual);
-
     index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);
 
@@ -255,6 +271,7 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
     index.type = DType::Sensor;
     ret |= upSensors(index, it->env);
+    ret |= upCabData(index, it);
 
     return ret;
 }

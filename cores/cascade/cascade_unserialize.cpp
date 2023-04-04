@@ -125,15 +125,15 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     data->group.vol.size = data->group.cur.size = 0;
 
     size = data->dual.size = obj->dualSize; //unDevSize(ds, size, data->dual);
-    for(int i=0; i< size; ++i)  unCabData(i, data->dual, obj->dual[i]);
+    for(int i=0; i< size; ++i) unCabData(i, data->dual, obj->dual[i]);
     data->dual.vol.size = data->dual.cur.size = 0;
 
     size = data->cabLine.size = obj->cabLineSize; //unDevSize(ds, size, data->dual);
-    for(int i=0; i< size; ++i)  unCabData(i, data->cabLine, obj->cabLine[i]);
+    for(int i=0; i< size; ++i) unCabData(i, data->cabLine, obj->cabLine[i]);
     data->cabLine.vol.size = data->cabLine.cur.size = 0;
 
     size = data->cabLoop.size = obj->cabLoopSize; //unDevSize(ds, size, data->dual);
-    for(int i=0; i< size; ++i)  unCabData(i, data->cabLoop, obj->cabLoop[i]);
+    for(int i=0; i< size; ++i) unCabData(i, data->cabLoop, obj->cabLoop[i]);
     data->cabLoop.vol.size = data->cabLoop.cur.size = 0;
 
     size = data->output.size = obj->outputSize; //unDevSize(ds, size, data->output);

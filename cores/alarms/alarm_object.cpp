@@ -54,6 +54,8 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
     case DType::Dual: obj = &(dev->dual); break;
+    case DType::CabLine: obj = &(dev->cabLine); break;
+    case DType::CabLoop: obj = &(dev->cabLoop); break;
     default: cout << index.type; break;
     }
     return obj;
@@ -77,15 +79,15 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index)
     if(DType::Tg == index.type) return unit;
     sDevData *dev = cm::devData(index.addr);
 
-    if(index.type < DType::Env) {
-        obj = getObjData(index);
-        unit = getAlarmUnit(index, obj);
-    } else {
+    if(index.type == DType::Env) {
         switch (index.topic) {
         case DTopic::Tem: unit = &(dev->env.tem);break;
         case DTopic::Hum: unit = &(dev->env.hum);break;
         default: cout << index.topic; break;
         }
+    } else {
+        obj = getObjData(index);
+        unit = getAlarmUnit(index, obj);
     }
 
     return unit;
@@ -95,7 +97,8 @@ sTgUnit *Alarm_Object::getTgAlarmUnit(const sDataItem &index)
 {
     sTgUnit *unit = nullptr;
     sTgObjData *obj = &(cm::devData(index.addr)->tg);
-    if(DType::Tg == index.type) {
+    if(DType::CabTg == index.type) obj = &(cm::devData(index.addr)->cabTg);
+    if((DType::Tg == index.type) || (DType::CabTg == index.type)) {
         switch (index.topic) {
         case DTopic::Vol: unit = &(obj->vol); break;
         case DTopic::Cur: unit = &(obj->cur); break;
@@ -279,6 +282,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
     bool ret = true;
     if(index.topic > DTopic::Pow) {
         sTgObjData *tg = &(cm::devData(index.addr)->tg);
+        if(DType::CabTg == index.type) tg = &(cm::devData(index.addr)->cabTg);
         switch (index.topic) {
         case DTopic::PF: index.value = tg->pf; break;
         case DTopic::Ele: index.value = tg->ele; break;
@@ -297,8 +301,8 @@ bool Alarm_Object::upMetaData(sDataItem &index)
 
     if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
     switch (index.type) {
-    case DType::Tg: return tgValue(index);
     case DType::Sensor: return sensorValue(index);
+    case DType::Tg: case DType::CabTg: return tgValue(index);
     }
 
     switch (index.topic) {

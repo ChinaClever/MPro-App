@@ -77,7 +77,15 @@ void Cfg_AlarmUnserialize::unDevData(sDevData *data, cfg::_sDevData *obj)
 
     size = obj->dualSize;
     for(int i=0; i<size; ++i) unObjData(i, data->dual, obj->dual[i]);
-    data->output.vol.size = 0;
+    data->dual.vol.size = data->dual.cur.size = data->dual.pow.size = 0;
+
+    size = obj->cabLineSize;
+    for(int i=0; i<size; ++i) unObjData(i, data->cabLine, obj->cabLine[i]);
+    data->cabLine.vol.size = data->cabLine.cur.size = data->cabLine.pow.size = 0;
+
+    size = obj->cabLoopSize;
+    for(int i=0; i<size; ++i) unObjData(i, data->cabLoop, obj->cabLoop[i]);
+    data->cabLoop.vol.size = data->cabLoop.cur.size = data->cabLoop.pow.size = 0;
 
     size = obj->outputSize;
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);

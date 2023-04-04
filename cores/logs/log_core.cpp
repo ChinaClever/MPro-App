@@ -73,16 +73,16 @@ void Log_Core::append(const sDataItem &it)
 
 void Log_Core::log_hda(const sDataItem &it)
 {
-    //uint sec = cfg.hdaTime*60*60;
-    uint sec = cfg.hdaTime*60; //////////////============
+    uint sec = cfg.hdaTime*60*60;
+    //uint sec = cfg.hdaTime*60; //////////////============
     if(!cfg.hdaEn || !sec) return ;
     if(!(mCnt%sec)) append(it);
 }
 
 void Log_Core::log_hdaEle(const sDataItem &it)
 {
-    //uint sec = cfg.eleTime*24*60*60;
-    uint sec = cfg.eleTime*60;  ////////////=============
+    uint sec = cfg.eleTime*24*60*60;
+    //uint sec = cfg.eleTime*60;  ////////////=============
     if(!cfg.hdaEn || !sec) return ;
     if(!(mCnt%sec)) append(it);
 }
