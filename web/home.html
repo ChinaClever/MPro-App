@@ -391,6 +391,7 @@
 				//}
 				}
 			}
+			loop_se = [];
 			for(let i = 0;i<loop_num;i++){
 				if(pdu_data.pdu_info.pdu_spec == 1){
 					loop_se[i] = "-" + "-" + "-";	
@@ -398,6 +399,7 @@
 					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
 				}
 			}
+			loop_info = [];
 			for(let i = 0;i<loop_num;i++){
 				loop_info[i] = new Array();
 				loop_info[i][0] = "C" + (i + 1);
@@ -461,6 +463,7 @@
 				ParseData();
 				ShowData();
 				LangFun();
+				flash_html();
 			},500);
 		}
 		function delay() {
@@ -716,6 +719,17 @@
 				iptname[i].disabled = true;
 			}
 		}
+		function flash_html(par)
+		{
+			setTimeout(function(){
+				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				ReadData();
+		
+				$('.loop_table').html(BuildTableLoop(loop_num));
+				LangFun();
+				ShowData();
+			},200);
+		}
 		function BuildTablePhase(obj) {
 			let tbody = '';
 			if (obj == 0) {
@@ -821,6 +835,8 @@
 		setInterval(function () {
 			ParseData();
 			ReadData();
+			ShowData()
+			flash_html();
 		}, 2000);
 	</script>
 </body>
