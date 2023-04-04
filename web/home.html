@@ -393,11 +393,7 @@
 			}
 			loop_se = [];
 			for(let i = 0;i<loop_num;i++){
-				if(pdu_data.pdu_info.pdu_spec == 1){
-					loop_se[i] = "-" + "-" + "-";	
-				}else{
 					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
-				}
 			}
 			loop_info = [];
 			for(let i = 0;i<loop_num;i++){
