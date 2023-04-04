@@ -111,7 +111,7 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break; //////========
+    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
     default: cout << it.type; break;
     }
 
@@ -151,7 +151,7 @@ int Set_Core::setting(sDataItem &it)
         if(it.addr) {
             int num = cm::masterDev()->cfg.nums.slaveNum;
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
-        } if(it.topic != DTopic::Relay) setAlarmLog(it);
+        } if((it.topic != DTopic::Relay) && ret) setAlarmLog(it);
         if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}
     } else {
         ret = false;

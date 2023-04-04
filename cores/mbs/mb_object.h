@@ -6,7 +6,8 @@
 class Mb_Object : public Modbus_SlaveRtu , public Set_Output
 {
 public:
-    explicit Mb_Object(QObject *parent = nullptr);
+    explicit Mb_Object(QObject *parent = nullptr);    
+    bool alarmUnitCheck(int reg, int id, sAlarmUnit *unit, ushort v);
 
 protected:
     void upDevInfo();

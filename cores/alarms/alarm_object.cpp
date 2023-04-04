@@ -121,10 +121,38 @@ sRelayUnit *Alarm_Object::getRelayUnit(const sDataItem &index)
     return unit;
 }
 
-void Alarm_Object::setAll(uint *ptr, uint value, int size)
+bool Alarm_Object::setAll(uint *ptr, sDataItem &index, sAlarmUnit *unit)
+{
+    bool ret =  true;
+    int size = unit->size;
+    uint value = index.value;
+    for(int i=0; i<size; ++i) {
+        sDataItem it = index; it.id = i+1;
+        ret = alarmUnitCheck(it, unit);
+        if(!ret) return ret;
+    }
+
+    return setAll(ptr, value, size);
+}
+
+bool Alarm_Object::setAll(uint *ptr, uint value, int size)
 {
     if(0 == size) size = OUTPUT_NUM;
     for(int i=0; i<size; ++i)  ptr[i] = value;
+    return true;
+}
+
+bool Alarm_Object::alarmUnitCheck(sDataItem &index, sAlarmUnit *unit)
+{
+    bool ret = true; int id = index.id; if(id) id -= 1;
+    uint v = index.value; switch (index.subtopic) {
+    case DSub::VMax: if((v > (unit->rated[id])*1.3) || (v < unit->crMax[id])) ret = false; break;
+    case DSub::VCrMax: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
+    case DSub::VCrMin: if((v > unit->crMax[id]) || (v < unit->min[id])) ret = false; break;
+    case DSub::VMin: if(v > unit->crMax[id]) ret = false; break;
+    }
+
+    return ret;
 }
 
 bool Alarm_Object::alarmUnitValue(sDataItem &index)
@@ -151,8 +179,10 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
 
     if(ptr) {
         if(index.rw){
-            if(index.id) ptr[index.id-1] = index.value;
-            else setAll(ptr, index.value, unit->size);
+            if(index.id) {
+                ret = alarmUnitCheck(index, unit);
+                if(ret) ptr[index.id-1] = index.value;
+            } else ret = setAll(ptr, index, unit);
         } else index.value = ptr[index.id];
 
         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {

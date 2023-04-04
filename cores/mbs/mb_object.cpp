@@ -74,3 +74,16 @@ vshort Mb_Object::strToShort(const char *str)
 
     return res;
 }
+
+
+bool Mb_Object::alarmUnitCheck(int reg, int id, sAlarmUnit *unit, ushort v)
+{
+    bool ret = true; switch (reg) {
+    case 1: if((v > unit->rated[id]*1.3) || (v < unit->crMax[id])) ret = false; break;
+    case 2: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
+    case 3: if((v > unit->crMax[id]) || (v < unit->min[id])) ret = false; break;
+    case 4: if(v > unit->crMin[id]) ret = false; break;
+    }
+
+    return ret;
+}
