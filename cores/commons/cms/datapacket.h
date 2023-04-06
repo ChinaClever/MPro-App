@@ -292,7 +292,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线
+    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线　６: 副机告警
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
