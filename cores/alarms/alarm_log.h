@@ -21,10 +21,11 @@ protected slots:
     void alarmSlot(const sDataItem &index, uchar value);
 
 private:
-    QString alarmStatus(uchar value);
-    QString alarmContent(const sDataItem &index);
-    QString alarmSensor(uchar value);
+    void resetAwtk();
     QString alarmRelay(uchar value);
+    QString alarmStatus(uchar value);
+    QString alarmSensor(uchar value);
+    QString alarmContent(const sDataItem &index);
     sAlarmItem alarmItem(const sDataItem &index, uchar value);
 
 private:

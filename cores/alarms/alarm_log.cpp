@@ -49,12 +49,18 @@ void Alarm_Log::appendSlaveOffline(int addr)
     m_currentAlarm[0] += str + "\n";
 }
 
+void Alarm_Log::resetAwtk()
+{
+    system("killall awtk");
+    system("awtk &");
+}
+
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];
     if(str.size()) str = str.split("\n").first();
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
-    if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); }
+    if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
 
 QString Alarm_Log::alarmType(const sDataItem &index)
