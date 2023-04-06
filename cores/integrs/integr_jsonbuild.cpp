@@ -323,6 +323,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     QJsonObject obj;
     obj.insert("sn", it.sn);
     obj.insert("room", it.room);
+    obj.insert("uuid", it.uuid);
     obj.insert("name", it.devName);
     obj.insert("qrcode", it.qrcode);
     obj.insert("pdu_type", it.devType);

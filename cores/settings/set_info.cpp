@@ -159,6 +159,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     sUutInfo *it = &(cm::devData(addr)->cfg.uut);
 
     switch (fc) {
+    case 0: ptr = it->uuid; break;
     case 1: ptr = it->room; break;
     case 2: ptr = it->location; break;
     case 3: ptr = it->devName; break;
@@ -180,6 +181,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     sUutInfo *it = &(cm::masterDev()->cfg.uut);
 
     switch (fc) {
+    //case 0: key = "uuid";  ptr = it->uuid; break;
     case 1: key = "room";  ptr = it->room; break;
     case 2: key = "location";  ptr = it->location; break;
     case 3: key = "devName";  ptr = it->devName; break;
@@ -189,7 +191,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     default: ret = false; cout << fc; break;
     }
 
-    if(ptr) {
+    if(ptr && fc) {
         qstrcpy(ptr, array.data());
         ptr[array.size()] = 0;
         Cfg_Core *cfg = Cfg_Core::bulid();
