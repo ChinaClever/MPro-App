@@ -215,7 +215,8 @@ struct sUutInfo {
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[4*NAME_SIZE]; // 二维码
     char devType[NAME_SIZE]; // 设备型号
-    char reserve[3][NAME_SIZE];
+    char uuid[NAME_SIZE];
+    char reserve[2][NAME_SIZE];
     char sn[NAME_SIZE];
 };
 
