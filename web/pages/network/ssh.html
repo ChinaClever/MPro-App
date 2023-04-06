@@ -127,7 +127,7 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否保存此次修改。")){
+			if(confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!")){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
 						pdu_cfg.setCfg(45,i,btn.value,0,addr);
