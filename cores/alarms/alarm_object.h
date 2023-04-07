@@ -31,6 +31,7 @@ private:
     bool sensorValue(sDataItem &index);
     bool powPfValue(sDataItem &index);
     bool eleValue(sDataItem &index);
+    void clearEle(sDataItem &index);
 };
 
 #endif // ALARM_OBJECT_H

@@ -22,6 +22,7 @@ public:
     void smtp_sendMail(const QString &content, bool ok=false);
     static sSmtpCfg smtpCfg;
     bool smtp_testMail();
+    QString smtp_uut();
     void smtp_run();
     void sendMail();
 

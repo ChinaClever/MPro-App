@@ -295,7 +295,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         if(cm::dataPacket()->ota.work) dev->status = 3;
     } else if(dev->offLine <= 1) {
         dev->status = 5; if(!(*ptr)) *ptr=5;
-        Alarm_Log::bulid()->appendSlaveOffline(addr);
+        if(addr) Alarm_Log::bulid()->appendSlaveOffline(addr);
     } dev->cfg.param.runStatus = dev->status;
 
     return ret;

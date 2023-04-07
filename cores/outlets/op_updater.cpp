@@ -17,7 +17,7 @@ OP_Updater::OP_Updater(QObject *parent) : OP_Object{parent}
 bool OP_Updater::ota_start(const QString &fn)
 {
     bool ret = true; // File::CheckCrc(fn); //////////==========
-    if(ret) { mOtaFile=fn;
+    if(ret) { mOtaFile=fn; throwMessage("start");
         setbit(cm::dataPacket()->ota.work, DOta_Outlet);
     } else qDebug() << "Error: OP Updater ota crc" << Q_FUNC_INFO;
     return ret;

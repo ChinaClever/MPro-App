@@ -18,7 +18,7 @@ int Data_Dual::setDualSize(int id, int type)
 
     switch (type) {
     case DType::Dual:
-        size = dev->cfg.nums.outputNum;
+        size = dev->output.pow.size;
         obj =  &(cm::devData(id)->dual);
         break;
 
