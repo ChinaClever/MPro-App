@@ -300,6 +300,7 @@ class PduCfgItem extends PduDataItem {
         var params = [addr, type, fc, id, 0, value];
         return this.rpc.json_rpc_set(method, params);
     }
+
 } //var obj = new PduCfgItem(); setTimeout(function(){obj.getCfg(22,1,1);}, obj.getTimeOut());
 
 // 多个配置参数操作类
@@ -531,8 +532,27 @@ class PduLog extends  PduCfgs{
     }
 }
 
+class PduOta extends  PduLog{
+    constructor() {
+        super();
+    }
+
+    otaValue(fc, id, addr) {
+        var key = 0+'_'+92+'_'+fc+'_'+id+'_'+addr;
+        return this.rpc.json_rpc_value(key);
+    }
+
+    // 刷新某个配置参数至Map表中
+    getOta(fc, id, addr) {
+        var method = "pduReadParam"; 
+        var params = [0, 92, fc, id,addr];
+        return this.rpc.json_rpc_get(method, params);
+    }     
+
+}
+
 // 实例化接口类
-class PduCore extends PduCfgs {
+class PduCore extends PduOta {
     static _instance = null;
     constructor() {
         super();
