@@ -48,6 +48,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
 bool Set_Output::outputCtrl(const sDataItem &unit)
 {
+    if(unit.value > 2) return false;
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
