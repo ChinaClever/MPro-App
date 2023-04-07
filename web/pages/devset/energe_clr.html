@@ -66,7 +66,10 @@
 		let output_num;
 		let dev_name =new Array();
 		let slave_num;
+		let loop_num;
 		let lang = new Array();
+		let DataString = pdu_cfg.meta_value();
+		let pdu_data = JSON.parse(DataString);
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
@@ -83,19 +86,32 @@
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
+			 loop_num = pdu_data.pdu_info.loop_num;
 			language = pdu_data.pdu_info.language;
 			let k = 0;
-			for(let i = 0;i<output_num;i++){
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+				for(let i = 0;i<loop_num;i++){
+					output_info_[i] = new Array();
+					let j = 0;
+					for(let key in pdu_data.pdu_data.loop_item_list){
+						output_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+						j ++;
+					}
+				}			
+			}else{
+				for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
 				let j = 0;
 				for(let key in pdu_data.pdu_data.output_item_list){
 					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
 					j ++;
 				}
+				}	
 			}
-			if(pdu_data.pdu_info.pdu_spec == 3){
-				hidden();
-			}
+	
+			//if(pdu_data.pdu_info.pdu_spec == 3){
+			//	hidden();
+		//	}
 		}
 		ParseData();
 		LangInit();
@@ -115,15 +131,31 @@
 			lang[10] = ["计量清零","","","",""];
 			lang[11]  = ["主机", "", "", "", ""];
 			lang[12]  = ["副机", "", "", "", ""];
+			lang[13] = ["序号","","","",""];
+			lang[14] = ["回路名称","","","",""];
+			lang[15] = ["电能消耗(kWh)","","","",""];
+			lang[16] = ["历史记录","","","",""];
+			lang[17] = ["重置清零","","","",""];
 			dev_name[0] = lang[11][language];
 			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[12][language] + i;
 			}
 		}
 		function LangFun(){
-			for(let j = 1;j<9;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+				for(let j = 1;j<4;j++){
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
+				for(let j = 13;j<18;j++){
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
+			}else{
+				for(let j = 1;j<9;j++){
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
 			}
+
+
 			if(slave_num != 0){
 				document.getElementById("dev_sel").style.display="";
 			}
@@ -131,14 +163,29 @@
 		}
 		ReadData();
 		function ReadData(){
-			for(var i = 1 ;i < output_num + 1;i++)
-			{
-				output_name[i] = output_info_[i - 1][12];
-				energe_val[i] = output_info_[i - 1][10];
-				ckd_state[i] = output_info_[i - 1][11];
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+
+				for(var i = 1 ;i < loop_num + 1;i++){
+					output_name[i] = "C" + i ;
+					energe_val[i] = output_info_[i - 1][11];
+					ckd_state[i] = output_info_[i - 1][12];
+				}
+			}else{
+				for(var i = 1 ;i < output_num + 1;i++)
+				{
+					output_name[i] = output_info_[i - 1][12];
+					energe_val[i] = output_info_[i - 1][10];
+					ckd_state[i] = output_info_[i - 1][11];
+				}
 			}
+
 		}
-		$('.table-striped').html(BuildTable(output_num));
+		if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){	
+			$('.table-striped').html(BuildTable(loop_num));		
+		}else{
+			$('.table-striped').html(BuildTable(output_num));
+		}
+
 		$('.devname').html(BuildSel((slave_num+1)));
 		LangFun();
 		ShowData();
@@ -153,20 +200,36 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
-				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));									
+				}else{
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
+				}
+
 				ShowData();
 				LangFun();
 				ModeSet();
 			},500);
 		}
 		function ShowData(){
-			for(let i = 0;i < output_num;i++){
-				state_ = document.getElementById('f' + i);
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){		
+				for(let i = 0;i < loop_num;i++){
+					state_ = document.getElementById('f' + i);
 				if(ckd_state[i+1] ==  1){
 					state_.checked = true;
 				}else{
 					state_.checked = false;
 				}
+				}
+			}else{
+				for(let i = 0;i < output_num;i++){
+					state_ = document.getElementById('f' + i);
+				if(ckd_state[i+1] ==  1){
+					state_.checked = true;
+				}else{
+					state_.checked = false;
+				}
+				}	
 			}
 		}
 		function Cked(ckd)
@@ -181,8 +244,24 @@
 			}else{
 				stat = '0';
 			}
-			if(number == output_num +1){
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+			
+			if(number == loop_num +1){
 				number1 = 0;
+				for(let i = 0;i<loop_num;i++){
+				if(ckd.checked == true){
+					document.getElementById(type1+(i)).checked = true;
+				}else{
+					document.getElementById(type1+(i)).checked = false;
+				}
+			}
+			}else{
+				number1 = number;
+			}
+			pdu_cfg.setData(2,energe_,sub,number1,stat);
+			}else{
+				if(number == output_num +1){
+					number1 = 0;
 				for(let i = 0;i<output_num;i++){
 				if(ckd.checked == true){
 					document.getElementById(type1+(i)).checked = true;
@@ -193,7 +272,9 @@
 			}else{
 				number1 = number;
 			}
-			pdu_cfg.setData(output,energe_,sub,number1,stat);
+			pdu_cfg.setData(output,energe_,sub,number1,stat);	
+			}
+
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);
@@ -204,7 +285,11 @@
 			setTimeout(function(){
 				par.parentNode.parentNode.parentNode.remove();
 				ReadData();
-				$('.table-striped').html(BuildTable(output_num));
+				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));				
+				}else{
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));	
+				}
 				ShowData();
 				LangFun();
 			},500);
@@ -215,12 +300,22 @@
 			var retVal = confirm("您已更改表单，请确认提交！");
 			if(retVal == true)
 			{
-				if(num !== output_num + 1){
+				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+					if(num !== loop_num + 1){
+					}
+					else{
+						num = 0;
+					}
+					pdu_cfg.setData(2,5,1,num,stat);
+				}else{
+					if(num !== output_num + 1){
+					}
+					else{
+						num = 0;
+					}
+					pdu_cfg.setData(output,5,1,num,stat);
 				}
-				else{
-					num = 0;
-				}
-				pdu_cfg.setData(output,5,1,num,stat);
+		
 				setTimeout(() => {
 					PduMetaData.meta_workDown();
 				}, 100);
@@ -272,12 +367,21 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="6%" id="lang_4"></td>\
-					<td width ="26%" id="lang_5"></td>\
-					<td width ="12%" id="lang_6"></td>\
-					<td width ="36%"></td>\
-					<td width ="8%" id="lang_7"></td>\
-					<td width ="8%" id="lang_8"></td>';
+					if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+						thead = '<tr><td width ="6%" id="lang_13"></td>\
+						<td width ="26%" id="lang_14"></td>\
+						<td width ="12%" id="lang_15"></td>\
+						<td width ="36%"></td>\
+						<td width ="8%" id="lang_16"></td>\
+						<td width ="8%" id="lang_17"></td>';					
+					}else{
+						thead = '<tr><td width ="6%" id="lang_4"></td>\
+						<td width ="26%" id="lang_5"></td>\
+						<td width ="12%" id="lang_6"></td>\
+						<td width ="36%"></td>\
+						<td width ="8%" id="lang_7"></td>\
+						<td width ="8%" id="lang_8"></td>';	
+					}
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
@@ -304,8 +408,14 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			for(let i = 0;i < output_num;i++){
-				document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+				for(let i = 0;i < loop_num;i++){
+					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+				}				
+			}else{
+				for(let i = 0;i < output_num;i++){
+					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+				}
 			}
 		}
 		setInterval(function(){
