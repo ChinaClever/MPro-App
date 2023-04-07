@@ -21,8 +21,8 @@ void Data_Outlet::outletNums()
 
     switch (mDev->cfg.param.devSpec) {
     case 1: obj->size = obj->cur.size = obj->pow.size = obj->relay.size = 0;break;
+    case 3: obj->size = obj->cur.size = obj->pow.size = 0; break;
     case 2: obj->relay.size = 0; break;
-    case 3: obj->cur.size = obj->pow.size = 0; break;
     }
 }
 

@@ -53,6 +53,7 @@ void Alarm_Log::resetAwtk()
 {
     system("killall awtk");
     system("awtk &");
+    cout << "awtk";
 }
 
 void Alarm_Log::generateQRcode()

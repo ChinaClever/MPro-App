@@ -44,16 +44,16 @@ bool Data_Relay::relayTimingCheck(const char (*str)[NAME_SIZE], int id)
 {
     bool ret = false;
     const char *ptr = str[id];
-    QString tcmd = "hh:mm:ss";
+    QString tcmd = "hh:mm"; // :ss
     QString dtcmd = "yyyy-MM-dd " + tcmd;
 
-    if(strlen(ptr) == 8) {
+    if((int)strlen(ptr) == tcmd.size()) {
         QTime t = QTime::fromString(ptr, tcmd);
         if(t.toString() == QTime::currentTime().toString()) ret = true;
-   } else if(strlen(ptr) == 19) {
+   } else if((int)strlen(ptr) == dtcmd.size()) {
         QDateTime t = QDateTime::fromString(ptr, dtcmd);
         if(t.toString() == QDateTime::currentDateTime().toString()) ret = true;
-    }
+    } else if(strlen(ptr)) cout << ptr;
 
     return ret;
 }

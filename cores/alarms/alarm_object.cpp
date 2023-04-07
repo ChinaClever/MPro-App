@@ -286,6 +286,18 @@ bool Alarm_Object::powPfValue(sDataItem &index)
     return ret;
 }
 
+void Alarm_Object::clearEle(sDataItem &index)
+{
+    int start=0, end=0;
+    sDevCfg *cfg = &cm::masterDev()->cfg;
+    if(cfg->param.devSpec == 3) {
+        for(int i=0; i<index.id+1; ++i) {
+            if(i) start += cfg->nums.loopEachNum[i-1];
+            end += cfg->nums.loopEachNum[i];
+        } OP_Core::bulid()->clearEle(start, end);
+    } else OP_Core::bulid()->clearEle(index.id);
+}
+
 bool Alarm_Object::eleValue(sDataItem &index)
 {
     bool ret = true; uint *ptr = nullptr;
@@ -300,7 +312,7 @@ bool Alarm_Object::eleValue(sDataItem &index)
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
             else setAll(ptr, index.value, obj->size);
-            if(DTopic::Ele == index.topic) OP_Core::bulid()->clearEle(index.id);
+            if(DTopic::Ele == index.topic) clearEle(index);
         } else index.value = ptr[index.id];
     }
 
