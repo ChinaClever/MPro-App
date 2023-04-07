@@ -391,9 +391,11 @@
 				//}
 				}
 			}
+			loop_se = [];
 			for(let i = 0;i<loop_num;i++){
-				loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
+					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
 			}
+			loop_info = [];
 			for(let i = 0;i<loop_num;i++){
 				loop_info[i] = new Array();
 				loop_info[i][0] = "C" + (i + 1);
@@ -457,6 +459,7 @@
 				ParseData();
 				ShowData();
 				LangFun();
+				flash_html();
 			},500);
 		}
 		function delay() {
@@ -712,6 +715,17 @@
 				iptname[i].disabled = true;
 			}
 		}
+		function flash_html(par)
+		{
+			setTimeout(function(){
+				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
+				ReadData();
+		
+				$('.loop_table').html(BuildTableLoop(loop_num));
+				LangFun();
+				ShowData();
+			},200);
+		}
 		function BuildTablePhase(obj) {
 			let tbody = '';
 			if (obj == 0) {
@@ -745,15 +759,15 @@
 		function BuildTableLoop(obj) {
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
-			tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-			tbody += '<tr><td class="spacing" id="lang_8"></td>';
-			tbody += '<td class="spacing" id="lang_9"></td>';
-			tbody += '<td class="spacing" id="lang_10"></td>';
-			tbody += '<td class="spacing" id="lang_11"></td>';
-			tbody += '<td class="spacing" id="lang_12"></td>';
-			tbody += '<td class="spacing" id="lang_13"></td>';
-			tbody += '<td class="spacing" id="lang_14"></td>';
-			tbody += '<td class="spacing" id="lang_15"></td></tr>';			
+				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
+				tbody += '<tr><td class="spacing" id="lang_8"></td>';
+				tbody += '<td class="spacing" id="lang_9"></td>';
+				tbody += '<td class="spacing" id="lang_10"></td>';
+				tbody += '<td class="spacing" id="lang_11"></td>';
+				tbody += '<td class="spacing" id="lang_12"></td>';
+				tbody += '<td class="spacing" id="lang_13"></td>';
+				tbody += '<td class="spacing" id="lang_14"></td>';
+				tbody += '<td class="spacing" id="lang_15"></td></tr>';			
 			}else{
 				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 				tbody += '<tr><td class="spacing" id="lang_8"></td>';
@@ -817,6 +831,8 @@
 		setInterval(function () {
 			ParseData();
 			ReadData();
+			ShowData()
+			flash_html();
 		}, 2000);
 	</script>
 </body>

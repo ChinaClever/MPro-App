@@ -215,7 +215,8 @@ struct sUutInfo {
     char devName[NAME_SIZE]; // 设备名称
     char qrcode[4*NAME_SIZE]; // 二维码
     char devType[NAME_SIZE]; // 设备型号
-    char reserve[3][NAME_SIZE];
+    char uuid[NAME_SIZE];
+    char reserve[2][NAME_SIZE];
     char sn[NAME_SIZE];
 };
 
@@ -292,15 +293,15 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线
+    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线　６: 副机告警
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
     struct sObjData group; //组数据
     struct sObjData output; //位数据
     struct sObjData dual; //双电源
-    struct sObjData cabLoop; //机柜回路 ////======
-    struct sObjData cabLine; //机柜相 ////======
+    struct sObjData cabLoop; //机柜回路
+    struct sObjData cabLine; //机柜相
     struct sTgObjData tg; // 统计数据
     struct sTgObjData cabTg; // 机柜统计
     struct sEnvData env; // 环境数据
@@ -308,8 +309,8 @@ struct sDevData
     struct sDevCfg cfg; // 配置数据
     struct sFaultCode dtc; // 故障码
     struct sProcState proc; // 进程状态
-    struct sObjData reserveObj[6]; ////======
-    struct sTgObjData reserveTg[3]; ////======
+    struct sObjData reserveObj[6];
+    struct sTgObjData reserveTg[3];
 
     uchar lps; // 防雷开关
     uchar dc; // 交直流标志位

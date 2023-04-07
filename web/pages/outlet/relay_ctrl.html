@@ -419,7 +419,12 @@
 		}
 		function PutData(){
 			for(let i = 0;i < pdu_data.pdu_info.output_num;i++){
-				document.getElementById('c' + i).innerHTML = State[pdu_data.pdu_data.output_item_list.relay_state[i]];
+				if(State[pdu_data.pdu_data.output_item_list.relay_state[i]] == undefined){
+					document.getElementById('c' + i).innerHTML = State[1];
+				}else{
+					document.getElementById('c' + i).innerHTML = State[pdu_data.pdu_data.output_item_list.relay_state[i]];
+				}
+				
 			}
 		}
 		setInterval(function(){

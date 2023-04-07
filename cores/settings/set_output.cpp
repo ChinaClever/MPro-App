@@ -48,13 +48,15 @@ void Set_Output::relayOpLog(const sDataItem &it)
 
 bool Set_Output::outputCtrl(const sDataItem &unit)
 {
+    if(unit.value > 2) return false;
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if((0==it->disabled[id]) || (unit.txType == DTxType::TxWeb)) {
-        OP_Core::bulid()->relayCtrl(unit.id, unit.value);
-        if(unit.value) it->cnt[id] += 1;
-        it->sw[id] = unit.value;
+        if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
+            if(unit.value) it->cnt[id] += 1;
+            it->sw[id] = unit.value;
+        } else ret = false;
     } else ret = false;
 
     return ret;
@@ -100,14 +102,11 @@ bool Set_Output::relaySet(sDataItem &unit)
 {
     bool ret = true;
     switch (unit.subtopic) {
-    case DSub::Value:
-        if(unit.type == DType::Group) ret = groupCtrl(unit);
-        else ret = outputCtrl(unit);
-        break;
+    case DSub::Value: if(unit.type == DType::Group) ret = groupCtrl(unit); else ret = outputCtrl(unit); break;
     case DSub::Relays: ret = outputsCtrl(unit); break;
     case DSub::UpDelay: OP_Core::bulid()->setDelay(unit.id, unit.value); //break;
     default: ret = upMetaData(unit); Cfg_Core::bulid()->writeAlarms(); break;
-    } relayOpLog(unit);
+    } if(ret) relayOpLog(unit);
 
     //if(unit.type == DType::Dual) {
     //    sDataItem it = unit; it.addr += 1;
@@ -230,7 +229,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     case 2: ptr = obj->relay.timingOn[id]; break;
     case 3: ptr = obj->relay.timingOff[id]; break;
     default: res = false; cout << it.fc; break;
-    }
+    } cout << it.type << it.fc << v;
 
     if(ptr){
         QByteArray array = v.toByteArray();

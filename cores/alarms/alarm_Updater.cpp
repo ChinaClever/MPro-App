@@ -228,6 +228,25 @@ bool Alarm_Updater::upSensors(sDataItem &index, sEnvData &it)
     return ret;
 }
 
+bool Alarm_Updater::upCabData(sDataItem &index, sDevData *it)
+{
+    bool ret = false;
+
+    index.type = DType::Dual;
+    ret |= upObjData(index, it->dual);
+
+    index.type = DType::CabLine;
+    ret |= upObjData(index, it->cabLine);
+
+    index.type = DType::CabLoop;
+    ret |= upObjData(index, it->cabLoop);
+
+    index.type = DType::CabTg;
+    ret |= upTgObjData(index, it->cabTg);
+
+    return ret;
+}
+
 bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 {
     bool ret = false;
@@ -244,9 +263,6 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     index.type = DType::Group;
     ret |= upObjData(index, it->group);
 
-    index.type = DType::Dual;
-    ret |= upObjData(index, it->dual);
-
     index.type = DType::Tg;
     ret |= upTgObjData(index, it->tg);
 
@@ -255,6 +271,7 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
 
     index.type = DType::Sensor;
     ret |= upSensors(index, it->env);
+    ret |= upCabData(index, it);
 
     return ret;
 }
@@ -266,7 +283,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
     sDataItem index; index.addr = addr;
     uchar *ptr = &cm::masterDev()->status;
     Alarm_Log::bulid()->currentAlarmClear(addr);
-    //if(0 == addr) dev->offLine = 5;
+    if(0 == addr) dev->offLine = 5;
 
     if(dev->offLine > 1) {
         ret = upDevData(index, dev);
@@ -274,6 +291,7 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
         dev->status = dev->alarm;
         if(!ret && mCrAlarm) dev->status = 1;
         if(dev->dtc.fault) dev->status = 4;
+        if(addr && (0 == *ptr) && dev->alarm) *ptr=6;
         if(cm::dataPacket()->ota.work) dev->status = 3;
     } else if(dev->offLine <= 1) {
         dev->status = 5; if(!(*ptr)) *ptr=5;

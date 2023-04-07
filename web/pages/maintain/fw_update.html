@@ -72,6 +72,7 @@
 		lang_init();
 		function read_data(){
 			let i = 0;
+			slave_data[i] = new Array();
 			for(i = 1;i<slave_num+1;i++){
 				slave_data[i][0] = pdu_cfg.cfgValue(92,6,5,i);
 				slave_data[i][1] = parseInt(pdu_cfg.cfgValue(92,6,4,i));
@@ -131,6 +132,7 @@
 			for(i = 0;i<4;i++){
 				update_state[i] = lang[27 +i][language];
 			}
+			//read_data();
 		}
 		function lang_fun(){
 			for(let j = 1;j<14;j++){
@@ -239,6 +241,12 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		setInterval(function () {
+			ParseData();
+			read_data();
+			show_data()
+			flash_data();
+		}, 2000);
     </script>
 </body>
 </html>

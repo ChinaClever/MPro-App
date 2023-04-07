@@ -11,6 +11,7 @@ public:
 
 private:
     void initVer();
+    void initUuid();
     void compileTime();
 };
 

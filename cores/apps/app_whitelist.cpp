@@ -20,11 +20,18 @@ void App_WhiteList::internetFirewall()
         system("netcfg -s on");
         system("netcfg -a '127.0.0.1 - - -'");
         for(int i=0; i<WHITE_LIST_NUM; ++i) {
-            QString ip = cfg->ip[i]; if(ip.isEmpty()) ip = "-";
-            QString mac = cfg->mac[i]; if(mac.isEmpty()) mac = "-";
-            QString fmd = "netcfg -a '%1 - - %2'";
-            if(ip.size() > 2 || mac.size() > 2) {
-                QString cmd = fmd.arg(ip, mac);
+            QString ip = cfg->ip[i]; //if(ip.isEmpty()) ip = "-";
+            if(ip.size() > 2) {
+                QString fmd = "netcfg -a '%1 - - -'";
+                QString cmd = fmd.arg(ip);
+                system(cmd.toLocal8Bit().data());
+                qDebug() << cmd; ret = true;
+            }
+
+            QString mac = cfg->mac[i]; //if(mac.isEmpty()) mac = "-";
+            if(mac.size() > 2) {
+                QString fmd = "netcfg -a '- - - %1'";
+                QString cmd = fmd.arg(mac);
                 system(cmd.toLocal8Bit().data());
                 qDebug() << cmd; ret = true;
             }

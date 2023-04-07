@@ -52,7 +52,7 @@
     let web_service = 0;
     let user_name = "",identify = "";
     //let hasher = CryptoJS.algo.SHA256.create();
-   /* let time1 = setInterval(function(){
+    let time1 = setInterval(function(){
       if(time1_num== 20 ){
         clearInterval(time1);
       }
@@ -66,7 +66,7 @@
         clearInterval(time1);
       }
       time1_num ++;
-    },50);*/
+    },50);
     function LangInit(){
 
     }
@@ -82,7 +82,7 @@
       }
     }
     let time3 = setInterval(function(){
-      if(time3_num >= 25){
+      if(time3_num >= 0.5){
           GotoRegisterPage();
           clearInterval(time3);
       }
@@ -105,10 +105,13 @@
           alert("请输入5-16位用户名");
           return ;
         }
-        if(!pattern.test(psd)){
-          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
-          return ;
-        }
+
+        //if(!pattern.test(psd)){
+        //alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+        //return ;
+        //}
+
+
        // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         let userPsd = usr + ";" + psd;
         obj.setCfg(user,11,userPsd,0,0);

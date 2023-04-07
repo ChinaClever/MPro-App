@@ -29,6 +29,15 @@ bool App_Smtp::smtp_testMail()
     return true;
 }
 
+QString App_Smtp::smtp_uut()
+{
+    QString str;
+    str = "ip addr:";
+    str += cm::dataPacket()->net.inet.ip;
+    str += "\r\n";
+    return str;
+}
+
 void App_Smtp::sendMail()
 {
     //if(!smtpCfg.en) return;
@@ -57,7 +66,7 @@ void App_Smtp::sendMail()
         }
     } message.setSubject("PDU Email");
 
-    QString contents;
+    QString contents = smtp_uut();
     foreach(const auto &it, mList)
         contents += it + "\r\n";
     mList.clear();

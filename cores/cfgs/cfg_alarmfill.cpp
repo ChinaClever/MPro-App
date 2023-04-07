@@ -78,6 +78,12 @@ void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     size = obj->dualSize = OUTPUT_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->dual, obj->dual[i]);
 
+    size = obj->cabLineSize = LINE_NUM;
+    for(int i=0; i<size; ++i) upObjData(i, data->cabLine, obj->cabLine[i]);
+
+    size = obj->cabLoopSize = LOOP_NUM;
+    for(int i=0; i<size; ++i) upObjData(i, data->cabLoop, obj->cabLoop[i]);
+
     size = obj->outputSize = OUTPUT_NUM;
     for(int i=0; i<size; ++i) upObjData(i, data->output, obj->output[i]);
 
@@ -85,6 +91,7 @@ void Cfg_AlarmFill::upDevData(sDevData *data, cfg::_sDevData *obj)
     for(int i=0; i<size; ++i) upEnvData(i, data->env, obj->env[i]);
 
     obj->tg = data->tg;
+    obj->cabTg = data->cabTg;
     //obj->info = data->info;
     //obj->login = cm::dataPacket()->login;
     obj->tg.vol.value = obj->tg.cur.value = obj->tg.pow.value = 0;

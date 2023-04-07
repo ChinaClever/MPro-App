@@ -78,7 +78,7 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
         proc.daemonSec = proc.runSec;
     } else if(!proc_isRun(name)){
         resetProc(proc, name);
-        ret = false;
+        ret = false; qDebug() << "AAAAAAAAAA" << name;
     } mdelay(100);
     return ret;
 }
@@ -86,10 +86,12 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
 void Daemons::workDown()
 {
     mdelay(5400); while(1) {
-        procRunStatus(mProcs->awtk, "awtk");
         procRunStatus(mProcs->core, "cores");
         procRunStatus(mProcs->web, "web_server");
         procRunStatus(mProcs->ota, "ota_updater");
         mProcs->daemon.runSec += 1; mdelay(1800);
+        if(5 == mProcs->daemon.runSec%30) {
+            procRunStatus(mProcs->awtk, "awtk");
+        }
     }
 }

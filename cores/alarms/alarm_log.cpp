@@ -49,12 +49,19 @@ void Alarm_Log::appendSlaveOffline(int addr)
     m_currentAlarm[0] += str + "\n";
 }
 
+void Alarm_Log::resetAwtk()
+{
+    system("killall awtk");
+    system("awtk &");
+    //cout << "awtk";
+}
+
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];
     if(str.size()) str = str.split("\n").first();
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
-    if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); }
+    if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
 
 QString Alarm_Log::alarmType(const sDataItem &index)
@@ -70,6 +77,9 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     case DType::Output: str += tr("输出位"); break;
     case DType::Env: str += tr("环境"); break;
     case DType::Sensor: str += tr("传感器"); break;
+    case DType::CabTg: str += tr("机柜总"); break;
+    case DType::CabLine: str += tr("机柜相"); break;
+    case DType::CabLoop: str += tr("机柜回路"); break;
     }
 
     switch (index.topic) {

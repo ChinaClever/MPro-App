@@ -298,10 +298,8 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     int start=1, end=0;
     QJsonArray loopEnd, loopStart;
     for(uint i=0; i<it.nums.loopNum; ++i) {
-        if(it.param.devSpec > 1) {
-            if(i) start += it.nums.loopEachNum[i-1];
-            end += it.nums.loopEachNum[i];
-        } else start = end = 0;
+        if(i) start += it.nums.loopEachNum[i-1];
+        end += it.nums.loopEachNum[i];
         loopEnd.append(end);
         loopStart.append(start);
     }
@@ -325,6 +323,7 @@ void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObje
     QJsonObject obj;
     obj.insert("sn", it.sn);
     obj.insert("room", it.room);
+    obj.insert("uuid", it.uuid);
     obj.insert("name", it.devName);
     obj.insert("qrcode", it.qrcode);
     obj.insert("pdu_type", it.devType);

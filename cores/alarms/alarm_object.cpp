@@ -54,6 +54,8 @@ sObjData *Alarm_Object::getObjData(const sDataItem &index)
     case DType::Group: obj = &(dev->group); break;
     case DType::Output: obj = &(dev->output); break;
     case DType::Dual: obj = &(dev->dual); break;
+    case DType::CabLine: obj = &(dev->cabLine); break;
+    case DType::CabLoop: obj = &(dev->cabLoop); break;
     default: cout << index.type; break;
     }
     return obj;
@@ -77,15 +79,15 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index)
     if(DType::Tg == index.type) return unit;
     sDevData *dev = cm::devData(index.addr);
 
-    if(index.type < DType::Env) {
-        obj = getObjData(index);
-        unit = getAlarmUnit(index, obj);
-    } else {
+    if(index.type == DType::Env) {
         switch (index.topic) {
         case DTopic::Tem: unit = &(dev->env.tem);break;
         case DTopic::Hum: unit = &(dev->env.hum);break;
         default: cout << index.topic; break;
         }
+    } else {
+        obj = getObjData(index);
+        unit = getAlarmUnit(index, obj);
     }
 
     return unit;
@@ -95,7 +97,8 @@ sTgUnit *Alarm_Object::getTgAlarmUnit(const sDataItem &index)
 {
     sTgUnit *unit = nullptr;
     sTgObjData *obj = &(cm::devData(index.addr)->tg);
-    if(DType::Tg == index.type) {
+    if(DType::CabTg == index.type) obj = &(cm::devData(index.addr)->cabTg);
+    if((DType::Tg == index.type) || (DType::CabTg == index.type)) {
         switch (index.topic) {
         case DTopic::Vol: unit = &(obj->vol); break;
         case DTopic::Cur: unit = &(obj->cur); break;
@@ -118,10 +121,38 @@ sRelayUnit *Alarm_Object::getRelayUnit(const sDataItem &index)
     return unit;
 }
 
-void Alarm_Object::setAll(uint *ptr, uint value, int size)
+bool Alarm_Object::setAll(uint *ptr, sDataItem &index, sAlarmUnit *unit)
+{
+    bool ret =  true;
+    int size = unit->size;
+    uint value = index.value;
+    for(int i=0; i<size; ++i) {
+        sDataItem it = index; it.id = i+1;
+        ret = alarmUnitCheck(it, unit);
+        if(!ret) return ret;
+    }
+
+    return setAll(ptr, value, size);
+}
+
+bool Alarm_Object::setAll(uint *ptr, uint value, int size)
 {
     if(0 == size) size = OUTPUT_NUM;
     for(int i=0; i<size; ++i)  ptr[i] = value;
+    return true;
+}
+
+bool Alarm_Object::alarmUnitCheck(sDataItem &index, sAlarmUnit *unit)
+{
+    bool ret = true; int id = index.id; if(id) id -= 1;
+    uint v = index.value; switch (index.subtopic) {
+    case DSub::VMax: if((v > (unit->rated[id])*1.3) || (v < unit->crMax[id])) ret = false; break;
+    case DSub::VCrMax: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
+    case DSub::VCrMin: if((v > unit->crMax[id]) || (v < unit->min[id])) ret = false; break;
+    case DSub::VMin: if(v > unit->crMax[id]) ret = false; break;
+    } if(id >= unit->size) ret = false;
+
+    return ret;
 }
 
 bool Alarm_Object::alarmUnitValue(sDataItem &index)
@@ -148,8 +179,10 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
 
     if(ptr) {
         if(index.rw){
-            if(index.id) ptr[index.id-1] = index.value;
-            else setAll(ptr, index.value, unit->size);
+            if(index.id) {
+                ret = alarmUnitCheck(index, unit);
+                if(ret) ptr[index.id-1] = index.value;
+            } else ret = setAll(ptr, index, unit);
         } else index.value = ptr[index.id];
 
         //if((index.type == DType::Env) && (index.topic == DTopic::Tem) ) {
@@ -253,6 +286,18 @@ bool Alarm_Object::powPfValue(sDataItem &index)
     return ret;
 }
 
+void Alarm_Object::clearEle(sDataItem &index)
+{
+    int start=0, end=0;
+    sDevCfg *cfg = &cm::masterDev()->cfg;
+    if(cfg->param.devSpec == 3) {
+        for(int i=0; i<index.id+1; ++i) {
+            if(i) start += cfg->nums.loopEachNum[i-1];
+            end += cfg->nums.loopEachNum[i];
+        } OP_Core::bulid()->clearEle(start, end);
+    } else OP_Core::bulid()->clearEle(index.id);
+}
+
 bool Alarm_Object::eleValue(sDataItem &index)
 {
     bool ret = true; uint *ptr = nullptr;
@@ -267,7 +312,7 @@ bool Alarm_Object::eleValue(sDataItem &index)
         if(index.rw){
             if(index.id) ptr[index.id-1] = index.value;
             else setAll(ptr, index.value, obj->size);
-            if(DTopic::Ele == index.topic) OP_Core::bulid()->clearEle(index.id);
+            if(DTopic::Ele == index.topic) clearEle(index);
         } else index.value = ptr[index.id];
     }
 
@@ -279,6 +324,7 @@ bool Alarm_Object::tgValue(sDataItem &index)
     bool ret = true;
     if(index.topic > DTopic::Pow) {
         sTgObjData *tg = &(cm::devData(index.addr)->tg);
+        if(DType::CabTg == index.type) tg = &(cm::devData(index.addr)->cabTg);
         switch (index.topic) {
         case DTopic::PF: index.value = tg->pf; break;
         case DTopic::Ele: index.value = tg->ele; break;
@@ -297,8 +343,8 @@ bool Alarm_Object::upMetaData(sDataItem &index)
 
     if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
     switch (index.type) {
-    case DType::Tg: return tgValue(index);
     case DType::Sensor: return sensorValue(index);
+    case DType::Tg: case DType::CabTg: return tgValue(index);
     }
 
     switch (index.topic) {

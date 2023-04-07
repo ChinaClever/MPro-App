@@ -51,18 +51,17 @@ void pduDataGet(const QStringList &ls)
 void pduDataSet(const QStringList &ls)
 {
     SshRpcClient *rpc = SshRpcClient::bulid();
-    int k = 0; if(ls.size() == 6) {
+    bool res = false; int k = 0; if(ls.size() == 6) {
         uchar addr = ls.at(k++).toInt();
         uchar type = ls.at(k++).toInt();
         uchar topic = ls.at(k++).toInt();
         uchar sub = ls.at(k++).toInt();
         uchar id = ls.at(k++).toInt();
-        double value = ls.at(k++).toDouble();
-        bool res = rpc->pduDataSet(addr, type, topic, sub, id, value, 7); //DTxType::TxSsh
+        double value = ls.at(k++).toDouble(&res);
+        if(res) res = rpc->pduDataSet(addr, type, topic, sub, id, value, 7); //DTxType::TxSsh
         qDebug().noquote() <<  res;
     } else qCritical() << "pduDataSet Parameter error";
 }
-
 
 void pduCfgGet(const QStringList &ls)
 {
@@ -107,7 +106,7 @@ void pduLogFun(const QStringList &ls)
         uchar fc = ls.at(k++).toInt();
         uchar id = 0; if(ls.size() > 2) id = ls.at(k++).toInt();
         uchar sub = 0; if(ls.size() > 3) sub = ls.at(k++).toInt();
-        qDebug().noquote() << rpc->pduLogFun(type, fc, id, sub);
+        qDebug() << rpc->pduLogFun(type, fc, id, sub);
     } else qCritical() << "pduLogFun Parameter error";
 }
 

@@ -37,6 +37,7 @@ void Cascade_Fill::upRelayUnit(uchar id, sRelayUnit &unit, c_sRelayUnit &it)
     it.maxCnt = unit.maxCnt[id];
     it.disabled = unit.disabled[id];
     it.offAlarm = unit.offAlarm[id];
+    it.resetDelay = unit.resetDelay[id];
     it.powerUpDelay = unit.powerUpDelay[id];
     it.overrunOff = unit.overrunOff[id];
     it.timingEn = unit.timingEn[id];

@@ -104,14 +104,17 @@ void Mb_Loop::loop_setting(ushort addr, ushort value)
     default: cout << addr; return;
     }
 
-    switch (reg % 5) {
+    reg = reg % 5; switch (reg) {
     case 0: ptr = unit->en; break;
     case 1: ptr = unit->max; break;
     case 2: ptr = unit->crMax; break;
     case 3: ptr = unit->crMin; break;
     case 4: ptr = unit->min; break;
     default: cout << addr; break;
-    } if(ptr) ptr[id] = value;
+    }
+
+    bool ret = alarmUnitCheck(reg, id, unit, value);
+    if(ptr && ret) ptr[id] = value;
 }
 
 

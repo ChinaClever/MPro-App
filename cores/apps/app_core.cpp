@@ -6,6 +6,7 @@
 #include "app_core.h"
 #include "cfg_core.h"
 #include "cfg_app.h"
+//#include <QUuid>
 
 App_Core::App_Core(QObject *parent)
     : App_WhiteList{parent}
@@ -34,6 +35,21 @@ void App_Core::compileTime()
     cm::buildDateTime(vers->compileDate);
 }
 
+void App_Core::initUuid()
+{
+    QString fn = "/usr/data/clever/cfg/uuid.conf";
+    if(!QFile::exists(fn)) {
+        QString uuid = QUuid::createUuid().toString();
+        QString cmd = "echo '%1' > %2";
+        cmd = cmd.arg(uuid, fn); qDebug() << cmd;
+        system(cmd.toStdString().c_str());
+    }  QString cmd = "cat %1";
+    QString res = cm::execute(cmd.arg(fn)).remove("\n");
+    char *ptr = cm::masterDev()->cfg.uut.uuid;
+    qstrcpy(ptr, res.toLocal8Bit().data());
+    qDebug() << res;
+}
+
 void App_Core::initVer()
 {
     sVersions *ver = &(cm::masterDev()->cfg.vers);
@@ -51,6 +67,6 @@ void App_Core::initVer()
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
         qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark)-3);
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
-    } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
+    } else {ver->md5[0] = 0; cout << CFG_APP << "error";} initUuid();
 }
 

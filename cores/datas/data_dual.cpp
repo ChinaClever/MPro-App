@@ -14,21 +14,23 @@ int Data_Dual::setDualSize(int id, int type)
 {
     int size = 0;
     sObjData *obj = nullptr;
+    sDevData *dev = cm::devData(id);
+
     switch (type) {
     case DType::Dual:
-        size = mDev->cfg.nums.outputNum;
+        size = dev->output.pow.size;
         obj =  &(cm::devData(id)->dual);
         break;
 
-//    case DType::CabLine:
-//        size = mDev->cfg.nums.lineNum;
-//        obj =  &(cm::devData(id)->cabLoop);
-//        break;
+    case DType::CabLine:
+        size = dev->cfg.nums.lineNum;
+        obj =  &(cm::devData(id)->cabLoop);
+        break;
 
-//    case DType::CabLoop:
-//        size = mDev->cfg.nums.loopNum;
-//        obj =  &(cm::devData(id)->cabLoop);
-//        break;
+    case DType::CabLoop:
+        size = dev->cfg.nums.loopNum;
+        obj =  &(cm::devData(id)->cabLoop);
+        break;
     }
 
     if(obj) {
@@ -46,7 +48,7 @@ void Data_Dual::dualWork()
         dualWorkdown(DType::Dual);
         //dualWorkdown(DType::CabLine);
         //dualWorkdown(DType::CabLoop);
-    }
+    } else disDualAlarm();
 }
 
 void Data_Dual::dualWorkdown(int type)
@@ -58,6 +60,22 @@ void Data_Dual::dualWorkdown(int type)
         if(size > 0) dualData(i, type);
         //else disDualAlarm();
     } //dualTiming(0);
+}
+
+void Data_Dual::dualTgWork(int id)
+{
+    sTgObjData *dest = &(cm::devData(id)->cabTg);
+    sTgObjData *src1 = &(cm::devData(id)->tg);
+    sTgObjData *src2 = &(cm::devData(id+1)->tg);
+
+    dest->vol.value = (src1->vol.value + src2->vol.value)/2;
+    dest->cur.value = src1->cur.value + src2->cur.value;
+    dest->pow.value = src1->pow.value + src2->pow.value;
+    dest->pow.rated = src1->pow.rated + src2->pow.rated;
+    dest->reactivePow = src1->reactivePow + src2->reactivePow;
+    dest->artPow = src1->artPow + src2->artPow;
+    dest->ele = src1->ele + src2->ele;
+    //dest->pf[i] = calPf(i, *dest);
 }
 
 
@@ -74,17 +92,17 @@ void Data_Dual::dualData(int id, int type)
         src2 = &(cm::devData(id+1)->output);
         break;
 
-//    case DType::CabLine:
-//        dest = &(cm::devData(id)->cabLine);
-//        src1 = &(cm::devData(id)->line);
-//        src2 = &(cm::devData(id+1)->line);
-//        break;
+    case DType::CabLine:
+        dest = &(cm::devData(id)->cabLine);
+        src1 = &(cm::devData(id)->line);
+        src2 = &(cm::devData(id+1)->line);
+        break;
 
-//    case DType::CabLoop:
-//        dest = &(cm::devData(id)->cabLoop);
-//        src1 = &(cm::devData(id)->loop);
-//        src2 = &(cm::devData(id+1)->loop);
-//        break;
+    case DType::CabLoop:
+        dest = &(cm::devData(id)->cabLoop);
+        src1 = &(cm::devData(id)->loop);
+        src2 = &(cm::devData(id+1)->loop);
+        break;
     }
 
     for(int i=0; i<dest->size; ++i) {
@@ -96,7 +114,7 @@ void Data_Dual::dualData(int id, int type)
         dest->artPow[i] = src1->artPow[i] + src2->artPow[i];
         dest->ele[i] = src1->ele[i] + src2->ele[i];
         dest->pf[i] = calPf(i, *dest);
-    } //dualTiming(id);
+    } dualTgWork(id); //dualTiming(id);
 }
 
 
@@ -119,14 +137,28 @@ void Data_Dual::dualTiming(int id)
 
 void Data_Dual::disDualAlarm()
 {
-    sObjData *it = &mDev->dual;
-    for(int i=0; i<OUTPUT_NUM; ++i) {
-        it->vol.en[i] = 0;
-        it->cur.en[i] = 0;
-        it->pow.en[i] = 0;
-        it->relay.disabled[i] = 0;
-        it->relay.offAlarm[i] = 0;
-        it->relay.timingEn[i] = 0;
-        it->relay.overrunOff[i] = 0;
+    int num = mDev->cfg.nums.slaveNum;
+    for(int i=0; i<=num; ++i) {
+        sDevData *dev = cm::devData(i);
+        dev->dual.size = 0;
+        dev->dual.pow.size = 0;
+
+        dev->cabLoop.size = 0;
+        dev->cabLoop.pow.size = 0;
+
+        dev->cabLine.size = 0;
+        dev->cabLine.pow.size = 0;
     }
+
+
+    //    sObjData *it = &mDev->dual;
+    //    for(int i=0; i<OUTPUT_NUM; ++i) {
+    //        it->vol.en[i] = 0;
+    //        it->cur.en[i] = 0;
+    //        it->pow.en[i] = 0;
+    //        it->relay.disabled[i] = 0;
+    //        it->relay.offAlarm[i] = 0;
+    //        it->relay.timingEn[i] = 0;
+    //        it->relay.overrunOff[i] = 0;
+    //    }
 }

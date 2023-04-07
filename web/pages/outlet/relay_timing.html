@@ -307,9 +307,16 @@
 			}
 			val += document.getElementById('f'+ (num -1)).value;
 			if(type1 == 'g'){
-				if(document.getElementById('d' + (num -2)).innerHTML == val){
-					alert("警告：不能选择同样的上下电时间，请重新提交！")
-					return;
+				if(num < 25){
+					if(document.getElementById('d' + (num -1)).innerHTML == val){
+						alert("警告：不能选择同样的上下电时间，请重新提交！")
+						return;
+					}				
+				}else{
+					if(document.getElementById('d' + (num -2)).innerHTML == val){
+						alert("警告：不能选择同样的上下电时间，请重新提交！")
+						return;
+					}					
 				}
 			}else{
 				if(document.getElementById('c' + (num -1)).innerHTML == val){

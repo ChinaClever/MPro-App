@@ -50,16 +50,8 @@ void Cfg_devParam::devNumRead(sDevNums &it)
 
     for(uint i=0; i<it.loopNum; ++i) {
         QString key = "loopEachNum_" + QString::number(i);
-        it.loopEachNum[i] = cfg->readCfg(key, 8*i+1, g).toUInt();
+        it.loopEachNum[i] = cfg->readCfg(key, 8, g).toUInt();
     }
-
-//    for(uint i=0; i<it.loopNum; ++i) {
-//        QString key = "loopStarts_" + QString::number(i);
-//        it.loopStarts[i] = cfg->readCfg(key, 8*i+1, g).toUInt();
-
-//        key = "loopEnds_" + QString::number(i);
-//        it.loopEnds[i] = cfg->readCfg(key, 8*(i+1), g).toUInt();
-//    }
 
     QByteArray array = cfg->readCfg("group", QByteArray(), g).toByteArray();
     if(array.size()) memcpy(it.group, array.data(), sizeof(it.group));
