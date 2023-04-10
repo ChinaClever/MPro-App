@@ -57,7 +57,7 @@ void Ota_Usb::usb_run()
         if(!(ret > 0 && FD_ISSET(CppLive, &fds))) continue;
         rcvlen = recv(CppLive, &buf, sizeof(buf), 0); /* receive data */
         if (rcvlen > 0) {
-            QString str = buf; //qDebug() << buf;
+            QString str = buf; qDebug() << buf;
             if(!isUsbRun && str.contains("scsi_disk"))
             {isUsbRun = true; emit usbSig();}
             /*You can do something here to make the program more perfect!!!*/
