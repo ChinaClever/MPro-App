@@ -42,12 +42,12 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
+        uutInfo(dev->cfg.uut, "uut_info", json);
 
         if(dc > 1) {
             online(json);
             faultCode(dev, json);
             devInfo(dev->cfg, "pdu_info", json);
-            uutInfo(dev->cfg.uut, "uut_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
@@ -320,14 +320,14 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 
 void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj;
-    obj.insert("sn", it.sn);
-    obj.insert("room", it.room);
-    obj.insert("uuid", it.uuid);
-    obj.insert("name", it.devName);
-    obj.insert("qrcode", it.qrcode);
-    obj.insert("pdu_type", it.devType);
-    obj.insert("location", it.location);
+    QJsonObject obj; int dc = mDataContent;
+    if((dc > 1) || qstrlen(it.sn)) obj.insert("sn", it.sn);
+    if((dc > 1) || qstrlen(it.room)) obj.insert("room", it.room);
+    if((dc > 1) || qstrlen(it.uuid)) obj.insert("uuid", it.uuid);
+    if((dc > 1) || qstrlen(it.devName)) obj.insert("name", it.devName);
+    if((dc > 1) || qstrlen(it.qrcode)) obj.insert("qrcode", it.qrcode);
+    if((dc > 1) || qstrlen(it.devType)) obj.insert("pdu_type", it.devType);
+    if((dc > 1) || qstrlen(it.location)) obj.insert("location", it.location);
     if(obj.size()) json.insert(key, obj);
 }
 

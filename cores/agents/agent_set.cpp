@@ -173,8 +173,8 @@ bool Agent_Set::setOutputName(const QVariant &value)
 bool Agent_Set::setName(int type,const QVariant &value)
 {
     sCfgItem item;
-    item.txType = DTxType::TxSnmp;
     item.type = 19 + type;
+    item.txType = DTxType::TxSnmp;
     item.addr = mIndex.addr; item.fc = mIndex.id;
     return Set_Core::bulid()->setCfg(item, value);
 }

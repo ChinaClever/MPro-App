@@ -132,7 +132,7 @@ void pduRelaysCtrl(const QStringList &ls)
         uchar start = ls.at(k++).toInt();
         uchar num = ls.at(k++).toInt();
         uchar on = ls.at(k++).toInt();
-        qDebug() << rpc->pduRelaysCtrl(addr, start, num, on);
+        qDebug() << rpc->pduRelaysCtrl(addr, start, num, on , 7);
     } else qCritical() << "pduRelaysCtrl Parameter error";
 }
 
@@ -151,7 +151,7 @@ bool workDown(const QStringList &str)
         else if(fc == "pduRelaysCtrl") pduRelaysCtrl(cmds);
         else if(fc == "pduLogFun") pduLogFun(cmds);
         else if(fc == "pduLogHda") pduLogHda(cmds);
-        else if(fc == "quit") ret = false;
+        else if(fc == "quit" || fc == "exit") ret = false;
         else usage();
     }
     return ret;

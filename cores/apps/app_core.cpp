@@ -44,7 +44,8 @@ void App_Core::initUuid()
         cmd = cmd.arg(uuid, fn); qDebug() << cmd;
         system(cmd.toStdString().c_str());
     }  QString cmd = "cat %1";
-    QString res = cm::execute(cmd.arg(fn)).remove("\n");
+    QString res = cm::execute(cmd.arg(fn)).remove("\n");    
+    res = res.remove("{").remove("}");
     char *ptr = cm::masterDev()->cfg.uut.uuid;
     qstrcpy(ptr, res.toLocal8Bit().data());
     qDebug() << res;
