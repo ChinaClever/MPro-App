@@ -538,14 +538,14 @@ class PduOta extends  PduLog{
     }
 
     otaValue(fc, id, addr) {
-        var key = 0+'_'+92+'_'+fc+'_'+id+'_'+addr;
+        var key = addr+'_'+92+'_'+fc+'_'+id+'_'+addr;
         return this.rpc.json_rpc_value(key);
     }
 
     // 刷新某个配置参数至Map表中
     getOta(fc, id, addr) {
         var method = "pduReadParam"; 
-        var params = [0, 92, fc, id,addr];
+        var params = [addr, 92, fc, id, addr];
         return this.rpc.json_rpc_get(method, params);
     }     
 

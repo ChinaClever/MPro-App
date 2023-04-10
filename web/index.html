@@ -6,7 +6,7 @@
 	<meta name="renderer" content="webkit">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
-	<title>MPDU</title>
+	<title id = "ser_type"></title>
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="icon" href="include/images/logo.png">
 	<link rel="stylesheet" href="include/css/public.min.css">
@@ -70,6 +70,13 @@
 		var run_status = new Array();
 		let pdu_data;
 		let lang =new Array();
+		let DataString = pdu_cfg_.meta_value();
+		if(DataString == null){
+			DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
+		}else{
+			pdu_data = JSON.parse(DataString);
+			document.getElementById("ser_type").innerHTML = document.getElementById("ser_type").innerHTML + pdu_data.uut_info.pdu_type;
+		}
 		for (let i = 0; i < 3; i++) {
 			total_data[i] = new Array(3);
 			inletA_data[i] = new Array(3);
@@ -156,7 +163,8 @@
 			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
-			//document.getElementById("MPDU").title = pdu_data.uut_info.pdu_type;
+			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;
+			//console.log(document.getElementById("MPDU").innerHTML);
 			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
