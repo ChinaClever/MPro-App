@@ -324,6 +324,12 @@
 			var type1 = ipt.id.substr(0,1);
 			var num = parseInt(ipt.id.slice(1))+1;
 			stat = parseInt(ipt.value);
+			if(stat <5){
+				alert("延时值不能低于5s!");
+				stat = 5;
+				return -1;
+			}else{
+			}
 			if(type1 === 'd'){
 				sub = 4;
 			}else if(type1 === 'j'){
@@ -391,7 +397,7 @@
 				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.output_item_list.name[i]+'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
 				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_powerup_delay[i]+'"></input></td>';
-				tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
+				tbody += '<td><input type = "text" onchange ="SetData(this)"  class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 				tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + Input_state[0] + '</button></td>';
@@ -405,7 +411,8 @@
 					tbody += '<td id = "b'+ i + '">'+lang[16][language]+'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" ></input></td>';
-					tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" ></input></td>';
+					//tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" ></input></td>';
+					tbody += '<td><input type = "text" onchange ="SetData(this)"  class = "input" id = "j'+ i + '" ></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "f'+ i + '" ></input></td>';
 					tbody += '<td><button id = "g'+ i + '" onclick = BtnClick(this) >' + Input_state[0] + '</button></td>';

@@ -75,7 +75,7 @@
       	 		pdu_cfg.getOta(7, 5, i);
 			}
 			pdu_cfg.getOta(1, 0, 0);
-		},200);
+		},600);
 
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -92,6 +92,7 @@
 			for( i = 0;i<slave_num;i++){
 				//slave_data[i][0] = pdu_cfg.otaValue(6,5,(i+1));
 				slave_data[i][0] = parseInt(pdu_cfg.otaValue(6,5,(i+1)));
+				if(null == slave_data[i][0]) return false;
 				slave_data[i][1] = parseInt(pdu_cfg.otaValue(6,4,(i+1)));
 				if(slave_data[i][1] == 3 || slave_data[i][1] ==4){
 					Slave_mark += 1;
@@ -283,7 +284,7 @@
 				pdu_cfg.fwupdateCfg();
 				setTimeout(function(){
 					read_data();
-					show_data();
+					//show_data();
 				},800);
 			},1500);
 		}
@@ -320,7 +321,7 @@
 		setInterval(function () {
 			ParseData();
 			read_data();
-			show_data();
+			//show_data();
 			setTimeout(function(){
 				for(i = 1;i<slave_num+1;i++){
 				pdu_cfg.getOta(6, 4, i);
@@ -332,7 +333,7 @@
       	 		pdu_cfg.getOta(7, 5, i);
 			}	
 			pdu_cfg.getOta(1, 0, 0);
-			},200);
+			},600);
 			//flash_data();
 		}, 2000);
     </script>

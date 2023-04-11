@@ -64,6 +64,9 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				ParseData();	
+			}
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
@@ -134,7 +137,7 @@
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},2100);
+		},1100);
 
 		function flash_html(par)
 		{

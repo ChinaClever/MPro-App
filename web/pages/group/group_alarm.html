@@ -368,10 +368,10 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_value[i]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_min[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_min[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_max[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_max[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_min[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_min[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_max[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_max[i]).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -381,10 +381,11 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"></input></td>';
+					//tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}

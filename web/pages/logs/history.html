@@ -83,6 +83,9 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				ParseData();
+			}
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			slave_num = pdu_data.pdu_info.slave_num +1;
@@ -332,7 +335,11 @@
 				start = arr[4];
 				end = arr[5];
 				if(arr[2] < 6){
-					fc = fc.slice(0,5);
+					if(arr[3] > 9){								
+						fc = fc.slice(0,6);
+					}else{
+						fc = fc.slice(0,5);	
+					}
 				}else{
 					fc = fc.slice(0,6);
 				}
