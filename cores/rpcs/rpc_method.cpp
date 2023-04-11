@@ -80,12 +80,12 @@ QString Rpc_Method::pduLogFun(int type, int fc, int id, int cnt)
     return Log_Core::bulid()->log_readFun(it);
 }
 
-bool Rpc_Method::pduRelaysCtrl(int addr, int start, int num, int on)
+bool Rpc_Method::pduRelaysCtrl(int addr, int start, int num, int on, int txType)
 {
     uchar topic = DTopic::Relay;
     uchar sub = DSub::Relays;
     uchar type = start;
 
-    return pduDataSet(addr, type, topic, sub, num, on);
+    return pduDataSet(addr, type, topic, sub, num, on, txType);
 }
 

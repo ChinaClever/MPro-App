@@ -25,8 +25,15 @@ void Set_Alarm::setAlarmLog(sDataItem &unit)
 QString Set_Alarm::opSrc(uchar addr, uchar txType)
 {
     QString str;
-    if(DTxType::TxWeb == txType) str = QStringLiteral("[Web操作] ");
-    else str = QStringLiteral("[协议控制] ");
+    switch (txType) {
+    case DTxType::TxWeb: str = QStringLiteral("[Web操作] "); break;
+    case DTxType::TxSnmp: str = QStringLiteral("[SNMP] "); break;
+    case DTxType::TxSsh: str = QStringLiteral("[SSH/Telnet] "); break;
+    case DTxType::TxRest: str = QStringLiteral("[REST] "); break;
+    case DTxType::TxRpc: str = QStringLiteral("[RPC] "); break;
+    case DTxType::TxJson: str = QStringLiteral("[JSON] "); break;
+    default: str = QStringLiteral("[协议控制] "); break;
+    }
 
     if(addr == 0xff) {
         str += QStringLiteral("所有级联设备");

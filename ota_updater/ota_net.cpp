@@ -85,7 +85,8 @@ void Ota_Net::workDown(const QString &fn, int bit)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
-    system("chmod 777 -R /usr/data/clever/");
+    system("echo 512 > /proc/sys/vm/min_free_kbytes");
+    system("chmod 777 -R /usr/data/clever/"); system("sync");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     QString cmd = fmd.arg(dir); cmd = cm::execute(cmd); throwMessage(cmd);
 

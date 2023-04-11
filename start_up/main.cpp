@@ -30,6 +30,7 @@ static void initSystem()
     system("cmd_fb display /dev/fb0");
     system("rm -rf /usr/data/upload");
     system("chmod 755 -R /usr/data/clever");
+    system("chmod 777 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
@@ -70,7 +71,7 @@ static void init_netWork()
 
 static void init_mem()
 {
-    //system("echo 38912 > /proc/sys/vm/min_free_kbytes");
+    system("echo 38912 > /proc/sys/vm/min_free_kbytes");
     system("echo 800 > /proc/sys/vm/vfs_cache_pressure");
     system("echo 0 > /proc/sys/vm/dirty_background_bytes");
     system("echo 1 > /proc/sys/vm/dirty_background_ratio");
