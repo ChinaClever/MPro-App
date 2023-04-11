@@ -457,7 +457,7 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
-				ShowData();
+				//ShowData();
 				LangFun();
 				flash_html();
 			},500);
@@ -570,8 +570,9 @@
 			// system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
 			// system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
 			// system_info[4] = sessionStorage.getItem(ver_name[1]);
-			ShowData();
+			//ShowData();
 			ReadChartData();
+			flash_html();
 		}
 		function BuildSel(rows) {
 			var tbody = '';
@@ -719,12 +720,15 @@
 		{
 			setTimeout(function(){
 				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
-				ReadData();
-		
+			//	ReadData();
+			//	document.getElementById('lang_8').parentNode.remove();
+				let DataString = pdu_cfg.meta_value();
+				pdu_data = JSON.parse(DataString);
+				loop_num = pdu_data.pdu_info.loop_num;
 				$('.loop_table').html(BuildTableLoop(loop_num));
 				LangFun();
 				ShowData();
-			},200);
+			},100);
 		}
 		function BuildTablePhase(obj) {
 			let tbody = '';
@@ -831,7 +835,7 @@
 		setInterval(function () {
 			ParseData();
 			ReadData();
-			ShowData()
+		//	ShowData()
 			flash_html();
 		}, 2000);
 	</script>
