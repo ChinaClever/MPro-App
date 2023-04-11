@@ -150,7 +150,7 @@ bool Alarm_Object::alarmUnitCheck(sDataItem &index, sAlarmUnit *unit)
     case DSub::VCrMax: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
     case DSub::VCrMin: if((v > unit->crMax[id]) || (v < unit->min[id])) ret = false; break;
     case DSub::VMin: if(v > unit->crMax[id]) ret = false; break;
-    } //if(id >= unit->size) ret = false;
+    } if(id >= unit->size) ret = false;
 
     return ret;
 }

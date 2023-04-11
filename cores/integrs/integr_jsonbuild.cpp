@@ -236,8 +236,9 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
         if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
-        alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
-        alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+        bool ret = false; for(int i=0; i<SENOR_NUM; ++i) if(it.isInsert[i]) ret = true;
+        if(ret) alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+        if(ret) alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
         sAlarmUnit tem=it.tem, hum=it.hum;
         tem.size = hum.size = SENOR_NUM;
