@@ -131,7 +131,7 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 {    
     QJsonArray array;
     for(int i=0; i<size; ++i) {
-        array.append(ptr[i]); //if(strlen(ptr[i]))
+         array.append(ptr[i]); //if(strlen(ptr[i]))
     } if(array.size()) json.insert(key, array);
 }
 
@@ -194,7 +194,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     else if(5 == type) groupRelayUnit(it.relay, "dual_relay", obj);
     else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
     else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
-    if(type > 2) strListAppend(it.name, size, "name", obj);
+    if(type > 2) { if(!size) {size = it.relay.size;} strListAppend(it.name, size, "name", obj); }
 
     json.insert(key, obj);
 }
