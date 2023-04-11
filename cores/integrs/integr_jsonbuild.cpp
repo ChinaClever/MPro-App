@@ -351,10 +351,10 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     ObjData(it->loop, "loop_item_list", obj, 2);
     ObjData(it->output, "output_item_list", obj, 3);
 
-    //if(mDataContent < 3) {
+    if(mDataContent < 3) {
         ObjData(it->group, "group_item_list", obj, 4);
         ObjData(it->dual, "dual_item_list", obj, 5);
-    //} else webGroupData(it, obj);
+    } else webGroupData(it, obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);
