@@ -44,7 +44,9 @@ int Data_Dual::setDualSize(int id, int type)
 
 void Data_Dual::dualWork()
 {
-    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
+    int mode = mDev->cfg.param.devMode;
+    int addr = mDev->cfg.param.cascadeAddr;
+    if((mode == EDevMode::DM_Dual) && (addr == 0)) {
         dualWorkdown(DType::Dual);
         //dualWorkdown(DType::CabLine);
         //dualWorkdown(DType::CabLoop);
