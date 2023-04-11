@@ -88,8 +88,9 @@
 		lang_init();
 		function read_data(){
 			let i = 0;
-			slave_data[i] = new Array();
+			
 			for( i = 0;i<slave_num;i++){
+				slave_data[i] = new Array();
 				//slave_data[i][0] = pdu_cfg.otaValue(6,5,(i+1));
 				slave_data[i][0] = parseInt(pdu_cfg.otaValue(6,5,(i+1)));
 				if(null == slave_data[i][0]) return false;
