@@ -331,8 +331,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
-    char global[NAME_SIZE];
-    char reserve[2][NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     uchar prefixLen;
 };
 

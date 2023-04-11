@@ -13,7 +13,7 @@ Data_Env::Data_Env()
 
 void Data_Env::setEnvSize()
 {
-    int size = 0;
+    int size = 4;
     for(int i=0; i<SENOR_NUM; ++i) {
         if(mDev->env.isInsert[i]) size = 2;
     } if(mDev->cfg.param.sensorBoxEn) size = SENOR_NUM;

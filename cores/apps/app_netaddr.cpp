@@ -219,7 +219,7 @@ void App_NetAddr::inet_dnsCfg()
 
 void App_NetAddr::inet_updateInterface()
 {
-    sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg();
+    sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
 #if (QT_VERSION < QT_VERSION_CHECK(5,13,0))
@@ -245,7 +245,8 @@ void App_NetAddr::inet_updateInterface()
                         qstrcpy(net->inet6.ip, hostIp.toString().remove("%eth0").toLatin1().constData()); //获取ip
                         qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
                         net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
-                    }
+                    } str = hostIp.toString() + "/" + QString::number(entry.prefixLength());
+                    if(k<3)qstrcpy(net->inet6.reserve[k++], str.remove("%eth0").toLatin1().constData());
                     break;
 
                 default:

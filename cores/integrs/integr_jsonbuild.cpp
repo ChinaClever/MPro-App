@@ -131,7 +131,7 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 {    
     QJsonArray array;
     for(int i=0; i<size; ++i) {
-        array.append(ptr[i]); //if(strlen(ptr[i]))
+         array.append(ptr[i]); //if(strlen(ptr[i]))
     } if(array.size()) json.insert(key, array);
 }
 
@@ -194,7 +194,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     else if(5 == type) groupRelayUnit(it.relay, "dual_relay", obj);
     else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
     else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
-    if(type > 2) strListAppend(it.name, size, "name", obj);
+    if(type > 2) { if(!size) {size = it.relay.size;} strListAppend(it.name, size, "name", obj); }
 
     json.insert(key, obj);
 }
@@ -236,8 +236,9 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
         if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
-        alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
-        alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+        bool ret = false; for(int i=0; i<SENOR_NUM; ++i) if(it.isInsert[i]) ret = true;
+        if(ret) alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+        if(ret) alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
         sAlarmUnit tem=it.tem, hum=it.hum;
         tem.size = hum.size = SENOR_NUM;
@@ -351,10 +352,10 @@ void Integr_JsonBuild::devData(sDevData *it, const QString &key, QJsonObject &js
     ObjData(it->loop, "loop_item_list", obj, 2);
     ObjData(it->output, "output_item_list", obj, 3);
 
-    //if(mDataContent < 3) {
+    if(mDataContent < 3) {
         ObjData(it->group, "group_item_list", obj, 4);
         ObjData(it->dual, "dual_item_list", obj, 5);
-    //} else webGroupData(it, obj);
+    } else webGroupData(it, obj);
 
     tgObjData(it->tg, "pdu_tg_data", obj);
     envData(it->env, "env_item_list", obj);

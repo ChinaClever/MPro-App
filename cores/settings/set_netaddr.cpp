@@ -28,6 +28,9 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
     case 7: res = inet->dns2; break;
     case 10: res = net->name; break;
     case 11: res = net->mac; break;
+    case 16: res = inet->reserve[0]; break;
+    case 17: res = inet->reserve[1]; break;
+    case 18: res = inet->reserve[2]; break;
     default: qDebug() << Q_FUNC_INFO; break;
     }
     return res;
