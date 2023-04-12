@@ -211,14 +211,20 @@
 				}
 			}else if(btn.id == "last"){ 
 				if((page_num - 1) > 0){
+					//document.getElementById("last").style.display = "none";
+					$("input[id=last]").attr("disabled","disabled");
 					page_num -= 1;
 					show_num = 20;
-					start_ = log_num-(page_num * 20);
+					start_ = log_num-(page_num * 20);			
 					pdu_log.log_fun(alarm_log,2,start_,show_num);
-					flash_html(btn);
+					setTimeout(() => {	
+					//	document.getElementById("last").style.display = "";	
+						$("input[id=last]").removeAttr("disabled");			
+					}, 1000);
+					flash_html(btn);				
 				}else{
-
 				}
+				
 			}else if(btn.id == "next"){
 				if((page_num + 1) <= page_size){
 					page_num += 1;

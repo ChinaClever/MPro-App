@@ -65,6 +65,8 @@
 		var output_num;
 		var dev_name =new Array();
 		var slave_num;
+		let pdu_spec;
+		let dev_mode;
 		let dual_dev_name =  new Array();
 		let lang = new Array();
 		let progress_width = new Array();
@@ -87,7 +89,12 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
 			dev_dis = pdu_data.pdu_info.cascade_addr;
+			dev_mode = pdu_data.pdu_info.dev_mode;
+			
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
+				hidden();
+			}
+			if(dev_mode != 2){
 				hidden();
 			}
 			let k = 0;
@@ -149,8 +156,8 @@
 				output_name[i] = pdu_data.pdu_data.dual_item_list.name[i-1];
 				//TotalPowVal[i] = parseFloat(dual_info_[i - 1][14]);
 				//TotalPowAlarm[i] = parseFloat(dual_info_[i - 1][11]);
-				TotalPowVal[i] = parseFloat(dual_info_[i - 1][11]);
-				TotalPowAlarm[i] = parseFloat(dual_info_[i - 1][14]);
+				TotalPowVal[i] = parseFloat(pdu_data.pdu_data.dual_item_list.pow_value[i-1]);
+				TotalPowAlarm[i] = parseFloat(pdu_data.pdu_data.dual_item_list.pow_alarm_status[i-1]);
 				TotalAVPowVal[i] = parseFloat(dual_info_[i - 1][0]);
 				TotalEnergeVal[i] = parseFloat(dual_info_[i - 1][4]);
 				PowValA[i] = parseFloat(output_info_[i - 1][20]);

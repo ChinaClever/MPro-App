@@ -62,6 +62,7 @@
 		}else{
 			document.getElementById("lang_2").style.display="";
 		}
+
 		function hidden(){
 			document.getElementsByClassName("page-cont")[0].style.display = "none";		
 		}
@@ -73,6 +74,9 @@
 			if(pdu_data.pdu_info.pdu_spec == 1){
 				hidden();
 			}
+			if(pdu_data.pdu_info.group_en == 0){
+			document.getElementById("lang_2").style.display="none";
+		}
 		}
 		function ReadData(){
 			for(var i = 1 ;i < group_num + 1;i++){

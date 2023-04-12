@@ -71,6 +71,7 @@
 			let dual_num;
 			let dual_name = new Array();
 			var slave_num;
+			let dev_mode;
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			if(top.login_permit_ == 1){
@@ -104,7 +105,11 @@
 				slave_num = pdu_data.pdu_info.slave_num;
 				language = pdu_data.pdu_info.language;
 				dev_dis = pdu_data.pdu_info.cascade_addr;
+				dev_mode = pdu_data.pdu_info.dev_mode;
 				if(pdu_data.pdu_info.pdu_spec == 1){
+					hidden();
+				}
+				if(dev_mode != 2){
 					hidden();
 				}
 				let k = 0;
