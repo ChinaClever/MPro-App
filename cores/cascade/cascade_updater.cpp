@@ -32,10 +32,11 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
-            if(!ret) ret = otaSendPacket(addr, data);
+            if(!ret) { ret = otaSendPacket(addr, data);
+                throwMessage(tr("Error: addr=%1: ota update packet failed").arg(addr)); }
             if(ret) {
                 i += data.size(); int v = (i*1000.0)/it.size;
-                if(v > pro){ pro = up->progs[addr] = v/10; up->results[addr] = 1;
+                if(v > (pro+1)){ pro = up->progs[addr] = v/10; up->results[addr] = 1;
                     throwMessage(tr("addr=%1: %2%").arg(addr).arg(v/10.0));
                     up->subId = addr; up->progress = v; up->isRun = 1;
                 }
