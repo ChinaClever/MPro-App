@@ -30,7 +30,7 @@ void Cfg_Core::slaveAlarmDefault()
     QString dir = "/usr/data/clever/cfg/";
     system(cmd.arg(dir+CFG_ALARM_DF).toLatin1().data());
 
-    cmd = "cp -af %1 %2"; cm::mdelay(543);
+    cmd = "cp -af %1 %2"; cm::mdelay(1543);
     cmd = cmd.arg(dir+CFG_ALARM_FN, dir+CFG_ALARM_DF);
     system(cmd.toLatin1().data()); qDebug() << cmd;
 }

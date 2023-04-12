@@ -23,7 +23,7 @@ void Cfg_AlarmObj::writeAlarms()
 
 bool Cfg_AlarmObj::saveAlarms()
 {
-    cm::mdelay(265); fillData();
+    cm::mdelay(365); fillData();
     QFile file(Cfg_Com::pathOfCfg(CFG_ALARM_FN));
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
