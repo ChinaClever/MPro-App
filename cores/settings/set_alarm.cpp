@@ -11,6 +11,18 @@ Set_Alarm::Set_Alarm()
 
 }
 
+bool Set_Alarm::thresholdSlave(int fc)
+{
+    Cfg_Core *cfg = Cfg_Core::bulid();
+    bool ret = true; switch (fc) {
+    case 1: cfg->writeAlarms(); break;
+    case 2: cfg->writeAlarmDefault(); break;
+    default: cout << fc; ret = false; break;
+    }
+
+    return ret;
+}
+
 bool Set_Alarm::setAlarm(sDataItem &unit)
 {   
     return upMetaData(unit);
