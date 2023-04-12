@@ -68,7 +68,7 @@ void SerialPort::waitForSend(int size)
 {
     if((size > 0) && (mBr > 0)) {
         int ms = (size*10.0)/mBr*1000;
-        cm::mdelay(ms+50);
+        cm::mdelay(2*ms+50);
     }
 }
 
@@ -93,10 +93,10 @@ QByteArray SerialPort::readSerial(int msecs)
         }
 
         do{
-            cm::mdelay(75);
+            cm::mdelay(85);
             array = mSerial->readAll();
             if(array.isEmpty()) {
-                cm::mdelay(85);
+                cm::mdelay(123);
                 array += mSerial->readAll();
             } rcv.append(array);
         } while (array.size());

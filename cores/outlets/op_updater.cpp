@@ -60,6 +60,7 @@ bool OP_Updater::ota_updates()
             emit otaFinish(i, ret);
             if(ret) up->results[i] = 2;
             else up->results[i] = 3;
+            cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
         if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
@@ -87,9 +88,9 @@ bool OP_Updater::ota_update(int addr, QByteArray &array)
 void OP_Updater::onOtaProgress(uchar addr, int v)
 {
     sOtaUpIt *it = &cm::dataPacket()->ota.outlet;
-    it->subId = addr; it->progress = it->progs[addr] = v;
-    QString str = "addr=%1 progress=%2";
-    throwMessage(str.arg(addr).arg(v));
+    it->subId = addr; it->progress = it->progs[addr] = v/10;
+    QString str = "addr=%1 progress=%2%";
+    throwMessage(str.arg(addr).arg(v/10.0));
 }
 
 bool OP_Updater::ota_update(int addr, const QString &fn)
@@ -100,7 +101,7 @@ bool OP_Updater::ota_update(int addr, const QString &fn)
         while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data); len += data.size();
-            int v = (len*100.0)/size; emit otaProgress(addr, v);
+            int v = (len*1000.0)/size; emit otaProgress(addr, v);
             if(ret) cm::mdelay(325); else break;
         } file.close();
     } else cout << addr << fn;
@@ -122,7 +123,7 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
     QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
-    if(!recv.contains("Start Updat")) {
+    if(!recv.contains("Start Updat")) { cm::mdelay(3250);
         recv = transmit(cmd, sizeof(cmd), 5000);
         if(!recv.isEmpty()) isOta = false;
         //if(!recv.contains("Start Updat")) isOta = false;
