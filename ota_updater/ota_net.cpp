@@ -54,7 +54,7 @@ bool Ota_Net::rootfsExists(const QString &path)
 {
     bool ret = false; QString dir = path + "rootfs";
     QStringList fns = File::entryList(dir); //cout << dir << fns << ret;
-    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;    
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;
     return ret;
 }
 
@@ -114,7 +114,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         ok = versionCheck(dir);
     } cm::execute("chmod 777 -R " + dir);
 
-    if(ok) {        
+    if(ok) {
         if(QFile::exists(dir+"auto.sh")) {
             QString str = "sh %1/auto.sh ";
             str = cm::execute(str.arg(dir));
@@ -125,10 +125,14 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         up->isRun = 2;
         if(bit != DOtaCode::DOta_Usb) {
             QString fn = it.path + it.file;
-            QString cmd = "rm -f " + fn;
-            system(cmd.toLocal8Bit());
-            cmd_updater(fn, 400); cm::mdelay(1100);
-            system("sync"); system("reboot");
+            bool ret = coreRuning();
+            if(ret) ret = cmd_updater(fn, bit);
+            if(!ret) {
+                QString cmd = "rm -f " + fn;
+                system(cmd.toLocal8Bit());
+                cmd_updater(fn, 400); cm::mdelay(1100);
+                system("sync"); system("reboot");
+            }
         }
     } clrbit(mOta->work, bit);
 }
