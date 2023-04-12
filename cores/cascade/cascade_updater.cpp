@@ -17,7 +17,7 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 void Cascade_Updater::throwMessage(const QString &msg)
 {
     QString str = "cascade updater " + msg;
-    QString ip = cm::dataPacket()->ota.host; qDebug() << str;
+    QString ip = cm::dataPacket()->ota.host; qDebug().noquote() << str;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
@@ -28,13 +28,15 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
         ret = otaSendInit(addr, it); cm::mdelay(150);
+        if(!ret) { cm::mdelay(650); ret = otaSendInit(addr, it);}
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
             ret = otaSendPacket(addr, data);
+            if(!ret) ret = otaSendPacket(addr, data);
             if(ret) {
-                i += data.size(); int v = (i*100.0)/it.size;
-                if(v > pro){ pro = up->progs[addr] = v; up->results[addr] = 1;
-                    throwMessage(tr("addr=%1: %2").arg(addr).arg(v));
+                i += data.size(); int v = (i*1000.0)/it.size;
+                if(v > pro){ pro = up->progs[addr] = v/10; up->results[addr] = 1;
+                    throwMessage(tr("addr=%1: %2%").arg(addr).arg(v/10.0));
                     up->subId = addr; up->progress = v; up->isRun = 1;
                 }
             } else {
@@ -59,6 +61,7 @@ void Cascade_Updater::ota_updates()
         for(uint i=0; i<size; ++i) {
             throwMessage(tr("addr=%1: %2").arg(i+1).arg(0));
             if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
+            if(i<size-1) cm::mdelay(11*1000);
         } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
         up->isRun = 0; cm::mdelay(255);
@@ -70,7 +73,7 @@ bool Cascade_Updater::otaSendInit(int addr, const sOtaFile &it)
     isOta = true; waitForLock(); cm::mdelay(200); mCnt = 0;
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << it.fc << it.dev <<it.path << it.file << it.md5 << it.sig << it.size << END_CRC;
-    QByteArray recv = tranData(fc_otaStart, addr, array);
+    QByteArray recv = tranData(fc_otaStart, addr, array); cm::mdelay(150);
     if(!recv.contains("Start Updata")) isOta = false;
     return isOta;
 }

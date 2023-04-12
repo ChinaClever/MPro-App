@@ -54,7 +54,7 @@ bool Ota_Net::rootfsExists(const QString &path)
 {
     bool ret = false; QString dir = path + "rootfs";
     QStringList fns = File::entryList(dir); //cout << dir << fns << ret;
-    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;    
+    if(fns.contains("rootfs.squashfs") && fns.contains("xImage")) ret = true;
     return ret;
 }
 
@@ -83,9 +83,9 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
+    system("rm -rf /tmp/updater/ota_apps/*");
     QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
-    system("echo 512 > /proc/sys/vm/min_free_kbytes");
     system("chmod 777 -R /usr/data/clever/"); system("sync");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
     QString cmd = fmd.arg(dir); cmd = cm::execute(cmd); throwMessage(cmd);
@@ -114,7 +114,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         ok = versionCheck(dir);
     } cm::execute("chmod 777 -R " + dir);
 
-    if(ok) {        
+    if(ok) {
         if(QFile::exists(dir+"auto.sh")) {
             QString str = "sh %1/auto.sh ";
             str = cm::execute(str.arg(dir));
@@ -125,10 +125,15 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         up->isRun = 2;
         if(bit != DOtaCode::DOta_Usb) {
             QString fn = it.path + it.file;
-            QString cmd = "rm -f " + fn;
-            system(cmd.toLocal8Bit());
-            cmd_updater(fn, 400); cm::mdelay(1100);
-            system("sync"); system("reboot");
+            bool ret = coreRuning();
+            if(ret) cmd_updater(fn, bit);
+            clrbit(mOta->work, bit);
+            if(!mOta->work) {
+                QString cmd = "rm -f " + fn;
+                system(cmd.toLocal8Bit());
+                cmd_updater(fn, 400); cm::mdelay(1100);
+                system("sync"); system("reboot");
+            }
         }
     } clrbit(mOta->work, bit);
 }

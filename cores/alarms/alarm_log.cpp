@@ -59,7 +59,7 @@ void Alarm_Log::resetAwtk()
 void Alarm_Log::generateQRcode()
 {
     static QString alarm; QString str = m_currentAlarm[0];
-    if(str.size()) str = str.split("\n").first();
+    if(str.size()) str = str.split("\n").first().split(";").first();
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
@@ -177,7 +177,7 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
     if(index.addr) it.alarm_status = tr("副机%1").arg(index.addr);
     //if(value) it.alarm_status += tr("告警"); else it.alarm_status += tr("恢复正常");
     if(index.type) it.alarm_status += tr("第%１").arg(index.id+1);
-    it.alarm_status += alarmType(index) +"; ";
+    it.alarm_status += alarmType(index) +", ";
 
     if(index.topic == DTopic::Relay) {
         it.alarm_content = alarmRelay(value);

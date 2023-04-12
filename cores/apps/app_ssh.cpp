@@ -24,7 +24,7 @@ void App_Ssh::ssh_delUser()
     QStringList ls = cm::execute(cmd).split("\n");
     if(ls.size() > 13){
         usr = ls.last();
-        cmd = "deluser -r " + usr;
+        cmd = "deluser " + usr;
         system(cmd.toLatin1().data());
     }
 }
