@@ -66,7 +66,7 @@ void App_Core::initVer()
         qstrcpy(ver->oldVersion, it.oldVersion.toUtf8().data());
         qstrcpy(ver->releaseDate, it.releaseDate.toUtf8().data());
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
-        qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark)-3);
+        qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark));
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
     } else {ver->md5[0] = 0; cout << CFG_APP << "error";} initUuid();
 }
