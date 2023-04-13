@@ -266,7 +266,6 @@
 										alert("未开启历史数据或此时间段没有数据！");
 									}
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
-	
 									log_num = getJsonLength(log_str.logs);
 									data_total = [];
 									for(let i = 0;i<log_num;i++){

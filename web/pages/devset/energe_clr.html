@@ -86,7 +86,7 @@
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
-			 loop_num = pdu_data.pdu_info.loop_num;
+			loop_num = pdu_data.pdu_info.loop_num;
 			language = pdu_data.pdu_info.language;
 			let k = 0;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
@@ -108,10 +108,6 @@
 				}
 				}	
 			}
-	
-			//if(pdu_data.pdu_info.pdu_spec == 3){
-			//	hidden();
-		//	}
 		}
 		ParseData();
 		LangInit();
@@ -142,6 +138,12 @@
 			}
 		}
 		function LangFun(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
 				for(let j = 1;j<4;j++){
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
@@ -163,8 +165,14 @@
 		}
 		ReadData();
 		function ReadData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			language = pdu_data.pdu_info.language;
+			output_name = [];
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-
 				for(var i = 1 ;i < loop_num + 1;i++){
 					output_name[i] = "C" + i ;
 					energe_val[i] = output_info_[i - 1][11];
@@ -195,23 +203,21 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			pdu_cfg.setAddr(addr);
-			//setTimeout(function(){
-			//	PduMetaData.meta_workDown();
-			//},100);
+			setTimeout(function(){
+				PduMetaData.meta_workDown();
+			},100);
 			setTimeout(function(){
 				ParseData();
-				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));									
-				}else{
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
-				}
-
-				ShowData();
-				LangFun();
-				ModeSet();
+				FlashHtml();
 			},500);
 		}
 		function ShowData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			output_num = pdu_data.pdu_info.output_num;
+			slave_num = pdu_data.pdu_info.slave_num;
+			loop_num = pdu_data.pdu_info.loop_num;
+			language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){		
 				for(let i = 0;i < loop_num;i++){
 					state_ = document.getElementById('f' + i);
@@ -244,37 +250,35 @@
 			}else{
 				stat = '0';
 			}
-			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-			
-			if(number == loop_num +1){
-				number1 = 0;
-				for(let i = 0;i<loop_num;i++){
-				if(ckd.checked == true){
-					document.getElementById(type1+(i)).checked = true;
+			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){		
+				if(number == loop_num +1){
+					number1 = 0;
+					for(let i = 0;i<loop_num;i++){
+						if(ckd.checked == true){
+							document.getElementById(type1+(i)).checked = true;
+						}else{
+							document.getElementById(type1+(i)).checked = false;
+						}
+					}
 				}else{
-					document.getElementById(type1+(i)).checked = false;
+					number1 = number;
 				}
-			}
-			}else{
-				number1 = number;
-			}
-			pdu_cfg.setData(2,energe_,sub,number1,stat);
+				pdu_cfg.setData(2,energe_,sub,number1,stat);
 			}else{
 				if(number == output_num +1){
 					number1 = 0;
 				for(let i = 0;i<output_num;i++){
-				if(ckd.checked == true){
-					document.getElementById(type1+(i)).checked = true;
-				}else{
-					document.getElementById(type1+(i)).checked = false;
+					if(ckd.checked == true){
+						document.getElementById(type1+(i)).checked = true;
+					}else{
+						document.getElementById(type1+(i)).checked = false;
+					}
 				}
+				}else{
+					number1 = number;
+				}
+				pdu_cfg.setData(output,energe_,sub,number1,stat);	
 			}
-			}else{
-				number1 = number;
-			}
-			pdu_cfg.setData(output,energe_,sub,number1,stat);	
-			}
-
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);
@@ -283,16 +287,26 @@
 		function FlashHtml()
 		{
 			setTimeout(function(){
-				par.parentNode.parentNode.parentNode.remove();
+				let DataString = pdu_cfg.meta_value();
+				let pdu_data = JSON.parse(DataString);
+				output_num = pdu_data.pdu_info.output_num;
+				slave_num = pdu_data.pdu_info.slave_num;
+				loop_num = pdu_data.pdu_info.loop_num;
+				language = pdu_data.pdu_info.language;
 				ReadData();
 				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));				
+				//	document.getElementById('lang_4').parentNode.parentNode.remove();
+				//	document.getElementById('tr0').parentNode.remove();
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));									
 				}else{
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));	
+				//	document.getElementById('lang_13').parentNode.remove();
+				//	document.getElementById('tr0').parentNode.remove();
+					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				}
-				ShowData();
 				LangFun();
-			},500);
+				ShowData();
+				ModeSet();
+			},200);
 		}
 		function BtnClick(btn){
 			let num = parseInt(btn.id.slice(1))+1;
@@ -367,6 +381,12 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
+				let DataString = pdu_cfg.meta_value();
+				let pdu_data = JSON.parse(DataString);
+				output_num = pdu_data.pdu_info.output_num;
+				slave_num = pdu_data.pdu_info.slave_num;
+				loop_num = pdu_data.pdu_info.loop_num;
+				language = pdu_data.pdu_info.language;
 					if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
 						thead = '<tr><td width ="6%" id="lang_13"></td>\
 						<td width ="26%" id="lang_14"></td>\
@@ -381,7 +401,9 @@
 						<td width ="36%"></td>\
 						<td width ="8%" id="lang_7"></td>\
 						<td width ="8%" id="lang_8"></td>';	
+
 					}
+
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
@@ -408,6 +430,12 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
+			let DataString = pdu_cfg.meta_value();
+				let pdu_data = JSON.parse(DataString);
+				output_num = pdu_data.pdu_info.output_num;
+				slave_num = pdu_data.pdu_info.slave_num;
+				loop_num = pdu_data.pdu_info.loop_num;
+				language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
 				for(let i = 0;i < loop_num;i++){
 					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
@@ -420,7 +448,8 @@
 		}
 		setInterval(function(){
 			ParseData();
-			ReadData();
+			//ReadData();
+			//FlashHtml();
 			PutData();
 		},2000);
 		
