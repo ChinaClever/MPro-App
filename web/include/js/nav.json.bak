@@ -112,11 +112,8 @@
       {
         "name": "分组定时",
         "url": "group_timing.html"
-      },
-      {
-        "name": "机架定时",
-        "url": "dual_timing.html"
-      }     
+      }
+    
     ]
   },
   {

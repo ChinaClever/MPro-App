@@ -93,6 +93,7 @@
 				$("textarea").attr("disabled","disabled");
 			}else{
 			}
+			FlashHtml();
 		}
 		function SetData(btn){
 			let mds_data = 0;
@@ -109,7 +110,7 @@
 			setTimeout(function(){
 				ReadData();
 				ShowData();
-			},500);
+			},300);
 		}
 		//限制中文15字，英文30字
 		var checklength = function(dom,maxlength){

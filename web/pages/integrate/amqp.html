@@ -84,11 +84,11 @@
 			document.getElementById("lang_15").value  = lang[15][language];
 		}
 		setInterval(function () {
-			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
-				document.getElementById("lang_13").innerHTML =	lang[19][language];
-			}else{
-				document.getElementById("lang_13").innerHTML =	lang[18][language];
-			}
+			pdu_cfg.ampqCfg();
+			ParseData();
+			read_data();
+			lang_fun();
+			showdata();
 		 	}, 2500);
 		function read_data(){
 			for(var j = 1;j<13;j++){

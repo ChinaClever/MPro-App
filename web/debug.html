@@ -255,6 +255,7 @@
 					}
 				}
 			}
+			pdu_obj.setCfg(97,2,1,0,addr);
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
@@ -338,6 +339,7 @@
 			for(let  i = 1;i<=output_num;i++){
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}
+			pdu_obj.setCfg(97,2,1,0,addr);
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);

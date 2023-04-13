@@ -95,11 +95,16 @@
 		}
 
 		setInterval(function () {
-			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
-				document.getElementById("lang_12").innerHTML =	lang[21][language];
-			}else{
-				document.getElementById("lang_12").innerHTML =	lang[20][language];
-			}
+			pdu_cfg.mqttCfg();
+			ParseData();
+			read_data();
+			lang_fun();
+			showdata();
+		//	if(pdu_cfg.cfgValue(19,10,0,0) =="false" || pdu_cfg.getCfg(19,10) =='0'){
+		//		document.getElementById("lang_12").innerHTML =	lang[21][language];
+		//	}else{
+		//		document.getElementById("lang_12").innerHTML =	lang[20][language];
+		//	}
 		 	}, 2500);
 		function read_data(){
 

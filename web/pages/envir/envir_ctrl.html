@@ -434,11 +434,20 @@
 					<td width ="70%"></td>\
 					<td width ="20%" id="lang_15"></td>';
 				}
-				tbody += '<tr id = "tr'+ i + '">';
+				if(i<2){
+					tbody += '<tr id = "tr'+ i + '">';
 					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
 					tbody += '<td id = "j'+ i + '"></td>';
 					tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+8][0]] +'</td>';
+					tbody += '</tr>';				
+				}else{
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
+					tbody += '<td id = "j'+ i + '"></td>';
+					tbody += '<td id = "k'+ i + '">'+ Sensor_state_[data[i+8][0]] +'</td>';
 					tbody += '</tr>';
+				}
+
 			}
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
