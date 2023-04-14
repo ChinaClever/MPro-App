@@ -675,19 +675,29 @@
 			}
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
-				}
-				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
 				}else{
 					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
 				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+			}
+			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+				document.getElementById('dat' + 70).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 70).bgColor = '';
+			}
+			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+				document.getElementById('dat' + 71).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 71).bgColor = '';
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){
