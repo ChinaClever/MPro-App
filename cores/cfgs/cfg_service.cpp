@@ -198,7 +198,7 @@ void Cfg_Service::log()
     for(int i=1; i<7; ++i)  {
         switch (i) {
         case 1: key = "eleTime";  cfg->eleTime = mCfg->readCfg(key, 7, prefix).toInt(); break;
-        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 2, prefix).toInt(); break;
+        case 2: key = "hdaTime";  cfg->hdaTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
         case 3: key = "logCnt";  cfg->logCnt = mCfg->readCfg(key, 10000, prefix).toInt();  break;
         case 4: key = "hdaCnt";  cfg->hdaCnt = mCfg->readCfg(key, 50000, prefix).toInt();  break;
         case 5: key = "eventCnt";  cfg->eventCnt = mCfg->readCfg(key, 10000, prefix).toInt();  break;
