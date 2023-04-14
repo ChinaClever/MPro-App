@@ -177,12 +177,27 @@
 				ShowData();
 			}
 		}
+		function SetData_other(btn){
+			let mds_data = 0;
+			if(confirm("请确认是否选择此功能！")){
+				for(let  i = 0;i < id_val.length;i++){
+					if(id_val[i] == btn.id){
+						pdu_cfg.setCfg(cfg,i,btn.value,0,addr);
+						PduMetaData.meta_workDown();
+						btn.blur();
+					}
+				}
+				FlashHtml();
+			}else{
+				ShowData();
+			}	
+		}
 		function Set(btn){
 			let mds_data = 0;
 			if(confirm("请确认是否修改此项。")){
 				pdu_cfg.setCfg(num,5,btn.value,0,addr);
 				btn.blur();
-				FlashHtml();
+			//	FlashHtml();
 			}else{
 				ShowData();
 			}
@@ -224,13 +239,13 @@
 			thead = '<tr><td width ="15%" id = "lang_6"></td>\
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td id = "lang_7"></td>';
-			tbody += '<td><select id ="buz" onchange ="SetData(this)">';
+			tbody += '<td><select id ="buz" onchange ="SetData_other(this)">';
 			for(var i = 0; i<opt_val.length;i++){
 				tbody +='<option value ="'+i+'">'+opt_val[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id = "lang_8"></td>';
-			tbody += '<td><select id ="data_len" onchange ="SetData(this)">';
+			tbody += '<td><select id ="data_len" onchange ="SetData_other(this)">';
 			for(var i = 0; i<sel_len.length;i++){
 				tbody +='<option value ="'+i+'">'+sel_len[i] +'</option>';
 			}

@@ -128,7 +128,8 @@
 			lang[17] = ["升级", "", "", "", ""];
 			lang[18] = ["故障", "", "", "", ""];
 			lang[19] = ["副机离线", "", "", "", ""];
-			lang[20] = ["副机告警", "", "", "", ""];
+			lang[20] = ["副机预警", "", "", "", ""];
+			lang[21] = ["副机告警", "", "", "", ""];
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
 			run_status[2] = lang[16][language_];
@@ -136,6 +137,7 @@
 			run_status[4] = lang[18][language_];
 			run_status[5] = lang[19][language_];
 			run_status[6] = lang[20][language_];
+			run_status[7] = lang[21][language_];
 		}
 		function TimeConvert(min){
 			let time_show;
@@ -202,7 +204,7 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6){
+			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6 ||pdu_data.status ==7){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 			}else{
 				alert("当前无告警日志！");
