@@ -46,6 +46,7 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 void Alarm_Log::appendSlaveOffline(int addr)
 {
     QString str = tr("副机%1离线;").arg(addr);
+    if(cm::en()) str = tr("slave %1 off-line;").arg(addr);
     m_currentAlarm[0] += str + "\n";
 }
 
