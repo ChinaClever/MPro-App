@@ -58,8 +58,9 @@ void Set_Updater::ota_log()
     }
 }
 
-void Set_Updater::ota_logErr(const QString &fn)
+bool Set_Updater::ota_logErr(const QString &fn)
 {    
+    bool ret = true;
     QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
@@ -78,8 +79,9 @@ void Set_Updater::ota_logErr(const QString &fn)
             it.remark = "updater error";
             it.oldVersion = "--- ---";
             it.releaseDate = ls.last();
-        }
+        } ret = false;
     } Log_Core::bulid()->append(it);
+    return ret;
 }
 
 bool Set_Updater::ota_cascade(const QString &fn)
@@ -118,6 +120,13 @@ bool Set_Updater::ota_outlet()
     return ret;
 }
 
+bool Set_Updater::ota_error(const QString &fn)
+{
+    bool ret = ota_logErr(fn);
+    if(ret) ret = ota_cascade(fn);
+    return ret?1:0;
+}
+
 int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
     bool ret = false; switch (fc) {
@@ -125,7 +134,7 @@ int Set_Updater::ota_updater(int fc, const QVariant &v)
     case DOtaCode::DOta_Net:  break;
     case DOtaCode::DOta_Web:  break;
     case DOtaCode::DOta_Rootfs:  break;
-    default: ota_logErr(v.toString()); return 0;
+    default: return ota_error(v.toString());
     }
 
     QString fn = v.toString();

@@ -124,13 +124,12 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         up->isRun = 2;
         if(bit != DOtaCode::DOta_Usb) {
             QString fn = it.path + it.file;
-            bool ret = coreRuning();
-            if(ret) cmd_updater(fn, bit);
             clrbit(mOta->work, bit);
+            cmd_updater(fn, 400);
+            cm::mdelay(1100);
             if(!mOta->work) {
                 QString cmd = "rm -f " + fn;
                 system(cmd.toLocal8Bit());
-                cmd_updater(fn, 400); cm::mdelay(1100);
                 system("sync"); system("reboot");
             }
         }
