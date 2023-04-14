@@ -83,7 +83,6 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    system("rm -rf /tmp/updater/ota_apps/*");
     QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/clever/"); system("sync");
