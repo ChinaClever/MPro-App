@@ -84,6 +84,7 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::OutputName: ret = outputNameSet(it, v); break;
     case SFnCode::EWhiteList: ret = setWhiteList(it.fc, v); break;
     case SFnCode::EDgsNet: ret = net_diagnoseSet(it.fc, v); break;
+    case SFnCode::EThreshold: ret = thresholdSlave(it.fc); break;
 
     case SFnCode::ESys: ret = syscmd(it.fc); break;
     case SFnCode::EBR: ret = restores(it.fc, v); break;
