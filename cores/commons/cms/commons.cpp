@@ -114,7 +114,12 @@ bool cm::isIPaddress(const QString& ip)
 
 bool cm::language()
 {
-    return masterDev()->cfg.param.language ? false: true;
+    return masterDev()->cfg.param.language;
+}
+
+bool cm::en()
+{
+    return cm::language();
 }
 
 QByteArray cm::zipCompress(const QByteArray &array)

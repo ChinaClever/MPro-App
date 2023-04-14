@@ -123,7 +123,7 @@ int Set_Login::loginCheck(const QString &str)
         sEventItem db; db.event_type = QStringLiteral("用户登陆");
         db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         Log_Core::bulid()->append(db); ret = 1;
-    } else ret = 0; // cout << ls << ret << mFailCnt;
+    } else ret = 0-loginTryLock(); // cout << ls << ret << mFailCnt;
 
     return ret;
 }
