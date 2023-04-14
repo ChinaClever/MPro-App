@@ -84,16 +84,16 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     }
 
     switch (index.topic) {
-    case DTopic::Vol: str += tr("电压"); break;
-    case DTopic::Cur: str += tr("电流"); break;
-    case DTopic::Pow: str += tr("功率"); break;
-    case DTopic::Ele: str += tr("电能"); break;
-    case DTopic::Tem: str += tr("温度"); break;
-    case DTopic::Hum: str += tr("湿度"); break;
-    case DTopic::Door1: str += tr("门禁1"); break;
-    case DTopic::Door2: str += tr("门禁２"); break;
-    case DTopic::Water: str += tr("水浸"); break;
-    case DTopic::Smoke: str += tr("烟雾"); break;
+    case DTopic::Vol: if(cm::en()) str += "voltage "; else str += tr("电压"); break;
+    case DTopic::Cur: if(cm::en()) str += "current "; else str += tr("电流"); break;
+    case DTopic::Pow: if(cm::en()) str += "active power "; else str += tr("功率"); break;
+    case DTopic::Ele: if(cm::en()) str += "electric energy "; else str += tr("电能"); break;
+    case DTopic::Tem: if(cm::en()) str += "temperature "; else str += tr("温度"); break;
+    case DTopic::Hum: if(cm::en()) str += "humidity "; else str += tr("湿度"); break;
+    case DTopic::Door1: if(cm::en()) str += "door 1 "; else str += tr("门禁1"); break;
+    case DTopic::Door2: if(cm::en()) str += "door 2 "; else str += tr("门禁２"); break;
+    case DTopic::Water: if(cm::en()) str += "water "; else str += tr("水浸"); break;
+    case DTopic::Smoke: if(cm::en()) str += "smog "; else str += tr("烟雾"); break;
     case DTopic::Relay: if(index.type == DType::Loop) str += tr("断路器"); else str += tr("开关"); break;
     }
 
