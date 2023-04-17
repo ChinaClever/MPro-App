@@ -12,6 +12,7 @@ public:
     QString alarmType(const sDataItem &index);
 
     QString getCurrentAlarm(int addr);
+    void currentAllAlarmClear() {for(int i=0; i<DEV_NUM; ++i) currentAlarmClear(i);}
     void currentAlarmClear(int addr){m_currentAlarm[addr].clear();}
     void appendAlarm(const sDataItem &index, uchar value);
     void appendSlaveOffline(int addr);
