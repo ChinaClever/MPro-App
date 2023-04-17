@@ -42,7 +42,8 @@
 		let language;
 		pdu_cfg.udpPush();
 		var mode_set = new Array();
-		var mode_name = new Array("","UDP","TCP","WebSocket");
+		//var mode_name = new Array("","UDP","TCP","WebSocket");
+		var mode_name = new Array();
 		var select_name = new Array("","udpEn","udpAddr","udpPort","delay","","","","mode","port");
 		var udp_sel = new Array("","","","");
 		var push_data = new Array();
@@ -86,9 +87,11 @@
 			lang[13] = ["禁用","","","",""];
 			lang[14] = ["启用","","","",""];
 			lang[15] = ["通道","","","",""];
+			//lang[16] = ["启用","","","",""];
 			mode_set[0] = lang[13][language];
 			mode_set[1] = lang[14][language];
 			mode_name[0] = lang[13][language];
+			mode_name[1] = lang[14][language];
 			udp_sel[0] = lang[15][language] + 1;
 			udp_sel[1] = lang[15][language] + 2;
 			udp_sel[2] = lang[15][language] + 3;

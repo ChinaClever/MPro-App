@@ -72,6 +72,7 @@
 			let dual_name = new Array();
 			var slave_num;
 			let dev_mode;
+			let t1 = 0;
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			if(top.login_permit_ == 1){
@@ -110,6 +111,13 @@
 					hidden();
 				}
 				if(dev_mode != 2){
+					if(t1 == 0){
+						let t2 =setInterval(function () {
+						alert("未开启机架功能!")
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 					hidden();
 				}
 				let k = 0;

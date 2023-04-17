@@ -147,7 +147,7 @@
 					}
 				}
 			}
-			document.getElementById("a").value = ipv6_info[16] +'\n'+ ipv6_info[17] +'\n'+ ipv6_info[18];
+			document.getElementById("ipv6_addr").value = ipv6_info[16] +'\n'+ ipv6_info[17] +'\n'+ ipv6_info[18];
 			if(parseInt(ip_info[0][1]) == 0){
 				for(i = 2;i<8;i++){
 					if(i!=5)
@@ -159,7 +159,7 @@
 					if(i!=5)
 						document.getElementById(info_name[i]+'0').disabled = true;
 				}
-				document.getElementById("a").disabled = true;
+				document.getElementById("ipv6_addr").disabled = true;
 				document.getElementById("lang_11").disabled = true;
 			}
 			if(parseInt(ip_info[1][0]) == 0){
@@ -167,24 +167,24 @@
 					if(i!=3)
 						document.getElementById(info_name[i]+'1').disabled = true;
 				}
-				document.getElementById("a").disabled = true;
+				document.getElementById("ipv6_addr").disabled = true;
 				document.getElementById("lang_19").disabled = false;
 			}else{
 				document.getElementById(info_name[1]+'1').disabled = false;
-				document.getElementById("a").disabled = false;
+				document.getElementById("ipv6_addr").disabled = false;
 				if(parseInt(ip_info[1][1]) == 0){
 					for(i = 2;i<8;i++){
 						if(i!=3)
 							document.getElementById(info_name[i]+'1').disabled = false;
 					}
-					document.getElementById("a").disabled = false;
+					document.getElementById("ipv6_addr").disabled = false;
 					document.getElementById("lang_19").disabled = false;
 				}else{
 					for(i = 2;i<8;i++){
 						if(i!=3)
 							document.getElementById(info_name[i]+'1').disabled = true;
 					}
-					document.getElementById("a").disabled = true;
+					document.getElementById("ipv6_addr").disabled = true;
 					document.getElementById("lang_19").disabled = false;
 				}
 			}
@@ -327,7 +327,7 @@
 			tbody += '<td><input id = "dns_1" style ="width:24.5%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_24" ></td>';
-			tbody += '<td><textarea id = "a" style ="height:70px;width:24.5%;resize: none;"  readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0"></textarea>';	
+			tbody += '<td><textarea id = "ipv6_addr" style ="height:70px;width:24.5%;resize: none;"  readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0"></textarea>';	
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
 			//tbody += '<td><input id = "b" style ="width:24.5%" type = "text" maxlength = "129" readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
