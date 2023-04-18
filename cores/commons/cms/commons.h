@@ -17,7 +17,7 @@ QByteArray zipUncompress(const QByteArray &array);
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
 
-bool en();
+bool cn();
 bool language();
 sDevData *masterDev();
 sDataPacket *dataPacket();

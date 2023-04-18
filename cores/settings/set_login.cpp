@@ -52,9 +52,9 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     if(ptr) {
         QByteArray str = v.toByteArray();
         qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
-        //        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        //        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
-        //        Log_Core::bulid()->append(db);
+        // sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+        // db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -120,9 +120,13 @@ int Set_Login::loginCheck(const QString &str)
     }
 
     loginLocking(ret); if(ret) {
-        sEventItem db; db.event_type = QStringLiteral("用户登陆");
-        db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
-        Log_Core::bulid()->append(db); ret = 1;
+        sEventItem db; if(cm::cn()) {
+            db.event_type = QStringLiteral("用户登陆");
+            db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
+        } else {
+            db.event_type = "log in";
+            db.event_content = QStringLiteral("Login account is %1").arg(ls.first());
+        } Log_Core::bulid()->append(db); ret = 1;
     } else ret = 0-loginTryLock(); // cout << ls << ret << mFailCnt;
 
     return ret;

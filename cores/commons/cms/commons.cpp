@@ -117,9 +117,9 @@ bool cm::language()
     return masterDev()->cfg.param.language;
 }
 
-bool cm::en()
+bool cm::cn()
 {
-    return cm::language();
+    return !cm::language();
 }
 
 QByteArray cm::zipCompress(const QByteArray &array)

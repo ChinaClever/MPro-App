@@ -47,9 +47,13 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
     }
 
     file.close(); if(!ret) {
-        sEventItem it; it.event_type = QStringLiteral("参数异常");
-        it.event_content = QStringLiteral("设备报警数据读取异常");
-        it.event_content += file.errorString();
+        sEventItem it; if(cm::cn()) {
+            it.event_type = QStringLiteral("参数异常");
+            it.event_content = QStringLiteral("设备报警数据读取异常");
+        } else {
+            it.event_type = "parameter abnormality ";
+            it.event_content = QStringLiteral("Abnormal reading of device alarm data");
+        } it.event_content += file.errorString();
         Log_Core::bulid()->append(it);
         cout << Cfg_Com::pathOfCfg(fn);
     }

@@ -44,15 +44,25 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
-            sEventItem it; it.event_type = tr("级联"); it.addr = addr;
-            it.event_content = tr("副机 %1 连接正常").arg(addr);
-            Log_Core::bulid()->append(it);
+            sEventItem it; it.addr = addr;
+            if(cm::cn()) {
+                it.event_type = tr("级联");
+                it.event_content = tr("副机 %1 连接正常").arg(addr);
+            } else {
+                it.event_type = "cascade";
+                it.event_content = tr("Connection from machine %1 is normal").arg(addr);
+            } Log_Core::bulid()->append(it);
         } if(cm::runTime() > 48*60*60) v = 5; else v = 2;
     } else if(v > 1){
         if(--v == 1)  {
-            sEventItem it; it.event_type = tr("级联"); it.addr = addr;
-            it.event_content = tr("副机 %1 掉线").arg(addr);
-            Log_Core::bulid()->append(it);
+            sEventItem it; it.addr = addr;
+            if(cm::cn()) {
+                it.event_type = tr("级联");
+                it.event_content = tr("副机 %1 掉线").arg(addr);
+            } else {
+                it.event_type = "cascade";
+                it.event_content = tr("slave %1 dropped").arg(addr);
+            } Log_Core::bulid()->append(it);
             cout << addr << ret << v;
         }
     } cm::mdelay(355);
