@@ -506,8 +506,8 @@
 			lang[35] = ["实时动态趋势图", "Real-time dynamic trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
 			lang[36] = ["主机", "", "", "", ""];
 			lang[37] = ["副机", "", "", "", ""];
-			lang[38] = ["开启", "", "", "", ""];
-			lang[39] = ["关闭", "", "", "", ""];
+			lang[38] = ["关闭", "", "", "", ""];
+			lang[39] = ["开启", "", "", "", ""];
 			lang[40] = ["正常", "", "", "", ""];
 			lang[41] = ["告警", "", "", "", ""];
 			lang[42] = ["断开", "", "", "", ""];
@@ -675,19 +675,36 @@
 			}
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
-				}
-				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
 				}else{
 					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
 				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+			}
+			for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+				if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+					document.getElementById('dat' + (68 + i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (68 + i)).bgColor = '';
+				}
+			}
+			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+				document.getElementById('dat' + 70).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 70).bgColor = '';
+			}
+			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+				document.getElementById('dat' + 71).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 71).bgColor = '';
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){

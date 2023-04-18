@@ -64,6 +64,7 @@
 		let dev_name =new Array();
 		let pdu_data;
 		let addr = pdu_cfg.addr;
+		let t1 = 0;
 
 		pdu_cfg.OutInGroup();
 		if(top.login_permit_ == 1){
@@ -91,6 +92,13 @@
 				hidden();
 			}
 			if(pdu_data.pdu_info.group_en == 0){
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						alert("未开启分组功能!")
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 				hidden();
 			}
 

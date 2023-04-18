@@ -69,6 +69,7 @@
 		let lang = new Array();
 		let addr = pdu_cfg.addr;
 		let pdu_data;
+		let t1 = 0;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
@@ -91,6 +92,13 @@
 				hidden();
 			}
 			if(pdu_data.pdu_info.group_en == 0){
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						alert("未开启分组功能!")
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 				hidden();
 			}
 		}

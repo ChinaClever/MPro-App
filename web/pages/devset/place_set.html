@@ -78,10 +78,13 @@
 			}
 			uuid = pdu_data.uut_info.uuid;
 		}
-		$('.place_set').html(BuildTable());
-		LangFun();
-		ReadData();
-		ShowData();
+		setTimeout(function(){
+			$('.place_set').html(BuildTable());
+			LangFun();
+			ReadData();
+			ShowData();
+			},400);
+
 		function ShowData(){
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
@@ -93,7 +96,7 @@
 				$("textarea").attr("disabled","disabled");
 			}else{
 			}
-			FlashHtml();
+			//FlashHtml();
 		}
 		function SetData(btn){
 			let mds_data = 0;
@@ -133,7 +136,7 @@
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id = "lang_9"></td>';
-			tbody += '<td><input id = "uuid" style ="width:24.5%" type = "text" readonly ="true" ></input>';
+			tbody += '<td><input id = "uuid" style ="width:25.0%" type = "text" readonly ="true" ></input>';
 			tbody += '<tr><td id = "lang_3"></td>';
 			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';

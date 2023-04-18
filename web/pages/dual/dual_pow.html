@@ -79,6 +79,7 @@
 			var dual_info = new Array();
 			var lang = new Array();
 			var slave_num;
+			let t1 = 0;
 			let dual_arr = [14,13,11,9,10,16,15,8,0,0,12];
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -106,6 +107,13 @@
 					hidden();
 				}
 				if(dev_mode != 2){
+					if(t1 == 0){
+					let t2 =setInterval(function () {
+						alert("未开启机架功能!")
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 					hidden();
 				}
 				let k = 0;
@@ -169,7 +177,7 @@
 			}
 			lang_init();
 			$('.table-striped').html(buildTable(dual_num));
-			$('.devname').html(buildSel(slave_num));
+			$('.devname').html(buildSel(slave_num / 2));
 			lang_fun();
 			showdata();
 			modeset();
