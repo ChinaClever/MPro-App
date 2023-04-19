@@ -12,8 +12,7 @@ Data_Line::Data_Line()
 
 void Data_Line::lineWork()
 {
-    int size = mDev->cfg.nums.lineNum;
-    if(size == 0) size = 1;
+    int size = mDev->cfg.nums.lineNum; if(size == 0) size = 1;
     int num = mDev->cfg.nums.loopNum / size;
     for(int i=0; i<size; ++i) {
         int start = i * num;

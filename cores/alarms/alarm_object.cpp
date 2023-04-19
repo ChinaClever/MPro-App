@@ -290,12 +290,29 @@ void Alarm_Object::clearEle(sDataItem &index)
 {
     int start=0, end=0;
     sDevCfg *cfg = &cm::masterDev()->cfg;
-    if(cfg->param.devSpec == 3) {
+    if(DType::Line == index.type) {
+        int id = index.id; if(id) id -= 1;
+        int size = cfg->nums.lineNum;
+        int num = cfg->nums.outputNum / size;
+        if(cfg->param.devSpec == 1) num = cfg->nums.loopNum / size;
+        start = id * num; end = (id+1) * num;
+        OP_Core::bulid()->clearEle(start, end);
+    } else if((DType::Loop == index.type) && (cfg->param.devSpec > 1)) {
         for(int i=0; i<index.id+1; ++i) {
             if(i) start += cfg->nums.loopEachNum[i-1];
             end += cfg->nums.loopEachNum[i];
         } OP_Core::bulid()->clearEle(start, end);
-    } else OP_Core::bulid()->clearEle(index.id);
+    } else {
+        OP_Core::bulid()->clearEle(index.id);
+    }
+
+    //    sDevCfg *cfg = &cm::masterDev()->cfg;
+    //    if(cfg->param.devSpec == 3) {
+    //        for(int i=0; i<index.id+1; ++i) {
+    //            if(i) start += cfg->nums.loopEachNum[i-1];
+    //            end += cfg->nums.loopEachNum[i];
+    //        } OP_Core::bulid()->clearEle(start, end);
+    //    } else OP_Core::bulid()->clearEle(index.id);
 }
 
 bool Alarm_Object::eleValue(sDataItem &index)
