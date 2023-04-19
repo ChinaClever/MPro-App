@@ -85,7 +85,7 @@ bool OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
     } else {
         cnt[id] += 1;
         dtc[id] |= code;
-        mDev->dtc.fault = 16;
+        mDev->dtc.fault = 36;
     }
     return f;
 }
@@ -157,10 +157,9 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
     if(mOpData->type) dest = mDev->loop.ele;
-    if((dest[id] && src[i]) && (src[i] < 1000)){
-        if(src[i] - dest[id] > 2) {
-            ret = false;
-            faultLog(id, cnt, src[i]);
+    if((dest[id] && src[i]) /*&& (src[i] < 1000)*/){
+        if(qAbs((int)src[i] - (int)dest[id]) > 2) {
+            ret = false; faultLog(id, cnt, src[i]);
         } else cnt[id] = 0;
     }
 
