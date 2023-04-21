@@ -55,7 +55,7 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
     QVector<c_sFrame> res;
     QVector<c_sFrame> its = arrayToFrames(rcv);
     foreach(const auto &it, its) {
-        if(it.srcAddr == addr) {
+        if((it.srcAddr == addr)|| (addr == fc_mask)) {
             if(fc) if(fc != it.fc) continue;
             res << it;
         }
