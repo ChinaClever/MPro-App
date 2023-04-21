@@ -181,6 +181,11 @@ void Cascade_Updater::otaRootfs(const QString &path)
         ota->rootfs.isRun = 0;
         ota->rootfs.progress = 100;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
+    } else {
+        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString cmd = fmd.arg(path);
+        system(cmd.toLatin1().data());
+        throwMessage(cmd);
     }
 }
 

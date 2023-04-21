@@ -75,7 +75,13 @@ bool Ota_Net::up_rootfs(const QString &path)
         ota->rootfs.isRun = 0;
         //cout << ota->rootfs.progress;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
-    } else ret = false;
+    } else {
+        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString cmd = fmd.arg(path);
+        system(cmd.toLatin1().data());
+        throwMessage(cmd);
+        ret = false;
+    }
 
     return ret;
 }
@@ -107,7 +113,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
     default: up = &mOta->net; break;
     } up->isRun = 1;
 
-    QString dir; if(ok) {
+    QString dir; cm::mdelay(1000); if(ok) {
         if(it.fc == 21) dir = it.path; // 21时为U盘升级
         else dir = unzip(it.path+it.file);
         ok = versionCheck(dir);
