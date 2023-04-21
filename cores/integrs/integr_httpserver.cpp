@@ -40,7 +40,7 @@ bool Integr_HttpServer::pduMetaData(const QByteArray &body)
         QJsonObject obj = Integr_JsonBuild::bulid()->getJsonObject(addr, dc);
         mSession->replyJsonObject(obj);
     } else {
-        ret = replyHttp("error", 211);
+        ret = replyHttp("error", 411);
     }
     return ret;
 }
@@ -56,7 +56,7 @@ bool Integr_HttpServer::download(const QByteArray &body)
         mSession->replyFile(fn);
     } else {
         QString str = "error: file does not exist, ";
-        ret = replyHttp(str+fn, 214);
+        ret = replyHttp(str+fn, 414);
     }
     return ret;
 }
@@ -80,7 +80,7 @@ bool Integr_HttpServer::upload(const QByteArray &body)
         if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(array); file.close();
         } replyHttp("ok:"+fn, 200);
-    } else ret = replyHttp("error", 223);
+    } else ret = replyHttp("error", 423);
 
     return ret;
 }
@@ -88,7 +88,7 @@ bool Integr_HttpServer::upload(const QByteArray &body)
 bool Integr_HttpServer::getting(const QByteArray &body)
 {
     QVariant res = Integr_JsonRecv::bulid()->reply(body);
-    if(res.isNull()) replyHttp("error", 212);
+    if(res.isNull()) replyHttp("error", 412);
     else replyValue(res.toJsonValue());
     return true;
 }
@@ -96,7 +96,7 @@ bool Integr_HttpServer::getting(const QByteArray &body)
 bool Integr_HttpServer::setting(const QByteArray &body)
 {
     bool ret = Integr_JsonRecv::bulid()->recv(body);
-    if(ret) replyHttp("ok", 200); else replyHttp("error", 221);
+    if(ret) replyHttp("ok", 200); else replyHttp("error", 421);
     return ret;
 }
 
@@ -110,7 +110,7 @@ bool Integr_HttpServer::execute(const QByteArray &body)
         QString res = cm::execute(cmd);
         replyHttp(res, 200);
     } else {
-        ret = replyHttp("error:" + cmd, 231);
+        ret = replyHttp("error:" + cmd, 431);
     }
     return ret;
 }
@@ -127,14 +127,14 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
         if(url.contains("pduMetaData")) pduMetaData(body);
         else if(url.contains("pduGetting")) getting(body);
         else if(url.contains("download")) download(body);
-        else replyHttp(err, 213);
+        else replyHttp(err, 413);
     } else if(method.contains("POST")) {
         if(url.contains("pduSetting")) setting(body);
         else if(url.contains("upload")) upload(body);
-        else replyHttp(err, 223);
+        else replyHttp(err, 423);
     } else if(method.contains("PUT")) {
         if(url.contains("execute")) execute(body);
-        else replyHttp(err, 233);
+        else replyHttp(err, 433);
     }
 }
 
