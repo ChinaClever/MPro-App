@@ -16,8 +16,10 @@
 /* 内部登录窗口 */
 .inner_box {
   position: absolute;
-  width: 450px;
-  height: 400px;
+  /* width: 450px; */
+  /* height: 400px; */
+  width: 528px;
+  height: 428px; 
   /* background-color: rgba(127, 255, 212, 0.5); */
   left: 45%;
   top: 45%;
@@ -29,18 +31,23 @@
 }
 /* 登录表单 */
 .inner_box .center_form {
-  width: 450px;
-  height: 350px;
+  /* width: 450px; */
+  /* height: 350px; */
+  width: 528px;
+  height: 428px; 
   /* background-color:rgb(255,255,255,0.2); */
-  border-radius: 10px;
+  /* border-radius: 10px; */
   background-image: url(../images/login_.png);
   background-size: contain;
   /* background-color: rgba(179, 187, 186, 0.575); */
-  box-shadow: 0px 0px 3px rgb(217, 224, 224);
+  /* box-shadow: 0px 0px 3px rgb(217, 224, 224); */
+  text-align: center;
+  margin: 0 auto;
 }
 .inner_box .center_form p{
   height: 50px;
-  width: 449px;
+  /* width: 449px; */
+  width: 527px;
   text-align: center;
   color: rgb(255, 255, 255);
 }
@@ -50,11 +57,15 @@
   border-radius: 10px;
   /* background-color:rgb(255,255,255,0.2); */
   /* margin-bottom: 40px; */
-  font-weight: 800;
-  font-size: 25px;
+  /* font-weight: 800; */
+  /* font-size: 25px; */
+  font-weight: normal;
+  font-size: 22px;
+  text-align: center;
 }
 span{
-  color:rgb(240,240,240);
+  /* color:rgb(240,240,240); */
+  color: #000000;
 }
 input {
   width: 280px;
@@ -62,19 +73,22 @@ input {
   height: 40px;
   padding-left: 20px;
   /* background: none; */
-  background-color: rgb(255,255,255,0.2);
+  /* background-color: rgb(255,255,255,0.2); */
+  background-color: #EDEEEE;
   color :rgb(240,240,240);
   border: 1px solid #fff;
   box-sizing:border-box;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   font-size: 15px;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 input::placeholder{
-  color:rgb(255,255,255);
+  /* color:rgb(255,255,255); */
+  color: rgba(0, 0, 0, 0.7);
 }
 a{
-  color :rgb(240,240,240);
+  /* color :rgb(240,240,240); */
+  color: rgba(0, 0, 0, 0.7);
   font-size: 18px;
 }
 /* remember me */

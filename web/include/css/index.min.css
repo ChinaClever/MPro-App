@@ -11,7 +11,8 @@ html {
 .side-box {
     float: left;
     min-width: 180px;
-    background: #2b333e
+    /* background: #2b333e */
+    background: #083266
 }
 
 .side-box a {
@@ -28,7 +29,8 @@ html {
     height: 65px;
     display: block;
     padding: 12px 0 5px;
-    background: #323b48;
+    /* background: #323b48; */
+    background: #083266;
     border-bottom: 1px solid #28303a;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1)
@@ -85,7 +87,8 @@ html {
 }
 
 .nav-item.is-active {
-    background: #222931;
+    /* background: #222931; */
+    background: #25519D;
     border-color: #4082e6
 }
 
@@ -157,7 +160,8 @@ html {
     padding-top: 5px;
     margin: 0;
     margin-top: -50px;
-    background: #2b333e;
+    /* background: #2b333e; */
+    background: #083266;
     border-color: #28303a
 }
 
@@ -185,7 +189,8 @@ p{
     height: 83px;
     color:#fff;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background:#323b48;
+    /* background:#323b48; */
+    background: #083266;
 }
 .body-top{
     width: 100%;
@@ -212,7 +217,8 @@ p{
 }
 .phase_table{
 	width:100%;
-	margin-top:5px;
+    height:40px; 
+	margin-top:-5px;
 	font-size:12px;
 	border:0px solid;
 	border-color: #aaaaff;
@@ -220,10 +226,16 @@ p{
 .phase{
 	float:left; 
 	display:table-cell; 
-	width:26%; 
-	height:210px; 
-	border:0px solid;
-	border-color: #aaaaff;
+	width:24.3%; 
+	height:250px; 
+    /* margin-left:5px; */
+    /* margin-right:5px; */
+    /* margin:1px 1px 1px 1px; */
+	border:6px solid;
+    border-radius: 7px;
+    background: #FFFFFF;
+    border-color: #e7e7e7;
+	/* border-color: #aaaaff; */
 }
 .span_tit{
 	float:left; 
@@ -231,7 +243,7 @@ p{
 }
 .span_data{
 	float:left; 
-	padding-left:10px;
+	padding-left:20px;
 }
 .span_unit{
 	float:left; 
@@ -240,17 +252,21 @@ p{
 .phase_div{
 	float:left; 
 	display:table-cell;
-	width:22%;
-    height:210px;
-	border:0px solid;
-	border-color: #aaaaff;
+	width:24.1%;
+    height:250px;
+	border:6px solid;
+    border-radius: 7px;
+	/* border-color: #aaaaff; */
+    border-color: #e7e7e7;
 }
 .phase_div1{
 	border:0px solid;
 	border-color: #ffffff;
 	margin:10px;
-    height:250px;
-	background:#ffffff; 
+    /* height:300px; */
+    height:262px;
+	/* background:#ffffff;  */
+    background:#e7e7e7; 
 	text-align:center;
 }
 .phase_div2{
@@ -283,8 +299,8 @@ p{
   }
 
   .loop_div{
-    border:1px solid;
-    border-color: #ffffff;
+    /* border:1px solid; */
+    /* border-color: #ffffff; */
     margin:10px;
     background:#ffffff;
     text-align:center;
@@ -298,6 +314,7 @@ p{
   .spacing{
 	text-align:left; 
 	padding-left:20px;
+
 }
 .child {
     position: relative;

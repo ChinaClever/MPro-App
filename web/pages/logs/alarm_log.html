@@ -242,8 +242,12 @@
 					flash_html(btn);
 				}
 			}else if(btn.id == "del"){
-				pdu_log.log_fun(alarm_log,3,0,0);
-				flash_html(btn);
+				if(confirm("确认删除日志吗？")){
+					pdu_log.log_fun(alarm_log,3,0,0);
+					flash_html(btn);
+				}else{					
+				}
+
 			}else{
 
 			}
