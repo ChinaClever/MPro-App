@@ -61,7 +61,7 @@ void Set_Updater::ota_log()
 bool Set_Updater::ota_logErr(const QString &fn)
 {    
     bool ret = true;
-    QString dir = "/usr/data/ota_apps/";
+    QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
         cfg.app_unpack(ver);

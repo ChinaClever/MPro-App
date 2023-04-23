@@ -21,6 +21,25 @@ Web_Obj *Web_Obj::bulid(QObject *parent)
     return sington;
 }
 
+QString Web_Obj::createUuid()
+{
+    mUuid = QUuid::createUuid().toString();
+    return mUuid;
+}
+
+bool Web_Obj::checkUuid(const QString &uuid)
+{
+    bool ret = true;  //////////====================
+    if(mUuid.size() && (mUuid == uuid)) ret = true;
+    return ret;
+}
+
+bool Web_Obj::checkUuid(mg_str &r)
+{
+    QString uuid = getString(r, 6);
+    return checkUuid(uuid);
+}
+
 QString Web_Obj::getString(mg_str &r, int id)
 {
     QString res;

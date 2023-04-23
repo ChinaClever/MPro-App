@@ -8,6 +8,7 @@ class JsonRpc {
     static _instance = null;
 
     constructor() {
+        this.uuid = '';
         this.rpcid = 0; 
         this.timeOut = 65; // HTTP最小超时时间 
         this.isSetting = false; // 是否在设置模式
@@ -132,6 +133,13 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
+        if((14 == parseInt(type)) && (11 == parseInt(topic))) {
+            if(1 == parseInt(value)){
+                this.uuid = str.slice(3);
+                value = 1;
+            } 
+        }
+
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
         const json = Object.fromEntries(this.root_map);
@@ -151,13 +159,15 @@ class JsonRpc {
 
     // RPC读取接口
     json_rpc_get(method, params) {
-        this.isSetting = false;
+        this.isSetting = false; params.push(0);
+        params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
    
     // RPC设置接口
     json_rpc_set(method, params) {
         this.isSetting = true;
+        params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
 

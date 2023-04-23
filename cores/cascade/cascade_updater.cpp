@@ -40,7 +40,7 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
                     throwMessage(tr("addr=%1: %2%").arg(addr).arg(v/10.0));
                     up->subId = addr; up->progress = v/10; up->isRun = 1;
                     up->reserve = up->progs[DEV_NUM/2+addr] = v%10;
-                }
+                } cm::mdelay(120);
             } else {
                 up->isRun = 2; up->results[addr] = 3;
                 throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
@@ -148,11 +148,11 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
         QString fn = it.path + it.file;
-        QString dir = "/usr/data/ota_apps/";
+        QString dir = "/tmp/updater/ota_apps/";
         QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
         system("chmod 777 -R /usr/data/clever/");
-        system("chmod 777 -R /usr/data/ota_apps/");
+        system("chmod 777 -R /tmp/updater/ota_apps/");
         QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
         str = cm::execute(cmd); throwMessage(str);
@@ -200,7 +200,7 @@ void Cascade_Updater::otaReboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
-    system("rm -rf /usr/data/ota_apps");
+    system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
 }

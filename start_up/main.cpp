@@ -13,7 +13,7 @@ static void createDirectory()
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
-    system("mkdir -p /usr/data/ota_apps");
+    system("mkdir -p /tmp/updater/ota_apps");
     system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");

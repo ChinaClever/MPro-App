@@ -27,9 +27,13 @@ public:
     QString backup(int fc); // fc 1 配置文件 2 批量配置文件
     QString diag(); // 下载诊断功能
     QString getIpv6En(); // ipv6标志
+    QString createUuid();
+    bool checkUuid(mg_str &r);
+    bool checkUuid(const QString &uuid);
 
 private:
     JsonRpc_Client *mRpc;
+    QString mUuid;
 };
 
 #define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"
