@@ -304,7 +304,9 @@ bool Alarm_Updater::upDevAlarm(uchar addr)
 
 void Alarm_Updater::run()
 {
-    int num = cm::masterDev()->cfg.nums.slaveNum;
+    int num = 0; sDevCfg *cfg = &cm::masterDev()->cfg;
+    if(cfg->param.devMode) num = cfg->nums.slaveNum;
+    else Alarm_Log::bulid()->currentAllAlarmClear();
     for(int i=0; i<num+1; ++i) upDevAlarm(i);
     Alarm_Log::bulid()->generateQRcode();
     Log_Core::bulid()->log_addCnt();

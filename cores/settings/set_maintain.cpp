@@ -76,10 +76,13 @@ QString Set_Maintain::profileBackup()
     system("rm -rf /tmp/download/*");
     system(cmd.toLocal8Bit().data());
 
-    sEventItem it;
-    it.event_type = QStringLiteral("备份");
-    it.event_content = QStringLiteral("设备设置备份");
-    Log_Core::bulid()->append(it);
+    sEventItem it; if(cm::cn()) {
+        it.event_type = QStringLiteral("备份");
+        it.event_content = QStringLiteral("设备设置备份");
+    } else {
+        it.event_type = "backups";
+        it.event_content = "device settings backup";
+    } Log_Core::bulid()->append(it);
 
     return dst;
 }
@@ -98,29 +101,38 @@ QString Set_Maintain::batchBackup()
         system(cmd.toLocal8Bit().data());
     }
 
-    sEventItem it;
-    it.event_type = QStringLiteral("备份");
-    it.event_content = QStringLiteral("批量设置备份");
-    Log_Core::bulid()->append(it);
+    sEventItem it; if(cm::cn()) {
+        it.event_type = QStringLiteral("备份");
+        it.event_content = QStringLiteral("批量设置备份");
+    } else {
+        it.event_type = "backups";
+        it.event_content = "batch settings backup";
+    } Log_Core::bulid()->append(it);
 
     return zip;
 }
 
 bool Set_Maintain::batchRestore(const QString &fn)
 {
-    sEventItem it;
-    it.event_type = QStringLiteral("恢复");
-    it.event_content = QStringLiteral("批量设置恢复");
-    Log_Core::bulid()->append(it);
+    sEventItem it; if(cm::cn()) {
+        it.event_type = QStringLiteral("恢复");
+        it.event_content = QStringLiteral("批量设置恢复");
+    } else {
+        it.event_type = "restore";
+        it.event_content = "batch settings recovery";
+    } Log_Core::bulid()->append(it);
     return restory(fn);
 }
 
 bool Set_Maintain::profileRestore(const QString &fn)
 {
-    sEventItem it;
-    it.event_type = QStringLiteral("恢复");
-    it.event_content = QStringLiteral("设备配置恢复");
-    Log_Core::bulid()->append(it);
+    sEventItem it; if(cm::cn()) {
+        it.event_type = QStringLiteral("恢复");
+        it.event_content = QStringLiteral("设备配置恢复");
+    } else {
+        it.event_type = "restore";
+        it.event_content = "device configuration recovery";
+    } Log_Core::bulid()->append(it);
     return restory(fn);
 }
 

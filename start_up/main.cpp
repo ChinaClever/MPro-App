@@ -8,12 +8,12 @@
 
 static void createDirectory()
 {
-    system("mkdir -p /tmp/updater");
     system("mkdir -p /tmp/download");
     system("mkdir -p /usr/data/upload");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
+    system("mkdir -p /usr/data/ota_apps");
     system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");
@@ -99,7 +99,7 @@ static void start_init()
 //    system("cmd_fb enable /dev/fb0");
 //    system("cmd_fb display /dev/fb0");
 //    if(cnt < 5) initSystem(); else {
-//        system("mkdir -p /tmp/updater");
+//        system("mkdir -p /usr/data/updater");
 //        system("mkdir -p /tmp/download");
 //    }
 }

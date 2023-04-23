@@ -27,24 +27,25 @@ bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
     bool ret = false; int max = 3*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
     if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
-        ret = otaSendInit(addr, it); cm::mdelay(150);
-        if(!ret) { cm::mdelay(650); ret = otaSendInit(addr, it);}
+        ret = otaSendInit(fc_mask, it); cm::mdelay(150);  //addr
+        if(!ret) { cm::mdelay(650); ret = otaSendInit(fc_mask, it);} //addr
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
-            ret = otaSendPacket(addr, data);
-            if(!ret) { ret = otaSendPacket(addr, data);
+            ret = otaSendPacket(fc_mask, data); //addr
+            if(!ret) { ret = otaSendPacket(fc_mask, data); //addr
                 throwMessage(tr("Error: addr=%1: ota update packet failed").arg(addr)); }
             if(ret) {
                 i += data.size(); int v = (i*1000.0)/it.size;
-                if(v > (pro+1)){ pro = up->progs[addr] = v/10; up->results[addr] = 1;
+                if(v > pro){ pro = v; up->progs[addr] = v/10; up->results[addr] = 1;
                     throwMessage(tr("addr=%1: %2%").arg(addr).arg(v/10.0));
-                    up->subId = addr; up->progress = v; up->isRun = 1;
+                    up->subId = addr; up->progress = v/10; up->isRun = 1;
+                    up->reserve = up->progs[DEV_NUM/2+addr] = v%10;
                 }
             } else {
                 up->isRun = 2; up->results[addr] = 3;
                 throwMessage(tr("Error: addr=%1: ota update failed").arg(addr)); break;
             }
-        } mFile->close(); ret = otaSendFinish(addr, ret?1:0);
+        } mFile->close(); ret = otaSendFinish(fc_mask, ret?1:0); //addr
     } cm::mdelay(1200); if(ret) up->results[addr] = 2;
 
     return ret;
@@ -62,7 +63,7 @@ void Cascade_Updater::ota_updates()
         for(uint i=0; i<size; ++i) {
             throwMessage(tr("addr=%1: %2").arg(i+1).arg(0));
             if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
-            if(i<size-1) cm::mdelay(11*1000);
+            cm::mdelay(1000);break; //if(i<size-1) {cm::mdelay(12*1000);}
         } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
         up->isRun = 0; cm::mdelay(255);
@@ -95,7 +96,7 @@ bool Cascade_Updater::otaSendData(uchar fn, int addr, const QByteArray &array)
     QByteArray recv = tranData(fn, addr, array);
     if(recv.isEmpty() || recv.contains("Receive Packet Failure")) {
         throwMessage(tr("cascade error: addr=%1: fn=%2 cnt=%3 ota send len:%4 recv failed: %5")
-                     .arg(addr).arg(fn).arg(mCnt).arg(array.size()).arg(recv.data())); ret = false;
+                         .arg(addr).arg(fn).arg(mCnt).arg(array.size()).arg(recv.data())); ret = false;
     } //emit otaSendSig(addr, recv);
     return ret;
 }
@@ -115,7 +116,9 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
     out >> it->fc >> it->dev >> it->path >> it->file >> it->md5 >> it->sig >> it->size >> it->crc;
     if(it->crc == END_CRC) otaSetFile(it->path + it->file);
     else cout << it->file << it->md5 << it->sig << it->crc;
-    return writeData(fc_otaStart, 0, "Start Updata");
+    int res = cm::masterDev()->cfg.param.cascadeAddr; //cout << res;
+    if(1 == res) res = writeData(fc_otaStart, 0, "Start Updata");
+    return res;
 }
 
 bool Cascade_Updater::otaReplyPacket(const QByteArray &data)
@@ -124,7 +127,8 @@ bool Cascade_Updater::otaReplyPacket(const QByteArray &data)
     if(mFile->isWritable()) {
         mFile->write(data); mSize += data.size();
         QString str = "Receive Packet " + QString::number(mSize);
-        ret = writeData(fc_otaPack, 0, str.toLocal8Bit());
+        int addr = cm::masterDev()->cfg.param.cascadeAddr;
+        if(1 == addr) ret = writeData(fc_otaPack, 0, str.toLocal8Bit());
     } else cout << tr("Error: reply Ota Packet %1").arg(data.data());
 
     return ret;
@@ -135,18 +139,20 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     QString str = "Receive Packet "; mFile->close();
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
-    return writeData(fc_otaEnd, 0, str.toLocal8Bit());
+    int res = cm::masterDev()->cfg.param.cascadeAddr;
+    if(1 == res) res = writeData(fc_otaEnd, 0, str.toLocal8Bit());
+    return res;
 }
 
 void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
 {
     if(ok){
         QString fn = it.path + it.file;
-        QString dir = "/tmp/updater/ota_apps/";
+        QString dir = "/usr/data/ota_apps/";
         QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
         system("chmod 777 -R /usr/data/clever/");
-        system("chmod 777 -R /tmp/updater/ota_apps/");
+        system("chmod 777 -R /usr/data/ota_apps/");
         QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
         str = cm::execute(cmd); throwMessage(str);
@@ -181,6 +187,11 @@ void Cascade_Updater::otaRootfs(const QString &path)
         ota->rootfs.isRun = 0;
         ota->rootfs.progress = 100;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
+    } else {
+        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString cmd = fmd.arg(path);
+        system(cmd.toLatin1().data());
+        throwMessage(cmd);
     }
 }
 
@@ -189,7 +200,7 @@ void Cascade_Updater::otaReboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
-    system("rm -rf /tmp/updater/ota_apps");
+    system("rm -rf /usr/data/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
 }

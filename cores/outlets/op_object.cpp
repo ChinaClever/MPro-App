@@ -85,7 +85,7 @@ bool OP_Object::faultCode(int id, bool f, uint *cnt, FaultCode code)
     } else {
         cnt[id] += 1;
         dtc[id] |= code;
-        mDev->dtc.fault = 16;
+        mDev->dtc.fault = 36;
     }
     return f;
 }
@@ -142,7 +142,8 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
     } else {
         cout << value/COM_RATE_PF;
         sEventItem it; it.event_type = tr("PF");
-        it.event_content = tr("输出位 %1 功率因素错误％2").arg(id+1).arg(value/COM_RATE_PF);
+        if(cm::cn()) it.event_content = tr("输出位 %1 功率因素错误％2").arg(id+1).arg(value/COM_RATE_PF);
+        else it.event_content = tr("Output bit %1 power factor error %2").arg(id+1).arg(value/COM_RATE_PF);
         Log_Core::bulid()->append(it);
     }
 }
@@ -156,10 +157,9 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *cnt = mDev->dtc.cnt[2];
     uint *dest = mDev->output.ele;
     if(mOpData->type) dest = mDev->loop.ele;
-    if((dest[id] && src[i]) && (src[i] < 1000)){
-        if(src[i] - dest[id] > 2) {
-            ret = false;
-            faultLog(id, cnt, src[i]);
+    if((dest[id] && src[i]) /*&& (src[i] < 1000)*/){
+        if(qAbs((int)src[i] - (int)dest[id]) > 2) {
+            ret = false; faultLog(id, cnt, src[i]);
         } else cnt[id] = 0;
     }
 

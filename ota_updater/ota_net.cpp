@@ -25,10 +25,10 @@ void Ota_Net::startSlot(const QString &host)
 
 QString Ota_Net::unzip(const QString &fn)
 {
-    QString dst = "/tmp/updater/ota_apps/"; cm::execute("mkdir -p " + dst);
+    QString dst = "/usr/data/ota_apps/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
     str = cm::execute(str.arg(fn)); throwMessage(str);
-    system("chmod 777 -R /tmp/updater/ota_apps/");
+    system("chmod 777 -R /usr/data/ota_apps/");
     return dst;
 }
 
@@ -75,7 +75,13 @@ bool Ota_Net::up_rootfs(const QString &path)
         ota->rootfs.isRun = 0;
         //cout << ota->rootfs.progress;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
-    } else ret = false;
+    } else {
+        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString cmd = fmd.arg(path);
+        system(cmd.toLatin1().data());
+        throwMessage(cmd);
+        ret = false;
+    }
 
     return ret;
 }
@@ -83,7 +89,7 @@ bool Ota_Net::up_rootfs(const QString &path)
 void Ota_Net::workDown(const QString &fn, int bit)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
-    QString dir = "/tmp/updater/ota_apps/";
+    QString dir = "/usr/data/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/clever/"); system("sync");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
@@ -107,7 +113,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
     default: up = &mOta->net; break;
     } up->isRun = 1;
 
-    QString dir; if(ok) {
+    QString dir; cm::mdelay(1000); if(ok) {
         if(it.fc == 21) dir = it.path; // 21时为U盘升级
         else dir = unzip(it.path+it.file);
         ok = versionCheck(dir);
@@ -139,7 +145,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
 void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
-    system("rm -rf /tmp/updater/ota_apps");
+    system("rm -rf /usr/data/ota_apps");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");

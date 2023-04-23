@@ -61,9 +61,13 @@ void Data_Group::groupOverrunOff()
             QList<int> ls = outletByGroup(i);
             OP_Core::bulid()->relaysCtrl(ls, 0);
             sEventItem db; //db.addr = i;
-            db.event_type = QStringLiteral("超限断电");
-            db.event_content =QStringLiteral("组继电器%1断开").arg(i+1);
-            Log_Core::bulid()->append(db);
+            if(cm::cn()) {
+                db.event_type = QStringLiteral("超限断电");
+                db.event_content = QStringLiteral("组继电器%1断开").arg(i+1);
+            } else {
+                db.event_type = "Overlimit power outage ";
+                db.event_content = QStringLiteral("Group relay %1 disconnected ").arg(i+1);
+            } Log_Core::bulid()->append(db);
         }
     }
 }
@@ -76,12 +80,18 @@ void Data_Group::groupTiming()
         if(res) {
             QList<int> ls = outletByGroup(i);
             OP_Core::bulid()->relaysCtrl(ls, res-1);
-            sEventItem db; //db.addr = i;
-            db.event_type = QStringLiteral("定时开关"); res--;
-            db.event_content = QStringLiteral("组继电器%1").arg(i+1);
-            if(res) db.event_content += QStringLiteral("接通");
-            else db.event_content += QStringLiteral("断开");
-            Log_Core::bulid()->append(db);
+            sEventItem db; res--; //db.addr = i;
+            if(cm::cn()) {
+                db.event_type = QStringLiteral("定时开关");
+                db.event_content = QStringLiteral("组继电器%1").arg(i+1);
+                if(res) db.event_content += QStringLiteral("接通");
+                else db.event_content += QStringLiteral("断开");
+            } else {
+                db.event_type = "time switch ";
+                db.event_content = "group relay ";
+                if(res) db.event_content += "put through ";
+                else db.event_content += "break";
+            } Log_Core::bulid()->append(db);
         }
     }
 }

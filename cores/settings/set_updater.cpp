@@ -33,8 +33,8 @@ QVariant Set_Updater::otaStatus(sCfgItem &cfg)
         switch (cfg.id) {
         case 1: res = it->isRun; break;
         case 2: res = it->subId; break;
-        case 3: res = it->progress; break;
-        case 4: res = it->progs[cfg.addr]; break;
+        case 3: res = it->progress + it->reserve/10.0; break;
+        case 4: res = it->progs[cfg.addr] + it->progs[DEV_NUM/2+cfg.addr]/10.0; break;
         case 5: res = it->results[cfg.addr]; break;
         default: cout << cfg.id; break;
         }
@@ -61,7 +61,7 @@ void Set_Updater::ota_log()
 bool Set_Updater::ota_logErr(const QString &fn)
 {    
     bool ret = true;
-    QString dir = "/tmp/updater/ota_apps/";
+    QString dir = "/usr/data/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
         cfg.app_unpack(ver);

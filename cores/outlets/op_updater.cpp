@@ -42,7 +42,7 @@ void OP_Updater::ota_reboot()
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
-    system("rm -rf /tmp/updater/ota_apps");
+    system("rm -rf /usr/data/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
 }
@@ -91,6 +91,7 @@ void OP_Updater::onOtaProgress(uchar addr, int v)
     it->subId = addr; it->progress = it->progs[addr] = v/10;
     QString str = "addr=%1 progress=%2%";
     throwMessage(str.arg(addr).arg(v/10.0));
+    it->progs[DEV_NUM/2+addr] = v%10;
 }
 
 bool OP_Updater::ota_update(int addr, const QString &fn)

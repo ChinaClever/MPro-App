@@ -36,10 +36,10 @@ void Agent_Mib::createHead()
 
             "--- ----------------------------------\n"
             "--- pdu MODULE-IDENTITY\n"
-            "---    LAST-UPDATED \"202303040000Z\"\n"
+            "---    LAST-UPDATED \"202304210000Z\"\n"
             "---    ORGANIZATION \"pdu-snmp-subagent\"\n"
             "---    DESCRIPTION  \"Top-level of the SNMP pdu MIB tree.\"\n"
-            "---    REVISION     \"202303040000Z\"\n"
+            "---    REVISION     \"202304210000Z\"\n"
             "---    DESCRIPTION  \"Initial revision.\"\n"
             "--- ----------------------------------\n"
             "pdu OBJECT IDENTIFIER ::= { enterprises 30966}\n\n"

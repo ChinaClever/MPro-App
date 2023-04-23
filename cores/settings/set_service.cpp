@@ -154,7 +154,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     case 4: key = "pwd";  cfg->pwd = v.toString();  break;
     case 5: ret = obj->ssh_save(); break;
     default: ret = false; cout << fc; break;
-    } cout << fc << v;
+    } //cout << fc << v;
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
