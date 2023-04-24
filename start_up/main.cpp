@@ -29,7 +29,7 @@ static void initSystem()
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm -rf /usr/data/upload");
-    system("chmod 755 -R /usr/data/clever");
+    //system("chmod 755 -R /usr/data/clever");
     system("chmod 777 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");
@@ -94,14 +94,8 @@ static void start_init()
         cnt = file.readAll().toInt(); file.seek(0);
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
-    } file.close(); initSystem(); //system("sync");
-
-//    system("cmd_fb enable /dev/fb0");
-//    system("cmd_fb display /dev/fb0");
-//    if(cnt < 5) initSystem(); else {
-//        system("mkdir -p /usr/data/updater");
-//        system("mkdir -p /tmp/download");
-//    }
+    } file.close(); initSystem(); system("sync");
+    if(cnt < 5) system("chmod 755 -R /usr/data/clever");
 }
 
 int main(int argc, char *argv[])

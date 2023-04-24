@@ -33,7 +33,7 @@ public:
 
 private:
     JsonRpc_Client *mRpc;
-    QString mUuid;
+    QString mUuid = " ";
 };
 
 #define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"

@@ -8,8 +8,8 @@ class JsonRpc {
     static _instance = null;
 
     constructor() {
-        this.uuid = '';
         this.rpcid = 0; 
+        this.uuid = ' ';
         this.timeOut = 65; // HTTP最小超时时间 
         this.isSetting = false; // 是否在设置模式
         this.root_map = this.rpc_map(); // 唯一的Map表，此表会存储所有的数据
@@ -133,17 +133,17 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
+        var sessionStorage = window.sessionStorage;
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
-            if(1 == parseInt(value)){
-                this.uuid = str.slice(3);
-                value = 1;
+            if(1 == parseInt(value)) {                
+                this.uuid = str.slice(3); value = 1;
+                sessionStorage.setItem('uuid', this.uuid);
             } 
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
-        const json = Object.fromEntries(this.root_map);
-        var sessionStorage = window.sessionStorage;
+        const json = Object.fromEntries(this.root_map);        
         sessionStorage.setItem('root_map',JSON.stringify(json));
 
         return true;
@@ -573,6 +573,17 @@ class PduCore extends PduOta {
             PduCore._instance = new PduCore()
         }
         return PduCore._instance
+    }
+
+
+    loginUuid() {
+        var sessionStorage = window.sessionStorage;
+        var value = sessionStorage.getItem("uuid");
+        var res = 0; if(value != null) {
+            if(value.length > 3) res = 1;
+        }   
+        
+        return res;
     }
 
     // 清除所有数据
