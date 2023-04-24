@@ -94,11 +94,18 @@
 			
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						alert("A或C系列不支持机架功能！");
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 			}
 			if(dev_mode != 2){
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("未开启机架功能!")
+						alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!")
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);

@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);"  id="lang_21"></button></span>
 							</div>
 						</div>
 					</div>
@@ -40,7 +40,7 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let pdu_metadata = new PduMetaData();
 		let language;
-		var read =0;
+		var read =1;
 		let addr = 0;
 		let cfg = 13,num = 12;
 		pdu_cfg.modesetCfg();
@@ -101,8 +101,10 @@
 			lang[16]  = ["主机", "", "", "", ""];
 			lang[17]  = ["副机", "", "", "", ""];
 			lang[18]  = ["自动", "", "", "", ""];
-			lang[19]  = ["最少", "", "", "", ""];
-			lang[20]  = ["最多", "", "", "", ""];
+			lang[19]  = ["精简", "", "", "", ""];
+			lang[20]  = ["标准", "", "", "", ""];
+			lang[21] = ["阅读模式","","","",""];
+			lang[22] = ["设置模式","","","",""];
 
 			for(let j = 0;j < 3;j++){
 				mode_set[j] = lang[12 +j][language];
@@ -121,6 +123,7 @@
 			for(let i = 1;i < 9; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
+			document.getElementById("lang_21").innerHTML = lang[21][language];
 		}
 		let modeset_arr = [3,4,7,21,8,9,10];
 		function ReadData(){
@@ -128,12 +131,54 @@
 				mode_data[i] = pdu_cfg.cfgValue(cfg,modeset_arr[i],0,addr);
 			}
 		}
+		function ReadOnlySet(ros){
+			if(read === 1){
+				read = 0;
+				ros.style.backgroundColor = 'red';
+				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				ros.innerHTML = lang[22][language];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++){
+					iptname[i].disabled = false;
+				}
+				document.getElementById("data_len").disabled = false;
+				document.getElementById("buz").disabled = false;
+				document.getElementById("addr").disabled = false;
+				document.getElementById("mode").disabled = false;
+
+			}
+			else{
+				read = 1;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = lang[21][language];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++){
+					iptname[i].disabled = true;
+				}
+				document.getElementById("data_len").disabled = true;
+				document.getElementById("buz").disabled = true;
+				document.getElementById("addr").disabled = true;
+				document.getElementById("mode").disabled = true;
+			}
+		}
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+			document.getElementById("data_len").disabled = true;
+			document.getElementById("buz").disabled = true;
+			document.getElementById("addr").disabled = true;
+			document.getElementById("mode").disabled = true;
+		}
 		setTimeout(function(){
 			$('.mode_set').html(BuildTableMode());
 			$('.sw_set').html(BuildTableSw());
 			LangFun();
 			ReadData();
 			ShowData();
+			ModeSet();
 		},400);
 		function ShowData(){
 			for(let i = 0;i<id_val1.length;i++){

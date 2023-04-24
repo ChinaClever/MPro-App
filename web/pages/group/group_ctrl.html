@@ -95,7 +95,7 @@
 				if(pdu_data.pdu_info.group_en == 0){
 					if(t1 == 0){
 						let t2 =setInterval(function () {
-							alert("未开启分组功能!")
+							alert("未开启分组功能，请前往“分组设置”处开启!")
 							clearInterval(t2);
 							t1 += 1;
 						}, 100);
@@ -140,9 +140,11 @@
 				if (read == 0) {
 					document.getElementById("lang_2").innerHTML = lang[10][language];
 				}
-				if(pdu_data.pdu_info.slave_num != 0){
-					document.getElementById("dev_sel").style.display="";
-				}
+				if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
 			}
 			function Change(sel){
 				top.addr_ = parseInt(sel.value);
@@ -192,6 +194,7 @@
 				if (read === 1) {
 					read = 0;
 					ros.style.backgroundColor = 'red';
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
 					ros.innerHTML = lang[11][language];
 					var iptname = document.getElementsByTagName("input");
 					var btnname = document.getElementsByTagName("button");

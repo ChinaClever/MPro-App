@@ -62,6 +62,7 @@
 		let state_ = new Array();
 		let dev_name = new Array();
 		var slave_num ;
+		let dev_mode;
 		let pdu_data;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
@@ -75,6 +76,7 @@
 			pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
+			dev_mode = pdu_data.pdu_info.dev_mode;
 			language = pdu_data.pdu_info.language;
 			for(let i = 1;i<output_num + 1;i++){
 				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
@@ -121,8 +123,10 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 		}
@@ -143,6 +147,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
+				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
 				ros.innerHTML = lang[8][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)

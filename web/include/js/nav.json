@@ -56,7 +56,10 @@
     "icon": "fa-list",
     "base": "pages/group/",
     "subNav": [
-
+      {
+        "name": "分组设置",
+        "url": "group_set.html"
+      },
       {
         "name": "分组监测",
         "url": "group_monitoring.html"
@@ -72,10 +75,6 @@
       {
         "name": "分组定时",
         "url": "group_timing.html"
-      },
-      {
-        "name": "分组设置",
-        "url": "group_set.html"
       },
       {
         "name": "分组控制",

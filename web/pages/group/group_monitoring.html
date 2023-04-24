@@ -56,7 +56,7 @@
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("未开启分组功能!")
+						alert("未开启分组功能，请前往“分组设置”处开启!")
 						clearInterval(t2);
 						t1 += 1;
 				}, 100);
@@ -100,8 +100,10 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 

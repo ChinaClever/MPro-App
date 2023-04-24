@@ -51,21 +51,20 @@
 				<div class="phase" id="l1" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L1</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart0"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart0"></div>			
+					<div style="min-width:24.3%; height:170px;"  id="myChart0"></div>	
+					<!-- <div style="min-width:200px; height:170px;"  id="myChart0"></div>		 -->
 					<table class="phase_table p1"></table>
 
 				</div>	
 				<div class="phase " id="l2" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L2</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart1"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart1"></div>	
 					<table class="phase_table p2"></table>
 					</table>
 				</div>
 				<div class="phase" id="l3" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L3</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart2"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart2"></div>	
 					<table class="phase_table p3"></table>
 				</div>
 				<script>
@@ -100,10 +99,7 @@
 				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
 				k++;
 			}
-		//	total_info[0] = total_info[0].toFixed(2);
-		//	total_info[1] = total_info[1].toFixed(2);
 		}
-
 		function build_pie(){
 			let i = 0;
 			//L1-L3的环形图
@@ -113,6 +109,9 @@
 					title: {
 						floating:true,
 						text: phase_info[i][0]+'A'
+					},
+					chart:{
+						reflow:true
 					},
 					tooltip: {
 						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -163,6 +162,9 @@
 			title: {
 				floating:true,	
 				text: ''
+			},
+			chart:{
+				reflow:true
 			},
 			tooltip: {
 				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -218,140 +220,7 @@
 				y:centerY + titleHeight/2
 			});
 		});
-	}
-		
-		function built_pie(){
-		for(let i = 0;i<phase_num;i++){
-			ctx[i] = document.getElementById('myChart'+ i);	
-		}
-		ctx[4] = document.getElementById("total_date");
-	
-		for(let i = 0;i<phase_num;i++){
-			 data[0] = {
-				labels: [
-				// 'Red',
-				],
-				
-				datasets: [{
-					label: '当前电流与额度电流比例',
-					//data: [phase_info[i][0], phase_info[i][4]-phase_info[i][0]],
-					data :[
-						{
-							name: '当前电流与额度电流比例',
-							value: phase_info[i][0]
-						},
-						{
-							name: '当前电流',
-							value: phase_info[i][4]-phase_info[i][0]
-						}
-					],
-					backgroundColor: [
-						// 'rgb(255, 99, 132)',
-						// 'rgb(54, 162, 235)',
-						'#13AB78',
-						'#ebebeb',
-					],
-					hoverOffset: 4
-				}]
-			};
-			data[1] = {
-				labels: [
-				// 'Red',
-				],				
-				datasets: [{
-					label: '当前电流与额度电流比例',
-					data: [phase_info[i][0], phase_info[i][4]-phase_info[i][0]],
-					backgroundColor: [
-						'#FFA701',
-						'#ebebeb',
-
-					],
-					hoverOffset: 4
-				}]
-			};	
-			data[2] = {
-				labels: [
-				// 'Red',
-				],			
-				datasets: [{
-					label: '当前电流与额度电流比例',
-					data: [phase_info[i][0], phase_info[i][4]-phase_info[i][0]],
-					backgroundColor: [
-						'#FD4442',
-						'#ebebeb',
-					],
-
-					hoverOffset: 4
-				}]
-			};	
-		
-			config[i] = {
-				type: 'doughnut',
-				data: data[i],
-				options: {
-					cutout:50,
-					responsive: true, // 设置图表为响应式，根据屏幕窗口变化而变化
-					maintainAspectRatio: false,// 保持图表原有比例
-					animateRotate: true,
-					hoverBorderJoinStyle:'round',
-					plugin:{
-						legend:{
-							position:'bottom'
-						},
-						title:{
-							display: true,
-							text:'cyas'
-						}
-					},
-
-			
-					borderWidth:0,
-
-					responsive: true,
-		
-		
-				}
-			};
-		}
-		//总数据的环形图
-		data[4] = {
-			labels: [
-			// 'Red',
-			],
-				
-			datasets: [{
-				label: 'kVA与KW比例',
-				data: [total_info[0], total_info[1]],
-				backgroundColor: [
-					// 'rgb(255, 99, 132)',
-					// 'rgb(54, 162, 235)',
-					
-					'#4D81E7',
-					'#1AE1E5',
-					
-				],
-					hoverOffset: 4
-				}]
-			};
-			config[4] = {
-				type: 'doughnut',
-				data: data[4],
-				options: {
-					cutout:50,
-					responsive: true, // 设置图表为响应式，根据屏幕窗口变化而变化
-					maintainAspectRatio: false,// 保持图表原有比例
-					animateRotate: true,
-					borderWidth:0,
-	
-				}
-			};
-	
-		for(let i = 0;i<phase_num;i++){
-			const myChart = new Chart(ctx[i], config[i]);
-		}
-		const myChart = new Chart(ctx[4], config[4]);
-	}
-
+	}		
 		build_pie();
 		setInterval(function () {
 			PduMetaData.meta_workDown();
@@ -614,9 +483,9 @@
 							data_inlet1.push(top.inletA_data[chart_type][49]);
 							data_inlet2.push(top.inletB_data[chart_type][49]);
 							data_inlet3.push(top.inletC_data[chart_type][49]);
-							if (chart_type == 1) {
+					//		if (chart_type == 1) {
 								data_total.shift();
-							}
+					//		}
 							dataLabels.shift();
 							data_inlet1.shift();
 							data_inlet2.shift();
@@ -843,8 +712,10 @@
 				}
 			}
 			document.getElementById("ms").value = top.addr_;
-			if (slave_num != 0) {
-				document.getElementById("dev_sel").style.display = "";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 		}
 		function ReadChartData() {

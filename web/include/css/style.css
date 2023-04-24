@@ -75,7 +75,8 @@ input {
   /* background: none; */
   /* background-color: rgb(255,255,255,0.2); */
   background-color: #EDEEEE;
-  color :rgb(240,240,240);
+  /* color :rgb(240,240,240); */
+  color :rgba(0, 0, 0, 0.7);
   border: 1px solid #fff;
   box-sizing:border-box;
   /* border-radius: 5px; */

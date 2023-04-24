@@ -39,7 +39,7 @@
 				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label></label><br> -->
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display:inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label><label  id ="uptime" style="width:70%;"></label><label id ="status" style="width:50%;" ></label></label> -->
-				<label style="width:55%;font-size:16px;line-height:12px;font-family: Roboto;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label><label  id ="uptime" style="width:70%;"></label><label id ="status" style="width:50%;" ></label></label>
+				<label style="width:55%;font-size:16px;line-height:12px;font-family: Roboto; padding-right:40px;"><label id ="status" style="width:50%;" ></label><label id ="version" style="width:50%;"></label><label id ="series" style="width:70%;"></label><label  id ="uptime" style="width:70%;"></label></label>
 			</p>
 		</div>
 	</div>
@@ -163,7 +163,7 @@
 			document.getElementById("logOut").title = lang[8][language_];
 			document.getElementById("status").innerHTML = run_status[pdu_data.status];
 			document.getElementById("series").innerHTML = lang[1][language_] + pdu_data.uut_info.pdu_type + "("+series_data[pdu_data.pdu_info.pdu_spec]+")";
-			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
+			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.pdu_version.ver;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
 			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;

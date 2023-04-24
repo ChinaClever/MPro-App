@@ -159,8 +159,10 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[36][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 		}
@@ -258,6 +260,7 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
+				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
 				ros.innerHTML = lang[36][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
