@@ -120,8 +120,10 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 		}
@@ -182,6 +184,7 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
+				alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次！")
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				var btnname = document.getElementsByTagName("button");

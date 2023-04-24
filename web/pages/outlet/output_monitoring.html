@@ -108,8 +108,10 @@
 				}
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 	

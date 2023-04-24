@@ -85,7 +85,7 @@
       }
     }
     let time3 = setInterval(function(){
-      if(time3_num >= 1.5){
+      if(time3_num >= 4){
           GotoRegisterPage();
           clearInterval(time3);
       }
@@ -294,7 +294,7 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        tbody += '<p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<br/><p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="username" maxlength="16"; onkeyup = "Clear(this)" placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';

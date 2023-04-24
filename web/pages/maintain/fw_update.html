@@ -64,14 +64,14 @@
 		let Board_mark = 0;
 		let slave_num;
 		let board_num;
-		let method_data = new Array();
-		
+		let method_data = new Array();	
 		setTimeout(function(){
-			for(i = 1;i<slave_num+1;i++){
-				pdu_cfg.getOta(6, 4, i);
-      	 		pdu_cfg.getOta(6, 5, i);
-
-			}	
+			// for(i = 1;i<slave_num+1;i++){
+				// pdu_cfg.getOta(6, 4, i);
+      	 		// pdu_cfg.getOta(6, 5, i);
+			// }	
+			pdu_cfg.getOta(6, 4, 1);
+      		pdu_cfg.getOta(6, 5, 1);
 			for(i = 1;i<board_num+1;i++){
 				pdu_cfg.getOta(7, 4, i);
       	 		pdu_cfg.getOta(7, 5, i);
@@ -91,22 +91,28 @@
 		function read_data(){
 			let i = 0;
 			
-			for( i = 0;i<slave_num;i++){
+			/*for( i = 0;i<slave_num;i++){
 				slave_data[i] = new Array();
 				//slave_data[i][0] = pdu_cfg.otaValue(6,5,(i+1));
 				slave_data[i][0] = parseInt(pdu_cfg.otaValue(6,5,(i+1)));
-				if(null == slave_data[i][0]) return false;
+			//	if(null == slave_data[i][0]) return false;
 				slave_data[i][1] = parseInt(pdu_cfg.otaValue(6,4,(i+1)));
 				if(slave_data[i][1] == 3 || slave_data[i][1] ==4){
 					Slave_mark += 1;
 				}
+			}*/
+			slave_data[i] = new Array();
+			slave_data[0][0] = parseInt(pdu_cfg.otaValue(6,5,1));
+			slave_data[0][1] = pdu_cfg.otaValue(6,4,1);
+			if(slave_data[0][1] == 3 || slave_data[0][1] ==4){
+					Slave_mark += 1;
 			}
 			
 			for( i = 0;i<board_num;i++){
 				board_data[i] = new Array();
 				//board_data[i][0] = pdu_cfg.otaValue(7,5,(i+1));
 				board_data[i][0] = parseInt( pdu_cfg.otaValue(7,5,(i+1)));
-				board_data[i][1] = parseInt(pdu_cfg.otaValue(7,4,(i+1)));
+				board_data[i][1] = pdu_cfg.otaValue(7,4,(i+1));
 				if(board_data[i][1] == 3 || board_data[i][1] ==4){
 					Board_mark += 1;
 				}
@@ -150,7 +156,6 @@
 			lang[28] = ["进行中","","","",""];
 			lang[29] = ["已完成","","","",""];
 			lang[30] = ["升级失败","","","",""];
-
 			lang[31] = ["无升级","","","",""];
 			lang[32] = ["U盘升级","","","",""];
 			lang[33] = ["网络升级","","","",""];
@@ -161,9 +166,9 @@
 			for(i = 0;i<board_num;i++){
 				board_name[i] = lang[14][language] + lang[17 +i][language] + lang[16][language];
 			}
-			for(i = 0;i<slave_num;i++){
-				slave_name[i] = lang[15][language] + (i+1);
-			}
+			//for(i = 0;i<slave_num;i++){
+				slave_name[0] = lang[15][language] ;
+			//}
 			for(i = 0;i<4;i++){
 				update_state[i] = lang[27 +i][language];
 			}
@@ -184,23 +189,23 @@
 		}
 		function show_data(){
 			let i = 0;
-			if(slave_num!=0){
-				for(i = 0;i<slave_num;i++){
-					document.getElementById('Sprogress'+i).innerHTML = update_state[slave_data[i][0]];
-					document.getElementById('Sstate'+i).innerHTML = slave_data[i][1];
-					if(update_state[slave_data[i][0]] == "进行中"){
-						document.getElementById('Sprogress'+i).bgColor = 'yellow';
-						document.getElementById('Sstate'+i).bgColor = 'yellow';
+		//	if(slave_num!=0){
+				//for(i = 0;i<slave_num;i++){
+					document.getElementById('Sprogress').innerHTML = update_state[slave_data[0][0]];
+					document.getElementById('Sstate').innerHTML = slave_data[0][1] + '%';
+					if(update_state[slave_data[0][0]] == "进行中"){
+						document.getElementById('Sprogress').bgColor = 'yellow';
+						document.getElementById('Sstate').bgColor = 'yellow';
 					}else{
-						document.getElementById('Sprogress'+i).bgColor = '';
-						document.getElementById('Sstate'+i).bgColor = '';	
+						document.getElementById('Sprogress').bgColor = '';
+						document.getElementById('Sstate').bgColor = '';	
 					}
-				}
-			}
+				//}
+		//	}
 			if(board_num!=0){
 				for(i = 0;i<board_num;i++){
 					document.getElementById('Bprogress'+i).innerHTML = update_state[board_data[i][0]];
-					document.getElementById('Bstate'+i).innerHTML = board_data[i][1];
+					document.getElementById('Bstate'+i).innerHTML = board_data[i][1] + '%';
 					if(update_state[board_data[i][0]] == "进行中"){
 						document.getElementById('Bprogress'+i).bgColor = 'yellow';
 						document.getElementById('Bstate'+i).bgColor = 'yellow';
@@ -213,9 +218,9 @@
 			if(Board_mark == board_num && Slave_mark == slave_num){
 				clearInterval(time1);
 			}
-			for(i = 0;i<slave_num;i++){
-				document.getElementById('b'+i).innerHTML = slave_name[i];
-			}
+			//for(i = 0;i<slave_num;i++){
+				document.getElementById('b').innerHTML = slave_name[0];
+			//}
 			for(i = 0;i<board_num;i++){
 				document.getElementById('a'+i).innerHTML  = board_name[i];
 			}
@@ -301,13 +306,13 @@
 			tbody += '<tr><td width ="20%" ></td><td width ="40%"></td><td width ="40%"></td></tr>'
 			tbody += '<tr><td id="lang_6"></td><td></td><td></td></tr>';
 			tbody += '<tr style="background:#f5f7fa" ><td id="lang_7"></td><td id="lang_8" ></td><td id="lang_9" ></td></tr>';
-			for(let i = 0;i<slave_num;i++){
+			//for(let i = 0;i<slave_num;i++){
 				//tbody += '<tr><td id="'+slave_name[i]+'"><td>';
-				tbody += '<tr><td id="b'+ i +'"></td>';
+				tbody += '<tr><td id="b"></td>';
 				
-				tbody += '<td id="Sstate'+i+'" ></td>';
-				tbody += '<td id="Sprogress'+ i+'" ></td></tr>';
-			}
+				tbody += '<td id="Sstate" ></td>';
+				tbody += '<td id="Sprogress" ></td></tr>';
+			//}
 			tbody += '<tr><td></td><td></td><td></td></tr>'
 			tbody += '<tr><td id="lang_10"></td><td></td><td></td></tr>';
 			tbody += '<tr style="background:#f5f7fa"><td id="lang_11"></td><td id="lang_12" ></td><td id="lang_13" ></td></tr>';
@@ -326,19 +331,20 @@
 			read_data();
 			//show_data();
 			setTimeout(function(){
-				for(i = 1;i<slave_num+1;i++){
-				pdu_cfg.getOta(6, 4, i);
-      	 		pdu_cfg.getOta(6, 5, i);
-
-			}	
-			for(i = 1;i<board_num+1;i++){
-				pdu_cfg.getOta(7, 4, i);
-      	 		pdu_cfg.getOta(7, 5, i);
-			}	
-			pdu_cfg.getOta(1, 0, 0);
-			},600);
-			//flash_data();
-		}, 2000);
+				// for(i = 1;i<slave_num+1;i++){
+					// pdu_cfg.getOta(6, 4, i);
+					// pdu_cfg.getOta(6, 5, i);
+				// }	
+				pdu_cfg.getOta(6, 4, 1);
+      			pdu_cfg.getOta(6, 5, 1);
+				for(i = 1;i<board_num+1;i++){
+					pdu_cfg.getOta(7, 4, i);
+					pdu_cfg.getOta(7, 5, i);
+				}	
+				pdu_cfg.getOta(1, 0, 0);
+				},600);
+				//flash_data();
+			}, 2000);
     </script>
 </body>
 </html>

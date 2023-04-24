@@ -84,7 +84,7 @@
 			}
 			function hidden(){
 				document.getElementsByClassName("page-cont")[0].style.display = "none";	
-				document.getElementsByClassName("section-cont")[0].style.display = "none";	
+				document.getElementsByClassName("section-cont")[0].style.display = "none";		
 			}
 			function lang_init() {
 				for (let i = 1; i < 8; i++) {
@@ -107,13 +107,16 @@
 				language = pdu_data.pdu_info.language;
 				dev_dis = pdu_data.pdu_info.cascade_addr;
 				dev_mode = pdu_data.pdu_info.dev_mode;
-				if(pdu_data.pdu_info.pdu_spec == 1){
+				if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 					hidden();
+					setTimeout(() => {
+						alert("A或C系列不支持机架功能！");
+				}, 200);
 				}
 				if(dev_mode != 2){
 					if(t1 == 0){
 						let t2 =setInterval(function () {
-						alert("未开启机架功能!")
+						alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!")
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);
@@ -153,6 +156,7 @@
 				if (read === 1) {
 					read = 0;
 					ros.style.backgroundColor = 'red';
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
 					ros.innerHTML = lang[6][language];
 					var iptname = document.getElementsByTagName("input");
 					for (var i = 0; i < iptname.length; i++) {
