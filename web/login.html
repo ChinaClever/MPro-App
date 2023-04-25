@@ -19,15 +19,13 @@
     <div class="inner_box">
       <div class="center_form">
       </div>
+      <!-- <p style="width: 520px;">Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "</p> -->
+      <p  style="width: 528px;height: auto;padding-left: -10%;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
+      <p  style="width: 528px;text-align: left;">免加密策略：勾选免加密策略可以无需遵循以上密码和账户规则！</p>
     </div>
+
   </div>
   <style>
-    .inner_box {
-      width: 300px;
-      height: 300px;
-      text-align: center;
-      margin: 0 auto;
-    }
 
     .center_form {
       /* width: 300px; */
@@ -53,6 +51,8 @@
     let time3_num = 0;
     let user = 14;
     let web_service = 0;
+    let lang = new Array();
+    lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
     //let hasher = CryptoJS.algo.SHA256.create();
     let time1 = setInterval(function(){
