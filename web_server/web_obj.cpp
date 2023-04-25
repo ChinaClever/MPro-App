@@ -31,6 +31,7 @@ bool Web_Obj::checkUuid(const QString &uuid)
 {
     bool ret = false;  //////////====================
     if(mUuid.size() && (mUuid == uuid)) ret = true;
+    else cout << mUuid << uuid;
     return ret;
 }
 

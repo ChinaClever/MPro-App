@@ -33,7 +33,8 @@ class JsonRpc {
             let arr = Object.entries(json);
             map = new Map(arr);
         }   
-        
+        value = sessionStorage.getItem('uuid');
+        if(value != null)  this.uuid = value;
         return map;
     }
 
@@ -135,9 +136,10 @@ class JsonRpc {
 
         var sessionStorage = window.sessionStorage;
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
-            if(1 == parseInt(value)) {                
-                this.uuid = str.slice(3); value = 1;
+            if(1 == parseInt(value[0])) {   
+                this.uuid = value.slice(3); value = 1;
                 sessionStorage.setItem('uuid', this.uuid);
+                alert(value); alert(this.uuid);
             } 
         }
 
