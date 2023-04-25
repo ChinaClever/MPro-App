@@ -71,7 +71,14 @@
       time1_num ++;
     },50);
     function LangInit(){
-
+      for(let i = 1;i<3;i++){
+				lang[i] = new Array();
+			}
+      lang[1] = ["免加密策略:","","","",""];
+      lang[2] = ["checkbox","","","",""];
+			document.getElementById("lang_1").innerHTML  = lang[1][language];
+			document.getElementById("lang_2").innerHTML  = lang[2];
+    
     }
     language = obj.cfgValue(13,10,0,0);
     document.onkeydown = function(e){
@@ -195,14 +202,17 @@
           alert("请输入5-16位用户名");
           return ;
         }
-        if(!pattern.test(psd)){
-          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
-          return ;
-        }
-        if(!pattern.test(ient)){
-          alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
-          return ;
-        }
+        if(document.getElementById("lang_2").checked == true){
+        }else{
+          if(!pattern.test(psd)){
+            alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+            return ;
+          }
+          if(!pattern.test(ient)){
+            alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+            return ;
+          }
+       }
         if(ient == psd){
           alert("验证信息为重设密码时使用，请勿设置与密码一致。");
           return ;
@@ -295,13 +305,14 @@
       if(Reg === 'register')
       {
         tbody += '<br/><p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<p style ="height:30px"><span style="text-align:center;line-height:40px">免加密策略：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
         tbody += '<p><input id ="username" type="username" maxlength="16"; onkeyup = "Clear(this)" placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="16"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<br/><br/><br/><p class="title"><img src ="./include/images/login_logo.png" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<br/><br/><br/><br/><p class="title"><img src ="./include/images/login_logo.png" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="text" maxlength="16" placeholder="用户名" onkeyup = "Clear(this)" onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="16" autocomplete="off" oninput ="check();" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
