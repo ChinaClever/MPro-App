@@ -31,7 +31,7 @@ void Cascade_Master::masterReadDevs()
     uint size = masterDev()->cfg.nums.slaveNum;
     for(uint i=1; i<=size; ++i) {
         bool ret = masterRead(i); // cout << ret << i;
-        if(!ret) ret = masterRead(i);
+        if(!ret) {mdelay(1000); ret = masterRead(i);}
         setEndisable(i, ret, devData(i)->offLine);
         if(hasCmdWrite()) return;
     }
@@ -52,7 +52,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
                 it.event_type = "cascade";
                 it.event_content = tr("Connection from machine %1 is normal").arg(addr);
             } Log_Core::bulid()->append(it);
-        } if(cm::runTime() > 48*60*60) v = 5; else v = 2;
+        } if(cm::runTime() > 48*60*60) v = 6; else v = 3;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.addr = addr;
