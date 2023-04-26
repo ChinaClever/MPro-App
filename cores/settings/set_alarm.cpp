@@ -90,7 +90,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
 void Set_Alarm::oplog(const sDataItem &it)
 {
     QString content = QStringLiteral("全部");
-    if(!cm::cn()) content ="all "; if(it.id) {
+    if(!cm::cn()){content ="all ";}if(it.id) {
         if(cm::cn()) content = QStringLiteral("第");
         content = QString::number(it.id);
     }
@@ -101,7 +101,12 @@ void Set_Alarm::oplog(const sDataItem &it)
     db.addr = it.addr;
     db.event_content = content;
     db.event_type = opSrc(it.addr, it.txType);
-    if(cm::cn())  db.event_type += QStringLiteral("告警设置;");
-    else db.event_type += "alarm settings;";
+    if(DType::Env != it.type) {
+        if(cm::cn()) db.event_type += QStringLiteral("告警设置;");
+        else db.event_type += "alarm settings;";
+    } else {
+        if(cm::cn()) db.event_type += QStringLiteral("电能清除;");
+        else db.event_type += "Electric energy clearing;";
+    }
     Log_Core::bulid()->append(db);
 }
