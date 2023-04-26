@@ -64,9 +64,10 @@ char* Web_Rpc::responRpcString(const QVector<uint> &ls, const QString &value)
 
 char *Web_Rpc::pduReadParam(mg_str &r)
 {
-    QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
-    bool ret = mObj->checkUuid(r); QString value;
-    if(ret) value = mObj->getCfg(its.at(1), its.at(2), its.at(3), its.at(0));
+    bool ret = true; QString value;
+    QVector<uint> its = mObj->getNumbers(r, 5);
+    if(its.at(1) != 14) ret = mObj->checkUuid(r);  //cout << its;
+    if(ret) value = mObj->getCfg(its.at(1), its.at(2), its.at(3), its.at(0));   
     return responRpcString(its, value);
 }
 

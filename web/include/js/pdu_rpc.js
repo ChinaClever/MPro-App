@@ -139,7 +139,7 @@ class JsonRpc {
             if(1 == parseInt(value[0])) {   
                 this.uuid = value.slice(3); value = 1;
                 sessionStorage.setItem('uuid', this.uuid);
-                //alert(value); alert(this.uuid);
+                // alert(value); alert(this.uuid);
             } 
         }
 

@@ -45,27 +45,27 @@
 				<div class="phase_div">
 					<div style="text-align: left;padding-left:20px;background: #FFFFFF;" id="lang_3"></div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="total_date"></canvas></div> -->
-					<div style="min-width:239px; height:170px;"  id="total_date"></div>
+					<div style="min-width:12%; height:170px;"  id="total_date"></div>
 					<table class="phase_table total" style="background: #FFFFFF;"></table>
 				</div>
 				<div class="phase" id="l1" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L1</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart0"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart0"></div>			
+					<div style="min-width:12%; height:170px;"  id="myChart0"></div>			
 					<table class="phase_table p1"></table>
 
 				</div>	
 				<div class="phase " id="l2" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L2</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart1"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart1"></div>	
+					<div style="min-width:12%; height:170px;"  id="myChart1"></div>	
 					<table class="phase_table p2"></table>
 					</table>
 				</div>
 				<div class="phase" id="l3" style="display: none;">
 					<div style="text-align: left;padding-left:20px" >L3</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart2"></canvas></div> -->
-					<div style="min-width:200px; height:170px;"  id="myChart2"></div>	
+					<div style="min-width:12%; height:170px;"  id="myChart2"></div>	
 					<table class="phase_table p3"></table>
 				</div>
 				<script>
@@ -109,10 +109,13 @@
 				chart[i] = Highcharts.chart('myChart'+ i, {
 					title: {
 						floating:true,
-						text: phase_info[i][0]+'A'
+						text: phase_info[i][0]+'A',
+						style: {
+							fontSize:18,				
+						}
 					},
 					chart:{
-						reflow:true
+						zoomType:'xy'
 					},
 					tooltip: {
 						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -139,11 +142,11 @@
 						animation:false,  //旋转动画
 						center: ['50%', '50%'],
 						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
-						name: '电流',
+						name: '占比',
 						data: [
 
-							['当前电流占比',   phase_info[i][0]],
-							['未使用的电流',   phase_info[i][4]-phase_info[i][0]],
+							['当前电流',   phase_info[i][0]],
+							['空余电流',   phase_info[i][4]-phase_info[i][0]],
 						]
 					}]
 
@@ -165,7 +168,7 @@
 				text: ''
 			},
 			chart:{
-						reflow:true
+				zoomType:'xy'
 					},
 			tooltip: {
 				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -205,7 +208,7 @@
 				center: ['50%', '50%'],
 				borderWidth:0,
 				colors:['#4D81E7','#1AE1E5',],
-				name: '占总数据',
+				name: '占比',
 				data: [
 					['KW',    total_info[0]],
 					['kVA',   total_info[1]],
@@ -221,7 +224,7 @@
 				y:centerY + titleHeight/2
 			});
 		});
-	}		
+	}	
 		build_pie();
 		setInterval(function () {
 			PduMetaData.meta_workDown();
@@ -679,14 +682,14 @@
 			lang[33] = ["产品系列：", "PDU series:", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
 			lang[34] = ["软件版本：", "PDU version:", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
 			lang[35] = ["实时动态趋势图", "Real-time dynamic trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
-			lang[36] = ["主机", "", "", "", ""];
-			lang[37] = ["副机", "", "", "", ""];
-			lang[38] = ["关闭", "", "", "", ""];
-			lang[39] = ["开启", "", "", "", ""];
-			lang[40] = ["正常", "", "", "", ""];
-			lang[41] = ["告警", "", "", "", ""];
-			lang[42] = ["断开", "", "", "", ""];
-			lang[43] = ["闭合", "", "", "", ""];
+			lang[36] = ["主机", "Master", "", "", ""];
+			lang[37] = ["副机", "Slave", "", "", ""];
+			lang[38] = ["关闭", "Close", "", "", ""];
+			lang[39] = ["开启", "Open", "", "", ""];
+			lang[40] = ["正常", "Normal", "", "", ""];
+			lang[41] = ["告警", "Warning", "", "", ""];
+			lang[42] = ["断开", "Off", "", "", ""];
+			lang[43] = ["闭合", "On", "", "", ""];
 			dev_name[0] = lang[36][language];
 			for (let i = 1; i < (slave_num + 1); i++) {
 				dev_name[i] = lang[37][language] + i;

@@ -74,8 +74,8 @@
       for(let i = 1;i<3;i++){
 				lang[i] = new Array();
 			}
-      lang[1] = ["免加密策略:","","","",""];
-      lang[2] = ["checkbox","","","",""];
+      lang[1] = ["免加密策略:","Encryption free policy","","",""];
+      lang[2] = ["checkbox","checkbox","","",""];
 			document.getElementById("lang_1").innerHTML  = lang[1][language];
 			document.getElementById("lang_2").innerHTML  = lang[2];
     
@@ -130,9 +130,11 @@
             clearInterval(time2);
           }
           let ver = obj.cfgValue(user,11,0,0);
-          if(ver === null || ver === ""){
-          }else{
-            if(ver  === "1"){
+          setTimeout(function(){
+           
+            if(ver === null || ver === ""){
+            }else{
+            if(ver  === 1){
               var key = '0_14_11_0_0';
               obj.rpc.root_map.set(key, "");
               window.open('index.html','_self');
@@ -144,8 +146,10 @@
             }
             window.clearInterval(time2);
           }
+		    	},400);
+   
           time2_num ++;
-        },100);
+        },450);
       }else{
         alert("请输入用户名和密码后登陆");
       }    
