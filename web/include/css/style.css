@@ -21,10 +21,12 @@
   width: 528px;
   height: 428px; 
   /* background-color: rgba(127, 255, 212, 0.5); */
-  left: 45%;
-  top: 45%;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+  margin: 0 auto;
 }
 .inner_box div {
   float: left;
@@ -112,11 +114,11 @@ a{
   color:red;
   display:inline-block;
   text-align: center;
-  height: 30px;
+  height: 20px;
   width: 449px;
   font-weight: bold;
   font-size: 15px;
-  line-height: 200%;
+  line-height: 100%;
 }
 
 /* 登录按钮 */

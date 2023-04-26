@@ -55,6 +55,18 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped pow_table text-center"></table>
 					</div>
+
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_39"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-striped energer_table text-center"></table>
+					</div>
 					<div class="grid-col grid-col-7 " style ="height: 100px;">
 					</div>
 				</div>
@@ -76,6 +88,13 @@
 		let type_arr = new Array("vol","cur","pow");
 		let addr = pdu_cfg.addr;
 		let pdu_data;
+
+		let energe_val = new Array();
+		let ckd_state = new Array();
+		let output = 3,energe_ = 9;
+		let loop_num;
+		let output_info_ = new Array();
+		let output_name = new Array();
 		let loop_arr = ["vol_value","vol_rated","vol_alarm_status","vol_alarm_max","vol_alarm_min","vol_warn_min","vol_warn_max","vol_alarm_enable","","","vol_hda_en","cur_value","cur_rated",
 		"cur_alarm_status","cur_alarm_max","cur_alarm_min","cur_warn_min","cur_warn_max","cur_alarm_enable","","","cur_hda_en","pow_value","pow_rated","pow_alarm_status","pow_alarm_max","pow_alarm_min","pow_warn_min","pow_warn_max","pow_alarm_enable","","","pow_hda_en"];
 		window.addEventListener('message',function(event){
@@ -96,6 +115,7 @@
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			loop_num = pdu_data.pdu_info.loop_num;
 			for (let i = 1; i < pdu_data.pdu_info.loop_num + 1; i++) {
 				loop_info[i] = new Array();
 				let j = 0;
@@ -108,9 +128,18 @@
 					j++;
 				}
 			}
+			for(let i = 0;i<loop_num;i++){
+				output_info_[i] = new Array();
+				let j = 0;
+				for(let key in pdu_data.pdu_data.loop_item_list){
+					output_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
+					j ++;
+				}
+			}
 		}
 		ParseData();
 		lang_init();
+		ReadData();
 		function lang_init(){
 			for(let i = 1;i<8;i++){
 				lang[i] = new Array();
@@ -153,6 +182,14 @@
 			lang[36] = ["设置模式","","","",""];
 			lang[37]  = ["主机", "", "", "", ""];
 			lang[38]  = ["副机", "", "", "", ""];
+
+			lang[39]  = ["回路电能设置", "", "", "", ""];
+			lang[40] = ["序号","","","",""];
+			lang[41] = ["回路名称","","","",""];
+			lang[42] = ["电能消耗(kWh)","","","",""];
+			lang[43] = ["历史记录","","","",""];
+			lang[44] = ["重置清零","","","",""];
+			lang[45] = ["计量清零","","","",""];
 			dev_name[0] = lang[37][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[38][language] + i;
@@ -160,6 +197,9 @@
 		}
 		function LangFun(){
 			for(let j = 1;j<34;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			for(let j = 39;j<45;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if(read == 0){
@@ -175,6 +215,7 @@
 		$('.vol_table').html(BuildTableVol(pdu_data.pdu_info.loop_num));
 		$('.cur_table').html(BuildTableCur(pdu_data.pdu_info.loop_num));
 		$('.pow_table').html(BuildTablePow(pdu_data.pdu_info.loop_num));
+		$('.energer_table').html(BuildTableeng(pdu_data.pdu_info.loop_num));
 		$('.devname').html(BuildSel(pdu_data.pdu_info.slave_num +1));
 		LangFun();
 		ShowData();
@@ -189,10 +230,12 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
-				$('.vol_table').html(BuildTableVol(pdu_data.pdu_info.line_num));
-				$('.cur_table').html(BuildTableCur(pdu_data.pdu_info.line_num));
-				$('.pow_table').html(BuildTablePow(pdu_data.pdu_info.line_num));
-				ShowData();
+				ReadData();
+				$('.vol_table').html(BuildTableVol(pdu_data.pdu_info.loop_num));
+				$('.cur_table').html(BuildTableCur(pdu_data.pdu_info.loop_num));
+				$('.pow_table').html(BuildTablePow(pdu_data.pdu_info.loop_num));
+				$('.energer_table').html(BuildTableeng(pdu_data.pdu_info.loop_num));
+				//ShowData();
 				LangFun();
 				ModeSet();
 			},500);
@@ -205,6 +248,13 @@
 				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+ dev_name[i] +'</option>';
 			}
 			return tbody;
+		}
+		function ReadData(){
+			for(var i = 1 ;i < loop_num + 1;i++){
+				output_name[i] = "C" + i ;
+				energe_val[i] = output_info_[i - 1][11];
+				ckd_state[i] = output_info_[i - 1][12];
+			}
 		}
 		function ShowData(){
 			for(var i = 1 ;i < pdu_data.pdu_info.loop_num + 1;i++){
@@ -235,6 +285,61 @@
 					}
 				}
 			}
+			for(let i = 0;i < loop_num;i++){
+				state_ = document.getElementById('f' + i);
+				if(ckd_state[i+1] ==  1){
+					state_.checked = true;
+				}else{
+					state_.checked = false;
+				}
+			}
+		}
+		function BtnClick(btn){
+			let num = parseInt(btn.id.slice(1))+1;
+			let stat = 0;
+			var retVal = confirm("您已更改表单，请确认提交！");
+			if(retVal == true){
+				if(num !== loop_num + 1){
+				}
+				else{
+					num = 0;
+				}
+				pdu_cfg.setData(2,5,1,num,stat);
+				setTimeout(() => {
+					PduMetaData.meta_workDown();
+				}, 100);
+			//	btn.blur();
+			//	ReadData();
+			}else{}
+		}
+		function Cked(ckd){
+			var stat = 0,number1 = 0;
+			let sub = 11;
+			var addr_ = addr + 0 * 256;
+			var type1 = ckd.id.substr(0,1);
+			var number = parseInt(ckd.id.slice(1))+1;
+			if(ckd.checked == true){
+				stat = '1';
+			}else{
+				stat = '0';
+			}		
+				if(number == loop_num +1){
+					number1 = 0;
+					for(let i = 0;i<loop_num;i++){
+						if(ckd.checked == true){
+							document.getElementById(type1+(i)).checked = true;
+						}else{
+							document.getElementById(type1+(i)).checked = false;
+						}
+					}
+				}else{
+					number1 = number;
+				}
+				pdu_cfg.setData(2,energe_,sub,number1,stat);
+
+			setTimeout(() => {
+				PduMetaData.meta_workDown();
+			}, 100);
 		}
 		function ShowData_(){
 			for(var i = 1 ;i < pdu_data.pdu_info.loop_num + 1;i++){
@@ -408,7 +513,7 @@
 			for (var i = 0; i < rows; i++) {
 				for (var i = 0; i < rows; i++) {
 					if (i === 0) {
-						thead = '<tr><td width ="8%" id="lang_7"></td>\
+						thead = '<tr style="background:#d6d6d6;"><td width ="8%" id="lang_7"></td>\
 						<td width ="11.5%" id="lang_8"></td>\
 						<td width ="11.5%" id="lang_9"></td>\
 						<td width ="11.5%" id="lang_10"></td>\
@@ -452,7 +557,7 @@
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="8%" id="lang_16"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="8%" id="lang_16"></td>\
 					<td width ="11.5%" id="lang_17"></td>\
 					<td width ="11.5%" id="lang_18"></td>\
 					<td width ="11.5%" id="lang_19"></td>\
@@ -495,7 +600,7 @@
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="8%" id="lang_25"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="8%" id="lang_25"></td>\
 					<td width ="11.5%" id="lang_26"></td>\
 					<td width ="11.5%" id="lang_27"></td>\
 					<td width ="11.5%" id="lang_28"></td>\
@@ -534,17 +639,56 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
+		function BuildTableeng(rows) {
+			var thead = '',
+				tbody = '';
+
+			for (var i = 0; i < rows; i++) {
+				if (i === 0) {
+						thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_40"></td>\
+						<td width ="26%" id="lang_41"></td>\
+						<td width ="12%" id="lang_42"></td>\
+						<td width ="36%"></td>\
+						<td width ="8%" id="lang_43"></td>\
+						<td width ="8%" id="lang_44"></td>';	
+				}
+				tbody += '<tr id = "tr'+ i + '">';
+				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
+				tbody += '<td id = "d'+ i + '"></td>';
+				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "BtnClick(this)" value="'+lang[45][language]+'"></input></td>';
+				tbody += '</tr>';
+				if(i === rows - 1){
+					i++;
+					tbody += '<tr id = "tr'+ i + '">';
+					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
+					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
+					tbody += '<td id = "c'+ i + '"></td>';
+					tbody += '<td id = "d'+ i + '"></td>';
+					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = BtnClick(this) value="'+lang[45][language]+'"></input></td>';
+					tbody += '</tr>';
+				}
+			}
+
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
 		function PutData(){
 			for(let i = 0;i < pdu_data.pdu_info.loop_num;i++){
 				for(let j = 0;j<3;j++){
-					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(loop_info[i + 1][0 + j * 11])).toFixed(j+1);
+					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(loop_info[i + 1][0 + j * 11])).toFixed(j+1);	
 				}
+				document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
 			}
 		}
 		let Time2 = setInterval(function(){
 			ParseData();
+			ReadData();
 			PutData();
-			ShowData_();
+			//ShowData_();
 		},500);
     </script>
 </body>
