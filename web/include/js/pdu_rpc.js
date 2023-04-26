@@ -580,19 +580,23 @@ class PduCore extends PduOta {
     }
 
 
-    Logged_in() {
+    logged_in() {
         var sessionStorage = window.sessionStorage;
         var value = sessionStorage.getItem("uuid");
         var res = 0; if(value != null) {
             var host = window.location.host;
             var ip = sessionStorage.getItem('host');    
-            if(v(alue.length > 9) && (host == ip)) res = 1;
+            if((alue.length > 9) && (host == ip)) res = 1;
         }   
         
         return res;
     }
 
-   
+    logged_out() {
+        var sessionStorage = window.sessionStorage;
+        sessionStorage.setItem('host', ' ');
+        sessionStorage.setItem('uuid', '');
+    }   
 
 
     // 清除所有数据
