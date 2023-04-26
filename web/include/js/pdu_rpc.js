@@ -595,7 +595,7 @@ class PduCore extends PduOta {
     logged_out() {
         var sessionStorage = window.sessionStorage;
         sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', '');
+        sessionStorage.setItem('uuid', ' ');
     }   
 
 
