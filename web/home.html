@@ -17,6 +17,7 @@
 	<script src="include/js/public.min.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
 	<script src="include/js/highcharts.js"></script>
+	<!-- <script src="include/js/no-data-to-display.js"></script> -->
 	<style>
 		.box {
 			border: 1px solid #C4C2C3;
@@ -78,8 +79,8 @@
 		total_info = new Array();
 		phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		total_arr = ["pow","apparent_pow","ele"];
-		ParseData();
-		function ParseData(){
+		ParseData_();
+		function ParseData_(){
 			let DataString = pdu_cfg.meta_value();
 			if(DataString == null){
 				setTimeout(function(){ParseData()}, pdu_cfg.getTimeOut());
@@ -100,6 +101,9 @@
 				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
 				k++;
 			}
+			// if(total_info[0] == 0 && total_info[1] == 0){
+				// total_info[1] = 1;
+			// }
 		}
 		function build_pie(){
 			let i = 0;
@@ -115,7 +119,7 @@
 						}
 					},
 					chart:{
-						zoomType:'xy'
+						reflow:true
 					},
 					tooltip: {
 						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -129,6 +133,7 @@
 									color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'					
 								}
 							},
+							//borderColor:'#000000',
 						}  
 					},
 					credits:{
@@ -138,7 +143,7 @@
 						type: 'pie',
 						size:'120%',
 						innerSize: '70%',
-						borderWidth:0,
+						borderWidth:0.3,
 						animation:false,  //旋转动画
 						center: ['50%', '50%'],
 						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
@@ -168,8 +173,8 @@
 				text: ''
 			},
 			chart:{
-				zoomType:'xy'
-					},
+				reflow:true
+			},
 			tooltip: {
 				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
 			},
@@ -195,6 +200,7 @@
 							}
 						}
 					},
+					borderColor:'#000000',
 				}  
 			},
 			credits:{
@@ -206,12 +212,14 @@
 				innerSize: '70%',
 				animation:false,
 				center: ['50%', '50%'],
-				borderWidth:0,
-				colors:['#4D81E7','#1AE1E5',],
+				borderWidth:0.5,  //环形边框颜色
+				colors:['#4D81E7','#1AE1E5','#ebebeb'],
 				name: '占比',
 				data: [
 					['KW',    total_info[0]],
 					['kVA',   total_info[1]],
+					// ['KW',    0],
+					// ['kVA',   0],
 				]
 			}]
 
@@ -228,7 +236,8 @@
 		build_pie();
 		setInterval(function () {
 			PduMetaData.meta_workDown();
-			ParseData();
+			ParseData_();
+			//document.getElementById('myChart'+ 2).remove();
 			build_pie();
 		}, 1000);
 			   </script>
@@ -558,6 +567,7 @@
 			top.language_ = language;
 			freq_ = pdu_data.pdu_info.pdu_hz;
 			let k = 0;
+			phase_info = [];
 			for(let i = 0;i<phase_num;i++){
 				phase_info[i] = new Array();
 				let j = 0;
@@ -569,6 +579,7 @@
 				//}
 				}
 			}
+
 			loop_se = [];
 			for(let i = 0;i<loop_num;i++){
 					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
@@ -764,9 +775,14 @@
 			return tbody;
 		}
 		function ShowData() {
-			for(let i = 1;i<= phase_num;i++){
-				document.getElementById("l"+i).style.display = "";
+			for(let i = 1;i<= 3;i++){
+				if(i<= phase_num){
+					document.getElementById("l"+i).style.display = "";
+				}else{
+					document.getElementById("l"+i).style.display = "none";
+				}
 			}
+
 			for (let i = 0; i < 4; i++) {
 				if (i < 2) {
 					//document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
@@ -1039,7 +1055,7 @@
 		setInterval(function () {
 			ParseData();
 			ReadData();
-		//	ShowData()
+			//ShowData()
 			flash_html();
 		}, 2000);
 	</script>

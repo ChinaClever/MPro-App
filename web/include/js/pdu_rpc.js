@@ -497,7 +497,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(47, fcs);
     }
     debugCfg(){
-        var fcs = [1,9,10,11,13];
+        var fcs = [1,9,10,11,12,13];
         let type_ = [1,1,1,2,2,2,3,6,6,3]; 
         let topic_ = [2,3,4,2,3,4,3,11,12,4]; 
         let fcs_ = [2,5,6,7,4];

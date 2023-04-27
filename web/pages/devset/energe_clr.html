@@ -90,6 +90,7 @@
 			language = pdu_data.pdu_info.language;
 			let k = 0;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
+				hidden();
 				for(let i = 0;i<loop_num;i++){
 					output_info_[i] = new Array();
 					let j = 0;
@@ -117,7 +118,7 @@
 			}
 			lang[1] = ["电能清零","Electic energy reset","","",""];
 			lang[2] = ["阅读模式","Reading mode","","",""];
-			lang[3] = ["设备选择:","Equipment selection","","",""];
+			lang[3] = ["设备选择:","Equipment selection:","","",""];
 			lang[4] = ["序号","Serial number","","",""];
 			lang[5] = ["单元名称","Uints name","","",""];
 			lang[6] = ["电能消耗(kWh)","Power consumption(kWh)","","",""];
@@ -130,7 +131,7 @@
 			lang[13] = ["序号","Serial number","","",""];
 			lang[14] = ["回路名称","Loop name","","",""];
 			lang[15] = ["电能消耗(kWh)","Power consumption(kWh)","","",""];
-			lang[16] = ["历史记录","HIstory","","",""];
+			lang[16] = ["历史记录","History","","",""];
 			lang[17] = ["重置清零","Reset","","",""];
 			dev_name[0] = lang[11][language];
 			for(let i = 1;i<(slave_num+1);i++){

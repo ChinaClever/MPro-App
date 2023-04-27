@@ -67,8 +67,8 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["Modbus设置","Modbus setting","","",""];
-			lang[2] = ["Modbus RTU设置","Modbus RTU setting","","",""];
+			lang[1] = ["Modbus设置","Modbus settings","","",""];
+			lang[2] = ["Modbus RTU设置","Modbus RTU settings","","",""];
 			lang[3] = ["Modbus RTU启用:","Modbus RTU enable:","","",""];
 			lang[4] = ["Modbus地址:","Modbus address:","","",""];
 			lang[5] = ["波特率:","Baud rate:","","",""];
@@ -76,7 +76,7 @@
 			lang[7] = ["数据位:","Data bit:","","",""];
 			lang[8] = ["停止位:","Stop bit:","","",""];
 			lang[9] = ["立即生效","Effective immediately","","",""];
-			lang[10] = ["Modbus TCP设置","Modbus TCP setting","","",""];
+			lang[10] = ["Modbus TCP设置","Modbus TCP settings","","",""];
 			lang[11] = ["Modbus TCP启用:","Modbus TCP enable:","","",""];
 			lang[12] = ["Modbus端口号:","Modbus port:","","",""];
 			lang[13] = ["立即生效","Effective immediately","","",""];
@@ -146,7 +146,7 @@
 			if(confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！")){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
-						pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);
+						pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);										
 					}
 				}
 				btn.blur();
@@ -183,7 +183,7 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "addr" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255};if(value<1)value=1" placeholder="1~255"></input>';
+			tbody += '<td><input id = "addr" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>255){value=255}" placeholder="1~255"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><select id ="baud" onchange ="SetData(this)">';

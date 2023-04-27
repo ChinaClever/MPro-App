@@ -20,8 +20,8 @@
       <div class="center_form">
       </div>
       <!-- <p style="width: 520px;">Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "</p> -->
-      <p  style="width: 528px;height: auto;padding-left: -10%;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
-      <p  style="width: 528px;text-align: left;">免加密策略：勾选免加密策略可以无需遵循以上密码和账户规则！</p>
+      <p id="rule" style="width: 528px;height: auto;padding-left: -10%;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
+      <p id="free_rule" style="width: 528px;text-align: left;">免加密策略：勾选免加密策略可以无需遵循以上密码和账户规则！</p>
     </div>
 
   </div>
@@ -99,6 +99,8 @@
       user_name = obj.cfgValue(user,1,0,0);
       identify = obj.cfgValue(user,3,0,0);
       if(user_name !== null &&  user_name !== ""){
+         document.getElementById("rule").style.display = "none";
+         document.getElementById("free_rule").style.display = "none";
          $('.center_form').html(BuildDiv('signin'));
          clearInterval(time3);
       }
@@ -230,6 +232,8 @@
           for(var i = 0; i<div[0].childElementCount;i++){
             div[0].removeChild(div[0].childNodes[i]);
           }
+          document.getElementById("rule").style.display = "none";
+         document.getElementById("free_rule").style.display = "none";
           $('.center_form').html(BuildDiv('signin'));
         },800);
       }
