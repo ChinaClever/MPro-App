@@ -38,7 +38,7 @@ void Data_Line::lineVoltage()
 
 void Data_Line::tgWork()
 {
-    sObjData *obj = &(mDev->output);
+    sObjData *obj = &(mDev->line);
     sTgObjData *tg = &(mDev->tg);
     int size = obj->size; calHz();    
     if(!size) return ;
