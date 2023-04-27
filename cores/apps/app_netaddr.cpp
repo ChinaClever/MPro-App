@@ -73,9 +73,7 @@ void App_NetAddr::inet_setInterface()
         QTimer::singleShot(87,this,&App_NetAddr::inet_setInterfaceSlot);
         QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
         if(t) QTimer::singleShot(t+587,this,&App_NetAddr::inet_setInterfaceSlot);
-        if(t) QTimer::singleShot(t+1234,this,&App_NetAddr::inet_updateInterface);
-        QTimer::singleShot(1*60*1000,this,&App_NetAddr::inet_updateInterface);
-        QTimer::singleShot(4*60*1000,this,&App_NetAddr::inet_updateInterface);
+        if(t) QTimer::singleShot(2*t+587,this,&App_NetAddr::inet_setInterfaceSlot);
     }
 }
 
@@ -179,7 +177,7 @@ void App_NetAddr::inet_dnsCfg()
     QString str = cm::execute("cat /tmp/resolv.conf");
     if(str.isEmpty()) return; else str.remove(" # eth0").remove("\n");
     QStringList res = str.split("nameserver ");
-    qDebug() << str << res;
+    //qDebug() << str << res;
 
     net->inet.dns[0] = 0;
     net->inet.dns2[0] = 0;
@@ -208,6 +206,7 @@ void App_NetAddr::inet_dnsCfg()
 
 void App_NetAddr::inet_updateInterface()
 {
+    mCnt *= 2; QTimer::singleShot(mCnt*1000,this,&App_NetAddr::inet_updateInterface);
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息

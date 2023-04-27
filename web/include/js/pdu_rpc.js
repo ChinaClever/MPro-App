@@ -137,6 +137,8 @@ class JsonRpc {
         var sessionStorage = window.sessionStorage;
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
             if(1 == parseInt(value[0])) {   
+                var host = window.location.host;
+                window.sessionStorage.setItem('host', host);
                 this.uuid = value.slice(3); value = 1;
                 sessionStorage.setItem('uuid', this.uuid);
                 // alert(value); alert(this.uuid);
@@ -578,15 +580,24 @@ class PduCore extends PduOta {
     }
 
 
-    loginUuid() {
+    logged_in() {
         var sessionStorage = window.sessionStorage;
         var value = sessionStorage.getItem("uuid");
         var res = 0; if(value != null) {
-            if(value.length > 3) res = 1;
+            var host = window.location.host;
+            var ip = sessionStorage.getItem('host');    
+            if((alue.length > 9) && (host == ip)) res = 1;
         }   
         
         return res;
     }
+
+    logged_out() {
+        var sessionStorage = window.sessionStorage;
+        sessionStorage.setItem('host', ' ');
+        sessionStorage.setItem('uuid', ' ');
+    }   
+
 
     // 清除所有数据
     clear() {

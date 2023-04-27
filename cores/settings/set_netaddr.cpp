@@ -43,7 +43,7 @@ bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
     char *ptr = nullptr; if(it.id) inet = &net->inet6;
 
     switch (it.fc) {
-    case 0: inet->en = v.toInt(); break;
+    case 0: inet->en = v.toInt(); //break;
     case 15: App_Core::bulid()->inet_saveCfg(it.id); break;
     case 1: inet->dhcp = v.toInt(); break;
     case 2: ptr = inet->ip; break;
