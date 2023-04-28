@@ -48,7 +48,15 @@
       {
         "name": "单元定时",
         "url": "relay_timing.html"
-      }    
+      },
+      {
+        "name": "超限断电",
+        "url": "overrun.html"
+      },
+      {
+        "name": "电能清零",
+        "url": "energe_clr.html"
+      }     
     ]
   },
   {
@@ -119,15 +127,7 @@
       {
         "name": "位置设置",
         "url": "place_set.html"
-      },     
-      {
-        "name": "超限断电",
-        "url": "overrun.html"
-      },
-      {
-        "name": "电能清零",
-        "url": "energe_clr.html"
-      }      
+      }         
     ]
   },
   {
