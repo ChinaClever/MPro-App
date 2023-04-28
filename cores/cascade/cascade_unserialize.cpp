@@ -112,7 +112,7 @@ void Cascade_Unserialize::unDevSize(int devSpec, uchar size, sObjData &data)
 
 void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
 {
-    data->cfg = obj->cfg; //int ds = data->cfg.param.devSpec; //data->uut = obj->uut;
+    data->cfg = obj->cfg; int ds = data->cfg.param.devSpec; //data->uut = obj->uut;
     uchar size = data->line.size = obj->lineSize; //unDevSize(ds, size, data->line);
     for(int i=0; i< size; ++i) unObjData(i, data->line, obj->line[i]);
     data->line.relay.size = 0;
@@ -120,7 +120,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     size = data->loop.size = obj->loopSize; //unDevSize(ds, size, data->loop);
     for(int i=0; i< size; ++i) unObjData(i, data->loop, obj->loop[i]);
 
-    size = data->group.size = obj->groupSize; //unDevSize(ds, size, data->group);
+    size = data->group.size = obj->groupSize; unDevSize(ds, size, data->group);
     for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
     //if(4 != data->cfg.param.devSpec) data->group.relay.size = 0;
     data->group.vol.size = data->group.cur.size = 0;
@@ -137,7 +137,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
     for(int i=0; i< size; ++i) unCabData(i, data->cabLoop, obj->cabLoop[i]);
     data->cabLoop.vol.size = data->cabLoop.cur.size = 0;
 
-    size = data->output.size = obj->outputSize; //unDevSize(ds, size, data->output);
+    size = data->output.size = obj->outputSize; unDevSize(ds, size, data->output);
     for(int i=0; i< size; ++i) unObjData(i, data->output, obj->output[i]);
     data->output.vol.size = 0;
 
