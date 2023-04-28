@@ -20,7 +20,7 @@ void App_NetAddr::inet_initFunSlot()
     sNetInterface *net = &(cm::dataPacket()->net);
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
-    if(net->inet.dhcp || net->inet6.dhcp) system("udhcpc &");
+    if(net->inet.dhcp || (net->inet6.dhcp && net->inet6.en)) system("udhcpc &");
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
@@ -91,7 +91,7 @@ void App_NetAddr::inet_setIpV4()
 {
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet.dhcp) {
-        net->inet.ip[0] = 0;
+        //net->inet.ip[0] = 0;
     } else {
         QString fn = net->name;
         QString ip = net->inet.ip;
@@ -111,13 +111,13 @@ void App_NetAddr::inet_setIpV4()
             } else {
                 cmd = "ip route replace default via %1 dev %2";
                 str = cmd.arg(gw, fn);
-            } qDebug() << str;
+            } //qDebug() << str;
             system(str.toStdString().c_str());
         }
 
         if(dns.size() || dns2.size()) {
             cmd = "netcfg -d \"%1 %2\"";
-            str = cmd.arg(dns, dns2); qDebug() << str;
+            str = cmd.arg(dns, dns2); //qDebug() << str;
             system(str.toStdString().c_str());
         }
     }
@@ -142,7 +142,7 @@ void App_NetAddr::inet_setIpV6()
         } else {
             cmd = "ip -6 addr add %1/%2 dev %3";
             str = cmd.arg(ip).arg(mask).arg(fn);
-        } qDebug() << str; system(str.toStdString().c_str());
+        } system(str.toStdString().c_str()); // qDebug() << str;
 
         if(gw.size()) {
             if(QFile::exists("netcfg")) {
@@ -151,13 +151,12 @@ void App_NetAddr::inet_setIpV6()
             } else {
                 cmd = "ip -6 route replace default via %1 dev %2";
                 str = cmd.arg(gw, fn);
-            } qDebug() << str;
-            system(str.toStdString().c_str());
+            } system(str.toStdString().c_str()); //qDebug() << str;
         }
 
         if(dns.size() || dns2.size()) {
             cmd = "netcfg -d \"%1 %2\"";
-            str = cmd.arg(dns, dns2); qDebug() << str;
+            str = cmd.arg(dns, dns2); //qDebug() << str;
             system(str.toStdString().c_str());
         }
     }
@@ -205,16 +204,13 @@ void App_NetAddr::inet_dnsCfg()
 }
 
 void App_NetAddr::inet_updateInterface()
-{
+{    
     mCnt *= 2; QTimer::singleShot(mCnt*1000,this,&App_NetAddr::inet_updateInterface);
-    sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;
+    sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
+    if(net->inet6.dhcp && net->inet6.en)inet_setIpV4();
     foreach(QNetworkInterface interface, list) {  //便利每一个接口信息
-#if (QT_VERSION < QT_VERSION_CHECK(5,13,0))
         if(interface.name() != "eth0") continue;
-#else
-        if(interface.name() !="ens33") continue;
-#endif
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址

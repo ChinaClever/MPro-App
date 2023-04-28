@@ -66,29 +66,27 @@ void App_Sensor::door_workDown()
 void App_Sensor::env_workDown()
 {
     sEnvData *env = &cm::masterDev()->env;
-    int *th = mFds; char t[32]; int v[2];
+    int *th = mFds; char t[32]; uint v[2];
     for(int i=0; i<2; ++i) {
         if(th[i] >= 0) {
             if(read(th[i], t, sizeof(t)) < 0) {
                 env->isInsert[i] = 0;
-                //env->tem.value[i] = 0;
-                //env->hum.value[i] = 0;
             } else {
-                env->isInsert[i] = 1;
                 sscanf(t, "%d:%d", v, v+1);
-                env->hum.value[i] = v[1];
-                env->tem.value[i] = v[0]*10;
-                //qDebug() << i <<  v[0] << v[1];
-                //printf("th%d:温度(%d),湿度(%d)\n", i, v[0], v[1]);
+                if((v[0] < 100) && (v[1] < 100)) {
+                    env->isInsert[i] = 1;
+                    env->hum.value[i] = v[1];
+                    env->tem.value[i] = v[0]*10;
+                }
             }
-        }
+        } else env->isInsert[i] = 0;
     }
 }
 
 void App_Sensor::env_delay()
 {
     int r = QRandomGenerator::global()->bounded(565);
-    if(cm::runTime() > 48*60*60){r += 1000;}  cm::mdelay(1500 + r);
+    if(cm::runTime() > 48*60*60){r += 1000;}  cm::mdelay(3500 + r);
 }
 
 void App_Sensor::env_run()
