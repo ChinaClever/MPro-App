@@ -122,7 +122,7 @@ void Cascade_Unserialize::unDevData(sDevData *data, c_sDevData *obj)
 
     size = data->group.size = obj->groupSize; unDevSize(ds, size, data->group);
     for(int i=0; i< size; ++i) unObjData(i, data->group, obj->group[i]);
-    //if(4 != data->cfg.param.devSpec) data->group.relay.size = 0;
+    if(data->cfg.param.devSpec < 3) data->group.relay.size = 0;
     data->group.vol.size = data->group.cur.size = 0;
 
     size = data->dual.size = obj->dualSize; //unDevSize(ds, size, data->dual);
