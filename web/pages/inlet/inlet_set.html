@@ -282,8 +282,8 @@
 				}
 			}
 
-			for(let i = 0;i < pdu_data.pdu_info.loop_num;i++){
-				state_ = document.getElementById('f' + i);
+			for(let i = 0;i < pdu_data.pdu_info.line_num;i++){
+				state_ = document.getElementById('ck' + i);
 				if(ckd_state[i+1] ==  1){
 					state_.checked = true;
 				}else{
@@ -313,16 +313,16 @@
 			var stat = 0,number1 = 0;
 			let sub = 11;
 			var addr_ = addr + 0 * 256;
-			var type1 = ckd.id.substr(0,1);
-			var number = parseInt(ckd.id.slice(1))+1;
+			var type1 = ckd.id.substr(0,2);
+			var number = parseInt(ckd.id.slice(2))+1;
 			if(ckd.checked == true){
 				stat = '1';
 			}else{
 				stat = '0';
 			}		
-				if(number == loop_num +1){
+				if(number == pdu_data.pdu_info.line_num +1){
 					number1 = 0;
-					for(let i = 0;i<loop_num;i++){
+					for(let i = 0;i<pdu_data.pdu_info.line_num;i++){
 						if(ckd.checked == true){
 							document.getElementById(type1+(i)).checked = true;
 						}else{
@@ -659,7 +659,7 @@
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
-				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "ck'+ i + '"></input></td>';
 				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "BtnClick(this)" value="'+lang[45][language]+'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
@@ -669,7 +669,7 @@
 					tbody += '<td id = "b'+ i + '">'+ 'All' +'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td id = "d'+ i + '"></td>';
-					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "ck'+ i + '"></input></td>';
 					tbody += '<td><input id = "e'+ i + '"  type = "button" onclick = BtnClick(this) value="'+lang[45][language]+'"></input></td>';
 					tbody += '</tr>';
 				}
@@ -692,7 +692,6 @@
 			ParseData();
 			ReadData();
 			PutData();
-			ShowData();
 			ShowData_();
 		},500);
     </script>
