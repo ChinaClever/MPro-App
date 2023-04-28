@@ -12,13 +12,22 @@ Data_Line::Data_Line()
 
 void Data_Line::lineWork()
 {
-    int size = mDev->cfg.nums.lineNum; if(size == 0) size = 1;
-    int num = mDev->cfg.nums.loopNum / size;
-    for(int i=0; i<size; ++i) {
-        int start = i * num;
-        int end = (i+1) * num;
-        lineData(i, start, end);
-    } inletNum(); lineVoltage();
+    int size = mDev->cfg.nums.lineNum; if(size == 0) size = 1;    
+    if(mDev->cfg.nums.loopNum) {
+        int num = mDev->cfg.nums.loopNum / size;
+        for(int i=0; i<size; ++i) {
+            int start = i * num;
+            int end = (i+1) * num;
+            lineData(i, start, end);
+        }
+    } else {
+        int num = mDev->cfg.nums.outputNum / size;
+        for(int i=0; i<size; ++i) {
+            int start = i * num;
+            int end = (i+1) * num;
+            lineDataNoLoop(i, start, end);
+        }
+    }inletNum(); lineVoltage();
 }
 
 void Data_Line::inletNum()
@@ -40,8 +49,11 @@ void Data_Line::tgWork()
 {
     sObjData *obj = &(mDev->line);
     sTgObjData *tg = &(mDev->tg);
-    int size = obj->size; calHz();    
-    if(!size) return ;
+    int size = obj->size; calHz();
+    if(!size) {
+        obj = &(mDev->output);
+        size = obj->size;
+    } if(!size) return ;
 
     tg->vol.value = averageValue(obj->vol.value, 0, size);
     tg->cur.value = summation(obj->cur.value, 0, size);
