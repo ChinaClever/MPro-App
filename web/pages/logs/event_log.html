@@ -26,7 +26,7 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
 					</div>
-					<div class="grid-col grid-col-7 " style ="height: 50px;">
+					<div class="grid-col grid-col-7 " style ="height: 30px;">
 					</div>
 					<div>
 						<br/>
@@ -55,7 +55,12 @@
 		let event_log = 2;
 		setTimeout(() => {
 			pdu_log.log_fun(event_log,1,0,0);
-		}, 300);
+		}, 800);
+
+		setTimeout(() => {
+			pdu_log.log_fun(event_log,1,0,0);
+		}, 1500);
+
 		let btn_name = new Array("jump","last","next","del","export");
 		let lang = new Array();
 		let log_data = new Array();
@@ -102,6 +107,7 @@
 		}
 		function read_data(){
 			let log_str = window.JSON.parse(pdu_log.log_get(event_log,2,start_,show_num));
+			if(log_str == null) return false;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -118,6 +124,7 @@
 					}
 				}
 			}
+			return true;
 		}
 		setTimeout(function(){
 			log_num = parseInt(pdu_log.log_get(event_log,1,start_,show_num));
@@ -129,13 +136,25 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(event_log,2,start_,show_num);
-		},500);
+		},900);
 		setTimeout(function(){
-			read_data();
-			$('.table-striped').html(buildTable(show_num));
-			lang_fun();
-			showdata();
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
 		},1100);
+
+		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},2500);
+
 		function flash_html(par)
 		{
 			setTimeout(function(){

@@ -282,7 +282,6 @@
 				}
 			}
 
-			for(let i = 0;i < loop_num;i++){
 				state_ = document.getElementById('f' + i);
 				if(ckd_state[i+1] ==  1){
 					state_.checked = true;
@@ -332,7 +331,7 @@
 				}else{
 					number1 = number;
 				}
-				pdu_cfg.setData(2,energe_,sub,number1,stat);
+				pdu_cfg.setData(1,energe_,sub,number1,stat);
 
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
@@ -692,6 +691,7 @@
 			ParseData();
 			ReadData();
 			PutData();
+			ShowData();
 			ShowData_();
 		},500);
     </script>

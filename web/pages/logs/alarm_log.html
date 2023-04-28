@@ -53,7 +53,12 @@
 		let alarm_log = 1;
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
-		}, 500);
+		}, 800);
+
+		setTimeout(() => {
+			pdu_log.log_fun(alarm_log,1,0,0);
+		}, 1500);
+
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
 		let btn_name = new Array("jump","last","next","del","export");
@@ -103,6 +108,7 @@
 		lang_fun();
 		function read_data(){
 			let log_str = window.JSON.parse(pdu_log.log_get(alarm_log,2,start_,show_num));
+			if(log_str == null) return false;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -119,6 +125,7 @@
 					}
 				}
 			}
+			return true;
 		}
 		setTimeout(function(){
 			log_num = parseInt(pdu_log.log_get(alarm_log,1,start_,show_num));
@@ -130,15 +137,33 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(alarm_log,2,start_,show_num);
-		},800);
+		},980);
 
 		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},1100);
+
+		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},2500);
+
+		/*setTimeout(function(){
 			read_data();
 			$('.table-striped').html(buildTable(show_num));
 			lang_fun();
 			showdata();
-		},1100);
-
+		},2500);
+		*/
 		function flash_html(par)
 		{
 			setTimeout(function(){
