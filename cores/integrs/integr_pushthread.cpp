@@ -31,8 +31,7 @@ void Integr_PushThread::httpPush(const QByteArray &array)
 {
     sPushHttpCfg *cfg = &mCfg->http; if(!cfg->sec) return;
     if(cfg->url.isEmpty() || (mCnt%cfg->sec)) return ;
-    switch (cfg->en) {
-    case 0: break;
+    switch (cfg->en) { case 0: break;
     case 1: Http::post(cfg->url, array, cfg->timeout); break;
     case 2: Http::put(cfg->url, array, cfg->timeout); break;
     default: cout << cfg->url; break;
