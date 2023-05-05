@@ -586,7 +586,7 @@ class PduCore extends PduOta {
         var res = 0; if(value != null) {
             var host = window.location.host;
             var ip = sessionStorage.getItem('host');    
-            if((alue.length > 9) && (host == ip)) res = 1;
+            if((value.length > 9) && (host == ip)) res = 1;
         }   
         
         return res;
