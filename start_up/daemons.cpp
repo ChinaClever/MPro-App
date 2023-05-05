@@ -64,8 +64,8 @@ void Daemons::initFun()
 
 void Daemons::resetProc(sRunTime &proc, const QString &name)
 {
-//    QString cmd = "killall " + name;
-//    system(cmd.toLatin1().data()); mdelay(100);
+    QString cmd = "killall " + name;
+    system(cmd.toLatin1().data()); mdelay(100);
     proc_log(name +"_exit"); mdelay(100);
     proc_start(proc, name); mdelay(5000);
 }
