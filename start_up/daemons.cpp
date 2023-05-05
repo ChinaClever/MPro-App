@@ -78,7 +78,7 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
         proc.daemonSec = proc.runSec;
     } else if(!proc_isRun(name)){
         resetProc(proc, name);
-        ret = false; qDebug() << "AAAAAAAAAA" << name;
+        ret = false; qDebug() << __FUNCTION__ << name;
     } mdelay(100);
     return ret;
 }
