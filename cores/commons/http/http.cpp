@@ -7,7 +7,7 @@
 
 QPair<bool, QByteArray> Http::post(const QString &url, const QByteArray &body, const int &timeout)
 {
-    const auto &&reply = JQNet::HTTP::post(url, body, timeout);
+    const auto &&reply = JQNet::HTTP::post(url, body, timeout*1000);
     //qDebug() << "HTTP post reply:" << reply.first << reply.second;
     return reply;
 
@@ -20,7 +20,7 @@ QPair<bool, QByteArray> Http::post(const QString &url, const QByteArray &body, c
 
 QPair<bool, QByteArray> Http::put(const QString &url, const QByteArray &body, const int &timeout)
 {
-    const auto &&reply = JQNet::HTTP::put(url, body, timeout);
+    const auto &&reply = JQNet::HTTP::put(url, body, timeout*1000);
     //qDebug() << "HTTP post reply:" << reply.first << reply.second;
     return reply;
 }

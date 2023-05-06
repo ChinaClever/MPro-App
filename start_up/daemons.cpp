@@ -64,8 +64,8 @@ void Daemons::initFun()
 
 void Daemons::resetProc(sRunTime &proc, const QString &name)
 {
-//    QString cmd = "killall " + name;
-//    system(cmd.toLatin1().data()); mdelay(100);
+    QString cmd = "killall " + name;
+    system(cmd.toLatin1().data()); mdelay(100);
     proc_log(name +"_exit"); mdelay(100);
     proc_start(proc, name); mdelay(5000);
 }
@@ -78,7 +78,7 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
         proc.daemonSec = proc.runSec;
     } else if(!proc_isRun(name)){
         resetProc(proc, name);
-        ret = false; qDebug() << "AAAAAAAAAA" << name;
+        ret = false; qDebug() << __FUNCTION__ << name;
     } mdelay(100);
     return ret;
 }
