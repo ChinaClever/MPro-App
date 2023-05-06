@@ -96,7 +96,7 @@
 			lang[4] = ["序号","Serial number","","",""];
 			lang[5] = ["单元名称","Uint name","","",""];
 			lang[6] = ["上次设置","Last setting","","",""];
-			lang[7] = ["日期和时间","Date and time","","",""];
+			lang[7] = ["日期","Date","","",""];
 			lang[8] = ["控制操作","Control operation","","",""];
 			lang[9] = ["上电操作","Power on operation","","",""];
 			lang[10] = ["下电操作","Power off operation","","",""];
@@ -107,6 +107,7 @@
 			lang[15] = ["统一设置","Unified settings","","",""];
 			lang[16]  = ["主机", "Master", "", "", ""];
 			lang[17]  = ["副机", "Slave", "", "", ""];
+			lang[18] = ["时间","time","","",""];
 			dev_name[0] = lang[16][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
@@ -116,6 +117,7 @@
 			for(var i = 1;i<12;i++){
 				document.getElementById("lang_" + i).innerHTML  = lang[i][language];
 			}
+			document.getElementById("lang_18").innerHTML  = lang[18][language];
 			document.getElementById("b" + pdu_data.pdu_info.output_num).innerHTML  = lang[15][language];
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML = lang[14][language];
@@ -184,7 +186,11 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
-				alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次！")
+				if(0 == language){
+					alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次！")
+				}else{
+					alert("The timing function supports two modes: specified date and daily execution. If no date is specified, it will be executed every day, and if a date is specified, it will only be executed once!")
+				}
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				var btnname = document.getElementsByTagName("button");
@@ -312,18 +318,30 @@
 			if(type1 == 'g'){
 				if(num < 25){
 					if(document.getElementById('d' + (num -1)).innerHTML == val){
-						alert("警告：不能选择同样的上下电时间，请重新提交！")
+						if(0 == language){
+							alert("警告：不能选择同样的上下电时间，请重新提交！")
+						}else{
+							alert("Warning: Cannot choose the same power on/off time, please resubmit!")
+						}
 						return;
 					}				
 				}else{
 					if(document.getElementById('d' + (num -2)).innerHTML == val){
-						alert("警告：不能选择同样的上下电时间，请重新提交！")
+						if(0 == language){
+							alert("警告：不能选择同样的上下电时间，请重新提交！")
+						}else{
+							alert("Warning: Cannot choose the same power on/off time, please resubmit!")
+						}
 						return;
 					}					
 				}
 			}else{
 				if(document.getElementById('c' + (num -1)).innerHTML == val){
-					alert("警告：不能选择同样的上下电时间，请重新提交！")
+					if(0 == language){
+						alert("警告：不能选择同样的上下电时间，请重新提交！")
+					}else{
+						alert("Warning: Cannot choose the same power on/off time, please resubmit!")
+					}
 					return;
 				}
 			}
@@ -349,7 +367,8 @@
 					<td width ="20%" rowspan = "2" id="lang_5"></td>\
 					<td width ="5%" rowspan = "2" id="lang_11"></td>\
 					<td width ="40%" colspan = "2" id="lang_6"></td>\
-					<td  rowspan = "2" colspan = "2" id="lang_7"></td>\
+					<td  rowspan = "2" width ="10%" id="lang_7"></td>\
+					<td  rowspan = "2" width ="10%" id="lang_18"></td>\
 					<td width ="10%" rowspan = "2" colspan = "2" id="lang_8"></td>\
 					</tr>';
 					thead += '<tr style="background:#d6d6d6;"><td id="lang_9"></td>\

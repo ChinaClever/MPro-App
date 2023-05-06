@@ -194,7 +194,11 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
-				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				var btnname = document.getElementsByTagName("button");
@@ -328,7 +332,11 @@
 			var num = parseInt(ipt.id.slice(1))+1;
 			stat = parseInt(ipt.value);
 			if(stat <5){
-				alert("延时值不能低于5s!");
+				if(0 == language){
+					alert("延时值不能低于5s!");
+				}else{
+					alert("The delay value cannot be less than 5 seconds!");
+				}				
 				stat = 5;
 				return -1;
 			}else{

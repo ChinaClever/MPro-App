@@ -138,11 +138,15 @@ class JsonRpc {
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
             if(1 == parseInt(value[0])) {   
                 var host = window.location.host;
-                window.sessionStorage.setItem('host', host);
+                sessionStorage.setItem('host', host);
                 this.uuid = value.slice(3); value = 1;
                 sessionStorage.setItem('uuid', this.uuid);
                 // alert(value); alert(this.uuid);
             } 
+        }
+
+        if((0 == addr) && (13 == type) && (10 == topic)) {
+            sessionStorage.setItem('language', value);
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;

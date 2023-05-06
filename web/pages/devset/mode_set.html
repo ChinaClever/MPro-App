@@ -53,6 +53,7 @@
 		let id_val = new Array("","","","mode","addr","","","buz","","","","","","","","","","","","","","data_len");//,"group","energe","pow");
 		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
 		let slave_num1 = 0;
+		let pdu_data;
 		let device_num = 10;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -135,7 +136,11 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
-				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML = lang[22][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++){

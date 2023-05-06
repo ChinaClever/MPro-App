@@ -94,7 +94,11 @@
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("未开启分组功能，请前往“分组设置”处开启!")
+						if(0 == language){
+							alert("未开启分组功能，请前往“分组设置”处开启!");
+						}else{
+							alert("The grouping function is not enabled. Please go to the 'Grouping Settings' section to enable it!");
+						}
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);
@@ -158,7 +162,11 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
-				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML = lang[7][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)

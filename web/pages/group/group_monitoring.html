@@ -56,7 +56,11 @@
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("未开启分组功能，请前往“分组设置”处开启!")
+						if(0 == language){
+							alert("未开启分组功能，请前往“分组设置”处开启!");
+						}else{
+							alert("The grouping function is not enabled. Please go to the 'Grouping Settings' section to enable it!");
+						}
 						clearInterval(t2);
 						t1 += 1;
 				}, 100);

@@ -265,7 +265,11 @@
 				if(pdu_log.log_value(addr, fc) != "" || pdu_log.log_value(addr, fc) != null){
 					clearInterval(time1);
 					if(pdu_log.log_value(addr,fc) == "" || pdu_log.log_value(addr,fc) == null){
-						alert("未开启历史数据或此时间段没有数据！");
+						if(0 == language){
+							alert("未开启历史数据或此时间段没有数据！");
+						}else{
+							alert("No historical data has been opened or there is no data in this time period!");
+						}
 					}
 					log_str = window.JSON.parse(pdu_log.log_value(addr, fc));
 					log_num = getJsonLength(log_str.logs);

@@ -360,7 +360,11 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML =  lang[9][language];
 				var btnname = document.getElementsByTagName("input");
 				for(var j = 0; j<btnname.length;j++)

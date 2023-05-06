@@ -105,7 +105,11 @@
 			if(dev_mode != 2){
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!")
+						if(0 == language){
+							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
+						}else{
+							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
+						}
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);

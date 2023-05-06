@@ -187,12 +187,12 @@
 		LangInit();
 		//ShowData();
 		function ChoseLang(){
-			if(language_ = 1){
+			if(language_ == 1){
 				language_ = 0;
 			}else{
 				language_ = 1;
 			}
-			pdu_cfg.setCfg(13,10,language_,0,addr_);
+			pdu_cfg_.setCfg(13,10,language_,0,addr_);
 			setTimeout(function(){
 				PduMetaData.meta_workDown();
 			},300);
@@ -208,7 +208,12 @@
 			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6 ||pdu_data.status ==7){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 			}else{
-				alert("当前无告警日志！");
+				if(0 == language_){
+					alert("当前无告警日志！");
+				}else{
+					alert("There are currently no alarm logs!");
+				}
+				
 			}
 		}
 		function LogOut() {
@@ -246,6 +251,7 @@
 			let v = pdu_cfg_.meta_value();
 			if(v) {
 				ParseData();
+				LangInit();
 				ShowData();
 			}
 		},1000);

@@ -140,7 +140,12 @@
 		}
 		function deltet(){
 			if(parseInt(document.getElementById("usrSel").value) == 0){
-				alert("不可以删除注册的账号!")
+				if(0 == language){
+					alert("不可以删除注册的账号!")
+				}else{
+					alert("Registered accounts cannot be deleted!")
+				}
+				
 			}else{
 				if(confirm("确认删除该用户吗？")){
 				let val =  parseInt(document.getElementById("usrSel").value);
@@ -178,27 +183,50 @@
 			}
 			if(!pattern_.test(usr_))
 			{
-				alert("请输入5-16位用户名");
+				if(0 == language){
+					alert("请输入5-16位用户名");
+				}else{
+					alert("Please enter a 5-16 digit username");
+				}
+				
 				return ;
 			}
 			if(document.getElementById("lang_21").checked == true){				
 			}else{
 				if(!pattern.test(psd_) && psd_ == conpsd_){
-				alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+					if(0 == language){
+						alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+					}else{
+						alert("Please enter a 6-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
+					}				
 				return ;
 				}
 				if(!pattern.test(ident_)){
-				alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+					if(0 == language){
+						alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+					}else{
+						alert("Please enter 6-16 digit verification information, which must contain at least one digit, uppercase and lowercase letters");
+					}
+				
 				return ;
 				}
 			}
 			if(ident_ == psd_){
-			alert("输入的验证信息和密码不能是同一个，请重新输入");
+				if(0 == language){
+					alert("输入的验证信息和密码不能是同一个，请重新输入");
+				}else{
+					alert("The verification information and password entered cannot be the same. Please re-enter");
+				}
+		
 			return ;
 			}
 			for(i = 0;i < 5;i++){
 				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
-					alert("该用户已存在，请重新输入！");
+					if(0 == language){
+						alert("该用户已存在，请重新输入！");
+					}else{
+						alert("The user already exists, please re-enter！");
+					}				
 					return ;
 				}
 			}	

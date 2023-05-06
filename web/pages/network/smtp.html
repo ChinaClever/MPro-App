@@ -183,7 +183,12 @@
 		}
 		function Set(){
 			if(document.getElementById("SmtpRecvUsr1").value == ""&&document.getElementById("SmtpRecvUsr2").value == ""&&document.getElementById("SmtpRecvUsr3").value ==""&&document.getElementById("SmtpRecvUsr4").value ==""){
-				alert("请输入至少一个邮箱账号！");
+				if(0 == language){
+					alert("请输入至少一个邮箱账号！");
+				}else{
+					alert("Please enter at least one email account！");
+				}
+				
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
 			}
@@ -238,7 +243,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id ="lang_17" style ="width:40%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
+			tbody += '<tr><td><input id ="lang_17" style ="width:50%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
