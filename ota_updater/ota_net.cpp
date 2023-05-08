@@ -117,7 +117,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         if(it.fc == 21) dir = it.path; // 21时为U盘升级
         else dir = unzip(it.path+it.file);
         ok = versionCheck(dir);
-    } cm::execute("chmod 777 -R " + dir);
+    } //cm::execute("chmod 777 -R " + dir);
 
     if(ok) {
         if(QFile::exists(dir+"auto.sh")) {
