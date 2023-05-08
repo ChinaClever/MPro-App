@@ -11,11 +11,13 @@
 	<link rel="stylesheet" href="include/css/iconfont.min.css">
 	<link rel="stylesheet" href="include/css/font-awesome.min.css">
 	<link rel="stylesheet" href="include/css/index.min.css">
-
+	
 	<script src="include/js/jquery-1.11.3.min.js"></script>
 	<script src="include/js/chart.min.js"></script>
 	<script src="include/js/public.min.js"></script>
 	<script src="include/js/pdu_rpc.js"></script>
+	<script src="include/js/highcharts.js"></script>
+	<!-- <script src="include/js/no-data-to-display.js"></script> -->
 	<style>
 		.box {
 			border: 1px solid #C4C2C3;
@@ -40,20 +42,205 @@
 				</div>
 			</div>
 			<div class="phase_div1">
-				<div class="phase_div2" id="lang_3"></div>
+				<!-- <div class="phase_div2" id="lang_3"></div> -->
 				<div class="phase_div">
-					<table class="phase_table total"></table>
+					<div style="text-align: left;padding-left:20px;background: #FFFFFF;" id="lang_3"></div>
+					<!-- <div style="width:95%; height:160px;"><canvas  id="total_date"></canvas></div> -->
+					<div style="min-width:12%; height:170px;"  id="total_date"></div>
+					<table class="phase_table total" style="background: #FFFFFF;"></table>
 				</div>
-				<div class="phase" id="L1" style="display: none;">
+				<div class="phase" id="l1" style="display: none;">
+					<div style="text-align: left;padding-left:20px" >L1</div>
+					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart0"></canvas></div> -->
+					<div style="min-width:12%; height:170px;"  id="myChart0"></div>			
 					<table class="phase_table p1"></table>
-				</div>
-				<div class="phase " id="L2" style="display: none;">
+
+				</div>	
+				<div class="phase " id="l2" style="display: none;">
+					<div style="text-align: left;padding-left:20px" >L2</div>
+					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart1"></canvas></div> -->
+					<div style="min-width:12%; height:170px;"  id="myChart1"></div>	
 					<table class="phase_table p2"></table>
 					</table>
 				</div>
-				<div class="phase" id="L3" style="display: none;">
+				<div class="phase" id="l3" style="display: none;">
+					<div style="text-align: left;padding-left:20px" >L3</div>
+					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart2"></canvas></div> -->
+					<div style="min-width:12%; height:170px;"  id="myChart2"></div>	
 					<table class="phase_table p3"></table>
 				</div>
+				<script>
+		phase_info = new Array();
+		pdu_cfg = top.pdu_cfg_;
+		data = new Array();
+		ctx  = new Array();
+		config = new Array();
+		chart =new Array();
+		total_info = new Array();
+		phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
+		total_arr = ["pow","apparent_pow","ele"];
+		ParseData_();
+		function ParseData_(){
+			let DataString = pdu_cfg.meta_value();
+			if(DataString == null){
+				setTimeout(function(){ParseData()}, pdu_cfg.getTimeOut());
+				return ;
+			}
+			pdu_data = JSON.parse(DataString);
+			phase_num = pdu_data.pdu_info.line_num;
+			let k = 0;
+			for(let i = 0;i<phase_num;i++){
+				phase_info[i] = new Array();
+				let j = 0;
+				for(let key of phase_arr){
+					phase_info[i][j] = pdu_data.pdu_data.line_item_list[key][i];
+					j ++;
+				}
+			}
+			for(let key of total_arr){
+				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
+				k++;
+			}
+			// if(total_info[0] == 0 && total_info[1] == 0){
+				// total_info[1] = 1;
+			// }
+		}
+		function build_pie(){
+			let i = 0;
+			//L1-L3的环形图
+			for(let i = 0;i<phase_num;i++){
+				chart[i] = document.getElementById('myChart'+ i);			
+				chart[i] = Highcharts.chart('myChart'+ i, {
+					title: {
+						floating:true,
+						text: phase_info[i][0]+'A',
+						style: {
+							fontSize:18,				
+						}
+					},
+					chart:{
+						reflow:true
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {			
+							dataLabels: {
+								enabled: false,
+								format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+								style: {
+									color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'					
+								}
+							},
+							//borderColor:'#000000',
+						}  
+					},
+					credits:{
+               		 	enabled:false,      // 默认值，如果想去掉版权信息Highcharts.com，设置为false
+         		    },
+					series: [{
+						type: 'pie',
+						size:'120%',
+						innerSize: '70%',
+						borderWidth:0.3,
+						animation:false,  //旋转动画
+						center: ['50%', '50%'],
+						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
+						name: '占比',
+						data: [
+
+							['当前电流',   phase_info[i][0]],
+							['空余电流',   phase_info[i][4]-phase_info[i][0]],
+						]
+					}]
+
+				}, function(c) { // 图表初始化完毕后的会掉函数
+					// 环形图圆心
+					var centerY = c.series[0].center[1],
+					titleHeight = parseInt(c.title.styles.fontSize);
+					// 动态设置标题位置
+					c.setTitle({
+						y:centerY + titleHeight/2
+					});
+				});
+			}
+		////总数据的环形图
+		chart[4] = document.getElementById('total_date');
+		chart[4] = Highcharts.chart('total_date', {
+			title: {
+				floating:true,	
+				text: ''
+			},
+			chart:{
+				reflow:true
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {			
+					dataLabels: {
+						enabled: true,
+						connectorWidth:0,  //取消数据标签线
+						distance:0,
+						// format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						format: '<b>{point.y}{point.name}</b>',
+						style: {
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+							fontSize:16,				
+						}
+					},
+					point: {
+						events: {
+							mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+							//		chart.setTitle({
+							//			text: e.target.name+ '\t'+ e.target.y + ' %'
+							//		});
+							}
+						}
+					},
+					borderColor:'#000000',
+				}  
+			},
+			credits:{
+				enabled:false,         // 默认值，如果想去掉版权信息Highcharts.com，设置为false
+			},
+			series: [{
+				type: 'pie',
+				size:'120%',
+				innerSize: '70%',
+				animation:false,
+				center: ['50%', '50%'],
+				borderWidth:0.5,  //环形边框颜色
+				colors:['#4D81E7','#1AE1E5','#ebebeb'],
+				name: '占比',
+				data: [
+					['KW',    total_info[0]],
+					['kVA',   total_info[1]],
+					// ['KW',    0],
+					// ['kVA',   0],
+				]
+			}]
+
+		}, function(c) { // 图表初始化完毕后的会掉函数
+			// 环形图圆心
+			var centerY = c.series[0].center[1],
+			titleHeight = parseInt(c.title.styles.fontSize);
+			// 动态设置标题位置
+			c.setTitle({
+				y:centerY + titleHeight/2
+			});
+		});
+	}	
+		build_pie();
+		setInterval(function () {
+			PduMetaData.meta_workDown();
+			ParseData_();
+			//document.getElementById('myChart'+ 2).remove();
+			build_pie();
+		}, 1000);
+			   </script>
 			</div>
 			<div id="ht" class="loop_div">
 				<table class="loop_table "></table>
@@ -62,22 +249,22 @@
 				<tr>
 					<td style=" width: 99%;">
 						<div
-							style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:203px; background:#ffffff; text-align:center;">
-							<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;"
-								id="lang_16"></div>
+							style=" width: 99%; margin-bottom: 0.8%;  margin-left:10px; height:151px; background:#ffffff; text-align:center;">
+							<!-- <div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" -->
+								<!-- id="lang_16"></div> -->
 							<table class="sensor_tab"
-								style="height:32px;width:100%; font-size:12px;border:1px solid;border-color: #ffffff;">
+								style="height:32px;width:100%; font-size:12px;">
 							</table>
 						</div>
 					</td>
 				</tr>
 			</table>
 			<div align="center"
-				style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:550px; background:#ffffff;">
-				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;"
+				style="border:0px solid;border-color: #aaaaff; margin:0px 10px 10px 10px; height:530px; background:#ffffff;">
+				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px;"
 					id="lang_35"></div>
 
-				<br>
+			
 				<ul style="padding-right:70%; font-family:courier;"><span id=""></span><select id="sel1"
 						style="width:100px;" onChange="ChangeMode(this);"></select></ul>
 				<div id="container" style="width:90%; height:500px;">
@@ -139,9 +326,9 @@
 						for (let i = 0; i < 16; i++) {
 							chart_lang[i] = new Array();
 						}
-						chart_lang[1] = ["功率", "", "", "", ""];
-						chart_lang[2] = ["电流", "", "", "", ""];
-						chart_lang[3] = ["电压", "", "", "", ""];
+						chart_lang[1] = ["功率", "Power", "", "", ""];
+						chart_lang[2] = ["电流", "Electric current", "", "", ""];
+						chart_lang[3] = ["电压", "Voltage", "", "", ""];
 						chart_lang[4] = ["相信息实时统计图表显示", "", "", "", ""];
 						sel_name[0] = chart_lang[1][language];
 						sel_name[1] = chart_lang[2][language];
@@ -309,9 +496,9 @@
 							data_inlet1.push(top.inletA_data[chart_type][49]);
 							data_inlet2.push(top.inletB_data[chart_type][49]);
 							data_inlet3.push(top.inletC_data[chart_type][49]);
-							if (chart_type == 1) {
+					//		if (chart_type == 1) {
 								data_total.shift();
-							}
+					//		}
 							dataLabels.shift();
 							data_inlet1.shift();
 							data_inlet2.shift();
@@ -380,6 +567,7 @@
 			top.language_ = language;
 			freq_ = pdu_data.pdu_info.pdu_hz;
 			let k = 0;
+			phase_info = [];
 			for(let i = 0;i<phase_num;i++){
 				phase_info[i] = new Array();
 				let j = 0;
@@ -391,6 +579,7 @@
 				//}
 				}
 			}
+
 			loop_se = [];
 			for(let i = 0;i<loop_num;i++){
 					loop_se[i] = pdu_data.pdu_info.loop_start[i] + "-" + pdu_data.pdu_info.loop_ends[i];
@@ -457,7 +646,7 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
-				ShowData();
+				//ShowData();
 				LangFun();
 				flash_html();
 			},500);
@@ -493,7 +682,7 @@
 			lang[22] = ["湿度1", "Humidity 1", "Humidité 1", "влажность1", "Temperatura 1", "الرطوبة 1"];
 			lang[23] = ["温度2", "Temperature 2", "Temperature 2", "температура2", "Temperatura 2", "درجة الحرارة 2"];
 			lang[24] = ["湿度2", "Humidity 2", "Humidité 2", "влажность2", "Temperatura 2", "الرطوبة 2"];
-			lang[25] = ["门禁1", "Doohttps://192.168.10.96/index.htmlr1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
+			lang[25] = ["门禁1", "Door1", "Door1", "вход1", "Puerta 1", "التحكم في الوصول 1"];
 			lang[26] = ["门禁2", "Door2", "Door2", "вход2", "Puertas 2", "التحكم في الوصول 2"];
 			lang[27] = ["水浸", "Water", "Eau", "погружение", "Inmersión", "الفيضانات"];
 			lang[28] = ["烟雾", "Smoke", "Fumée", "дым", "Humo", "دخان"];
@@ -504,22 +693,22 @@
 			lang[33] = ["产品系列：", "PDU series:", "PDU Série:", "серия продуктов:", "Serie de productos:", "سلسلة المنتج:"];
 			lang[34] = ["软件版本：", "PDU version:", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
 			lang[35] = ["实时动态趋势图", "Real-time dynamic trend graph", "Temps réel diagramme dynamique", "диаграмма динамической мощности и тенденций течения в реальном масштабе времени", "Dynamic Power and Electricity Trends in Time time", "في الوقت الحقيقي قوة ديناميكية والرسم البياني الحالي الاتجاه"];
-			lang[36] = ["主机", "", "", "", ""];
-			lang[37] = ["副机", "", "", "", ""];
-			lang[38] = ["开启", "", "", "", ""];
-			lang[39] = ["关闭", "", "", "", ""];
-			lang[40] = ["正常", "", "", "", ""];
-			lang[41] = ["告警", "", "", "", ""];
-			lang[42] = ["断开", "", "", "", ""];
-			lang[43] = ["闭合", "", "", "", ""];
+			lang[36] = ["主机", "Master", "", "", ""];
+			lang[37] = ["副机", "Slave", "", "", ""];
+			lang[38] = ["关闭", "Close", "", "", ""];
+			lang[39] = ["开启", "Open", "", "", ""];
+			lang[40] = ["正常", "Normal", "", "", ""];
+			lang[41] = ["告警", "Warning", "", "", ""];
+			lang[42] = ["断开", "Off", "", "", ""];
+			lang[43] = ["闭合", "On", "", "", ""];
 			dev_name[0] = lang[36][language];
 			for (let i = 1; i < (slave_num + 1); i++) {
 				dev_name[i] = lang[37][language] + i;
 			}
 			Sensor_state[1] = lang[38][language];
 			Sensor_state[2] = lang[39][language];
-			Sensor_state[1] = lang[40][language];
-			Sensor_state[2] = lang[41][language];
+			Sensor_state_[1] = lang[40][language];
+			Sensor_state_[2] = lang[41][language];
 			stat_[0] = lang[42][language];
 			stat_[1] = lang[43][language];
 			stat_[2] = "-";
@@ -529,6 +718,8 @@
 				if ((i != 6 && i < 29) || i > 34) {
 					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){
 						continue;
+					}else if(i == 7 || i == 16){
+						continue;
 					}else{
 						document.getElementById("lang_" + i).innerHTML = lang[i][language];
 					}
@@ -536,8 +727,10 @@
 				}
 			}
 			document.getElementById("ms").value = top.addr_;
-			if (slave_num != 0) {
-				document.getElementById("dev_sel").style.display = "";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 		}
 		function ReadChartData() {
@@ -570,8 +763,9 @@
 			// system_info[2] = sessionStorage.getItem(cfg_name[9] + addr) + " day";
 			// system_info[3] = "MPDU(" + serial_[parseInt(sessionStorage.getItem(cfg_name[1] + addr))] + ")";
 			// system_info[4] = sessionStorage.getItem(ver_name[1]);
-			ShowData();
+			//ShowData();
 			ReadChartData();
+			flash_html();
 		}
 		function BuildSel(rows) {
 			var tbody = '';
@@ -581,12 +775,17 @@
 			return tbody;
 		}
 		function ShowData() {
-			for(let i = 1;i<= phase_num;i++){
-				document.getElementById("L"+i).style.display = "";
+			for(let i = 1;i<= 3;i++){
+				if(i<= phase_num){
+					document.getElementById("l"+i).style.display = "";
+				}else{
+					document.getElementById("l"+i).style.display = "none";
+				}
 			}
+
 			for (let i = 0; i < 4; i++) {
 				if (i < 2) {
-					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
+					//document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
 				} else if (i == 2) {
 					document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(1);
 				} else {
@@ -596,11 +795,11 @@
 			}
 			for (let i = 0; i < phase_num; i++) {
 				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
-				document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
+				//document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
-				document.getElementById('pgt' + (i + 1)).style.width = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
-				if (phase_info[i][3] == 2 || phase_info[i][3] == 4) {
+				//document.getElementById('pgt' + (i + 1)).style.width = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
+				/*if (phase_info[i][3] == 2 || phase_info[i][3] == 4) {
 					document.getElementById('pgt' + (i + 1)).style.background = 'yellow';
 				}
 				else if (phase_info[i][3] == 1 || phase_info[i][3] == 8) {
@@ -608,8 +807,8 @@
 				}
 				else {
 					document.getElementById('pgt' + (i + 1)).style.background = '';
-				}
-				document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
+				}*/
+				//document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
 			}
 			for (let i = 0; i < loop_num; i++) {
 				if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
@@ -674,19 +873,36 @@
 			}
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
-					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
-				}
-				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
-				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
 				}else{
 					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
 				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+			}
+			for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+				if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+					document.getElementById('dat' + (68 + i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (68 + i)).bgColor = '';
+				}
+			}
+			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+				document.getElementById('dat' + 70).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 70).bgColor = '';
+			}
+			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+				document.getElementById('dat' + 71).bgColor = 'red';
+			}else{
+				document.getElementById('dat' + 71).bgColor = '';
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){
@@ -719,39 +935,44 @@
 		{
 			setTimeout(function(){
 				//par.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].remove();
-				ReadData();
-		
+			//	ReadData();
+			//	document.getElementById('lang_8').parentNode.remove();
+				let DataString = pdu_cfg.meta_value();
+				pdu_data = JSON.parse(DataString);
+				loop_num = pdu_data.pdu_info.loop_num;
 				$('.loop_table').html(BuildTableLoop(loop_num));
 				LangFun();
 				ShowData();
-			},200);
+			},100);
 		}
 		function BuildTablePhase(obj) {
 			let tbody = '';
 			if (obj == 0) {
 				for (let i = 0; i < 4; i++) {
 					if (i < 2) {
-						tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
-						tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
+						//tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
+						//tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
 					} else {
-						tbody += '<tr><td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span>';
-						tbody += '<span class = "span_data" id ="dat' + (i + 1) + '"></span>';
-						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td></tr>';
+						//tbody += '<br/>';
+						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 1) + '"></span>';
+						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
+						//tbody += '<td></td>';
 					}
 				}
 			} else {
-				tbody += '<tr><td><span class = "span_tit" >L' + obj + '</span></td></tr>';
-				tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
-				tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
-				tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >U' + obj + ':</span>';
-				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
-				tbody += '<span class = "span_unit">V</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span>';
-				tbody += '<span class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
-				tbody += '<span class = "span_unit">kW</span></td></tr>';
-				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >PF' + obj + ':</span>';
-				tbody += '<span class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
+				//tbody += '<tr><td><span class = "span_tit" >L' + obj + '</span></td></tr>';
+				// tbody += '<tr><td><span class = "span_tit" style=" line-height:40px;font-size:40px;" id="dat' + (3 * (obj - 1) + 6) + '" ></span>';
+				// tbody += '<span class = "span_data" style=" padding-top:28px;">A</span></td></tr>';
+				// tbody += '<tr><td><div class = "progress" id ="progress' + obj + '"><div class ="child"><p style ="height:13px" class="progress-bar" id="pgt' + obj + '"></p></div></div></td></tr>';
+				tbody += '<tr style="height:25px;"><td><span class = "span_tit" >U' + obj + ':</span><br/>';
+				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
+				tbody += '<span class = "span_unit">V</span></td></td>';
+				tbody += '<td style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span><br/>';
+				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
+				tbody += '<span class = "span_unit">kW</span></td></td>';
+				tbody += '<td style="height:25px;"><td><span class = "span_tit" >PF' + obj + ':</span><br/>';
+				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
 				tbody += '<span class = "span_unit"></span></td></tr>';
 			}
 			return tbody;
@@ -759,31 +980,33 @@
 		function BuildTableLoop(obj) {
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
-				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td class="spacing" id="lang_8"></td>';
-				tbody += '<td class="spacing" id="lang_9"></td>';
-				tbody += '<td class="spacing" id="lang_10"></td>';
-				tbody += '<td class="spacing" id="lang_11"></td>';
-				tbody += '<td class="spacing" id="lang_12"></td>';
-				tbody += '<td class="spacing" id="lang_13"></td>';
-				tbody += '<td class="spacing" id="lang_14"></td>';
-				tbody += '<td class="spacing" id="lang_15"></td></tr>';			
+				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
+				tbody += '<tr><td class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
 			}else{
-				tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td class="spacing" id="lang_8"></td>';
+				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
+				tbody += '<tr><td class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
 				//tbody += '<td class="spacing" id="lang_9"></td>';
-				tbody += '<td class="spacing" id="lang_10"></td>';
-				tbody += '<td class="spacing" id="lang_11"></td>';
-				tbody += '<td class="spacing" id="lang_12"></td>';
-				tbody += '<td class="spacing" id="lang_13"></td>';
-				tbody += '<td class="spacing" id="lang_14"></td>';
-				tbody += '<td class="spacing" id="lang_15"></td></tr>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';
 			}
 				for (let i = 0; i < obj; i++) {
 					if (i % 2 == 0) {
-						tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
-					} else {
 						tbody += '<tr id = "tr' + i + '">';
+						// tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
+					} else {
+						tbody += '<tr style="border-width:1px  0px 1px ;border-style:solid;border-color: #e7e7e7;" type = "text" id = "tr' + i + '">';
+						// tbody += '<tr id = "tr' + i + '" style="background:#e7e7e7;">';
 					}
 					for (let j = 0; j < 8; j++) {
 						tbody += '<td class="spacing" id="dat' + (16 + i * 8 + j) + '"></td>';
@@ -796,15 +1019,16 @@
 		}
 		function BuildTableSensor() {
 			let tbody = "";
-			tbody += '<tr><td width="20%" class="spacing" id="lang_17"></td>';
-			tbody += '<td width="30%" class="spacing" id="lang_18"></td>';
-			tbody += '<td width="20%" class="spacing" id="lang_19"></td>';
-			tbody += '<td width="30%" class="spacing" id="lang_20"></td></tr>';
+			tbody += '<tr><td width="20%" class="spacing" style="background:#d6d6d6;" id="lang_17"></td>';
+			tbody += '<td width="30%" class="spacing" style="background:#d6d6d6;" id="lang_18"></td>';
+			tbody += '<td width="20%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
+			tbody += '<td width="30%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
 			for (let i = 0; i < 4; i++) {
 				if (i % 2 == 0) {
-					tbody += '<tr style="background:#e7e7e7;">';
-				} else {
+					// tbody += '<tr style="background:#e7e7e7;">';
 					tbody += '<tr>';
+				} else {
+					tbody += '<tr style="border-width:1px  0px 1px ;border-style:solid;border-color: #e7e7e7;">';
 				}
 				for (let j = 0; j < 4; j++) {
 					if (j % 2 == 0) {
@@ -831,7 +1055,7 @@
 		setInterval(function () {
 			ParseData();
 			ReadData();
-			ShowData()
+			//ShowData()
 			flash_html();
 		}, 2000);
 	</script>

@@ -12,6 +12,7 @@ public:
 
 private:
     bool readSettings();
+    void slaveAlarmDefault();
 };
 
 #endif // CFG_CORE_H

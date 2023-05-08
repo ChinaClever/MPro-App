@@ -15,6 +15,7 @@
 #include <errno.h>  /*错误号定义*/
 #include <stdint.h>
 #include <sys/ioctl.h>
+#include "commons.h"
 
 static int speed_arr[] = {B115200, B57600, B38400, B19200, B9600, B4800, B2400, B1200, B300};
 static int name_arr[] = {115200, 57600, 38400,  19200,  9600,  4800,  2400,  1200,  300};
@@ -150,7 +151,7 @@ int Serial_Port::setup(int speed,int databits,int stopbits,int parity,int flow_c
     //修改输出模式，原始数据输出
     options.c_oflag &= ~OPOST;
     options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-//    options.c_lflag &= ~(ISIG | ICANON);
+    //    options.c_lflag &= ~(ISIG | ICANON);
 
     //设置等待时间和最小接收字符
     options.c_cc[VTIME] = 2; /* 读取一个字符等待1*(1/10)s */
@@ -177,8 +178,9 @@ int  Serial_Port::readBuffer(uint8_t * buffer,int size)
 
 int  Serial_Port::writeBuffer(uint8_t * buffer,int size)
 {
-    int ret = 0;
-    if(fd >= 0) ret = write(fd, buffer, size);
+    int ret = 0; if(fd >= 0) {
+        ret = write(fd, buffer, size);
+    }
     return ret;
 }
 

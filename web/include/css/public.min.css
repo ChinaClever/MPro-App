@@ -363,7 +363,7 @@ blockquote {
 }
 
 .table-striped tr:nth-child(odd) {
-    background: #f5f7fa
+    /* background: #f5f7fa */
 }
 
 .table-hover tr:hover {

@@ -83,6 +83,9 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				ParseData();
+			}
 			phase_num = pdu_data.pdu_info.line_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			slave_num = pdu_data.pdu_info.slave_num +1;
@@ -115,46 +118,46 @@
 			for(i = 1;i<41;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["系统日志","","","",""];
-			lang[2] = ["设备选择:","","","",""];
-			lang[3] = ["数据选择:","","","",""];
-			lang[4] = ["数据类型:","","","",""];
-			lang[5] = ["相/回路/输出位:","","","",""];
-			lang[6] = ["日志大小:","","","",""];
-			lang[7] = ["页","","","",""];
-			lang[8] = ["/页","","","",""];
-			lang[9] = ["前往","","","",""];
-			lang[10] = ["上一页","","","",""];
-			lang[11] = ["下一页","","","",""];
-			lang[12] = ["删除日志","","","",""];
-			lang[13] = ["导出","","","",""];
-			lang[14] = ["条","","","",""];
-			lang[15] = ["主机","","","",""];
-			lang[16] = ["副机","","","",""];
-			lang[17] = ["相数据","","","",""];
-			lang[18] = ["回路数据","","","",""];
-			lang[19] = ["输出位数据","","","",""];
-			lang[20] = ["组数据","","","",""];
-			lang[21] = ["双电源数据","","","",""];
-			lang[22] = ["温湿度数据","","","",""];
-			lang[23] = ["电压","","","",""];
-			lang[24] = ["电流","","","",""];
-			lang[25] = ["功率","","","",""];
-			lang[26] = ["电能","","","",""];
-			lang[27] = ["温度","","","",""];
-			lang[28] = ["湿度","","","",""];
-			lang[29] = ["提交","","","",""];
-			lang[30] = ["起止日期:","","","",""];
-			lang[31] = ["序号","","","",""];
-			lang[32] = ["日期和时间","","","",""];
-			lang[33] = ["设备","","","",""];
-			lang[34] = ["数据","","","",""];
-			lang[35] = ["数据类型","","","",""];
-			lang[36] = ["位置","","","",""];
-			lang[37] = ["历史记录","","","",""];
-			lang[38] = ["历史记录","","","",""];
-			lang[39] = ["历史记录","","","",""];
-			lang[40] = ["条","","","",""];
+			lang[1] = ["系统日志","System Log:","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3] = ["数据选择:","Data selection:","","",""];
+			lang[4] = ["数据类型:","Data Type:","","",""];
+			lang[5] = ["相/回路/输出位:","Phase/Loop/Out bit:","","",""];
+			lang[6] = ["日志大小:","Log size:","","",""];
+			lang[7] = ["页","Page","","",""];
+			lang[8] = ["/页","/Page","","",""];
+			lang[9] = ["前往","Go to","","",""];
+			lang[10] = ["上一页","Previous page","","",""];
+			lang[11] = ["下一页","Next page","","",""];
+			lang[12] = ["删除日志","Delete log","","",""];
+			lang[13] = ["导出","Export","","",""];
+			lang[14] = ["条","Strip","","",""];
+			lang[15] = ["主机","Master","","",""];
+			lang[16] = ["副机","Slave","","",""];
+			lang[17] = ["相数据","Phase data","","",""];
+			lang[18] = ["回路数据","Loop data","","",""];
+			lang[19] = ["输出位数据","Out bit data","","",""];
+			lang[20] = ["组数据","Group data","","",""];
+			lang[21] = ["双电源数据","Dual Power data","","",""];
+			lang[22] = ["温湿度数据","Temperature and humidity data","","",""];
+			lang[23] = ["电压","Voltage","","",""];
+			lang[24] = ["电流","Current","","",""];
+			lang[25] = ["功率","Power","","",""];
+			lang[26] = ["电能","Electric energy","","",""];
+			lang[27] = ["温度","Temperature","","",""];
+			lang[28] = ["湿度","Humidity","","",""];
+			lang[29] = ["提交","Commit","","",""];
+			lang[30] = ["起止日期:","Period:","","",""];
+			lang[31] = ["序号","Serial number","","",""];
+			lang[32] = ["日期和时间","Date and time","","",""];
+			lang[33] = ["设备","Equipment","","",""];
+			lang[34] = ["数据","Data","","",""];
+			lang[35] = ["数据类型","Data type","","",""];
+			lang[36] = ["位置","Location","","",""];
+			lang[37] = ["历史记录","History","","",""];
+			lang[38] = ["历史记录","History","","",""];
+			lang[39] = ["历史记录","History","","",""];
+			lang[40] = ["条","Strip","","",""];
 			for(i = 0;i<slave_num;i++){
 				if(i == 0){
 					dev_name_[i] = lang[15][language];
@@ -170,7 +173,7 @@
 			topic_name_[1] = new Array(lang[27][language],lang[28][language]);
 			topic_name_[2] = new Array(lang[24][language],lang[25][language],lang[26][language]);
 			topic_name_[3] = new Array(lang[25][language]);
-			topic_name_[4] = new Array(lang[23][language],lang[24][language],lang[25][language]);
+			topic_name_[4] = new Array(lang[23][language],lang[24][language],lang[25][language],lang[26][language]);
 			for(i = 0;i<phase_num;i++){
 				num_name_[0][i] = i+1;
 			}
@@ -259,9 +262,16 @@
 			let time1 = setInterval(function(){
 				//fc = fc.slice(0,5);
 				fc = fc.replace(/;/g,"_");
-				log_str = window.JSON.parse(pdu_log.log_value(addr, fc));
-				if(log_str != ""){
+				if(pdu_log.log_value(addr, fc) != "" || pdu_log.log_value(addr, fc) != null){
 					clearInterval(time1);
+					if(pdu_log.log_value(addr,fc) == "" || pdu_log.log_value(addr,fc) == null){
+						if(0 == language){
+							alert("未开启历史数据或此时间段没有数据！");
+						}else{
+							alert("No historical data has been opened or there is no data in this time period!");
+						}
+					}
+					log_str = window.JSON.parse(pdu_log.log_value(addr, fc));
 					log_num = getJsonLength(log_str.logs);
 					if(log_num > 20){
 						show_num = 20;
@@ -332,7 +342,11 @@
 				start = arr[4];
 				end = arr[5];
 				if(arr[2] < 6){
-					fc = fc.slice(0,5);
+					if(arr[3] > 9){								
+						fc = fc.slice(0,6);
+					}else{
+						fc = fc.slice(0,5);	
+					}
 				}else{
 					fc = fc.slice(0,6);
 				}

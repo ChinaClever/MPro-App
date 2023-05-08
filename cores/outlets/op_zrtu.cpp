@@ -65,9 +65,13 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
-        m_array[addr] = cmd; sEventItem it; it.event_type = tr("执行板通讯");
-        it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
-        rtuThrowMessage(it.event_type + it.event_content);
+        m_array[addr] = cmd; sEventItem it;
+        if(cm::cn()) {it.event_type = tr("执行板通讯");
+            it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
+        } else {
+            it.event_type = "Executive board communication";
+            it.event_content = tr("No response from the execution board addr:%1 ").arg(addr+1);
+        } rtuThrowMessage(it.event_type + it.event_content);
         Log_Core::bulid()->append(it);
     }
 }
@@ -88,9 +92,13 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size();
-        sEventItem it; it.event_type = tr("执行板通讯");
-        it.event_content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
-        rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
+        sEventItem it; if(cm::cn()) {
+            it.event_type = tr("执行板通讯");
+            it.event_content = tr("执行板 %1 数据读取错误: len=%2").arg(addr).arg(recv.size());
+        } else {
+            it.event_type = "Executive board communication";
+            it.event_content = tr("Execution board %1 data read error: len=%2").arg(addr).arg(recv.size());
+        } rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid()->append(it);
     }
@@ -103,13 +111,15 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
     if(ret) {
         if(v == 1) {
             sEventItem it; it.event_type = tr("Output");
-            it.event_content = tr("执行板 %1 连接正常").arg(addr);
+            if(cm::cn()) it.event_content = tr("执行板 %1 连接正常").arg(addr);
+            else it.event_content = tr("Execution board %1 is connected normally").arg(addr);
             Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Output");
-            it.event_content = tr("执行板 %1 掉线").arg(addr);
+            if(cm::cn()) it.event_content = tr("执行板 %1 掉线").arg(addr);
+            else it.event_content = tr("Execution board %1 dropped").arg(addr);
             Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);

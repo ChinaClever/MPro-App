@@ -71,6 +71,8 @@
 			let dual_num;
 			let dual_name = new Array();
 			var slave_num;
+			let dev_mode;
+			let t1 = 0;
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			if(top.login_permit_ == 1){
@@ -82,19 +84,19 @@
 			}
 			function hidden(){
 				document.getElementsByClassName("page-cont")[0].style.display = "none";	
-				document.getElementsByClassName("section-cont")[0].style.display = "none";	
+				document.getElementsByClassName("section-cont")[0].style.display = "none";		
 			}
 			function lang_init() {
 				for (let i = 1; i < 8; i++) {
 					lang[i] = new Array();
 				}
-				lang[1] = ["机架名称", "", "", "", ""];
-				lang[2] = ["阅读模式", "", "", "", ""];
-				lang[3] = ["机柜选择", "", "", "", ""];
-				lang[4] = ["序号", "", "", "", ""];
-				lang[5] = ["机架名称", "", "", "", ""];
-				lang[6] = ["设置模式", "", "", "", ""];
-				lang[7] = ["机柜", "", "", "", ""];
+				lang[1] = ["机架名称", "Rack name", "", "", ""];
+				lang[2] = ["阅读模式", "Reading mode", "", "", ""];
+				lang[3] = ["机柜选择", "Cabinet selection", "", "", ""];
+				lang[4] = ["序号", "Serial name", "", "", ""];
+				lang[5] = ["机架名称", "Rack name", "", "", ""];
+				lang[6] = ["设置模式", "Setting mode", "", "", ""];
+				lang[7] = ["机柜", "Cabinet", "", "", ""];
 			}
 			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
@@ -104,7 +106,25 @@
 				slave_num = pdu_data.pdu_info.slave_num;
 				language = pdu_data.pdu_info.language;
 				dev_dis = pdu_data.pdu_info.cascade_addr;
-				if(pdu_data.pdu_info.pdu_spec == 1){
+				dev_mode = pdu_data.pdu_info.dev_mode;
+				if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
+					hidden();
+					setTimeout(() => {
+						alert("A或C系列不支持机架功能！");
+				}, 200);
+				}
+				if(dev_mode != 2){
+					if(t1 == 0){
+						let t2 =setInterval(function () {
+						if(0 == language){
+							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
+						}else{
+							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
+						}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 					hidden();
 				}
 				let k = 0;
@@ -140,6 +160,11 @@
 				if (read === 1) {
 					read = 0;
 					ros.style.backgroundColor = 'red';
+					if(pdu_data.pdu_info.language == 0){
+						alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+					}else{
+						alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+					}
 					ros.innerHTML = lang[6][language];
 					var iptname = document.getElementsByTagName("input");
 					for (var i = 0; i < iptname.length; i++) {
@@ -221,7 +246,7 @@
 
 				for (var i = 0; i < rows; i++) {
 					if (i === 0) {
-						thead = '<tr><td width ="10%" id ="lang_4"></td>\
+						thead = '<tr style="background:#d6d6d6;"><td width ="10%" id ="lang_4"></td>\
 					<td width ="50%"></td>\
 					<td width ="40%" id ="lang_5"></td>';
 					}

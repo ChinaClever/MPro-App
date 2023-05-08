@@ -65,6 +65,7 @@
 		let dual_addr = top.dual_addr_;
 		let dual_info_ = new Array();
 		var read  = 1;
+		let dev_mode;
 		let lang = new Array();
 		let dual_data = new Array();
 		let dual_name = new Array();
@@ -91,7 +92,11 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
 			dev_dis = pdu_data.pdu_info.cascade_addr;
+			dev_mode = pdu_data.pdu_info.dev_mode;
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 2 || pdu_data.pdu_info.pdu_spec == 3){
+				hidden();
+			}
+			if(dev_mode != 2){
 				hidden();
 			}
 			let k = 0;
@@ -121,22 +126,22 @@
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["机架控制","","","",""];
-			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["机柜选择","","","",""];
-			lang[4] = ["序号","","","",""];
-			lang[5] = ["机架名称","","","",""];
-			lang[6] = ["上次设置","","","",""];
-			lang[7] = ["日期和时间","","","",""];
-			lang[8] = ["控制操作","","","",""];
-			lang[9] = ["上电操作","","","",""];
-			lang[10] = ["下电操作","","","",""];
-			lang[11] = ["定时开关","","","",""];
-			lang[12] = ["上电","","","",""];
-			lang[13] = ["下电","","","",""];
-			lang[14] = ["设置模式","","","",""];
-			lang[15] = ["统一设置","","","",""];
-			lang[16] = ["机柜","","","",""];
+			lang[1] = ["机架控制","Sack control","","",""];
+			lang[2] = ["阅读模式","Reading mode","","",""];
+			lang[3] = ["机柜选择","Cabinet selection","","",""];
+			lang[4] = ["序号","Serial number","","",""];
+			lang[5] = ["机架名称","Sack name","","",""];
+			lang[6] = ["上次设置","Last setting","","",""];
+			lang[7] = ["日期和时间","Date and time","","",""];
+			lang[8] = ["控制操作","Control operation","","",""];
+			lang[9] = ["上电操作","Power on operation","","",""];
+			lang[10] = ["下电操作","Power off operation","","",""];
+			lang[11] = ["定时开关","Time switch","","",""];
+			lang[12] = ["上电","Power on","","",""];
+			lang[13] = ["下电","Power off","","",""];
+			lang[14] = ["设置模式","Setting mode","","",""];
+			lang[15] = ["统一设置","Unified settings","","",""];
+			lang[16] = ["机柜","Cabinet","","",""];
 		}
 		function lang_fun(){
 			for(var i = 1;i<12;i++){
@@ -305,12 +310,20 @@
 			val += document.getElementById('f'+ (num -1)).value;
 			if(type1 == 'g'){
 				if(document.getElementById('d' + (num -2)).innerHTML == val){
-					alert("警告：不能选择同样的上下电时间，请重新提交！")
+					if(0 == language){
+						alert("警告：不能选择同样的上下电时间，请重新提交！")
+					}else{
+						alert("Warning: Cannot choose the same power on/off time, please resubmit!")
+					}				
 					return;
 				}
 			}else{
 				if(document.getElementById('c' + (num -1)).innerHTML == val){
-					alert("警告：不能选择同样的上下电时间，请重新提交！")
+					if(0 == language){
+						alert("警告：不能选择同样的上下电时间，请重新提交！")
+					}else{
+						alert("Warning: Cannot choose the same power on/off time, please resubmit!")
+					}	
 					return;
 				}
 			}

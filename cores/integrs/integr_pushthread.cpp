@@ -20,7 +20,7 @@ void Integr_PushThread::udpPush(const QByteArray &array)
 {
     for(int i=0; i<INTEGR_UDP_SIZE; ++i)  {
         sPushUdpCfg *cfg = &mCfg->udp[i]; if(!cfg->sec) return;
-        if(cfg->en && cfg->host.size() && (0 == mCnt%cfg->sec)) {
+        if(cfg->en && cfg->host.size() && (0 == (mCnt%cfg->sec))) {
             QHostAddress host(cfg->host); //cout << "udp" << ip << mCfg->udp[i].port;
             mUdp->writeDatagram(array, host, cfg->port);
         }
@@ -30,19 +30,18 @@ void Integr_PushThread::udpPush(const QByteArray &array)
 void Integr_PushThread::httpPush(const QByteArray &array)
 {
     sPushHttpCfg *cfg = &mCfg->http; if(!cfg->sec) return;
-    if(cfg->url.isEmpty() && (0 == mCnt%cfg->sec)) return ;
-    switch (cfg->en) {
-    case 0: break;
+    if(cfg->url.isEmpty() || (mCnt%cfg->sec)) return ;
+    switch (cfg->en) { case 0: break;
     case 1: Http::post(cfg->url, array, cfg->timeout); break;
     case 2: Http::put(cfg->url, array, cfg->timeout); break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << cfg->url; break;
     }
 }
 
 void Integr_PushThread::mqttPush(const QByteArray &array)
 {
     sMqttCfg *cfg = &Mqtt_Client::cfg; if(!cfg->sec) return;
-    if(cfg->isConnected && (0 == mCnt%cfg->sec)) {
+    if(cfg->isConnected && (0 == (mCnt%cfg->sec))) {
         emit Mqtt_Client::bulid()->publish(array);
     }
 }
@@ -50,7 +49,7 @@ void Integr_PushThread::mqttPush(const QByteArray &array)
 void Integr_PushThread::amqpPush(const QByteArray &array)
 {
     sAmqpCfg *cfg = &QRabbitMQ::amqpCfg; if(!cfg->sec) return;
-    if(cfg->isConnected && (0 == mCnt%cfg->sec)) {
+    if(cfg->isConnected && (0 == (mCnt%cfg->sec))) {
         emit QRabbitMQ::bulid()->sendMsgSig(array);
     }
 }

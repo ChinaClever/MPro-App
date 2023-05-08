@@ -15,34 +15,85 @@ Set_Output::Set_Output()
 
 void Set_Output::relayOpLog(const sDataItem &it)
 {
-    QString str = QStringLiteral("全部");
-    if(it.id) str = QStringLiteral("第%１").arg(it.id);
+    QString str = QStringLiteral("全部"); if(cm::cn()){
+        if(it.id) str = QStringLiteral("第%1").arg(it.id);
+    } else {
+        str = "all ";  if(it.id) str = QString::number(it.id) =" ";
+    }
+
     switch (it.subtopic) {
     case DSub::Value:
-        if(it.type == DType::Group) str += QStringLiteral("组开关 ");
-        else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
-        else str += QStringLiteral(" 输出位继电器 ");
-        if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
-        break;
+        if(cm::cn()) {
+            if(it.type == DType::Group) str += QStringLiteral("组开关 ");
+            else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
+            else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
+            else str += QStringLiteral(" 输出位继电器 ");
+            if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
+        } else {
+            if(it.type == DType::Group) str += "group switch ";
+            else if(it.type == DType::Dual) str += "group switch ";
+            else if(it.type == DType::Dual) str += "Dual power switch ";
+            else str += "Output position relay ";
+            if(it.value) str += "close"; else str += "break";
+        } break;
     case DSub::Rated:
-        str += QStringLiteral("输出位继电器模式切换 ");
-        if(sRelay::OffALarm == it.value) str += QStringLiteral("断开报警模式");
-        else {str += QStringLiteral("默认");} break;
-    case DSub::UpDelay: str += QStringLiteral("输出位继电器上电延时，修改为 %1s").arg(it.value); break;
-    case DSub::ResetDelay: str += QStringLiteral("输出位继电器复位延时，修改为 %1s").arg(it.value); break;
-    case DSub::OverrunOff: str += QStringLiteral("输出位超限断电，修改为 %1s").arg(it.value); break;
-    case DSub::TimingEn: str += QStringLiteral("输出位定时功能，修改为 %1s").arg(it.value); break;
-    case DSub::RelayEn: str += QStringLiteral("继电器使能状态，修改为 %1").arg(it.value); break;
-    case DSub::Relays: {
-        int start = it.type-1; int end = start + it.id; str = QStringLiteral("第%１至%2 ").arg(start, end);
-        if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开"); break;}
+        if(cm::cn()) {
+            str += QStringLiteral("输出位继电器模式切换 ");
+            if(sRelay::OffALarm == it.value) str += QStringLiteral("断开报警模式");
+            else str += QStringLiteral("默认");
+        } else {
+            str += "Output bit relay mode switching ";
+            if(sRelay::OffALarm == it.value) str += "Disconnect alarm mode";
+            else str += "default ";
+        } break;
+    case DSub::UpDelay:
+        if(cm::cn()) str += QStringLiteral("输出位继电器上电延时，修改为: ");
+        else str += "Output position relay power-on delay, modified to ";
+        str += QString::number(it.value) +"s"; break;
+    case DSub::ResetDelay:
+        if(cm::cn()) str += QStringLiteral("输出位继电器复位延时，修改为 ");
+        else str += "Output bit relay reset delay, modified to ";
+        str += QString::number(it.value) +"s"; break;
+    case DSub::OverrunOff:
+        if(cm::cn()) {
+            str += QStringLiteral("输出位超限断电，修改为 ");
+            if(it.value) str += QStringLiteral("启用"); else str += QStringLiteral("禁用");
+        } else {
+            str += "Output bit out of limit power outage, modified to ";
+            if(it.value) str += "Enable"; else str += "Disable";
+        } break;
+
+    case DSub::TimingEn:
+        if(cm::cn()) {
+            str += QStringLiteral("输出位定时功能，修改为");
+            if(it.value) str += QStringLiteral("启用"); else str += QStringLiteral("禁用");
+        } else{
+            str += "Output bit timing function, modified to ";
+            if(it.value) str += "Enable"; else str += "Disable";
+        } break;
+    case DSub::RelayEn:
+        if(cm::cn()){
+            str += QStringLiteral("关键设备保护，修改为 ");
+            if(it.value) str += QStringLiteral("启用"); else str += QStringLiteral("禁用");
+        } else {
+            str += "Protection of critical equipment, modified to ";
+            if(it.value) str += "Enable"; else str += "Disable";
+        } break;
+    case DSub::Relays: { int start = it.type; int end = start + it.id;
+        if(cm::cn()) { str = QStringLiteral("第%１至%2 ").arg(start).arg(end-1);
+            if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
+        } else {
+            str = QStringLiteral(" %１ to %2 ").arg(start).arg(end-1);
+            if(it.value) str += "close"; else str += "break";
+        } break;}
     default: cout << it.subtopic; break;
     }
 
     sEventItem db;
     db.event_content = str;
     db.event_type = opSrc(it.addr, it.txType);
-    db.event_type += QStringLiteral("继电器 控制");
+    if(cm::cn()) db.event_type += QStringLiteral("继电器 控制");
+    else db.event_type += QStringLiteral("relay control");
     Log_Core::bulid()->append(db);
 }
 
@@ -160,14 +211,20 @@ QString Set_Output::outputName(int addr, int id)
 
 void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
 {    
-    QString str = QStringLiteral("全部"); QString op;
-    if(it.fc) str = QStringLiteral("第%１").arg(it.fc);
-    str += QStringLiteral("名称修改为:%1").arg(v.toString());
+    QString str = QStringLiteral("全部");
+    if(cm::cn()){
+        if(it.fc) str = QStringLiteral("第%1").arg(it.fc);
+        str += QStringLiteral("名称修改为: %1").arg(v.toString());
+    } else {
+        str = "all ";
+        if(it.fc) str = QString::number(it.fc);
+        str += " change the name to " + v.toString();
+    }
 
-    switch (it.type) {
-    case SFnCode::EOutput: op += QStringLiteral("输出位名称"); break;
-    case SFnCode::EGroup: op += QStringLiteral("组名称"); break;
-    case SFnCode::EDual: op += QStringLiteral("机架名称"); break;
+    QString op; switch (it.type) {
+    case SFnCode::EOutput: if(cm::cn()) op += QStringLiteral("输出位名称"); else op += "Output bit name"; break;
+    case SFnCode::EGroup: if(cm::cn()) op += QStringLiteral("组名称"); else op += "Group name"; break;
+    case SFnCode::EDual: if(cm::cn()) op += QStringLiteral("机架名称"); else op += "Rack name"; break;
     default: cout << it.type; break;
     }
 

@@ -26,17 +26,21 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 30px;">
+					</div>
 					<div>
 						<br/>
 						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
+							<input type ="button" style = "width:15%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
 							<input type ="button" name = "del" style = "width:11%" id  = "del" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
 				</div>
+			</div>
+			<div class="grid-col grid-col-7 " style ="height: 100px;">
 			</div>
 		</div>
 
@@ -51,7 +55,12 @@
 		let event_log = 2;
 		setTimeout(() => {
 			pdu_log.log_fun(event_log,1,0,0);
-		}, 300);
+		}, 800);
+
+		setTimeout(() => {
+			pdu_log.log_fun(event_log,1,0,0);
+		}, 1500);
+
 		let btn_name = new Array("jump","last","next","del","export");
 		let lang = new Array();
 		let log_data = new Array();
@@ -62,6 +71,9 @@
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				ParseData();
+			}
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
@@ -70,20 +82,20 @@
 			for(i = 1;i<31;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["事件记录","","","",""];
-			lang[2] = ["序号","","","",""];
-			lang[3] = ["时间","","","",""];
-			lang[4] = ["操作类型","","","",""];
-			lang[5] = ["详细信息","","","",""];
-			lang[6] = ["日志大小：","","","",""];
-			lang[7] = ["页","","","",""];
-			lang[8] = ["/页","","","",""];
-			lang[9] = ["前往","","","",""];
-			lang[10] = ["上一页","","","",""];
-			lang[11] = ["下一页","","","",""];
-			lang[12] = ["删除日志","","","",""];
-			lang[13] = ["导出","","","",""];
-			lang[14] = ["条","","","",""];
+			lang[1] = ["事件记录","Event recording","","",""];
+			lang[2] = ["序号","Serial number","","",""];
+			lang[3] = ["时间","Time","","",""];
+			lang[4] = ["操作类型","Operation type","","",""];
+			lang[5] = ["详细信息","Detailed information","","",""];
+			lang[6] = ["日志大小：","Log size:","","",""];
+			lang[7] = ["页","Page","","",""];
+			lang[8] = ["/页","/Page","","",""];
+			lang[9] = ["前往","Go to","","",""];
+			lang[10] = ["上一页","Previous page","","",""];
+			lang[11] = ["下一页","Next page","","",""];
+			lang[12] = ["删除日志","Delete log","","",""];
+			lang[13] = ["导出","Export","","",""];
+			lang[14] = ["条","Strip","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<9;j++){
@@ -95,6 +107,7 @@
 		}
 		function read_data(){
 			let log_str = window.JSON.parse(pdu_log.log_get(event_log,2,start_,show_num));
+			if(log_str == null) return false;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -111,6 +124,7 @@
 					}
 				}
 			}
+			return true;
 		}
 		setTimeout(function(){
 			log_num = parseInt(pdu_log.log_get(event_log,1,start_,show_num));
@@ -122,13 +136,25 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(event_log,2,start_,show_num);
-		},500);
+		},900);
 		setTimeout(function(){
-			read_data();
-			$('.table-striped').html(buildTable(show_num));
-			lang_fun();
-			showdata();
-		},2200);
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},1100);
+
+		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},2500);
+
 		function flash_html(par)
 		{
 			setTimeout(function(){
@@ -168,7 +194,7 @@
 					str+=(i+1)+',';
 					for(let j = 0;j < 5;j++){
 						if(j == 1){
-							str+= user_name +',';
+						//	str+= user_name +',';
 						}else if(j>1){
 							str+=log_data[i][j-1]+',';
 						}else{
@@ -206,10 +232,15 @@
 				}
 			}else if(btn.id == "last"){ 
 				if((page_num - 1) > 0){
+					$("input[id=last]").attr("disabled","disabled");
 					page_num -= 1;
 					show_num = 20;
 					start_ = (log_num-(page_num * 20));
 					pdu_log.log_fun(event_log,2,start_,show_num);
+					setTimeout(() => {	
+					//	document.getElementById("last").style.display = "";	
+						$("input[id=last]").removeAttr("disabled");			
+					}, 1000);
 					flash_html(btn);
 				}else{
 

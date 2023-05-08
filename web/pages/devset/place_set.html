@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left:35%;"><button  onclick ="ReadOnlySet(this);" id="lang_10"></button></span>
 							</div>
 						</div>
 					</div>
@@ -39,13 +39,16 @@
 		var read =0;
 		let addr = 0;
 		let uut = 11;
+		let uuid = new Array();
 		pdu_cfg.placesetCfg();
 		var place_data = new Array();
 		let lang = new Array();
-		let id_val = new Array("","room","addr","dev","qr","sn","dt");
+		let id_val = new Array("uuid","room","addr","dev","qr","sn","dt");
+		let DataString = pdu_cfg.meta_value();
+		let pdu_data = JSON.parse(DataString);
 		function ParseData(){
-			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
+			 DataString = pdu_cfg.meta_value();
+			 pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
@@ -54,17 +57,20 @@
 			for(let i = 0;i<8;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["位置设置","","","",""];
-			lang[2] = ["位置设置","","","",""];
-			lang[3] = ["机房名称:","","","",""];
-			lang[4] = ["位置信息:","","","",""];
-			lang[5] = ["设备名称:","","","",""];
-			lang[6] = ["二维码:","","","",""];
-			lang[7] = ["设备SN码:","","","",""];
-			lang[8] = ["设备类型:","","","",""];
+			lang[1] = ["位置设置","Location settings","","",""];
+			lang[2] = ["位置设置","Location settings","","",""];
+			lang[3] = ["机房名称:","Computer room name:","","",""];
+			lang[4] = ["位置信息:","Position information:","","",""];
+			lang[5] = ["设备名称:","Device name:","","",""];
+			lang[6] = ["二维码:","QR code:","","",""];
+			lang[7] = ["设备SN码:","Equipment SN code:","","",""];
+			lang[8] = ["设备类型:","Equipment selection:","","",""];
+			lang[9] = ["UUID:","UUID:","","",""];
+			lang[10] = ["阅读模式","Reading mode","","",""];
+			lang[11] = ["设置模式","Setting mode","","",""];
 		}
 		function LangFun(){
-			for(let i = 1;i < 9; i++){
+			for(let i = 1;i < 11; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 		}
@@ -72,20 +78,61 @@
 			for(let i = 1;i<7;i++){
 				place_data[i] = pdu_cfg.cfgValue(uut,i,0,addr);
 			}
+			uuid = pdu_data.uut_info.uuid;
 		}
-		$('.place_set').html(BuildTable());
-		LangFun();
-		ReadData();
-		ShowData();
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+		}
+		setTimeout(function(){
+			$('.place_set').html(BuildTable());
+			LangFun();
+			ReadData();
+			ShowData();
+			ModeSet();
+			},400);
+
 		function ShowData(){
 			for(let i = 1;i<id_val.length;i++){
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
+			document.getElementById("uuid").value = uuid;
 			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 				$("textarea").attr("disabled","disabled");
 			}else{
+			}
+			//FlashHtml();
+		}
+		function ReadOnlySet(ros){
+			if(read === 0){
+				read = 1;
+				ros.style.backgroundColor = 'red';
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
+				ros.innerHTML =  lang[11][language];
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length ;j++)
+				{
+					btnname[j].disabled = false;
+				}
+			}
+			else{
+				read = 0;
+				ros.style.backgroundColor = '';
+				ros.innerHTML =  lang[10][language];
+				var btnname = document.getElementsByTagName("input");
+				for(var j = 0; j<btnname.length;j++)
+				{
+					btnname[j].disabled = true;
+				}
 			}
 		}
 		function SetData(btn){
@@ -103,7 +150,7 @@
 			setTimeout(function(){
 				ReadData();
 				ShowData();
-			},500);
+			},300);
 		}
 		//限制中文15字，英文30字
 		var checklength = function(dom,maxlength){
@@ -125,23 +172,25 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id = "lang_2"></td>\
 			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id = "lang_9"></td>';
+			tbody += '<td><input id = "uuid" style ="width:32%" type = "text" readonly ="true" ></input>';
 			tbody += '<tr><td id = "lang_3"></td>';
-			tbody += '<td><input id = "room" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
+			tbody += '<td><input id = "room" style ="width:32%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_4"></td>';
-			tbody += '<td><input id = "addr" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
+			tbody += '<td><input id = "addr" style ="width:32%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_5"></td>';
-			tbody += '<td><input id = "dev" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
+			tbody += '<td><input id = "dev" style ="width:32%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_7"></td>';
-			tbody += '<td><input id = "sn" style ="width:24.5%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)"></input>';
+			tbody += '<td><input id = "sn" style ="width:32%" type = "text" onchange = "SetData(this)" onkeyup = "checklength(this,30)"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_8"></td>';
-			tbody += '<td><input id = "dt" style ="width:24.5%" type = "text" readonly ="true" ></input>';
+			tbody += '<td><input id = "dt" style ="width:32%" type = "text" readonly ="true" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_6"></td>';
-			tbody += '<td><textarea id = "qr"  style="height:90px;width:24.5%;resize: none;" rows="4" cols="37" onkeyup = "checklength(this,40)" onchange = "SetData(this)" autofocus></textarea>';
+			tbody += '<td><input id = "qr"  style="height:90px;width:32%;resize: none;" type="textarea" rows="4" cols="37" onkeyup = "checklength(this,40)" onchange = "SetData(this)" autofocus></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

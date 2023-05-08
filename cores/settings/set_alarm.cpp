@@ -11,6 +11,18 @@ Set_Alarm::Set_Alarm()
 
 }
 
+bool Set_Alarm::thresholdSlave(int fc)
+{
+    Cfg_Core *cfg = Cfg_Core::bulid();
+    bool ret = true; switch (fc) {
+    case 1: cfg->writeAlarms(); break;
+    case 2: cfg->writeAlarmDefault(); break;
+    default: cout << fc; ret = false; break;
+    }
+
+    return ret;
+}
+
 bool Set_Alarm::setAlarm(sDataItem &unit)
 {   
     return upMetaData(unit);
@@ -25,14 +37,23 @@ void Set_Alarm::setAlarmLog(sDataItem &unit)
 QString Set_Alarm::opSrc(uchar addr, uchar txType)
 {
     QString str;
-    if(DTxType::TxWeb == txType) str = QStringLiteral("[Web操作] ");
-    else str = QStringLiteral("[协议控制] ");
+    switch (txType) {
+    case DTxType::TxWeb: str = QStringLiteral("[Web] "); break;
+    case DTxType::TxSnmp: str = QStringLiteral("[SNMP] "); break;
+    case DTxType::TxSsh: str = QStringLiteral("[SSH/Telnet] "); break;
+    case DTxType::TxRest: str = QStringLiteral("[REST] "); break;
+    case DTxType::TxRpc: str = QStringLiteral("[RPC] "); break;
+    case DTxType::TxJson: str = QStringLiteral("[JSON] "); break;
+    default: if(cm::cn()) str = QStringLiteral("[协议控制] "); else str = " [protocol control] "; break;
+    }
 
     if(addr == 0xff) {
-        str += QStringLiteral("所有级联设备");
+        if(cm::cn()) str +=QStringLiteral("所有级联设备") ; else str += "all cascaded devices ";
     } if(addr) {
-        str += QStringLiteral("副机%1").arg(addr);
-    } else str += QStringLiteral("本机");
+         if(cm::cn()) str += QStringLiteral("副机"); else str +="slave ";
+         str += QString::number(addr);
+    } else if(cm::cn()) str += QStringLiteral("本机"); else str += "native ";
+
     return str+" ";
 }
 
@@ -51,24 +72,28 @@ QString Set_Alarm::opContent(const sDataItem &index)
     }
 
     switch (index.subtopic) {
-    case DSub::Rated: str = QStringLiteral("额定值"); break;
-    case DSub::VMax: str = QStringLiteral("报警最大值"); break;
-    case DSub::VMin: str = QStringLiteral("报警最小值"); break;
-    case DSub::VCrMax: str = QStringLiteral("预警最大值"); break;
-    case DSub::VCrMin: str = QStringLiteral("预警最小值"); break;
-    case DSub::EnAlarm: str = QStringLiteral("报警开关"); rate = 1; suffix="";break;
-    case DSub::DHda: str = QStringLiteral("历史记录"); rate = 1; suffix="";break;
+    case DSub::Rated: if(cm::cn()) str = QStringLiteral("额定值"); else str = "rated value "; break;
+    case DSub::VMax: if(cm::cn()) str = QStringLiteral("报警最大值"); else str = "alarm maximum value "; break;
+    case DSub::VMin: if(cm::cn()) str = QStringLiteral("报警最小值"); else str = "alarm minimum value "; break;
+    case DSub::VCrMax: if(cm::cn()) str = QStringLiteral("预警最大值"); else str = "maximum warning value "; break;
+    case DSub::VCrMin: if(cm::cn()) str = QStringLiteral("预警最小值"); else str = "minimum  warning value "; break;
+    case DSub::EnAlarm: if(cm::cn()) str = QStringLiteral("报警开关"); else str = "alarm switch "; rate = 1; suffix="";break;
+    case DSub::DHda: if(cm::cn()) str = QStringLiteral("历史记录"); else str = "history "; rate = 1; suffix="";break;
     default: cout << index.subtopic; break;
     }
 
-    str += QStringLiteral("修改为:%1 %2").arg(index.value/rate).arg(suffix);
-    return str;
+    if(cm::cn()) str += QStringLiteral("修改为:%1 %2");
+    else str += QStringLiteral("modify to:%1 %2 ");
+    return str.arg(index.value/rate).arg(suffix);
 }
 
 void Set_Alarm::oplog(const sDataItem &it)
 {
     QString content = QStringLiteral("全部");
-    if(it.id) content = QStringLiteral("第%１ ").arg(it.id);
+    if(!cm::cn()){content ="all ";}if(it.id) {
+        if(cm::cn()) content = QStringLiteral("第");
+        content = QString::number(it.id);
+    }
     content += Alarm_Log::bulid()->alarmType(it);
     content += opContent(it);
 
@@ -76,6 +101,12 @@ void Set_Alarm::oplog(const sDataItem &it)
     db.addr = it.addr;
     db.event_content = content;
     db.event_type = opSrc(it.addr, it.txType);
-    db.event_type += QStringLiteral("告警设置;");
+    if(DType::Env != it.type) {
+        if(cm::cn()) db.event_type += QStringLiteral("告警设置;");
+        else db.event_type += "alarm settings;";
+    } else {
+        if(cm::cn()) db.event_type += QStringLiteral("电能清除;");
+        else db.event_type += "Electric energy clearing;";
+    }
     Log_Core::bulid()->append(db);
 }

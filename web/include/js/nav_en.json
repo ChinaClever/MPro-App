@@ -1,301 +1,296 @@
 [
   {
-    "name": "首页",
+    "name": "Font page",
     "icon": "homepage_fill",
     "base": "",
     "url": "home.html"
   },
   {
-    "name": "输入",
+    "name": "Enter",
     "icon": "flashlight_fill",
     "base": "pages/inlet/",
     "subNav": [
       {
-        "name": "相设置",
+        "name": "Phase setting",
         "url": "inlet_set.html"
       },
       {
-        "name": "回路设置",
+        "name": "Loop setting",
         "url": "loop_set.html"
       }
     ]
   },
   {
-    "name": "输出",
+    "name": "Output",
     "icon": "subtraction",
     "base": "pages/outlet/",
     "subNav": [ 
       {
-        "name": "单元监测",
+        "name": "Unit monitoring",
         "url": "output_monitoring.html"
       },
       {
-        "name": "单元电流",
+        "name": "Unit current",
         "url": "outlet_cur.html"
       },
       {
-        "name": "单元功率",
+        "name": "Unit power",
         "url": "outlet_pow.html"
       },  
       {
-        "name": "单元名称",
+        "name": "Unit name",
         "url": "output_name.html"
       }, 
       {
-        "name": "单元控制",
+        "name": "Unit control",
         "url": "relay_ctrl.html"
       },
       {
-        "name": "单元定时",
+        "name": "Unit timing",
         "url": "relay_timing.html"
-      }    
+      },
+      {
+        "name": "Overrun power cut",
+        "url": "overrun.html"
+      },
+      {
+        "name": "Power reset",
+        "url": "energe_clr.html"
+      }     
     ]
   },
   {
-    "name": "分组",
+    "name": "Group",
     "icon": "tasklist_fill",
     "base": "pages/group/",
     "subNav": [
-
       {
-        "name": "分组监测",
-        "url": "group_monitoring.html"
-      },
-      {
-        "name": "分组阈值",
-        "url": "group_alarm.html"
-      },
-      {
-        "name": "分组名称",
-        "url": "group_name.html"
-      },
-      {
-        "name": "分组定时",
-        "url": "group_timing.html"
-      },
-      {
-        "name": "分组设置",
+        "name": "Group setting",
         "url": "group_set.html"
       },
       {
-        "name": "分组控制",
+        "name": "Group monitoring",
+        "url": "group_monitoring.html"
+      },
+      {
+        "name": "Group threshold",
+        "url": "group_alarm.html"
+      },
+      {
+        "name": "Group name",
+        "url": "group_name.html"
+      },
+      {
+        "name": "Group timing",
+        "url": "group_timing.html"
+      },
+      {
+        "name": "Group control",
         "url": "group_ctrl.html"
       } 
     ]
   }, 
   {
-    "name": "机架",
+    "name": "Frame",
     "icon": "createtask_fill",
     "base": "pages/dual/",
     "subNav": [
       {
-        "name": "机架监测",
+        "name": "Frame monitoring",
         "url": "dual_monitoring.html"
       },
       {
-        "name": "机架功率",
+        "name": "Frame power",
         "url": "dual_pow.html"
       },
       {
-        "name": "机架名称",
+        "name": "Frame name",
         "url": "dual_name.html"
-      },
-      {
-        "name": "机架定时",
-        "url": "dual_timing.html"
-      }      
+      }     
     ]
   },
   {
-    "name": "环境参数",
+    "name": "Environmental parameters",
     "icon": "flag_fill",
     "base": "",
     "url": "pages/envir/envir_ctrl.html"
   },
   {
-    "name": "设备设置",
+    "name": "Device setting",
     "icon": "info",
     "base": "pages/devset/",
     "subNav": [
       {
-        "name": "模式设置",
+        "name": "Mode setting",
         "url": "mode_set.html"
       },
       {
-        "name": "位置设置",
+        "name": "Location setting",
         "url": "place_set.html"
-      },     
-      {
-        "name": "超限断电",
-        "url": "overrun.html"
-      },
-      {
-        "name": "电能清零",
-        "url": "energe_clr.html"
-      }      
+      }         
     ]
   },
   {
-    "name": "集成接口",
+    "name": "Integrated interface",
     "icon": "collection_fill",
     "base": "pages/integrate/",
     "subNav": [
       {
-        "name": "主动推送",
+        "name": "Active push",
         "url": "push.html"
       },
       {
-        "name": "RPC集成",
+        "name": "RPC integration",
         "url": "rpc.html"
       },
       {
-        "name": "REST集成",
+        "name": "REST integration",
         "url": "rest.html"
       },
       {
-        "name": "MQTT集成",
+        "name": "MQTT integration",
         "url": "mqtt.html"
       },
       {
-        "name": "AMQP服务",
+        "name": "AMQP service",
         "url": "amqp.html"
       },
       {
-        "name": "SNMP服务",
+        "name": "SNMP service",
         "url": "snmp.html"
       },
       {
-        "name": "数据库服务",
+        "name": "Database service",
         "url": "odbc.html"
       },      
       {
-        "name": "Modbus协议",
+        "name": "Modbus protocol",
         "url": "modbus.html"
       }
     ]
   }, 
   {
-    "name": "安全加密",
+    "name": "Secure encryption",
     "icon": "lock_fill",
     "base": "pages/sercet/",
     "subNav": [      
       {
-        "name": "数据加密",
+        "name": "Data encryption",
         "url": "data.html"
       },
       {
-        "name": "TLS证书",
+        "name": "TLS certificate",
         "url": "tlscert.html"
       },
       {
-        "name": "网络安全",
+        "name": "Cyber security",
         "url": "net.html"
       }
     ]
   },
   {
-    "name": "网络服务",
+    "name": "Internet service",
     "icon": "computer_fill",
     "base": "pages/network/",
     "subNav": [
       {
-        "name": "网络连接",
+        "name": "Internet connection",
         "url": "base.html"
       },
       {
-        "name": "WEB服务",
+        "name": "WEB service",
         "url": "web.html"
       },
       {
-        "name": "NTP服务",
+        "name": "NTP service",
         "url": "ntp.html"
       },
       {
-        "name": "SSH服务",
+        "name": "SSH service",
         "url": "ssh.html"
       },
       {
-        "name": "SMTP服务",
+        "name": "SMTP service",
         "url": "smtp.html"
       },
       {
-        "name": "Syslog服务",
+        "name": "Syslog service",
         "url": "syslog.html"
       },
       {
-        "name": "远程认证服务",
+        "name": "Remote authentication service",
         "url": "radius.html"
       }
     ]
   },  
   {
-    "name": "图表信息",
+    "name": "Chart information",
     "icon": "dynamic_fill",
     "base": "",
     "url": "pages/chart/chart.html"
   },
   {
-    "name": "日志查询",
+    "name": "Log query",
     "icon": "document_fill",
     "base": "pages/logs/",
     "subNav": [
       {
-        "name": "告警日志",
+        "name": "Alarm log",
         "url": "alarm_log.html"
       },
       {
-        "name": "事件记录",
+        "name": "Event log",
         "url": "event_log.html"
       },
       {
-        "name": "历史数据",
+        "name": "Historical data",
         "url": "history.html"
       },
       {
-        "name": "日志设置",
+        "name": "Log setting",
         "url": "log_setting.html"
       }
     ]
   },
   {
-    "name": "系统维护",
+    "name": "System maintenance",
     "icon": "manage_fill",
     "base": "pages/maintain/",
     "subNav": [
       {
-        "name": "系统信息",
+        "name": "System information",
         "url": "sys_info.html"
       },
       {
-        "name": "用户信息",
+        "name": "User information",
         "url": "usr_info.html"
       },
       {
-        "name": "更新固件",
+        "name": "Update firmware",
         "url": "fw_update.html"
       },
       {
-        "name": "固件历史",
+        "name": "Firmware history",
         "url": "fw_history.html"
       },
       {
-        "name": "批量配置",
+        "name": "Batch configuration",
         "url": "batch_setting.html"
       },
       {
-        "name": "网络诊断",
+        "name": "Network diagnosis",
         "url": "net_diagnostics.html"
       },
       {
-        "name": "备份/恢复",
+        "name": "Backup/Restore",
         "url": "backups.html"
       },
       {
-        "name": "下载诊断",
+        "name": "Download diagnosis",
         "url": "download_diagnosis.html"
       },
       {
-        "name": "系统命令",
+        "name": "System command",
         "url": "sys_command.html"
       },{
         "name": "",

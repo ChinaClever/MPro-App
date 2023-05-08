@@ -23,7 +23,7 @@ public:
 
     QVariant pduCfgGet(uchar type, uchar fc, uchar id=0, uchar addr=0);
     int pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar id=0, uchar addr=0, int txType=0);
-    bool pduRelaysCtrl(int addr, int start, int num, uchar on);
+    bool pduRelaysCtrl(int addr, int start, int num, uchar on, int txType=0);
     QString pduLogFun(uchar type, uchar fc, int id, int cnt=30);
     QString execute(const QString &cmd);
     QString pduMetaData(uchar addr, int dc);

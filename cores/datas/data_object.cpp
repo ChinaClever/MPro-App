@@ -118,3 +118,8 @@ void Data_Object::lineData(int id, int start, int end)
     sumObjData(id, mDev->line, mDev->loop, start, end);
 }
 
+
+void Data_Object::lineDataNoLoop(int id, int start, int end)
+{
+    sumObjData(id, mDev->line, mDev->output, start, end);
+}

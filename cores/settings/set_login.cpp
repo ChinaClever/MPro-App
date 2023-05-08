@@ -52,9 +52,9 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     if(ptr) {
         QByteArray str = v.toByteArray();
         qstrcpy(ptr, str.data()); //ptr[v.toByteArray().size()] = 0;
-        //        sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
-        //        db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
-        //        Log_Core::bulid()->append(db);
+        // sEventItem db; db.event_type = QStringLiteral("登陆信息"); //opSrc(txType);
+        // db.event_content = QStringLiteral("%1 修改为 %2").arg(key, v.toString());
+        // Log_Core::bulid()->append(db);
     }
 
     return ret;
@@ -110,20 +110,25 @@ int Set_Login::loginCheck(const QString &str)
         if(cfg->en) {
             int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
             if((res == -1) && cfg->local) ret = loginAuth(ls);
-            else ret = res;
+            else ret = res; cout << ret;
         } else {
             ret = loginAuth(ls);
+            loginLocking(ret);
         }
     } else if(App_Ldap::ldapCfg.en && ls.size()) {
         bool res = App_Core::bulid()->ldap_work(ls.last());
         if(res) ls.insert(0, "ldap:"+App_Ldap::ldapCfg.user);
     }
 
-    loginLocking(ret); if(ret) {
-        sEventItem db; db.event_type = QStringLiteral("用户登陆");
-        db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
-        Log_Core::bulid()->append(db); ret = 1;
-    } else ret = 0; // cout << ls << ret << mFailCnt;
+    if(ret > 0) {
+        sEventItem db; if(cm::cn()) {
+            db.event_type = QStringLiteral("用户登陆");
+            db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
+        } else {
+            db.event_type = "log in";
+            db.event_content = QStringLiteral("Login account is %1").arg(ls.first());
+        } Log_Core::bulid()->append(db); ret = 1;
+    } else ret = 0-loginTryLock(); // cout << ls << ret << mFailCnt;
 
     return ret;
 }

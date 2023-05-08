@@ -96,10 +96,10 @@ int JsonRpc_Client::pduCfgSet(uchar type, uchar fc, const QVariant &value, uchar
     return ret;
 }
 
-bool JsonRpc_Client::pduRelaysCtrl(int addr, int start, int num, uchar on)
+bool JsonRpc_Client::pduRelaysCtrl(int addr, int start, int num, uchar on, int txType)
 {
     bool ret = false; if(!isConnected()) return ret;
-    auto result = rpc_client->call("pduRelaysCtrl", addr, start, num, on);
+    auto result = rpc_client->call("pduRelaysCtrl", addr, start, num, on, txType);
     if (result->isSuccess()) {
         ret = result->result().toBool();
     } else {

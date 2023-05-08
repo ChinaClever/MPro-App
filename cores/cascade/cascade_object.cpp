@@ -55,7 +55,7 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
     QVector<c_sFrame> res;
     QVector<c_sFrame> its = arrayToFrames(rcv);
     foreach(const auto &it, its) {
-        if(it.srcAddr == addr) {
+        if((it.srcAddr == addr)|| (addr == fc_mask)) {
             if(fc) if(fc != it.fc) continue;
             res << it;
         }
@@ -86,7 +86,7 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    int t = 2654; //if(value.size() >= 5*1024) t *=5;
+    int t = 2654; //if(value.size() >= 5*1024) t *=4;
     array = transmit(qCompress(array), t);
     if(array.size()) array = qUncompress(array);
     return replyData(array, addr, fc);

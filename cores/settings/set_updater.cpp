@@ -33,8 +33,8 @@ QVariant Set_Updater::otaStatus(sCfgItem &cfg)
         switch (cfg.id) {
         case 1: res = it->isRun; break;
         case 2: res = it->subId; break;
-        case 3: res = it->progress; break;
-        case 4: res = it->progs[cfg.addr]; break;
+        case 3: res = it->progress + it->reserve/10.0; break;
+        case 4: res = it->progs[cfg.addr] + it->progs[DEV_NUM/2+cfg.addr]/10.0; break;
         case 5: res = it->results[cfg.addr]; break;
         default: cout << cfg.id; break;
         }
@@ -58,8 +58,9 @@ void Set_Updater::ota_log()
     }
 }
 
-void Set_Updater::ota_logErr(const QString &fn)
+bool Set_Updater::ota_logErr(const QString &fn)
 {    
+    bool ret = true;
     QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
@@ -78,8 +79,9 @@ void Set_Updater::ota_logErr(const QString &fn)
             it.remark = "updater error";
             it.oldVersion = "--- ---";
             it.releaseDate = ls.last();
-        }
+        } ret = false;
     } Log_Core::bulid()->append(it);
+    return ret;
 }
 
 bool Set_Updater::ota_cascade(const QString &fn)
@@ -118,6 +120,13 @@ bool Set_Updater::ota_outlet()
     return ret;
 }
 
+bool Set_Updater::ota_error(const QString &fn)
+{
+    bool ret = ota_logErr(fn);
+    if(ret) ret = ota_cascade(fn);
+    return ret?1:0;
+}
+
 int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
     bool ret = false; switch (fc) {
@@ -125,7 +134,7 @@ int Set_Updater::ota_updater(int fc, const QVariant &v)
     case DOtaCode::DOta_Net:  break;
     case DOtaCode::DOta_Web:  break;
     case DOtaCode::DOta_Rootfs:  break;
-    default: ota_logErr(v.toString()); return 0;
+    default: return ota_error(v.toString());
     }
 
     QString fn = v.toString();

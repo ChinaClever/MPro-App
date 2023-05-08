@@ -134,11 +134,11 @@ void OP_ObjCtrl::clearAllEle()
     funClearEle(cmd);
 }
 
-void OP_ObjCtrl::clearEle(int id, int cnt)
+void OP_ObjCtrl::clearEle(int start, int end)
 {
     uchar cmd[8];
     for(int i=0; i<6; i++) cmd[i] = 0;
-    for(int i=id; i<cnt; i++) setBitControl(i, cmd);
+    for(int i=start; i<end; i++) setBitControl(i, cmd);
     funClearEle(cmd);
 }
 

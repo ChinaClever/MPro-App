@@ -77,27 +77,27 @@
 			for(let i = 0;i<19;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["用户管理","","","",""];
-			lang[2] = ["用户设置","","","",""];
-			lang[3] = ["用户列表:","","","",""];
-			lang[4] = ["用户名:","","","",""];
-			lang[5] = ["密码:","","","",""];
-			lang[6] = ["确认密码:","","","",""];
-			lang[7] = ["预留信息:","","","",""];
-			lang[8] = ["权限:","","","",""];
-			lang[9] = ["输出位","","","",""];
-			lang[10] = ["权限设置","","","",""];
-			lang[11] = ["输出位","","","",""];
-			lang[12] = ["权限设置","","","",""];
-			lang[13] = ["管理员","","","",""];
-			lang[14] = ["访客","","","",""];
-			lang[15] = ["用户名","","","",""];
-			lang[16] = ["密码","","","",""];
-			lang[17] = ["确认密码","","","",""];
-			lang[18] = ["提交","","","",""];
-			lang[19] = ["删除用户","","","",""];
-			lang[20] = ["免加密策略:","","","",""];
-			lang[21] = ["chk","","","",""];
+			lang[1] = ["用户管理","User management","","",""];
+			lang[2] = ["用户设置","User settings","","",""];
+			lang[3] = ["用户列表:","User tabulation:","","",""];
+			lang[4] = ["用户名:","User name:","","",""];
+			lang[5] = ["密码:","Password:","","",""];
+			lang[6] = ["确认密码:","Confirm password:","","",""];
+			lang[7] = ["预留信息:","Reserved information:","","",""];
+			lang[8] = ["权限:","Limits od authority:","","",""];
+			lang[9] = ["输出位","Output bit","","",""];
+			lang[10] = ["权限设置","Limits od authority settings","","",""];
+			lang[11] = ["输出位","Output bit","","",""];
+			lang[12] = ["权限设置","Limits od authority settings","","",""];
+			lang[13] = ["管理员","Administrators","","",""];
+			lang[14] = ["访客","Visitor","","",""];
+			lang[15] = ["用户名","User name","","",""];
+			lang[16] = ["密码","Password","","",""];
+			lang[17] = ["确认密码","Confirm password","","",""];
+			lang[18] = ["提交","Commit","","",""];
+			lang[19] = ["删除用户","Delete user","","",""];
+			lang[20] = ["免加密策略:","Encryption free policy","","",""];
+			lang[21] = ["chk","chk","","",""];
 
 			jurisdiction[0] = lang[13][language];
 			jurisdiction[1] = lang[14][language];
@@ -139,7 +139,15 @@
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
 		}
 		function deltet(){
-			if(confirm("确认删除该用户吗？")){
+			if(parseInt(document.getElementById("usrSel").value) == 0){
+				if(0 == language){
+					alert("不可以删除注册的账号!")
+				}else{
+					alert("Registered accounts cannot be deleted!")
+				}
+				
+			}else{
+				if(confirm("确认删除该用户吗？")){
 				let val =  parseInt(document.getElementById("usrSel").value);
 				let usr_ = document.getElementById("UserName").value;
 				let psd_ = document.getElementById("Password").value;
@@ -155,6 +163,8 @@
 				pdu_cfg.setCfg(14,3,ident_,val,addr);
 				pdu_cfg.setCfg(14,4,jur_,val,addr);
 			}else{}
+			}
+
 
 			FlashHtml();
 		}
@@ -173,27 +183,50 @@
 			}
 			if(!pattern_.test(usr_))
 			{
-				alert("请输入5-16位用户名");
+				if(0 == language){
+					alert("请输入5-16位用户名");
+				}else{
+					alert("Please enter a 5-16 digit username");
+				}
+				
 				return ;
 			}
 			if(document.getElementById("lang_21").checked == true){				
 			}else{
 				if(!pattern.test(psd_) && psd_ == conpsd_){
-				alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+					if(0 == language){
+						alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+					}else{
+						alert("Please enter a 6-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
+					}				
 				return ;
 				}
 				if(!pattern.test(ident_)){
-				alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+					if(0 == language){
+						alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+					}else{
+						alert("Please enter 6-16 digit verification information, which must contain at least one digit, uppercase and lowercase letters");
+					}
+				
 				return ;
 				}
 			}
 			if(ident_ == psd_){
-			alert("输入的验证信息和密码不能是同一个，请重新输入");
+				if(0 == language){
+					alert("输入的验证信息和密码不能是同一个，请重新输入");
+				}else{
+					alert("The verification information and password entered cannot be the same. Please re-enter");
+				}
+		
 			return ;
 			}
 			for(i = 0;i < 5;i++){
 				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
-					alert("该用户已存在，请重新输入！");
+					if(0 == language){
+						alert("该用户已存在，请重新输入！");
+					}else{
+						alert("The user already exists, please re-enter！");
+					}				
 					return ;
 				}
 			}	

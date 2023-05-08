@@ -8,12 +8,12 @@
 
 static void createDirectory()
 {
-    system("mkdir -p /tmp/updater");
     system("mkdir -p /tmp/download");
     system("mkdir -p /usr/data/upload");
     system("mkdir -p /usr/data/etc/ssl");
     system("mkdir -p /usr/data/etc/ssh");
     system("mkdir -p /usr/data/etc/snmp");
+    system("mkdir -p /tmp/updater/ota_apps");
     system("mkdir -p /usr/data/clever/bin");
     system("mkdir -p /usr/data/clever/app");
     system("mkdir -p /usr/data/clever/cfg");
@@ -28,7 +28,9 @@ static void initSystem()
 {
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
-    system("chmod 755 -R /usr/data/clever");
+    system("rm -rf /usr/data/upload");
+    //system("chmod 755 -R /usr/data/clever");
+    system("chmod 777 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
@@ -69,7 +71,7 @@ static void init_netWork()
 
 static void init_mem()
 {
-    system("echo 38912 > /proc/sys/vm/min_free_kbytes");
+    //system("echo 38912 > /proc/sys/vm/min_free_kbytes");
     system("echo 800 > /proc/sys/vm/vfs_cache_pressure");
     system("echo 0 > /proc/sys/vm/dirty_background_bytes");
     system("echo 1 > /proc/sys/vm/dirty_background_ratio");
@@ -92,14 +94,8 @@ static void start_init()
         cnt = file.readAll().toInt(); file.seek(0);
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
-    } file.close(); initSystem(); //system("sync");
-
-//    system("cmd_fb enable /dev/fb0");
-//    system("cmd_fb display /dev/fb0");
-//    if(cnt < 5) initSystem(); else {
-//        system("mkdir -p /tmp/updater");
-//        system("mkdir -p /tmp/download");
-//    }
+    } file.close(); initSystem(); system("sync");
+    if(cnt < 50) system("chmod 755 -R /usr/data/clever");
 }
 
 int main(int argc, char *argv[])

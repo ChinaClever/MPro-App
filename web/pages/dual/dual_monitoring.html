@@ -65,6 +65,9 @@
 		var output_num;
 		var dev_name =new Array();
 		var slave_num;
+		let pdu_spec;
+		let dev_mode;
+		let t1 = 0;
 		let dual_dev_name =  new Array();
 		let lang = new Array();
 		let progress_width = new Array();
@@ -87,7 +90,30 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
 			dev_dis = pdu_data.pdu_info.cascade_addr;
+			dev_mode = pdu_data.pdu_info.dev_mode;
+			
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
+				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						alert("A或C系列不支持机架功能！");
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+			}
+			if(dev_mode != 2){
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
+						}else{
+							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
+						}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 				hidden();
 			}
 			let k = 0;
@@ -117,20 +143,20 @@
 			lang_fun();
 		},800);
 		function lang_init(){
-			lang[1] = ["机架监测","","","",""];
-			lang[2] = ["机柜选择","","","",""];
-			lang[3] = ["序号","","","",""];
-			lang[4] = ["名称","","","",""];
-			lang[5] = ["A路有功功率(kW)","","","",""];
-			lang[6] = ["B路有功功率(kW)","","","",""];
-			lang[7] = ["总有功功率(kW)","","","",""];
-			lang[8] = ["AB路功率占比","","","",""];
-			lang[9] = ["电能消耗(kWh)","","","",""];
-			lang[10] = ["开","","","",""];
-			lang[11] = ["闭","","","",""];
-			lang[12] = ["重启","","","",""];
-			lang[13] = ["关","","","",""];
-			lang[14] = ["机柜","","","",""];
+			lang[1] = ["机架监测","Rack monitoring","","",""];
+			lang[2] = ["机柜选择","Cabinet selection","","",""];
+			lang[3] = ["序号","Serial number","","",""];
+			lang[4] = ["名称","Name","","",""];
+			lang[5] = ["A路有功功率(kW)","A-channel active power(kW)","","",""];
+			lang[6] = ["B路有功功率(kW)","B-channel active power(kW)","","",""];
+			lang[7] = ["总有功功率(kW)","Total active power(kW)","","",""];
+			lang[8] = ["AB路功率占比","Ratio of A&B circuit power","","",""];
+			lang[9] = ["电能消耗(kWh)","Power consumption","","",""];
+			lang[10] = ["开","Open","","",""];
+			lang[11] = ["闭","Close","","",""];
+			lang[12] = ["重启","Reset","","",""];
+			lang[13] = ["关","Close","","",""];
+			lang[14] = ["机柜","Cabinet","","",""];
 			Input_state[0] = lang[10][language];
 			Input_state[1] = lang[11][language];
 			Input_state[2] = lang[12][language];
@@ -148,13 +174,27 @@
 				//output_name[i] = dual_info_[i - 1][6];
 				output_name[i] = pdu_data.pdu_data.dual_item_list.name[i-1];
 				TotalPowVal[i] = parseFloat(dual_info_[i - 1][14]);
-				TotalPowAlarm[i] = parseFloat(dual_info_[i - 1][11]);
+				//TotalPowAlarm[i] = parseFloat(dual_info_[i - 1][11]);
+				//TotalPowVal[i] = parseFloat(pdu_data.pdu_data.dual_item_list.pow_value[i-1]);
+				TotalPowAlarm[i] = parseFloat(pdu_data.pdu_data.dual_item_list.pow_alarm_status[i-1]);
 				TotalAVPowVal[i] = parseFloat(dual_info_[i - 1][0]);
 				TotalEnergeVal[i] = parseFloat(dual_info_[i - 1][4]);
 				PowValA[i] = parseFloat(output_info_[i - 1][20]);
+				if(PowValA[i] < 0.003){
+					PowValA[i] = 0.000;	
+				}
+				if(PowValA[i] > TotalPowVal[i]){
+					PowValA[i] = TotalPowVal[i];	
+				}
 				AVPowValA[i] = parseFloat(output_info_[i - 1][0]);
 				EnergeValA[i] = parseFloat(output_info_[i - 1][10]);
 				PowValB[i] =parseFloat(TotalPowVal[i] - PowValA[i]).toFixed(3);
+				if(PowValB[i] < 0.003){
+					PowValB[i] = 0.000;	
+				}
+				if(PowValB[i] > TotalPowVal[i]){
+					PowValB[i] = TotalPowVal[i];	
+				}
 				AVPowValB[i] =parseFloat(TotalPowVal[i] - PowValA[i]).toFixed(3);
 				EnergeValB[i] =parseFloat(TotalPowVal[i] - PowValA[i]).toFixed(2);
 
@@ -197,6 +237,7 @@
 					document.getElementById("progress"+(i-1)).style.backgroundColor= "#b7b7b7";
 					document.getElementById("progress"+(i-1)).title ="A:"+progress_width[i]+"% B:" + parseFloat(100-progress_width[i])+"%";
 				}else{
+					document.getElementById("progress"+(i-1)).style.backgroundColor= "";
 					document.getElementById("progress"+(i-1)).title ="A:"+progress_width[i]+"% B:" + parseFloat(100-progress_width[i])+"%";
 				}
 			}
@@ -205,7 +246,7 @@
 			var thead = '',tbody = '';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="8%" id="lang_3"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="8%" id="lang_3"></td>\
 					<td width ="32%" id="lang_4"></td>\
 					<td width ="12%" id="lang_5"></td>\
 					<td width ="12%" id="lang_6"></td>\

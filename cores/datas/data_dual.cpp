@@ -44,7 +44,9 @@ int Data_Dual::setDualSize(int id, int type)
 
 void Data_Dual::dualWork()
 {
-    if(mDev->cfg.param.devMode == EDevMode::DM_Dual) {
+    int mode = mDev->cfg.param.devMode;
+    int addr = mDev->cfg.param.cascadeAddr;
+    if((mode == EDevMode::DM_Dual) && (addr == 0)) {
         dualWorkdown(DType::Dual);
         //dualWorkdown(DType::CabLine);
         //dualWorkdown(DType::CabLoop);
@@ -125,12 +127,18 @@ void Data_Dual::dualTiming(int id)
         int res = relayTiming(*obj, i);
         if(res) {
             sEventItem db; res -=1; //db.addr = id;
-            OP_Core::bulid()->relayCtrl(i, res);
-            db.event_type = QStringLiteral("机架定时开关");
-            db.event_content = QStringLiteral("继电器%1").arg(i);
-            if(res) db.event_content += QStringLiteral("接通");
-            else db.event_content += QStringLiteral("断开");
-            Log_Core::bulid()->append(db);
+            OP_Core::bulid()->relayCtrl(i, res);            
+            if(cm::cn()) {
+                db.event_type = QStringLiteral("机架定时开关");
+                db.event_content = QStringLiteral("继电器%1").arg(i);
+                if(res) db.event_content += QStringLiteral("接通");
+                else db.event_content += QStringLiteral("断开");
+            } else {
+                db.event_type = "rack timing switch ";
+                db.event_content = QStringLiteral("relay %1 ").arg(i);
+                if(res) db.event_content += "put through ";
+                else db.event_content += "break ";
+            } Log_Core::bulid()->append(db);
         }
     }
 }

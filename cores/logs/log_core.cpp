@@ -25,9 +25,13 @@ Log_Core *Log_Core::bulid(QObject *parent)
         sington = new Log_Core(parent);
         if(cm::masterDev()->startCnt < 1500) {
             sEventItem it; it.addr = 0;
-            it.event_type = tr("系统事件");
-            it.event_content = tr("系统启动");;
-            sington->append(it);
+            if(cm::cn()) {
+                it.event_type = tr("系统事件");
+                it.event_content = tr("系统启动");
+            } else {
+                it.event_type = "system event";
+                it.event_content = "system startup";
+            } sington->append(it);
         }
     }
     return sington;
@@ -37,9 +41,13 @@ void Log_Core::factoryRestore()
 {
     QString fn = "/usr/data/clever/cfg/factoryRestore";
     sEventItem it; if(QFile::exists(fn)) {
-        it.event_type = QStringLiteral("恢复");
-        it.event_content = QStringLiteral("恢复出厂设置");
-        append(it); cm::execute("rm -rf " + fn);
+        if(cm::cn()) {
+            it.event_type = QStringLiteral("恢复");
+            it.event_content = QStringLiteral("恢复出厂设置");
+        } else {
+            it.event_type = "restore";
+            it.event_content = "restore factory settings";
+        } append(it); cm::execute("rm -rf " + fn);
     }
 }
 

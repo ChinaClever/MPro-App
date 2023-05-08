@@ -293,7 +293,7 @@ struct sDevData
 
     uchar id;  // 设备号
     uchar alarm; // 工作状态 ==0 正常
-    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线　６: 副机告警
+    uchar status; // 0：正常 1：预警 2：告警 3: 升级 4：故障 5：副机离线　６: 副机预警 7: 副机告警
     uchar offLine; //离线标志 > 0在线
     struct sObjData line; // 相数据
     struct sObjData loop; // 回路数据
@@ -331,8 +331,7 @@ struct sNetAddr
     char mask[NAME_SIZE];
     char dns[NAME_SIZE];
     char dns2[NAME_SIZE];
-    char global[NAME_SIZE];
-    char reserve[2][NAME_SIZE];
+    char reserve[3][NAME_SIZE];
     uchar prefixLen;
 };
 
@@ -404,7 +403,7 @@ enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor, CabTg=11, CabLine
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
-enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh};
+enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh, TxRest};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
@@ -430,7 +429,7 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap,
-             EAlarm=80, ELog, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, ECmd=111};
+             EAlarm=80, ELog, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, EThreshold, ECmd=111};
 
 struct sCfgItem {
 #ifndef SUPPORT_C

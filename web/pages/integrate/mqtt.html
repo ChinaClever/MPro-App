@@ -60,27 +60,27 @@
 			for(let i = 1;i<20;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["MQTT设置","","","",""];
-			lang[2] = ["MQTT设置","","","",""];
-			lang[3] = ["MQTT是否开启:","","","",""];
-			lang[4] = ["服务器地址:","","","",""];
-			lang[5] = ["端口:","","","",""];
-			lang[6] = ["Path:","","","",""];
-			lang[7] = ["ClientID:","","","",""];
-			lang[8] = ["用户名:","","","",""];
-			lang[9] = ["密码:","","","",""];
-			lang[10] = ["KeepAlive(S):","","","",""];
-			lang[11] = ["Qos:","","","",""];
-			lang[12] = ["连接状态:","","","",""];
-			lang[13] = ["更新频率(S):","","","",""];
-			lang[14] = ["立即生效","","","",""];
-			lang[15] = ["禁用","","","",""];
-			lang[16] = ["启用","","","",""];
-			lang[17] = ["0 消息最多传递一次","","","",""];
-			lang[18] = ["1 消息传递最少一次","","","",""];
-			lang[19] = ["2 消息仅传递一次","","","",""];
-			lang[20] = ["已连接","","","",""];
-			lang[21] = ["未连接","","","",""];
+			lang[1] = ["MQTT设置","MQTT settings","","",""];
+			lang[2] = ["MQTT设置","MQTT settings","","",""];
+			lang[3] = ["MQTT是否开启:","MQTT is it enabled:","","",""];
+			lang[4] = ["服务器地址:","Sever address:","","",""];
+			lang[5] = ["端口:","Port:","","",""];
+			lang[6] = ["Path:","Path:","","",""];
+			lang[7] = ["ClientID:","ClientID:","","",""];
+			lang[8] = ["用户名:","User name:","","",""];
+			lang[9] = ["密码:","Password:","","",""];
+			lang[10] = ["KeepAlive(S):","KeepAlive(S):","","",""];
+			lang[11] = ["Qos:","Qos:","","",""];
+			lang[12] = ["连接状态:","Connection status:","","",""];
+			lang[13] = ["更新频率(S):","Update frequency(S):","","",""];
+			lang[14] = ["立即生效","Effective immediately","","",""];
+			lang[15] = ["禁用","Disable","","",""];
+			lang[16] = ["启用","Enable","","",""];
+			lang[17] = ["0 消息最多传递一次","0 message can be delivered at most once","","",""];
+			lang[18] = ["1 消息传递最少一次","1 message can be delivered at least once","","",""];
+			lang[19] = ["2 消息仅传递一次","2 message can be delivered at once","","",""];
+			lang[20] = ["已连接","Connected","","",""];
+			lang[21] = ["未连接","Disconnected","","",""];
 
 			enable[0] = lang[15][language];
 			qos_[0] = lang[17][language];
@@ -95,11 +95,16 @@
 		}
 
 		setInterval(function () {
-			if(pdu_cfg.getCfg(19,10) =="false" || pdu_cfg.getCfg(19,10) =='0'){
-				document.getElementById("lang_12").innerHTML =	lang[21][language];
-			}else{
-				document.getElementById("lang_12").innerHTML =	lang[20][language];
-			}
+			pdu_cfg.mqttCfg();
+			ParseData();
+			read_data();
+			lang_fun();
+			showdata();
+		//	if(pdu_cfg.cfgValue(19,10,0,0) =="false" || pdu_cfg.getCfg(19,10) =='0'){
+		//		document.getElementById("lang_12").innerHTML =	lang[21][language];
+		//	}else{
+		//		document.getElementById("lang_12").innerHTML =	lang[20][language];
+		//	}
 		 	}, 2500);
 		function read_data(){
 
@@ -203,7 +208,7 @@
 				tbody +='<option value ="'+i+'">'+qos_[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id = "lang_14" type = "button" style ="width:60%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id = "lang_14" type = "button" style ="width:75%"  onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

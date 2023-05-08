@@ -62,13 +62,13 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["批量备份/恢复","","","",""];
-			lang[2] = ["批量保存设备设置","","","",""];
-			lang[3] = ["下载设备设置:","","","",""];
-			lang[4] = ["下载设备设置","","","",""];
-			lang[5] = ["批量恢复设备设置","","","",""];
-			lang[6] = ["选择固件:","","","",""];
-			lang[7] = ["上传和恢复设备设置","","","",""];
+			lang[1] = ["批量备份/恢复","Batch backup/recovery","","",""];
+			lang[2] = ["批量保存设备设置","Batch save device settings","","",""];
+			lang[3] = ["下载设备设置:","Download backup settings:","","",""];
+			lang[4] = ["下载设备设置","Download backup settings","","",""];
+			lang[5] = ["批量恢复设备设置","Batch restore device settings","","",""];
+			lang[6] = ["选择固件:","Select firmware:","","",""];
+			lang[7] = ["上传和恢复设备设置","Upload and restore device settings","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<8;j++){
@@ -128,7 +128,7 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
-					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
+					sendFileData(f.name, new Uint8Array(r.result), 2*1024*1024,"loading");
 				};
 			}
 		}

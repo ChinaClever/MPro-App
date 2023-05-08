@@ -45,7 +45,8 @@ void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 
 void Alarm_Log::appendSlaveOffline(int addr)
 {
-    QString str = tr("副机%1离线").arg(addr);
+    QString str = tr("副机%1离线;").arg(addr);
+    if(!cm::cn()) str = tr("slave %1 off-line;").arg(addr);
     m_currentAlarm[0] += str + "\n";
 }
 
@@ -58,9 +59,9 @@ void Alarm_Log::resetAwtk()
 
 void Alarm_Log::generateQRcode()
 {
-    static QString alarm; QString str = m_currentAlarm[0];
-    if(str.size()) str = str.split("\n").first();
-    if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode;
+    static QString alarm=" "; QString str = m_currentAlarm[0];
+    if(str.size()) str = str.split("\n").first().split(";").first();
+    if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode; //cout << str << alarm;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
 
@@ -69,31 +70,33 @@ QString Alarm_Log::alarmType(const sDataItem &index)
     QString str;
 
     switch (index.type) {
-    case DType::Tg: str += tr("总"); break;
-    case DType::Line: str += tr("相"); break;
-    case DType::Loop: str += tr("回路"); break;
-    case DType::Group: str += tr("组"); break;
-    case DType::Dual: str += tr("双电源"); break;
-    case DType::Output: str += tr("输出位"); break;
-    case DType::Env: str += tr("环境"); break;
-    case DType::Sensor: str += tr("传感器"); break;
-    case DType::CabTg: str += tr("机柜总"); break;
-    case DType::CabLine: str += tr("机柜相"); break;
-    case DType::CabLoop: str += tr("机柜回路"); break;
+    case DType::Tg: if(cm::cn()) str += tr("总"); else str += "assemble"; break;
+    case DType::Line: if(cm::cn()) str += tr("相"); else str += "phase "; break;
+    case DType::Loop: if(cm::cn()) str += tr("回路"); else str += "loop "; break;
+    case DType::Group: if(cm::cn()) str += tr("组"); else str += "group "; break;
+    case DType::Dual: if(cm::cn()) str += tr("双电源"); else str += "rack "; break;
+    case DType::Output: if(cm::cn()) str += tr("输出位"); else str += "outlet "; break;
+    case DType::Env: if(cm::cn()) str += tr("环境"); else str += "environment "; break;
+    case DType::Sensor: if(cm::cn()) str += tr("传感器"); else str += "sensor "; break;
+    case DType::CabTg: if(cm::cn()) str += tr("机柜总"); else str += "cabinet assembly "; break;
+    case DType::CabLine: if(cm::cn()) str += tr("机柜相"); else str += "cabinet phase "; break;
+    case DType::CabLoop: if(cm::cn()) str += tr("机柜回路"); else str += "cabinet circuit "; break;
     }
 
     switch (index.topic) {
-    case DTopic::Vol: str += tr("电压"); break;
-    case DTopic::Cur: str += tr("电流"); break;
-    case DTopic::Pow: str += tr("功率"); break;
-    case DTopic::Ele: str += tr("电能"); break;
-    case DTopic::Tem: str += tr("温度"); break;
-    case DTopic::Hum: str += tr("湿度"); break;
-    case DTopic::Door1: str += tr("门禁1"); break;
-    case DTopic::Door2: str += tr("门禁２"); break;
-    case DTopic::Water: str += tr("水浸"); break;
-    case DTopic::Smoke: str += tr("烟雾"); break;
-    case DTopic::Relay: if(index.type == DType::Loop) str += tr("断路器"); else str += tr("开关"); break;
+    case DTopic::Vol: if(cm::cn()) str += tr("电压"); else str += "voltage "; break;
+    case DTopic::Cur: if(cm::cn()) str += tr("电流"); else str += "current "; break;
+    case DTopic::Pow: if(cm::cn()) str += tr("功率"); else str += "active power "; break;
+    case DTopic::Ele: if(cm::cn()) str += tr("电能"); else str += "electric energy "; break;
+    case DTopic::Tem: if(cm::cn()) str += tr("温度"); else str += "temperature "; break;
+    case DTopic::Hum: if(cm::cn()) str += tr("湿度"); else str += "humidity "; break;
+    case DTopic::Door1: if(cm::cn()) str += tr("门禁1"); else str += "door 1 "; break;
+    case DTopic::Door2: if(cm::cn()) str += tr("门禁２"); else str += "door 2 "; break;
+    case DTopic::Water: if(cm::cn()) str += tr("水浸"); else str += "water "; break;
+    case DTopic::Smoke: if(cm::cn()) str += tr("烟雾"); else str += "smog "; break;
+    case DTopic::Relay:
+        if(cm::cn()) {if(index.type == DType::Loop) str += tr("断路器"); else str += tr("开关");}
+        else {if(index.type == DType::Loop) str += "circuit breaker "; else str += "relay";} break;
     }
 
     return str;
@@ -102,11 +105,11 @@ QString Alarm_Log::alarmType(const sDataItem &index)
 QString Alarm_Log::alarmStatus(uchar value)
 {
     QString state; switch (value) {
-    case AlarmCode::Ok: state = tr("恢复正常"); break;
-    case AlarmCode::Min: state = tr("过低告警");  break;
-    case AlarmCode::CrMin: state = tr("过低预警");  break;
-    case AlarmCode::CrMax: state = tr("过高预警"); break;
-    case AlarmCode::Max: state = tr("过高告警");  break;
+    case AlarmCode::Ok: if(cm::cn()) state = tr("恢复正常"); else state = "return to normal "; break;
+    case AlarmCode::Min: if(cm::cn()) state = tr("过低告警"); else state = "under voltage alarm "; break;
+    case AlarmCode::CrMin: if(cm::cn()) state = tr("过低预警"); else state = "low warning "; break;
+    case AlarmCode::CrMax: if(cm::cn()) state = tr("过高预警"); else state = "excessive warning "; break;
+    case AlarmCode::Max: if(cm::cn()) state = tr("过高告警");  else state = "over high alarm "; break;
     }
     return state+"; ";
 }
@@ -129,8 +132,10 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6")
-                    .arg(unit->value[id]/rate)
+            if(cm::cn()) str = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6");
+            else str = "Current value:%1%6 Alarm minimum value:%2%6, early warning minimum value:%3%6 "
+                        "early warning maximum value:%4%6 Alarm maximum value:%5%6";
+            str  = str.arg(unit->value[id]/rate)
                     .arg(unit->min[id] / rate)
                     .arg(unit->crMin[id] / rate)
                     .arg(unit->crMax[id] / rate)
@@ -140,8 +145,10 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     } else {
         sTgUnit *unit = obj.getTgAlarmUnit(index);
         if(unit) {
-            str  = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6")
-                    .arg(unit->value/rate)
+            if(cm::cn()) str = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6");
+            else str = "Current value:%1%6 Alarm minimum value:%2%6, early warning minimum value:%3%6 "
+                       "early warning maximum value:%4%6 Alarm maximum value:%5%6";
+            str = str.arg(unit->value/rate)
                     .arg(unit->min / rate)
                     .arg(unit->crMin / rate)
                     .arg(unit->crMax / rate)
@@ -155,29 +162,33 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
 
 QString Alarm_Log::alarmRelay(uchar value)
 {
-    QString str;
-    switch (value) {
-    case sRelay::OffALarm: str = tr("断开"); break;
-    case sRelay::NoAlarm: str = tr("恢复"); break;
-    case sRelay::LifeAlarm: str = tr("寿命"); break;
+    QString str; switch (value) {
+    case sRelay::OffALarm: if(cm::cn()) str = tr("断开"); else str = "break "; break;
+    case sRelay::NoAlarm: if(cm::cn()) str = tr("恢复"); else str = "restore "; break;
+    case sRelay::LifeAlarm: if(cm::cn()) str = tr("寿命"); else str = "life "; break;
     }
     return str+"; ";
 }
 
 QString Alarm_Log::alarmSensor(uchar value)
 {
-    QString str = tr("恢复正常");
-    if(value) str = tr("告警");
+    QString str = tr("恢复正常"); if(!cm::cn()) str = "return to normal ";
+    if(value){ if(cm::cn()) str = tr("告警");else str = "alarm "; }
     return str+"; ";
 }
 
 sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
 {
-    sAlarmItem it; it.alarm_status = tr("本机"); it.addr = index.addr;
-    if(index.addr) it.alarm_status = tr("副机%1").arg(index.addr);
-    //if(value) it.alarm_status += tr("告警"); else it.alarm_status += tr("恢复正常");
-    if(index.type) it.alarm_status += tr("第%１").arg(index.id+1);
-    it.alarm_status += alarmType(index) +"; ";
+    sAlarmItem it;  it.addr = index.addr;
+    if(cm::cn()) {
+        it.alarm_status = tr("本机");
+        if(index.addr) it.alarm_status = tr("副机%1").arg(index.addr);
+        if(index.type) it.alarm_status += tr("第%１").arg(index.id+1);
+    } else {
+        it.alarm_status = "Native ";
+        if(index.addr) it.alarm_status = tr("Slave %1 ").arg(index.addr);
+        if(index.type) it.alarm_status += tr("%１").arg(index.id+1);
+    } it.alarm_status += alarmType(index) +", ";
 
     if(index.topic == DTopic::Relay) {
         it.alarm_content = alarmRelay(value);

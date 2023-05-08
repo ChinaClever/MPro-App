@@ -28,8 +28,8 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->loopSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->loop[i]);
 
-    size = ptr->groupSize; in << size;
-    for(int i=0; i<size; ++i) in << toByteArray(ptr->group[i]);
+    size = ptr->groupSize; if(!size) size = ptr->group->relay.size;
+    in << size; for(int i=0; i<size; ++i) in << toByteArray(ptr->group[i]);
 
     size = ptr->dualSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->dual[i]);
@@ -40,11 +40,11 @@ QDataStream& operator<<(QDataStream& in, Cascade_Stream& data)
     size = ptr->cabLoopSize; in << size;
     for(int i=0; i<size; ++i) in << toByteArray(ptr->cabLoop[i]);
 
-    size = ptr->outputSize; in << size;
-    for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
+    size = ptr->outputSize; if(!size) size = ptr->output->relay.size;
+    in << size; for(int i=0; i<size; ++i) in << toByteArray(ptr->output[i]);
 
-    size = ptr->envSize; in << size; if(!size) size = SENOR_NUM;
-    for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
+    size = ptr->envSize; if(!size) size = SENOR_NUM;
+    in << size; for(int i=0; i<size; ++i) in << toByteArray(ptr->env[i]);
 
     in << toByteArray(ptr->tg);
     in << toByteArray(ptr->cabTg);

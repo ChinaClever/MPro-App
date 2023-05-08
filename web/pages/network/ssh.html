@@ -63,15 +63,15 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["远程服务","","","",""];
-			lang[2] = ["服务设置","","","",""];
-			lang[3] = ["SSH服务:","","","",""];
-			lang[4] = ["Telnet服务:","","","",""];
-			lang[5] = ["账号:","","","",""];
-			lang[6] = ["密码:","","","",""];
-			lang[7] = ["创建账户","","","",""];
-			lang[8] = ["禁用","","","",""];
-			lang[9] = ["启用","","","",""];
+			lang[1] = ["远程服务","Remote services","","",""];
+			lang[2] = ["服务设置","Service settings","","",""];
+			lang[3] = ["SSH服务:","SSH services:","","",""];
+			lang[4] = ["Telnet服务:","Telnet services:","","",""];
+			lang[5] = ["账号:","Account:","","",""];
+			lang[6] = ["密码:","Password:","","",""];
+			lang[7] = ["创建账户","Creat account","","",""];
+			lang[8] = ["禁用","Disable","","",""];
+			lang[9] = ["启用","Enable","","",""];
 
 			mode_set[0] = lang[8][language];
 			mode_set[1] = lang[9][language];
@@ -110,17 +110,31 @@
 				let ssh_psd = document.getElementById("SshPsd").value;
 				if(ssh_name!= "" && ssh_psd !=""){
 					if(!pattern.test(ssh_psd)){
-						alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+						if(0 == language){
+							alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+						}else{
+							alert("Please enter a 6-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
+						}
 						return ;
 					}else{
 						//ssh_psd = CryptoJS.PBKDF2(ssh_psd,ssh_psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
 						pdu_cfg.setCfg(45,3,ssh_name,0,addr);
 						pdu_cfg.setCfg(45,4,ssh_psd,0,addr);
 						pdu_cfg.setCfg(45,5,0,0,addr);
+						if(0 == language){
+							alert("创建成功!");	
+						}else{
+							alert("Created successfully!");
+						}						
 					}
 				}else {
 					pdu_cfg.setCfg(45,3,"",0,addr);
 					pdu_cfg.setCfg(45,4,"",0,addr);
+					if(0 == language){
+						alert("创建失败!");	
+					}else{
+						alert("Created failed!");
+					}
 				}
 			}
 		}

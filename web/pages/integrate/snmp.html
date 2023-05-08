@@ -84,24 +84,24 @@
 			for(let i = 0;i<15;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["SNMP设置","","","",""];
-			lang[2] = ["SNMP(v1/v2c)代理设置","","","",""];
-			lang[3] = ["snmp v2启用:","","","",""];
-			lang[4] = ["立即生效","","","",""];
-			lang[5] = ["SNMP(v3)代理设置","","","",""];
-			lang[6] = ["SNMP v3启用:","","","",""];
-			lang[7] = ["帐号:","","","",""];
-			lang[8] = ["密码:","","","",""];
-			lang[9] = ["密钥:","","","",""];
-			lang[10] = ["加密方式:","","","",""];
-			lang[11] = ["创建/修改","","","",""];
-			lang[12] = ["Trap地址设置","","","",""];
-			lang[13] = ["立即生效","","","",""];
-			lang[14] = ["Inform地址设置","","","",""];
-			lang[15] = ["立即生效","","","",""];
-			lang[16] = ["mib文件下载","","","",""];
-			lang[17] = ["禁用","","","",""];
-			lang[18] = ["启用","","","",""];
+			lang[1] = ["SNMP设置","SNMP settings","","",""];
+			lang[2] = ["SNMP(v1/v2c)代理设置","SNMP(v1/v2c) proxy settings","","",""];
+			lang[3] = ["snmp v2启用:","snmp v2 enable:","","",""];
+			lang[4] = ["立即生效","Effective immediately","","",""];
+			lang[5] = ["SNMP(v3)代理设置","SNMP(v3) proxy settings","","",""];
+			lang[6] = ["SNMP v3启用:","NMP v3 enable:","","",""];
+			lang[7] = ["帐号:","Account number:","","",""];
+			lang[8] = ["密码:","Password:","","",""];
+			lang[9] = ["密钥:","Secret key:","","",""];
+			lang[10] = ["加密方式:","Encryption:","","",""];
+			lang[11] = ["创建/修改","Craet/Modify","","",""];
+			lang[12] = ["Trap地址设置","Trap address settings","","",""];
+			lang[13] = ["立即生效","Effective immediately","","",""];
+			lang[14] = ["Inform地址设置","Inform address settings","","",""];
+			lang[15] = ["立即生效","Effective immediately","","",""];
+			lang[16] = ["mib文件下载","mib file download","","",""];
+			lang[17] = ["禁用","Disable","","",""];
+			lang[18] = ["启用","Enable","","",""];
 			mode_set[0] = lang[17][language];
 			mode_set[1] = lang[18][language];
 		}
@@ -166,7 +166,12 @@
 				if(snmp_name[i] == btn.id){
 					if(btn.id  == "psd" || btn.id == "parity"){
 						if(!pattern_.test(btn.value) && btn.value != ""){
-							alert("请输入8-16位字符");
+							if(0 == language){
+								alert("请输入8-16位字符");
+							}else{
+								alert("Please enter 8-16 characters");
+							}
+							
 							return ;
 						}
 					}
@@ -211,7 +216,7 @@
 			tbody += '<td><input id = "getcomm" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
 			tbody += '<tr><td>Set Community:</td>';
 			tbody += '<td><input id = "setcomm" value = "" onchange ="SetData(this)" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:40%;" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id ="lang_4" type = "button" style ="width:55%;" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
@@ -253,7 +258,7 @@
 				tbody += '<td><input id = "trap'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
 				tbody += '</td></tr>';
 			}
-			tbody += '<tr><td><input id ="lang_13" type = "button" style ="width:40%;display:none" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id ="lang_13" type = "button" style ="width:75%;display:none" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
@@ -267,7 +272,7 @@
 				tbody += '<td><input id = "inform'+ j +'" style ="width:24.5%" onchange ="SetData(this)" type = "text"placeholder="255.255.255.255"></input>';
 				tbody += '</td></tr>';
 			}
-			tbody += '<tr><td><input id ="lang_15" type = "button" style ="width:40%;display:none;" onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td><input id ="lang_15" type = "button" style ="width:70%;display:none;" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

@@ -9,6 +9,7 @@ class JsonRpc {
 
     constructor() {
         this.rpcid = 0; 
+        this.uuid = ' ';
         this.timeOut = 65; // HTTP最小超时时间 
         this.isSetting = false; // 是否在设置模式
         this.root_map = this.rpc_map(); // 唯一的Map表，此表会存储所有的数据
@@ -32,7 +33,8 @@ class JsonRpc {
             let arr = Object.entries(json);
             map = new Map(arr);
         }   
-        
+        value = sessionStorage.getItem('uuid');
+        if(value != null)  this.uuid = value;
         return map;
     }
 
@@ -132,10 +134,24 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
 
+        var sessionStorage = window.sessionStorage;
+        if((14 == parseInt(type)) && (11 == parseInt(topic))) {
+            if(1 == parseInt(value[0])) {   
+                var host = window.location.host;
+                sessionStorage.setItem('host', host);
+                this.uuid = value.slice(3); value = 1;
+                sessionStorage.setItem('uuid', this.uuid);
+                // alert(value); alert(this.uuid);
+            } 
+        }
+
+        if((0 == addr) && (13 == type) && (10 == topic)) {
+            sessionStorage.setItem('language', value);
+        }
+
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
-        const json = Object.fromEntries(this.root_map);
-        var sessionStorage = window.sessionStorage;
+        const json = Object.fromEntries(this.root_map);        
         sessionStorage.setItem('root_map',JSON.stringify(json));
 
         return true;
@@ -151,13 +167,15 @@ class JsonRpc {
 
     // RPC读取接口
     json_rpc_get(method, params) {
-        this.isSetting = false;
+        this.isSetting = false; params.push(0);
+        params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
    
     // RPC设置接口
     json_rpc_set(method, params) {
         this.isSetting = true;
+        params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
 
@@ -300,6 +318,7 @@ class PduCfgItem extends PduDataItem {
         var params = [addr, type, fc, id, 0, value];
         return this.rpc.json_rpc_set(method, params);
     }
+
 } //var obj = new PduCfgItem(); setTimeout(function(){obj.getCfg(22,1,1);}, obj.getTimeOut());
 
 // 多个配置参数操作类
@@ -484,7 +503,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(47, fcs);
     }
     debugCfg(){
-        var fcs = [1,9,10,11,13];
+        var fcs = [1,9,10,11,12,13];
         let type_ = [1,1,1,2,2,2,3,6,6,3]; 
         let topic_ = [2,3,4,2,3,4,3,11,12,4]; 
         let fcs_ = [2,5,6,7,4];
@@ -531,8 +550,27 @@ class PduLog extends  PduCfgs{
     }
 }
 
+class PduOta extends  PduLog{
+    constructor() {
+        super();
+    }
+
+    otaValue(fc, id, addr) {
+        var key = addr+'_'+92+'_'+fc+'_'+id+'_'+addr;
+        return this.rpc.json_rpc_value(key);
+    }
+
+    // 刷新某个配置参数至Map表中
+    getOta(fc, id, addr) {
+        var method = "pduReadParam"; 
+        var params = [addr, 92, fc, id, addr];
+        return this.rpc.json_rpc_get(method, params);
+    }     
+
+}
+
 // 实例化接口类
-class PduCore extends PduCfgs {
+class PduCore extends PduOta {
     static _instance = null;
     constructor() {
         super();
@@ -544,6 +582,33 @@ class PduCore extends PduCfgs {
         }
         return PduCore._instance
     }
+
+
+    login_check() {
+        var sessionStorage = window.sessionStorage;
+        var value = sessionStorage.getItem("uuid");
+        var res = 0; if(value != null) {
+            var host = window.location.host;
+            var ip = sessionStorage.getItem('host');    
+            if((value.length > 9) && (host == ip)) res = 1;
+        }
+
+        if(0 == res) {
+            this.logged_out();
+            var url = window.location.protocol+"//";            
+            url += window.location.host;
+            window.location.replace(url);
+        }       
+        
+        return res;
+    }
+
+    logged_out() {
+        var sessionStorage = window.sessionStorage;
+        sessionStorage.setItem('host', ' ');
+        sessionStorage.setItem('uuid', ' ');
+    }   
+
 
     // 清除所有数据
     clear() {

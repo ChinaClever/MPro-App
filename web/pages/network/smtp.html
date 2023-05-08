@@ -76,23 +76,23 @@
 			for(let i = 1;i<16;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["SMTP服务","","","",""];
-			lang[2] = ["SMTP设置","","","",""];
-			lang[3] = ["SMTP启用:","","","",""];
-			lang[4] = ["发件箱服务器:","","","",""];
-			lang[5] = ["发件箱账号:","","","",""];
-			lang[6] = ["发件箱密码:","","","",""];
-			lang[7] = ["收件箱账号1:","","","",""];
-			lang[8] = ["收件箱账号2:","","","",""];
-			lang[9] = ["收件箱账号3:","","","",""];
-			lang[10] = ["收件箱账号4:","","","",""];
-			lang[11] = ["SMTP端口:","","","",""];
-			lang[12] = ["工作模式:","","","",""];
-			lang[13] = ["错误状态:","","","",""];
-			lang[14] = ["收件箱设置","","","",""];
-			lang[15] = ["禁用","","","",""];
-			lang[16] = ["启用","","","",""];
-			lang[17] = ["邮箱测试","","","",""];
+			lang[1] = ["SMTP服务","SMTP service","","",""];
+			lang[2] = ["SMTP设置","SMTP settings","","",""];
+			lang[3] = ["SMTP启用:","SMTP enable:","","",""];
+			lang[4] = ["发件箱服务器:","Outbox server:","","",""];
+			lang[5] = ["发件箱账号:","Outbox account:","","",""];
+			lang[6] = ["发件箱密码:","Outbox password:","","",""];
+			lang[7] = ["收件箱账号1:","Inbox account 1:","","",""];
+			lang[8] = ["收件箱账号2:","Inbox account 2:","","",""];
+			lang[9] = ["收件箱账号3:","Inbox account 3:","","",""];
+			lang[10] = ["收件箱账号4:","Inbox account 4:","","",""];
+			lang[11] = ["SMTP端口:","SMTP port:","","",""];
+			lang[12] = ["工作模式:","Work mode:","","",""];
+			lang[13] = ["错误状态:","Error status:","","",""];
+			lang[14] = ["收件箱设置","Inbox settings","","",""];
+			lang[15] = ["禁用","Disable","","",""];
+			lang[16] = ["启用","Enable","","",""];
+			lang[17] = ["邮箱测试","Email testing","","",""];
 
 			mode_set[0] = lang[15][language];
 			mode_set[1] = lang[16][language];
@@ -183,7 +183,12 @@
 		}
 		function Set(){
 			if(document.getElementById("SmtpRecvUsr1").value == ""&&document.getElementById("SmtpRecvUsr2").value == ""&&document.getElementById("SmtpRecvUsr3").value ==""&&document.getElementById("SmtpRecvUsr4").value ==""){
-				alert("请输入至少一个邮箱账号！");
+				if(0 == language){
+					alert("请输入至少一个邮箱账号！");
+				}else{
+					alert("Please enter at least one email account！");
+				}
+				
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
 			}
@@ -238,7 +243,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id ="lang_17" style ="width:40%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
+			tbody += '<tr><td><input id ="lang_17" style ="width:50%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

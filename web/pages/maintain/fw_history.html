@@ -49,7 +49,13 @@
 		let update_his = 3;
 		setTimeout(() => {
 			pdu_log.log_fun(update_his,1,0,0);
-		}, 300);
+		}, 400);
+		setTimeout(() => {
+			pdu_log.log_fun(update_his,1,0,0);
+		}, 1000);
+		setTimeout(() => {
+			pdu_log.log_fun(update_his,1,0,0);
+		}, 2000);
 		let lang = new Array();
 		let start_ = 0;
 		let btn_name = new Array("jump","last","next","export");
@@ -73,22 +79,22 @@
 			for(i = 1;i<31;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["升级记录","","","",""];
-			lang[2] = ["序号","","","",""];
-			lang[3] = ["升级时间","","","",""];
-			lang[4] = ["当前版本号","","","",""];
-			lang[5] = ["编码","","","",""];
-			lang[6] = ["详细信息","","","",""];
-			lang[7] = ["旧版本号","","","",""];
-			lang[8] = ["发布日期","","","",""];
-			lang[9] = ["历史记录：","","","",""];
-			lang[10] = ["页","","","",""];
-			lang[11] = ["/页","","","",""];
-			lang[12] = ["前往","","","",""];
-			lang[13] = ["上一页","","","",""];
-			lang[14] = ["下一页","","","",""];
-			lang[15] = ["导出","","","",""];
-			lang[16] = ["条","","","",""];
+			lang[1] = ["升级记录","Upgrade record","","",""];
+			lang[2] = ["序号","Serial number","","",""];
+			lang[3] = ["升级时间","Upgrade time","","",""];
+			lang[4] = ["当前版本号","Current version number","","",""];
+			lang[5] = ["编码","Code","","",""];
+			lang[6] = ["详细信息","Detailed information","","",""];
+			lang[7] = ["旧版本号","Old version number","","",""];
+			lang[8] = ["发布日期","Release data","","",""];
+			lang[9] = ["历史记录：","History:","","",""];
+			lang[10] = ["页","Page","","",""];
+			lang[11] = ["/页","/Page","","",""];
+			lang[12] = ["前往","Go to","","",""];
+			lang[13] = ["上一页","Previous page","","",""];
+			lang[14] = ["下一页","Next page","","",""];
+			lang[15] = ["导出","Strip","","",""];
+			lang[16] = ["条","Strip","","",""];
 		}
 		function lang_fun(){
 			for(let j = 1;j<12;j++){
@@ -101,6 +107,7 @@
 		lang_init();
 		function read_data(){
 			let log_str = window.JSON.parse(pdu_log.log_get(update_his,2,start_,show_num));
+			if(log_str == null) return false;
 			if(show_num < 20){
 				start_ = 0;
 			}else{
@@ -117,6 +124,7 @@
 					}
 				}
 			}
+			return true;
 		}
 		setTimeout(function(){
 			log_num = parseInt(pdu_log.log_get(update_his,1,start_,show_num));
@@ -128,13 +136,25 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(update_his,2,start_,show_num);
-		},500);
-		setTimeout(function(){
-			read_data();
-			$('.table-striped').html(buildTable(show_num));
-			lang_fun();
-			showdata();
 		},800);
+		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},1100);
+
+		setTimeout(function(){
+			var ret = read_data();
+			if(ret == true) {
+				$('.table-striped').html(buildTable(show_num));
+				lang_fun();
+				showdata();
+			}
+		},2500);
+
 		function flash_html(par)
 		{
 			setTimeout(function(){

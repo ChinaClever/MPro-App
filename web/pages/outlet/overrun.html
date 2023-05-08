@@ -43,6 +43,8 @@
 					<div class="grid-col grid-col-7">
 						<table class="table table-striped text-center"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -62,6 +64,7 @@
 		let state_ = new Array();
 		let dev_name = new Array();
 		var slave_num ;
+		let dev_mode;
 		let pdu_data;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
@@ -75,6 +78,7 @@
 			pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
+			dev_mode = pdu_data.pdu_info.dev_mode;
 			language = pdu_data.pdu_info.language;
 			for(let i = 1;i<output_num + 1;i++){
 				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
@@ -84,18 +88,18 @@
 			for(let i = 1;i<13;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["超限断电","","","",""];
-			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择:","","","",""];
-			lang[4] = ["序号","","","",""];
-			lang[5] = ["单元名称","","","",""];
-			lang[6] = ["状态","","","",""];
-			lang[7] = ["设置","","","",""];
-			lang[8] = ["设置模式","","","",""];
-			lang[9] = ["启用","","","",""];
-			lang[10] = ["禁用","","","",""];
-			lang[11]  = ["主机", "", "", "", ""];
-			lang[12]  = ["副机", "", "", "", ""];
+			lang[1] = ["超限断电","Overlimit power outage","","",""];
+			lang[2] = ["阅读模式","Reading mode","","",""];
+			lang[3] = ["设备选择:","Equipment selection","","",""];
+			lang[4] = ["序号","Serial number","","",""];
+			lang[5] = ["单元名称","Uints name","","",""];
+			lang[6] = ["状态","Status","","",""];
+			lang[7] = ["设置","Setting","","",""];
+			lang[8] = ["设置模式","Setting mode","","",""];
+			lang[9] = ["启用","Enable","","",""];
+			lang[10] = ["禁用","Disable","","",""];
+			lang[11]  = ["主机", "Master", "", "", ""];
+			lang[12]  = ["副机", "Slave", "", "", ""];
 			dev_name[0] = lang[11][language];
 			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[12][language] + i;
@@ -121,8 +125,10 @@
 			for(let j = 1;j<8;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			if(slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 		}
@@ -143,6 +149,7 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
+				//alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
 				ros.innerHTML = lang[8][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -227,7 +234,7 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="10%" id ="lang_4"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="10%" id ="lang_4"></td>\
 					<td width ="30%" id ="lang_5"></td>\
 					<td width ="40%"></td>\
 					<td width ="10%" id ="lang_6"></td>\

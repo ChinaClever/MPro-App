@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);"  id="lang_12"></button></span>
 							</div>
 						</div>
 					</div>
@@ -36,6 +36,7 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
+		var read =1;
 		let addr = 0;
 		pdu_cfg.logseetingCfg();
 		let logset_name = new Array("","HistoryEn","EnergeDelay","HistoryDelay","AlarmMaxNum","EventMaxNum","HistoryMaxNum");
@@ -58,17 +59,19 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["日志设置","","","",""];
-			lang[2] = ["日志记录设置","","","",""];
-			lang[3] = ["历史记录启用:","","","",""];
-			lang[4] = ["电能记录时间间隔(天):","","","",""];
-			lang[5] = ["历史数据记录时间(小时):","","","",""];
-			lang[6] = ["报警记录最大条数(条):","","","",""];
-			lang[7] = ["事件记录最大条数(条):","","","",""];
-			lang[8] = ["历史数据记录最大条数(条):","","","",""];
-			lang[9] = ["启用","","","",""];
-			lang[10] = ["禁用","","","",""];
-			lang[11] = ["条","","","",""];
+			lang[1] = ["日志设置","Log settings","","",""];
+			lang[2] = ["日志记录设置","Log record setting","","",""];
+			lang[3] = ["历史记录启用:","HistoryEn:","","",""];
+			lang[4] = ["电能记录时间间隔(天):","Electric energy recording time interval(Day):","","",""];
+			lang[5] = ["历史数据记录时间(小时):","History data recording Tome(Hour):","","",""];
+			lang[6] = ["报警记录最大条数(条):","Maximun number of alarm records(Strip):","","",""];
+			lang[7] = ["事件记录最大条数(条):","Maximun number of Event records(Strip):","","",""];
+			lang[8] = ["历史数据记录最大条数(条):","Maximun number of history data records(Strip):","","",""];
+			lang[9] = ["启用","Enable","","",""];
+			lang[10] = ["禁用","Disable","","",""];
+			lang[11] = ["条","Strip","","",""];
+			lang[12] = ["阅读模式","Reading mode","","",""];
+			lang[13] = ["设置模式","Setting mode","","",""];
 			enable[0] = lang[10][language];
 			enable[1] = lang[9][language];
 		}
@@ -76,13 +79,50 @@
 			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("lang_12").innerHTML  = lang[12][language];
 		}
 		setTimeout(function(){
 			read_data();
 			$('.log').html(buildTable());
 			lang_fun();
 			showdata();
+			ModeSet();
 		},500);
+		function ReadOnlySet(ros){
+			if(read === 1){
+				read = 0;
+				ros.style.backgroundColor = 'red';
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
+				ros.innerHTML = lang[13][language];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++){
+					iptname[i].disabled = false;
+				}
+				document.getElementById("HistoryEn").disabled = false;
+			}
+			else{
+				read = 1;
+				ros.style.backgroundColor = '';
+				ros.innerHTML = lang[12][language];
+				var iptname = document.getElementsByTagName("input");
+				for(var i = 0; i<iptname.length;i++){
+					iptname[i].disabled = true;
+				}
+				document.getElementById("HistoryEn").disabled = true;
+			}
+		}
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+			document.getElementById("HistoryEn").disabled = true;
+		}
 		function showdata(){
 			for(let i = 1;i<logset_name.length;i++){
 				document.getElementById(logset_name[i]).value =  logset_data[i];

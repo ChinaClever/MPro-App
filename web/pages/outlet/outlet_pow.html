@@ -94,24 +94,24 @@
 			for(let i = 1;i<19;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["单元功率","","","",""];
-			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择:","","","",""];
-			lang[4] = ["序号","","","",""];
-			lang[5] = ["单元名称","","","",""];
-			lang[6] = ["有功功率(kW)","","","",""];
-			lang[7] = ["告警使能","","","",""];
-			lang[8] = ["历史记录","","","",""];
-			lang[9] = ["额定值(kW)","","","",""];
-			lang[10] = ["最小值(kW)","","","",""];
-			lang[11] = ["下临界(kW)","","","",""];
-			lang[12] = ["上临界(kW)","","","",""];
-			lang[13] = ["最大值(kW)","","","",""];
-			lang[14] = ["设置模式","","","",""];
-			lang[15] = ["阅读模式","","","",""];
-			lang[16] = ["统一设置","","","",""];
-			lang[17]  = ["主机", "", "", "", ""];
-			lang[18]  = ["副机", "", "", "", ""];
+			lang[1] = ["单元功率","Uint power","","",""];
+			lang[2] = ["阅读模式","Reading mode","","",""];
+			lang[3] = ["设备选择:","Equipment selection:","","",""];
+			lang[4] = ["序号","Serial number","","",""];
+			lang[5] = ["单元名称","Uint name","","",""];
+			lang[6] = ["有功功率(kW)","Active Power(kW)","","",""];
+			lang[7] = ["告警使能","Warning enable","","",""];
+			lang[8] = ["历史记录","History","","",""];
+			lang[9] = ["额定值(kW)","Rated value(kW)","","",""];
+			lang[10] = ["最小值(kW)","Minimum(kW)","","",""];
+			lang[11] = ["下临界(kW)","Lower critical(kW)","","",""];
+			lang[12] = ["上临界(kW)","Upper critical(kW)","","",""];
+			lang[13] = ["最大值(kW)","Maximum(kW)","","",""];
+			lang[14] = ["设置模式","Setting mode","","",""];
+			lang[15] = ["阅读模式","Reading mode","","",""];
+			lang[16] = ["统一设置","Unified settings","","",""];
+			lang[17]  = ["主机", "Master", "", "", ""];
+			lang[18]  = ["副机", "Slave", "", "", ""];
 			dev_name[0] = lang[17][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[18][language] + i;
@@ -124,8 +124,10 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 		}
@@ -220,6 +222,11 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -338,7 +345,7 @@
 				tbody = '';
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="4%" id="lang_4"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="4%" id="lang_4"></td>\
 					<td width ="16%" id="lang_5"></td>\
 					<td width ="10%" id="lang_6"></td>\
 					<td width ="10%" id="lang_7"></td>\

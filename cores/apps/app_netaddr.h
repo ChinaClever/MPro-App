@@ -21,6 +21,7 @@ private:
     void inet_writeCfg(sNetAddr &inet, const QString &g);
 
 private:
+    int mCnt = 1;
     bool inet_isRun=false;
     Cfg_Obj *mInetCfg;
 };

@@ -6,7 +6,7 @@
 	<meta name="renderer" content="webkit">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
-	<title>MPDU</title>
+	<title id = "ser_type"></title>
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="icon" href="include/images/logo.png">
 	<link rel="stylesheet" href="include/css/public.min.css">
@@ -32,13 +32,14 @@
 			</a>
 		</div>
 		<div style="position: relative; z-index: 1;">
-			<p align="right" style="background-image: url(include/images/title.png);"> 
-			<!-- <p align="right" style="background-image: url();"> -->
-				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 1;padding-right: 3.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
-				<i id="language" class="fa fa-language"style="height: 18px; line-height: 1;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
+			<!-- <p align="right" style="background-image: url(include/images/title.png);">  -->
+			<p align="right" style="background-image: url();">
+				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
+				<i id="language" class="fa fa-language"style="height: 60%; line-height: 2;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
 				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
-				<label class="ft-warning " style="width:19%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:76%;"></label><label id ="version" style="width:44%;"></label></label><br>
-				<label class="ft-warning " style="width:19%;font-size:12px;line-height:12px;display:inline-flex;"><label  id ="uptime" style="width:76%;"></label><label id ="status" style="width:44%;" ></label></label>
+				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label></label><br> -->
+				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display:inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label><label  id ="uptime" style="width:70%;"></label><label id ="status" style="width:50%;" ></label></label> -->
+				<label style="width:55%;font-size:16px;line-height:12px;font-family: Roboto; padding-right:40px;"><label id ="status" style="width:50%;" ></label><label id ="version" style="width:50%;"></label><label id ="series" style="width:70%;"></label><label  id ="uptime" style="width:70%;"></label></label>
 			</p>
 		</div>
 	</div>
@@ -70,6 +71,13 @@
 		var run_status = new Array();
 		let pdu_data;
 		let lang =new Array();
+		let DataString = pdu_cfg_.meta_value();
+		if(DataString == null){
+			DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
+		}else{
+			pdu_data = JSON.parse(DataString);
+			document.getElementById("ser_type").innerHTML = document.getElementById("ser_type").innerHTML + pdu_data.uut_info.pdu_type;
+		}
 		for (let i = 0; i < 3; i++) {
 			total_data[i] = new Array(3);
 			inletA_data[i] = new Array(3);
@@ -84,8 +92,19 @@
 		}
 		 setTimeout(function () {
 		 	PduMetaData.meta_workDown(); //pdu_cfg_
-		 }, 300);
+		 }, 200);
 
+		 setTimeout(function () {
+		 	PduMetaData.meta_workDown(); //pdu_cfg_
+		 }, 800);
+
+		 setTimeout(function () {
+		 	PduMetaData.meta_workDown(); //pdu_cfg_
+		 }, 1200);
+
+		 setTimeout(function(){
+			pdu_cfg_.login_check();
+		},100);
 
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
@@ -106,22 +125,23 @@
 			lang[2] = ["软件版本：", "PDU version: ", "PDU Version:", "версия программного обеспечения:", "Versión de software:", "إصدار البرنامج:"];
 			lang[3] = ["运行时长：", "PDU uptime: ", "Temps:", "длительность эксплуатации:", "Duración del funcionamiento:", "وقت التشغيل:"];
 			lang[4] = ["工作状态：", "Working status: ", "Travail état:", "режим работы:", "Estado de trabajo:", "حالة العمل:"];
-			lang[5] = ["中文", "", "", "", ""];
-			lang[6] = ["英文", "", "", "", ""];
-			lang[7] = ["当前告警", "", "", "", ""];
-			lang[8] = ["登出", "", "", "", ""];
-			lang[9] = ["正常", "", "", "", ""];
-			lang[10] = ["预警", "", "", "", ""];
-			lang[11] = ["断开", "", "", "", ""];
-			lang[12] = ["闭合", "", "", "", ""];
-			lang[13] = ["天", "", "", "", ""];
-			lang[14] = ["小时", "", "", "", ""];
-			lang[15] = ["分钟", "", "", "", ""];
-			lang[16] = ["告警", "", "", "", ""];
-			lang[17] = ["升级", "", "", "", ""];
-			lang[18] = ["故障", "", "", "", ""];
-			lang[19] = ["副机离线", "", "", "", ""];
-			lang[20] = ["副机告警", "", "", "", ""];
+			lang[5] = ["中文", "Chinese", "", "", ""];
+			lang[6] = ["英文", "English", "", "", ""];
+			lang[7] = ["当前告警", "Current warning", "", "", ""];
+			lang[8] = ["登出", "LogOut", "", "", ""];
+			lang[9] = ["正常", "Normal", "", "", ""];
+			lang[10] = ["预警", "Early warning", "", "", ""];
+			lang[11] = ["断开", "Off", "", "", ""];
+			lang[12] = ["闭合", "On", "", "", ""];
+			lang[13] = ["天", "Day", "", "", ""];
+			lang[14] = ["小时", "Hour", "", "", ""];
+			lang[15] = ["分钟", "Minute", "", "", ""];
+			lang[16] = ["告警", "Warning", "", "", ""];
+			lang[17] = ["升级", "Upgrade", "", "", ""];
+			lang[18] = ["故障", "Fault", "", "", ""];
+			lang[19] = ["副机离线", "Slave offline", "", "", ""];
+			lang[20] = ["副机预警", "Slave warning", "", "", ""];
+			lang[21] = ["副机告警", "Slave early warning", "", "", ""];
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
 			run_status[2] = lang[16][language_];
@@ -129,6 +149,7 @@
 			run_status[4] = lang[18][language_];
 			run_status[5] = lang[19][language_];
 			run_status[6] = lang[20][language_];
+			run_status[7] = lang[21][language_];
 		}
 		function TimeConvert(min){
 			let time_show;
@@ -153,10 +174,11 @@
 			document.getElementById("logOut").title = lang[8][language_];
 			document.getElementById("status").innerHTML = run_status[pdu_data.status];
 			document.getElementById("series").innerHTML = lang[1][language_] + pdu_data.uut_info.pdu_type + "("+series_data[pdu_data.pdu_info.pdu_spec]+")";
-			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.version;
+			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.pdu_version.ver;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
-			//document.getElementById("MPDU").title = pdu_data.uut_info.pdu_type;
+			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;
+			//console.log(document.getElementById("MPDU").innerHTML);
 			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
@@ -176,12 +198,12 @@
 		LangInit();
 		//ShowData();
 		function ChoseLang(){
-			if(language_ = 1){
+			if(language_ == 1){
 				language_ = 0;
 			}else{
 				language_ = 1;
 			}
-			pdu_cfg.setCfg(13,10,language_,0,addr_);
+			pdu_cfg_.setCfg(13,10,language_,0,addr_);
 			setTimeout(function(){
 				PduMetaData.meta_workDown();
 			},300);
@@ -194,10 +216,15 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6){
+			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6 ||pdu_data.status ==7){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
 			}else{
-				alert("当前无告警日志！");
+				if(0 == language_){
+					alert("当前无告警日志！");
+				}else{
+					alert("There are currently no alarm logs!");
+				}
+				
 			}
 		}
 		function LogOut() {
@@ -235,6 +262,7 @@
 			let v = pdu_cfg_.meta_value();
 			if(v) {
 				ParseData();
+				LangInit();
 				ShowData();
 			}
 		},1000);

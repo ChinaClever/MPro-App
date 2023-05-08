@@ -21,12 +21,13 @@ void App_Ssh::ssh_initFunSlot()
 void App_Ssh::ssh_delUser()
 {
     QString usr, cmd = "cut -d: -f1 /usr/data/etc/passwd";
-    QStringList ls = cm::execute(cmd).split("\n");
+    QStringList ls = cm::execute(cmd).split("\n", QString::SkipEmptyParts);
     if(ls.size() > 13){
         usr = ls.last();
-        cmd = "deluser -r " + usr;
+        cmd = "deluser " + usr;
         system(cmd.toLatin1().data());
-    }
+        qDebug() << cmd;
+    } //cout << ls.size() << ls;
 }
 
 bool App_Ssh::ssh_addrUser()

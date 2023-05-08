@@ -42,7 +42,7 @@
 #include <QBuffer>
 #include <QPainter>
 #include <QtConcurrent>
-#include <QStringView>
+
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QLocalServer>
@@ -489,7 +489,6 @@ void JQHttpServer::Session::replyFile(const QString &filePath, const int &httpSt
         return;
     }
 
-    file->seek(0);
     replyBodySize_ = file->size();
 
     const auto &&data = replyFileFormat
@@ -1128,7 +1127,7 @@ bool JQHttpServer::SslServerManage::listen(
     sslConfiguration_->setPeerVerifyDepth( 1 );
     sslConfiguration_->setLocalCertificate( sslCertificate );
     sslConfiguration_->setPrivateKey( sslKey );
-    sslConfiguration_->setProtocol(QSsl::TlsV1_1OrLater);
+    sslConfiguration_->setProtocol( QSsl::TlsV1_1OrLater );
     sslConfiguration_->setCaCertificates( caCertificates );
 
     return this->initialize();
@@ -1632,12 +1631,7 @@ QString JQHttpServer::Service::snakeCaseToCamelCase(const QString &source, const
                 if ( firstCharUpper )
                 {
                     result += splitTag[ 0 ].toUpper();
-
-#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
-                    result += QStringView( splitTag ).mid( 1 );
-#else
-                    result += splitTag.midRef( 1 );
-#endif
+                    result += std::move( splitTag.mid( 1 ) );
                 }
                 else
                 {
@@ -1647,12 +1641,7 @@ QString JQHttpServer::Service::snakeCaseToCamelCase(const QString &source, const
             else
             {
                 result += splitTag[ 0 ].toUpper();
-
-#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
-                result += QStringView( splitTag ).mid( 1 );
-#else
-                result += splitTag.midRef( 1 );
-#endif
+                result += std::move( splitTag.mid( 1 ) );
             }
         }
     }

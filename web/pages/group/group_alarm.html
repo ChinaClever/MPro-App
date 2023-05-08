@@ -69,6 +69,7 @@
 		let lang = new Array();
 		let addr = pdu_cfg.addr;
 		let pdu_data;
+		let t1 = 0;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
@@ -90,6 +91,20 @@
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
 			}
+			if(pdu_data.pdu_info.group_en == 0){
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+							alert("未开启分组功能，请前往“分组设置”处开启!");
+						}else{
+							alert("The grouping function is not enabled. Please go to the 'Grouping Settings' section to enable it!");
+						}						
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				hidden();
+			}
 		}
 		ParseData();
 		LangInit();
@@ -97,23 +112,23 @@
 			for(let i = 0;i<18;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["分组阈值","","","",""];
-			lang[2] = ["阅读模式","","","",""];
-			lang[3] = ["设备选择:","","","",""];
-			lang[4] = ["序号","","","",""];
-			lang[5] = ["分组名称","","","",""];
-			lang[6] = ["有功功率(kW)","","","",""];
-			lang[7] = ["告警使能","","","",""];
-			lang[8] = ["历史记录","","","",""];
-			lang[9] = ["额定值(kW)","","","",""];
-			lang[10] = ["最小值(kW)","","","",""];
-			lang[11] = ["下临界(kW)","","","",""];
-			lang[12] = ["上临界(kW)","","","",""];
-			lang[13] = ["最大值(kW)","","","",""];
-			lang[14] = ["设置模式","","","",""];
-			lang[15] = ["统一设置","","","",""];
-			lang[16]  = ["主机", "", "", "", ""];
-			lang[17]  = ["副机", "", "", "", ""];
+			lang[1] = ["分组阈值","Grouping threshold","","",""];
+			lang[2] = ["阅读模式","Reading mode","","",""];
+			lang[3] = ["设备选择:","Equipment selection:","","",""];
+			lang[4] = ["序号","Serial number","","",""];
+			lang[5] = ["分组名称","Group name","","",""];
+			lang[6] = ["有功功率(kW)","Active power(kW) ","","",""];
+			lang[7] = ["告警使能","Warning enable","","",""];
+			lang[8] = ["历史记录","History","","",""];
+			lang[9] = ["额定值(kW)","Rated value(kW)","","",""];
+			lang[10] = ["最小值(kW)","Minimum(kW)","","",""];
+			lang[11] = ["下临界(kW)","Lower critical(kW)","","",""];
+			lang[12] = ["上临界(kW)","Upper critical(kW)","","",""];
+			lang[13] = ["最大值(kW)","Maximum(kW)","","",""];
+			lang[14] = ["设置模式","Setting mode","","",""];
+			lang[15] = ["统一设置","Unified settings","","",""];
+			lang[16]  = ["主机", "Master", "", "", ""];
+			lang[17]  = ["副机", "Slave", "", "", ""];
 			dev_name[0] = lang[16][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[17][language] + i;
@@ -128,8 +143,10 @@
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
-			if(pdu_data.pdu_info.slave_num != 0){
-				document.getElementById("dev_sel").style.display="";
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
 			}
 			document.getElementById("ms").value = addr;
 
@@ -220,6 +237,11 @@
 				// var ms = document.getElementById("sel");
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
+				if(pdu_data.pdu_info.language == 0){
+					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				}else{
+					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+				}
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -340,7 +362,7 @@
 			var thead = '',
 				tbody = '';
 			if(rows == 0){
-					thead = '<tr><td width ="5%" id="lang_4"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="5%" id="lang_4"></td>\
 					<td width ="18%" id="lang_5" ></td>\
 					<td width ="11%" id="lang_6"></td>\
 					<td width ="11%" id="lang_7"></td>\
@@ -352,7 +374,7 @@
 			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-					thead = '<tr><td width ="5%" id="lang_4"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="5%" id="lang_4"></td>\
 					<td width ="18%" id="lang_5" ></td>\
 					<td width ="11%" id="lang_6"></td>\
 					<td width ="11%" id="lang_7"></td>\
@@ -368,10 +390,10 @@
 				tbody += '<td id = "c'+ i + '">'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_value[i]).toFixed(3) +'</td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 				tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_min[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_min[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_max[i]).toFixed(3)  +'"></input></td>';
-				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_max[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_min[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_min[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_warn_max[i]).toFixed(3)  +'"></input></td>';
+				tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "i'+ i + '"value="'+ parseFloat(pdu_data.pdu_data.group_item_list.pow_alarm_max[i]).toFixed(3)  +'"></input></td>';
 				tbody += '</tr>';
 				if(i === rows - 1){
 					i++;
@@ -381,10 +403,11 @@
 					tbody += '<td id = "c'+ i + '"></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "d'+ i + '"></input></td>';
 					tbody += '<td><input  type = "checkbox" class = "input" onchange ="cked(this)" id = "j'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "i'+ i + '"></input></td>';
+					//tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>3.52){value=3.52};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "f'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "g'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "h'+ i + '"></input></td>';
+					tbody += '<td><input type = "text" onkeyup="clearNum(this)" onchange ="setdata(this)" oninput = "if(value>18){value=18};if(value<0)value=0" class = "input" id = "i'+ i + '"></input></td>';
 					tbody += '</tr>';
 				}
 			}

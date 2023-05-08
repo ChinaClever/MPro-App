@@ -42,12 +42,12 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
+        uutInfo(dev->cfg.uut, "uut_info", json);
 
         if(dc > 1) {
             online(json);
             faultCode(dev, json);
             devInfo(dev->cfg, "pdu_info", json);
-            uutInfo(dev->cfg.uut, "uut_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
@@ -131,7 +131,7 @@ void Integr_JsonBuild::strListAppend(const char (*ptr)[NAME_SIZE], int size, con
 {    
     QJsonArray array;
     for(int i=0; i<size; ++i) {
-        array.append(ptr[i]); //if(strlen(ptr[i]))
+         array.append(ptr[i]); //if(strlen(ptr[i]))
     } if(array.size()) json.insert(key, array);
 }
 
@@ -194,7 +194,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     else if(5 == type) groupRelayUnit(it.relay, "dual_relay", obj);
     else if(2 == type) arrayAppend(it.relay.sw, it.relay.size, "breaker", obj);
     else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
-    if(type > 2) strListAppend(it.name, size, "name", obj);
+    if(type > 2) { if(!size) {size = it.relay.size;} strListAppend(it.name, size, "name", obj); }
 
     json.insert(key, obj);
 }
@@ -236,8 +236,9 @@ void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObje
         if(it.door[0]||it.door[1])arrayAppend(it.door, 2, "door", obj);
         if(it.water[0]) arrayAppend(it.water, 1, "water", obj);
         if(it.smoke[0]) arrayAppend(it.smoke, 1, "smoke", obj);
-        alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
-        alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
+        bool ret = false; for(int i=0; i<SENOR_NUM; ++i) if(it.isInsert[i]) ret = true;
+        if(ret) alarmUnit(it.tem, "tem", obj, COM_RATE_TEM);
+        if(ret) alarmUnit(it.hum, "hum", obj, COM_RATE_HUM);
     } else {
         sAlarmUnit tem=it.tem, hum=it.hum;
         tem.size = hum.size = SENOR_NUM;
@@ -320,14 +321,14 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
 
 void Integr_JsonBuild::uutInfo(const sUutInfo &it, const QString &key, QJsonObject &json)
 {
-    QJsonObject obj;
-    obj.insert("sn", it.sn);
-    obj.insert("room", it.room);
-    obj.insert("uuid", it.uuid);
-    obj.insert("name", it.devName);
-    obj.insert("qrcode", it.qrcode);
-    obj.insert("pdu_type", it.devType);
-    obj.insert("location", it.location);
+    QJsonObject obj; int dc = mDataContent;
+    if((dc > 1) || qstrlen(it.sn)) obj.insert("sn", it.sn);
+    if((dc > 1) || qstrlen(it.room)) obj.insert("room", it.room);
+    if((dc > 1) || qstrlen(it.uuid)) obj.insert("uuid", it.uuid);
+    if((dc > 1) || qstrlen(it.devName)) obj.insert("name", it.devName);
+    if((dc > 1) || qstrlen(it.qrcode)) obj.insert("qrcode", it.qrcode);
+    if((dc > 1) || qstrlen(it.devType)) obj.insert("pdu_type", it.devType);
+    if((dc > 1) || qstrlen(it.location)) obj.insert("location", it.location);
     if(obj.size()) json.insert(key, obj);
 }
 

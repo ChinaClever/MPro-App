@@ -16,6 +16,9 @@ private:
     void env_close();
     void env_delay();
 
+    int door_initFun();
+    void door_workDown();
+
 private:
     bool mEnvIsRun=true;
     int mFds[SENOR_NUM]={-1,-1};

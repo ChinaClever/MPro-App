@@ -89,6 +89,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     for(int i=0; i< size; ++i) upObjData(i, data->loop, obj->loop[i]);
 
     size = obj->groupSize = data->group.size;
+    if(!size) obj->groupSize = data->group.relay.size;
     for(int i=0; i< size; ++i) upObjData(i, data->group, obj->group[i]);
 
     size = obj->dualSize = data->dual.size;
@@ -101,6 +102,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     for(int i=0; i< size; ++i) upObjData(i, data->cabLoop, obj->cabLoop[i]);
 
     size = obj->outputSize = data->output.size;
+    if(!size) size = obj->outputSize = data->output.relay.size;
     for(int i=0; i< size; ++i) upObjData(i, data->output, obj->output[i]);
 
     size = SENOR_NUM; //obj->envSize = data->env.size; if(!size) size = SENOR_NUM;
