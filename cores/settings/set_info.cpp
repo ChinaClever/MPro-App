@@ -102,7 +102,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     if(it->cascadeAddr) {sCfgItem it; it.type  = 12; it.fc = 5; ret=setCfgNum(it, 0);}
     if((1 == fc) && (value == 1)) {sCfgItem it; it.type  = 12; it.fc = 3; ret=setCfgNum(it, 0);}
     if((3 == fc) && value) {ret=modbusSet(1, 0);}
-    cout  << key << fc << value;
+    //cout  << key << fc << value;
 
     return ret;
 }

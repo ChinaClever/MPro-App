@@ -62,7 +62,6 @@ bool Set_Integr::modbusSet(uchar fc, int value)
         cfg->writeCfg(key, value, prefix);
     }
 
-
     return ret;
 }
 
