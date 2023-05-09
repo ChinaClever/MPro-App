@@ -584,14 +584,21 @@ class PduCore extends PduOta {
     }
 
 
-    logged_in() {
+    login_check() {
         var sessionStorage = window.sessionStorage;
         var value = sessionStorage.getItem("uuid");
         var res = 0; if(value != null) {
             var host = window.location.host;
             var ip = sessionStorage.getItem('host');    
             if((value.length > 9) && (host == ip)) res = 1;
-        }   
+        }
+
+        if(0 == res) {
+            this.logged_out();
+            var url = window.location.protocol+"//";            
+            url += window.location.host;
+            window.location.replace(url);
+        }       
         
         return res;
     }

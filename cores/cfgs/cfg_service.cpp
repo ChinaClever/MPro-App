@@ -347,7 +347,7 @@ void Cfg_Service::modbus()
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
     } sParameter *param = &(cm::masterDev()->cfg.param);
-    param->modbusRtuAddr = cfg->addrRtu;
+    if(cfg->enRtu) param->modbusRtuAddr = cfg->addrRtu;
     param->modbusRtuBr = cfg->baud;
 }
 

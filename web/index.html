@@ -93,8 +93,19 @@
 		}
 		 setTimeout(function () {
 		 	PduMetaData.meta_workDown(); //pdu_cfg_
-		 }, 300);
+		 }, 200);
 
+		 setTimeout(function () {
+		 	PduMetaData.meta_workDown(); //pdu_cfg_
+		 }, 800);
+
+		 setTimeout(function () {
+		 	PduMetaData.meta_workDown(); //pdu_cfg_
+		 }, 1200);
+
+		 setTimeout(function(){
+			pdu_cfg_.login_check();
+		},100);
 
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();

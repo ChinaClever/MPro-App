@@ -42,6 +42,17 @@
 		window.addEventListener('popstate',function(){
 			window.history.pushState(null,null,document.URL);
 		});
+
+    let pdu_obj = PduCore.build();
+    setTimeout(function(){
+      PduMetaData.meta_workDown(0);
+			pdu_obj.logged_out();
+		},1000);
+
+    setTimeout(function(){
+      PduMetaData.meta_workDown(0);
+		},2000);
+
     var obj = new PduCfgItem;
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;

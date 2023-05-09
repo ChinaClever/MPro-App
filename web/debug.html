@@ -80,7 +80,18 @@
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			PduMetaData.meta_workDown(0);
-		},200);
+		},400);
+
+		setTimeout(function(){
+			pdu_obj.debugCfg();
+			PduMetaData.meta_workDown(0);
+		},600);
+
+		setTimeout(function(){
+			pdu_obj.login_check();
+		},100);
+	
+
     	let name_phase_ = new Array("单相","双火线","三相");
     	let id_name = new Array("phase_","board_num_","board_num1","board_num2","board_num3","board_num4","");
 		let num_id = new Array("","phase_","loop_","","board_");
