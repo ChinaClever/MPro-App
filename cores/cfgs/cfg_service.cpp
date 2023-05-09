@@ -347,14 +347,16 @@ void Cfg_Service::modbus()
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
     } sParameter *param = &(cm::masterDev()->cfg.param);
+    param->modbusRtuAddr = cfg->addrRtu;
+    param->modbusRtuBr = cfg->baud;
 
-    if(cfg->enRtu) {
-        param->modbusRtuAddr = cfg->addrRtu;
-        param->modbusRtuBr = cfg->baud;
-    } else {
-        param->modbusRtuAddr = param->cascadeAddr;
-        param->modbusRtuBr = 57600;
-    }
+    //    if(cfg->enRtu) {
+    //        param->modbusRtuAddr = cfg->addrRtu;
+    //        param->modbusRtuBr = cfg->baud;
+    //    } else {
+    //        param->modbusRtuAddr = param->cascadeAddr;
+    //        param->modbusRtuBr = 57600;
+    //    }
 }
 
 void Cfg_Service::rpc()

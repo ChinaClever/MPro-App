@@ -62,11 +62,11 @@ bool Set_Integr::modbusSet(uchar fc, int value)
         cfg->writeCfg(key, value, prefix);
     }
 
-    if(0==cfg->enRtu){
-        sParameter *param = &(cm::masterDev()->cfg.param);
-        param->modbusRtuAddr = param->cascadeAddr;
-        param->modbusRtuBr = 57600;
-    }
+    //if(0==cfg->enRtu){
+    //    sParameter *param = &(cm::masterDev()->cfg.param);
+    //    param->modbusRtuAddr = param->cascadeAddr;
+    //    param->modbusRtuBr = 57600;
+    //}
 
     return ret;
 }
