@@ -53,6 +53,7 @@
 		let dev_name =new Array();
 		let addr = pdu_cfg.addr;
 		let pdu_data;
+		let t1 = 0;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
@@ -70,6 +71,18 @@
 			language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+								alert("A或C系列不支持此功能！");
+							}else{
+								alert("The A or C series does not support this feature!")
+							}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				return ;
 			}
 		}
 		ParseData();

@@ -309,10 +309,18 @@
 					}
 					function SetDataShow(num) {
 						for (let j = 0; j < sample_num; j++) {
-							data_total[j] = top.total_data[num][j];
-							data_inlet1[j] = top.inletA_data[num][j];
-							data_inlet2[j] = top.inletB_data[num][j];
-							data_inlet3[j] = top.inletC_data[num][j];
+							if(top.phase_num == 3){
+								data_total[j] = top.total_data[num][j];
+								data_inlet1[j] = top.inletA_data[num][j];
+								data_inlet2[j] = top.inletB_data[num][j];
+								data_inlet3[j] = top.inletC_data[num][j];
+							}else{
+								data_total[j] = top.total_data[num][j];
+								data_inlet1[j] = top.inletA_data[num][j];
+								data_inlet2[j] = 0;
+								data_inlet3[j] = 0;
+							}
+
 						}
 					}
 					setTimeout(function(){
@@ -372,7 +380,7 @@
 								},
 								{
 									label: 'L2',
-									data: data_inlet2,
+									data: data_inlet2,						
 									backgroundColor: 'rgb(128, 128, 128)',
 									borderColor: 'rgb(128, 128, 128)',
 									fill: false,
@@ -493,16 +501,27 @@
 							if (chart_type == 0) {
 								data_total.push(top.total_data[chart_type][49]);
 							}
-							data_inlet1.push(top.inletA_data[chart_type][49]);
-							data_inlet2.push(top.inletB_data[chart_type][49]);
-							data_inlet3.push(top.inletC_data[chart_type][49]);
-					//		if (chart_type == 1) {
+							if(top.phase_num == 3){
+								data_inlet1.push(top.inletA_data[chart_type][49]);
+								data_inlet2.push(top.inletB_data[chart_type][49]);
+								data_inlet3.push(top.inletC_data[chart_type][49]);
+						//		if (chart_type == 1) {
 								data_total.shift();
-					//		}
-							dataLabels.shift();
-							data_inlet1.shift();
-							data_inlet2.shift();
-							data_inlet3.shift();
+						//		}
+								dataLabels.shift();
+								data_inlet1.shift();
+								data_inlet2.shift();
+								data_inlet3.shift();
+							}else{
+								data_inlet1.push(top.inletA_data[chart_type][49]);
+
+								data_total.shift();
+
+								dataLabels.shift();
+								data_inlet1.shift();
+
+							}
+
 
 							chart.update();
 						}

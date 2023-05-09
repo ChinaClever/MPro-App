@@ -67,6 +67,7 @@
 		let dev_name =new Array();
 		let slave_num;
 		let loop_num;
+		let t1 = 0;
 		let lang = new Array();
 		let DataString = pdu_cfg.meta_value();
 		let pdu_data = JSON.parse(DataString);
@@ -91,6 +92,18 @@
 			let k = 0;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+								alert("A或C系列不支持此功能！");
+							}else{
+								alert("The A or C series does not support this feature!")
+							}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				return ;
 				for(let i = 0;i<loop_num;i++){
 					output_info_[i] = new Array();
 					let j = 0;

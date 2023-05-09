@@ -115,11 +115,11 @@
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
-        if(!pattern_.test(usr))
-        {
-          alert("请输入5-16位用户名");
-          return ;
-        }
+       // if(!pattern_.test(usr))
+       // {
+        //  alert("请输入5-16位用户名");
+      //    return ;
+       // }
 
         //if(!pattern.test(psd)){
         //alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
@@ -206,13 +206,14 @@
         alert("输入有误请重新输入！");
       }
       else{
-        if(!pattern_.test(usr))
-        {
-          alert("请输入5-16位用户名");
-          return ;
-        }
+
         if(document.getElementById("lang_2").checked == true){
         }else{
+          if(!pattern_.test(usr))
+          {
+            alert("请输入5-16位用户名");
+            return ;
+          }
           if(!pattern.test(psd)){
             alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
             return ;
