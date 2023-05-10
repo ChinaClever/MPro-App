@@ -101,9 +101,11 @@
 				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
 				k++;
 			}
-			// if(total_info[0] == 0 && total_info[1] == 0){
-				// total_info[1] = 1;
-			// }
+			/* if(total_info[0] == 0 && total_info[1] == 0){
+				 total_info[2] = 1;
+			 }else{
+				total_info[2] = '';
+			 }*/
 		}
 		function build_pie(){
 			let i = 0;
@@ -143,15 +145,15 @@
 						type: 'pie',
 						size:'120%',
 						innerSize: '70%',
-						borderWidth:0.3,
+						// borderWidth:0.3,
 						animation:false,  //旋转动画
 						center: ['50%', '50%'],
 						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
-						name: '占比',
+						name: 'Proportion',
 						data: [
 
-							['当前电流',   phase_info[i][0]],
-							['空余电流',   phase_info[i][4]-phase_info[i][0]],
+							['Use current',   phase_info[i][0]],
+							['Spare current',   phase_info[i][4]-phase_info[i][0]],
 						]
 					}]
 
@@ -200,7 +202,7 @@
 							}
 						}
 					},
-					borderColor:'#000000',
+					// borderColor:'#000000',
 				}  
 			},
 			credits:{
@@ -212,12 +214,13 @@
 				innerSize: '70%',
 				animation:false,
 				center: ['50%', '50%'],
-				borderWidth:0.5,  //环形边框颜色
+				// borderWidth:0.5,  //环形边框颜色
 				colors:['#4D81E7','#1AE1E5','#ebebeb'],
-				name: '占比',
+				name: 'Proportion',
 				data: [
 					['KW',    total_info[0]],
 					['kVA',   total_info[1]],
+					// ['',   total_info[2]],
 					// ['KW',    0],
 					// ['kVA',   0],
 				]

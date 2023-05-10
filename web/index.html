@@ -218,15 +218,16 @@
 		// 	window.history.pushState(null,null,document.URL);
 		// });
 		function AlramNow(){
-			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==4 || pdu_data.status ==5 || pdu_data.status ==6 ||pdu_data.status ==7){
+			if(pdu_data.status ==1 || pdu_data.status ==2 || pdu_data.status ==5 || pdu_data.status ==6 ||pdu_data.status ==7){
     			$("#mainCont").attr("src", "pages/logs/alarm_now.html");
+			}else if(pdu_data.status == 4){
+				$("#mainCont").attr("src", "pages/logs/event_log.html");
 			}else{
 				if(0 == language_){
 					alert("当前无告警日志！");
 				}else{
 					alert("There are currently no alarm logs!");
 				}
-				
 			}
 		}
 		function LogOut() {

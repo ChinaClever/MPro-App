@@ -214,7 +214,12 @@
 		}
 		function SetData(btn){
 			let mds_data = 0;
-			if(confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！");	
+			}else{
+				var retVal = confirm("Please confirm whether to enable cascading or disable this function. Once enabled, the modbus RTU cascading mode will be turned off！");
+			}
+			if(retVal == true){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
 						pdu_cfg.setCfg(cfg,i,btn.value,0,addr);
@@ -229,7 +234,12 @@
 		}
 		function SetData_other(btn){
 			let mds_data = 0;
-			if(confirm("请确认是否选择此功能！")){
+			if(0 == language){
+				var retVal = confirm("请确认是否选择此功能！");	
+			}else{
+				var retVal = confirm("Please confirm if this feature is selected！");
+			}
+			if(retVal == true){
 				for(let  i = 0;i < id_val.length;i++){
 					if(id_val[i] == btn.id){
 						pdu_cfg.setCfg(cfg,i,btn.value,0,addr);
@@ -244,7 +254,12 @@
 		}
 		function Set(btn){
 			let mds_data = 0;
-			if(confirm("请确认是否修改此项。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否修改此项！");	
+			}else{
+				var retVal = confirm("Please confirm whether to modify this item！");
+			}
+			if(retVal == true){
 				pdu_cfg.setCfg(num,5,btn.value,0,addr);
 				btn.blur();
 			//	FlashHtml();

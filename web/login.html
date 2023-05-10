@@ -116,6 +116,13 @@
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
          $('.center_form').html(BuildDiv('signin'));
+         if(0 != language){
+          document.getElementById("username").placeholder = "User name";
+          document.getElementById("psd").placeholder = "Passward";
+          document.getElementById("sign_in").value = "SIGIN";
+          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("reset").innerHTML = "Reset Password";
+         }
          clearInterval(time3);
       }
       // document.getElementById('username').value = '';
@@ -155,10 +162,18 @@
               obj.rpc.root_map.set(key, "");
               window.open('index.html','_self');
             }else if(ver == "0"){
-              alert("用户名或密码输入有误，请重新输入！");
+              if(0 == language){
+				  	    alert("用户名或密码输入有误，请重新输入！");
+			      	}else{
+                alert("Incorrect username or password input, please re-enter！");
+              }           
             }else{
               let num = Math.abs(ver);
-              alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
+              if(0 == language){
+                alert("密码验证次数过多，账号已锁定，请于" + num +"分钟后再试！");
+			      	}else{
+                alert("The password has been verified too many times and the account has been locked. Please try again in "+num+" minutes！");
+              } 
             }
             window.clearInterval(time2);
           }
@@ -167,7 +182,11 @@
           time2_num ++;
         },450);
       }else{
-        alert("请输入用户名和密码后登陆");
+        if(0 == language){
+				  alert("请输入用户名和密码后登陆");
+			  }else{
+          alert("Please enter your username and password before logging in！");
+        } 
       }    
     }
     function submite(){
@@ -176,6 +195,12 @@
         div[0].removeChild(div[0].childNodes[i]);
       }
       $('.center_form').html(BuildDiv('submite'));
+      document.getElementById("username").placeholder = "User name";
+      document.getElementById("psd").placeholder = "New Passward";
+      document.getElementById("conpsd").placeholder = "Confirm Password";
+      document.getElementById("ident").placeholder = "Set validation information";
+      document.getElementById("sign_in").value = "SUBMIT";
+      document.getElementById("sub_title").innerHTML = "Reset Password";
     }
     function GotoRegisterPage(){
       var div= document.getElementsByClassName('center_form');
@@ -183,18 +208,37 @@
         div[0].removeChild(div[0].childNodes[i]);
       }
       $('.center_form').html(BuildDiv('register'));
+      if(0 != language){
+          document.getElementById("username").placeholder = "User name";
+          document.getElementById("psd").placeholder = "Passward";
+          document.getElementById("conpsd").placeholder = "Confirm Password";
+          document.getElementById("ident").placeholder = "Set validation information";
+          document.getElementById("sign_in").value = "REGISTER";
+          document.getElementById("reg_title_name").innerHTML = "Registration Page";
+          document.getElementById("free_encryption").innerHTML = "Encryption free policy";
+          document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 6, and at most 16 characters!";
+          document.getElementById("free_rule").innerHTML = "Encryption free policy: Checking the encryption free policy eliminates the need to follow the above password and account rules!";
+         }
     }
     function submite1(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       let conpsd = document.getElementById('conpsd').value;
       let ident = document.getElementById('ident').value;
-      if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || ident != identify){
-        alert("输入有误请重新输入！");
+      if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || ident != identify){       
+        if(0 == language){
+				  alert("输入有误请重新输入！");
+			  }else{
+          alert("Input error, please re-enter!！");
+        } 
       }
       else{
         if(!pattern.test(psd)){
-          alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+          if(0 == language){
+						alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+					}else{
+						alert("Please enter a 6-16 digit  password, which must contain at least one number, uppercase and lowercase letters");
+					}
           return ;
         }
        // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
@@ -205,6 +249,13 @@
             div[0].removeChild(div[0].childNodes[i]);
           }
           $('.center_form').html(BuildDiv('signin'));
+          if(0 != language){
+          document.getElementById("username").placeholder = "User name";
+          document.getElementById("psd").placeholder = "Passward";
+          document.getElementById("sign_in").value = "SIGIN";
+          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("reset").innerHTML = "Reset Password";
+         }
         },800);
       }
     }
@@ -214,7 +265,11 @@
       let conpsd = document.getElementById('conpsd').value;
       let ient = document.getElementById('ident').value;
       if(user =='' || psd == '' || conpsd == ''||ient == '' || psd != conpsd){
-        alert("输入有误请重新输入！");
+        if(0 == language){
+				  alert("输入有误请重新输入！");
+			  }else{
+          alert("Input error, please re-enter!！");
+        } 
       }
       else{
 
@@ -222,20 +277,36 @@
         }else{
           if(!pattern_.test(usr))
           {
-            alert("请输入5-16位用户名");
+            if(0 == language){
+					    alert("请输入5-16位用户名");
+				    }else{
+				    	alert("Please enter a 5-16 digit username");
+				    }
             return ;
           }
           if(!pattern.test(psd)){
-            alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+            if(0 == language){
+				  		alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+				  	}else{
+				  		alert("Please enter a 6-16 digit  password, which must contain at least one number, uppercase and lowercase letters");
+				  	}
             return ;
           }
           if(!pattern.test(ient)){
-            alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+            if(0 == language){
+					  	alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+			  		}else{
+			  			alert("Please enter 6-16 digit verification information, which must contain at least one digit, uppercase and lowercase letters");
+				  	}
             return ;
           }
        }
         if(ient == psd){
-          alert("验证信息为重设密码时使用，请勿设置与密码一致。");
+          if(0 == language){
+					alert("输入的验证信息和密码不能是同一个，请重新输入");
+				}else{
+					alert("The verification information and password entered cannot be the same. Please re-enter");
+				}
           return ;
         }
        // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
@@ -250,6 +321,13 @@
           document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
           $('.center_form').html(BuildDiv('signin'));
+          if(0 != language){
+          document.getElementById("username").placeholder = "User name";
+          document.getElementById("psd").placeholder = "Passward";
+          document.getElementById("sign_in").value = "SIGIN";
+          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("reset").innerHTML = "Reset Password";
+         }
         },800);
       }
     }
@@ -288,13 +366,32 @@
       if(code != null && con != null)
       {
         if(ipt.value == "" && ipt.id == "username"){
-          printError("Errinfo", "用户名不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "用户名不能为空");
+			  	}else{
+            printError("Errinfo", "User name cannot be empty");
+				  }
         }else if(ipt.value == "" && ipt.id == "psd"){
-          printError("Errinfo", "密码不能为空");
+          // printError("Errinfo", "密码不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "密码不能为空");
+			  	}else{
+            printError("Errinfo", "Password cannot be empty");
+				  }
         }else if((ipt.value == "" || ipt.value !== psd_val.value)&& ipt.id == "conpsd"){
-          printError("Errinfo", "两次密码不一致，请重新输入");
+          // printError("Errinfo", "两次密码不一致，请重新输入");
+          if(0 == language){
+				  	printError("Errinfo", "两次密码不一致，请重新输入");
+			  	}else{
+            printError("Errinfo", "The two passwords do not match, please re-enter");
+				  }
         }else if(ipt.value == "" && ipt.id == "ident"){
-          printError("Errinfo", "身份验证信息不能为空");
+          // printError("Errinfo", "身份验证信息不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "身份验证信息不能为空");
+			  	}else{
+            printError("Errinfo", "Authentication information cannot be empty");
+				  }
         }else{
           printError("Errinfo", "");
         }
@@ -302,9 +399,19 @@
       else if(con == null && code == null)
       {
         if(ipt.value == "" && ipt.id == "username"){
-          printError("Errinfo", "用户名不能为空");
+          // printError("Errinfo", "用户名不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "用户名不能为空");
+			  	}else{
+            printError("Errinfo", "User name cannot be empty");
+				  }
         }else if(ipt.value == "" && ipt.id == "psd"){
-          printError("Errinfo", "密码不能为空");
+          // printError("Errinfo", "密码不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "密码不能为空");
+			  	}else{
+            printError("Errinfo", "Password cannot be empty");
+				  }
         }
         else{
           printError("Errinfo", "");
@@ -312,9 +419,19 @@
       }
       else{
         if(ipt.value == "" && ipt.id == "username"){
-          printError("Errinfo", "用户名不能为空");
+          // printError("Errinfo", "用户名不能为空");
+          if(0 == language){
+				  	printError("Errinfo", "用户名不能为空");
+			  	}else{
+            printError("Errinfo", "User name cannot be empty");
+				  }
         }else if(ipt.value == "" && ipt.id == "ident"){
-          printError("Errinfo", "请输入正确的验证信息");
+          // printError("Errinfo", "请输入正确的验证信息");
+          if(0 == language){
+				  	printError("Errinfo", "请输入正确的验证信息");
+			  	}else{
+            printError("Errinfo", "Please enter the correct verification information");
+				  }
         }else{
           printError("Errinfo", "");
         }
@@ -327,21 +444,21 @@
       var tbody = '';
       if(Reg === 'register')
       {
-        tbody += '<br/><p class="title"><span>注册页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p style ="height:30px"><span style="text-align:center;line-height:40px">免加密策略：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
+        tbody += '<br/><p class="title"><span id="reg_title_name">注册页</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<p style ="height:30px"><span id="free_encryption" style="text-align:center;line-height:40px">免加密策略：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
         tbody += '<p><input id ="username" type="username" maxlength="16"; onkeyup = "Clear(this)" placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="16"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<br/><br/><br/><br/><p class="title"><img src ="./include/images/login_logo.png" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<br/><br/><br/><br/><p class="title"><img src ="./include/images/login_logo.png" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB" id ="title_name">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="text" maxlength="16" placeholder="用户名" onkeyup = "Clear(this)" onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="16" autocomplete="off" oninput ="check();" onblur = "validataForm(this)"  placeholder="密码"></p>';
-        tbody += '<div class="chk"><span></span><span><a href ="javascript:submite();">重置密码</a></span></div><p></p>';
+        tbody += '<div class="chk"><span></span><span><a id = "reset" href ="javascript:submite();">重置密码</a></span></div><p></p>';
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "登陆" onclick="sign_in()"></input></p>';
       }else if(Reg === 'submite'){
-        tbody += '<p class="title"><span>重置密码</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<p class="title"><span id="sub_title">重置密码</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="text" maxlength="16" onblur= "validataForm(this)" onkeyup = "Clear(this)" placeholder="用户名"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="新密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
