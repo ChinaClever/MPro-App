@@ -43,17 +43,19 @@
 			window.history.pushState(null,null,document.URL);
 		});
 
-    let pdu_obj = PduCore.build();
+    var obj = PduCore.build();
+    //var obj = new PduCfgItem;
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
-			pdu_obj.logged_out();
+			obj.logged_out();
+      obj.loginCfg();
 		},1000);
 
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
-		},2000);
+		},1600);
 
-    var obj = new PduCfgItem;
+    
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
@@ -80,7 +82,7 @@
         clearInterval(time1);
       }
       time1_num ++;
-    },150);
+    },350);
     function LangInit(){
       for(let i = 1;i<3;i++){
 				lang[i] = new Array();
@@ -103,11 +105,12 @@
       }
     }
     let time3 = setInterval(function(){
-      if(time3_num >= 4){
+      if(time3_num >= 5){
           GotoRegisterPage();
           clearInterval(time3);
       } else {
-        obj.getCfg(14, 1, 0, 0);
+        //obj.getCfg(14, 1, 0, 0);
+        obj.loginCfg();
       }
       
       user_name = obj.cfgValue(user,1,0,0);
@@ -128,7 +131,7 @@
       // document.getElementById('username').value = '';
       // document.getElementById('psd').value ='';
       time3_num ++;
-    },200);
+    },350);
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
