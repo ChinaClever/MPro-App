@@ -103,6 +103,10 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
+			if(0 != language){
+				document.getElementById("SshName").placeholder = "User name";
+				document.getElementById("SshPsd").placeholder = "Passward";
+			}
 		}
 		function SetVal(){
 			if(confirm("是否创建此账户。")){

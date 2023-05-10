@@ -263,7 +263,11 @@
 				var type1 = btn.id.substr(0, 1);
 				var num = parseInt(btn.id.slice(1)) + 1;
 				var stat = 0;
-				var retVal = confirm("您已更改表单，请确认提交！");
+				if(0 == pdu_data.pdu_info.language){
+					var retVal = confirm("您已更改表单，请确认提交！");	
+				}else{
+					var retVal = confirm("You have made changes to the form, please confirm submission！");
+				}
 				let dual = 0, addr_num = 0;
 				if (retVal == true) {
 					dual = type1.charCodeAt() - 'g'.charCodeAt();

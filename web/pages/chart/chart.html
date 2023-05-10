@@ -215,7 +215,12 @@
 						}
 						function getData(){
 							let arr = new Array();
-							if(confirm("请确认是否执行此操作！")){
+							if(0 == language){
+								var retVal = confirm("请确认是否执行此操作！");	
+							}else{
+								var retVal = confirm("Please confirm whether to perform this operation！");
+							}
+							if(retVal == true){
 								for(let i = 0;i<get_arr.length;i++){
 									if(i<4){
 										arr[i] = parseInt(document.getElementById(get_arr[i]).value);
