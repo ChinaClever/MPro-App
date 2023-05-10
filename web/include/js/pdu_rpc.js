@@ -134,13 +134,12 @@ class JsonRpc {
         var id = data[4];
         var value = data[5];
        
-        if(-1 == parseInt(value)) {         
-            this.ws.close();   
+        if(-1 == parseInt(value)) { 
             window.sessionStorage.setItem('uuid', ' ');
             var url = window.location.protocol+"//";            
-            url += window.location.host;
-            window.history.back();
+            url += window.location.host; this.ws.close(); 
             window.location.replace(url);
+            //window.history.back();
             //alert(value);alert(url);
         }
 
