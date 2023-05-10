@@ -139,6 +139,7 @@ class JsonRpc {
             window.sessionStorage.setItem('uuid', ' ');
             var url = window.location.protocol+"//";            
             url += window.location.host;
+            window.history.back();
             window.location.replace(url);
             //alert(value);alert(url);
         }
