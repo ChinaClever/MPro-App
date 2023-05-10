@@ -71,7 +71,12 @@
 		$('.set').html(buildTable());
 		lang_fun();
 		function Set(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<syscmd.length;i++){
 					if(syscmd[i] == btn.id){
 						pdu_cfg.setCfg(96,i,0,0,addr);

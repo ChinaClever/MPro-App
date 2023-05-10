@@ -175,7 +175,12 @@
 			},500);
 		}
 		function changed(ipt){
-			if(confirm("请确认是否保存此次修改？")){
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if(retVal == true){
 				for(var i = 0 ;i<(id_name.length -1);i++){
 					if(ipt.id == id_name[i]){
 						pdu_cfg.setCfg(21,(i+1),ipt.value,0,addr);
@@ -185,7 +190,12 @@
 			}else{}
 		}
 		function changed_(ipt){
-			if(confirm("请确认是否保存此次修改？")){
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if(retVal == true){
 				for(var i = 0 ;i<(red_name.length -1);i++){
 					if(ipt.id == red_name[i]){
 						pdu_cfg.setCfg(28,(i+1),ipt.value,0,addr);
@@ -197,7 +207,12 @@
 		}
 		function Set(){
 			var sel =0;
-			if(confirm("请确认是否生效当前设置。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否生效当前设置！");	
+			}else{
+				var retVal = confirm("Confirm whether the current settings are effective！");
+			}
+			if(retVal == true){
 				rpc.call('pduSetParam',[default_addr,21,20,0,0,sel]);
 			}else{}
 		}

@@ -195,7 +195,11 @@
 			}
 		}
 		function saveArrayDataToExcel() {
-			var retVal = confirm("请确认是否导出此表单");
+			if(0 == language){
+				var retVal = confirm("请确认是否导出此表单！");	
+			}else{
+				var retVal = confirm("Please confirm whether to export this form！");
+			}
 			let str = '';
 			if(retVal == true)
 			{
@@ -267,7 +271,12 @@
 					flash_html(btn);
 				}
 			}else if(btn.id == "del"){
-				if(confirm("确认删除日志吗？")){
+				if(0 == language){
+					var retVal = confirm("确认删除日志吗？");	
+				}else{
+					var retVal = confirm("Are you sure to delete the log?！");
+				}
+				if(retVal == true){
 					pdu_log.log_fun(alarm_log,3,0,0);
 					flash_html(btn);
 				}else{					

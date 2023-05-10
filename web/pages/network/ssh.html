@@ -109,7 +109,12 @@
 			}
 		}
 		function SetVal(){
-			if(confirm("是否创建此账户。")){
+			if(0 == language){
+				var retVal = confirm("是否创建此账户?");	
+			}else{
+				var retVal = confirm("Do you want to create this account?");
+			}
+			if (retVal ==true) {
 				let ssh_name = document.getElementById("SshName").value;
 				let ssh_psd = document.getElementById("SshPsd").value;
 				if(ssh_name!= "" && ssh_psd !=""){
@@ -145,7 +150,12 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!")){
+			if(0 == language){
+				var retVal = confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!");	
+			}else{
+				var retVal = confirm("Please confirm whether to disable or enable this service. The service needs to be restarted before it can take effect?");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
 						pdu_cfg.setCfg(45,i,btn.value,0,addr);

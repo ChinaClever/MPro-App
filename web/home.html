@@ -50,21 +50,21 @@
 					<table class="phase_table total" style="background: #FFFFFF;"></table>
 				</div>
 				<div class="phase" id="l1" style="display: none;">
-					<div style="text-align: left;padding-left:20px" >L1</div>
+					<div id="phase1" style="text-align: left;padding-left:20px" >A相</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart0"></canvas></div> -->
 					<div style="min-width:12%; height:170px;"  id="myChart0"></div>			
 					<table class="phase_table p1"></table>
 
 				</div>	
 				<div class="phase " id="l2" style="display: none;">
-					<div style="text-align: left;padding-left:20px" >L2</div>
+					<div id="phase2" style="text-align: left;padding-left:20px" >B相</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart1"></canvas></div> -->
 					<div style="min-width:12%; height:170px;"  id="myChart1"></div>	
 					<table class="phase_table p2"></table>
 					</table>
 				</div>
 				<div class="phase" id="l3" style="display: none;">
-					<div style="text-align: left;padding-left:20px" >L3</div>
+					<div id="phase3" style="text-align: left;padding-left:20px" >C相</div>
 					<!-- <div style="width:95%; height:160px;"><canvas  id="myChart2"></canvas></div> -->
 					<div style="min-width:12%; height:170px;"  id="myChart2"></div>	
 					<table class="phase_table p3"></table>
@@ -218,7 +218,7 @@
 				colors:['#4D81E7','#1AE1E5','#ebebeb'],
 				name: 'Proportion',
 				data: [
-					['KW',    total_info[0]],
+					['kW',    total_info[0]],
 					['kVA',   total_info[1]],
 					// ['',   total_info[2]],
 					// ['KW',    0],
@@ -571,7 +571,7 @@
 		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let loop_arr1 = ["apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
-		let total_arr = ["pow","apparent_pow","ele"];
+		let total_arr = ["pow","apparent_pow","ele","pf"];
 		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
 		let sensor_id = [0,0,1,1,0,1,0,0];
 		function ParseData(){
@@ -641,7 +641,7 @@
 				total_info[k] = pdu_data.pdu_data.pdu_tg_data[key];
 				k++;
 			}
-			total_info[3] = freq_;
+			total_info[4] = freq_;
 		}
 		setTimeout(function(){
 			ParseData();
@@ -805,7 +805,7 @@
 				}
 			}
 
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < 5; i++) {
 				if (i < 2) {
 					//document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
 				} else if (i == 2) {
@@ -945,6 +945,12 @@
 					document.getElementById('dat' + (7 + 3*i)).style.backgroundColor ="";
 				}
 			}
+			if(0 != language){
+				document.getElementById("phase1").innerHTML = "A Phase";
+				document.getElementById("phase2").innerHTML = "B Phase";
+				document.getElementById("phase3").innerHTML = "C Phase";
+			}
+
 		}
 		function ModeSet(modesel) {
 			let ms = document.getElementById("sel");
@@ -970,16 +976,23 @@
 		function BuildTablePhase(obj) {
 			let tbody = '';
 			if (obj == 0) {
-				for (let i = 0; i < 4; i++) {
+				for (let i = 0; i < 5; i++) {
 					if (i < 2) {
 						//tbody += '<tr><td><span class = "span_tit" style="line-height:40px;font-size:40px;padding-top:15px;" id ="dat' + (i + 1) + '"></span>';
 						//tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
-					} else {
+					} else if(i  == 2){
 						//tbody += '<br/>';
 						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
 						//tbody += '<td></td>';
+					}else if( i == 3){
+						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 2) + '"></span>';
+						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
+					}else{
+						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" >PF:</span><br/>';
+						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + i  + '"></span>';
 					}
 				}
 			} else {
@@ -1003,24 +1016,24 @@
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
+				tbody += '<tr><td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
 			}else{
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
+				tbody += '<tr><td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
 				//tbody += '<td class="spacing" id="lang_9"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
-				tbody += '<td class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';
 			}
 				for (let i = 0; i < obj; i++) {
 					if (i % 2 == 0) {
@@ -1041,10 +1054,10 @@
 		}
 		function BuildTableSensor() {
 			let tbody = "";
-			tbody += '<tr><td width="20%" class="spacing" style="background:#d6d6d6;" id="lang_17"></td>';
-			tbody += '<td width="30%" class="spacing" style="background:#d6d6d6;" id="lang_18"></td>';
-			tbody += '<td width="20%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
-			tbody += '<td width="30%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
+			tbody += '<tr><td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_17"></td>';
+			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_18"></td>';
+			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
+			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
 			for (let i = 0; i < 4; i++) {
 				if (i % 2 == 0) {
 					// tbody += '<tr style="background:#e7e7e7;">';

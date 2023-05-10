@@ -198,7 +198,12 @@
 			let info_name_ = 0,id = 0;
 			id = parseInt(btn.id.slice(-1));
 			info_name_ = btn.id.slice(0,-1);
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 0;i<info_name.length;i++){
 					if(i<8 || i>9){
 						if(info_name[i] == info_name_){
@@ -222,7 +227,12 @@
 			let info_name_ = ipt.id.slice(0,-1);
 			let val;
 			let i = 0;
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				if(ipt.id == "lang_11"){
 					num = 0;
 				}else{

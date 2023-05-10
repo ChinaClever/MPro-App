@@ -211,9 +211,9 @@
 					read = 0;
 					ros.style.backgroundColor = 'red';
 					if(pdu_data.pdu_info.language == 0){
-						alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+						alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
 					}else{
-						alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+						alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
 					}
 					ros.innerHTML = lang[11][language];
 					var iptname = document.getElementsByTagName("input");
@@ -269,7 +269,11 @@
 			function BtnClick(btn) {
 				var num = parseInt(btn.id.slice(1)) + 1;
 				var stat = 0;
-				var retVal = confirm("您已更改表单，请确认提交！");
+				if(0 == language){
+					var retVal = confirm("您已更改表单，请确认提交！");	
+				}else{
+					var retVal = confirm("You have made changes to the form, please confirm submission！");
+				}
 				if (retVal == true) {
 					if (btn.innerText == lang[8][language]) {
 						stat = '1';

@@ -108,7 +108,12 @@
 			}
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<web_service.length;i++){
 					if(web_service[i] == btn.id){
 						pdu_cfg.setCfg(42,i,btn.value,0,addr);

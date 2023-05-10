@@ -280,12 +280,22 @@
 			}
 		}
 		function create(){
-			if(confirm("请确认是否保存此次修改？")){
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改?");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification?");
+			}
+			if(retVal == true){
 				pdu_cfg.setCfg(32,31,0,0,addr);
 			}else{}
 		}
 		function SetData(ipt){
-			if(confirm("请确认是否保存此次修改？")){
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改?");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification?");
+			}
+			if(retVal == true){
 				let id = parseInt(ipt.id.slice(3));
 				pdu_cfg.setCfg(32,id+11,ipt.value,0,addr);
 				flash_html();

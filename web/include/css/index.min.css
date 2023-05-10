@@ -44,7 +44,7 @@ html {
 }
 
 .logo {
-    border-radius: 8px;
+    /* border-radius: 8px; */
     display: block;
     max-height: 65px;
     max-width: 500px;

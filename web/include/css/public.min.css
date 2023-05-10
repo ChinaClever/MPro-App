@@ -197,7 +197,12 @@ input[type=checkbox],
 input[type=radio] {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0
+    padding: 0;
+    display: block;
+    width: 70%;
+    position: relative;
+    left: 14%;
+    /* text-align: center; */
 }
 
 button::-moz-focus-inner,
@@ -222,7 +227,8 @@ optgroup {
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input {
-        line-height: normal !important
+        /*市场部要求改大框框，故屏蔽*/
+        /* line-height: normal !important */
     }
 }
 
@@ -339,7 +345,8 @@ blockquote {
 
 .table td,
 .table th {
-    padding: 2px 5px;
+    /* padding: 2px 5px; *//*市场部要求改大框框*/
+    padding: 5px 5px;
     border: 1px solid #d6d6d9;
 }
 .text-center td,

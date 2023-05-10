@@ -128,7 +128,12 @@
 		}
 		function SetData(btn){
 			let setbtn = 0 ,lab = 0;
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 0;i<data_id.length;i++){
 					if(btn.id == data_id[i]){
 						pdu_cfg.setCfg(17,(i + 1),btn.value,0,addr);
@@ -141,7 +146,12 @@
 
 		function Set(btn){
 			var lab = 0;
-			if(confirm("请确认是否生效当前设置。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否生效当前设置！");	
+			}else{
+				var retVal = confirm("Confirm whether the current settings are effective！");
+			}
+			if(retVal == true){
 				if(btn.id =="lang_5"){
 					pdu_cfg.setCfg(17,3,0,0,addr);
 				}else{

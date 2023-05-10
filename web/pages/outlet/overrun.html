@@ -214,7 +214,11 @@
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
 			let val = 0;
-			var retVal = confirm("您已更改表单，请确认提交！");
+			if(0 == language){
+				var retVal = confirm("您已更改表单，请确认提交！");	
+			}else{
+				var retVal = confirm("You have made changes to the form, please confirm submission！");
+			}
 			if(retVal == true){
 				if(ipt.value == lang[9][language]){
 					val = '1';

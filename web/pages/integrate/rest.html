@@ -128,7 +128,12 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否开启此功能，此功能需要重启后才能生效！")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能，此功能需要重启后才能生效！");	
+			}else{
+				var retVal = confirm("Please confirm if this feature is enabled. It needs to be restarted before it can take effect！");
+			}
+			if(retVal == true){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
 						pdu_cfg.setCfg(18,11 + i,btn.value,0,addr);
@@ -148,7 +153,12 @@
 			},500);
 		}
 		function Set(){
-			if(confirm("请确认是否生效当前设置。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否生效当前设置！");	
+			}else{
+				var retVal = confirm("Confirm whether the current settings are effective！");
+			}
+			if(retVal == true){
 				pdu_cfg.setCfg(18,19,0,0,addr);
 				flash_html();
 			}else{}

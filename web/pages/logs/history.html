@@ -317,7 +317,12 @@
 		}
 		function getData(){
 			let arr = new Array();
-			if(confirm("请确认是否执行此操作！")){
+			if(0 == language){
+				var retVal = confirm("请确认是否执行此操作！");	
+			}else{
+				var retVal = confirm("Please confirm whether to perform this operation！");
+			}
+			if(retVal ==true){
 				for(let i = 0;i<get_arr.length;i++){
 					if(i<4){
 						arr[i] = parseInt(document.getElementById(get_arr[i]).value);
@@ -378,7 +383,11 @@
 
 		}
 		function setData(btn){
-			var retVal = confirm("请确认是否执行此操作！");
+			if(0 == language){
+				var retVal = confirm("请确认是否执行此操作！");	
+			}else{
+				var retVal = confirm("Please confirm whether to perform this operation！");
+			}
 			if(retVal == true)
 			{
 				if(btn.id == "jump"){
@@ -422,7 +431,12 @@
 
 		function saveArrayDataToExcel() {
 			let str = '';
-			if(confirm("请确认是否导出此表单！"))
+			if(0 == language){
+				var retVal = confirm("请确认是否导出此表单！");	
+			}else{
+				var retVal = confirm("Please confirm whether to export this form！");
+			}
+			if(retVal ==true)
 			{
 				str += lang[31][language]+','+lang[32][language]+','+lang[33][language]+','+lang[34][language]+','+lang[35][language]+','+lang[36][language]+','+lang[37][language]+'\n';
 				for(let i = 0;i < show_num;i++){

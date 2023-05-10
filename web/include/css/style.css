@@ -62,7 +62,8 @@
   /* font-weight: 800; */
   /* font-size: 25px; */
   font-weight: normal;
-  font-size: 22px;
+  /* font-size: 22px; *//*原来是22，市场部要求改大字体*/
+  font-size: 25px;
   text-align: center;
 }
 span{

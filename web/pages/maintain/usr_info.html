@@ -131,10 +131,12 @@
 				$("select").attr("disabled","disabled");
 			}else{
 			}
-			document.getElementById("UserName").placeholder = "User name";
-			document.getElementById("Password").placeholder = "Passward";
-			document.getElementById("conpsd").placeholder = "Confirm Password";
-			document.getElementById("Identify").placeholder = "Reserved information";
+			if(0 != language){
+				document.getElementById("UserName").placeholder = "User name";
+				document.getElementById("Password").placeholder = "Passward";
+				document.getElementById("conpsd").placeholder = "Confirm Password";
+				document.getElementById("Identify").placeholder = "Reserved information";
+			}
 		}
 		function Set_(opt){
 			for(let i = 1;i<5;i++){
@@ -151,7 +153,12 @@
 				}
 				
 			}else{
-				if(confirm("确认删除该用户吗？")){
+				if(0 == language){
+					var retVal = confirm("确认删除该用户吗？");	
+				}else{
+					var retVal = confirm("Are you sure to delete this user?");
+				}
+				if(retVal ==true){
 				let val =  parseInt(document.getElementById("usrSel").value);
 				let usr_ = document.getElementById("UserName").value;
 				let psd_ = document.getElementById("Password").value;
@@ -262,7 +269,7 @@
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
 			<td width ="85%"></td>/tr>';
 			tbody += '<tr><td id ="lang_20"></td>';
-			tbody += '<td><input  type = "checkbox"  class = "input"  id = "lang_21"></input></td></tr>';
+			tbody += '<td><input  type = "checkbox"  style="width:auto;position:static"  id = "lang_21"></input></td></tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
 			tbody += '<td><select id ="usrSel" onchange ="Set_(this.value)">';
 			for(var i = 0; i<usrs_name_.length;i++){

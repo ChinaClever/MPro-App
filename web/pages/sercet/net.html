@@ -120,7 +120,12 @@
 			}
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能,该功能需要设备重启后才能生效!")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能,该功能需要设备重启后才能生效!");	
+			}else{
+				var retVal = confirm("Please confirm if this feature is enabled. It requires a device restart to take effect！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<white_list.length;i++){
 					if(white_list[i] == btn.id){
 						pdu_cfg.setCfg(33,i,btn.value,0,addr);
@@ -133,7 +138,12 @@
 		}
 		function Set(){
 			var sel =0;
-			if(confirm("请确认是否保存此次修改？")){
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if(retVal ==true){
 				pdu_cfg.setCfg(33,10,0,0,addr);
 				flash_html();
 			}else{}
