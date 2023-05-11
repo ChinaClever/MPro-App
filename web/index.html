@@ -100,6 +100,7 @@
 		 }, 800);
 
 		 setTimeout(function () {
+			pdu_cfg_.getCfg(42,7,0,0)
 		 	PduMetaData.meta_workDown(); //pdu_cfg_
 		 }, 1200);
 
@@ -275,6 +276,35 @@
 		// setInterval(function () {
 		// 	PduMetaData.meta_workDown(pdu_cfg_);
 		// }, 2000);
+
+		var lastTime = new Date().getTime();
+        var currentTime = new Date().getTime();
+        var timeOut = 1 * 60 * 1000; //设置超时时间： 10分
+ 
+        $(function(){
+            /* 鼠标移动事件 */
+            $(document).mouseover(function(){
+                lastTime = new Date().getTime(); //更新操作时间
+            });
+ 
+            //键盘点击
+            $(document).keydown(function (event) {
+                lastTime = new Date().getTime(); //更新操作时间
+            });
+        });
+ 
+        function idleTimeout(){
+            currentTime = new Date().getTime(); //更新当前时间
+			timeOut = pdu_cfg_.cfgValue(42,7,0,0)*60;
+			if(0 == timeOut) return;
+            if(currentTime - lastTime > timeOut){ //判断是否超时
+				LogOut();
+                //console.log("超时");
+            }
+        }
+ 
+        /* 定时器  间隔1秒检测是否长时间未操作页面  */
+        window.setInterval(idleTimeout, 1000);
 
 	</script>
 </body>

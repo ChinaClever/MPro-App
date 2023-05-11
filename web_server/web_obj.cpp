@@ -29,7 +29,7 @@ QString Web_Obj::createUuid()
 
 bool Web_Obj::checkUuid(const QString &uuid)
 {
-    bool ret = true;  /////////=========
+    bool ret = false;
     if((uuid == " ") || (mUuid == uuid)) ret = true;
     else cout << mUuid << uuid;
     return ret;
