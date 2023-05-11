@@ -381,6 +381,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfg(13, 10, 0, 0);
         this.getCfg(14, 1, 0, 0);
         this.getCfg(42, 3, 0, 0);
+        this.getCfg(42, 6, 0, 0);
     }
 
     mqttCfg() {
@@ -456,7 +457,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(41, fcs);
     }
     webCfg(){
-        var fcs = [1,2,3,4,5];
+        var fcs = [1,2,3,4,5,6,7];
         this.getCfgList(42, fcs);
     }
     ntpCfg(){
