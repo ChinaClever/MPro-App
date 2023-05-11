@@ -116,13 +116,15 @@ void Cfg_Service::web()
     QString prefix = "web"; QString key;
     sWebCfg *cfg = &cm::dataPacket()->web;
 
-    for(int i=1; i<6; ++i) {
+    for(int i=1; i<8; ++i) {
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
         case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
         case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
+        case 6: key = "strong_pwd"; ptr = &cfg->strong_pwd;  value = 0; break;
+        case 7: key = "idle_timeout"; ptr = &cfg->idle_timeout;  value = 0; break;
         default: key.clear(); break;
         }
 
@@ -347,8 +349,16 @@ void Cfg_Service::modbus()
         }
         if(key.size() && ptr) *ptr = mCfg->readCfg(key, value, prefix).toInt();
     } sParameter *param = &(cm::masterDev()->cfg.param);
-    if(cfg->enRtu) param->modbusRtuAddr = cfg->addrRtu;
+    param->modbusRtuAddr = cfg->addrRtu;
     param->modbusRtuBr = cfg->baud;
+
+    //    if(cfg->enRtu) {
+    //        param->modbusRtuAddr = cfg->addrRtu;
+    //        param->modbusRtuBr = cfg->baud;
+    //    } else {
+    //        param->modbusRtuAddr = param->cascadeAddr;
+    //        param->modbusRtuBr = 57600;
+    //    }
 }
 
 void Cfg_Service::rpc()

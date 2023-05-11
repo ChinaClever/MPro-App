@@ -106,12 +106,17 @@
 				if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 3){
 					hidden();
 					if(t1 == 0){
-					let t2 =setInterval(function () {
-						alert("A或C系列不支持机架功能！");
-						clearInterval(t2);
-						t1 += 1;
-					}, 100);
-				}
+						let t2 =setInterval(function () {				
+							if(0 == language){
+								alert("A或C系列不支持机架功能！");
+							}else{
+								alert("The A or C series does not support rack functionality!")
+							}
+							clearInterval(t2);
+							t1 += 1;
+						}, 100);
+					}
+					return ;
 				}
 				if(dev_mode != 2){
 					if(t1 == 0){
@@ -120,8 +125,7 @@
 							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
 						}else{
 							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
-						}
-						
+						}						
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);
@@ -257,9 +261,9 @@
 					// ms.style.display = "";
 					ros.style.backgroundColor = 'red';
 					if(pdu_data.pdu_info.language == 0){
-						alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+						alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
 					}else{
-						alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+						alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
 					}
 					ros.innerHTML = lang[14][language];
 					var iptname = document.getElementsByTagName("input");

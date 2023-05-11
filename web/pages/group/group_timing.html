@@ -81,6 +81,18 @@
 			language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1 || pdu_data.pdu_info.pdu_spec == 2){
 				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+								alert("A或B系列不支持此功能！");
+							}else{
+								alert("The A or B series does not support this feature!")
+							}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				return ;
 			}
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
@@ -263,7 +275,12 @@
 			var stat;
 			var type1 = ckd.id.substr(0,1);
 			var num = parseInt(ckd.id.slice(1))+1;
-			if(confirm("您已更改表单，请确认提交！"))
+			if(0 == language){
+				var retVal = confirm("您已更改表单，请确认提交！");	
+			}else{
+				var retVal = confirm("You have made changes to the form, please confirm submission！");
+			}
+			if(retVal ==true)
 			{
 				if(type1 === 'i'){
 					if(ckd.checked == true){

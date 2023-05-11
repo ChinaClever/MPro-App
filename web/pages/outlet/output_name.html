@@ -65,6 +65,7 @@
 		let output_name =new Array();
 		let dev_name =new Array();
 		let pdu_data;
+		let t1 = 0;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
@@ -82,6 +83,18 @@
 			language = pdu_data.pdu_info.language;
 			if(pdu_data.pdu_info.pdu_spec == 1){
 				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+								alert("A系列不支持此功能！");
+							}else{
+								alert("The A series does not support this feature!")
+							}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				return ;
 			}
 		}
 		ParseData();
@@ -138,9 +151,9 @@
 				read = 0;
 				ros.style.backgroundColor = 'red';
 				if(pdu_data.pdu_info.language == 0){
-					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+					alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
 				}else{
-					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+					alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
 				}
 				ros.innerHTML = lang[6][language];
 				var iptname = document.getElementsByTagName("input");

@@ -111,7 +111,12 @@
 			document.getElementById(net_diagn[parseInt(btn) +1]).innerHTML = diagn_data[parseInt(btn)];
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
 						if(i == 3 || i == 8){
@@ -126,7 +131,12 @@
 			}else{}
 		}
 		function SetData_(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<net_diagn.length;i++){
 					if(net_diagn[i] == btn.id){
 						pdu_cfg.setCfg(93,i,btn.value,0,addr);

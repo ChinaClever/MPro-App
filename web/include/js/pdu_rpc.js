@@ -91,8 +91,8 @@ class JsonRpc {
     static socket_req(){
         var method = "pduMetaData"; 
         var params = [0, 100, 0, 0, 0];   
-        //obj.json_rpc_get(method, params);     
-        JsonRpc.socket_reqSend(method, params);
+        obj.json_rpc_get(method, params);     
+        //JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
         params = [0, 13, 10, 0, 0];
@@ -133,6 +133,15 @@ class JsonRpc {
         var sub =data[3];
         var id = data[4];
         var value = data[5];
+       
+        if(-1 == parseInt(value)) { 
+            window.sessionStorage.setItem('uuid', ' ');
+            var url = window.location.protocol+"//";            
+            url += window.location.host; this.ws.close(); 
+            window.location.replace(url);
+            //window.history.back();
+            //alert(value);alert(url);
+        }
 
         var sessionStorage = window.sessionStorage;
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
@@ -368,6 +377,13 @@ class PduCfgs extends PduCfgObj {
         super();
     }
 
+    loginCfg() {
+        this.getCfg(13, 10, 0, 0);
+        this.getCfg(14, 1, 0, 0);
+        this.getCfg(42, 3, 0, 0);
+        this.getCfg(42, 6, 0, 0);
+    }
+
     mqttCfg() {
         var fcs = [1,2,3,4,5,6,7,8,9,10,11];
         this.getCfgList(19, fcs);
@@ -441,7 +457,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(41, fcs);
     }
     webCfg(){
-        var fcs = [1,2,3,4,5];
+        var fcs = [1,2,3,4,5,6,7];
         this.getCfgList(42, fcs);
     }
     ntpCfg(){

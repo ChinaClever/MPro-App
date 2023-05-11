@@ -203,9 +203,34 @@ void App_NetAddr::inet_dnsCfg()
     }
 }
 
+int App_NetAddr::inet_dhcpUpdate()
+{   
+    sNetInterface *net = &(cm::dataPacket()->net);
+    int t = 60; if(net->inet.dhcp || net->inet6.dhcp) {
+        if(mCnt < 5*60) t = 1;
+        else if(mCnt < 10*60) t = 2;
+        else if(mCnt < 30*60) t = 3;
+        else if(mCnt < 60*60) t = 5;
+        else if(mCnt < 24*60*60) t = 8;
+        else if(mCnt < 48*60*60) t = 10;
+        else if(mCnt < 72*60*60) t = 15;
+        else t = 20;
+    }
+
+    if((!net->inet.dhcp) && net->inet6.en && net->inet6.dhcp){
+        static QString str = mInetCfg->readCfg("ip", "", "IPV4").toString();
+        if(str != net->inet.ip) {
+            inet_readCfg(net->inet, "IPV4");
+            inet_setIpV4();
+        }
+    }
+    return t;
+}
+
 void App_NetAddr::inet_updateInterface()
-{    
-    mCnt *= 2; QTimer::singleShot(mCnt*1000,this,&App_NetAddr::inet_updateInterface);
+{
+    int t = inet_dhcpUpdate(); mCnt += t;
+    QTimer::singleShot(t*1000,this,&App_NetAddr::inet_updateInterface);
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     if(net->inet6.dhcp && net->inet6.en)inet_setIpV4();

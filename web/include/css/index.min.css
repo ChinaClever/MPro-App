@@ -44,7 +44,7 @@ html {
 }
 
 .logo {
-    border-radius: 8px;
+    /* border-radius: 8px; */
     display: block;
     max-height: 65px;
     max-width: 500px;
@@ -228,11 +228,12 @@ p{
 	display:table-cell; 
 	width:24.1%;  
 	height:250px; 
-    /* margin-left:5px; */
+    margin-left:0.9%;
     /* margin-right:5px; */
     /* margin:1px 1px 1px 1px; */
-    border-radius: 7px;
-    border:6px solid;
+    /* border-radius: 7px; */
+    /* border:6px solid; */
+    /* border:5% solid; */
     background: #FFFFFF;
     border-color: #e7e7e7;
 	/* border-color: #aaaaff; */
@@ -254,8 +255,9 @@ p{
 	display:table-cell;
 	width:24.1%;
     height:250px;
-    border:6px solid;
-    border-radius: 7px;
+    /* border:10% solid #e7e7e7; */
+    /* border:6px solid; */
+    /* border-radius: 7px; */
 	/* border-color: #aaaaff; */
     border-color: #e7e7e7;
 }

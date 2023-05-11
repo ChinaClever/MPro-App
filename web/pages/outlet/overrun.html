@@ -66,12 +66,17 @@
 		var slave_num ;
 		let dev_mode;
 		let pdu_data;
+		let t1 = 0;
 		if(top.login_permit_ == 1){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 		}else{
 			document.getElementById("lang_2").style.display="";
+		}
+		function hidden(){
+			document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			document.getElementsByClassName("section-cont")[0].style.display = "none";	
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -82,6 +87,21 @@
 			language = pdu_data.pdu_info.language;
 			for(let i = 1;i<output_num + 1;i++){
 				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
+			}
+			if(pdu_data.pdu_info.pdu_spec == 1){
+				hidden();
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+								alert("A系列不支持此功能！");
+							}else{
+								alert("The A series does not support this feature!")
+							}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+				return ;
 			}
 		}
 		function LangInit(){
@@ -149,7 +169,11 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				//alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(pdu_data.pdu_info.language == 0){
+					alert("启用超限断电后，电流超过限定值，继电器会断开！");
+				}else{
+					alert("After enabling the power outage beyond the limit, if the current exceeds the limit value, the relay will disconnect!");
+				}
 				ros.innerHTML = lang[8][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -190,7 +214,11 @@
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
 			let val = 0;
-			var retVal = confirm("您已更改表单，请确认提交！");
+			if(0 == language){
+				var retVal = confirm("您已更改表单，请确认提交！");	
+			}else{
+				var retVal = confirm("You have made changes to the form, please confirm submission！");
+			}
 			if(retVal == true){
 				if(ipt.value == lang[9][language]){
 					val = '1';

@@ -55,12 +55,18 @@ bool Set_Integr::modbusSet(uchar fc, int value)
     case 13: key = "addrTcp"; cfg->addrTcp = value; break;
     case 14: emit Mb_Core::bulid()->connectTcpSig(); break;
     default: ret = false; cout << fc; break;
-    } if(!cfg->enRtu) cm::masterDev()->cfg.param.modbusRtuAddr = 0;
+    }
 
     if(ret && key.size()) {
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, value, prefix);
     }
+
+    //if(0==cfg->enRtu){
+    //    sParameter *param = &(cm::masterDev()->cfg.param);
+    //    param->modbusRtuAddr = param->cascadeAddr;
+    //    param->modbusRtuBr = 57600;
+    //}
 
     return ret;
 }

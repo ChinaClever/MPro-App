@@ -235,7 +235,12 @@
 			}
 		}
 		function SetData(btn) {
-			if (confirm("请确认是否选择此时区。")) {
+			if(0 == language){
+				var retVal = confirm("请确认是否选择此时区!");	
+			}else{
+				var retVal = confirm("Please confirm whether to select this time zone！");
+			}
+			if(retVal ==true){
 				for (let i = 1; i < ntp_info.length; i++) {
 					if (ntp_info[i] == btn.id) {
 						pdu_cfg.setCfg(43, i, btn.value, 0, addr);
@@ -279,7 +284,12 @@
 		}
 		function Set() {
 			var sel = 0;
-			if (confirm("请确认是否保存此次修改？")) {
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if (retVal ==true) {
 				pdu_cfg.setCfg(43, 5, 0, 0, addr);
 				flash_html();
 			} else {
@@ -289,7 +299,12 @@
 		function SetTime() {
 			var sel = 0;
 			let val = document.getElementById('DateTime').value;
-			if (confirm("请确认是否保存此次修改？")) {
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if (retVal ==true) {
 				val = val.replace("T", " ");
 				pdu_cfg.setCfg(43, 1, val, 0, addr);
 				flash_html();

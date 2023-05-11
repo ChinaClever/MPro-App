@@ -22,7 +22,7 @@ char* Web_Rpc::pduReadData(mg_str &r)
 char *Web_Rpc::pduMetaData(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5); //cout << its;
-    bool ret = mObj->checkUuid(r); QString value; //cout << ret;
+    bool ret = mObj->checkUuid(r); QString value = "-1"; //cout << ret;
     if(ret) value = mObj->metaData(its.at(0));
     return responRpcString(its, value);
 }
@@ -30,7 +30,7 @@ char *Web_Rpc::pduMetaData(mg_str &r)
 char *Web_Rpc::execute(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
-    bool ret = mObj->checkUuid(r); QString value;
+    bool ret = mObj->checkUuid(r); QString value= "-1";;
     QString cmd = mObj->getString(r, 5);
     if(ret) value = mObj->execute(cmd);
     return responRpcString(its, value);

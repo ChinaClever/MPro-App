@@ -180,7 +180,11 @@
 
 		}
 		function saveArrayDataToExcel() {
-			var retVal = confirm("请确认是否导出此表单");
+			if(0 == language){
+				var retVal = confirm("请确认是否导出此表单！");	
+			}else{
+				var retVal = confirm("Please confirm whether to export this form！");
+			}
 			let str = '';
 			if(retVal == true)
 			{
@@ -203,7 +207,11 @@
 			}else{}
     	}
 		function setData(btn){
-			var retVal = confirm("请确认是否执行此操作！");
+			if(0 == language){
+				var retVal = confirm("请确认是否执行此操作！");	
+			}else{
+				var retVal = confirm("Please confirm whether to perform this operation！");
+			}
 			if(retVal == true)
 			{
 				if(btn.id == "jump"){

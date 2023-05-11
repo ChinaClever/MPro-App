@@ -96,11 +96,16 @@
 				hidden();
 				if(t1 == 0){
 					let t2 =setInterval(function () {
-						alert("A或C系列不支持机架功能！");
+						if(0 == language){
+								alert("A或C系列不支持机架功能！");
+							}else{
+								alert("The A or C series does not support rack functionality!")
+							}
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);
 				}
+				return ;
 			}
 			if(dev_mode != 2){
 				if(t1 == 0){

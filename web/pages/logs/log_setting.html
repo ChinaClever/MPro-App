@@ -92,10 +92,10 @@
 			if(read === 1){
 				read = 0;
 				ros.style.backgroundColor = 'red';
-				if(pdu_data.pdu_info.language == 0){
-					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+				if(language == 0){
+					alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
 				}else{
-					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+					alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
 				}
 				ros.innerHTML = lang[13][language];
 				var iptname = document.getElementsByTagName("input");
@@ -135,7 +135,12 @@
 		}
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				for(let i = 1;i<logset_name.length;i++){
 					if(logset_name[i] == btn.id){
 						pdu_cfg.setCfg(47,i,btn.value,0,addr);

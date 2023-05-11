@@ -34,7 +34,7 @@ QSNMPOid SnmpModule::toOid(const QString &oid)
 {
     QSNMPOid res;
     for(auto &i : oid.split("."))  res << i.toInt();
-    return res;
+    return res << 0; ////////===========
 }
 
 

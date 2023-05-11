@@ -143,7 +143,12 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！");	
+			}else{
+				var retVal = confirm("Please confirm whether to enable or disable this feature. Once enabled, it will turn off the device's webpage cascading mode！");
+			}
+			if(retVal ==true){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
 						pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);										
@@ -162,7 +167,12 @@
 		}
 		function Set(btn){
 			var sel =0;
-			if(confirm("请确认是否生效当前设置。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否生效当前设置！");	
+			}else{
+				var retVal = confirm("Confirm whether the current settings are effective！");
+			}
+			if(retVal == true){
 				if(btn.id == "lang_9"){
 					pdu_cfg.setCfg(15,7,0,0,addr);
 				}else{

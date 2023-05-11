@@ -141,7 +141,12 @@
 			}
 		}
 		function SetData(btn){
-			if(confirm("请确认是否开启此功能。")){
+			if(0 == language){
+				var retVal = confirm("请确认是否开启此功能！");	
+			}else{
+				var retVal = confirm("Confirm whether to enable this function！");
+			}
+			if(retVal ==true){
 				if(btn.id == "udpSel"){
 					udp_num = parseInt(btn.value);
 				}else{
@@ -169,7 +174,12 @@
 			},500);
 		}
 		function Set(){
-			if(confirm("设置成功，请重启设备!!")){
+			if(0 == language){
+				var retVal = confirm("设置成功，请重启设备！");	
+			}else{
+				var retVal = confirm("Successfully set, please restart the device！");
+			}
+			if(retVal ==true){
 				pdu_cfg.setCfg(18,10,0,0,addr);
 			}else{}
 		}

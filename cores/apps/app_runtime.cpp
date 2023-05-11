@@ -14,7 +14,7 @@ App_RunTime::App_RunTime(QObject *parent)
 
 void App_RunTime::runing_initFunSlot()
 {
-    mTimer = new QTimer(this); mTimer->start(1000);
+    mTimer = new QTimer(this); mTimer->start(1000); mTimer->setTimerType(Qt::PreciseTimer);
     connect(mTimer, &QTimer::timeout, this, &App_RunTime::runing_onTimeoutDone);
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     sRunTime *run = &(cm::masterDev()->proc.core);
@@ -29,7 +29,7 @@ void App_RunTime::runing_initFunSlot()
 void App_RunTime::runing_onTimeoutDone()
 {
     sRunTime *param = &(cm::masterDev()->proc.core);
-    param->runSec += 1; if(0 == (param->runSec % 60)) {
+    param->runSec += 1; if(11 == (param->runSec % 60)) {
         Cfg_Core::bulid()->runTimeWrite();        
     } if(6 == (param->runSec%(60*60))) system("sync");
 }

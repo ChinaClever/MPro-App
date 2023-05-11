@@ -294,7 +294,11 @@
 		function BtnClick(btn){
 			let num = parseInt(btn.id.slice(1))+1;
 			let stat = 0;
-			var retVal = confirm("您已更改表单，请确认提交！");
+			if(0 == language){
+				var retVal = confirm("您已更改表单，请确认提交！");	
+			}else{
+				var retVal = confirm("You have made changes to the form, please confirm submission！");
+			}
 			if(retVal == true){
 				if(num !== loop_num + 1){
 				}
@@ -369,11 +373,10 @@
 				// ms.style.display = "";
 				ros.style.backgroundColor = 'red';
 				if(pdu_data.pdu_info.language == 0){
-					alert("编辑完或按回车键，信息会自动保存，并会立即生效！");
+					alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
 				}else{
-					alert("After editing or pressing the Enter key, the information will be automatically saved and will take effect immediately!");
+					alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
 				}
-				
 				ros.innerHTML = lang[36][language];
 				var iptname = document.getElementsByTagName("input");
 				for(var i = 0; i<iptname.length;i++)
@@ -528,8 +531,8 @@
 						<td width ="11.5%" id="lang_15"></td>';
 					}
 					tbody += '<tr id = "pow'+ i + '">';
-					//tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
-					tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
+					tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
+					// tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
 					tbody += '<td id = "b'+ i + '">'+ parseFloat(phase_info[i + 1][22]).toFixed(3) +'</td>';
 					tbody += '<td><input  name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 					tbody += '<td><input  name = "pow" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
@@ -573,8 +576,8 @@
 					<td width ="11.5%" id="lang_24"></td>';
 				}
 				tbody += '<tr id = "cur'+ i + '">';
-				//tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
-				tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
+				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
+				// tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
 				tbody += '<td id = "b'+ i + '">'+ (parseFloat(phase_info[i + 1][11])).toFixed(2) +'</td>';
 				tbody += '<td><input  name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 				tbody += '<td><input  name = "cur" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
@@ -617,8 +620,8 @@
 					<td width ="11.5%" id="lang_33"></td>';
 				}
 				tbody += '<tr id = "vol'+ i + '">';
-				//tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
-				tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
+				tbody += '<td id = "a'+ i + '">' + (String.fromCharCode(65+i)) + lang[34][language] +'</td>';
+				// tbody += '<td id = "a'+ i + '">L'+ (i+1) +'</td>';
 				tbody += '<td id = "b'+ i + '">'+ (parseFloat(phase_info[i + 1][0])).toFixed(1) +'</td>';
 				tbody += '<td><input name = "vol" type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ i + '"></input></td>';
 				tbody += '<td><input name = "vol" type = "checkbox" class = "input" onchange ="cked(this)" id = "i'+ i + '"></input></td>';
