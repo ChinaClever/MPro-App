@@ -184,7 +184,7 @@
 						if(i!=3)
 							document.getElementById(info_name[i]+'1').disabled = true;
 					}
-					document.getElementById("ipv6_addr").disabled = true;
+					document.getElementById("ipv6_addr").disabled = false;
 					document.getElementById("lang_19").disabled = false;
 				}
 			}
@@ -280,25 +280,25 @@
 			thead = '<tr><td width ="15%" id="lang_5" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><select style ="width:30.3%" id ="mode0" onchange="SetData(this)">';
+			tbody += '<td><select style ="width:35.3%" id ="mode0" onchange="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><input id = "addr0" style ="width:30%" maxlength = "15" type = "text" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "addr0" style ="width:35%" maxlength = "15" type = "text" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_8" ></td>';
-			tbody += '<td><input id = "mask0"  style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "mask0"  style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
-			tbody += '<td><input id = "gateway0"  style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "gateway0"  style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_10"  ></td>';
-			tbody += '<td><input id = "dns0"  style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "dns0"  style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
-			tbody += '<td><input id = "dns_0"  style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "dns_0"  style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 
 			tbody += '<tr><td><input style ="width:60%" type = "button" id ="lang_11" onclick = "Set(this)"></input></td></tr>';
@@ -310,34 +310,34 @@
 			thead = '<tr><td width ="15%" id="lang_12" ></td>\
 			<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_13" ></td>';
-			tbody += '<td><select style ="width:30.3%" id ="en1"  onchange="SetData(this)">';
+			tbody += '<td><select style ="width:35.3%" id ="en1"  onchange="SetData(this)">';
 			for(var i = 0; i<state_set.length;i++){
 				tbody +='<option value ="'+i+'">'+state_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_14" ></td>';
-			tbody += '<td><select style ="width:30.3%" id ="mode1"  onchange="SetData(this)">';
+			tbody += '<td><select style ="width:35.3%" id ="mode1"  onchange="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_15" ></td>';
-			tbody += '<td><input id = "addr1"  style ="width:30%" type = "text" maxlength = "129"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "addr1"  style ="width:35%" type = "text" maxlength = "129"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_16" ></td>';
-			tbody += '<td><input id = "gateway1" style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "gateway1" style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_17" ></td>';
-			tbody += '<td><input id = "prefix1" style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d]/g,\'\'))"  placeholder="\\0">';
+			tbody += '<td><input id = "prefix1" style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d]/g,\'\'))"  placeholder="\\0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_18" ></td>';
-			tbody += '<td><input id = "dns1" style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "dns1" style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
-			tbody += '<td><input id = "dns_1" style ="width:30%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
+			tbody += '<td><input id = "dns_1" style ="width:35%" type = "text" maxlength = "15" onkeyup="value=value.replace(/[^\\d.]/g,\'\') " onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_24" ></td>';
-			tbody += '<td><textarea id = "ipv6_addr" style ="height:70px;width:30%;resize: none;"  readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0"></textarea>';	
+			tbody += '<td><textarea id = "ipv6_addr" style ="height:70px;width:35%;resize: none;"  readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0"></textarea>';	
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
 			//tbody += '<td><input id = "b" style ="width:24.5%" type = "text" maxlength = "129" readonly ="true"  onbeforepaste="clipboardData.setData(\'text\',clipboardData.getData(\'text\').replace(/[^\\d.]/g,\'\'))"  placeholder="0.0.0.0">';
