@@ -100,6 +100,7 @@
 		 }, 800);
 
 		 setTimeout(function () {
+			pdu_cfg_.getCfg(42,7,0,0)
 		 	PduMetaData.meta_workDown(); //pdu_cfg_
 		 }, 1200);
 
@@ -291,7 +292,7 @@
  
         function idleTimeout(){
             currentTime = new Date().getTime(); //更新当前时间
-			timeOut = pdu_cfg_.cfgValue(42,6,0,0);
+			timeOut = pdu_cfg_.cfgValue(42,7,0,0)*60;
 			if(0 == timeOut) return;
             if(currentTime - lastTime > timeOut){ //判断是否超时
 				LogOut();
