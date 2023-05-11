@@ -91,7 +91,7 @@ class JsonRpc {
     static socket_req(){
         var method = "pduMetaData"; 
         var params = [0, 100, 0, 0, 0];   
-        obj.json_rpc_get(method, params);     
+        JsonRpc.build().json_rpc_get(method, params);     
         //JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
@@ -606,22 +606,19 @@ class PduCore extends PduOta {
             var host = window.location.host;
             var ip = sessionStorage.getItem('host');    
             if((value.length > 9) && (host == ip)) res = 1;
-        }
-
-        if(0 == res) {
-            this.logged_out();
-            var url = window.location.protocol+"//";            
-            url += window.location.host;
-            window.location.replace(url);
-        }       
+        } if(0 == res) this.login_out();
         
         return res;
     }
 
-    logged_out() {
+    login_out() {
         var sessionStorage = window.sessionStorage;
         sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', ' ');
+        sessionStorage.setItem('uuid', ' ');  
+        
+        var url = window.location.protocol+"//";            
+        url += window.location.host;
+        window.location.replace(url);
     }   
 
 

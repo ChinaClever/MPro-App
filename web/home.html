@@ -252,7 +252,7 @@
 				<tr>
 					<td style=" width: 99%;">
 						<div
-							style=" width: 99%; margin-bottom: 0.8%;  margin-left:10px; height:151px; background:#ffffff; text-align:center;">
+							style=" width: 99%; margin-bottom: 0.8%;  margin-left:10px;  background:#ffffff; text-align:center;">
 							<!-- <div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" -->
 								<!-- id="lang_16"></div> -->
 							<table class="sensor_tab"
@@ -560,6 +560,7 @@
 		let lang = new Array(36);
 		let dev_name = new Array();
 		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
+		let head_box = new Array("Tmp", "Tmp","Tmp", "Tmp", "Hum", "Hum", "Hum", "Hum","Door1", "Door2", "Water", "Smoke");
 		let stat_ = new Array("", "", "");
 		let serial_ = new Array("D", "A", "B", "C", "D");
 		let Sensor_state = new Array("NA", "", "");
@@ -568,12 +569,15 @@
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 		let pdu_data;
+		let sensor_box;/*传感器盒子*/
 		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let loop_arr1 = ["apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele","pf"];
 		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
+		let sensor_arr_box = ["tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];/*插入传感器盒子*/
 		let sensor_id = [0,0,1,1,0,1,0,0];
+		let sensor_id_box = [0,0,1,1,2,2,3,3,0,1,0,0];/*传感器盒子*/
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			if(DataString == null){
@@ -588,6 +592,7 @@
 			language = pdu_data.pdu_info.language;
 			top.language_ = language;
 			freq_ = pdu_data.pdu_info.pdu_hz;
+			sensor_box = pdu_data.pdu_info.sensor_box;
 			let k = 0;
 			phase_info = [];
 			for(let i = 0;i<phase_num;i++){
@@ -632,9 +637,16 @@
 				}
 			}
 			k = 0;
-			for(let key of sensor_arr){
-				sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id[k]];
-				k ++;
+			if(0 == sensor_box){
+				for(let key of sensor_arr){
+					sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id[k]];
+					k ++;
+				}
+			}else{
+				for(let key of sensor_arr_box){
+					sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id_box[k]];
+					k ++;
+				}	
 			}
 			k = 0;
 			for(let key of total_arr){
@@ -653,7 +665,7 @@
 			$('.p2').html(BuildTablePhase(2));
 			$('.p3').html(BuildTablePhase(3));
 			$('.loop_table').html(BuildTableLoop(loop_num));
-			$('.sensor_tab').html(BuildTableSensor());
+			$('.sensor_tab').html(BuildTableSensor(sensor_box));
 			// $('.sys_table').html(BuildTableSystem());
 			$('.devname').html(BuildSel((slave_num + 1)));
 			ReadData();
@@ -723,6 +735,10 @@
 			lang[41] = ["告警", "Warning", "", "", ""];
 			lang[42] = ["断开", "Off", "", "", ""];
 			lang[43] = ["闭合", "On", "", "", ""];
+			lang[44] = ["温度3", "Temperature 3", "Temperature 3", "температура3", "Temperatura 3", "درجة الحرارة 3"];
+			lang[45] = ["湿度3", "Humidity 3", "Humidité 3", "влажность3", "Temperatura 3", "الرطوبة 3"];
+			lang[46] = ["温度4", "Temperature 4", "Temperature 4", "температура4", "Temperatura 4", "درجة الحرارة 4"];
+			lang[47] = ["湿度4", "Humidity 4", "Humidité 4", "влажность4", "Temperatura 4", "الرطوبة 4"];
 			dev_name[0] = lang[36][language];
 			for (let i = 1; i < (slave_num + 1); i++) {
 				dev_name[i] = lang[37][language] + i;
@@ -746,6 +762,12 @@
 						document.getElementById("lang_" + i).innerHTML = lang[i][language];
 					}
 
+				}
+			}
+			/*传感器盒子*/
+			if(1 == sensor_box){
+				for(var i = 44; i < 48; i++ ){
+					document.getElementById("lang_" + i).innerHTML = lang[i][language];
 				}
 			}
 			document.getElementById("ms").value = top.addr_;
@@ -804,7 +826,7 @@
 					document.getElementById("l"+i).style.display = "none";
 				}
 			}
-
+			/*总数据*/
 			for (let i = 0; i < 5; i++) {
 				if (i < 2) {
 					//document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
@@ -815,8 +837,9 @@
 				}
 
 			}
+			/*相数据*/
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
+				document.getElementById('dat' + (80 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
 				//document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
@@ -832,6 +855,7 @@
 				}*/
 				//document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
 			}
+			/*回路数据*/
 			for (let i = 0; i < loop_num; i++) {
 				if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 					for (j = 0; j < 8; j++) {
@@ -872,8 +896,32 @@
 				}
 
 			}
+			/*sensor*/
+			if(0 == sensor_box){
 			for (let i = 0; i < head.length; i++) {
-				if (i < 4) {//insert
+				if (i < 4) {//温湿度
+					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {/*未插入*/
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						}
+					} else {
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "°C";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
+						}
+					}
+				} else if (i < 6) {//门禁
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
+				} else {//水浸和烟雾
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
+				}
+			}
+			}else{/*传感器盒子*/
+				for (let i = 0; i < head_box.length; i++) {
+				if (i < 8) {//insert
 					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {
 						if (i % 2 == 0) {
 							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
@@ -887,11 +935,12 @@
 							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
 						}
 					}
-				} else if (i < 6) {
+				} else if (i < 10) {
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
 				} else {
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
+			}
 			}
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
@@ -1004,7 +1053,7 @@
 				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></td>';
 				tbody += '<td style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span><br/>';
-				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
+				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (79 + obj) + '" ></span>';
 				tbody += '<span class = "span_unit">kW</span></td></td>';
 				tbody += '<td style="height:25px;"><td><span class = "span_tit" >PF' + obj + ':</span><br/>';
 				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
@@ -1052,12 +1101,13 @@
 			
 			
 		}
-		function BuildTableSensor() {
+		function BuildTableSensor(sensor_box) {
 			let tbody = "";
 			tbody += '<tr><td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_17"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_18"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
+			if(0 == sensor_box){
 			for (let i = 0; i < 4; i++) {
 				if (i % 2 == 0) {
 					// tbody += '<tr style="background:#e7e7e7;">';
@@ -1072,7 +1122,46 @@
 						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
 					}
 				}
+
 				tbody += '</tr>';
+			}
+			}else{
+				for (let i = 0; i < 6; i++) {
+				if (i % 2 == 0) {
+					// tbody += '<tr style="background:#e7e7e7;">';
+					tbody += '<tr>';
+				} else {
+					tbody += '<tr style="border-width:1px  0px 1px ;border-style:solid;border-color: #e7e7e7;">';
+				}
+				if(i < 2){
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (21 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}
+				}else if(i < 4){
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (40 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}	
+				}else{
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (17 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}	
+				}
+
+
+				tbody += '</tr>';
+			}	
 			}
 			return tbody;
 		}

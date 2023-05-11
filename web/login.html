@@ -113,13 +113,16 @@
         obj.loginCfg();
       }
       
+      //language = obj.cfgValue(13,10,0,0);
+      var language = window.sessionStorage.getItem('language');
+
       user_name = obj.cfgValue(user,1,0,0);
       identify = obj.cfgValue(user,3,0,0);
       if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
          $('.center_form').html(BuildDiv('signin'));
-         if(0 != language){
+         if(1 == language){
           document.getElementById("username").placeholder = "User name";
           document.getElementById("psd").placeholder = "Passward";
           document.getElementById("sign_in").value = "SIGIN";
@@ -132,6 +135,7 @@
       // document.getElementById('psd').value ='';
       time3_num ++;
     },350);
+
     function sign_in(){
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;

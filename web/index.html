@@ -180,7 +180,7 @@
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
 			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;
-			//console.log(document.getElementById("MPDU").innerHTML);
+			//console.log(document.getElelogin_outmentById("MPDU").innerHTML);
 			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
@@ -206,7 +206,9 @@
 				language_ = 1;
 			}
 			pdu_cfg_.setCfg(13,10,language_,0,addr_);
+			window.sessionStorage.setItem('language', language_);
 			setTimeout(function(){
+				pdu_cfg_.loginCfg();
 				PduMetaData.meta_workDown();
 			},300);
 			setTimeout(function(){
@@ -231,10 +233,11 @@
 			}
 		}
 		function LogOut() {
-			window.opener = null;
-			window.open('login.html', '_self');
-			closeWebPage();
-			window.history.replaceState({}, document.title, window.location.origin);
+			pdu_cfg_.login_out();
+			//window.opener = null;
+			//window.open('login.html', '_self');
+			//closeWebPage();
+			//window.history.replaceState({}, document.title, window.location.origin);
 		}
 		document.getElementById("logOut").onmouseover = function () {
 			document.getElementById("logOut").style.color = "red";

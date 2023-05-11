@@ -166,6 +166,23 @@
 				showdata();
 			}
 		}
+		function SetData_(btn){
+			if(btn.id == "udpSel"){
+					udp_num = parseInt(btn.value);
+				}else{
+					for(let i = 0;i<select_name.length;i++){
+						if(btn.id == select_name[i]){
+							if(i < 5){
+								pdu_cfg.setCfg(18,i,btn.value,1 + udp_num,addr);
+							}else if(i>7){
+								pdu_cfg.setCfg(18,i,btn.value,0,addr);
+							}
+						}
+					}
+				}
+				btn.blur();
+				flash_html();
+		}
 		function flash_html(){
 			pdu_cfg.udpPush();
 			setTimeout(function(){
@@ -183,12 +200,15 @@
 				pdu_cfg.setCfg(18,10,0,0,addr);
 			}else{}
 		}
+		function Set_(btn){
+			pdu_cfg.setCfg(18,9,btn.value,0,addr);
+		}
 		function buildTablePush() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
 			<td width ="85%"></td>/tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
-			tbody += '<td><select id ="udpSel" onchange ="SetData(this)">';
+			tbody += '<td><select id ="udpSel" onchange ="SetData_(this)">';
 			for(var i = 0; i<udp_sel.length;i++){
 				tbody +='<option value ="'+i+'">'+udp_sel[i] +'</option>';
 			}
@@ -200,11 +220,11 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><input id = "udpAddr" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0.0.0.0"></input></td></tr>';
+			tbody += '<td><input id = "udpAddr" style ="width:24.5%" onchange ="SetData_(this)" type = "text" placeholder="0.0.0.0"></input></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
-			tbody += '<td><input id = "udpPort" style ="width:24.5%" onchange ="SetData(this)" type = "text" placeholder="0~65535"></input></td></tr>';
+			tbody += '<td><input id = "udpPort" style ="width:24.5%" onchange ="SetData_(this)" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
-			tbody += '<td><input id = "delay" style ="width:24.5%" type = "text" onchange ="SetData(this)" placeholder="0~65535"></input></td></tr>';
+			tbody += '<td><input id = "delay" style ="width:24.5%" type = "text" onchange ="SetData_(this)" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:60%;display:none;" type = "button" id ="lang_8" onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
@@ -221,7 +241,7 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id ="lang_11"></td>';
-			tbody += '<td><input id = "port" style ="width:24.5%" type = "text" placeholder="0~65535"></input></td></tr>';
+			tbody += '<td><input id = "port" style ="width:24.5%" onchange ="Set_(this)" type = "text" placeholder="0~65535"></input></td></tr>';
 			tbody += '<tr><td><input style ="width:75%" type = "button" id ="lang_12" onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr><tr><td></td><td></td></tr><tr><td></td><td></td></tr>';
