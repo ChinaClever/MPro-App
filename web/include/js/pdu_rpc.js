@@ -607,7 +607,14 @@ class PduCore extends PduOta {
             var host = window.location.host;
             var ip = sessionStorage.getItem('host');    
             if((value.length > 9) && (host == ip)) res = 1;
-        } if(0 == res) this.login_out();
+        } 
+        
+        if(0 == res) {
+            this.login_out();
+            var url = window.location.protocol+"//";            
+            url += window.location.host;
+            window.location.replace(url);
+        }
         
         return res;
     }
@@ -615,11 +622,7 @@ class PduCore extends PduOta {
     login_out() {
         var sessionStorage = window.sessionStorage;
         sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', ' ');  
-        
-        var url = window.location.protocol+"//";            
-        url += window.location.host;
-        window.location.replace(url);
+        sessionStorage.setItem('uuid', ' '); 
     }   
 
 

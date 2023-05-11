@@ -295,8 +295,10 @@
  
         function idleTimeout(){
             currentTime = new Date().getTime(); //更新当前时间
-			timeOut = pdu_cfg_.cfgValue(42,7,0,0)*60;
-			if(0 == timeOut) return;
+			timeOut = pdu_cfg_.cfgValue(42,7,0,0);
+			timeOut = timeOut * 60 * 1000; //设置超时时间： 10分
+			//alert('aaa' + timeOut);
+			if(timeOut==null|| 0==timeOut) return;
             if(currentTime - lastTime > timeOut){ //判断是否超时
 				LogOut();
                 //console.log("超时");
@@ -304,7 +306,7 @@
         }
  
         /* 定时器  间隔1秒检测是否长时间未操作页面  */
-        window.setInterval(idleTimeout, 1000);
+        window.setInterval(idleTimeout, 60*1000);
 
 	</script>
 </body>
