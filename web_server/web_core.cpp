@@ -39,6 +39,7 @@ void Web_Core::init_webCfg(sWebCfg &web)
 
     cfg.https_en = web.https_en;
     cfg.https_port = web.https_port;
+    cfg.multi_users = web.multi_users;
 }
 
 sDataPacket *Web_Core::init_share_mem()
