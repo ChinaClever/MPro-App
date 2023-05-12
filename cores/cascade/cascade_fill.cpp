@@ -92,7 +92,7 @@ void Cascade_Fill::upDevData(uchar addr, sDevData *data, c_sDevData *obj)
     if(!size) obj->groupSize = data->group.relay.size;
     for(int i=0; i< size; ++i) upObjData(i, data->group, obj->group[i]);
 
-    size = obj->dualSize = data->dual.size;
+    size = obj->dualSize = data->output.size; //data->dual.size;
     for(int i=0; i< size; ++i) upObjData(i, data->dual, obj->dual[i]);
 
     size = obj->cabLineSize = data->cabLine.size;
