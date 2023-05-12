@@ -385,8 +385,9 @@ struct sWebCfg{
     ushort https_port;
 
     ushort strong_pwd; // 强密码
-    ushort idle_timeout; // 空闲超时时间 小时
-    ushort reserve[10];
+    ushort idle_timeout; // 空闲超时时间 分钟
+    ushort multi_users; // 多用户同时登陆
+    ushort reserve[9];
 };
 
 /**
