@@ -103,8 +103,8 @@
 			pdu_cfg.odbcCfg();
 			ParseData();
 			read_data();
-			lang_fun();
-			showdata();
+			// lang_fun();
+			show_connect_data();
 		 	}, 2500);
 		function read_data(){
 			for(var j = 1;j<11;j++){
@@ -132,6 +132,10 @@
 			lang_fun();
 			showdata();
 		},500);
+		function show_connect_data(){
+			document.getElementById("state_").value = odbc_data[10];
+			document.getElementById("state").value = odbc_data[10];
+		}
 		function showdata(){
 			for(var j = 0;j<id_name.length-1;j++){
 				if(j == 0){
