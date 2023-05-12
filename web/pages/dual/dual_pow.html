@@ -45,7 +45,7 @@
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
 								<span style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
 										class="devname" id="ms" style="width:100px;"
-										onchange="change();"></select></span>
+										onchange="change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -204,6 +204,20 @@
 				}
 				document.getElementById("ms").selected = slave_addr;
 				return tbody;
+			}
+			function change(opt){
+			//	slave_addr = parseInt(opt.value);
+				dual_addr = parseInt(opt.value) * 2;
+				pdu_cfg.setAddr(dual_addr);
+				setTimeout(function(){
+					ParseData();
+					read_data();
+					$('.table-striped').html(buildTable(dual_num));
+					//$('.devname').html(buildSel(slave_num/2));
+					showdata();
+					lang_fun();
+					modeset();
+				},800);
 			}
 			function showdata() {
 				var cs = 0, ss = 0;

@@ -63,6 +63,9 @@
 		<script src="../../doc-lib/doc.js"></script>
 		<script>
 			let read = 1;
+			let pdu_cfg = top.pdu_cfg_;
+			let slave_addr = top.slave_addr_;
+			let dual_addr = top.dual_addr_;
 			let pow_mark = new Array();
 			let dual_name = new Array();
 			let lang = new Array();
@@ -219,10 +222,23 @@
 					lang_fun();
 				}, 800);
 			}
-			function change(opt) {
+			function change(opt){
 				slave_addr = parseInt(opt.value);
 				dual_addr = parseInt(opt.value) * 2;
+				pdu_cfg.setAddr(dual_addr);
+				setTimeout(function(){
+					//ParseData();
+					read_data();
+					$('.table-striped').html(buildTable(dual_num));
+					//$('.devname').html(buildSel(slave_num/2));
+					showdata();
+					lang_fun();
+				},800);
 			}
+			//function change(opt) {
+			//	slave_addr = parseInt(opt.value);
+			//	dual_addr = parseInt(opt.value) * 2;
+		//	}
 			function cked(ckd) {
 				var stat;
 				var type1 = ckd.id.substr(0, 1);
