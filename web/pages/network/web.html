@@ -74,9 +74,6 @@
 			lang[8] = ["https端口号:","https port number:","","",""];
 			lang[9] = ["禁用","Disable","","",""];
 			lang[10] = ["启用","Enable","","",""];
-			lang[11] = ["WEB登陆限制","WEB login restrictions","","",""];
-			lang[12] = ["启用强密码：","Enable strong password：","","",""];
-			lang[13] = ["闲置超时时间：","Idle timeout：","","",""];
 
 			mode_set[0] = lang[9][language];
 			mode_set[1] = lang[10][language];
@@ -85,14 +82,10 @@
 			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
-			for(let j = 11;j<14;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
-			}
 		}
 		setTimeout(function(){
 			$('.http').html(buildTableHttp());
 			$('.https').html(buildTableHttps());
-			$('.web').html(buildTableWeb());
 			lang_fun();
 			read_data();
 			ShowData();
@@ -135,12 +128,6 @@
 				ShowData();
 			}
 		}
-		function SetWeb(btn){
-			if(btn.id == "web_sub"){
-			//	pdu_cfg.setCfg(42,7,btn.value,0,addr);
-			//	btn.blur();
-			}
-		}
 		function flash_html(){
 			pdu_cfg.webCfg();
 			setTimeout(function(){
@@ -167,7 +154,7 @@
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -184,21 +171,7 @@
 			tbody += '<tr><td id="lang_8" ></td>';
 			tbody += '<td><input id = "HttpsPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65536){value=65536};if(value<1)value=1" placeholder="1~65536"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td></td></tr>';
-			return '<thead>' + thead + '</thead>'
-				 + '<tbody>' + tbody + '</tbody>';
-		}
-		function buildTableWeb() {
-			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_11" ></td>\
-			<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_12" ></td>';
-
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_13" ></td>';
-			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

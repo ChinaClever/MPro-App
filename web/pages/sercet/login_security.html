@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>network</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left web"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
+    <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = 0;
+		pdu_cfg.webCfg();
+		let web_data = new Array();
+		let lang = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
+		function read_data(){
+			for(var i = 0; i < 3; i++){
+				web_data[i] = pdu_cfg.cfgValue(42,(i+6),0,addr);
+			}			
+		}
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<6;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["WEB登陆安全","WEB login security","","",""];
+			lang[2] = ["WEB登陆安全设置","WEB login security settings","","",""];
+			lang[3] = ["启用强密码：","Enable strong password：","","",""];
+			lang[4] = ["闲置超时时间：","Idle timeout：","","",""];
+			lang[5] = ["多用户同时登陆：","Multiple users logging in simultaneously:","","",""];
+
+		}
+		function lang_fun(){
+			for(let j = 1;j<6;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+		}
+		setTimeout(function(){
+			$('.web').html(buildTableWeb());
+			lang_fun();
+			read_data();
+			ShowData();
+		},500);
+		function ShowData(){
+
+			if(0 == web_data[0]){
+				document.getElementById("chk").checked = false;
+			}else{
+				document.getElementById("chk").checked = true;
+			}
+			if(0 == web_data[2]){
+				document.getElementById("more_user").checked = false;
+			}else{
+				document.getElementById("more_user").checked = true;
+			}
+			document.getElementById("web_sub").value = web_data[1] + ' '+ "min";
+
+		}
+
+		function SetWeb(btn){
+			if(btn.checked == true){
+				var val = 1;
+			}else{
+				var val = 0;
+			}
+			if(btn.id == "web_sub"){
+				pdu_cfg.setCfg(42,7,btn.value,0,addr);
+				btn.blur();
+			}else if(btn.id == "chk"){
+				pdu_cfg.setCfg(42,6,val,0,addr);
+				btn.blur();	
+			}else{
+				pdu_cfg.setCfg(42,8,val,0,addr);
+				btn.blur();	
+			}
+		}
+		function flash_html(){
+			pdu_cfg.webCfg();
+			setTimeout(function(){
+				read_data();
+				ShowData();
+			},500);
+		}
+		function buildTableWeb() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_2" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<td><input id = "chk"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><input id = "more_user"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+    </script>
+</body>
+</html>

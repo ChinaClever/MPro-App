@@ -234,11 +234,11 @@
 			}
 		}
 		function LogOut() {
-			pdu_cfg_.login_out();
-			//window.opener = null;
-			//window.open('login.html', '_self');
-			//closeWebPage();
-			//window.history.replaceState({}, document.title, window.location.origin);
+			//pdu_cfg_.login_out();
+			window.opener = null;
+			window.open('login.html', '_self');
+			closeWebPage();
+			window.history.replaceState({}, document.title, window.location.origin);
 		}
 		document.getElementById("logOut").onmouseover = function () {
 			document.getElementById("logOut").style.color = "red";
