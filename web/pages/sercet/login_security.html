@@ -87,7 +87,9 @@
 				document.getElementById("more_user").checked = true;
 			}
 			document.getElementById("web_sub").value = web_data[1] + ' '+ "min";
-
+			if(0 != language){
+				document.getElementById("explain").innerHTML = "(After entering the time, when there is no action on the page after that time, it will automatically exit the login interface. If the input time is 0, this function will not be executed.)";
+			}			
 		}
 
 		function SetWeb(btn){
@@ -95,6 +97,34 @@
 				var val = 1;
 			}else{
 				var val = 0;
+			}
+			if(btn.id =="chk" && btn.checked == true){
+				if(0 == language){
+					alert("启用强密码后，用户名、密码、验证信息必须为6-16位,且必须包含至少一个数字,大写和小写字母!");
+				}else{
+					alert("After enabling strong passwords, the username, password, and verification information must be 6-16 digits and must contain at least one number, uppercase and lowercase letters!");
+				}
+			}
+			if(btn.id =="chk" && btn.checked == false){
+				if(0 == language){
+					alert("不启用强密码，用户名、密码、验证信息无需遵循以上规则!");
+				}else{
+					alert("Do not enable strong passwords, username, password, and verification information do not need to follow the above rules!");
+				}
+			}
+			if(btn.id =="more_user" && btn.checked == true){
+				if(0 == language){
+					alert("启用后，可允许多个用户同时登陆!");
+				}else{
+					alert("After activation, multiple users can be allowed to log in simultaneously!");
+				}
+			}
+			if(btn.id =="more_user" && btn.checked == false){
+				if(0 == language){
+					alert("不启用后，只允许1个用户登陆!");
+				}else{
+					alert("When not enabled, only one user is allowed to log in!");
+				}
 			}
 			if(btn.id == "web_sub"){
 				pdu_cfg.setCfg(42,7,btn.value,0,addr);
@@ -126,6 +156,9 @@
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td>';
+			tbody += '<td id = "explain">(输入时间后，当页面超过该时间无任何操作时自动退出到登陆界面，输入时间为0则不执行此功能)';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

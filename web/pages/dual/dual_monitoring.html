@@ -213,6 +213,14 @@
 		function change(opt){
 			slave_addr = parseInt(opt.value);
 			dual_addr = parseInt(opt.value) * 2;
+			pdu_cfg.setAddr(dual_addr);
+			setTimeout(function(){
+			read_data();
+			$('.table-striped').html(buildTable(output_num));
+			$('.devname').html(buildSel(slave_num/2));
+			showdata();
+			lang_fun();
+		},800);
 		}
 		function buildSel(rows)
 		{
