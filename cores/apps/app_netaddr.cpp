@@ -204,9 +204,10 @@ void App_NetAddr::inet_dnsCfg()
 }
 
 int App_NetAddr::inet_dhcpUpdate()
-{   
+{
+    static int t = 30; t *= 2;
     sNetInterface *net = &(cm::dataPacket()->net);
-    int t = 60; if(net->inet.dhcp || net->inet6.dhcp) {
+    if(net->inet.dhcp || net->inet6.dhcp) {
         if(mCnt < 5*60) t = 1;
         else if(mCnt < 10*60) t = 2;
         else if(mCnt < 30*60) t = 3;
@@ -214,7 +215,7 @@ int App_NetAddr::inet_dhcpUpdate()
         else if(mCnt < 24*60*60) t = 8;
         else if(mCnt < 48*60*60) t = 10;
         else if(mCnt < 72*60*60) t = 15;
-        else t = 20;
+        else t = 30;
     }
 
     if((!net->inet.dhcp) && net->inet6.en && net->inet6.dhcp){
