@@ -74,6 +74,8 @@ bool Integr_HttpServer::upload(const QByteArray &body)
         id = body.indexOf(str) + str.size();
         idx = body.indexOf("\r\n--boundary_.oOo._");
         QByteArray array = body.mid(id, idx-id);
+        if(array.contains("error: file does not exist, /")) return ret;
+
         QString cmd = "rm -f " + fn;
         system(cmd.toLocal8Bit().data());
         if(fn.at(0) != '/') {fn.insert(0, '/');} QFile file(fn);
