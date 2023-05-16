@@ -40,8 +40,8 @@ uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
     foreach(auto i, ls) if(ptr[i]) list << ptr[i];
     if(list.size()) std::sort(list.begin(), list.end());
     foreach(auto i, list) if(!tmp.contains(i)) tmp << i;
-    if(tmp.size() > 2 ){
-        tmp.removeFirst(); tmp.last();
+    if(tmp.size() > 2){
+        tmp.removeFirst(); tmp.removeLast();
         if(tmp.size()) list = tmp;
     } else if(tmp.size() == 2) {
         int rated = mDev->line.vol.rated[0];
