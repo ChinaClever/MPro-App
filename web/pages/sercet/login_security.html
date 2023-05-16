@@ -58,7 +58,7 @@
 			}
 			lang[1] = ["WEB登陆安全","WEB login security","","",""];
 			lang[2] = ["WEB登陆安全设置","WEB login security settings","","",""];
-			lang[3] = ["启用强密码：","Enable strong password：","","",""];
+			lang[3] = ["强密码：","Strong password：","","",""];
 			lang[4] = ["闲置超时时间：","Idle timeout：","","",""];
 			lang[5] = ["多用户同时登陆：","Multiple users logging in simultaneously:","","",""];
 
@@ -88,7 +88,9 @@
 			}
 			document.getElementById("web_sub").value = web_data[1] + ' '+ "min";
 			if(0 != language){
-				document.getElementById("explain").innerHTML = "(After entering the time, when there is no action on the page after that time, it will automatically exit the login interface. If the input time is 0, this function will not be executed.)";
+				document.getElementById("explain1").innerHTML = "(After enabling strong passwords, the username, password, and verification information must be 6-16 digits and must contain at least one number, uppercase and lowercase letters. If not enabled, this rule does not need to be followed.)";
+				document.getElementById("explain2").innerHTML = "(After enabling, multiple users can be allowed to log in at the same time. If not enabled, only one user is allowed to log in.)";
+				document.getElementById("explain3").innerHTML = "(After entering the time, when there is no action on the page after that time, it will automatically exit the login interface. If the input time is 0, this function will not be executed.)";
 			}			
 		}
 
@@ -98,6 +100,7 @@
 			}else{
 				var val = 0;
 			}
+			/*
 			if(btn.id =="chk" && btn.checked == true){
 				if(0 == language){
 					alert("启用强密码后，用户名、密码、验证信息必须为6-16位,且必须包含至少一个数字,大写和小写字母!");
@@ -126,6 +129,7 @@
 					alert("When not enabled, only one user is allowed to log in!");
 				}
 			}
+			*/
 			if(btn.id == "web_sub"){
 				pdu_cfg.setCfg(42,7,btn.value,0,addr);
 				btn.blur();
@@ -151,14 +155,20 @@
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td><input id = "chk"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
 			tbody += '</td></tr>';
+			tbody += '<tr><td></td>';
+			tbody += '<td id = "explain1">(启用强密码后，用户名、密码、验证信息必须为6-16位,且必须包含至少一个数字,大写和小写字母，不启用则无需遵循此规则)';
+			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id = "more_user"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td>';
+			tbody += '<td id = "explain2">(启用后，可允许多个用户同时登陆，不启用则只允许一个用户登陆)';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
-			tbody += '<td id = "explain">(输入时间后，当页面超过该时间无任何操作时自动退出到登陆界面，输入时间为0则不执行此功能)';
+			tbody += '<td id = "explain3">(输入时间后，当页面超过该时间无任何操作时自动退出到登陆界面，输入时间为0则不执行此功能)';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
