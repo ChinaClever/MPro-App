@@ -20,8 +20,8 @@
       <div class="center_form">
       </div>
       <!-- <p style="width: 520px;">Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "</p> -->
-      <p id="rule" style="width: 528px;height: auto;padding-left: -10%;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
-      <p id="free_rule" style="width: 528px;text-align: left;">免加密策略：勾选免加密策略可以无需遵循以上密码和账户规则！</p>
+      <p id="rule" style="width: 528px;height: auto;padding-left: -10%;text-align: left;display: none;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
+      <p id="free_rule" style="width: 528px;text-align: left;display: none;"> 强密码：不勾选“强密码”可以无需遵循以上密码和账户规则！</p>
     </div>
 
   </div>
@@ -54,8 +54,7 @@
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
 		},1600);
-
-    
+   
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
 		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
@@ -64,9 +63,11 @@
     let time3_num = 0;
     let user = 14;
     let web_service = 0;
+    let language ;
     let lang = new Array();
     lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
+    language = window.sessionStorage.getItem('language');
     //let hasher = CryptoJS.algo.SHA256.create();
     let time1 = setInterval(function(){
       if(time1_num== 20 ){
@@ -197,24 +198,34 @@
       }    
     }
     function submite(){
+      language = window.sessionStorage.getItem('language');
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){
         div[0].removeChild(div[0].childNodes[i]);
       }
       $('.center_form').html(BuildDiv('submite'));
-      document.getElementById("username").placeholder = "User name";
-      document.getElementById("psd").placeholder = "New Passward";
-      document.getElementById("conpsd").placeholder = "Confirm Password";
-      document.getElementById("ident").placeholder = "Set validation information";
-      document.getElementById("sign_in").value = "SUBMIT";
-      document.getElementById("sub_title").innerHTML = "Reset Password";
+      document.getElementById("rule").style.display ='';
+     // document.getElementById("free_rule").style.display='';
+      if(0 != language){
+        document.getElementById("username").placeholder = "User name";
+        document.getElementById("psd").placeholder = "New Passward";
+        document.getElementById("conpsd").placeholder = "Confirm Password";
+        document.getElementById("ident").placeholder = "Set validation information";
+        document.getElementById("sign_in").value = "SUBMIT";
+        document.getElementById("sub_title").innerHTML = "Reset Password";
+        document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 6, and at most 16 characters!";
+     //   document.getElementById("free_rule").innerHTML = "Strong password: Unchecking ”Strong password“ eliminates the need to follow the above password and account rules!";
+      }
     }
     function GotoRegisterPage(){
+      var language = window.sessionStorage.getItem('language');
       var div= document.getElementsByClassName('center_form');
       for(var i = 0; i<div[0].childElementCount;i++){
         div[0].removeChild(div[0].childNodes[i]);
       }
       $('.center_form').html(BuildDiv('register'));
+      document.getElementById("rule").style.display ='';
+      document.getElementById("free_rule").style.display='';
       if(0 != language){
           document.getElementById("username").placeholder = "User name";
           document.getElementById("psd").placeholder = "Passward";
@@ -224,7 +235,7 @@
           document.getElementById("reg_title_name").innerHTML = "Registration Page";
           document.getElementById("free_encryption").innerHTML = "Encryption free policy";
           document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 6, and at most 16 characters!";
-          document.getElementById("free_rule").innerHTML = "Encryption free policy: Checking the encryption free policy eliminates the need to follow the above password and account rules!";
+          document.getElementById("free_rule").innerHTML = "Strong password: Unchecking ”Strong password“ eliminates the need to follow the above password and account rules!";
          }
     }
     function submite1(){
@@ -279,8 +290,7 @@
         } 
       }
       else{
-
-        if(document.getElementById("lang_2").checked == true){
+        if(document.getElementById("lang_2").checked == false){
         }else{
           if(!pattern_.test(usr))
           {
@@ -307,14 +317,14 @@
 				  	}
             return ;
           }
-       }
-        if(ient == psd){
-          if(0 == language){
-					alert("输入的验证信息和密码不能是同一个，请重新输入");
-				}else{
-					alert("The verification information and password entered cannot be the same. Please re-enter");
-				}
-          return ;
+          if(ient == psd){
+            if(0 == language){
+				    	alert("输入的验证信息和密码不能是同一个，请重新输入");
+			    	}else{
+					    alert("The verification information and password entered cannot be the same. Please re-enter");
+				    }
+            return ;
+         }
         }
        // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
         obj.setCfg(user,1,usr,0,0);
@@ -367,6 +377,7 @@
     },1200);
     function validataForm(ipt)
     {
+      var language = window.sessionStorage.getItem('language');
       var con = document.getElementById("conpsd");
       var code = document.getElementById("ident");
       var psd_val = document.getElementById("psd");
@@ -452,7 +463,7 @@
       if(Reg === 'register')
       {
         tbody += '<br/><p class="title"><span id="reg_title_name">注册页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p style ="height:30px"><span id="free_encryption" style="text-align:center;line-height:40px">免加密策略：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
+        tbody += '<p style ="height:30px"><span id="free_encryption" style="text-align:center;line-height:40px">强密码：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
         tbody += '<p><input id ="username" type="username" maxlength="16"; onkeyup = "Clear(this)" placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
@@ -469,8 +480,8 @@
         tbody += '<p><input id ="username" type="text" maxlength="16" onblur= "validataForm(this)" onkeyup = "Clear(this)" placeholder="用户名"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="新密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';
-        tbody += '<p><input id ="ident" type="text" maxlength="16" onblur = "validataForm(this)" autocomplete="off"  placeholder="Identifying code"></p>';
-        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" value = "提交" onclick="submite1()"></input></p>';
+        tbody += '<p><input id ="ident" type="text" maxlength="16" onblur = "validataForm(this)" autocomplete="off"  placeholder="设置验证信息"></p>';
+        tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" style="padding-left:0px" value = "提交" onclick="submite1()"></input></p>';
       }
       return tbody;
     }

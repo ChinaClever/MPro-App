@@ -124,7 +124,8 @@
 						reflow:true
 					},
 					tooltip: {
-						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+						enabled:false
 					},
 					plotOptions: {
 						pie: {			
@@ -178,7 +179,8 @@
 				reflow:true
 			},
 			tooltip: {
-				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+				enabled:false
 			},
 			plotOptions: {
 				pie: {			
@@ -187,10 +189,10 @@
 						connectorWidth:0,  //取消数据标签线
 						distance:0,
 						// format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-						format: '<b>{point.y}{point.name}</b>',
+						format: '<b>{point.y}<br>{point.name}</b>',
 						style: {
 							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-							fontSize:16,				
+							fontSize:16,//字体大小				
 						}
 					},
 					point: {
@@ -373,7 +375,7 @@
 							labels: dataLabels,
 							datasets: [
 								{
-									label: 'L1',
+									label: 'A Phase',
 									data: data_inlet1,
 									backgroundColor: 'rgb(75, 192, 192)',
 									borderColor: 'rgb(75, 192, 192)',
@@ -382,7 +384,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'L2',
+									label: 'B Phase',
 									data: data_inlet2,						
 									backgroundColor: 'rgb(128, 128, 128)',
 									borderColor: 'rgb(128, 128, 128)',
@@ -391,7 +393,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'L3',
+									label: 'C Phase',
 									data: data_inlet3,
 									backgroundColor: 'rgb(70, 130, 180)',
 									borderColor: 'rgb(70, 130, 180)',
@@ -960,20 +962,20 @@
 			}
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
 				if(pdu_data.pdu_data.env_item_list.door[i] == 2){
-					document.getElementById('dat' + (68 + i)).bgColor = 'red';
+					document.getElementById('dat' + (72 + i)).bgColor = 'red';
 				}else{
-					document.getElementById('dat' + (68 + i)).bgColor = '';
+					document.getElementById('dat' + (72 + i)).bgColor = '';
 				}
 			}
 			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
-				document.getElementById('dat' + 70).bgColor = 'red';
+				document.getElementById('dat' + 74).bgColor = 'red';
 			}else{
-				document.getElementById('dat' + 70).bgColor = '';
+				document.getElementById('dat' + 74).bgColor = '';
 			}
 			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
-				document.getElementById('dat' + 71).bgColor = 'red';
+				document.getElementById('dat' + 75).bgColor = 'red';
 			}else{
-				document.getElementById('dat' + 71).bgColor = '';
+				document.getElementById('dat' + 75).bgColor = '';
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){

@@ -226,15 +226,14 @@
 				
 				return ;
 				}
-			}
-			if(ident_ == psd_){
-				if(0 == language){
-					alert("输入的验证信息和密码不能是同一个，请重新输入");
-				}else{
-					alert("The verification information and password entered cannot be the same. Please re-enter");
+				if(ident_ == psd_){
+					if(0 == language){
+						alert("输入的验证信息和密码不能是同一个，请重新输入");
+					}else{
+						alert("The verification information and password entered cannot be the same. Please re-enter");
+					}		
+					return ;
 				}
-		
-			return ;
 			}
 			for(i = 0;i < 5;i++){
 				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
