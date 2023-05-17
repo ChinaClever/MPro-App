@@ -52,7 +52,7 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         env->hum.value[2] = getShort(ptr); ptr += 2;
         env->tem.value[3] = getShort(ptr); ptr += 2;
         env->hum.value[3] = getShort(ptr); ptr += 2;
-        ptr += 8;  int k=0, j=4;// 报警上下限
+        ptr += 8; int k=0, j=4;// 报警上下限
         ushort alarm = getShort(ptr); //ptr += 2;
 
         env->isInsert[2] = (isInsert >> k++) & 1;
