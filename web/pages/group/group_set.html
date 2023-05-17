@@ -21,8 +21,8 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i><span id="lang_1"></span>
-								<span style = "padding-left: 30%;"><span id="lang_6"></span><select class ="enable" id="en" style ="width:50px;" onchange = "Change(this);"></select></span>
-								<span style="padding-left: 8%;"><button id="lang_2" style="display: none;" onclick ="ReadOnlySet(this);"></button></span>
+								<span id="group_en" style = "padding-left: 30%;"><span id="lang_6"></span><select class ="enable" id="en" style ="width:50px;" onchange = "Change(this);"></select></span>
+								<span id="readonly" style="padding-left: 8%;"><button id="lang_2" style="display: none;" onclick ="ReadOnlySet(this);"></button></span>
 								<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
@@ -64,8 +64,44 @@
 			document.getElementById("lang_2").style.display="";
 		}
 
+		function dev_disp(){
+			let DataString = pdu_cfg.meta_value();
+			pdu_data = JSON.parse(DataString);
+			for(let i = 1;i<14;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["输出位监测","","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3]  = ["主机", "Master", "", "", ""];
+			lang[4]  = ["副机", "Slave", "", "", ""];
+
+			dev_name[0] = lang[3][language];
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
+				dev_name[i] =  lang[4][language] + i;
+			}
+			$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
+
+			for(let j = 1;j<3;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
+
+		}
 		function hidden(){
-			document.getElementsByClassName("page-cont")[0].style.display = "none";		
+			 dev_disp();
+			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			// document.getElementsByClassName("section-cont")[0].style.display = "none";
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+			 document.getElementById("readonly").style.display = "none";
+			 document.getElementById("group_en").style.display = "none";
+			 document.getElementById("lang_1").style.display = "none";
+			 return -1;
+
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();

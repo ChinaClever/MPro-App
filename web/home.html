@@ -960,22 +960,42 @@
 					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
 				}
 			}
-			for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
-				if(pdu_data.pdu_data.env_item_list.door[i] == 2){
-					document.getElementById('dat' + (72 + i)).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + (72 + i)).bgColor = '';
+			if(0 == sensor_box){
+				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+						document.getElementById('dat' + (68 + i)).bgColor = 'red';
+					}else{
+						document.getElementById('dat' + (68 + i)).bgColor = '';
+					}
 				}
-			}
-			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
-				document.getElementById('dat' + 74).bgColor = 'red';
+				if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+					document.getElementById('dat' + 70).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 70).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+					document.getElementById('dat' + 71).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 71).bgColor = '';
+				}			
 			}else{
-				document.getElementById('dat' + 74).bgColor = '';
-			}
-			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
-				document.getElementById('dat' + 75).bgColor = 'red';
-			}else{
-				document.getElementById('dat' + 75).bgColor = '';
+				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+						document.getElementById('dat' + (72 + i)).bgColor = 'red';
+					}else{
+						document.getElementById('dat' + (72 + i)).bgColor = '';
+					}
+				}
+				if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+					document.getElementById('dat' + 74).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 74).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+					document.getElementById('dat' + 75).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 75).bgColor = '';
+				}
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){
