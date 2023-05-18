@@ -49,7 +49,7 @@ uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
         uint min = qMin(tmp.first(), tmp.last());
         uint temp_max = qAbs((int)max-rated);
         uint temp_min = qAbs((int)min-rated);
-        return qMin(temp_max, temp_min);
+        if(temp_max >= temp_min) return min; else return max;
     } else if(1==tmp.size()) return tmp.first();
 
     if(list.size()) {
