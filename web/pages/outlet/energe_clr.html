@@ -111,7 +111,7 @@
 			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
 			// document.getElementsByClassName("section-cont")[0].style.display = "none";
 			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
-			 //document.getElementsByClassName("grid-col grid-col-7")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
 			 document.getElementById("readonly").style.display = "none";
 			 document.getElementById("lang_1").style.display = "none";
 			 return -1;
@@ -124,6 +124,7 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			loop_num = pdu_data.pdu_info.loop_num;
 			language = pdu_data.pdu_info.language;
+			output_num = pdu_data.pdu_info.output_num;
 			let k = 0;
 			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
 				hidden();
@@ -138,25 +139,22 @@
 						t1 += 1;
 					}, 100);
 				}
-				return ;
-				for(let i = 0;i<loop_num;i++){
-					output_info_[i] = new Array();
-					let j = 0;
-					for(let key in pdu_data.pdu_data.loop_item_list){
-						output_info_[i][j] = pdu_data.pdu_data.loop_item_list[key][i];
-						j ++;
-					}
-				}			
+				return ;		
 			}else{
-				for(let i = 0;i<output_num;i++){
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+			 document.getElementById("readonly").style.display = "";
+			 document.getElementById("lang_1").style.display = "";
+			}
+			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
 				let j = 0;
 				for(let key in pdu_data.pdu_data.output_item_list){
 					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
 					j ++;
 				}
-				}	
-			}
+			}	
+			
 		}
 		ParseData();
 		LangInit();
@@ -176,36 +174,16 @@
 			lang[10] = ["计量清零","Zero measurement","","",""];
 			lang[11]  = ["主机", "Master", "", "", ""];
 			lang[12]  = ["副机", "Slave", "", "", ""];
-			lang[13] = ["序号","Serial number","","",""];
-			lang[14] = ["回路名称","Loop name","","",""];
-			lang[15] = ["电能消耗(kWh)","Power consumption(kWh)","","",""];
-			lang[16] = ["历史记录","History","","",""];
-			lang[17] = ["重置清零","Reset","","",""];
 			dev_name[0] = lang[11][language];
 			for(let i = 1;i<(slave_num+1);i++){
 				dev_name[i] =  lang[12][language] + i;
 			}
 		}
 		function LangFun(){
-			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
-			loop_num = pdu_data.pdu_info.loop_num;
-			language = pdu_data.pdu_info.language;
-			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-				for(let j = 1;j<4;j++){
-					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
-				}
-				for(let j = 13;j<18;j++){
-					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
-				}
-			}else{
+
 				for(let j = 1;j<9;j++){
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
-			}
-
 
 			if (pdu_data.pdu_info.dev_mode == 0 ) {
 				document.getElementById("dev_sel").style.display = "none";
@@ -216,35 +194,15 @@
 		}
 		ReadData();
 		function ReadData(){
-			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
-			loop_num = pdu_data.pdu_info.loop_num;
-			language = pdu_data.pdu_info.language;
-			output_name = [];
-			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-				for(var i = 1 ;i < loop_num + 1;i++){
-					output_name[i] = "C" + i ;
-					energe_val[i] = output_info_[i - 1][11];
-					ckd_state[i] = output_info_[i - 1][12];
-				}
-			}else{
 				for(var i = 1 ;i < output_num + 1;i++)
 				{
 					output_name[i] = output_info_[i - 1][12];
 					energe_val[i] = output_info_[i - 1][10];
 					ckd_state[i] = output_info_[i - 1][11];
 				}
-			}
 
 		}
-		if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){	
-			$('.table-striped').html(BuildTable(loop_num));		
-		}else{
-			$('.table-striped').html(BuildTable(output_num));
-		}
-
+		$('.table-striped').html(BuildTable(output_num));
 		$('.devname').html(BuildSel((slave_num+1)));
 		LangFun();
 		ShowData();
@@ -259,26 +217,18 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
-				FlashHtml();
+				LangInit();
+				ReadData();
+				//FlashHtml();
+				$('.table-striped').html(BuildTable(output_num));
+
+				ShowData();
+				LangFun();
+				ModeSet();
 			},500);
 		}
 		function ShowData(){
-			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
-			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
-			loop_num = pdu_data.pdu_info.loop_num;
-			language = pdu_data.pdu_info.language;
-			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){		
-				for(let i = 0;i < loop_num;i++){
-					state_ = document.getElementById('f' + i);
-				if(ckd_state[i+1] ==  1){
-					state_.checked = true;
-				}else{
-					state_.checked = false;
-				}
-				}
-			}else{
+
 				for(let i = 0;i < output_num;i++){
 					state_ = document.getElementById('f' + i);
 				if(ckd_state[i+1] ==  1){
@@ -287,7 +237,7 @@
 					state_.checked = false;
 				}
 				}	
-			}
+			
 		}
 		function Cked(ckd)
 		{
@@ -338,22 +288,12 @@
 		function FlashHtml()
 		{
 			setTimeout(function(){
-				let DataString = pdu_cfg.meta_value();
-				let pdu_data = JSON.parse(DataString);
-				output_num = pdu_data.pdu_info.output_num;
-				slave_num = pdu_data.pdu_info.slave_num;
-				loop_num = pdu_data.pdu_info.loop_num;
-				language = pdu_data.pdu_info.language;
 				ReadData();
-				if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-				//	document.getElementById('lang_4').parentNode.parentNode.remove();
-				//	document.getElementById('tr0').parentNode.remove();
-					$('.table-striped').html(BuildTable(pdu_data.pdu_info.loop_num));									
-				}else{
+
 				//	document.getElementById('lang_13').parentNode.remove();
 				//	document.getElementById('tr0').parentNode.remove();
 					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
-				}
+
 				LangFun();
 				ShowData();
 				ModeSet();
@@ -441,29 +381,12 @@
 
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
-				let DataString = pdu_cfg.meta_value();
-				let pdu_data = JSON.parse(DataString);
-				output_num = pdu_data.pdu_info.output_num;
-				slave_num = pdu_data.pdu_info.slave_num;
-				loop_num = pdu_data.pdu_info.loop_num;
-				language = pdu_data.pdu_info.language;
-					if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-						thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_13"></td>\
-						<td width ="26%" id="lang_14"></td>\
-						<td width ="12%" id="lang_15"></td>\
-						<td width ="36%"></td>\
-						<td width ="8%" id="lang_16"></td>\
-						<td width ="8%" id="lang_17"></td>';					
-					}else{
-						thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_4"></td>\
+					thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_4"></td>\
 						<td width ="26%" id="lang_5"></td>\
 						<td width ="12%" id="lang_6"></td>\
 						<td width ="36%"></td>\
 						<td width ="8%" id="lang_7"></td>\
-						<td width ="8%" id="lang_8"></td>';	
-
-					}
-
+						<td width ="8%" id="lang_8"></td>';						
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
@@ -490,25 +413,13 @@
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 		function PutData(){
-			let DataString = pdu_cfg.meta_value();
-				let pdu_data = JSON.parse(DataString);
-				output_num = pdu_data.pdu_info.output_num;
-				slave_num = pdu_data.pdu_info.slave_num;
-				loop_num = pdu_data.pdu_info.loop_num;
-				language = pdu_data.pdu_info.language;
-			if(pdu_data.pdu_info.pdu_spec == 1||pdu_data.pdu_info.pdu_spec == 3){
-				for(let i = 0;i < loop_num;i++){
-					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
-				}				
-			}else{
 				for(let i = 0;i < output_num;i++){
 					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
 				}
-			}
 		}
 		setInterval(function(){
 			ParseData();
-			//ReadData();
+			ReadData();
 			//FlashHtml();
 			PutData();
 		},2000);

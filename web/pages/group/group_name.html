@@ -77,21 +77,22 @@
 		function dev_disp(){
 			let DataString = pdu_cfg.meta_value();
 			pdu_data = JSON.parse(DataString);
-			for(let i = 1;i<14;i++){
+			for(let i = 1;i<6;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["输出位监测","","","",""];
-			lang[2] = ["设备选择:","Equipment selection:","","",""];
-			lang[3]  = ["主机", "Master", "", "", ""];
-			lang[4]  = ["副机", "Slave", "", "", ""];
+			lang[2] = ["阅读模式","Reading mode","","",""];
+			lang[3] = ["设备选择:","Equipment selection:","","",""];
+			lang[4]  = ["主机", "Master", "", "", ""];
+			lang[5]  = ["副机", "Slave", "", "", ""];
 
-			dev_name[0] = lang[3][language];
+			dev_name[0] = lang[4][language];
 			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
-				dev_name[i] =  lang[4][language] + i;
+				dev_name[i] =  lang[5][language] + i;
 			}
 			$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 
-			for(let j = 1;j<3;j++){
+			for(let j = 1;j<4;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			if (pdu_data.pdu_info.dev_mode == 0 ) {
@@ -140,6 +141,11 @@
 					}, 100);
 				}
 				return ;
+			}else{
+				document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+				document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+				document.getElementById("readonly").style.display = "";
+				document.getElementById("lang_1").style.display = "";				
 			}
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
@@ -255,6 +261,7 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
 				ReadData();
 				$('.table-striped').html(BuildTable(group_num));
 				LangFun();

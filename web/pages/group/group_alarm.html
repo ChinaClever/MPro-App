@@ -133,6 +133,11 @@
 					}, 100);
 				}
 				return ;
+			}else{
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+			 document.getElementById("readonly").style.display = "";
+			 document.getElementById("lang_1").style.display = "";
 			}
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
@@ -209,6 +214,7 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
 				$('.table-striped').html(BuildTable(group_num));
 				LangFun();
 				ModeSet();

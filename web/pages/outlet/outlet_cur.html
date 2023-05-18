@@ -94,7 +94,7 @@
 			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
 			// document.getElementsByClassName("section-cont")[0].style.display = "none";
 			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
-			 //document.getElementsByClassName("grid-col grid-col-7")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
 			 document.getElementById("readonly").style.display = "none";
 			 document.getElementById("lang_1").style.display = "none";
 			 return -1;
@@ -118,6 +118,11 @@
 					}, 100);
 				}
 				return ;
+			}else{
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+			 document.getElementById("readonly").style.display = "";
+			 document.getElementById("lang_1").style.display = "";
 			}
 		}
 		ParseData();
@@ -178,6 +183,7 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
 				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				ShowData();
 				LangFun();

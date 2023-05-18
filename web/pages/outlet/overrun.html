@@ -107,7 +107,7 @@
 			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
 			// document.getElementsByClassName("section-cont")[0].style.display = "none";
 			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
-			 //document.getElementsByClassName("grid-col grid-col-7")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
 			 document.getElementById("readonly").style.display = "none";
 			 document.getElementById("lang_1").style.display = "none";
 			 return -1;
@@ -120,23 +120,28 @@
 			slave_num = pdu_data.pdu_info.slave_num;
 			dev_mode = pdu_data.pdu_info.dev_mode;
 			language = pdu_data.pdu_info.language;
-			for(let i = 1;i<output_num + 1;i++){
-				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
-			}
-			if(pdu_data.pdu_info.pdu_spec == 1){
+			if(pdu_data.pdu_info.pdu_spec == 1 ||pdu_data.pdu_info.pdu_spec == 2){
 				hidden();
 				if(t1 == 0){
 					let t2 =setInterval(function () {
 						if(0 == language){
-								alert("A系列不支持此功能！");
+								alert("A或B系列不支持此功能！");
 							}else{
-								alert("The A series does not support this feature!")
+								alert("The A or B series does not support this feature!")
 							}
 						clearInterval(t2);
 						t1 += 1;
 					}, 100);
 				}
 				return ;
+			}else{
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+			 document.getElementById("readonly").style.display = "";
+			 document.getElementById("lang_1").style.display = "";
+			}
+			for(let i = 1;i<output_num + 1;i++){
+				overrun_state[i] =  pdu_data.pdu_data.output_item_list.relay_overrun_off[i - 1];
 			}
 		}
 		function LangInit(){
@@ -170,6 +175,8 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
+				ReadData();
 				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				LangFun();
 				ShowData();
