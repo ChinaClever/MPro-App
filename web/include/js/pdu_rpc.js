@@ -180,11 +180,25 @@ class JsonRpc {
         params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
+
+    json_rpc_login(params) {
+        var addr  = data[0];
+        var type = data[1];
+        var topic = data[2];
+        var sub =data[3];
+        var id = data[4];
+
+        if(14 == type && 11 == topic) {
+            var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
+            this.root_map.set(key, 255);
+        }
+    }
    
     // RPC设置接口
     json_rpc_set(method, params) {
         this.isSetting = true;
-        params.push(this.uuid);
+        params.push(this.uuid);  
+        this.json_rpc_login(params);
         return this.json_rpc_obj(method, params);
     }
 
