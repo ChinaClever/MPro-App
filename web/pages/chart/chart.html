@@ -255,7 +255,11 @@
 									fc = fc.slice(0,6);
 								}
 								pdu_log.log_hda(addr, fc, start, end);
-								alert("Is reading,please wait...");
+								if(0 == language){
+									alert("正在读取数据，请稍候...");
+								}else{
+									alert("Is reading data,please wait...!");
+								}	
 								read_data();
 							}else{}
 						}
@@ -272,8 +276,7 @@
 											alert("未开启历史数据或此时间段没有数据！");
 										}else{
 											alert("No historical data has been opened or there is no data in this time period!");
-										}
-										
+										}										
 									}
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);

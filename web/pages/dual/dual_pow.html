@@ -118,6 +118,20 @@
 					}
 					return ;
 				}
+				if(0 == slave_num){
+					document.getElementsByClassName("page-cont")[0].style.display = "none";	
+					if(t1 == 0){
+						let t2 =setInterval(function () {
+							if(0 == language){
+								alert("副机机柜数据在主机查看!");
+							}else{
+								alert("Viewing the data of the auxiliary machine cabinet on the host!")
+							}
+							clearInterval(t2);
+							t1 += 1;
+						}, 100);
+					}
+				}
 				if(dev_mode != 2){
 					if(t1 == 0){
 					let t2 =setInterval(function () {
