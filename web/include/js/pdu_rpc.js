@@ -182,6 +182,7 @@ class JsonRpc {
     }
 
     json_rpc_login(params) {
+        var data = new Array();
         var addr  = data[0];
         var type = data[1];
         var topic = data[2];
