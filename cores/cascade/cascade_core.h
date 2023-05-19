@@ -15,6 +15,7 @@ public:
 private:
     void workFun();
     void initFunSlot();
+    void cascadeSlaveLog(int addr, bool recv);
 
 private:
     bool isRun=true;
