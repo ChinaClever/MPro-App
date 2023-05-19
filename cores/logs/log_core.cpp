@@ -76,7 +76,7 @@ void Log_Core::append(const sDataItem &it)
     hda.topic = QString::number(it.topic);
     hda.indexes = QString::number(it.id + 1);
     hda.value = QString::number(it.value / cm::decimal(it));
-    mHdaIts << hda; run(); //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
+    mHdaIts << hda; run(); cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
 }
 
 void Log_Core::log_hda(const sDataItem &it)

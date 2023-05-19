@@ -203,11 +203,9 @@ QVariant Integr_JsonRecv::pduCfgGet(const QJsonObject &object)
 
 bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
 {
-    bool ret = versionNumber(object);
-    if(ret) {
-        pduDataSet(object);
-        pduCfgSet(object);
-    }
+    //bool ret = versionNumber(object); //if(ret) {
+    bool ret = pduDataSet(object);
+    if(!ret) ret = pduCfgSet(object);
 
     return ret;
 }
