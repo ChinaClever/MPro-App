@@ -122,6 +122,12 @@
 					}, 100);
 				}
 				return ;
+			}else{
+				document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+				document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+				document.getElementById("readonly").style.display = "";
+				document.getElementById("group_en").style.display = "";
+				document.getElementById("lang_1").style.display = "";
 			}
 			if(pdu_data.pdu_info.group_en == 0){
 			document.getElementById("lang_2").style.display="none";
@@ -213,6 +219,7 @@
 				},100);
 				setTimeout(function(){
 					ParseData();
+					LangInit();
 					ReadData();
 					$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 					LangFun();
