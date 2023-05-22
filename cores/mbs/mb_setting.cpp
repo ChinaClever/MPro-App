@@ -35,10 +35,11 @@ void Mb_Setting::upSetData()
 
 void Mb_Setting::addrSet(ushort &v)
 {
-    Cfg_Com::bulid()->writeCfg("addr", v, "modbus");
-    Mb_Core::modbusCfg.addrRtu = v; setAddress(v);
-    mDevData->cfg.param.modbusRtuAddr = v;
-    cout << "modbus set addr OK" << v;
+    if(cm::runTime() < 1*60*60) {
+        Cfg_Com::bulid()->writeCfg("addr", v, "modbus");
+        Mb_Core::modbusCfg.addrRtu = v; setAddress(v);
+        mDevData->cfg.param.modbusRtuAddr = v;
+    } cout << "modbus set addr OK" << v;
 }
 
 void Mb_Setting::buzzerSw(ushort &v)
@@ -62,7 +63,7 @@ void Mb_Setting::startSet(ushort addr, ushort &value)
     case MbReg_SetBuzzer: buzzerSw(value); break;
     case MbReg_SetDry: drySw(value); break;
     case MbReg_SetEle: OP_Core::bulid()->clearEle(0); break;
-    //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
+        //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
     }
 }
 

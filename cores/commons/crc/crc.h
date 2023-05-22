@@ -5,22 +5,16 @@
 namespace Crc {
 uchar XorNum(uchar *buf, int len);
 uchar XorNum(const QByteArray &array);
-void AppendXorNum(QByteArray &array);
+void XorNumAppend(QByteArray &array);
 
-uchar Cal8(uchar *pdata, uint len);
-uint Cal32(uchar *pdata, uint len);
-uint Cal32(const QByteArray &array);
-uint Cal32(const QByteArray &array, uint crc);
-ushort Cal16(uchar *pdata, uint len);
+ushort Checksum(const char *ptr, int len);
+ushort Checksum(const QByteArray &array);
+void ChecksumAppend(QByteArray &array);
 
-uint File(const QString &fn);
-void AppendCrc(QByteArray &array);
-
-ushort CRC16(uchar *ptr, int len);
-ushort CRC16(const QByteArray &array);
-
-ushort rtu_crc(uchar *buf, int len);
-ushort rtu_crc(const QByteArray &array);
+ushort Rtu(uchar *buf, int len);
+ushort Rtu(const QByteArray &array);
+void RtuAppend(QByteArray &array);
+uint16_t CRC_16(uint8_t *puchMsg, uint16_t usDataLen);
 
 }
 

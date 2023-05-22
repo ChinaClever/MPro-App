@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "cascade_object.h"
+#include "crc.h"
 
 Cascade_Object::Cascade_Object(QObject *parent) : SerialPort{parent}
 {
@@ -31,7 +32,7 @@ bool Cascade_Object::arrayToFrame(QDataStream &out, c_sFrame &it)
 {
     ushort head, crc; bool ret = false; out >> head;
     if(head == START_HEAD) out >> it.dstAddr >> it.srcAddr >> it.fc >> it.len;
-    if(it.len) {out >> it.data;} out >> crc; // Crc::Cal(array)
+    if(it.len) {out >> it.data;} out >> crc;  //Crc::Cal(array)
     if(crc == END_CRC) ret = true;
     return ret;
 }
@@ -40,7 +41,7 @@ QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
 {
     QVector<c_sFrame> its;
     QDataStream out(&array, QIODevice::ReadOnly);
-    if((array.size()>6) && crcCheck(array)) {
+    if((array.size()>6) && integrityCheck(array)) {
         while(!out.atEnd()) {
             c_sFrame it; bool ret = arrayToFrame(out, it);
             if(ret) its << it; else cout;
@@ -64,6 +65,48 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
     return res;
 }
 
+
+QByteArray Cascade_Object::compress(QByteArray &value)
+{
+    QByteArray array;
+    if(value.size() > 17*1024) array = value;
+    else array = qUncompress(value);
+    Crc::Checksum(array);
+    return array;
+}
+
+bool Cascade_Object::crcCheck(const QByteArray &array)
+{
+    bool ret = true;  QByteArray end = array.right(2);
+    ushort crc = (((uchar)end.at(0))<<8) + (uchar)end.at(1);
+    ushort v = qChecksum(array.data(), array.size()-2);
+    if(crc != v) {ret = false; cout << crc << v;}
+    return ret;
+}
+
+QByteArray Cascade_Object::uncompress(int addr, const QByteArray &value)
+{
+    static int cnt[DEV_NUM] = {0};
+    bool ret = crcCheck(value); QByteArray array; if(ret) {
+        if(value.size() > 17*1024) array = value.right(value.size()-2);
+        else array = qUncompress((const uchar*)value.data(), value.size()-2);
+    }
+
+    if((1 == cnt[addr]++) && array.isEmpty()) {
+        sEventItem it; it.addr = addr;
+        if(cm::cn()) {
+            it.event_type = tr("级联通讯");
+            it.event_content = tr("收到副机 %1 异常通讯数据").arg(addr);
+        } else {
+            it.event_type = "Cascading communication";
+            it.event_content = tr("Abnormal communication data of auxiliary machine %1").arg(addr);
+        } Log_Core::bulid()->append(it);
+    } else if(array.size()) cnt[addr] = 0;
+    if(array.isEmpty()) cout;
+    return array;
+}
+
+
 QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr; it.len=0;
@@ -79,25 +122,6 @@ bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
     return writeSerial(qCompress(array));
-}
-
-
-QByteArray Cascade_Object::uncompress(int addr, const QByteArray &value)
-{
-    static int cnt[DEV_NUM] = {0};
-    QByteArray array = qUncompress(value);
-    if((1 == cnt[addr]++) && array.isEmpty()) {
-        sEventItem it; it.addr = addr;
-        if(cm::cn()) {
-            it.event_type = tr("级联通讯");
-            it.event_content = tr("收到副机 %1 异常通讯数据").arg(addr);
-        } else {
-            it.event_type = "Cascading communication";
-            it.event_content = tr("Abnormal communication data of auxiliary machine %1").arg(addr);
-        } Log_Core::bulid()->append(it);
-    } else if(array.size()) cnt[addr] = 0;
-    if(array.isEmpty()) cout;
-    return array;
 }
 
 QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
@@ -149,7 +173,7 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
     out >> dataStream;
 }
 
-bool Cascade_Object::crcCheck(const QByteArray &array)
+bool Cascade_Object::integrityCheck(const QByteArray &array)
 {
     bool ret = false;
     QByteArray ba = array.left(2);

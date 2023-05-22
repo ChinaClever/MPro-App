@@ -1,6 +1,6 @@
 INCLUDEPATH += $$PWD
 
-include(libcrc/libcrc.pri)
+#include(libcrc/libcrc.pri)
 
 HEADERS += \    
     $$PWD/crc.h
