@@ -146,6 +146,7 @@ void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
     system("rm -rf /tmp/updater/ota_apps");
+    system("chmod 777 -R /usr/data/clever/");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");

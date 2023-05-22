@@ -197,6 +197,7 @@ void Cascade_Updater::otaRootfs(const QString &path)
 
 void Cascade_Updater::otaReboot()
 {
+    system("chmod 777 -R /usr/data/clever/");
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
