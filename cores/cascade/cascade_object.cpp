@@ -41,7 +41,7 @@ QVector<c_sFrame> Cascade_Object::arrayToFrames(QByteArray &array)
 {
     QVector<c_sFrame> its;
     QDataStream out(&array, QIODevice::ReadOnly);
-    if((array.size()>6) && integrityCheck(array)) {
+    if((array.size()>6) && crcCheck(array)) {
         while(!out.atEnd()) {
             c_sFrame it; bool ret = arrayToFrame(out, it);
             if(ret) its << it; else cout;
@@ -68,30 +68,16 @@ QVector<c_sFrame> Cascade_Object::replyData(QByteArray &rcv, uchar addr, uchar f
 
 QByteArray Cascade_Object::compress(QByteArray &value)
 {
-    QByteArray array;
-    if(value.size() > 17*1024) array = value;
-    else array = qUncompress(value);
-    Crc::Checksum(array);
+    QByteArray array = qCompress(value);
+    //cout << value.size() << array.size();
+    //Crc::Checksum(array);
     return array;
-}
-
-bool Cascade_Object::crcCheck(const QByteArray &array)
-{
-    bool ret = true;  QByteArray end = array.right(2);
-    ushort crc = (((uchar)end.at(0))<<8) + (uchar)end.at(1);
-    ushort v = qChecksum(array.data(), array.size()-2);
-    if(crc != v) {ret = false; cout << crc << v;}
-    return ret;
 }
 
 QByteArray Cascade_Object::uncompress(int addr, const QByteArray &value)
 {
     static int cnt[DEV_NUM] = {0};
-    bool ret = crcCheck(value); QByteArray array; if(ret) {
-        if(value.size() > 17*1024) array = value.right(value.size()-2);
-        else array = qUncompress((const uchar*)value.data(), value.size()-2);
-    }
-
+    QByteArray array = qUncompress(value);
     if((1 == cnt[addr]++) && array.isEmpty()) {
         sEventItem it; it.addr = addr;
         if(cm::cn()) {
@@ -111,8 +97,8 @@ QVector<c_sFrame> Cascade_Object::readData(uchar fc, uchar addr)
 {
     c_sFrame it; it.fc = fc; it.dstAddr = addr; it.len=0;
     QByteArray array = frameToArray(it);
-    array = transmit(qCompress(array));
-    if(array.size()) array = uncompress(addr, array); //qUncompress(array);
+    array = transmit(compress(array));
+    if(array.size()) array = uncompress(addr, array);
     return arrayToFrames(array);
 }
 
@@ -121,7 +107,7 @@ bool Cascade_Object::writeData(uchar fc, uchar addr, const QByteArray &value)
     c_sFrame it; it.fc = fc; it.dstAddr = addr;
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
-    return writeSerial(qCompress(array));
+    return writeSerial(compress(array));
 }
 
 QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArray &value)
@@ -130,8 +116,8 @@ QVector<c_sFrame> Cascade_Object::transData(uchar fc, uchar addr, const QByteArr
     it.len = value.size(); it.data = value;
     QByteArray array = frameToArray(it);
     int t = 2654; //if(value.size() >= 5*1024) t *=4;
-    array = transmit(qCompress(array), t);
-    if(array.size()) array = uncompress(addr, array);//qUncompress(array);
+    array = transmit(compress(array), t);
+    if(array.size()) array = uncompress(addr, array);
     return replyData(array, addr, fc);
 }
 
@@ -173,7 +159,7 @@ void Cascade_Object::deDataStream(QByteArray &array, c_sDevData *dev)
     out >> dataStream;
 }
 
-bool Cascade_Object::integrityCheck(const QByteArray &array)
+bool Cascade_Object::crcCheck(const QByteArray &array)
 {
     bool ret = false;
     QByteArray ba = array.left(2);

@@ -29,11 +29,10 @@ private:
     QVector<c_sFrame> arrayToFrames(QByteArray &array);
 
     QByteArray compress(QByteArray &value);
-    bool crcCheck(const QByteArray &array);
     QByteArray uncompress(int addr, const QByteArray &value);
     void deDataStream(QByteArray &array, c_sDevData *dev);
     QByteArray toDataStream(c_sDevData *data);
-    bool integrityCheck(const QByteArray &array);
+    bool crcCheck(const QByteArray &array);
     void setAddress();
 
 private:

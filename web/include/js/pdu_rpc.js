@@ -181,17 +181,20 @@ class JsonRpc {
         return this.json_rpc_obj(method, params);
     }
 
-    json_rpc_login(params) {
-        var data = new Array();
+    json_rpc_login(data) {
+        //var data = new Array();
         var addr  = data[0];
         var type = data[1];
         var topic = data[2];
         var sub =data[3];
         var id = data[4];
+        var value = 255;
 
         if(14 == type && 11 == topic) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
             this.root_map.set(key, 255);
+            const json = Object.fromEntries(this.root_map);        
+            sessionStorage.setItem('root_map',JSON.stringify(json));
         }
     }
    
