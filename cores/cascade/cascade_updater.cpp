@@ -62,7 +62,7 @@ void Cascade_Updater::ota_updates()
         for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=0; i<size; ++i) {
             throwMessage(tr("addr=%1: %2").arg(i+1).arg(0));
-            if(cm::devData(i+1)->offLine) ota_update(i+1, mIt);
+            if(cm::devData(i+1)->offLine > 1) ota_update(i+1, mIt);
             cm::mdelay(1000);break; //if(i<size-1) {cm::mdelay(12*1000);}
         } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();

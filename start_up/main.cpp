@@ -29,7 +29,8 @@ static void initSystem()
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm -rf /usr/data/upload");
-    //system("chmod 755 -R /usr/data/clever");
+    system("chmod 755 -R /usr/data/clever/bin");
+    system("chmod 755 -R /usr/data/clever/app");
     system("chmod 777 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");

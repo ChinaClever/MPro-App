@@ -5,6 +5,7 @@
  */
 #include "set_service.h"
 #include "app_core.h"
+#include "sercret_core.h"
 
 Set_Service::Set_Service()
 {
@@ -157,8 +158,10 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     } //cout << fc << v;
 
     if(key.size()){
-        Cfg_Com *cfg = Cfg_Com::bulid();
-        cfg->writeCfg(key, v, prefix);
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(fc == 4) {
+            QString str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
+            cfg->writeCfg(key, str, prefix);
+        } else cfg->writeCfg(key, v, prefix);
     }
     return ret;
 }

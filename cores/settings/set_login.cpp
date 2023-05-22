@@ -5,6 +5,7 @@
  */
 #include "set_login.h"
 #include "app_core.h"
+#include "sercret_core.h"
 
 Set_Login::Set_Login()
 {
@@ -45,8 +46,10 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ret && key.size()) {
-        Cfg_Com *cfg = Cfg_Com::bulid();
-        cfg->writeCfg(key.arg(id), v, prefix);
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type) {
+            QString str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
+            cfg->writeCfg(key.arg(id), str, prefix);
+        } else cfg->writeCfg(key.arg(id), v, prefix);
     }
 
     if(ptr) {
