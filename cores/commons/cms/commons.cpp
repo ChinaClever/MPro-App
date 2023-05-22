@@ -37,7 +37,7 @@ QString cm::execute(const QString &cmd)
 {
     QProcess pro;
     pro.start(cmd);
-    pro.waitForFinished(); //qDebug() << cmd;
+    pro.waitForFinished(-1); //qDebug() << cmd;
     QByteArray bs = pro.readAllStandardOutput();
     bs +=  pro.readAllStandardError();
     return QString::fromLocal8Bit(bs);
