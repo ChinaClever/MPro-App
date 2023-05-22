@@ -70,22 +70,22 @@
     <script>
 		//var pdu_metadata_ = new PduMetaData();
 		//https重定向到http
-		var target_protocol = "http:";
-		if(window.location.protocol != target_protocol){
-			window.location.href = target_protocol +
-			window.location.href.substring(window.location.protocol.length);
-		}
+		//var target_protocol = "http:";
+		//if(window.location.protocol != target_protocol){
+		//	window.location.href = target_protocol +
+		//	window.location.href.substring(window.location.protocol.length);
+		//}
 
 		let pdu_obj = PduCore.build();
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			PduMetaData.meta_workDown(0);
-		},400);
+		},600);
 
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			PduMetaData.meta_workDown(0);
-		},600);
+		},1100);
 
 		setTimeout(function(){
 			pdu_obj.login_check();
