@@ -134,7 +134,7 @@ QVariant Set_Service::shellCfg(int fc, int id)
     switch (fc) {
     case 1: ret = cfg->startup[id]; break;
     case 2: ret = cfg->cmd[id]; break;
-    case 4: ret = cfg->result; break;
+    case 4: ret = cfg->result[id]; break;
     default: cout << fc; break;
     }
 
@@ -150,7 +150,7 @@ bool Set_Service::shellSet(int fc, int id, const QVariant &v)
     case 1: key = "startup_%1"; cfg->startup[id] = v.toInt(); break;
     case 2: key = "cmd_%1"; cfg->cmd[id] = v.toString(); break;
     case 3: App_Core::bulid()->shell_execute(id); break;
-    case 4: cfg->result.clear(); break;
+    case 4: cfg->result[id].clear(); break;
     default: cout << fc; ret = false; break;
     }
 
