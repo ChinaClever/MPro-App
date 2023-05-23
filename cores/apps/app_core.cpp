@@ -15,7 +15,7 @@ App_Core::App_Core(QObject *parent)
 #else
     initVer();
 #endif
-    Cfg_Core::bulid();   
+    Cfg_Core::bulid();
 }
 
 App_Core *App_Core::bulid(QObject *parent)

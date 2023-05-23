@@ -35,6 +35,7 @@ void Cfg_Service::readCfgParams()
     mqtt();
     amqp();
     odbc();
+    shell();
     redis();
     login();
     syslog();
@@ -151,6 +152,21 @@ void Cfg_Service::ssh()
             else cfg->pwd = res;
             break;
         }
+    }
+}
+
+
+void Cfg_Service::shell()
+{
+    QString prefix = "shell"; QString key;
+    sShellCfg *cfg = &App_Shell::shellCfg;
+
+    for(int i=0; i<SHELL_SIZE; ++i) {
+        key = "startup_" + QString::number(i);
+        cfg->startup[i] = mCfg->readCfg(key, 0, prefix).toInt();
+
+        key = "cmd_" + QString::number(i);
+        cfg->cmd[i] = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 
