@@ -138,6 +138,7 @@
     },350);
 
     function sign_in(){
+      let time_flage =0;
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
@@ -157,12 +158,16 @@
         let userPsd = usr + ";" + psd;
         obj.setCfg(user,11,userPsd,0,0);
         let time2 = setInterval(function(){
-          if(time2_num== 10){
+          //if(time2_num== 10){
+            //clearInterval(time2);
+         // }
+          if(time_flage== 135){
             clearInterval(time2);
           }
           let ver = obj.cfgValue(user,11,0,0);
           setTimeout(function(){
-            if(ver === null || ver === ""){
+            if(ver === null || ver === "" || ver == 255){
+              ver = obj.cfgValue(user,11,0,0);
             }else{
             if(ver  === 1){
               var key = '0_14_11_0_0';
@@ -186,7 +191,15 @@
           }
 		    	},400);
    
-          time2_num ++;
+         // time2_num ++;
+          time_flage++;
+          if(time_flage == 63){
+            if(0 == language){
+             alert("radius服务超时！");
+            }else{
+             alert("Radius service timeout!！");
+        } 
+          }
         },450);
       }else{
         if(0 == language){
