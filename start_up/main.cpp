@@ -29,8 +29,8 @@ static void initSystem()
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm -rf /usr/data/upload");
-    system("chmod 755 -R /usr/data/clever/bin");
-    system("chmod 755 -R /usr/data/clever/app");
+    system("chmod 775 -R /usr/data/clever/bin");
+    system("chmod 775 -R /usr/data/clever/app");
     system("chmod 777 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     system("echo 3 > /proc/sys/vm/drop_caches");
@@ -96,7 +96,7 @@ static void start_init()
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); initSystem(); system("sync");
-    if(cnt < 350) system("chmod 755 -R /usr/data/clever");
+    if(cnt < 350) system("chmod 775 -R /usr/data/clever");
 }
 
 int main(int argc, char *argv[])
