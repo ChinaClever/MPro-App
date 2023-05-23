@@ -96,7 +96,7 @@ static void start_init()
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); initSystem(); system("sync");
-    if(cnt < 350) system("chmod 775 -R /usr/data/clever");
+    if(cnt < 150) system("chmod 775 -R /usr/data/clever");
 }
 
 int main(int argc, char *argv[])
