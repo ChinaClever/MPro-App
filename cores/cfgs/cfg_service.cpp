@@ -147,7 +147,7 @@ void Cfg_Service::ssh()
         case 2: key = "telnet_en";  cfg->telnet_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 3: key = "usr"; cfg->usr = mCfg->readCfg(key, "", prefix).toString(); break;
         case 4: key = "pwd"; res = mCfg->readCfg(key, "", prefix).toByteArray();
-            if(res.size()>32) cfg->pwd = Sercret_Core::bulid()->rsa_decode(res);
+            if(res.size() > 42) cfg->pwd = Sercret_Core::bulid()->rsa_decode(res);
             else cfg->pwd = res;
             break;
         }
@@ -326,7 +326,7 @@ void Cfg_Service::login()
             case 3: key = "token_%1";  ptr = it->token; break;
             }
             QByteArray res = mCfg->readCfg(key.arg(k), "", prefix).toByteArray();
-            if(i == 2 && res.size()>32) res = Sercret_Core::bulid()->rsa_decode(res);
+            if(i == 2 && res.size()>42) res = Sercret_Core::bulid()->rsa_decode(res);
             qstrncpy(ptr, res.data(), NAME_SIZE);
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();

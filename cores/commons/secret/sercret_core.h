@@ -16,8 +16,8 @@ public:
     QByteArray encode(const QByteArray &raw);
     QByteArray decrypt(const QByteArray &raw);
 
-    QString base64_encode(const QString &raw);
-    QString base64_decode(const QString &raw);
+    QByteArray base64_encode(const QByteArray &raw);
+    QByteArray base64_decode(const QByteArray &raw);
 };
 
 #endif // SERCRET_CORE_H

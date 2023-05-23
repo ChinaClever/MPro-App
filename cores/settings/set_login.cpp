@@ -34,6 +34,7 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     QString key; int ret = true;
     QString prefix = "login"; char *ptr=nullptr;
     sDevLogin *it = &(cm::dataPacket()->login[id]);
+    ushort strong_pwd = cm::dataPacket()->web.strong_pwd;
 
     switch (type) {
     case 1: key = "user_%1"; ptr = it->user; break;
@@ -46,7 +47,7 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ret && key.size()) {
-        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type) {
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type && strong_pwd) {
             QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key.arg(id), str, prefix); //cout << str.size() << str;
         } else cfg->writeCfg(key.arg(id), v, prefix);

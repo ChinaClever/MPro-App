@@ -6,7 +6,6 @@
 #include "app_core.h"
 #include "cfg_core.h"
 #include "cfg_app.h"
-//#include <QUuid>
 
 App_Core::App_Core(QObject *parent)
     : App_WhiteList{parent}
@@ -16,7 +15,7 @@ App_Core::App_Core(QObject *parent)
 #else
     initVer();
 #endif
-    Cfg_Core::bulid();
+    Cfg_Core::bulid();   
 }
 
 App_Core *App_Core::bulid(QObject *parent)

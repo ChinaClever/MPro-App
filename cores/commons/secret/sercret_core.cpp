@@ -46,14 +46,12 @@ QByteArray Sercret_Core::decrypt(const QByteArray &raw)
     return res;
 }
 
-QString Sercret_Core::base64_encode(const QString &raw)
+QByteArray Sercret_Core::base64_encode(const QByteArray &raw)
 {
-    QByteArray data = raw.toLatin1().toBase64();
-    return QString::fromLocal8Bit(data);
+    return raw.toBase64();
 }
 
-QString Sercret_Core::base64_decode(const QString &raw)
+QByteArray Sercret_Core::base64_decode(const QByteArray &raw)
 {
-    QByteArray data = QByteArray::fromBase64(raw.toLocal8Bit());
-    return QString::fromLocal8Bit(data);
+    return QByteArray::fromBase64(raw);
 }
