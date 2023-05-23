@@ -45,3 +45,13 @@ QByteArray Sercret_Core::decrypt(const QByteArray &raw)
     }
     return res;
 }
+
+QByteArray Sercret_Core::base64_encode(const QByteArray &raw)
+{
+    return raw.toBase64();
+}
+
+QByteArray Sercret_Core::base64_decode(const QByteArray &raw)
+{
+    return QByteArray::fromBase64(raw);
+}

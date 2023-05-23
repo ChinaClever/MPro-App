@@ -126,6 +126,40 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
     return ret;
 }
 
+
+QVariant Set_Service::shellCfg(int fc, int id)
+{
+    QVariant ret;
+    sShellCfg *cfg = &App_Shell::shellCfg;
+    switch (fc) {
+    case 1: ret = cfg->startup[id]; break;
+    case 2: ret = cfg->cmd[id]; break;
+    case 3: ret = cfg->result[id]; break;
+    default: cout << fc; break;
+    }
+
+    return ret;
+}
+
+bool Set_Service::shellSet(int fc, int id, const QVariant &v)
+{
+    QString prefix = "shell"; QString key; bool ret = true;
+    sShellCfg *cfg = &App_Shell::shellCfg;
+
+    switch (fc) {
+    case 1: key = "startup_%1"; cfg->startup[id] = v.toInt(); break;
+    case 2: key = "cmd_%1"; cfg->cmd[id] = v.toString(); break;
+    case 3: App_Core::bulid()->shell_execute(id); break;
+    default: cout << fc; ret = false; break;
+    }
+
+    if(key.size()){
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key.arg(id), v, prefix);
+    }
+    return ret;
+}
+
 QVariant Set_Service::sshCfg(int fc)
 {
     QVariant ret;
@@ -143,10 +177,10 @@ QVariant Set_Service::sshCfg(int fc)
 
 bool Set_Service::sshSet(int fc, const QVariant &v)
 {
-    bool ret = true;
     sSshCfg *cfg = &App_Ssh::sshCfg;
     App_Core *obj = App_Core::bulid();
-    QString prefix = "ssh"; QString key;
+    QString prefix = "ssh"; QString key; bool ret = true;
+    ushort strong_pwd = cm::dataPacket()->web.strong_pwd;
 
     switch (fc) {
     case 1: key = "ssh_en"; cfg->ssh_en = v.toInt(); break;
@@ -158,11 +192,12 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     } //cout << fc << v;
 
     if(key.size()){
-        Cfg_Com *cfg = Cfg_Com::bulid(); if(fc == 4) {
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(fc == 4 && strong_pwd) {
             QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key, str, prefix);
         } else cfg->writeCfg(key, v, prefix);
     }
+
     return ret;
 }
 

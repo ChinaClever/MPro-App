@@ -6,7 +6,6 @@
 #include "app_core.h"
 #include "cfg_core.h"
 #include "cfg_app.h"
-//#include <QUuid>
 
 App_Core::App_Core(QObject *parent)
     : App_WhiteList{parent}
