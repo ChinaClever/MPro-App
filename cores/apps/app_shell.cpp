@@ -20,6 +20,13 @@ void App_Shell::shell_execute(int id)
         QStringList  arguments;
         arguments << shellCfg.cmd[id];
         pro->setArguments(arguments);
+        pro->setProcessChannelMode(QProcess::MergedChannels);   //设置读取标准输出模式
+        connect(pro, &QProcess::readyReadStandardError,[&](){
+            shellCfg.result << pro->readAllStandardError(); });
+        connect(pro, &QProcess::readyReadStandardOutput,[&](){
+            shellCfg.result << pro->readAllStandardOutput();
+            if(shellCfg.result.size() >100) shellCfg.result.clear();
+        });
         pro->startDetached();
     }
 }

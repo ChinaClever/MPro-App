@@ -5,8 +5,8 @@
 #define SHELL_SIZE 10
 struct sShellCfg {
     uchar startup[SHELL_SIZE]={0};
-    QString result[SHELL_SIZE];
     QString cmd[SHELL_SIZE];
+    QStringList result;
 };
 
 class App_Shell : public App_NetAddr
