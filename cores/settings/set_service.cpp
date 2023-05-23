@@ -159,7 +159,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid(); if(fc == 4) {
-            QString str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
+            QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key, str, prefix);
         } else cfg->writeCfg(key, v, prefix);
     }
