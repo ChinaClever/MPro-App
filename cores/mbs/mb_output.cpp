@@ -106,7 +106,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
         unit.type = DType::Output;
         unit.topic = DTopic::Relay;
         unit.subtopic = DSub::Value;
-        unit.txType = DTxType::TxSnmp;
+        unit.txType = DTxType::TxModbus;
         unit.value = value;
         Set_Core::bulid()->setting(unit);
     }
@@ -124,7 +124,8 @@ void Mb_Output::output_setting(ushort addr, ushort value)
     switch (reg/250) {
     case 0: unit = &(obj->cur); break;
     case 1: unit = &(obj->pow); break;
-    default: OP_Core::bulid()->setDelay(id+1, value); return;
+    case 2: OP_Core::bulid()->setDelay(id+1, value); return;
+    default: cout << addr << value; return;
     }
 
     reg = reg%250/50; switch (reg) {

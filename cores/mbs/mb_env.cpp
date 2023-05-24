@@ -71,8 +71,6 @@ void Mb_Env::env_update()
     env_thresholdUpdate();
 }
 
-
-
 void Mb_Env::env_setting(ushort addr, ushort value)
 {
     ushort reg = addr - MbReg_EnvThreshol;
