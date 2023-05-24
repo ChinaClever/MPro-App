@@ -149,14 +149,13 @@
 						// borderWidth:0.3,
 						animation:false,  //旋转动画
 						center: ['50%', '50%'],
-						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
-						// colors:['#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
+						// colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
+						// colors:['#ebebeb'],
 						name: 'Proportion',
 						data: [
 							{
 								name:'Use current',
 								y:phase_info[i][0],
-								color:'#13AB78',
 							},
 							{
 								name:'Spare current',
@@ -166,32 +165,26 @@
 							// ['Use current',   phase_info[i][0]],
 							// ['Spare current',   phase_info[i][4]-phase_info[i][0]],
 						],
-						// zones:[
-						// 	{	name:'Use current',
-						// 		value:0.6*phase_info[i][4],
-						// 		color:'#13AB78',
-
-						// 		name:'Spare current',	
-						// 		 value:phase_info[i][4]-phase_info[i][0],				
-						// 		color:'#ebebeb',
-						// 	},
-						// 	{
-						// 		name:'Use current',
-						// 		value:0.8*phase_info[i][4],
-						// 		color:'#FFA701',
-
-						// 		name:'Spare current',	
-						// 		value:phase_info[i][4]-phase_info[i][0],				
-						// 		color:'#ebebeb',
-						// 	},
-						// 	{
-						// 		name:'Use current',
-						// 		color:'#FD4442',
-						// 		 name:'Spare current',	
-						// 		value:phase_info[i][4]-phase_info[i][0],				
-						// 		color:'#ebebeb',							
-						// 	}
-						// ]
+						zones:[
+							{	
+								name:'Use current',
+								value:0.8*phase_info[i][4],
+								color:'#13AB78',
+								//数据低于额定电流80%为绿色
+							},
+							{
+								name:'Use current',
+								value:0.99*phase_info[i][4],
+								color:'#FFA701',
+								//数据低于额定电流100%为橙色
+							},
+							{
+								name:'Use current',
+								color:'#FD4442',
+								//数据高于额定电流为红色
+					
+							}
+						]
 					}]
 
 				}, function(c) { // 图表初始化完毕后的会掉函数

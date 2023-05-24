@@ -272,7 +272,17 @@
 		{
 			var addr_ = addr + 0 * 256;
 			var number = parseInt(ipt.id.slice(1))+1;
-			pdu_cfg.setCfg(23,1,ipt.value,number,addr_);
+			let val = ipt.value;
+			if(val == null || val == ''){
+				if(0 == language){
+					alert("分组名称不能为空!");
+				}else{
+					alert("Group name cannot be empty!");
+				}
+				return -1;
+			}
+			// pdu_cfg.setCfg(23,1,ipt.value,number,addr_);
+			pdu_cfg.setCfg(23,1,val,number,addr_);
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);

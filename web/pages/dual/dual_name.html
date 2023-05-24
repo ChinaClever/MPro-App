@@ -211,6 +211,14 @@
 				// var addr_ = addr + 0 * 256;
 				var number = parseInt(ipt.id.slice(1)) + 1;
 				let val = ipt.value;
+				if(val == null || val == ''){
+					if(0 == language){
+						alert("机架名称不能为空!");
+					}else{
+						alert("Rack name cannot be empty!");
+					}
+					return -1;
+				}
 				pdu_cfg.setCfg(24,1,val,number,dual_addr);
 				setTimeout(() => {
 					PduMetaData.meta_workDown();
