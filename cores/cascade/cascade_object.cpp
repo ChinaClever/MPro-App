@@ -88,7 +88,7 @@ QByteArray Cascade_Object::uncompress(int addr, const QByteArray &value)
             it.event_content = tr("Abnormal communication data of auxiliary machine %1").arg(addr);
         } Log_Core::bulid()->append(it);
     } else if(array.size()) cnt[addr] = 0;
-    if(array.isEmpty()) cout;
+    if(array.isEmpty()) {cm::mdelay(3000); cout << addr;}
     return array;
 }
 

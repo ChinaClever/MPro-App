@@ -26,6 +26,7 @@ OP_Core *OP_Core::bulid(QObject *parent)
 
 void OP_Core::run()
 {
+    cm::mdelay(1240);
     while (isRun) {
         bool ret = 0;
         int size = mDev->cfg.nums.boardNum; // cout << size;

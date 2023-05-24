@@ -39,7 +39,7 @@ void Cascade_Core::cascadeSlaveLog(int addr, bool recv)
             it.event_content = tr("Abnormal communication data of auxiliary machine %1").arg(addr);
         } Log_Core::bulid()->append(it);
     } else if(!recv) cnt = 0;
-    if(recv) cout;
+    if(recv) {cm::mdelay(3000); cout << addr;}
 }
 
 void Cascade_Core::workFun()
@@ -60,7 +60,7 @@ void Cascade_Core::workFun()
 
 void Cascade_Core::run()
 {
-    cm::mdelay(210);while(isRun) {
+    cm::mdelay(2210);while(isRun) {
         if(cm::masterDev()->cfg.param.devMode) {
             if(isOpened()) workFun(); else initFunSlot();
         } else if(isOpened()) closeSerial();
