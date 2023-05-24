@@ -22,7 +22,7 @@ void App_Shell::shell_readProcess()
             shellCfg.result[id] << pro->readAllStandardError();
             shellCfg.result[id] << pro->readAllStandardOutput();
             if(shellCfg.result[id].size() >100) shellCfg.result[id].clear();
-            qDebug().noquote() << id << shellCfg.result[id];
+            //qDebug().noquote() << id << shellCfg.result[id];
         }
     }
 }
