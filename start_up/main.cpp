@@ -8,6 +8,7 @@
 
 static void createDirectory()
 {
+    system("mkdir -p /tmp/script");
     system("mkdir -p /tmp/download");
     system("mkdir -p /usr/data/upload");
     system("mkdir -p /usr/data/etc/ssl");
