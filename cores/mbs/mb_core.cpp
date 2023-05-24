@@ -11,9 +11,9 @@ Mb_Core::Mb_Core(QObject *parent) : QThread{parent}
     mRtu = new Mb_Update(this);  mTcp = new Mb_Update(this); mCfg = &modbusCfg;
     connect(this, &Mb_Core::connectTcpSig, this, &Mb_Core::connectTcpSlot);
     connect(this, &Mb_Core::connectRtuSig, this, &Mb_Core::connectRtuSlot);
-    mTimer = new QTimer(this); mTimer->start(1000);
+    mTimer = new QTimer(this); mTimer->start(2000);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(run()));
-    QTimer::singleShot(135, this, SLOT(initFunSlot()));
+    QTimer::singleShot(152, this, SLOT(initFunSlot()));
 }
 
 Mb_Core *Mb_Core::bulid(QObject *parent)

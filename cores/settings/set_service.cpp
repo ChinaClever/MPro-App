@@ -129,12 +129,12 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
 
 QVariant Set_Service::shellCfg(int fc, int id)
 {
-    QVariant ret;
+    QVariant ret; QString str;
     sShellCfg *cfg = &App_Shell::shellCfg;
     switch (fc) {
     case 1: ret = cfg->startup[id]; break;
     case 2: ret = cfg->cmd[id]; break;
-    case 4: ret = cfg->result[id]; break;
+    case 4:  foreach (auto it, cfg->result[id]) str.append(it + "\n"); ret = str; break;
     default: cout << fc; break;
     }
 

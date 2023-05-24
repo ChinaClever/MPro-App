@@ -12,7 +12,7 @@ Modbus_SlaveObj::Modbus_SlaveObj(QObject *parent) : Modbus_Object{parent}
 
 void Modbus_SlaveObj::initConnects()
 {
-    QTimer::singleShot(5500,this,SLOT(initRecvSlot()));
+    QTimer::singleShot(6500,this,SLOT(initRecvSlot()));
     connect(mDev, &QModbusServer::stateChanged, this, &Modbus_SlaveObj::onStateChanged);
     connect(mDev, &QModbusServer::errorOccurred, this, &Modbus_SlaveObj::handleDeviceError);
 }

@@ -37,7 +37,7 @@ void Cascade_Master::masterReadDevs()
     }
 
     if(runTime() > 48*60*60) if(!hasCmdWrite()) t += 500;
-    if(cm::runTime() > 74*60*60) t += 1000;
+    if(!hasCmdWrite()) if(runTime() > 74*60*60) t += 1000;
     t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
 }
 

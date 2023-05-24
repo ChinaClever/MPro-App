@@ -152,7 +152,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
 
     int t = 0; if(cm::runTime() > 48*60*60) {
         if(!hasCmdWrite()) if(cm::runTime() > 74*60*60) t += 1000;
-        t += QRandomGenerator::global()->bounded(565);
+        if(!hasCmdWrite()) t += QRandomGenerator::global()->bounded(565);
     } cm::mdelay(t + 456);
 
     return !ret;

@@ -49,7 +49,6 @@ void App_Shell::shell_initSlot()
 {
     //shellCfg.startup[0] = 1;
     //shellCfg.cmd[0] ="ls -l /";
-
     for(int i=0; i<SHELL_SIZE; ++i) {
         if(shellCfg.startup[i]) shell_execute(i);
     }
