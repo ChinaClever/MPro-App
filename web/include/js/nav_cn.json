@@ -224,6 +224,10 @@
       {
         "name": "远程认证服务",
         "url": "radius.html"
+      },
+      {
+        "name": "SHELL服务",
+        "url": "shell.html"
       }
     ]
   },  
