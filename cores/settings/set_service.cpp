@@ -134,7 +134,7 @@ QVariant Set_Service::shellCfg(int fc, int id)
     switch (fc) {
     case 1: ret = cfg->startup[id]; break;
     case 2: ret = cfg->cmd[id]; break;
-    case 4:  foreach (auto it, cfg->result[id]) str.append(it + "\n"); ret = str; break;
+    case 4: foreach (auto it, cfg->result[id]) str.append(it + "\n"); ret = str; break; //.remove(QRegExp("\n{2,}"))
     default: cout << fc; break;
     }
 
