@@ -40,7 +40,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="grid-col grid-col-7 " style ="height: 100px;">
+			<div class="grid-col grid-col-7 " style ="height: 150px;">
 			</div>
 		</div>
 
@@ -267,8 +267,17 @@
 					flash_html(btn);
 				}
 			}else if(btn.id == "del"){
-				pdu_log.log_fun(event_log,3,start_,show_num);
-				flash_html(btn);
+				if(0 == language){
+					var retVal = confirm("确认删除日志吗？");	
+				}else{
+					var retVal = confirm("Are you sure to delete the log?！");
+				}
+				if(retVal == true){
+					pdu_log.log_fun(event_log,3,start_,show_num);
+					show_num = 0;
+					flash_html(btn);
+				}
+
 			}else{
 
 			}

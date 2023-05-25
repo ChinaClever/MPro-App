@@ -33,10 +33,10 @@
 							<input type ="button" style = "width:15%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
 							<input type ="button" name="del" style = "width:11%" id  = "del" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
+							<input type ="button" style = "width:8%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
-					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					<div class="grid-col grid-col-7 " style ="height: 150px;">
 					</div>
 				</div>
 			</div>
@@ -278,6 +278,7 @@
 				}
 				if(retVal == true){
 					pdu_log.log_fun(alarm_log,3,0,0);
+					show_num = 0;
 					flash_html(btn);
 				}else{					
 				}

@@ -222,13 +222,14 @@
         "url": "syslog.html"
       },
       {
-        "name": "Remote authentication service",
-        "url": "radius.html"
-      },
-      {
         "name": "SHELL service",
         "url": "shell.html"
+      },
+      {
+        "name": "Remote authentication service",
+        "url": "radius.html"
       }
+      
     ]
   },  
   {

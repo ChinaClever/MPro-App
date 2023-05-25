@@ -23,11 +23,8 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="grid-col grid-col-7">
-						<table class="table table-striped text-center"></table>
-					</div> -->
 					<div>
-						<input type="textarea" id="script_content" onchange = "SetData(this)" style="height:290px;width:99%;">
+							<textarea id="script_content" onchange = "SetData(this)"  style="height:290px;width:99%;font-size: 18px;padding-left: 15px;padding-top: 15px;border: 2px solid #000;"></textarea>
 					</div>
 					<div class="grid-col grid-col-7 " style ="height: 30px;">
 					</div>
@@ -37,21 +34,21 @@
 							<!-- <input type ="button" style = "width:15%" id  = "start" onclick="setData(this)"> -->
 							<span id="lang_2"></span>
 							<select class ="devname" id ="ms" style = "width:6%;margin-left: 2px" onchange = "Change(this);"></select>
-							<!-- <input type ="button" style = "width:12%;margin-left: 20px" id  = "jiaoben" onclick="setData(this)"> -->
-							<input type ="button" style = "width:12%;margin-left: 6%" id  = "exec" onclick="setData(this)">
-							<input type ="button" style = "width:12%;margin-left: 6%" id  = "save" onclick="setData(this)">
-							<input type ="button" style = "width:12%;margin-left: 6%" id  = "clear" onclick="setData(this)">
+							<span style = "margin-left: 5%" id="lang_6"></span><input id="chk" type="checkbox" onchange ="setData(this)" style="width:auto;position:static;display: inline;">
+							<input type ="button" style = "width:12%;margin-left: 10%" id  = "exec" onclick="setData(this)">
+							<!-- <input type ="button" style = "width:12%;margin-left: 6%" id  = "save" onclick="setData(this)"> -->
+							<input type ="button" style = "width:12%;margin-left: 10%" id  = "clear" onclick="setData(this)">
 
 						</span>
 					</div>
 					<div class="grid-col grid-col-7 " style ="height: 50px;">
 					</div>
 					<div>
-						<input type="textarea" id="result" style="height:290px;width:99%;">
+						<textarea id="result" readonly ="true" style="height:390px;width:99%;padding-left: 15px;border: 2px solid #000;"></textarea>
 					</div>
 				</div>
 			</div>
-			<div class="grid-col grid-col-7 " style ="height: 100px;">
+			<div class="grid-col grid-col-7 " style ="height: 150px;">
 			</div>
 		</div>
 
@@ -73,13 +70,12 @@
 			}			
 		}, 800);
 
-		let btn_name = new Array("exec","save","clear");
+		let btn_name = new Array("exec","clear");
 
 		let dev_name =new Array();
 		let lang = new Array();
 		let script_num = new Array();
 		let script = new Array();
-
 	
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -97,15 +93,15 @@
 		showdata();
 		function lang_init(){
 			let i = 0;
-			for(i = 1;i<31;i++){
+			for(i = 1;i<6;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["Shell 脚本","","","",""];
-			lang[2] = ["开机自启动:","","","",""];
+			lang[2] = ["选择脚本:","","","",""];
 			lang[3] = ["脚本","","","",""];
 			lang[4] = ["脚本执行","","","",""];
-			lang[5] = ["保存","","","",""];
-			lang[6] = ["清空结果","","","",""];
+			lang[5] = ["清空结果","","","",""];
+			lang[6] = ["开机自启动：","","","",""];
 			for(let i = 1;i < 11;i++){
 				dev_name[i] =  lang[3][language] + i;
 			}
@@ -117,6 +113,7 @@
 			}
 			document.getElementById("lang_1" ).innerHTML  = lang[1][language];
 			document.getElementById("lang_2" ).innerHTML  = lang[2][language];
+			document.getElementById("lang_6" ).innerHTML  = lang[6][language];
 			
 		}
 		function BuildSel(rows)
@@ -135,12 +132,17 @@
 			for(let i = 0;i<3;i++){
 				script[i] = pdu_cfg.cfgValue(shell_type,i+2,0,0);
 			}	
-			return true;
 		}
 
 		function showdata(){
+			var id = document.getElementById("ms" ).value;
 			document.getElementById("script_content" ).value = script[0];
 			document.getElementById("result" ).value = script[2];
+			if(0 == script_num[id]){
+				document.getElementById("chk").checked = false;
+			}else{
+				document.getElementById("chk").checked = true;
+			}
 
 			if(top.login_permit_ == 1){
 				$("input").attr("disabled","disabled");
@@ -148,14 +150,34 @@
 			}else{
 			}
 		}
-		function SetData(btn){
-			if(btn.id == "script_content"){
-				pdu_cfg.setCfg(shell_type,2,btn.value,0,addr);
-			}else if(btn.id == "clear")
-				pdu_cfg.setCfg(shell_type,4,'',0,addr);
-		  //btn.blur();
-		  //FlashHtml();
+		function showdata_(){
+			document.getElementById("result" ).value = script[2];
 		}
+		function Change(sel){
+				//let id = parseInt(sel.value);
+				setTimeout(function(){
+					for(let i = 0;i<10;i++){
+						pdu_cfg.getCfg(shell_type,1,i,0);
+					}
+					for(let i = 2;i<5;i++){
+						pdu_cfg.getCfg(shell_type,i,0,0);
+					}
+				},100);
+				setTimeout(function(){
+					read_data();
+					showdata();
+				},400);
+
+			}
+
+		// function SetData(btn){
+		// 	if(btn.id == "script_content"){
+		// 		pdu_cfg.setCfg(shell_type,2,btn.value,0,addr);
+		// 	}else if(btn.id == "clear")
+		// 		pdu_cfg.setCfg(shell_type,4,'',0,addr);
+		//   //btn.blur();
+		//   //FlashHtml();
+		// }
 		function FlashHtml(){
 			for(let i = 0;i<10;i++){
 				pdu_cfg.getCfg(shell_type,1,i,0);
@@ -165,28 +187,50 @@
 			}
 			setTimeout(function(){
 				read_data();
-				showdata();
+				showdata_();
 			},300);
 		}
 
 		function setData(btn){
+			// var id = parseInt(document.getElementById("ms" ).value);
+			var id = document.getElementById("ms" ).value;
 			if(btn.id == "save"){
-				//pdu_cfg.setCfg(shell_type,2,document.getElementById("script_content" ).value,0,0);
+
 			}else if(btn.id == "exec"){ 
-				pdu_cfg.setCfg(shell_type,3,1,0,0);
+				var cmd = document.getElementById("script_content" ).value;
+				pdu_cfg.setCfg(shell_type,2,cmd,id,0);
+				pdu_cfg.setCfg(shell_type,3,1,id,0);
+
+				 FlashHtml();
 			}else if(btn.id == "clear"){
-				pdu_cfg.setCfg(shell_type,4,'',0,addr);
+				pdu_cfg.setCfg(shell_type,4,'',id,0);
 				FlashHtml();
-			}else if(btn.id == "del"){
-
-			}else{
-
+			}else if(btn.id == "chk"){
+				var id = parseInt(document.getElementById("ms" ).value);
+				if(btn.checked == true){
+					pdu_cfg.setCfg(shell_type,1,1,id,0);
+				}else{
+					pdu_cfg.setCfg(shell_type,1,0,id,0);
+				}
+			
 			}
+			
 			
 		}
 		setInterval(function(){
-			read_data();
-			showdata();
+			// let id = document.getElementById("ms" ).value;
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,1,i,0);
+			}
+			for(let i = 2;i<5;i++){
+				pdu_cfg.getCfg(shell_type,i,0,0);
+			}
+			// read_data();
+			showdata_();
+			// setTimeout(function(){
+			// 	pdu_cfg.setCfg(shell_type,4,'',id,0);
+			// },1900);
+
 		},2000);
 
     </script>
