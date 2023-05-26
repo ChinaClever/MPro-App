@@ -19,12 +19,12 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_7" onclick="readonlyset(this);"></button></span>
 							</div>
 						</div>
 					</div>
 					<div>
-							<textarea id="script_content" onchange = "SetData(this)"  style="height:290px;width:99%;font-size: 18px;padding-left: 15px;padding-top: 15px;border: 2px solid #000;"></textarea>
+							<textarea id="script_content"  onchange = "SetData(this);" style="height:290px;width:99%;font-size: 18px;padding-left: 15px;padding-top: 15px;border: 2px solid #000;"></textarea>
 					</div>
 					<div class="grid-col grid-col-7 " style ="height: 30px;">
 					</div>
@@ -60,13 +60,16 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		let addr = 0;
+		let read = 1;
 		let shell_type = 50;
 		setTimeout(() => {
 			for(let i = 0;i<10;i++){
 				pdu_cfg.getCfg(shell_type,1,i,0);
 			}
 			for(let i = 2;i<5;i++){
-				pdu_cfg.getCfg(shell_type,i,0,0);
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
 			}			
 		}, 800);
 
@@ -75,7 +78,7 @@
 		let dev_name =new Array();
 		let lang = new Array();
 		let script_num = new Array();
-		let script = new Array();
+		let script = new Array(3);
 	
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -91,17 +94,20 @@
 		$('.devname').html(BuildSel(10));
 		read_data();
 		showdata();
+		ModeSet();
 		function lang_init(){
 			let i = 0;
-			for(i = 1;i<6;i++){
+			for(i = 1;i<9;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["Shell 脚本","","","",""];
-			lang[2] = ["选择脚本:","","","",""];
-			lang[3] = ["脚本","","","",""];
-			lang[4] = ["脚本执行","","","",""];
-			lang[5] = ["清空结果","","","",""];
-			lang[6] = ["开机自启动：","","","",""];
+			lang[1] = ["Shell 脚本","Shell Script","","",""];
+			lang[2] = ["选择脚本:","Select Script","","",""];
+			lang[3] = ["脚本","Script","","",""];
+			lang[4] = ["脚本执行","Script Execution","","",""];
+			lang[5] = ["清空结果","Clear Results","","",""];
+			lang[6] = ["开机自启动：","Self start upon startup:","","",""];
+			lang[7] = ["阅读模式", "Reading mode", "", "", ""];
+			lang[8] = ["设置模式", "Setting mode", "", "", ""];
 			for(let i = 1;i < 11;i++){
 				dev_name[i] =  lang[3][language] + i;
 			}
@@ -113,7 +119,9 @@
 			}
 			document.getElementById("lang_1" ).innerHTML  = lang[1][language];
 			document.getElementById("lang_2" ).innerHTML  = lang[2][language];
-			document.getElementById("lang_6" ).innerHTML  = lang[6][language];
+			for(let i = 6;i<8;i++){
+				document.getElementById("lang_" + i).innerHTML = lang[i][language];
+			}
 			
 		}
 		function BuildSel(rows)
@@ -126,18 +134,25 @@
 			return tbody;
 		}
 		function read_data(){
+			var id = document.getElementById("ms" ).value;
 			for(let i = 0;i<10;i++){
 				script_num[i] = pdu_cfg.cfgValue(shell_type,1,i,0);
 			}
 			for(let i = 0;i<3;i++){
-				script[i] = pdu_cfg.cfgValue(shell_type,i+2,0,0);
+				script[i] = new Array(10);
+			}
+			for(let i = 0;i<3;i++){
+				for(j =0;j<10;j++){					
+					script[i][j] = pdu_cfg.cfgValue(shell_type,i+2,j,0);
+				}
+				
 			}	
 		}
 
 		function showdata(){
 			var id = document.getElementById("ms" ).value;
-			document.getElementById("script_content" ).value = script[0];
-			document.getElementById("result" ).value = script[2];
+			document.getElementById("script_content" ).value = script[0][id];
+			document.getElementById("result" ).value = script[2][id];
 			if(0 == script_num[id]){
 				document.getElementById("chk").checked = false;
 			}else{
@@ -151,16 +166,20 @@
 			}
 		}
 		function showdata_(){
-			document.getElementById("result" ).value = script[2];
+			var id = document.getElementById("ms" ).value;
+			document.getElementById("result" ).value = script[2][id];
 		}
 		function Change(sel){
+			var id = document.getElementById("ms" ).value;
 				//let id = parseInt(sel.value);
 				setTimeout(function(){
 					for(let i = 0;i<10;i++){
 						pdu_cfg.getCfg(shell_type,1,i,0);
 					}
 					for(let i = 2;i<5;i++){
-						pdu_cfg.getCfg(shell_type,i,0,0);
+						for(j =0;j<10;j++){
+							pdu_cfg.getCfg(shell_type,i,j,0);
+						}
 					}
 				},100);
 				setTimeout(function(){
@@ -168,22 +187,63 @@
 					showdata();
 				},400);
 
+		}
+		function readonlyset(ros) {
+				if (read === 1) {
+					read = 0;
+					ros.style.backgroundColor = 'red';
+					if(language == 0){
+						alert("非专业人员请勿操作该界面！");
+					}else{
+						alert("Non professional personnel are not allowed to operate this interface!!");
+					}
+					ros.innerHTML = lang[8][language];
+					document.getElementById("ms").disabled = false;
+					document.getElementById("script_content").disabled = false;
+					document.getElementById("result").disabled = false;
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						iptname[i].disabled = false;
+					}
+				}
+				else {
+					read = 1;
+					ros.style.backgroundColor = '';
+					ros.innerHTML = lang[7][language];
+					document.getElementById("ms").disabled = true;
+					document.getElementById("script_content").disabled = true;
+					document.getElementById("result").disabled = true;
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						iptname[i].disabled = true;
+					}
+				}
+		}
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
 			}
-
-		// function SetData(btn){
-		// 	if(btn.id == "script_content"){
-		// 		pdu_cfg.setCfg(shell_type,2,btn.value,0,addr);
-		// 	}else if(btn.id == "clear")
-		// 		pdu_cfg.setCfg(shell_type,4,'',0,addr);
-		//   //btn.blur();
-		//   //FlashHtml();
-		// }
+			document.getElementById("ms").disabled = true;
+			document.getElementById("script_content").disabled = true;
+			document.getElementById("result").disabled = true;
+		}
+		function SetData(btn){
+			var id = parseInt(document.getElementById("ms" ).value);
+			if(btn.id == "script_content"){
+				pdu_cfg.setCfg(shell_type,2,btn.value,id,addr);
+			}else if(btn.id == "clear")
+				pdu_cfg.setCfg(shell_type,4,'',0,addr);
+		}
 		function FlashHtml(){
 			for(let i = 0;i<10;i++){
 				pdu_cfg.getCfg(shell_type,1,i,0);
 			}
 			for(let i = 2;i<5;i++){
-				pdu_cfg.getCfg(shell_type,i,0,0);
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
 			}
 			setTimeout(function(){
 				read_data();
@@ -192,16 +252,18 @@
 		}
 
 		function setData(btn){
-			// var id = parseInt(document.getElementById("ms" ).value);
-			var id = document.getElementById("ms" ).value;
+			var id = parseInt(document.getElementById("ms" ).value);
+			// var id = document.getElementById("ms" ).value;
 			if(btn.id == "save"){
 
 			}else if(btn.id == "exec"){ 
 				var cmd = document.getElementById("script_content" ).value;
 				pdu_cfg.setCfg(shell_type,2,cmd,id,0);
 				pdu_cfg.setCfg(shell_type,3,1,id,0);
+				setTimeout(function(){
+					FlashHtml();
+				},100);
 
-				 FlashHtml();
 			}else if(btn.id == "clear"){
 				pdu_cfg.setCfg(shell_type,4,'',id,0);
 				FlashHtml();
@@ -223,7 +285,9 @@
 				pdu_cfg.getCfg(shell_type,1,i,0);
 			}
 			for(let i = 2;i<5;i++){
-				pdu_cfg.getCfg(shell_type,i,0,0);
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
 			}
 			// read_data();
 			showdata_();

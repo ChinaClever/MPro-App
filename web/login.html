@@ -139,6 +139,7 @@
 
     function sign_in(){
       let time_flage =0;
+      language = window.sessionStorage.getItem('language');
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       if(usr != "" && psd !=""){
