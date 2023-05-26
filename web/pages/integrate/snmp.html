@@ -193,17 +193,17 @@
 			},500);
 		}
 		function Set(){
+			pdu_cfg.setCfg(16,17,0,0,addr);
 			if(0 == language){
 				var retVal = confirm("修改当前账户，需要重启之后生效，请确认是否重启!");	
 			}else{
 				var retVal = confirm("Modifying the current account requires a reboot to take effect. Please confirm if the reboot is necessary！");
 			}
 			if(retVal == true){
-				pdu_cfg.setCfg(16,17,0,0,addr);
 				flash_html();
 				pdu_cfg.setCfg(96,1,0,0,addr);
 			}else{
-				pdu_cfg.setCfg(16,17,0,0,addr);
+				//pdu_cfg.setCfg(16,17,0,0,addr);
 				flash_html();
 			}
 		}

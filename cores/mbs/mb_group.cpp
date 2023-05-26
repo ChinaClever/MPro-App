@@ -31,7 +31,7 @@ void Mb_Group::group_thresholdUpdate()
     appendData(size, obj->max, vs);
     appendData(size, obj->crMax, vs);
     appendData(size, obj->crMin, vs);
-    appendData2(size, obj->min, vs);
+    appendData(size, obj->min, vs);
     setRegs(MbReg_GroupThreshol, vs);
 }
 
@@ -55,7 +55,7 @@ void Mb_Group::group_ctrl(int id, ushort value)
     unit.type = DType::Group;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
-    unit.txType = DTxType::TxSnmp;
+    unit.txType = DTxType::TxModbus;
     unit.value = value;
     Set_Core::bulid()->setting(unit);
 }
@@ -70,7 +70,8 @@ void Mb_Group::group_setting(ushort addr, ushort value)
 
     switch (reg/50) {
     case 0: unit = &(obj->pow); break;
-    default: group_ctrl(id, value); return;
+    case 1: group_ctrl(id, value); return;
+    default: cout << addr << reg << value; return;
     }
 
     reg = reg%50/10; switch (reg) {

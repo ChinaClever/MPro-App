@@ -40,6 +40,7 @@ QString Set_Alarm::opSrc(uchar addr, uchar txType)
     switch (txType) {
     case DTxType::TxWeb: str = QStringLiteral("[Web] "); break;
     case DTxType::TxSnmp: str = QStringLiteral("[SNMP] "); break;
+    case DTxType::TxModbus: str = QStringLiteral("[Modbus] "); break;
     case DTxType::TxSsh: str = QStringLiteral("[SSH/Telnet] "); break;
     case DTxType::TxRest: str = QStringLiteral("[REST] "); break;
     case DTxType::TxRpc: str = QStringLiteral("[RPC] "); break;
