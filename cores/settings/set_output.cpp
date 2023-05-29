@@ -117,9 +117,9 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
 {
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     bool ret = false; int start = unit.type-1; int end = start + unit.id;
-    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);    
     for(int i=start; i<end; ++i) {
-        if((0==it->disabled[i]) && (unit.value < 2)){ /* || (unit.txType == DTxType::TxWeb)*/
+        if((0==it->disabled[i]) && (unit.value < 2) && (i < it->size)){ /* || (unit.txType == DTxType::TxWeb)*/
             ret = true; if(unit.value) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
