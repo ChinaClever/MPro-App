@@ -287,12 +287,17 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("loop_num", it.nums.loopNum/r);
     //obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
-    obj.insert("board_num", it.nums.boardNum/r);
-    obj.insert("group_en", it.param.groupEn/r);
-    obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
-    obj.insert("stand_neutral", it.param.standNeutral/r);
-    obj.insert("run_time", it.param.runTime/r);
+
+    if(mDataContent > 2) {
+        obj.insert("board_num", it.nums.boardNum/r);
+        obj.insert("group_en", it.param.groupEn/r);
+        obj.insert("sensor_box", it.param.sensorBoxEn/r);
+        obj.insert("stand_neutral", it.param.standNeutral/r);
+        obj.insert("web_background", it.param.webBackground/r);
+        obj.insert("run_time", it.param.runTime/r);
+    }
+
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 

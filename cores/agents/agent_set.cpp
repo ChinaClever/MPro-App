@@ -130,7 +130,7 @@ bool Agent_Set::setAlarm(const QVariant &value)
     bool ret = upAlarmIndex(unit);
     if(ret) unit.value = value.toInt();
     if(unit.subtopic == DSub::EnAlarm) {
-        if(value.toUInt() > 1) return false;
+        if(value.toUInt() > 1) unit.value = 1;
     }
 
     if(ret) ret = Set_Core::bulid()->setting(unit);

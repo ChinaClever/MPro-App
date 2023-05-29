@@ -68,6 +68,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 15: ret = it->backlightTime; break;
     case 16: App_Core::bulid()->beep_once(); break;
     case 17: ret = it->standNeutral; break;
+    case 18: ret = it->webBackground; break;
     case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }
@@ -95,6 +96,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 15: key = "backlightTime"; it->backlightTime = value; break;
     case 16: App_Core::bulid()->beep_once(); break;
     case 17: key = "standNeutral"; it->standNeutral = value; break;
+    case 18: key = "webBackground"; it->webBackground = value; break;
     case 21: key = "jsonContent"; it->jsonContent = value; break;
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
