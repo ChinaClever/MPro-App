@@ -86,7 +86,7 @@
 			}else{
 				document.getElementById("more_user").checked = true;
 			}
-			document.getElementById("web_sub").value = web_data[1] + ' '+ "min";
+			document.getElementById("web_sub").value = web_data[1] ;
 			if(0 != language){
 				document.getElementById("explain1").innerHTML = "(After enabling strong passwords, the username, password, and verification information must be 6-16 digits and must contain at least one number, uppercase and lowercase letters. If not enabled, this rule does not need to be followed.)";
 				document.getElementById("explain2").innerHTML = "(After enabling, multiple users can be allowed to log in at the same time. If not enabled, only one user is allowed to log in.)";
@@ -137,6 +137,12 @@
 				pdu_cfg.setCfg(42,6,val,0,addr);
 				btn.blur();	
 			}else{
+				if(0 == language){
+					alert("该功能启用或禁用后需重启才能生效！");
+				}else{
+					alert("After enabling or disabling this function, a reboot is required to take effect!!");
+				}
+
 				pdu_cfg.setCfg(42,8,val,0,addr);
 				btn.blur();	
 			}
@@ -165,7 +171,7 @@
 			tbody += '<td id = "explain2">(启用后，可允许多个用户同时登陆，不启用则只允许一个用户登陆)';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>';
+			tbody += '<td><input id = "web_sub"  onchange ="SetWeb(this)" style ="width:24.5%" type = "text"  placeholder=""></input>'+ ' '+ "min";
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
 			tbody += '<td id = "explain3">(输入时间后，当页面超过该时间无任何操作时自动退出到登陆界面，输入时间为0则不执行此功能)';

@@ -262,7 +262,7 @@
 				pdu_cfg.setCfg(shell_type,3,1,id,0);
 				setTimeout(function(){
 					FlashHtml();
-				},100);
+				},200);
 
 			}else if(btn.id == "clear"){
 				pdu_cfg.setCfg(shell_type,4,'',id,0);
@@ -279,23 +279,23 @@
 			
 			
 		}
-		setInterval(function(){
-			// let id = document.getElementById("ms" ).value;
-			for(let i = 0;i<10;i++){
-				pdu_cfg.getCfg(shell_type,1,i,0);
-			}
-			for(let i = 2;i<5;i++){
-				for(j =0;j<10;j++){
-					pdu_cfg.getCfg(shell_type,i,j,0);
-				}
-			}
-			// read_data();
-			showdata_();
-			// setTimeout(function(){
-			// 	pdu_cfg.setCfg(shell_type,4,'',id,0);
-			// },1900);
+		// setInterval(function(){
+		// 	// let id = document.getElementById("ms" ).value;
+		// 	for(let i = 0;i<10;i++){
+		// 		pdu_cfg.getCfg(shell_type,1,i,0);
+		// 	}
+		// 	for(let i = 2;i<5;i++){
+		// 		for(j =0;j<10;j++){
+		// 			pdu_cfg.getCfg(shell_type,i,j,0);
+		// 		}
+		// 	}
+		// 	// read_data();
+		// 	showdata_();
+		// 	// setTimeout(function(){
+		// 	// 	pdu_cfg.setCfg(shell_type,4,'',id,0);
+		// 	// },1900);
 
-		},2000);
+		// },2000);
 
     </script>
 </body>

@@ -393,7 +393,13 @@
 				}				
 				stat = 5;
 				return -1;
-			}else{
+			}else if(stat < 0){
+				if(0 == language){
+					alert("延时值不能小于0s!");
+				}else{
+					alert("The delay value cannot be less than 0s!");
+				}
+				stat = 0;
 			} 
 			if(type1 === 'd'){
 				sub = 4;
