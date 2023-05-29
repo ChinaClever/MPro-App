@@ -244,7 +244,8 @@ struct sParameter {
     uint hz; // 产品实时频繁
     uint jsonCompress; // 0：不压缩 1：压缩
     uint standNeutral; // 0-标准,1-中性
-    uint reserve[18];
+    uint webBackground; // 网页背景颜色
+    uint reserve[17];
 };
 
 struct sRunTime
