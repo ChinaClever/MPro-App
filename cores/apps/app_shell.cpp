@@ -19,12 +19,18 @@ void App_Shell::shell_readProcess()
         int id = it.key();
         auto pro = it.value();
         if(pro->isReadable()) {
-            shellCfg.result[id] << pro->readAllStandardError();
-            shellCfg.result[id] << pro->readAllStandardOutput();
-            if(shellCfg.result[id].size() >100) shellCfg.result[id].clear();
+            shellCfg.result[id].insert(0, pro->readAllStandardError());
+            shellCfg.result[id].insert(0, pro->readAllStandardOutput());
+            if(shellCfg.result[id].size() >100) shellCfg.result[id].removeLast();
             //qDebug().noquote() << id << shellCfg.result[id];
         }
     }
+}
+
+void App_Shell::shell_kill(int id)
+{
+    if(mMap.contains(id)) mMap[id]->kill();
+    mMap.remove(id);
 }
 
 void App_Shell::shell_execute(int id)
@@ -41,7 +47,7 @@ void App_Shell::shell_execute(int id)
         //pro->setProcessChannelMode(QProcess::MergedChannels);   //设置读取标准输出模式
         connect(pro, &QProcess::readyReadStandardError,[this](){this->shell_readProcess();});
         connect(pro, &QProcess::readyReadStandardOutput,[this](){this->shell_readProcess();});
-        mMap[id] = pro; pro->start();
+        shell_kill(id); mMap[id] = pro; pro->start();
     }
 }
 
