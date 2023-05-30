@@ -55,7 +55,7 @@ bool Dtls_Association::waitForConnected()
 void Dtls_Association::udpSocketConnected()
 {
     emit infoMessage(tr("%1: UDP socket is now in ConnectedState, continue with handshake ...").arg(name));
-    startHandshake();
+    cm::mdelay(2); startHandshake();
 }
 
 void Dtls_Association::readyRead()

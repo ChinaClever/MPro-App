@@ -2,7 +2,7 @@
 #define APP_SHELL_H
 
 #include "app_netaddr.h"
-#define SHELL_SIZE 10
+#define SHELL_SIZE 20
 struct sShellCfg {
     uchar startup[SHELL_SIZE]={0};
     QString cmd[SHELL_SIZE];
