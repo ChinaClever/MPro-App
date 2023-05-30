@@ -15,6 +15,7 @@ public:
     explicit App_Shell(QObject *parent = nullptr);
     static sShellCfg shellCfg;
     void shell_execute(int id);
+    void shell_kill(int id);
 
 private:
     void shell_initSlot();

@@ -151,6 +151,7 @@ bool Set_Service::shellSet(int fc, int id, const QVariant &v)
     case 2: key = "cmd_%1"; cfg->cmd[id] = v.toString(); break;
     case 3: App_Core::bulid()->shell_execute(id); break;
     case 4: cfg->result[id].clear(); break;
+    case 5: App_Core::bulid()->shell_kill(id); break;
     default: cout << fc; ret = false; break;
     }
 
