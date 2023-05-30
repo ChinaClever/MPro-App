@@ -143,20 +143,31 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(0 == language){
-				var retVal = confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！");	
-			}else{
-				var retVal = confirm("Please confirm whether to enable or disable this feature. Once enabled, it will turn off the device's webpage cascading mode！");
-			}
-			if(retVal ==true){
+			//if(0 == language){
+			//	var retVal = confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！");	
+			//}else{
+			//	var retVal = confirm("Please confirm whether to enable or disable this feature. Once enabled, it will turn off the device's webpage cascading mode！");
+		//	}
+		///if(retVal ==true){
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
-						pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);										
+						if(btn.id == "rtu"){
+							if(0 == language){
+								var retVal = confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！");	
+							}else{
+								var retVal = confirm("Please confirm whether to enable or disable this feature. Once enabled, it will turn off the device's webpage cascading mode！");
+							}
+							if(retVal ==true){
+								pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);		
+							}
+						}else{
+							pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);	
+						}								
 					}
 				}
 				btn.blur();
 				flash_html();
-			}else{}
+		//	}else{}
 		}
 		function flash_html(){
 			pdu_cfg.modbusCfg();
@@ -219,7 +230,7 @@
 				tbody +='<option value ="'+i+'">'+stopbits_name[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td style="padding-left: 35%"><input id="lang_9" type = "button" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px"  onclick = "Set(this)"></input></td></tr>';
+			tbody += '<tr><td><input id="lang_9" type = "button" style ="width:75%"  onclick = "Set(this)"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -235,7 +246,7 @@
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_12" ></td>';
 			tbody += '<td><input id = "tcp_port" onchange ="SetData(this)" value = "" style="width:24.5%"></td></tr>';
-			tbody += '<tr><td style="padding-left: 35%"><input id="lang_13" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px" type = "button"  onclick = "Set(this)"></input></td></tr>';
+			tbody += '<tr><td><input id="lang_13" style ="width:75%" type = "button"  onclick = "Set(this)"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

@@ -54,10 +54,6 @@
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
 		},1600);
-
-    setTimeout(function(){
-      datetime();
-		},2000);
    
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
@@ -141,32 +137,6 @@
       time3_num ++;
     },350);
 
-    function checkTime(i) {
-			if (i < 10) {
-				i = "0" + i;
-			}
-			return i;
-		}
-    function datetime() {
-			var today = new Date();
-			var yyyy = today.getFullYear();
-			var MM = today.getMonth() + 1;
-			var dd = today.getDate();
-			var hh = today.getHours();
-			var mm = today.getMinutes();
-			var ss = today.getSeconds();
-			MM = checkTime(MM);
-			dd = checkTime(dd);
-			hh = checkTime(hh);
-			mm = checkTime(mm);
-			ss = checkTime(ss);
-			var time = yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm + ":" + ss;
-
-			//document.getElementById('DateTime').value = time;
-      time = time.replace("T", " ");
-			obj.setCfg(43, 1, time, 0, 0);
-		}
-    
     function sign_in(){
       let time_flage =0;
       language = window.sessionStorage.getItem('language');
@@ -227,9 +197,9 @@
           time_flage++;
           if(time_flage == 63){
             if(0 == language){
-             alert("网页登陆超时！");
+             alert("radius服务超时！");
             }else{
-             alert("Website login timeout!！");
+             alert("Radius service timeout!！");
         } 
           }
         },450);
@@ -323,7 +293,6 @@
       }
     }
     function register1(){
-      var language = window.sessionStorage.getItem('language');
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       let conpsd = document.getElementById('conpsd').value;

@@ -77,18 +77,11 @@
 				var retVal = confirm("Confirm whether to enable this function！");
 			}
 			if(retVal ==true){
-				//for(let i = 1;i<syscmd.length;i++){
-					// if(syscmd[i] == btn.id){
-					// 	pdu_cfg.setCfg(96,i,0,0,addr);						
-					// 	pdu_cfg.clear();
-					// }
-					if(btn.id == "Reboot"){
-						pdu_cfg.setCfg(96,1,0,0,addr);
-					}else if(btn.id == "Restore"){
-						pdu_cfg.setCfg(96,2,0,0,addr);						
-						pdu_cfg.clear();
+				for(let i = 1;i<syscmd.length;i++){
+					if(syscmd[i] == btn.id){
+						pdu_cfg.setCfg(96,i,0,0,addr);
 					}
-				//}
+				}
 			}else{}
 		}
 		function buildTable() {
