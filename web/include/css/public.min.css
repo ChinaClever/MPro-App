@@ -257,7 +257,7 @@ button,
 input,
 select,
 textarea {
-    font-family: "lucida Grande", Verdana, "Microsoft YaHei", "Noto Sans CJK SC", "WenQuanYi Micro Hei", Tahoma, sans-serif;
+    font-family: "Microsoft YaHei", "lucida Grande", Verdana, "Noto Sans CJK SC", "WenQuanYi Micro Hei", Tahoma, sans-serif;
     -ms-text-autospace: ideograph-alpha ideograph-numeric ideograph-parenthesis
 }
 

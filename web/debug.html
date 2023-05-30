@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="./include/css/public.min.css">
 		<link rel="stylesheet" href="./include/css/iconfont.min.css">
 		<link rel="stylesheet" href="./include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="./include/css/index.min.css">
 		<style>
 			.panel-default{
             border: none;
@@ -115,7 +116,7 @@
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
-		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_");
+		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_","bg_color");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
@@ -171,6 +172,7 @@
 			cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
 			cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
 			cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
+			cfg_data[7] = pdu_obj.cfgValue(cfg,18,0,addr);
 			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_obj.getValue(unite_name[i],unite_type[i],2,0);
@@ -206,7 +208,7 @@
 				document.getElementById("board_num"+i).value = board_out[i - 1];
 			}
 			document.getElementById("break_").value = break_en;
-			for(i =0;i<7;i++){
+			for(i =0;i<8;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
 			for(let i = 0;i<10;i++){
@@ -251,6 +253,7 @@
 			pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
 			pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
 			pdu_obj.setCfg(41,11,document.getElementById("mac_").value,0,addr);
+
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
@@ -344,6 +347,21 @@
 		}
 		function chosefile(){
 			document.getElementById("info").value = document.getElementById("inputkey").value;
+		}
+		function bgColor_set(btn){
+			val  = parseInt(btn.value);
+			if(val == 0){				
+				pdu_obj.setCfg(cfg,18,btn.value,0,addr);
+			//	document.getElementsByClassName("side-box")[0].style.backgroundColor = "#083266";
+			}else if(val == 1){				
+				pdu_obj.setCfg(cfg,18,btn.value,0,addr);
+			//	document.getElementsByClassName("side-box")[0].style.backgroundColor = "#2b333e";
+			}
+			setTimeout(() => {
+				PduMetaData.meta_workDown();
+				pdu_obj.debugCfg();
+			}, 1500);
+			
 		}
 		function Set(){
 			for(let  i = 1;i<=output_num;i++){
@@ -446,6 +464,8 @@
 			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
 			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[6]+'"></input></td></tr>';
+			tbody += '<tr><td>背景颜色:</td>';
+			tbody += '<td><input id = "bg_color" style ="width:2.5%" type = "text" onchange = "bgColor_set(this)" value="'+cfg_data[7]+'"></input>(0-蓝色,1-黑色)</td></tr>';
 			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
