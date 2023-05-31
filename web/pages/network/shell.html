@@ -36,7 +36,7 @@
 							<select class ="devname" id ="ms" style = "width:6%;margin-left: 2px" onchange = "Change(this);"></select>
 							<span style = "margin-left: 5%" id="lang_6"></span><input id="chk" type="checkbox" onchange ="setData(this)" style="width:auto;position:static;display: inline;">
 							<input type ="button" style = "width:12%;margin-left: 10%" id  = "exec" onclick="setData(this)">
-							<!-- <input type ="button" style = "width:12%;margin-left: 6%" id  = "save" onclick="setData(this)"> -->
+							<input type ="button" style = "width:12%;margin-left: 10%" id  = "lang_9" onclick="setData(this)">
 							<input type ="button" style = "width:12%;margin-left: 10%" id  = "clear" onclick="setData(this)">
 
 						</span>
@@ -66,7 +66,7 @@
 			for(let i = 0;i<10;i++){
 				pdu_cfg.getCfg(shell_type,1,i,0);
 			}
-			for(let i = 2;i<5;i++){
+			for(let i = 2;i<6;i++){
 				for(j =0;j<10;j++){
 					pdu_cfg.getCfg(shell_type,i,j,0);
 				}
@@ -108,6 +108,7 @@
 			lang[6] = ["开机自启动：","Self start upon startup:","","",""];
 			lang[7] = ["阅读模式", "Reading mode", "", "", ""];
 			lang[8] = ["设置模式", "Setting mode", "", "", ""];
+			lang[9] = ["停止执行","Stop execution","","",""];
 			for(let i = 1;i < 11;i++){
 				dev_name[i] =  lang[3][language] + i;
 			}
@@ -119,6 +120,7 @@
 			}
 			document.getElementById("lang_1" ).innerHTML  = lang[1][language];
 			document.getElementById("lang_2" ).innerHTML  = lang[2][language];
+			document.getElementById("lang_9" ).value  = lang[9][language];
 			for(let i = 6;i<8;i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
@@ -176,7 +178,7 @@
 					for(let i = 0;i<10;i++){
 						pdu_cfg.getCfg(shell_type,1,i,0);
 					}
-					for(let i = 2;i<5;i++){
+					for(let i = 2;i<6;i++){
 						for(j =0;j<10;j++){
 							pdu_cfg.getCfg(shell_type,i,j,0);
 						}
@@ -240,7 +242,7 @@
 			for(let i = 0;i<10;i++){
 				pdu_cfg.getCfg(shell_type,1,i,0);
 			}
-			for(let i = 2;i<5;i++){
+			for(let i = 2;i<6;i++){
 				for(j =0;j<10;j++){
 					pdu_cfg.getCfg(shell_type,i,j,0);
 				}
@@ -248,25 +250,27 @@
 			setTimeout(function(){
 				read_data();
 				showdata_();
-			},300);
+			},500);
 		}
 
 		function setData(btn){
 			var id = parseInt(document.getElementById("ms" ).value);
 			// var id = document.getElementById("ms" ).value;
-			if(btn.id == "save"){
-
-			}else if(btn.id == "exec"){ 
+			if(btn.id == "lang_9"){
+				pdu_cfg.setCfg(shell_type,5,1,id,0);
+			}else if(btn.id == "exec"){
 				var cmd = document.getElementById("script_content" ).value;
 				pdu_cfg.setCfg(shell_type,2,cmd,id,0);
 				pdu_cfg.setCfg(shell_type,3,1,id,0);
 				setTimeout(function(){
 					FlashHtml();
-				},200);
+				},500);
 
 			}else if(btn.id == "clear"){
 				pdu_cfg.setCfg(shell_type,4,'',id,0);
-				FlashHtml();
+				setTimeout(function(){
+					FlashHtml();
+				},300);
 			}else if(btn.id == "chk"){
 				var id = parseInt(document.getElementById("ms" ).value);
 				if(btn.checked == true){
@@ -279,23 +283,19 @@
 			
 			
 		}
-		// setInterval(function(){
-		// 	// let id = document.getElementById("ms" ).value;
-		// 	for(let i = 0;i<10;i++){
-		// 		pdu_cfg.getCfg(shell_type,1,i,0);
-		// 	}
-		// 	for(let i = 2;i<5;i++){
-		// 		for(j =0;j<10;j++){
-		// 			pdu_cfg.getCfg(shell_type,i,j,0);
-		// 		}
-		// 	}
-		// 	// read_data();
-		// 	showdata_();
-		// 	// setTimeout(function(){
-		// 	// 	pdu_cfg.setCfg(shell_type,4,'',id,0);
-		// 	// },1900);
-
-		// },2000);
+		setInterval(function(){
+			// let id = document.getElementById("ms" ).value;
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,1,i,0);
+			}
+			for(let i = 2;i<6;i++){
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
+			}
+			read_data();
+			showdata_();
+		},2000);
 
     </script>
 </body>

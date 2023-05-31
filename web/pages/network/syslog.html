@@ -102,11 +102,6 @@
 		function SetData(btn){
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
-			if(language == 0){
-				alert("设置后需重启才能生效，输入框输入后按回车自动保存！");
-			}else{
-				alert("After setting, a reboot is required to take effect. After entering the input box, press Enter to automatically save it!");
-			}
 				for(let i = 1;i<syslog_name.length;i++){
 					if(syslog_name[i] == btn.id){
 						pdu_cfg.setCfg(46,i,btn.value,0,addr);

@@ -646,7 +646,9 @@ class PduCore extends PduOta {
 
     // 清除所有数据
     clear() {
+      //  this.login_out();
         this.rpc.clear();
+       // this.login_check();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 

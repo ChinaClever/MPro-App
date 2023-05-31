@@ -189,10 +189,14 @@
 					alert("请输入至少一个邮箱账号！");
 				}else{
 					alert("Please enter at least one email account！");
-				}
-				
+				}				
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
+				if(0 == language){
+					alert("测试邮件发送成功！");
+				}else{
+					alert("Test email sent successfully!");
+				}
 			}
 		}
 		function buildTable() {
@@ -245,7 +249,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id ="lang_17" style ="width:50%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
+			tbody += '<tr><td style="padding-left: 35%"><input id ="lang_17" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
