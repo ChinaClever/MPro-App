@@ -9,16 +9,14 @@ sWhiteListCfg App_WhiteList::whiteListCfg;
 App_WhiteList::App_WhiteList(QObject *parent)
     : App_Start{parent}
 {
-    QTimer::singleShot(1,this,&App_WhiteList::internetFirewall);
+    QTimer::singleShot(10,this,&App_WhiteList::internetFirewall);
 }
 
 void App_WhiteList::internetFirewall()
 {
-    bool ret = false;
-    sWhiteListCfg *cfg = &whiteListCfg;
-    if(cfg->en && QFile::exists("netcfg")) {
-        system("netcfg -s on");
-        system("netcfg -a '127.0.0.1 - - -'");
+    bool ret = false; sWhiteListCfg *cfg = &whiteListCfg;
+    if(cfg->en && QFile::exists("/usr/data/clever/bin/netcfg")) {
+        system("netcfg -s on"); system("netcfg -a '127.0.0.1 - - -'");
         for(int i=0; i<WHITE_LIST_NUM; ++i) {
             QString ip = cfg->ip[i]; //if(ip.isEmpty()) ip = "-";
             if(ip.size() > 2) {

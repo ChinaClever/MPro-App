@@ -32,7 +32,7 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60*60) num = 1;
+    if(cm::runTime() < 72*60*60) num = 1;
     if((cnt[id] == num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
@@ -59,8 +59,8 @@ void OP_Object::recoveryLog(int id, uint *cnt)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60*60) num = 1;
-    if((cnt[id] > num) && dtc[id]) {
+    if(cm::runTime() < 72*60*60) num = 1;
+    if((cnt[id] == num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
             it.event_type = tr("Vol recovery");

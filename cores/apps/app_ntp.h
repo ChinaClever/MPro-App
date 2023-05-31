@@ -27,6 +27,7 @@ public:
 
 private:
     Net_Udp *mUdp;
+    QMap<QString, QString> mTzMap;
 };
 
 #endif // APP_NTP_H

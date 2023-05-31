@@ -239,8 +239,8 @@ void Cfg_Service::ntp()
         switch (i) {
         case 2: key = "udp_en";  it->udp_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 3: key = "ntp_host";  it->ntp_host = mCfg->readCfg(key, "", prefix).toString();  break;
-        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "Asia/Shanghai", prefix).toString();  break;
-        }
+        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "GMT+8", prefix).toString();  break;
+        } // GMT+8  Asia/Shanghai
     }
 }
 
@@ -443,9 +443,8 @@ void Cfg_Service::whiteList()
         case 7: key = "ip2"; str = &it->ip[1]; break;
         case 8: key = "ip3"; str = &it->ip[2]; break;
         case 9: key = "ip4"; str = &it->ip[3]; break;
-        default: key.clear(); break;
-        }
-        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        default: key.clear(); str = nullptr; break;
+        } if(str) *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 

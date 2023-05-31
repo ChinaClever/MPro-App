@@ -79,6 +79,12 @@ void Data_Group::groupTiming()
         int res = relayTiming(*obj, i);
         if(res) {
             QList<int> ls = outletByGroup(i);
+            sRelayUnit *relay = &(cm::masterDev()->output.relay);
+            foreach (const auto &i, ls){
+                if(relay->disabled[i]) ls.removeOne(i);
+                else if(res) relay->cnt[i] += 1;
+            }
+
             OP_Core::bulid()->relaysCtrl(ls, res-1);
             sEventItem db; res--; //db.addr = i;
             if(cm::cn()) {

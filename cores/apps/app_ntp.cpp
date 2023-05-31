@@ -16,6 +16,18 @@ App_Ntp::App_Ntp(QObject *parent)
 
 void App_Ntp::ntp_initSlot()
 {
+    mTzMap = {
+        {"GMT-12", "GMT+12"}, {"GMT-11", "GMT+11"}, {"GMT-10", "GMT+10"},
+        {"GMT-9",  "GMT+9"},  {"GMT-8",  "GMT+8"},  {"GMT-7",  "GMT+7"},
+        {"GMT-6",  "GMT+6"},  {"GMT-5",  "GMT+5"},  {"GMT-4",  "GMT+4"},
+        {"GMT-3",  "GMT+3"},  {"GMT-2",  "GMT+2"},  {"GMT-1",  "GMT+1"},
+        {"GMT-0",  "GMT+0"},  {"GMT+0",  "GMT-0"},  {"GMT+1",  "GMT-1"},
+        {"GMT+2",  "GMT-2"},  {"GMT+3",  "GMT-3"},  {"GMT+4",  "GMT-4"},
+        {"GMT+5",  "GMT-5"},  {"GMT+6",  "GMT-6"},  {"GMT+7",  "GMT-7"},
+        {"GMT+8",  "GMT-8"},  {"GMT+9",  "GMT-9"},  {"GMT+10", "GMT-10"},
+        {"GMT+11", "GMT-11"}, {"GMT+12", "GMT-12"}
+    };
+
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     if(ntpCfg.udp_en) mUdp->bind(123);
     ntp_timeZone(ntpCfg.time_zone);
@@ -39,10 +51,10 @@ void App_Ntp::ntp_timeZone(const QString &zone)
 {
     ntpCfg.time_zone = zone;
     system("rm -rf /usr/data/etc/localtime");
-    QString cmd = "ln -s /usr/share/zoneinfo/%1";
-    cmd += " /usr/data/etc/localtime";
-    system(cmd.arg(zone).toLocal8Bit().data());
-    //qDebug() << cmd.arg(zone);
+    QString cmd = "ln -s /usr/share/zoneinfo/";
+    if(zone.contains("GMT")) cmd += "posix/Etc/" + mTzMap[zone];
+    else {cmd += zone;} cmd += "  /usr/data/etc/localtime";
+    system(cmd.toLocal8Bit().data()); //qDebug() << cmd.arg(zone);
 }
 
 bool App_Ntp::ntp_time(const QString &t)

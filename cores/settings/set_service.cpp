@@ -277,9 +277,17 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     default: ret = false; cout<< fc; break;
     } //cout << key << fc << v;
 
+    if(3 == fc && it->http_redirect && !it->https_en) {
+        it->http_redirect = 0; return false;
+    }
+
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
+        if(!it->http_en && !it->https_en) {
+            key = "http_en"; it->http_en =1;
+            cfg->writeCfg(key, 1, prefix);
+        }
     }
     return ret;
 }
