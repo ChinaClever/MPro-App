@@ -193,7 +193,13 @@
 			},500);
 		}
 		function Set(){
+			if(0 == language){
+				alert("修改当前账户，需要重启之后生效!");	
+			}else{
+				alert("Modifying the current account requires a reboot to take effect！");
+			}
 			pdu_cfg.setCfg(16,17,0,0,addr);
+			/*
 			if(0 == language){
 				var retVal = confirm("修改当前账户，需要重启之后生效，请确认是否重启!");	
 			}else{
@@ -205,7 +211,7 @@
 			}else{
 				//pdu_cfg.setCfg(16,17,0,0,addr);
 				flash_html();
-			}
+			}*/
 		}
 		function buildTableV1_2() {
 			var thead = '',tbody = '';

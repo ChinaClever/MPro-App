@@ -131,6 +131,9 @@
 			}
 			*/
 			if(btn.id == "web_sub"){
+				if(btn.value > 1440){
+					btn.value = 1440;
+				}
 				pdu_cfg.setCfg(42,7,btn.value,0,addr);
 				btn.blur();
 			}else if(btn.id == "chk"){
@@ -142,7 +145,6 @@
 				}else{
 					alert("After enabling or disabling this function, a reboot is required to take effect!!");
 				}
-
 				pdu_cfg.setCfg(42,8,val,0,addr);
 				btn.blur();	
 			}
@@ -162,7 +164,7 @@
 			tbody += '<td><input id = "chk"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td>';
-			tbody += '<td id = "explain1">(启用强密码后，用户名必须为5-16位，密码、验证信息必须为6-16位,且必须包含至少一个数字,大写和小写字母，不启用则无需遵循此规则)';
+			tbody += '<td id = "explain1">(启用强密码后，用户名必须为5-16位，密码、验证信息必须为6-16位,且必须包含至少一个数字,大写和小写字母，不启用则无需遵循此规则。新注册账户需按规则注册！)';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td><input id = "more_user"  onchange ="SetWeb(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';

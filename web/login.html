@@ -67,7 +67,7 @@
     let time3_num = 0;
     let user = 14;
     let web_service = 0;
-    let language ;
+    let language = 0 ;
     let lang = new Array();
     lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
@@ -110,16 +110,22 @@
       }
     }
     let time3 = setInterval(function(){
-      if(time3_num >= 5){
+      var language = obj.cfgValue(13,10,0,0);
+      if(time3_num >  5){
+        if(language != ""){
           GotoRegisterPage();
           clearInterval(time3);
+        }else{
+          obj.loginCfg(); 
+        }
+
       } else {
         //obj.getCfg(14, 1, 0, 0);
         obj.loginCfg();
       }
       
       //language = obj.cfgValue(13,10,0,0);
-      var language = window.sessionStorage.getItem('language');
+      
 
       user_name = obj.cfgValue(user,1,0,0);
       identify = obj.cfgValue(user,3,0,0);
