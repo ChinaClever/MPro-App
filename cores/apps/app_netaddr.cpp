@@ -105,9 +105,8 @@ void App_NetAddr::inet_setIpV4()
         //qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("netcfg")) {
-                cmd = "netcfg -g %1 eth0";
-                str = cmd.arg(gw);
+            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
+                cmd = "netcfg -g %1 eth0"; str = cmd.arg(gw);
             } else {
                 cmd = "ip route replace default via %1 dev %2";
                 str = cmd.arg(gw, fn);
@@ -136,7 +135,7 @@ void App_NetAddr::inet_setIpV6()
         QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
         QString cmd, str;
-        if(QFile::exists("netcfg")) {
+        if(QFile::exists("/usr/data/clever/bin/netcfg")) {
             cmd = "netcfg -i %1/%2 eth0";
             str = cmd.arg(ip).arg(mask);
         } else {
@@ -145,7 +144,7 @@ void App_NetAddr::inet_setIpV6()
         } system(str.toStdString().c_str()); // qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("netcfg")) {
+            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
                 cmd = "netcfg -g %1 eth0";
                 str = cmd.arg(gw);
             } else {

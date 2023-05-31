@@ -32,9 +32,10 @@ static void initSystem()
     system("rm -rf /usr/data/upload");
     system("chmod 775 -R /usr/data/clever/bin");
     system("chmod 775 -R /usr/data/clever/app");
-    system("chmod 777 /usr/data/clever/ver.ini");
+    system("chmod 775 -R /usr/data/clever/cfg");
+    system("chmod 775 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
-    system("echo 3 > /proc/sys/vm/drop_caches");
+    //system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 

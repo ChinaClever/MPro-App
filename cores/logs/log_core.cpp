@@ -132,5 +132,5 @@ void Log_Core::timeoutDone()
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);
-    system("echo 3 > /proc/sys/vm/drop_caches");
+    //system("echo 3 > /proc/sys/vm/drop_caches");
 }

@@ -139,10 +139,13 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
     }
 
     sRelayUnit *relay = &(cm::masterDev()->output.relay);
-    foreach (const auto &i, ids) if(unit.value) relay->cnt[i] += 1;
+    foreach (const auto &i, ids){
+        if(relay->disabled[i]) ids.removeOne(i);
+        else if(unit.value) relay->cnt[i] += 1;
+    }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
-    if(0==it->disabled[id] && (unit.value < 2)) { /* || unit.txType == DTxType::TxWeb*/
+    if(0==it->disabled[id] && (unit.value < 2)) { /* || unit.txType == DTxType::TxWeb*/        
         OP_Core::bulid()->relaysCtrl(ids, unit.value);
     } else ret = false;
 

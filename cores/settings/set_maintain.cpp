@@ -7,7 +7,7 @@
 
 Set_Maintain::Set_Maintain()
 {
-
+    //system("chmod 775 /usr/data/clever/cfg/*");
 }
 
 bool Set_Maintain::syscmd(int fc)
@@ -93,6 +93,7 @@ QString Set_Maintain::batchBackup()
     QString dir = "usr/data/clever/cfg/";
     fns << "mac.ini" << "inet.ini" << "devParam.ini";
     fns << "logs.db" << "qrcode.png" << "proc_cnt.ini";
+    fns << "uuid.conf" << "sn.conf";
 
     QString zip = profileBackup();
     foreach (const auto &fn, fns) {
@@ -141,7 +142,9 @@ bool Set_Maintain::restory(const QString &fn)
     bool ret = true; if(QFile::exists(fn)) {
         QString fmd = "unzip -o %1 -d /";
         QString cmd = fmd.arg(fn); qDebug() << cmd;
+        system("chmod 775 /usr/data/clever/cfg/*");
         system(cmd.toLatin1().data()); //cm::mdelay(50);
+        system("chmod 775 /usr/data/clever/cfg/*");
         cm::execute("rm -rf " + fn);
         cm::mdelay(1650);
         system("reboot");

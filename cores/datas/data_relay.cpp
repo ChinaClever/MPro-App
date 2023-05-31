@@ -32,7 +32,7 @@ int Data_Relay::relayTiming(const sObjData &obj, int id)
 {
     int ret = 0;
     const sRelayUnit *it = &obj.relay;
-    if((id < it->size) && it->timingEn[id]) {
+    if((id < it->size) && it->timingEn[id] ) {
         ret = relayTimingCheck(it->timingOff, id) ? 1:0;
         if(!ret) ret = relayTimingCheck(it->timingOn, id) ? 2:0;
     }
