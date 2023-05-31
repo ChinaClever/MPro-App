@@ -49,18 +49,35 @@
 		var mode_set = new Array("","");
 		var ver_data = new Array();
 		let lang = new Array();
-		let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let serialNumber;
+		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			serialNumber = pdu_data.pdu_version.serialNumber;
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
 		function read_data(){
-			for(var j = 0;j<24;j++){
-				if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
-					ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+			if(0 == language){
+				for(var j = 0;j<24;j++){
+					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+						ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+					}
 				}
+				ver_data[24] = serialNumber;
+			}else{
+				for(var j = 0;j<24;j++){
+					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+						if(j == 4){
+							continue;
+						}else{
+							ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+						}
+					}
+				}
+				ver_data[24] = serialNumber;			
 			}
 		}
 		lang_init();
@@ -88,10 +105,15 @@
 			lang[18] = ["内核版本:","Kernel version:","","",""];
 			lang[19] = ["内存信息:","Memory information:","","",""];
 			lang[20] = ["存储状态:","Storage status:","","",""];
+			lang[21] = ["设备序列号:","Equipment serial number:","","",""];
 		}
 		function lang_fun(){
-			for(let j = 1;j<21;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			for(let j = 1;j<22;j++){
+				if(1 == language && j == 7){
+					continue;
+				}else{
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
 			}
 		}
 		setTimeout(function(){
@@ -103,11 +125,35 @@
 			ShowData();
 		},500);
 		function ShowData(){
-			for(var i = 0; i < (ver_name.length);i++){
-				if(ver_name[i] != ""){
-					document.getElementById(ver_name[i]).innerHTML = ver_data[i];
-				}
+			if(0 == language){
+				for(var i = 0; i < (ver_name.length);i++){
+					if(ver_name[i] != ""){
+						if(i == 0){
+							document.getElementById(ver_name[i]).innerHTML = ver_data[i];
+						}else if(i == 1){
+							document.getElementById(ver_name[i]).innerHTML = ver_data[24];
+						}else{
+							document.getElementById(ver_name[i]).innerHTML = ver_data[i-1];
+						}
+						
+					}
+				}				
+			}else{
+				for(var i = 0; i < (ver_name_.length);i++){
+					if(ver_name_[i] != ""){
+						if(i == 0){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+						}else if(i == 1){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[24];
+						}else if(i <5){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i-1];
+						}else{
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+						}
+					}
 			}
+			}
+
 			if(top.login_permit_ == 0){
 			}else{
 				$("input").attr("disabled","disabled");
@@ -120,14 +166,18 @@
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td id = "McName"></td></tr>';
+			tbody += '<tr><td id="lang_21" ></td>';
+			tbody += '<td id = "ser_num"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td id = "McVer"></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td id = "McCode"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td id = "McUsrName"></td></tr>';
-			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td id = "McVerShow"></td></tr>';
+			if(0 == language){
+				tbody += '<tr><td id="lang_7" ></td>';
+				tbody += '<td id = "McVerShow"></td></tr>';
+			}			
 			tbody += '<tr><td id="lang_8" ></td>';
 			tbody += '<td id = "McReiyOnVer"></td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
