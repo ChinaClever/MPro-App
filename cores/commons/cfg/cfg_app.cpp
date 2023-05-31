@@ -38,6 +38,12 @@ void Cfg_App::app_upgradeDate()
     writeCfg("upgradeDate", dt, g);
 }
 
+void Cfg_App::app_serialNumber(const QString &sn)
+{
+    QString g = "app_pack";
+    writeCfg("sn", sn, g);
+}
+
 bool Cfg_App::app_pack(sAppVerIt &it)
 {
     QString g = "app_pack";

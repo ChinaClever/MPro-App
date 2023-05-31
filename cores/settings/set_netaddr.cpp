@@ -12,10 +12,13 @@ Set_NetAddr::Set_NetAddr()
 }
 
 QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
-{    
-    sNetInterface *net = &(cm::dataPacket()->net);
-    sNetAddr *inet = &net->inet; QVariant res;
-    if(sub) inet = &net->inet6;
+{
+    App_Core *app = App_Core::bulid();
+    sNetInterface net = cm::dataPacket()->net;
+    sNetAddr *inet = &net.inet; QVariant res;
+    if(0 == sub) app->inet_readCfg(*inet, "IPV4");
+    else {inet = &net.inet6; app->inet_readCfg(*inet, "IPV6");}
+    if(strlen(inet->ip) < 3) net = cm::dataPacket()->net;
 
     switch (fc) {
     case 0: res = inet->en; break;
@@ -26,12 +29,12 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
     case 5: res = inet->prefixLen; break;
     case 6: res = inet->dns; break;
     case 7: res = inet->dns2; break;
-    case 10: res = net->name; break;
-    case 11: res = net->mac; break;
+    case 10: res = net.name; break;
+    case 11: res = net.mac; break;
     case 16: res = inet->reserve[0]; break;
     case 17: res = inet->reserve[1]; break;
     case 18: res = inet->reserve[2]; break;
-    default: qDebug() << Q_FUNC_INFO; break;
+    default: cout << sub << fc; break;
     }
     return res;
 }

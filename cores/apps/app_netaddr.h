@@ -12,13 +12,13 @@ public:
     void inet_initFunSlot();
     void inet_updateInterface();
     void inet_setInterfaceSlot();
+    void inet_readCfg(sNetAddr &inet, const QString &g);
 
 private:
     void inet_setIpV4();
     void inet_setIpV6();
     void inet_dnsCfg();
     int inet_dhcpUpdate();
-    void inet_readCfg(sNetAddr &inet, const QString &g);
     void inet_writeCfg(sNetAddr &inet, const QString &g);
 
 private:

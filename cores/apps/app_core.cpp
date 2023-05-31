@@ -68,5 +68,11 @@ void App_Core::initVer()
         qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark));
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
     } else {ver->md5[0] = 0; cout << CFG_APP << "error";} initUuid();
+    QString fn = "/usr/data/clever/cfg/sn.conf";
+    if(it.sn.isEmpty() && QFile::exists(fn)) {
+        QString sn = cm::execute("cat " + fn);
+        qstrcpy(ver->serialNumber, sn.toUtf8().data());
+        cfg.app_serialNumber(sn);
+    }
 }
 
