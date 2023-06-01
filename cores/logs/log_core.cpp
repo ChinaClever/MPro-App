@@ -11,7 +11,7 @@ sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
 {
-    uint t = 6*60*1000;
+    uint t = 6*60*60*1000;
     timer = new QTimer(this);
     timer->start(t + rand()%100);
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
@@ -141,8 +141,7 @@ void Log_Core::invAdcSlot()
 {
     QString cmd = "cmd_adc get_voltage 1";
     if(QFile::exists("/usr/bin/cmd_adc")) {
-        QString res = cm::execute(cmd);
-        qDebug() << "ADC voltage" << res;
+        QString res = cm::execute(cmd); qDebug() << "ADC voltage" << res;
         double vol = res.remove("channel 1:adc sample voltage = ").toDouble();
         if(vol < 11 || vol > 13) {
             sEventItem it; {
