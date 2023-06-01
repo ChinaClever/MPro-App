@@ -108,10 +108,9 @@ bool Integr_HttpServer::execute(const QByteArray &body)
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     QString cmd = it->getString(body, "cmd");
     if(cmd.size()) {
-        if(cmd.contains("reboot")) replyHttp("ok", 200);
-        QString res = cm::execute(cmd);
+        if(cmd.contains("reboot")){replyHttp("ok", 200); cm::mdelay(400);}
+        QString res = cm::execute(cmd); replyHttp(res, 200);
         //system(cmd.toLatin1().data());
-        replyHttp(res, 200);
     } else {
         ret = replyHttp("error:" + cmd, 431);
     }

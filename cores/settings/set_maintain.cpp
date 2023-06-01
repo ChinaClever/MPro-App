@@ -7,21 +7,28 @@
 
 Set_Maintain::Set_Maintain()
 {
-    //system("chmod 775 /usr/data/clever/cfg/*");
+
 }
+
+static void dev_restart()
+{
+    cm::mdelay(1000);
+    system("sync");
+    system("reboot");
+}
+
 
 bool Set_Maintain::syscmd(int fc)
 {
     bool ret=true; switch (fc) {
-    case 1: ret = system("reboot"); break;
-    case 2: ret = factoryRestore(); break;
+    case 1: m_thread = new std::thread(dev_restart); m_thread->detach(); break;
+    case 2: factoryRestore(); break;
     default: ret = false; cout << fc; break;
     }
-
     return ret;
 }
 
-bool Set_Maintain::factoryRestore()
+void Set_Maintain::factoryRestore()
 {
     //sEventItem it;
     //it.event_type = QStringLiteral("恢复");
@@ -40,9 +47,9 @@ bool Set_Maintain::factoryRestore()
         QString fmd = "rm -rf %1%2";
         QString cmd = fmd.arg(dir, fn);
         system(cmd.toLocal8Bit().data());
-    } system("sync"); system("reboot");
-
-    return true;
+    } //system("sync"); system("reboot");
+    m_thread = new std::thread(dev_restart);
+    m_thread->detach(); //子线程与主线程分离
 }
 
 QString Set_Maintain::backups(int fc)
@@ -146,8 +153,9 @@ bool Set_Maintain::restory(const QString &fn)
         system(cmd.toLatin1().data()); //cm::mdelay(50);
         system("chmod 775 /usr/data/clever/cfg/*");
         cm::execute("rm -rf " + fn);
-        cm::mdelay(1650);
-        system("reboot");
+        m_thread = new std::thread(dev_restart);
+        m_thread->detach(); //子线程与主线程分离
+        //cm::mdelay(1650); //system("reboot");
     } else ret = false;
     return ret;
 }

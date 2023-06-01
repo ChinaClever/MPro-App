@@ -17,9 +17,9 @@ public:
     explicit App_Ssh(QObject *parent = nullptr);
     static sSshCfg sshCfg;
     bool ssh_save();
+    void ssh_delUser();
 
 private:
-    void ssh_delUser();
     bool ssh_addrUser();
 
 public:
