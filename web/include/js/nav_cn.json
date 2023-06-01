@@ -222,10 +222,6 @@
         "url": "syslog.html"
       },
       {
-        "name": "SHELL服务",
-        "url": "shell.html"
-      },
-      {
         "name": "远程认证服务",
         "url": "radius.html"
       }
@@ -289,6 +285,10 @@
       {
         "name": "网络诊断",
         "url": "net_diagnostics.html"
+      },
+      {
+        "name": "脚本服务",
+        "url": "shell.html"
       },
       {
         "name": "备份/恢复",
