@@ -19,8 +19,8 @@ public:
     QVariant sshCfg(int fc);
     bool sshSet(int fc, const QVariant &v);
 
-    QVariant shellCfg(int fc, int id);
-    bool shellSet(int fc, int id, const QVariant &v);
+    QVariant scriptCfg(int fc, int id);
+    bool scriptSet(int fc, int id, const QVariant &v);
 
     QVariant syslogCfg(int fc);
     bool syslogSet(int fc, const QVariant &v);

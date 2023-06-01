@@ -166,6 +166,7 @@ void App_NetAddr::inet_saveCfg(int fc)
     sNetInterface *net = &(cm::dataPacket()->net);
     if(fc) inet_writeCfg(net->inet6, "IPV6");
     else inet_writeCfg(net->inet, "IPV4");
+    QTimer::singleShot(1200,this,&App_NetAddr::inet_updateInterface);
 }
 
 void App_NetAddr::inet_dnsCfg()

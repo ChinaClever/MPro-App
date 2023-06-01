@@ -168,7 +168,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     case 4: ptr = it->qrcode; break;
     case 5: ptr = it->sn; break;
     case 6: ptr = it->devType; break;
-    default:  qDebug() << Q_FUNC_INFO; break;
+    default:  cout << fc << addr; break;
     }
 
     return ptr;

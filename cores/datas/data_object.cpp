@@ -36,21 +36,21 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 
 uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
 {
-    QList<uint> list; QList<uint> tmp;  uint ret = 0;
-    foreach(auto i, ls) if(ptr[i]) list << ptr[i];
-    if(list.size()) std::sort(list.begin(), list.end());
-    foreach(auto i, list) if(!tmp.contains(i)) tmp << i;
-    if(tmp.size() > 2){
-        tmp.removeFirst(); tmp.removeLast();
-        if(tmp.size()) list = tmp;
-    } else if(tmp.size() == 2) {
-        int rated = mDev->line.vol.rated[0];
-        uint max = qMax(tmp.first(), tmp.last());
-        uint min = qMin(tmp.first(), tmp.last());
-        uint temp_max = qAbs((int)max-rated);
-        uint temp_min = qAbs((int)min-rated);
-        if(temp_max >= temp_min) return min; else return max;
-    } else if(1==tmp.size()) return tmp.first();
+    QList<uint> list; uint ret = 0; //QList<uint> tmp;
+    foreach(auto i, ls) if(ptr[i]) if(!list.contains(ptr[i])) list << ptr[i];
+    //if(list.size()) std::sort(list.begin(), list.end());
+    //foreach(auto i, list) if(!tmp.contains(i)) tmp << i;
+    //if(tmp.size() > 2){
+    //    tmp.removeFirst(); tmp.removeLast();
+    //    if(tmp.size()) list = tmp;
+    //} else if(tmp.size() == 2) {
+    //    int rated = mDev->line.vol.rated[0];
+    //    uint max = qMax(tmp.first(), tmp.last());
+    //    uint min = qMin(tmp.first(), tmp.last());
+    //    uint temp_max = qAbs((int)max-rated);
+    //    uint temp_min = qAbs((int)min-rated);
+    //    if(temp_max >= temp_min) return min; else return max;
+    //} else if(1==tmp.size()) return tmp.first();
 
     if(list.size()) {
         std::sort(list.begin(), list.end());

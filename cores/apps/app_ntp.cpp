@@ -7,7 +7,7 @@
 
 sNtpCfg App_Ntp::ntpCfg;
 App_Ntp::App_Ntp(QObject *parent)
-    : App_Shell{parent}
+    : App_Script{parent}
 {
     mUdp = new Net_Udp(this);
     QTimer::singleShot(556,this,&App_Ntp::ntp_initSlot);
@@ -50,11 +50,11 @@ QString App_Ntp::ntp_time()
 void App_Ntp::ntp_timeZone(const QString &zone)
 {
     ntpCfg.time_zone = zone;
-    system("rm -rf /usr/data/etc/localtime");
-    QString cmd = "ln -s /usr/share/zoneinfo/";
+    //system("rm -rf /usr/data/etc/localtime");
+    QString cmd = "ln -sf /usr/share/zoneinfo/";
     if(zone.contains("GMT")) cmd += "posix/Etc/" + mTzMap[zone];
     else {cmd += zone;} cmd += "  /usr/data/etc/localtime";
-    system(cmd.toLocal8Bit().data()); //qDebug() << cmd.arg(zone);
+    system(cmd.toLocal8Bit().data()); qDebug() << cmd;
 }
 
 bool App_Ntp::ntp_time(const QString &t)
