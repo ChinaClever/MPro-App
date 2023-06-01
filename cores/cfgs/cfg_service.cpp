@@ -35,9 +35,9 @@ void Cfg_Service::readCfgParams()
     mqtt();
     amqp();
     odbc();
-    shell();
     redis();
     login();
+    script();
     syslog();
     modbus();
     radius();
@@ -156,12 +156,15 @@ void Cfg_Service::ssh()
 }
 
 
-void Cfg_Service::shell()
+void Cfg_Service::script()
 {
-    QString prefix = "shell"; QString key;
-    sShellCfg *cfg = &App_Shell::shellCfg;
+    QString prefix = "script"; QString key;
+    sScriptCfg *cfg = &App_Script::scriptCfg;
 
-    for(int i=0; i<SHELL_SIZE; ++i) {
+    for(int i=0; i<SCRIPT_SIZE; ++i) {
+        key = "type_" + QString::number(i);
+        cfg->type[i] = mCfg->readCfg(key, 0, prefix).toInt();
+
         key = "startup_" + QString::number(i);
         cfg->startup[i] = mCfg->readCfg(key, 0, prefix).toInt();
 

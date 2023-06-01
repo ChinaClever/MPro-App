@@ -7,7 +7,7 @@
 
 sNtpCfg App_Ntp::ntpCfg;
 App_Ntp::App_Ntp(QObject *parent)
-    : App_Shell{parent}
+    : App_Script{parent}
 {
     mUdp = new Net_Udp(this);
     QTimer::singleShot(556,this,&App_Ntp::ntp_initSlot);

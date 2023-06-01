@@ -127,13 +127,15 @@ bool Set_Service::smtpSet(int fc, int id, const QVariant &v)
 }
 
 
-QVariant Set_Service::shellCfg(int fc, int id)
+QVariant Set_Service::scriptCfg(int fc, int id)
 {
     QVariant ret; QString str;
-    sShellCfg *cfg = &App_Shell::shellCfg;
+    sScriptCfg *cfg = &App_Script::scriptCfg;
     switch (fc) {
+    case 0: ret = cfg->type[id]; break;
     case 1: ret = cfg->startup[id]; break;
     case 2: ret = cfg->cmd[id]; break;
+    case 3: case 5: ret = ""; break;
     case 4: foreach (auto it, cfg->result[id]) str.append(it + "\n"); ret = str; break; //.remove(QRegExp("\n{2,}"))
     default: cout << fc; break;
     }
@@ -141,17 +143,18 @@ QVariant Set_Service::shellCfg(int fc, int id)
     return ret;
 }
 
-bool Set_Service::shellSet(int fc, int id, const QVariant &v)
+bool Set_Service::scriptSet(int fc, int id, const QVariant &v)
 {
-    QString prefix = "shell"; QString key; bool ret = true;
-    sShellCfg *cfg = &App_Shell::shellCfg;
+    QString prefix = "script"; QString key; bool ret = true;
+    sScriptCfg *cfg = &App_Script::scriptCfg;
 
     switch (fc) {
+    case 0: key = "type_%1"; cfg->type[id] = v.toInt(); break;
     case 1: key = "startup_%1"; cfg->startup[id] = v.toInt(); break;
     case 2: key = "cmd_%1"; cfg->cmd[id] = v.toString(); break;
-    case 3: App_Core::bulid()->shell_execute(id); break;
+    case 3: App_Core::bulid()->script_execute(id); break;
     case 4: cfg->result[id].clear(); break;
-    case 5: App_Core::bulid()->shell_kill(id); break;
+    case 5: App_Core::bulid()->script_kill(id); break;
     default: cout << fc; ret = false; break;
     }
 

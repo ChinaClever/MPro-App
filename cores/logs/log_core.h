@@ -32,6 +32,7 @@ private slots:
     void timeoutDone();
     void initFunSlot();
     void saveLogSlot();
+    void invAdcSlot();
 
 private:
     bool isRun=false;
