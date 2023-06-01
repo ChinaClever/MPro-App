@@ -30,8 +30,8 @@
 						<br/>
 						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_9"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_10"></span><input id = "page" style = "width:3%;text-align: center;" value="0"><span id  ="lang_11"></span><span id  ="page_num"></span>
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "last" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
+							<input type ="button" style = "width:16%" id  = "last" onclick="setData(this)">
+							<input type ="button" style = "width:15%" id  = "next" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
@@ -121,6 +121,14 @@
 						log_data[i][j] = log_str.logs[start_+ (show_num - i - 1)][j];
 					}else{
 						log_data[i][j] = log_str.logs[start_+ (show_num - i)][j];
+					}
+				}
+				if(1 == language){//英文版本不显示详细信息
+					log_data[i][3] = log_data[i][3].slice(0,4);
+					if(log_data[i][3] == "[OK]"){
+						log_data[i][3] = "Upgrade Successful";
+					}else{
+						log_data[i][3] = "Upgrade Failed";
 					}
 				}
 			}

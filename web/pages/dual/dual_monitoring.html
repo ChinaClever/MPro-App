@@ -29,7 +29,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="dev_sel" style = "float:right;"><span style = "padding-right: 5px;" id="lang_2" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -79,9 +79,51 @@
 			$("select").attr("disabled","disabled");
 		}else{
 		}
+		// function hidden(){
+		// 	document.getElementsByClassName("page-cont")[0].style.display = "none";	
+		// 	document.getElementsByClassName("section-cont")[0].style.display = "none";	
+		// }
+				function dev_disp(){
+			let DataString = pdu_cfg.meta_value();
+			pdu_data = JSON.parse(DataString);
+			for(let i = 1;i<6;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["输出位监测","","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3]  = ["机柜", "Cabinet", "", "", ""];
+
+			for(let i = 0;i<(slave_num / 2);i++){
+					dev_name[i] =  lang[3][language] + (i+1);
+				}
+				$('.devname').html(BuildSel((slave_num / 2)));
+
+			for(let j = 1;j<3;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
+			function BuildSel(rows)
+			{
+				var tbody = '';
+				for(var i = 0;i<rows;i++)
+				{
+					tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+				}
+				return tbody;
+			}
+		}
 		function hidden(){
-			document.getElementsByClassName("page-cont")[0].style.display = "none";	
-			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+			 dev_disp();
+			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			// document.getElementsByClassName("section-cont")[0].style.display = "none";
+			document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+			 document.getElementById("lang_1").style.display = "none";
+			 return -1;
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();

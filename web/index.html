@@ -8,7 +8,7 @@
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
 	<title id = "ser_type"></title>
 	<link rel="shortcut icon" href="favicon.ico">
-	<link rel="icon" href="include/images/logo.png">
+	<link id="favicon_img" rel="icon" href="include/images/logo.png">
 	<link rel="stylesheet" href="include/css/public.min.css">
 	<link rel="stylesheet" href="include/css/iconfont.min.css">
 	<link rel="stylesheet" href="include/css/font-awesome.min.css">
@@ -72,6 +72,7 @@
 		let pdu_data;
 		var phase_num;
 		let bg_color = 0;
+		let ver_mode = 1;
 		let lang =new Array();
 		let DataString = pdu_cfg_.meta_value();
 		if(DataString == null){
@@ -130,6 +131,7 @@
 			phase_num = pdu_data.pdu_info.line_num;
 
 			bg_color = pdu_cfg_.cfgValue(13,18,0,0);
+			ver_mode = pdu_cfg_.cfgValue(13,17,0,0);
 		}
 		function LangInit() {
 			for (let i = 0; i < lang.length; i++) {
@@ -219,6 +221,15 @@
 			// 	document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#222931";
 			// 	document.getElementById("top_color").style.backgroundColor = "#2b333e";
 			// }
+			// if(0 == ver_mode){
+			// 	document.getElementById("favicon_img").href ="include/images/logo.png";
+			// }else{
+			// 	var link = document.createElement("link");
+			// 	link.href = "include/images/___logo.png";
+			// 	document.head.appendChild(link);
+			// 	// document.getElementById("favicon_img").href ="";
+			// }
+
 
 		}
 		//ParseData();
