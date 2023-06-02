@@ -136,7 +136,7 @@
     "base": "pages/integrate/",
     "subNav": [
       {
-        "name": "主动推送",
+        "name": "主动上报",
         "url": "push.html"
       },
       {

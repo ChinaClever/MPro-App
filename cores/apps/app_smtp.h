@@ -25,6 +25,7 @@ public:
     QString smtp_uut();
     void smtp_run();
     void sendMail();
+    bool smtp_inputCheck();
 
 private:
     QStringList mList;
