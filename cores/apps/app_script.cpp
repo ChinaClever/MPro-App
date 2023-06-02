@@ -19,10 +19,12 @@ void App_Script::script_readProcess()
         int id = it.key();
         auto pro = it.value();
         if(pro->isReadable()) {
-            scriptCfg.result[id].insert(0, pro->readAllStandardError());
-            scriptCfg.result[id].insert(0, pro->readAllStandardOutput());
-            if(scriptCfg.result[id].size() >100) scriptCfg.result[id].removeLast();
-            qDebug().noquote() << id << scriptCfg.result[id];
+            QString res = pro->readAllStandardError().trimmed() ;
+            scriptCfg.result[id].insert(0, res);
+            res = pro->readAllStandardOutput().trimmed(); //simplified()
+            scriptCfg.result[id].insert(0, res);
+            if(scriptCfg.result[id].size()>100) scriptCfg.result[id].removeLast();
+            //qDebug().noquote() << id << scriptCfg.result[id];
         }
     }
 }

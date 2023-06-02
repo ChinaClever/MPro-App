@@ -15,7 +15,7 @@ Log_Core::Log_Core(QObject *parent)
     timer = new QTimer(this);
     timer->start(t + rand()%100);
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
-    QTimer::singleShot(1367,this, SLOT(invAdcSlot()));
+    //QTimer::singleShot(1367,this, SLOT(invAdcSlot()));
     connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
 }
 
@@ -133,7 +133,7 @@ void Log_Core::timeoutDone()
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);
-    QTimer::singleShot(1567,this, SLOT(invAdcSlot()));
+    //QTimer::singleShot(1567,this, SLOT(invAdcSlot()));
     //system("echo 3 > /proc/sys/vm/drop_caches");
 }
 

@@ -8,10 +8,12 @@
 Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
 {
     mNet = new Net_Udp(this);
+    mOtaTimer = new QTimer(this);
     isOta = false; mFile = new QFile;
     qRegisterMetaType<sOtaFile>("sOtaFile");
     connect(this, &Cascade_Updater::otaReplyFinishSig,
             this, &Cascade_Updater::otaRecvFinishSlot);
+    connect(mOtaTimer, SIGNAL(timeout()), this, SLOT(otaTimeoutDone()));
 }
 
 void Cascade_Updater::throwMessage(const QString &msg)
@@ -105,7 +107,7 @@ bool Cascade_Updater::otaSetFile(const QString &fn)
 {
     mFile->close(); mFile->setFileName(fn);
     bool ret = mFile->open(QIODevice::WriteOnly | QIODevice::Truncate);
-    if(ret) mSize = 0; else cout << fn;
+    if(ret) {mOldCnt = mSize = 0; mOtaTimer->start(60*1000);} else cout << fn;
     return ret;
 }
 
@@ -124,7 +126,7 @@ bool Cascade_Updater::otaReplyStart(const QByteArray &data)
 bool Cascade_Updater::otaReplyPacket(const QByteArray &data)
 {
     bool ret = false;
-    if(mFile->isWritable()) {
+    if(mFile->isWritable()) {        
         mFile->write(data); mSize += data.size();
         QString str = "Receive Packet " + QString::number(mSize);
         int addr = cm::masterDev()->cfg.param.cascadeAddr;
@@ -139,7 +141,7 @@ bool Cascade_Updater::otaReplyFinish(const QByteArray &data)
     QString str = "Receive Packet "; mFile->close();
     bool ret = data.toInt() && File::CheckMd5(mIt);  emit otaReplyFinishSig(mIt, ret);
     if(ret) str += QString::number(mSize) + " successful"; else str += "Failure";
-    int res = cm::masterDev()->cfg.param.cascadeAddr;
+    int res = cm::masterDev()->cfg.param.cascadeAddr; mOtaTimer->stop();
     if(1 == res) res = writeData(fc_otaEnd, 0, str.toLocal8Bit());
     return res;
 }
@@ -205,4 +207,10 @@ void Cascade_Updater::otaReboot()
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");
+}
+
+void Cascade_Updater::otaTimeoutDone()
+{
+    if(mSize > mOldCnt) mOldCnt = mSize;
+    else otaReboot();
 }

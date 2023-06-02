@@ -282,6 +282,8 @@ bool Set_Service::webSet(int fc, const QVariant &v)
 
     if(3 == fc && it->http_redirect && !it->https_en) {
         it->http_redirect = 0; return false;
+    } else if(4 == fc && it->http_redirect && !it->https_en) {
+        it->https_en = 1; return false;
     }
 
     if(key.size()){
