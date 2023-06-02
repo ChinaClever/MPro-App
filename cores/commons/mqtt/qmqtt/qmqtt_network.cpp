@@ -129,10 +129,10 @@ void QMQTT::Network::initialize()
     QObject::connect(_socket->ioDevice(), &QIODevice::readyRead, this, &Network::onSocketReadReady);
     QObject::connect(
         _autoReconnectTimer, &TimerInterface::timeout,
-        this, static_cast<void (Network::*)()>(&Network::connectToHost));    
+        this, static_cast<void (Network::*)()>(&Network::connectToHost));
     QObject::connect(_socket,
-        static_cast<void (SocketInterface::*)(QAbstractSocket::SocketError)>(&SocketInterface::error),
-        this, &Network::onSocketError);
+                     static_cast<void (SocketInterface::*)(QAbstractSocket::SocketError)>(&SocketInterface::error),
+                     this, &Network::onSocketError);
 }
 
 QMQTT::Network::~Network()
@@ -239,8 +239,13 @@ void QMQTT::Network::onSocketReadReady()
         case Length:
             _length |= (byte & 0x7F) << _shift;
             _shift += 7;
-            if ((byte & 0x80) != 0)
+            if ((byte & 0x80) != 0) {
+                if (_shift > 21) { // only up to 4 bytes (3*7 shifts)
+                    _readState = Header;
+                    emit error(QAbstractSocket::SocketError::UnknownSocketError);
+                }
                 break;
+            }
             if (_length == 0) {
                 _readState = Header;
                 Frame frame(_header, _data);

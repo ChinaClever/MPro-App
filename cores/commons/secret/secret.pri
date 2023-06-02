@@ -24,12 +24,18 @@ SOURCES += \
 }
 
 HEADERS += \
+    $$PWD/RSA/bigint.h \
+    $$PWD/RSA/mini-gmp.h \
+    $$PWD/RSA/qrsaencryption.h \
     $$PWD/pbkdf/pbkdf2_sha256.h \
     $$PWD/pbkdf/sha256.h \
     $$PWD/sercret_core.h \
     $$PWD/sercret_pwd.h
 
 SOURCES += \
+    $$PWD/RSA/bigint.cpp \
+    $$PWD/RSA/mini-gmp.c \
+    $$PWD/RSA/qrsaencryption.cpp \
     $$PWD/pbkdf/sha256.cpp \
     $$PWD/sercret_core.cpp \
     $$PWD/sercret_pwd.cpp
