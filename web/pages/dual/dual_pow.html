@@ -40,10 +40,10 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<i class="fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" style="display: none;" onclick="readonlyset(this);"></button></span>
+								<span id="lang_1"></span><span id="readonly" style="padding-left:35%;"><button id="lang_2" style="display: none;" onclick="readonlyset(this);"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-								<span style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
+								<span id="dev_sel" style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
 										class="devname" id="ms" style="width:100px;"
 										onchange="change(this);"></select></span>
 							</div>
@@ -90,9 +90,51 @@
 			}else{
 				document.getElementById("lang_2").style.display="";
 			}
+			function dev_disp(){
+				let dev_name =new Array();
+				let DataString = pdu_cfg.meta_value();
+				pdu_data = JSON.parse(DataString);
+				slave_num = pdu_data.pdu_info.slave_num;
+				for(let i = 1;i<6;i++){
+					lang[i] = new Array();
+				}
+				lang[1] = ["输出位监测","","","",""];
+				lang[2] = ["阅读模式","Reading mode","","",""];
+				lang[3] = ["设备选择:","Equipment selection:","","",""];
+				lang[4]  = ["机柜", "Cabinet", "", "", ""];
+
+				for(let i = 0;i<(slave_num / 2);i++){
+					dev_name[i] =  lang[4][language] + (i+1);
+				}
+				$('.devname').html(BuildSel((slave_num / 2)));
+
+				for(let j = 1;j<4;j++){
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
+				if (pdu_data.pdu_info.dev_mode == 0 ) {
+					document.getElementById("dev_sel").style.display = "none";
+				}else{
+					document.getElementById("dev_sel").style.display = "";	
+				}
+				function BuildSel(rows)
+				{
+					var tbody = '';
+					for(var i = 0;i<rows;i++)
+					{
+						tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+					}
+					return tbody;
+				}
+			}
 			function hidden(){
-				document.getElementsByClassName("page-cont")[0].style.display = "none";	
-				document.getElementsByClassName("section-cont")[0].style.display = "none";	
+				dev_disp();
+				// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+				// document.getElementsByClassName("section-cont")[0].style.display = "none";
+				document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+				document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+				document.getElementById("readonly").style.display = "none";
+				document.getElementById("lang_1").style.display = "none";
+				return -1;
 			}
 			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
@@ -117,6 +159,27 @@
 						}, 100);
 					}
 					return ;
+				}else{
+					document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+					document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+					document.getElementById("readonly").style.display = "";
+					document.getElementById("lang_1").style.display = "";
+				}
+				if(dev_mode != 2){
+					document.getElementsByClassName("page-cont")[0].style.display = "none";
+					if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
+						}else{
+							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
+						}						
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
+					hidden();
+					return
 				}
 				if(0 == slave_num){
 					document.getElementsByClassName("page-cont")[0].style.display = "none";	
@@ -131,20 +194,6 @@
 							t1 += 1;
 						}, 100);
 					}
-				}
-				if(dev_mode != 2){
-					if(t1 == 0){
-					let t2 =setInterval(function () {
-						if(0 == language){
-							alert("未开启机架功能，请前往“设备设置”->“模式设置”里面开启!");
-						}else{
-							alert("The rack function is not enabled. Please go to 'Device Settings' ->'Mode Settings' to enable it!")
-						}						
-						clearInterval(t2);
-						t1 += 1;
-					}, 100);
-				}
-					hidden();
 				}
 				let k = 0;
 				for(let i = 0;i<dual_num;i++){

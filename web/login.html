@@ -58,6 +58,11 @@
     setTimeout(function(){
       datetime();
 		},2000);
+
+    setTimeout(function(){
+      obj.debugCfg();
+		},2000);
+
    
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
@@ -68,6 +73,7 @@
     let user = 14;
     let web_service = 0;
     let language = 0 ;
+    let ver_mode = 1;
     let lang = new Array();
     lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
@@ -99,6 +105,8 @@
     
     }
     language = obj.cfgValue(13,10,0,0);
+    ver_mode = obj.cfgValue(13,17,0,0);
+
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
       if(keyNum == 13){
@@ -109,27 +117,26 @@
         }
       }
     }
-    let time3 = setInterval(function(){
+    let time3 = setInterval(function(){//定时取数据，有用户名数据进登陆界面，否则进注册
       var language = obj.cfgValue(13,10,0,0);
-      if(time3_num >  5){
-        if(language != ""){
+      obj.debugCfg();
+      obj.loginCfg();
+      if(time3_num >  3 && ver_mode != "" && language != ""&&ver_mode !=null&&language !=null){
           GotoRegisterPage();
           clearInterval(time3);
-        }else{
-          obj.loginCfg(); 
-        }
-
-      } else {
-        //obj.getCfg(14, 1, 0, 0);
-        obj.loginCfg();
       }
-      
-      //language = obj.cfgValue(13,10,0,0);
-      
-
-      user_name = obj.cfgValue(user,1,0,0);
-      identify = obj.cfgValue(user,3,0,0);
-      if(user_name !== null &&  user_name !== ""){
+      if(time3_num >  4 && ver_mode ==null&&language ==null){
+        clearInterval(time3);
+        $('.center_form').html(BuildDiv('signin'));
+      }else {
+        obj.loginCfg();
+        obj.debugCfg();
+      }
+      setTimeout(function(){
+        ver_mode = obj.cfgValue(13,17,0,0);    
+         user_name = obj.cfgValue(user,1,0,0);
+        identify = obj.cfgValue(user,3,0,0);
+        if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
          $('.center_form').html(BuildDiv('signin'));
@@ -140,12 +147,16 @@
           document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
          }
+         if(ver_mode == 0){
+          document.getElementById("title_log").style.display = "";
+         }
          clearInterval(time3);
       }
+	  	},400);           
       // document.getElementById('username').value = '';
       // document.getElementById('psd').value ='';
       time3_num ++;
-    },350);
+    },500);
 
     function checkTime(i) {
 			if (i < 10) {
@@ -289,6 +300,7 @@
          }
     }
     function submite1(){
+      ver_mode = obj.cfgValue(13,17,0,0);
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       let conpsd = document.getElementById('conpsd').value;
@@ -325,11 +337,15 @@
           document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
          }
+         if(ver_mode == 0){
+          document.getElementById("title_log").style.display = "";
+         }
         },800);
       }
     }
     function register1(){
       var language = window.sessionStorage.getItem('language');
+      ver_mode = obj.cfgValue(13,17,0,0);
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
       let conpsd = document.getElementById('conpsd').value;
@@ -396,6 +412,9 @@
           document.getElementById("sign_in").value = "SIGIN";
           document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
+         }
+         if(ver_mode == 0){
+          document.getElementById("title_log").style.display = "";
          }
         },800);
       }
@@ -523,7 +542,7 @@
         tbody += '<p><input id ="ident" type="text" maxlength="16"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<br/><br/><br/><br/><p class="title"><img src ="./include/images/login_logo.png"  style="margin-right:10px" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB" id ="title_name">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<br/><br/><br/><br/><p class="title"><img id="title_log" src ="./include/images/login_logo.png"  style="margin-right:10px;display: none;" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB" id ="title_name">MPDU pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="text" maxlength="16" placeholder="用户名"  onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\' maxlength="16" autocomplete="off" oninput ="check();" onblur = "validataForm(this)"  placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a id = "reset" href ="javascript:submite();">重置密码</a></span></div><p></p>';

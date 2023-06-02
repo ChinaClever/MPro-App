@@ -191,8 +191,8 @@
 			lang[11] = ["设置时间", "Set time", "", "", ""];
 			lang[12] = ["禁用", "Disable", "", "", ""];
 			lang[13] = ["启用", "Enable", "", "", ""];
-			lang[14] = ["GTM+", "GTM+", "", "", ""];
-			lang[15] = ["GTM-", "GTM-", "", "", ""];
+			lang[14] = ["GMT+", "GMT+", "", "", ""];
+			lang[15] = ["GMT-", "GMT-", "", "", ""];
 			lang[16] = ["当前时区：", "Current time zone:", "", "", ""];
 
 			mode_set[0] = lang[12][language];
@@ -205,11 +205,18 @@
 			// 		time_sel[i] = lang[15][language] + (i-13);
 			// 	}
 			// }
-			for(let i = 25;i >=0;i--){
-				if(i  > 12){
-					time_sel[i] = lang[14][language] + (i-13);
-				}else{
-					time_sel[i] = lang[15][language] + (12-i);	
+			// for(let i = 25;i >=0;i--){
+			// 	if(i  > 12){
+			// 		time_sel[i] = lang[14][language] + (i-13);
+			// 	}else{
+			// 		time_sel[i] = lang[15][language] + (12-i);	
+			// 	}
+			// }
+			for(let i = 0;i <= 25;i++){
+				if(i  < 13){
+			 		time_sel[i] = lang[14][language] + (12-i);
+			 	}else{
+			 		time_sel[i] = lang[15][language] + (i- 13);	
 				}
 			}
 		}

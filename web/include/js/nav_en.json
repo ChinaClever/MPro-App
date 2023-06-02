@@ -222,10 +222,6 @@
         "url": "syslog.html"
       },
       {
-        "name": "SHELL service",
-        "url": "shell.html"
-      },
-      {
         "name": "Remote authentication service",
         "url": "radius.html"
       }
@@ -289,6 +285,10 @@
       {
         "name": "Network diagnosis",
         "url": "net_diagnostics.html"
+      },
+      {
+        "name": "Script Service",
+        "url": "shell.html"
       },
       {
         "name": "Backup/Restore",
