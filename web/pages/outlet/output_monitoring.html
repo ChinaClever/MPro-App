@@ -81,6 +81,7 @@
 			}else{
 				document.getElementById("dev_sel").style.display = "";	
 			}
+			document.getElementById("ms").value = addr;
 
 		}
 		function hidden(){
@@ -196,20 +197,22 @@
 				var hs = document.getElementById('c'+(i-1));
 				var ss = document.getElementById('d'+(i-1));
 				var cs = document.getElementById('e'+(i-1));
-				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2|| pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
-					//hs.bgColor = 'yellow';
-					hs.style.color = 'yellow';
-				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
-					//hs.bgColor = 'red';
-					hs.style.color = 'red';
-				}
-				else{
-					hs.bgColor = '';
-					hs.style.color = 'green';
-					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
-						hs.style.color = 'black';
+				if(pdu_data.pdu_info.pdu_spec == 2){
+				}else{				
+					if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2|| pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
+						//hs.bgColor = 'yellow';
+						hs.style.color = 'yellow';
+					}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
+						//hs.bgColor = 'red';
+						hs.style.color = 'red';
 					}
-					
+					else{
+						hs.bgColor = '';
+						hs.style.color = 'green';
+						if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+							hs.style.color = 'black';
+						}						
+					}
 				}
 				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';
