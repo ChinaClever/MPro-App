@@ -193,12 +193,19 @@
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
 				if(0 == language){
-					alert("测试邮件发送成功！");
+					alert("已发送测试邮件！");
 				}else{
-					alert("Test email sent successfully!");
+					alert("Test email has been sent!");
 				}
 			}
 		}
+		setInterval(function(){
+			pdu_cfg.smtpCfg(); 
+			setTimeout(function(){
+				read_data();
+				document.getElementById("SmtpState").innerHTML = smtp_data[8][1];
+			},500);
+   		 },2000);
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\

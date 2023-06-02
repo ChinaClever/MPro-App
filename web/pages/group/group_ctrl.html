@@ -252,9 +252,9 @@
 					read = 0;
 					ros.style.backgroundColor = 'red';
 					if(pdu_data.pdu_info.language == 0){
-						alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
+						alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效，开启关键设备保护功能后，无法进行开关设置！");
 					}else{
-						alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
+						alert("All editable fields will automatically save and take effect when entering the next field for editing after editing，After enabling the protection function of critical equipment, switch settings cannot be performed!");
 					}
 					ros.innerHTML = lang[10][language];
 					var iptname = document.getElementsByTagName("input");
