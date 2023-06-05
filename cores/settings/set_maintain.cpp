@@ -40,8 +40,8 @@ void Set_Maintain::factoryRestore()
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
     system("echo '1' > /usr/data/clever/cfg/factoryRestore");
-    fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini";
-    fns << "cfg.ini" << "inet.ini";
+    fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini";
+    //fns << "inet.ini";
 
     foreach (const auto &fn, fns) {
         QString fmd = "rm -rf %1%2";

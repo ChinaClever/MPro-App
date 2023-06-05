@@ -15,6 +15,7 @@ Log_Core::Log_Core(QObject *parent)
     timer = new QTimer(this);
     timer->start(t + rand()%100);
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
+    QTimer::singleShot(3367,this, SLOT(timeoutDone()));
     //QTimer::singleShot(1367,this, SLOT(invAdcSlot()));
     connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
 }
