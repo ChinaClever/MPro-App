@@ -24,7 +24,7 @@ bool Set_Alarm::thresholdSlave(int fc)
 }
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
-{   
+{
     return upMetaData(unit);
 }
 
