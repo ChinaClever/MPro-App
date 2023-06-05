@@ -146,6 +146,9 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
+			if(document.getElementById("SmtpState").innerHTML !=''){
+				document.getElementById("SmtpState").style.color = 'red';	
+			}
 		}
 		function SetData(btn){
 			for(let i = 1;i<smtp_name.length;i++){

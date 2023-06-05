@@ -157,7 +157,7 @@
 		let addr = 0;
 		pdu_cfg.ntpCfg();
 		// let ntp_info = new Array("", "DevTime", "TimeSetEn", "NtpServer", "TimeZone");
-		let ntp_info = new Array("", "DevTime", "TimeSetEn", "NtpServer", "now_time");
+		let ntp_info = new Array("", "DevTime", "TimeSetEn", "NtpServer");
 		let mode_set = new Array("", "");
 		 let ntp_data = new Array();
 		let lang = new Array();
@@ -198,23 +198,9 @@
 			mode_set[0] = lang[12][language];
 			mode_set[1] = lang[13][language];
 
-			// for(let i = 0;i <26;i++){//设置为GTM时区
-			// 	if(i  < 13){
-			// 		time_sel[i] = lang[14][language] + i;
-			// 	}else{
-			// 		time_sel[i] = lang[15][language] + (i-13);
-			// 	}
-			// }
-			// for(let i = 25;i >=0;i--){
-			// 	if(i  > 12){
-			// 		time_sel[i] = lang[14][language] + (i-13);
-			// 	}else{
-			// 		time_sel[i] = lang[15][language] + (12-i);	
-			// 	}
-			// }
 			for(let i = 0;i <= 25;i++){
-				if(i  < 13){
-			 		time_sel[i] = lang[14][language] + (12-i);
+				if(i  < 14){
+			 		time_sel[i] = lang[14][language] + (13-i);
 			 	}else{
 			 		time_sel[i] = lang[15][language] + (i- 13);	
 				}
@@ -223,10 +209,38 @@
 		function BuildSel(rows)
 		{
 			var tbody = '';
-			for(var i = 0;i<rows;i++)
-			{
-				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+time_sel[i]+'</option>';
-			}
+			// for(var i = 0;i<rows;i++)
+			// {
+			// 	tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+time_sel[i]+'</option>';
+			// }
+			tbody += '<option value="0">GMT+13:00 Nuku alofa';
+			tbody += '<option value="1">GMT+12:00 Fiji, Kamchatka, Marshall Is.;Auckland, Wellington';
+			tbody += '<option value="2">GMT+11:00 Magadan, Solomon Is., New Caledonia';
+			tbody += '<option value="3">GMT+10:00 Canberra, Melbourne, Sydney;Brisbane;Hobart;Vladivostok;Guam, Port Moresby';
+			tbody += '<option value="4">GMT+09:00 Seoul;Osaka, Sapporo, Tokyo;Yakutsk';
+			tbody += '<option value="5">GMT+08:00 Beijing, Chongqing, Hong Kong, Urumqi;Irkutsk, Ulaan Bataar;Kuala Lumpur, Singapore;Taipei;Perth';
+			tbody += '<option value="6">GMT+07:00 Krasnoyarsk;Bangkok, Hanoi, Jakarta';
+			tbody += '<option value="7">GMT+06:00 Astana, Dhaka;Almaty, Novosibirsk';
+			tbody += '<option value="8">GMT+05:00 Ekaterinburg;Islamabad, Karachi;Tashkent';
+			tbody += '<option value="9">GMT+04:00 Abu Dhabi, Muscat;Baku;Yerevan';
+			tbody += '<option value="10">GMT+03:00 Kuwait, Riyadh;Baghdad;Nairobi;Tbilisi;Moscow, St. Petersburg, Volgograd';
+			tbody += '<option value="11">GMT+02:00 Minsk;Warsaw;Cairo;Bucharest, Kyiv, Riga, Sofia, Tallinn, Vilnius;Athens, Helsinki, Istanbul;Jerusalem;Amman;Beirut;Windhoek;Harare, Pretoria';
+			tbody += '<option value="12">GMT+01:00 Belgrade;Bratislava;Budapest;Ljubljana;Prague;Sarajevo;Skopje;ZagrebBrussels;Copenhagen;Madrid;Paris;West;Central;Africa;Amsterdam;Berlin;Bern;Rome;Stockholm;Vienna';
+			tbody += '<option value="13">GMT Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London;Monrovia, Reykjavik;Casablanca';
+			// tbody += '<option value="13">GMT-00:00 Nuku alofa';
+			tbody += '<option value="14">GMT-01:00 Azores;Cape Verde Is';
+			tbody += '<option value="15">GMT-02:00 Mid-Atlantic';
+			tbody += '<option value="16">GMT-03:00 Buenos Aires;Brasilia;Greenland;Montevideo;Georgetown';
+			tbody += '<option value="17">GMT-04:00 Atlantic Time (Canada);Manaus;Santiago;La Paz';
+			tbody += '<option value="18">GMT-05:00 Eastern Time (US & Canada);Bogota, Lima, Quito, Rio Branco;Indiana (East)';
+			tbody += '<option value="19">GMT-06:00 Saskatchewan;Central America;Central Time (US & Canada);Guadalajara, Mexico City, Monterrey';
+			tbody += '<option value="20">GMT-07:00 Mountain Time (US & Canada);Chihuahua, La Paz, Mazatlan;Arizona';
+			tbody += '<option value="21">GMT-08:00 Pacific Time (US & Canada);Tijuana, Baja California';
+			tbody += '<option value="22">GMT-09:00 Alaska';
+			tbody += '<option value="23">GMT-10:00 Hawaii';
+			tbody += '<option value="24">GMT-11:00 Midway Island, Samoa';
+			tbody += '<option value="25">GMT-12:00 International Date Line West';	
+				
 			return tbody;
 		}
 		function lang_fun() {
@@ -237,7 +251,7 @@
 					document.getElementById("lang_" + j).innerHTML = lang[j][language];
 				}
 			}
-			document.getElementById("lang_16").innerHTML = lang[16][language];
+			// document.getElementById("lang_16").innerHTML = lang[16][language];
 		}
 		$('.ntp').html(buildTableNtp());
 		$('.custom').html(buildTable());
@@ -261,8 +275,9 @@
 				// }
 				// document.getElementById("DateTime").disabled = false;
 			}
-			for (var i = 0; i < 25; i++) {//选择框默认值
-				if(document.getElementById("ms")[i].innerHTML == ntp_data[4]){
+			for (var i = 0; i < 26; i++) {//选择框默认值
+				// if(document.getElementById("ms")[i].innerHTML == ntp_data[4]){
+				if(time_sel[i] == ntp_data[4]){
 					document.getElementById("ms")[i].selected = true;
 				}
 			}
@@ -307,7 +322,10 @@
 				var retVal = confirm("Please confirm whether to select this time zone！");
 			}
 			if(retVal ==true){
-				pdu_cfg.setCfg(43, 4, btn.selectedOptions[0].innerHTML, 0, addr);
+				// pdu_cfg.setCfg(43, 4, btn.selectedOptions[0].innerHTML, 0, addr);
+				let val = btn.value;
+				pdu_cfg.setCfg(43, 4, time_sel[val], 0, addr);
+				$('.devname').html(BuildSel(26));
 				flash_html();
 			} else {
 				showdata();
@@ -317,7 +335,7 @@
 		function flash_html() {
 			pdu_cfg.ntpCfg();
 			setTimeout(function () {
-				read_data();
+				read_data();			
 				showdata();
 			}, 500);
 		}
@@ -379,9 +397,8 @@
 			var thead = '', tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 			<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_16" ></td>';
-			tbody += '<td  id ="now_time" ></td></tr>';	
-			// tbody += '<td><input id = "now_time"  style ="width:24.5%" type = "text" readonly="true"></input>';
+			// tbody += '<tr><td id="lang_16" ></td>';
+			// tbody += '<td  id ="now_time" ></td></tr>';	
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td  id ="DevTime" ></td></tr>';
@@ -389,7 +406,7 @@
 			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><div><select class ="devname" id ="ms" style = "width:15%;margin-left: 2px" onchange = "chose_time_zone(this);"></select></div>';
+			tbody += '<td><div><select class ="devname" id ="ms" style = "width:50%;margin-left: 2px" onchange = "chose_time_zone(this);"></select></div>';
 			// tbody += '<td><div class="selectBox"><div class="inputCase"><input class="imitationSelect" type="text" id ="TimeZone"><i class="fa fa-caret-down"></i></div>';
 			tbody += '<ul class="selectUl">';
 			for (var i = 0; i < timezone_arr.length; i++) {
@@ -425,7 +442,7 @@
 		}
 		function PutData(){
 			document.getElementById("DevTime").innerHTML = pdu_cfg.cfgValue(43, 1, 0, addr);
-			document.getElementById("now_time").innerHTML = pdu_cfg.cfgValue(43, 4, 0, addr);
+			// document.getElementById("now_time").innerHTML = pdu_cfg.cfgValue(43, 4, 0, addr);
 		}
 		setInterval(function(){
 			pdu_cfg.getCfg(43, 1, 0, addr);
