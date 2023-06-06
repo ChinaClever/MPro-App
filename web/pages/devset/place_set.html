@@ -100,7 +100,7 @@
 				document.getElementById(id_val[i]).value = place_data[i];
 			}
 			document.getElementById("uuid").value = uuid;
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				document.getElementById("lang_10").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");

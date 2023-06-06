@@ -189,6 +189,7 @@
       language = window.sessionStorage.getItem('language');
       let usr = document.getElementById('username').value;
       let psd = document.getElementById('psd').value;
+      window.sessionStorage.setItem('username', usr);
       if(usr != "" && psd !=""){
        // if(!pattern_.test(usr))
        // {

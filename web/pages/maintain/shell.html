@@ -193,7 +193,8 @@
 				document.getElementById("chk").checked = true;
 			}
 			document.getElementById("script_tp" ).value = scr_type[id];
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
+				document.getElementById("lang_7").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{

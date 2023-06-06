@@ -364,10 +364,13 @@
 			
 		}
 		function Set(){
+			var out_pow = new Array();
 			for(let  i = 1;i<=output_num;i++){
-				if(document.getElementById("c" + i).checked == true){
+				if(document.getElementById("a" + i).checked == true||document.getElementById("b" + i).checked == true||document.getElementById("c" + i).checked == true){
 					rating_[i] = document.getElementById("cur_val").value;
-				}				
+				}
+				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);;
+				pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}
 			pdu_obj.setCfg(97,2,1,0,addr);

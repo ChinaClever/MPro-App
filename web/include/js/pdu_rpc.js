@@ -643,6 +643,16 @@ class PduCore extends PduOta {
         sessionStorage.setItem('uuid', ' '); 
     }   
 
+    login_permit() {
+        var json = JSON.parse(this.meta_value(0));
+        let user = window.sessionStorage.getItem('username');
+        let res = 0; if(user && json) {
+            res = json.login_permits[user]; 
+            if(res == null) res = 0;            
+        }
+        return res;
+    }
+
 
     // 清除所有数据
     clear() {
