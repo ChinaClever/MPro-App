@@ -177,6 +177,10 @@ bool Alarm_Object::alarmUnitValue(sDataItem &index)
         }
     }
 
+    if(index.rw && (DSub::EnAlarm == index.subtopic)) {
+        if(index.value > 1) index.value = 1;
+    }
+
     if(ptr) {
         if(index.rw){
             if(index.id) {
