@@ -122,7 +122,7 @@ void Log_Core::run()
 void Log_Core::saveLogSlot()
 {
     QWriteLocker locker(mRwLock);
-    QSqlDatabase::database().transaction(); //Db_Tran t;
+    cm::mdelay(100); QSqlDatabase::database().transaction();
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
