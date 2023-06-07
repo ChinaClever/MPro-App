@@ -66,7 +66,7 @@
 		let dev_name =new Array();
 		let pdu_data;
 		let t1 = 0;
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
@@ -99,6 +99,7 @@
 			}else{
 				document.getElementById("dev_sel").style.display = "";	
 			}
+			document.getElementById("ms").value = addr;
 
 		}
 		function hidden(){
@@ -220,9 +221,9 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			pdu_cfg.setAddr(addr);
-			setTimeout(function(){
-				PduMetaData.meta_workDown();
-			},100);
+			// setTimeout(function(){
+			// 	PduMetaData.meta_workDown();
+			// },100);
 			setTimeout(function(){
 				ParseData();
 				LangInit();

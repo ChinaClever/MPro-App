@@ -59,7 +59,11 @@
 
 		setTimeout(() => {
 			pdu_log.log_fun(event_log,1,0,0);
-		}, 1500);
+		}, 1200);
+
+		setTimeout(() => {
+			pdu_log.log_fun(event_log,1,0,0);
+		}, 1600);
 
 		let btn_name = new Array("jump","last","next","del","export");
 		let lang = new Array();
@@ -127,7 +131,10 @@
 			return true;
 		}
 		setTimeout(function(){
-			log_num = parseInt(pdu_log.log_get(event_log,1,start_,show_num));
+			var res = pdu_log.log_get(event_log,1,start_,show_num);
+			if(res == null) return;
+
+			log_num = parseInt(res);
 			if(log_num > 20){
 				show_num = 20;
 				start_ = (log_num-20);
@@ -136,7 +143,23 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(event_log,2,start_,show_num);
-		},900);
+		},1100);
+
+		setTimeout(function(){
+			var res = pdu_log.log_get(event_log,1,start_,show_num);
+			if(res == null) return;
+			
+			log_num = parseInt(res);
+			if(log_num > 20){
+				show_num = 20;
+				start_ = (log_num-20);
+			}else{
+				show_num = log_num;
+				start_= 0;
+			}
+			pdu_log.log_fun(event_log,2,start_,show_num);
+		},1300);
+
 		setTimeout(function(){
 			var ret = read_data();
 			if(ret == true) {
@@ -144,7 +167,7 @@
 				lang_fun();
 				showdata();
 			}
-		},1100);
+		},1250);
 
 		setTimeout(function(){
 			var ret = read_data();
@@ -177,7 +200,7 @@
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				//$("input").attr("disabled","disabled");
 				//$("select").attr("disabled","disabled");
 				$("input[name=del]").attr("disabled","disabled");

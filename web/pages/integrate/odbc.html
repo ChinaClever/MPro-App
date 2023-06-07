@@ -165,7 +165,7 @@
 				}
 			}
 			document.getElementById(red_name[red_name.length-1]).innerHTML = redis_data[10];
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{

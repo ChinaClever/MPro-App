@@ -125,7 +125,8 @@
 			}
 			pdu_data = JSON.parse(DataString);			
 			if(pdu_data) {
-				login_permit_ = pdu_data.login_permit;
+				//login_permit_ = pdu_data.login_permits;
+				login_permit_  = pdu_cfg_.login_permit();
 				language_ = pdu_data.pdu_info.language;
 			}
 			phase_num = pdu_data.pdu_info.line_num;

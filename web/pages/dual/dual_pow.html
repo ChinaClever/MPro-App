@@ -83,7 +83,7 @@
 			let dual_arr = [14,13,11,9,10,16,15,8,0,0,12];
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				document.getElementById("lang_2").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");

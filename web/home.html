@@ -336,7 +336,7 @@
 					Minu = date.getMinutes();
 					Hou = date.getHours();
 					let dataLabels = new Array();
-					if(top.login_permit_ == 1){
+					if(top.login_permit_ != 0){
 						$("input").attr("disabled","disabled");
 						$("select").attr("disabled","disabled");
 					}else{
@@ -590,7 +590,7 @@
 		let total_title = new Array("kW", "kVA", "kWh", "Hz", "mA");
 		let lang = new Array(36);
 		let dev_name = new Array();
-		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
+		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2");
 		let head_box = new Array("Tmp", "Tmp","Tmp", "Tmp", "Hum", "Hum", "Hum", "Hum","Door1", "Door2", "Water", "Smoke");
 		let stat_ = new Array("", "", "");
 		let serial_ = new Array("D", "A", "B", "C", "D");
@@ -605,7 +605,7 @@
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let loop_arr1 = ["apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele","pf"];
-		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
+		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door"];
 		let sensor_arr_box = ["tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];/*插入传感器盒子*/
 		let sensor_id = [0,0,1,1,0,1,0,0];
 		let sensor_id_box = [0,0,1,1,2,2,3,3,0,1,0,0];/*传感器盒子*/
@@ -785,10 +785,14 @@
 		function LangFun() {
 			for (var i = 1; i < 36; i++) {
 				if ((i != 6 && i < 29) || i > 34) {
-					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){
+					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){//单相无开关状态
 						continue;
-					}else if(i == 7 || i == 16){
+					}else if(i == 7 || i == 16){//去掉回路和传感器
 						continue;
+					}else if(i == 27 || i == 28){//烟雾和水浸只插入传感器盒子显示
+						if(0 == sensor_box){
+							continue;
+						}
 					}else{
 						document.getElementById("lang_" + i).innerHTML = lang[i][language];
 					}
@@ -800,6 +804,8 @@
 				for(var i = 44; i < 48; i++ ){
 					document.getElementById("lang_" + i).innerHTML = lang[i][language];
 				}
+				document.getElementById("lang_27").innerHTML = lang[27][language];
+				document.getElementById("lang_28").innerHTML = lang[28][language];
 			}
 			document.getElementById("ms").value = top.addr_;
 			if (pdu_data.pdu_info.dev_mode == 0 ) {
@@ -947,7 +953,7 @@
 				} else if (i < 6) {//门禁
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
 				} else {//水浸和烟雾
-					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
+				//	document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
 			}else{/*传感器盒子*/
@@ -966,13 +972,31 @@
 							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
 						}
 					}
-				} else if (i < 10) {
+				} else if (i < 10) {//门禁
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
-				} else {
+				} else {//水浸和烟雾
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
 			}
+			if(0 == sensor_box){
+				for(let i = 0;i < 2;i++){//温湿度64-67
+				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+				}				
+			}else{	//温湿度64-71		
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
@@ -989,6 +1013,7 @@
 					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
 				}
 			}
+			}
 			if(0 == sensor_box){
 				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
 					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
@@ -997,16 +1022,16 @@
 						document.getElementById('dat' + (68 + i)).bgColor = '';
 					}
 				}
-				if(pdu_data.pdu_data.env_item_list.water[0] == 2){
-					document.getElementById('dat' + 70).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + 70).bgColor = '';
-				}
-				if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
-					document.getElementById('dat' + 71).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + 71).bgColor = '';
-				}			
+				// if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+				// 	document.getElementById('dat' + 70).bgColor = 'red';
+				// }else{
+				// 	document.getElementById('dat' + 70).bgColor = '';
+				// }
+				// if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+				// 	document.getElementById('dat' + 71).bgColor = 'red';
+				// }else{
+				// 	document.getElementById('dat' + 71).bgColor = '';
+				// }			
 			}else{
 				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
 					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
@@ -1082,16 +1107,16 @@
 						//tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
 					} else if(i  == 2){
 						//tbody += '<br/>';
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
 						//tbody += '<td></td>';
 					}else if( i == 3){
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 2) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
 					}else{
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" >PF:</span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" >PF:</span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + i  + '"></span>';
 					}
 				}
@@ -1159,7 +1184,7 @@
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
 			if(0 == sensor_box){
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < 3; i++) {
 				if (i % 2 == 0) {
 					// tbody += '<tr style="background:#e7e7e7;">';
 					tbody += '<tr>';

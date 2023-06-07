@@ -56,7 +56,7 @@
 		let pdu_data;
 		let en_state=new Array();
 		pdu_cfg.OutInGroup();
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
@@ -190,7 +190,7 @@
 		},500);
 		function ShowData(){
 			if(!group_mode){
-				if(top.login_permit_ == 1){
+				if(top.login_permit_ != 0){
 					document.getElementById("lang_2").style.display = "none";
 				}
 			}else{
@@ -230,7 +230,7 @@
 				pdu_cfg.setCfg(13,8,sel.value,0,addr);
 				if(sel.value == 1){
 					group_mode =1;
-					if(top.login_permit_ != 1){
+					if(top.login_permit_ == 0){
 						document.getElementById("lang_2").style.display = "";
 					}					
 				}else{

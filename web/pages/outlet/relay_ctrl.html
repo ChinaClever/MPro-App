@@ -71,7 +71,7 @@
 		let State = new Array("","");
 		let dev_name =new Array();
 		let lang = new Array();
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
@@ -104,6 +104,7 @@
 			}else{
 				document.getElementById("dev_sel").style.display = "";	
 			}
+			document.getElementById("ms").value = addr;
 
 		}
 		function hidden(){
@@ -200,9 +201,9 @@
 			pdu_cfg.addr = parseInt(sel.value);
 			addr = pdu_cfg.addr;
 			pdu_cfg.setAddr(addr);
-			setTimeout(function(){
-				PduMetaData.meta_workDown();
-			},100);
+			// setTimeout(function(){
+			// 	PduMetaData.meta_workDown();
+			// },100);
 			setTimeout(function(){
 				ParseData();
 				LangInit();
@@ -385,22 +386,41 @@
 			var type1 = ipt.id.substr(0,1);
 			var num = parseInt(ipt.id.slice(1))+1;
 			stat = parseInt(ipt.value);
-			if(stat >300){
-				if(0 == language){
-					alert("延时值不能超过300s!");
-				}else{
-					alert("The delay value cannot exceed 300s!");
-				}				
-				stat = 5;
-				return -1;
-			}else if(stat < 0){
-				if(0 == language){
-					alert("延时值不能小于0s!");
-				}else{
-					alert("The delay value cannot be less than 0s!");
-				}
-				stat = 0;
-			} 
+			if(type1 === 'd'){
+				if(stat >15){
+					if(0 == language){
+						alert("延时值不能超过15s!");
+					}else{
+						alert("The delay value cannot exceed 15s!");
+					}				
+					stat = 15;
+					return -1;
+				}else if(stat < 0){
+					if(0 == language){
+						alert("延时值不能小于0s!");
+					}else{
+						alert("The delay value cannot be less than 0s!");
+					}
+					stat = 0;
+				} 				
+			}else if(type1 === 'j'){			
+				if(stat >300){
+					if(0 == language){
+						alert("延时值不能超过300s!");
+					}else{
+						alert("The delay value cannot exceed 300s!");
+					}				
+					stat = 5;
+					return -1;
+				}else if(stat < 0){
+					if(0 == language){
+						alert("延时值不能小于0s!");
+					}else{
+						alert("The delay value cannot be less than 0s!");
+					}
+					stat = 0;
+				} 
+			}
 			if(type1 === 'd'){
 				sub = 4;
 			}else if(type1 === 'j'){

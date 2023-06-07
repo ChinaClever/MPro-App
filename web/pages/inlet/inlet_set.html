@@ -99,7 +99,7 @@
 		let phase_arr = ["vol_value","vol_rated","vol_alarm_status","vol_alarm_max","vol_alarm_min","vol_warn_min","vol_warn_max","vol_alarm_enable","","","vol_hda_en","cur_value","cur_rated",
 		"cur_alarm_status","cur_alarm_max","cur_alarm_min","cur_warn_min","cur_warn_max","cur_alarm_enable","","","cur_hda_en","pow_value","pow_rated","pow_alarm_status","pow_alarm_max","pow_alarm_min","pow_warn_min","pow_warn_max","pow_alarm_enable","","","pow_hda_en"];
 		let addr = pdu_cfg.addr;
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");

@@ -67,7 +67,7 @@
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 		}
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 			$("input[name=del]").attr("disabled","disabled");
