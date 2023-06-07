@@ -28,6 +28,7 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(inet->gw, "192.168.1.1");
         qstrcpy(inet->ip, "192.168.1.99");
         qstrcpy(inet->mask, "255.255.255.0");
+        inet_writeCfg(*inet, "IPV4");
     } inet_setInterface();
 }
 
@@ -51,7 +52,7 @@ void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
     inet.prefixLen = cfg->readCfg("prefixLen", 0, g).toInt();
 }
 
-void App_NetAddr::inet_writeCfg(sNetAddr &inet, const QString &g)
+void App_NetAddr::inet_writeCfg(const sNetAddr &inet, const QString &g)
 {
     Cfg_Obj *cfg = mInetCfg;
     cfg->writeCfg("en", inet.en, g);
@@ -161,12 +162,12 @@ void App_NetAddr::inet_setIpV6()
     }
 }
 
-void App_NetAddr::inet_saveCfg(int fc)
+void App_NetAddr::inet_saveCfg(int fc, const sNetInterface &net)
 {
-    sNetInterface *net = &(cm::dataPacket()->net);
-    if(fc) inet_writeCfg(net->inet6, "IPV6");
-    else inet_writeCfg(net->inet, "IPV4");
-    QTimer::singleShot(1200,this,&App_NetAddr::inet_updateInterface);
+    //sNetInterface *net = &(cm::dataPacket()->net);
+    if(fc) inet_writeCfg(net.inet6, "IPV6");
+    else inet_writeCfg(net.inet, "IPV4");
+    //QTimer::singleShot(1200,this,&App_NetAddr::inet_updateInterface);
 }
 
 void App_NetAddr::inet_dnsCfg()

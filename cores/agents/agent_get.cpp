@@ -251,7 +251,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         addRelayGroup(addr, oid, name+"ctrl-dual", it->output.relay, i);
     }
 
-    size = it->env.size;if(!size) size = SENOR_NUM;
+    size = it->env.size;if(!size) size = SENOR_NUM/2;
     for(int i=0; i<size; ++i) {
         QString oid = "1.6." + QString::number(i+1);
         addEnvData(addr, oid, name+"read-env", it->env, i);

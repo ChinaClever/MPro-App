@@ -9,29 +9,38 @@ sScriptCfg App_Script::scriptCfg;
 App_Script::App_Script(QObject *parent)
     : App_NetAddr{parent}
 {
+    mScriptTimer = new QTimer(this); mScriptTimer->start(1500);
     QTimer::singleShot(1234,this,&App_Script::script_initSlot);
+    connect(mScriptTimer, &QTimer::timeout, this, &App_Script::script_readProcess);
 }
 
 void App_Script::script_readProcess()
 {
-    QMap<int, QProcess *>::iterator it;
+    static char buffer[2048] = {0};
+    QMap<int, FILE *>::iterator it;
     for(it=mMap.begin(); it != mMap.end(); it++) {
         int id = it.key();
         auto pro = it.value();
+#if 0
         if(pro->isReadable()) {
             QString res = pro->readAllStandardError().trimmed() ;
             scriptCfg.result[id].insert(0, res);
             res = pro->readAllStandardOutput().trimmed(); //simplified()
             scriptCfg.result[id].insert(0, res);
-            if(scriptCfg.result[id].size()>100) scriptCfg.result[id].removeLast();
-            //qDebug().noquote() << id << scriptCfg.result[id];
+
         }
+#else
+        while(fgets(buffer,sizeof(buffer), pro)) {
+            scriptCfg.result[id].insert(0, buffer);
+            //qDebug().noquote() << id << scriptCfg.result[id];
+        } if(scriptCfg.result[id].size()>100) scriptCfg.result[id].removeLast();
+#endif
     }
 }
 
 void App_Script::script_kill(int id)
 {
-    if(mMap.contains(id)) mMap[id]->kill();
+    if(mMap.contains(id)) pclose(mMap[id]); //mMap[id]->kill();
     mMap.remove(id);
 }
 
@@ -48,7 +57,7 @@ void App_Script::script_execute(int id)
         case 1: program = "micropython"; break;
         case 2: program = "lua"; break;
         }
-
+#if 0
         QProcess *pro = new QProcess(this);
         QStringList arguments; arguments << fn;
         pro->setProgram(program); pro->setArguments(arguments);
@@ -56,6 +65,13 @@ void App_Script::script_execute(int id)
         connect(pro, &QProcess::readyReadStandardError,[this](){this->script_readProcess();});
         connect(pro, &QProcess::readyReadStandardOutput,[this](){this->script_readProcess();});
         script_kill(id); mMap[id] = pro; pro->start();
+#else
+        cmd = program + " " + fn;
+        char *ptr = cmd.toLatin1().data();
+        script_kill(id); FILE *fp = popen(ptr, "r");
+        if(fp) mMap[id] = fp; else cout << id << program;
+        cout << id << program;
+#endif
     }
 }
 

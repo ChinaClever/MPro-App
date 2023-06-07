@@ -11,7 +11,7 @@ sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
 {
-    uint t = 6*60*60*1000;
+    uint t = 1*60*60*1000;
     timer = new QTimer(this);
     timer->start(t + rand()%100);
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
@@ -110,10 +110,13 @@ void Log_Core::initFunSlot()
 void Log_Core::run()
 {
     if(!isRun) {
-        isRun = true;
-        QTimer::singleShot(567,this, SLOT(saveLogSlot()));
+        if(cm::runTime() > 48*60*60) mt += 1567;
+        int cnt = mEventIts.size() + mAlarmIts.size();
+        if(cnt > 30 || mLogCnt > 1000) {mt += 3567; timeoutDone();} mLogCnt += cnt;
+        QTimer::singleShot(mt,this, SLOT(saveLogSlot()));
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
-    }
+        isRun = true; mt = 567;
+    } else mt = 5567;
 }
 
 void Log_Core::saveLogSlot()
@@ -124,12 +127,13 @@ void Log_Core::saveLogSlot()
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    QSqlDatabase::database().commit(); cm::mdelay(10);
+    QSqlDatabase::database().commit(); cm::mdelay(100);
     system("sync"); isRun = false;
 }
 
 void Log_Core::timeoutDone()
 {
+    QWriteLocker locker(mRwLock);
     int cnt = 1; Db_Tran t; system("sync");
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);

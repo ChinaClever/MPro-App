@@ -23,7 +23,9 @@ private:
     void script_readProcess();
 
 private:
-    QMap<int, QProcess *> mMap;
+    //QMap<int, QProcess *> mMap;
+    QTimer *mScriptTimer;
+    QMap<int, FILE *> mMap;
 };
 
 #endif // APP_SCRIPT_H
