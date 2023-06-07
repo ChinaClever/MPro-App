@@ -9,6 +9,9 @@ public:
 
     QVariant netAddrCfg(uchar fc, uchar sub);
     bool netAddrSet(sCfgItem &it, const QVariant &v);
+
+private:
+    sNetInterface m_net;
 };
 
 #endif // SET_NETADDR_H

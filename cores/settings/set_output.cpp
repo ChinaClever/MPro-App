@@ -289,7 +289,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     case 2: ptr = obj->relay.timingOn[id]; break;
     case 3: ptr = obj->relay.timingOff[id]; break;
     default: res = false; cout << it.fc; break;
-    } cout << it.type << it.fc << v;
+    } //cout << it.type << it.fc << v;
 
     if(ptr){
         QByteArray array = v.toByteArray();

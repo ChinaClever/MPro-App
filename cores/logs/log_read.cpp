@@ -81,7 +81,7 @@ QString Log_Read::log_readFun(const sLogFcIt &it)
     case eLogFc::eLog_cnt: res = QString::number(sql->counts()); break;
     case eLogFc::eLog_readOnce: res = log_readOnce(it.type, it.id); break;
     case eLogFc::eLog_read: res = log_readPage(it.type, it.id, it.cnt); break;
-    default: qDebug() << Q_FUNC_INFO << it.fc; break;
+    default: cout << it.fc; break;
     } //cout << it.type << it.fc << it.id << res;
 
     return res;
@@ -108,7 +108,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
         for(int i=0; i<its.size(); ++i) its[i].id = i;
         int minId = its.first().id;
         res = db->toPageJson(its, minId);
-    } else qDebug() << Q_FUNC_INFO << cmd;
+    } else cout << cmd;
     //cout << its.size() << cmd  << res;
 
     return res;
