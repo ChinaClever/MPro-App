@@ -18,7 +18,7 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
     sNetAddr *inet = &net.inet; QVariant res;
     if(0 == sub) app->inet_readCfg(*inet, "IPV4");
     else {inet = &net.inet6; app->inet_readCfg(*inet, "IPV6");}
-    if(inet->dhcp || strlen(inet->ip) < 3) net = cm::dataPacket()->net;
+    //if(inet->dhcp || strlen(inet->ip) < 3) net = cm::dataPacket()->net;
 
     switch (fc) {
     case 0: res = inet->en; break;
