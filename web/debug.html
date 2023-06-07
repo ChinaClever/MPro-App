@@ -105,6 +105,7 @@
 		let board_num= "";
 		var mark = 1;
 		let pdu_data= "";
+		let login_permit_;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -129,10 +130,16 @@
 		function ParseData(){
 			let DataString = pdu_obj.meta_value();
 			pdu_data = JSON.parse(DataString);
+			login_permit_  = pdu_obj.login_permit();
 			if(pdu_data == null){
 				return;
 			}
-
+			if(login_permit_ != 0){
+				window.opener = null;
+				window.open('index.html', '_self');
+				//closeWebPage();
+				window.history.replaceState({}, document.title, window.location.origin);
+			}
 			//phase_num = pdu_obj.meta_Json_value(pdu_info, line_num);
 
 			phase_num = pdu_data.pdu_info.line_num;
@@ -366,7 +373,7 @@
 		function Set(){
 			var out_pow = new Array();
 			for(let  i = 1;i<=output_num;i++){
-				if(document.getElementById("a" + i).checked == true||document.getElementById("b" + i).checked == true||document.getElementById("c" + i).checked == true){
+				if(document.getElementById("c" + i).checked == true){
 					rating_[i] = document.getElementById("cur_val").value;
 				}
 				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);;

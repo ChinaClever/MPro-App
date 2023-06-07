@@ -41,7 +41,7 @@
 		pdu_cfg.sshCfg();
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
-		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+		let pattern = /^.*(?=.{8,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
     	let hasher = CryptoJS.algo.SHA256.create();
 		let ssh_name = new Array("","SshEn","TelnetEn","SshName","SshPsd");
 		var mode_set = new Array("","");
@@ -120,9 +120,9 @@
 				if(ssh_name!= "" && ssh_psd !=""){
 					if(!pattern.test(ssh_psd)){
 						if(0 == language){
-							alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+							alert("请输入8-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
 						}else{
-							alert("Please enter a 6-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
+							alert("Please enter a 8-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
 						}
 						return ;
 					}else{

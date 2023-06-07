@@ -110,7 +110,7 @@
     ]
   },
   {
-    "name": "Environmental parameters",
+    "name": "Environmental data",
     "icon": "flag_fill",
     "base": "",
     "url": "pages/envir/envir_ctrl.html"

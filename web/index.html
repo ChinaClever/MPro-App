@@ -7,7 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
 	<title id = "ser_type"></title>
-	<link rel="shortcut icon" href="favicon.ico">
+	<!-- 网址栏图标隐藏 -->
+	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
 	<!-- <link id="favicon_img" rel="icon" href="include/images/logo.png"> -->
 	<link rel="stylesheet" href="include/css/public.min.css">
 	<link rel="stylesheet" href="include/css/iconfont.min.css">
@@ -32,10 +33,12 @@
 			</a>
 		</div>
 		<div style="position: relative; z-index: 1;">
+			<!-- 去掉顶部的背景图片 -->
 			<!-- <p align="right" style="background-image: url(include/images/title.png);">  -->
 			<p id="top_color" align="right" style="background-image: url();">
 				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
-				<i id="language" class="fa fa-language"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
+				<!-- 语言切换功能屏蔽 -->
+				<!-- <i id="language" class="fa fa-language"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i> -->
 				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label></label><br> -->
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display:inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label><label  id ="uptime" style="width:70%;"></label><label id ="status" style="width:50%;" ></label></label> -->
@@ -161,12 +164,15 @@
 			lang[21] = ["副机告警", "Slave early warning", "", "", ""];
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
-			run_status[2] = lang[16][language_];
-			run_status[3] = lang[17][language_];
-			run_status[4] = lang[18][language_];
-			run_status[5] = lang[19][language_];
-			run_status[6] = lang[20][language_];
-			run_status[7] = lang[21][language_];
+			for (let i = 2; i < 8; i++) {
+				run_status[i] = lang[i+14][language_];
+			}
+			// run_status[2] = lang[16][language_];
+			// run_status[3] = lang[17][language_];
+			// run_status[4] = lang[18][language_];
+			// run_status[5] = lang[19][language_];
+			// run_status[6] = lang[20][language_];
+			// run_status[7] = lang[21][language_];
 		}
 		function TimeConvert(min){
 			let time_show;
@@ -186,7 +192,7 @@
 			return time_show;
 		}
 		function ShowData(){
-			document.getElementById("language").title = lang[language_ +5][language_];
+			// document.getElementById("language").title = lang[language_ +5][language_];//去掉中英文切换
 			document.getElementById("alramNow").title = lang[7][language_];
 			document.getElementById("logOut").title = lang[8][language_];
 			document.getElementById("status").innerHTML = run_status[pdu_data.status];
@@ -194,8 +200,6 @@
 			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.pdu_version.ver;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
-			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;
-			//console.log(document.getElelogin_outmentById("MPDU").innerHTML);
 			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
@@ -209,7 +213,7 @@
 				document.getElementById("alramNow").style.color = "red";	
 			}
 			document.getElementById("logo_").style.display ="";
-			// if( "0" == bg_color){
+			// if( "0" == bg_color){//背景颜色
 			// 	document.getElementsByClassName("side-box")[1].style.backgroundColor = "#083266";
 			// 	document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#083266";
 			// 	document.getElementsByClassName("nav-item is-active")[0].style.backgroundColor = "#25519D";
@@ -218,7 +222,7 @@
 			// }else if( "1" == bg_color){
 			// 	document.getElementsByClassName("side-box")[1].style.backgroundColor = "#2b333e";
 			// 	document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#2b333e";
-			// 	document.getElementsByClassName("nav-item is-active")[0].style.backgroundColor = "#2b333e";
+			// 	document.getElementsByClassName("nav-item is-active")[0].style.background = "#2b333e";
 			// 	document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#222931";
 			// 	document.getElementById("top_color").style.backgroundColor = "#2b333e";
 			// }
