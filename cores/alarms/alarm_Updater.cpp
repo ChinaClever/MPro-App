@@ -34,7 +34,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
         uchar state = it.offAlarm[i];
         if(state == sRelay::EnOffALarm) {
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
-        } else alarm = sRelay::NoAlarm; index.id = i;
+        } else {alarm = sRelay::NoAlarm;} index.id = i;
         if((0==alarm) && it.lifeEn[i]) if(it.cnt[i] > it.maxCnt[i]) alarm = sRelay::LifeAlarm;
         if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
