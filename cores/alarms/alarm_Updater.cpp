@@ -117,6 +117,10 @@ void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
 bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 {
     bool ret = false;
+
+    index.topic = DTopic::Relay;
+    ret |= upRelayUnit(index, it.relay);
+
     index.topic = DTopic::Vol;
     ret |= upAlarmUnit(index, it.vol);
 
@@ -125,9 +129,6 @@ bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 
     index.topic = DTopic::Pow;
     ret |= upAlarmUnit(index, it.pow);
-
-    index.topic = DTopic::Relay;
-    ret |= upRelayUnit(index, it.relay);
 
     index.topic = DTopic::Ele;
     upEleHda(index, it);

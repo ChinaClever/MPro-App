@@ -19,7 +19,7 @@ bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
 {
     bool ret = true;
     if(cm::runTime() < 48*60*60) dest = src;
-    if((src >= min) && (src < max)) {
+    if((src >= min) && (src <= max)) {
         dest = src; ret = true;
     } else {
         ret = false;
