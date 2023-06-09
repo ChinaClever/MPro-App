@@ -73,7 +73,7 @@ Sql_Statement *Log_Read::getSql(int type)
 
 
 QString Log_Read::log_readFun(const sLogFcIt &it)
-{    
+{
     //cout << it.type << it.fc << it.id;
     Sql_Statement *sql = getSql(it.type); if(!sql) return "";
     QString res; QWriteLocker locker(mRwLock); switch (it.fc) {

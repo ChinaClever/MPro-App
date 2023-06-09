@@ -121,10 +121,12 @@ void Data_Object::loopData(int id, int start, int end)
 
 void Data_Object::loopBreaker(int id)
 {
-    uint sw = 0; //mDev->cfg.nums.loopEachNum[id] = 0;
-    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
+    uint sw = 0; uint *cnt = &mDev->loop.relay.cnt[id];// mDev->cfg.nums.loopEachNum[id] = 0;
+    if (mDev->loop.cur.value[id] > 0.2 * COM_RATE_CUR) sw = 1;
     if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;
-    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
+    if(sw) *cnt = 4; else if(*cnt) if(--(*cnt)) sw = 1;
+    if(!mDev->cfg.param.isBreaker) {sw = 2;}
+    mDev->loop.relay.sw[id] = sw;
 }
 
 void Data_Object::lineData(int id, int start, int end)

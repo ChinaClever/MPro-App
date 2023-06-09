@@ -142,11 +142,12 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             if(cm::cn()) it.event_content = tr("执行板 %1 掉线").arg(addr);
             else it.event_content = tr("Execution board %1 dropped").arg(addr);
             Log_Core::bulid()->append(it);
-
+#if 0
             int size = sizeof(mOpData->vol);
             memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pf, 0, size);
+#endif
         }
     }
 

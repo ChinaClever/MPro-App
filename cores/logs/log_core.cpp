@@ -78,7 +78,7 @@ void Log_Core::append(const sDataItem &it)
     hda.topic = QString::number(it.topic);
     hda.indexes = QString::number(it.id + 1);
     hda.value = QString::number(it.value / cm::decimal(it));
-    mHdaIts << hda; run(); //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
+    mHdaIts << hda; run();  //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
 }
 
 void Log_Core::log_hda(const sDataItem &it)
@@ -112,8 +112,8 @@ void Log_Core::run()
     if(!isRun) {
         if(cm::runTime() > 48*60*60) mt += 1567;
         int cnt = mEventIts.size() + mAlarmIts.size();
-        if(cnt > 30 || mLogCnt > 1000) {mt += 3567; timeoutDone();} mLogCnt += cnt;
-        QTimer::singleShot(mt,this, SLOT(saveLogSlot()));
+        if(cnt > 10 || mLogCnt > 1000) {mt += 3567; timeoutDone();}
+        mLogCnt += cnt; QTimer::singleShot(mt,this, SLOT(saveLogSlot()));
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
         isRun = true; mt = 567;
     } else mt = 5567;
@@ -122,13 +122,12 @@ void Log_Core::run()
 void Log_Core::saveLogSlot()
 {
     QWriteLocker locker(mRwLock);
-    cm::mdelay(100); QSqlDatabase::database().transaction();
+    QSqlDatabase::database().transaction();
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    QSqlDatabase::database().commit(); cm::mdelay(100);
-    system("sync"); isRun = false;
+    QSqlDatabase::database().commit(); isRun = false; //cm::mdelay(100);
 }
 
 void Log_Core::timeoutDone()

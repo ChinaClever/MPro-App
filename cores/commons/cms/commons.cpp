@@ -20,7 +20,7 @@ void cm::mdelay(int msec)
     QTimer::singleShot(msec, &loop, SLOT(quit()));
     loop.exec();
 #else
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
     //阻塞方式延时,如果在主线程会卡住主界面
     QThread::msleep(msec);
 #else

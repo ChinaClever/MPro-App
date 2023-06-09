@@ -140,7 +140,7 @@ void Odbc_Core::createTables()
 
 void Odbc_Core::insertItems()
 {
-    QWriteLocker locker(mLock); db_transaction();
+    db_transaction(); //QWriteLocker locker(mLock);
     while(mThIts.size()) th_poll(mThIts.takeFirst());
     while(mHdaIts.size())  hda_insert(mHdaIts.takeFirst());
     while(mDataIts.size()) data_poll(mDataIts.takeFirst());
