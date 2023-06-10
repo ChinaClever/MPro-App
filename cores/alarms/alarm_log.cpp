@@ -194,7 +194,9 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
         it.alarm_content = alarmRelay(value);
          if(DType::Loop == index.type) {
             Alarm_Object obj;
-            sAlarmUnit *unit = obj.getAlarmUnit(index);
+            sDataItem item = index;
+            item.topic = DTopic::Vol;
+            sAlarmUnit *unit = obj.getAlarmUnit(item);
             double v = unit->value[index.id] /COM_RATE_VOL;
             it.alarm_content += tr("vol = %1V").arg(v);
          }

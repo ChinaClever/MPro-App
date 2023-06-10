@@ -29,10 +29,10 @@ public:
 
 private slots:
     void run();
+    void invAdcSlot();
     void timeoutDone();
     void initFunSlot();
     void saveLogSlot();
-    void invAdcSlot();
 
 private:
     bool isRun=false;

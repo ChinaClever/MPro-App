@@ -237,7 +237,7 @@ struct sParameter {
     uint backlightTime; // 节能 时长 小时数
     uint groupEn; // 组开关使能
     uint sensorBoxEn; // 传感器盒子 0：禁用， 1：启用
-    uint powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint supplyVol; // 12V开关电源电压
     uint jsonContent; // 0：自动 1：最少 2：最多
     uint runTime; // 总运行时间 单位天
     uint vh; // 0:垂直 1:水平
