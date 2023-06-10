@@ -57,19 +57,18 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
             if(cm::cn()) it.event_content = tr("总计量板异常");
             else it.event_content = "Abnormal total metering board";
             Log_Core::bulid()->append(it);
-#if 0
+
             int size = sizeof(mOpData->vol);
-            memset(mOpData->vol, 0, size);
+            //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pf, 0, size);
-#endif
         }
     }
 
     int t = 0; if(cm::runTime() > 48*60*60) {
         t = QRandomGenerator::global()->bounded(565);
         if(cm::runTime() > 74*60*60) t += 1000;
-    } cm::mdelay(t + 360);
+    } cm::mdelay(t + 660);
 
     return !ret;
 }
