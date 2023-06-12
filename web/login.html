@@ -20,7 +20,7 @@
       <div class="center_form">
       </div>
       <!-- <p style="width: 520px;">Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "</p> -->
-      <p id="rule" style="width: 528px;height: auto;padding-left: -10%;text-align: left;display: none;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少6个、最多16个字符！</p>
+      <p id="rule" style="width: 528px;height: auto;padding-left: -10%;text-align: left;display: none;">账号规则：账号中只能包含大、小写字母、数字,至少5个、最多16个字符！<br>密码规则：密码中必须包含大、小写字母、数字,至少8个、最多16个字符！</p>
       <p id="free_rule" style="width: 528px;text-align: left;display: none;"> 强密码：不勾选“强密码”可以无需遵循以上密码和账户规则！</p>
     </div>
 
@@ -536,7 +536,7 @@
       {
         //注册页和登陆页面以及重置页面去掉了 onkeyup = "Clear(this)"
         tbody += '<br/><p class="title"><span id="reg_title_name">注册页</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p style ="height:30px"><span id="free_encryption" style="text-align:center;line-height:40px">强密码：</span><input id="lang_2" type="checkbox" style ="width:3%;height:17px"></p>';
+        tbody += '<p style ="height:30px"><span id="free_encryption" style="text-align:center;line-height:40px">强密码：</span><input id="lang_2" type="checkbox" checked="checked" style ="width:3%;height:17px"></p>';
         tbody += '<p><input id ="username" type="username" maxlength="16"; placeholder="用户名" onblur = "validataForm(this)">';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" placeholder="确认密码"></p>';

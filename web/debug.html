@@ -235,7 +235,7 @@
 				}
 			}
 		}
-		function Set_(){
+		function Set_(btn){
 			//setTimeout(() => {
 			//	PduMetaData.meta_workDown();
 			//}, 100);
@@ -252,13 +252,26 @@
 			for(let i = 1;i < 5;i++){
 				pdu_obj.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
 			}
-			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
+
 			pdu_obj.setCfg(11,6,document.getElementById("dev_type_").value,0,addr);
-			pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
-			pdu_obj.setCfg(cfg,12,document.getElementById("angle_").value,0,addr);
-			pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
-			pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
-			pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);							
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,12,document.getElementById("angle_").value,0,addr);
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
+			}	
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
+			}
+			if(btn.value == "1"||btn.value == "2"||btn.value == "3"||btn.value == "4"){
+				pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
+			}								
 			pdu_obj.setCfg(41,11,document.getElementById("mac_").value,0,addr);
 
 			setTimeout(() => {
@@ -454,29 +467,29 @@
 			tbody += '&nbsp&nbsp<input id = "out_num5" style ="width:2.5%;" type = "text" onchange = "Set_()" value="'+loop_out[4]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num6" style ="width:2.5%;" type = "text" onchange = "Set_()" value="'+loop_out[5]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带断路器:</td>';
-			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" onchange = "Set_()" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
+			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 
 			tbody += '<tr><td>屏幕方向角:</td>';
-			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_()"  value="'+cfg_data[0]+'">(0-垂直,1-水平)</input></td></tr>';
+			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_(this)"  value="'+cfg_data[0]+'">(0-垂直,1-水平)</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
-			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_()"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
+			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_(this)"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
 			tbody += '<tr><td>设备类型:</td>';
-			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'"></input></td></tr>';
+			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_(this)" value="'+cfg_data[2]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
-			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
+			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
 			tbody += '<tr><td>设备系列选择:</td>';
-			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
+			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 			tbody += '<tr><td>语言选择:</td>';
-			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
+			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
-			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[6]+'"></input></td></tr>';
+			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[6]+'"></input></td></tr>';
 			tbody += '<tr><td>背景颜色:</td>';
 			tbody += '<td><input id = "bg_color" style ="width:2.5%" type = "text" onchange = "bgColor_set(this)" value="'+cfg_data[7]+'"></input>(0-蓝色,1-黑色)</td></tr>';
-			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';
+			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_(this)" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

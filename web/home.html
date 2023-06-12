@@ -598,6 +598,7 @@
 		let Sensor_state_ = new Array("NA", "", "");
 		let Sys_state = new Array("正常", "告警", "故障");
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
+		let loop_unit_ = new Array("", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 		let pdu_data;
 		let sensor_box;/*传感器盒子*/
@@ -916,12 +917,12 @@
 					for (j = 0; j < 7; j++) {
 					if (j > 1 && j != 4 && j != 6) {
 						if (j == 5) {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit_[j];
 						} else {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit_[j];
 						}
 					} else if (j == 4 || j == 6) {
-						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit[j];
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit_[j];
 					} else {
 						//if (j == 1) {
 					//		document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i][j]];
@@ -1141,14 +1142,14 @@
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
+				tbody += '<tr><td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
 			}else{
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 				tbody += '<tr><td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';

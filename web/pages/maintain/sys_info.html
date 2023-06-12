@@ -41,6 +41,14 @@
 			</div>
 		</div>
 	</div>
+	<style>
+		.sele {
+			-moz-appearance:none;
+			-webkit-appearance:none;
+			appearance:none;
+		}
+		.sele::-ms-expand{display: none;}
+	</style>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
@@ -110,7 +118,7 @@
 			lang[19] = ["内存信息:","Memory information:","","",""];
 			lang[20] = ["存储状态:","Storage status:","","",""];
 			lang[21] = ["设备序列号:","Equipment serial number:","","",""];
-			lang[22] = ["语言选择","Language selection:","","",""];
+			lang[22] = ["语言:","Language selection:","","",""];
 			lang[23] = ["中文","Chinese","","",""];
 			lang[24] = ["英文","English","","",""];
 			for(let i = 0;i < 2;i++){
@@ -249,8 +257,9 @@
 		}
 		function buildTableLanguage() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_22" ></td>';
-			tbody += '<td><select id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
+			//thead = '<tr><td width ="15%" id="lang_22" ></td>';
+			tbody +='<tr><td width ="15%" id="lang_22" ></td>';
+			tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
 			for(var i = 0; i<2;i++){
 				tbody +='<option value ="'+i+'">'+type[i] +'</option>';
 			}
