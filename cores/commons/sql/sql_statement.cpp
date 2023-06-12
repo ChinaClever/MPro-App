@@ -69,7 +69,7 @@ bool Sql_Statement::sqlQuery(const QString &sql)
 bool Sql_Statement::remove(const QString &condition)
 {
     QString sql = "DELETE FROM %1 WHERE %2";
-    return sqlQuery(sql.arg(tableName()).arg(condition));
+    return sqlQuery(sql.arg(tableName(), condition));
 }
 
 bool Sql_Statement::remove(const QString &name, const QString &vale)
@@ -157,7 +157,7 @@ int Sql_Statement::counts()
 
 int Sql_Statement::contains(const QString &name, const QString &value)
 {
-    QString condition = QString("where %1=\'%2\'").arg(name).arg(value);
+    QString condition = QString("where %1=\'%2\'").arg(name, value);
     return counts(name, condition);
 }
 

@@ -34,7 +34,7 @@ bool Alarm_Updater::upRelayUnit(sDataItem &index, sRelayUnit &it)
         uchar state = it.offAlarm[i];
         if(state == sRelay::EnOffALarm) {
             if(value == sRelay::Off) alarm = sRelay::OffALarm;
-        } else alarm = sRelay::NoAlarm; index.id = i;
+        } else {alarm = sRelay::NoAlarm;} index.id = i;
         if((0==alarm) && it.lifeEn[i]) if(it.cnt[i] > it.maxCnt[i]) alarm = sRelay::LifeAlarm;
         if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
         if(it.alarm[i] != alarm) emit alarmSig(index, alarm);
@@ -117,6 +117,10 @@ void Alarm_Updater::upEleHda(sDataItem &index, sObjData &it)
 bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 {
     bool ret = false;
+
+    index.topic = DTopic::Relay;
+    ret |= upRelayUnit(index, it.relay);
+
     index.topic = DTopic::Vol;
     ret |= upAlarmUnit(index, it.vol);
 
@@ -125,9 +129,6 @@ bool Alarm_Updater::upObjData(sDataItem &index, sObjData &it)
 
     index.topic = DTopic::Pow;
     ret |= upAlarmUnit(index, it.pow);
-
-    index.topic = DTopic::Relay;
-    ret |= upRelayUnit(index, it.relay);
 
     index.topic = DTopic::Ele;
     upEleHda(index, it);

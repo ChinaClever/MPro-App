@@ -73,7 +73,6 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.devMode = cfg->readCfg("devMode", 0, g).toInt();
     it.cascadeAddr = cfg->readCfg("cascadeAddr", 1, g).toInt();
     it.sensorBoxEn = cfg->readCfg("sensorBoxEn", 0, g).toInt();
-    it.powLogEn = cfg->readCfg("powLogEn", 0, g).toInt();
     it.buzzerSw = cfg->readCfg("buzzerSw", 1, g).toInt();
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();

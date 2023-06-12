@@ -75,5 +75,6 @@ void Ota_Usb::usb_otaSlot()
     qDebug() << "USB:" + dir << ret; if(ret) {
         sOtaFile it; it.fc = 21; it.path = dir;
         ota_updater(it, DOta_Usb, true);
-    }isUsbRun = false;
+    } system("umount /tmp/mass_storage/sda1");
+    isUsbRun = false;
 }

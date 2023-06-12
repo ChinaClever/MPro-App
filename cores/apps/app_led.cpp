@@ -73,9 +73,9 @@ void App_Led::led_workDown()
 {
     sDevData *dev = cm::masterDev();
     int *rgb = mRgb; switch (dev->status) {
-    case 0: case 1: RGB_ON(rgb[RGB_GREEN]); break;
     case 2: RGB_ON(rgb[RGB_RED]); break;
-    default: if(RGB_ON(rgb[RGB_BLUE]) < 0)  perror("RGB_BLUE on fail\n"); break;
+    case 3: case 4: case 5: RGB_ON(rgb[RGB_BLUE]); break;
+    default: if(RGB_ON(rgb[RGB_GREEN]) < 0)  perror("RGB_GREEN on fail\n"); break;
     } led_delayOff();
 }
 

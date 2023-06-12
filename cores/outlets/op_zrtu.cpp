@@ -144,7 +144,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);
-            memset(mOpData->vol, 0, size);
+            //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pf, 0, size);
         }
@@ -153,7 +153,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
     int t = 0; if(cm::runTime() > 48*60*60) {
         if(!hasCmdWrite()) if(cm::runTime() > 74*60*60) t += 1000;
         if(!hasCmdWrite()) t += QRandomGenerator::global()->bounded(565);
-    } cm::mdelay(t + 456);
+    } cm::mdelay(t + 656);
 
     return !ret;
 }

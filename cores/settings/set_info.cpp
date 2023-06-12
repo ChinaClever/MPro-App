@@ -69,6 +69,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 16: App_Core::bulid()->beep_once(); break;
     case 17: ret = it->standNeutral; break;
     case 18: ret = it->webBackground; break;
+    case 19: ret = it->supplyVol; break;
     case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }

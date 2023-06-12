@@ -304,6 +304,7 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
         obj.insert("sensor_box", it.param.sensorBoxEn/r);
         obj.insert("stand_neutral", it.param.standNeutral/r);
         obj.insert("web_background", it.param.webBackground/r);
+        obj.insert("supply_vol", it.param.supplyVol/r);
         obj.insert("language", it.param.language/r);
         obj.insert("run_time", it.param.runTime/r);
         obj.insert("breaker", it.param.isBreaker/r);
