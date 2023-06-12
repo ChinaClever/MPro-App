@@ -170,7 +170,8 @@
 			//for(i= 0;i<10;i++){
 			//	cfg_data[i] = "";
 		//	}
-			cfg_data[6] = pdu_data.net_addr.mac;
+		//	cfg_data[6] = pdu_data.net_addr.mac;
+			cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
 			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
 			cfg_data[0] = pdu_obj.cfgValue(cfg,12,0,addr);
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
