@@ -10,6 +10,7 @@ App_RunTime::App_RunTime(QObject *parent)
     : App_Ssh{parent}
 {
     QTimer::singleShot(75,this,&App_RunTime::runing_initFunSlot);
+    //QTimer::singleShot(1750,this,&App_RunTime::runing_cpuDone);
 }
 
 void App_RunTime::runing_initFunSlot()
@@ -35,3 +36,16 @@ void App_RunTime::runing_onTimeoutDone()
 }
 
 
+void App_RunTime::runing_cpuDone()
+{
+    QString res = cm::execute("cat /tmp/kernel_messages");
+    if(res.contains("IRQ Error")) {
+            sEventItem it;  if(cm::cn()) {
+                it.event_type = QStringLiteral("CPU检测");
+                it.event_content = QStringLiteral("内核打印异常");
+            } else {
+                it.event_type = "CPU Detection";
+                it.event_content = "Kernel printing exception ";
+            } Log_Core::bulid()->append(it);
+    }
+}
