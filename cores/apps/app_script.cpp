@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "app_script.h"
+#include <fcntl.h>
 
 sScriptCfg App_Script::scriptCfg;
 App_Script::App_Script(QObject *parent)
@@ -19,8 +20,7 @@ void App_Script::script_readProcess()
     static char buffer[2048] = {0};
     QMap<int, FILE *>::iterator it;
     for(it=mMap.begin(); it != mMap.end(); it++) {
-        int id = it.key();
-        auto pro = it.value();
+        int id = it.key(); auto pro = it.value();
 #if 0
         if(pro->isReadable()) {
             QString res = pro->readAllStandardError().trimmed() ;
@@ -30,8 +30,8 @@ void App_Script::script_readProcess()
 
         }
 #else
-        while(fgets(buffer,sizeof(buffer), pro)) {
-            scriptCfg.result[id].insert(0, buffer);
+        buffer[0] = 0; while(fgets(buffer,sizeof(buffer), pro)) {
+            if(strlen(buffer)) scriptCfg.result[id].insert(0, buffer);
             //qDebug().noquote() << id << scriptCfg.result[id];
         } if(scriptCfg.result[id].size()>100) scriptCfg.result[id].removeLast();
 #endif
@@ -70,7 +70,9 @@ void App_Script::script_execute(int id)
         char *ptr = cmd.toLatin1().data();
         script_kill(id); FILE *fp = popen(ptr, "r");
         if(fp) mMap[id] = fp; else cout << id << program;
-        cout << id << program;
+        int fd = fileno(fp); int flags = fcntl(fd, F_GETFL, 0);
+        fcntl(fd, F_SETFL, flags | O_NONBLOCK); // 设置文件描述符为非阻塞模式
+        //cout << id << cmd;
 #endif
     }
 }

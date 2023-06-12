@@ -39,7 +39,7 @@ QString cm::execute(const QString &cmd)
     pro.start(cmd);
     pro.waitForFinished(-1); //qDebug() << cmd;
     QByteArray bs = pro.readAllStandardOutput();
-    bs +=  pro.readAllStandardError();
+    bs +=  pro.readAllStandardError(); pro.kill();
     return QString::fromLocal8Bit(bs);
     //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
@@ -52,7 +52,7 @@ QString cm::executes(const QStringList &cmds)
         pro.waitForFinished();
     }
     QByteArray bs = pro.readAllStandardOutput();
-    bs +=  pro.readAllStandardError();
+    bs +=  pro.readAllStandardError(); pro.kill();
     return QString::fromLocal8Bit(bs);
 }
 
@@ -65,7 +65,7 @@ bool cm::pingNet(const QString& ip)
         bPingSuccess = true;
     }else {
         bPingSuccess = false;
-    }
+    } //cout << p_stdout;
 
     return bPingSuccess;
 }
