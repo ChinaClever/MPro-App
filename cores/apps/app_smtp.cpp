@@ -38,21 +38,26 @@ QString App_Smtp::smtp_uut()
     return str;
 }
 
+void App_Smtp::smtp_testInit()
+{
+    sSmtpCfg *cfg = &smtpCfg;
+    cfg->port = 25;
+    cfg->host = "smtp.qq.com";
+    cfg->pwd = "hltwgrkymjcbbjcd";
+    //   cfg->pwd = "Lzy123456";
+    cfg->from ="luozhiyong131@qq.com";
+    cfg->ct = 0; cfg->en = 1;
+    cfg->to[0] = "517345026@qq.com";
+
+    //    cfg->port = 465;
+    //    cfg->ct = 1;
+}
+
 void App_Smtp::sendMail()
 {
     //if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
-
-//    cfg->port = 25;
-//    cfg->host = "smtp.qq.com";
-//    cfg->pwd = "hltwgrkymjcbbjcd";
-//    //cfg->pwd = "Lzy123456";
-//    cfg->from ="luozhiyong131@qq.com";
-//    cfg->ct = 0; cfg->en = 1;
-//    cfg->to[0] = "517345026@qq.com";
-
-//    cfg->port = 465;
-//    cfg->ct = 1;
+    //smtp_testInit();
 
     MimeMessage message;
     EmailAddress sender(cfg->from);
@@ -84,19 +89,17 @@ void App_Smtp::sendMail()
     }
 
     SmtpClient smtp(cfg->host, cfg->port, ct);
-    //smtp.connectToHost(); cout <<"AAAAAAAAAAAA";
+    smtp.connectToHost(); //cout <<"AAAAAAAAAAAA";
     if (!smtp.waitForReadyConnected(5000)) {
-        cfg->lastErr += "Failed to connect to host!" + cfg->host;
-        smtp.quit(); return;
+        cfg->lastErr += "Failed to connect to host! " + cfg->host;
+        smtp.quit(); cout << cfg->lastErr; return;
     }
 
     smtp.login(cfg->from, cfg->pwd);
-    // cout <<"BBBBBBBBBBBBBB";
+    //cout <<"BBBBBBBBBBBBBB";
     if (!smtp.waitForAuthenticated(5000)) {
-        smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
-        //smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthLogin);
-        if (!smtp.waitForAuthenticated(5000)) cfg->lastErr += " Failed to login!" + cfg->from;
-        smtp.quit(); return;
+        cfg->lastErr += " Failed to login!" + cfg->from;
+        smtp.quit(); cout << cfg->lastErr; return;
     }
 
     //cout <<"CCCCCCCCCCCCCCCCCC";
@@ -104,8 +107,8 @@ void App_Smtp::sendMail()
     if (!smtp.waitForMailSent(5000)) {
         cfg->lastErr += " Failed to send mail!";
     }
-    smtp.quit();
-    cout << cfg->lastErr;
+    cfg->lastErr = "send mail ok";
+    smtp.quit(); cout << cfg->lastErr;
 }
 
 bool App_Smtp::smtp_inputCheck()
@@ -147,6 +150,6 @@ void App_Smtp::smtp_run()
         bool ret = smtp_inputCheck();
         if(ret) { ret = cm::pingNet(cfg->host);
         if(ret) sendMail(); else cfg->lastErr += "network error or host error!";
-        } smtp_isRun = false;
+        }  smtp_isRun = false;
     }
 }
