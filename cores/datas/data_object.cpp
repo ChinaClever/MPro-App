@@ -125,7 +125,7 @@ void Data_Object::loopBreaker(int id)
     if(mDev->loop.cur.value[id] > 0.2 * COM_RATE_CUR) sw = 1;
     if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;
     if(mDev->loop.pow.value[id] > 50) sw = 1;
-    if(sw) *cnt = 4; else if(*cnt) if(--(*cnt)) sw = 1;
+    if(sw) *cnt = 5; else if(*cnt) if(--(*cnt)) sw = 1;
     if(!mDev->cfg.param.isBreaker) {sw = 2;}
     mDev->loop.relay.sw[id] = sw;
 }

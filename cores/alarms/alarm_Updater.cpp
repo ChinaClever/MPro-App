@@ -71,7 +71,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
     if(value < it.min[i]) alarm = AlarmCode::Min;
     else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
-    uint t = 5; if(cm::runTime() > 48*60*60) t = 5; //////==========
+    uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
     if(it.alarm[i] != alarm)  {
         if(it.cnt[i]++ > t) {
             Log_Core::bulid()->append(index);
