@@ -12,8 +12,8 @@ Set_Maintain::Set_Maintain()
 
 static void dev_restart()
 {
-    cm::mdelay(1000);
     system("sync");
+    cm::mdelay(1000);
     system("reboot");
 }
 
@@ -41,7 +41,7 @@ void Set_Maintain::factoryRestore()
     system("chmod 777 /usr/data/clever/cfg/*");
     system("echo '1' > /usr/data/clever/cfg/factoryRestore");
     fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini";
-    //fns << "inet.ini";
+    if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
     foreach (const auto &fn, fns) {
         QString fmd = "rm -rf %1%2";
