@@ -9,11 +9,12 @@
 Set_NetAddr::Set_NetAddr()
 {
     m_net.inet.en = 0;
+    m_net.mac[0] = 0;
 }
 
 QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
-{
-    if(!m_net.inet.en) m_net = cm::dataPacket()->net;
+{    
+    if(!m_net.inet.en || !strlen(m_net.mac)) m_net = cm::dataPacket()->net;
     sNetAddr *inet = &m_net.inet; QVariant res;
     if(sub) inet = &m_net.inet6;
 
@@ -38,7 +39,7 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
 
 bool Set_NetAddr::netAddrSet(sCfgItem &it, const QVariant &v)
 {
-    if(!m_net.inet.en) m_net = cm::dataPacket()->net;
+    if(!m_net.inet.en || !strlen(m_net.mac)) m_net = cm::dataPacket()->net;
     sNetAddr *inet = &m_net.inet; bool res = true;
     char *ptr = nullptr; if(it.id) inet = &m_net.inet6;
 

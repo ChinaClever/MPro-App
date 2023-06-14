@@ -23,9 +23,16 @@ bool Set_Maintain::syscmd(int fc)
     bool ret=true; switch (fc) {
     case 1: m_thread = new std::thread(dev_restart); m_thread->detach(); break;
     case 2: factoryRestore(); break;
+    case 3: clearLogs(); break;
     default: ret = false; cout << fc; break;
     }
     return ret;
+}
+
+void Set_Maintain::clearLogs()
+{
+    system("chmod 777 /usr/data/clever/cfg/logs.db");
+    system("rm -rf /usr/data/clever/cfg/logs.db");
 }
 
 void Set_Maintain::factoryRestore()
@@ -40,7 +47,7 @@ void Set_Maintain::factoryRestore()
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
     system("echo '1' > /usr/data/clever/cfg/factoryRestore");
-    fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini";
+    fns << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini"; // << "logs.db";
     if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
     foreach (const auto &fn, fns) {

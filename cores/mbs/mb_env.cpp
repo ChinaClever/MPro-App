@@ -16,8 +16,10 @@ void Mb_Env::env_dataUpdate()
     vshort vs; int size = SENOR_NUM;
     sEnvData *obj = &(mDevData->env);
     for(int i=0; i<size; ++i) {
-        vs << obj->tem.value[i];
-        vs << obj->hum.value[i];
+        if(obj->isInsert[i]) {
+            vs << obj->tem.value[i];
+            vs << obj->hum.value[i];
+        } else vs << 0 << 0;
     }setRegs(MbReg_EnvData, vs);
 }
 

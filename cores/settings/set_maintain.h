@@ -12,7 +12,8 @@ public:
     QString backups(int fc);
     bool restores(int fc, const QVariant &v);
 
-private:    
+private:
+    void clearLogs();
     QString batchBackup();
     QString profileBackup();
     bool restory(const QString &fn);
