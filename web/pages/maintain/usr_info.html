@@ -59,6 +59,14 @@
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			if(top.login_permit_ != 0){
+				hidden();
+			}
+		}
+		function hidden(){
+			 document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			 document.getElementsByClassName("section-cont")[0].style.display = "none";
+			 return -1;
 		}
 		ParseData();
 		function ReadData(){
@@ -194,7 +202,15 @@
 			if(jur_ != 0){
 				jur_ = 2;
 			}
-
+			if(parseInt(document.getElementById("usrSel").value) == 0){
+				if(0 == language){
+					alert("第一个账户不能修改为访客权限!")
+				}else{
+					alert("The first account cannot be modified to visitor permissions!")
+				}
+				return -1;
+			}else{
+			}
 			//if(document.getElementById("lang_21").checked == true){				
 			//}else{
 			if(web_data[0] == 0){				
@@ -283,9 +299,9 @@
 			tbody += '<tr><td id = "lang_4"></td>';
 			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" onkeyup ="Clear(this)" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></form></td></tr>';
+			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  onselectstart="return false" onpaste="return false"  placeholder="密码"></form></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
-			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></form></td></tr>';
+			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"   onselectstart="return false" onpaste="return false" placeholder="确认密码" autocomplete="off"></form></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
 			tbody += '<td><input id ="Identify" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onkeyup ="Clear(this)"  onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_8"></td>';

@@ -281,6 +281,7 @@
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
 									data_total = [];
+									dataLabels = [];
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];
 										data_total[i] = parseFloat(log_str.logs[i][5]).toFixed(3);

@@ -51,6 +51,7 @@
 		let language;
 		let addr = 0;
 		let alarm_log = 1;
+		pdu_cfg.logseetingCfg();
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
 		}, 800);
@@ -70,6 +71,7 @@
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
 		let start_ = 0;
+		let alarm_max_num;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -129,6 +131,7 @@
 					}
 				}
 			}
+			alarm_max_num = pdu_cfg.cfgValue(47,4,0,0);
 			return true;
 		}
 		setTimeout(function(){
@@ -203,6 +206,9 @@
 			let size = document.getElementById("log_size");
 			let p = document.getElementById("page");
 			let p_n = document.getElementById("page_num");
+			if(log_num > alarm_max_num){
+				log_num = alarm_max_num;
+			}
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
