@@ -69,7 +69,9 @@ bool Sql_Statement::sqlQuery(const QString &sql)
 bool Sql_Statement::remove(const QString &condition)
 {
     QString sql = "DELETE FROM %1 WHERE %2";
-    return sqlQuery(sql.arg(tableName(), condition));
+    bool ret = sqlQuery(sql.arg(tableName(), condition));
+    if(ret) {sql = "VACUUM "; ret = sqlQuery(sql);}
+    return ret;
 }
 
 bool Sql_Statement::remove(const QString &name, const QString &vale)
@@ -217,7 +219,9 @@ bool Sql_Statement::updateColumn(const QString& column_name, QString value, cons
 bool Sql_Statement::clear()
 {
     QString sql = "delete from %1";
-    return sqlQuery(sql.arg(tableName()));;
+    bool ret = sqlQuery(sql.arg(tableName()));
+    if(ret) {sql = "VACUUM"; ret = sqlQuery(sql);}
+    return ret;
 }
 
 QString Sql_Statement::tableMarking()

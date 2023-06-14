@@ -86,6 +86,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 1: key = "devSpec"; it->devSpec = value; break;
     case 3: key = "devMode"; it->devMode = value; break;
     case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
+    case 5: key = "runTime"; it->runTime = value; break;
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
     case 9: key = "sensorBoxEn"; it->sensorBoxEn = value; break;
