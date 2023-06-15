@@ -118,7 +118,7 @@
 			lang[19] = ["内存信息:","Memory information:","","",""];
 			lang[20] = ["存储状态:","Storage status:","","",""];
 			lang[21] = ["设备序列号:","Equipment serial number:","","",""];
-			lang[22] = ["语言:","Language selection:","","",""];
+			lang[22] = ["语言:","Language:","","",""];
 			lang[23] = ["中文","Chinese","","",""];
 			lang[24] = ["英文","English","","",""];
 			for(let i = 0;i < 2;i++){
@@ -173,7 +173,7 @@
 					}
 			}
 			}
-			document.getElementById("language_sel" ).value = language;
+			//document.getElementById("language_sel" ).value = language;
 			if(top.login_permit_ == 0){
 			}else{
 				$("input").attr("disabled","disabled");
@@ -181,21 +181,22 @@
 			}
 		}
 		function ChoseLang(btn){
-				
-			setTimeout(function(){
-				pdu_cfg.setCfg(13,10,btn.value,0,addr);	
+			if(0 == language){
+				alert("请按F5重新刷新网页以更改语言设置！");	
+			}else{
+				alert("Please press F5 to refresh the webpage again to change the language settings！");
+			}
+			if(language == 1){
+				language = 0;
+			}else{
+				language = 1;
+			}
+			pdu_cfg.setCfg(13,10,language,0,addr);
+			setTimeout(function(){	
 			//	window.sessionStorage.setItem('language_sel', language);
 				pdu_cfg.loginCfg();
 				PduMetaData.meta_workDown();
-				if(0 == language){
-					alert("请按F5重新刷新网页以更改语言设置！");	
-				}else{
-					alert("Please press F5 to refresh the webpage again to change the language settings！");
-				}
 			},800);
-			setTimeout(function(){
-
-			},1000);
 		}
 
 		function buildTableMc() {
@@ -257,13 +258,13 @@
 		}
 		function buildTableLanguage() {
 			var thead = '',tbody = '';
-			//thead = '<tr><td width ="15%" id="lang_22" ></td>';
-			tbody +='<tr><td width ="15%" id="lang_22" ></td>';
-			tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
-			for(var i = 0; i<2;i++){
-				tbody +='<option value ="'+i+'">'+type[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
+			tbody +='<tr><td width ="15%" id="lang_22" ></td>';		
+			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" onclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
+			// tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
+			// for(var i = 0; i<2;i++){
+			// 	tbody +='<option value ="'+i+'">'+type[i] +'</option>';
+			// }
+			// tbody += '</select></td></tr>';//下拉框方法
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

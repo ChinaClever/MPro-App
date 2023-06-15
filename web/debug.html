@@ -110,6 +110,8 @@
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
 		let break_en = 0;
+		let output_cur_upper = new Array();
+		let output_cur_max = new Array();
 		let rating = new Array();
 		let rating_ = new Array();;
 		let out_vol = new Array(49);
@@ -170,7 +172,8 @@
 			//for(i= 0;i<10;i++){
 			//	cfg_data[i] = "";
 		//	}
-			cfg_data[6] = pdu_data.net_addr.mac;
+		//	cfg_data[6] = pdu_data.net_addr.mac;
+			cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
 			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
 			cfg_data[0] = pdu_obj.cfgValue(cfg,12,0,addr);
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
@@ -203,7 +206,7 @@
 			}
 			m++;
 		},1100);
-		let ph
+		
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
@@ -234,6 +237,13 @@
 					document.getElementById("c"+i).checked = true;
 				}
 			}
+			//需要修改的重点突出
+			document.getElementById("phase_vol_0").style.backgroundColor = 'green';
+			document.getElementById("loop_vol_0").style.backgroundColor = 'green';
+			document.getElementById("phase_cur_0").style.backgroundColor = 'red';
+			document.getElementById("loop_cur_0").style.backgroundColor = 'red';
+			document.getElementById("output_cur_0").style.backgroundColor = 'red';
+			
 		}
 		function Set_(btn){
 			//setTimeout(() => {
@@ -390,6 +400,11 @@
 					rating_[i] = document.getElementById("cur_val").value;
 				}
 				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);;
+				// output_cur_upper[i] = parseInt(rating_[i])*0.8.toFixed(3);
+				output_cur_upper[i] = rating_[i]*0.8;
+				output_cur_max[i] = parseInt(rating_[i]);
+				pdu_obj.setData(output,cur_,7,i,rating_[i]*0.8);
+				pdu_obj.setData(output,cur_,4,i,output_cur_max[i]);
 				pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}

@@ -87,6 +87,7 @@
 				let dev_name =new Array();
 				let DataString = pdu_cfg.meta_value();
 				pdu_data = JSON.parse(DataString);
+				slave_num = pdu_data.pdu_info.slave_num;
 				for(let i = 1;i<6;i++){
 					lang[i] = new Array();
 				}
@@ -108,7 +109,7 @@
 				}else{
 					document.getElementById("dev_sel").style.display = "";	
 				}
-				document.getElementById("ms").value = dual_addr;
+				document.getElementById("ms").value = slave_num/2;
 				function BuildSel(rows)
 				{
 					var tbody = '';

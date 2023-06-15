@@ -146,7 +146,7 @@
 			
 				for(let i = 0;i<select_name.length;i++){
 					if(select_name[i] == btn.id){
-						if(btn.id == "rtu"){
+						if(btn.id == "rtu" && btn.value == "1"){
 							if(0 == language){
 								var retVal = confirm("请确认是否开启或禁用此功能，该功能开启后将关闭设备网页级联方式！");	
 							}else{
@@ -156,6 +156,13 @@
 								pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);	
 							}else{}
 						}else{
+							if(btn.id == "tcp" && btn.value == "1"){
+								if(0 == language){
+									var retVal = confirm("Modbus TCP是一种未加密的通信方法，存在未经授权的第三方可能监视或捕获内容的风险！");	
+								}else{
+									var retVal = confirm("Modbus TCP is an unencrypted communication method that carries the risk of unauthorized third parties monitoring or capturing content！");
+								}
+							}
 							pdu_cfg.setCfg(15,(i+1),btn.value,0,addr);
 						}										
 					}

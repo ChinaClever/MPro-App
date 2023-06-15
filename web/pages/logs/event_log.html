@@ -30,12 +30,12 @@
 					</div>
 					<div>
 						<br/>
-						<span style = "float:right;"><span style = "margin: 5px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 5px;" id = "lang_7"></span><input id = "page" style = "width:5%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
+						<span style = "float:right"><span style = "margin: 2px;" id = "lang_6"></span><span style = "margin: 5px;" id  ="log_size"></span><span style = "margin: 2px;" id = "lang_7"></span><input id = "page" style = "width:5%;text-align: center;" value="0"><span id  ="lang_8"></span><span id  ="page_num"></span>
 							<input type ="button" style = "width:11%" id  = "jump" onclick="setData(this)">
 							<input type ="button" style = "width:15%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
 							<input type ="button" name = "del" style = "width:11%" id  = "del" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
+							<input type ="button" style = "width:10%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
 				</div>
@@ -64,6 +64,7 @@
 		setTimeout(() => {
 			pdu_log.log_fun(event_log,1,0,0);
 		}, 1600);
+		pdu_cfg.logseetingCfg();
 
 		let btn_name = new Array("jump","last","next","del","export");
 		let lang = new Array();
@@ -71,6 +72,8 @@
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
 		let start_ = 0;
+		let event_max_num;
+		
 		lang_init();
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -128,6 +131,7 @@
 					}
 				}
 			}
+			event_max_num = pdu_cfg.cfgValue(47,5,0,0);
 			return true;
 		}
 		setTimeout(function(){
@@ -197,6 +201,9 @@
 			let size = document.getElementById("log_size");
 			let p = document.getElementById("page");
 			let p_n = document.getElementById("page_num");
+			if(log_num > event_max_num){
+				log_num = event_max_num;
+			}
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
