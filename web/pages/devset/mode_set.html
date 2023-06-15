@@ -231,9 +231,17 @@
 		function SetData(btn){
 			let mds_data = 0;
 			if(0 == language){
-				var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！");	
+				if(btn.id == "mode"&& btn.value == "2"){
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！A/C系列无机架功能");			
+				}else{
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！");	
+				}
 			}else{
-				var retVal = confirm("Please confirm whether to enable cascading or disable this function. Once enabled, the modbus RTU cascading mode will be turned off！");
+				if(btn.id == "mode"&& btn.value == "2"){
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！A/C系列无机架功能");			
+				}else{
+					var retVal = confirm("Please confirm whether to enable cascading or disable this function. Once enabled, the modbus RTU cascading mode will be turned off! A/C series inorganic rack function！");
+				}				
 			}
 			if(retVal == true){
 				for(let  i = 0;i < id_val.length;i++){

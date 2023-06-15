@@ -151,10 +151,19 @@
 			let mds_data = 0, setbtn = 0 ,lab = 0;
 			mds_data = parseInt();
 			if(0 == language){
-				var retVal = confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!");	
+				if(btn.id == "TelnetEn"){
+					var retVal = confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!Telet是一种未加密的通信方法，存在未经授权的第三方可能监视或捕获内容的风险");	
+				}else{
+					var retVal = confirm("请确认是否禁止或启用该服务，该服务需要重启后才能生效!");
+				}					
 			}else{
-				var retVal = confirm("Please confirm whether to disable or enable this service. The service needs to be restarted before it can take effect?");
+				if(btn.id == "TelnetEn"){
+					var retVal = confirm("Please confirm whether to disable or enable this service. The service needs to be restarted before it can take effect!Telnet is an unencrypted communication method that carries the risk of unauthorized third parties monitoring or capturing content");
+				}else{
+					var retVal = confirm("Please confirm whether to disable or enable this service. The service needs to be restarted before it can take effect?");
+				}					
 			}
+			
 			if(retVal ==true){
 				for(let i = 1;i<ssh_name.length;i++){
 					if(ssh_name[i] == btn.id){
