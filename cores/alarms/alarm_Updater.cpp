@@ -77,7 +77,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
             Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;
-        }
+        } else alarm = AlarmCode::Ok;
     } else it.cnt[i] = 0;
 
     if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);

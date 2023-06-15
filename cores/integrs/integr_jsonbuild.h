@@ -31,6 +31,7 @@ private:
     void groupRelayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
     void webGroupData(sDevData *it, QJsonObject &obj);
     void loginPermit(QJsonObject &json);
+    void outputVol(QJsonObject &json);
     void online(QJsonObject &json);
 
 private:

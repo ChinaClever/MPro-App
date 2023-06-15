@@ -90,8 +90,7 @@ int Set_Login::loginTryLock()
         QDateTime dt = QDateTime::currentDateTime();
         int minutes = mDt.secsTo(dt) / 60;
         ret = (mFailCnt-4) * 10 - minutes;
-        if(ret < 0) ret = 0;
-        //cout << ret << mFailCnt;
+        if(ret < 0) ret = 0; //cout << ret << mFailCnt;
     }
 
     return ret;

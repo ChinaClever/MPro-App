@@ -26,7 +26,7 @@ void App_NetAddr::inet_initFunSlot()
         sNetAddr *inet = &net->inet;
         inet->en = 1; inet->dhcp = 0;
         qstrcpy(inet->gw, "192.168.1.1");
-        qstrcpy(inet->ip, "192.168.1.99");
+        qstrcpy(inet->ip, "192.168.1.163");
         qstrcpy(inet->mask, "255.255.255.0");
         inet_writeCfg(*inet, "IPV4");
     } inet_setInterface();
