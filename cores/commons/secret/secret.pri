@@ -1,6 +1,6 @@
 unix {
 INCLUDEPATH += $$PWD
-
+#CONFIG += crypto
 #include(SMX/SMX.pri)
 LIBS += -lcrypto
 
