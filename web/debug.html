@@ -80,11 +80,13 @@
 		let pdu_obj = PduCore.build();
 		setTimeout(function(){
 			pdu_obj.debugCfg();
+			pdu_obj.getCfg(41,11,0,0);
 			PduMetaData.meta_workDown(0);
 		},600);
 
 		setTimeout(function(){
 			pdu_obj.debugCfg();
+			pdu_obj.getCfg(41,11,0,0);
 			PduMetaData.meta_workDown(0);
 		},1100);
 
@@ -127,7 +129,7 @@
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
-		$('.vol_table').html(buildTableVol());ase_info_ = new Array();
+		$('.vol_table').html(buildTableVol());
 		let output_info_ = new Array();
 		function ParseData(){
 			let DataString = pdu_obj.meta_value();
@@ -152,7 +154,7 @@
 
 			let k = 0;
 			if(mark){
-				pdu_obj.debugVolData(output_num);
+				// pdu_obj.debugVolData(output_num);
 				mark = 0;
 			}
 			for(let i = 0;i<output_num;i++){
@@ -169,20 +171,27 @@
 			for(i= 0;i<loop_num;i++){
 				loop_out[i] = pdu_data.pdu_info.loop_array[i];
 			}
-			//for(i= 0;i<10;i++){
-			//	cfg_data[i] = "";
-		//	}
-		//	cfg_data[6] = pdu_data.net_addr.mac;
+
+			// cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
+			// break_en = pdu_obj.cfgValue(cfg,11,0,addr);
+			// cfg_data[0] = pdu_obj.cfgValue(cfg,12,0,addr);
+			// cfg_data[1] = pdu_data.pdu_info.stand_neutral;
+			// cfg_data[2] = pdu_data.uut_info.pdu_type;
+			// //cfg_data[2] = pdu_obj.cfgValue(11,6,0,addr);
+			// cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
+			// cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
+			// cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
+			// cfg_data[7] = pdu_obj.cfgValue(cfg,18,0,addr);
+
 			cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
-			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
-			cfg_data[0] = pdu_obj.cfgValue(cfg,12,0,addr);
+			break_en = pdu_data.pdu_info.breaker;
+			cfg_data[0] = pdu_data.pdu_info.vh;
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
 			cfg_data[2] = pdu_data.uut_info.pdu_type;
-			//cfg_data[2] = pdu_obj.cfgValue(11,6,0,addr);
-			cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
-			cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
-			cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
-			cfg_data[7] = pdu_obj.cfgValue(cfg,18,0,addr);
+			cfg_data[3] = pdu_data.pdu_info.sensor_box;
+			cfg_data[4] = pdu_data.pdu_info.pdu_spec;
+			cfg_data[5] = pdu_data.pdu_info.language;
+			cfg_data[7] = pdu_data.pdu_info.web_background;
 			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_obj.getValue(unite_name[i],unite_type[i],2,0);
@@ -193,7 +202,7 @@
 			}
 			for(i =1;i<=output_num;i++){
 				rating[i] = output_info_[i -1][6];
-				out_vol[i] = pdu_obj.getValue(output,vol_,1,i);
+				out_vol[i] = pdu_data.output_vol[i-1];
 				rating_[i] = rating[i];
 			}
 		}
@@ -414,14 +423,14 @@
 			}, 100);
 		}
 		setInterval(function(){
-			pdu_obj.debugVolData(output_num);
-			setTimeout(function(){
-				for(i =1;i<=output_num;i++){
-					out_vol[i] = pdu_obj.getValue(output,vol_,1,i);
-					document.getElementById("vol" + i).innerHTML = out_vol[i];
-				}
-			},500);
-		},2000);
+			$('.vol_table').html(buildTableVol());
+			ParseData();
+			PduMetaData.meta_workDown(0);
+			for(i =1;i<=output_num;i++){
+				out_vol[i] = pdu_data.output_vol[i-1];
+				document.getElementById("vol" + i).innerHTML = out_vol[i]/10;
+			}
+		},3000);
 
 	
 		function power_calculation(){
