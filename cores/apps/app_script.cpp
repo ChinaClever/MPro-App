@@ -5,6 +5,8 @@
  */
 #include "app_script.h"
 #include <fcntl.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 sScriptCfg App_Script::scriptCfg;
 App_Script::App_Script(QObject *parent)
@@ -40,8 +42,11 @@ void App_Script::script_readProcess()
 
 void App_Script::script_kill(int id)
 {
-    if(mMap.contains(id)) pclose(mMap[id]); //mMap[id]->kill();
-    mMap.remove(id);
+    if(mMap.contains(id)) {
+        QString cmd = "killall " + mCmdMap[id];
+        system(cmd.toStdString().c_str());
+        pclose(mMap[id]); //mMap[id]->kill();
+    } mMap.remove(id);
 }
 
 void App_Script::script_execute(int id)
@@ -66,7 +71,7 @@ void App_Script::script_execute(int id)
         connect(pro, &QProcess::readyReadStandardOutput,[this](){this->script_readProcess();});
         script_kill(id); mMap[id] = pro; pro->start();
 #else
-        cmd = program + " " + fn;
+        mCmdMap[id] = cmd = program + " " + fn;
         char *ptr = cmd.toLatin1().data();
         script_kill(id); FILE *fp = popen(ptr, "r");
         if(fp) mMap[id] = fp; else cout << id << program;
