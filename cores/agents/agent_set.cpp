@@ -129,6 +129,10 @@ bool Agent_Set::setAlarm(const QVariant &value)
     sDataItem unit;
     bool ret = upAlarmIndex(unit);
     if(ret) unit.value = value.toInt();
+    if(unit.subtopic == DSub::EnAlarm) {
+        if(value.toUInt() > 1) unit.value = 1;
+    }
+
     if(ret) ret = Set_Core::bulid()->setting(unit);
     return ret;
 }
@@ -202,6 +206,10 @@ bool Agent_Set::ctrlOutput(const QVariant &value)
         case 7: v = DSub::OverrunOff; break;
         default: cout << it->subtopic; break;
         }  unit.topic = DTopic::Relay;
+    }
+
+    if((unit.topic == DTopic::Relay) && (it->subtopic == DSub::Value)) {
+        if(value.toUInt() > 1) return false;
     }
 
     unit.subtopic = v;

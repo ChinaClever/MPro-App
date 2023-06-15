@@ -26,8 +26,9 @@ void App_NetAddr::inet_initFunSlot()
         sNetAddr *inet = &net->inet;
         inet->en = 1; inet->dhcp = 0;
         qstrcpy(inet->gw, "192.168.1.1");
-        qstrcpy(inet->ip, "192.168.1.99");
+        qstrcpy(inet->ip, "192.168.1.163");
         qstrcpy(inet->mask, "255.255.255.0");
+        inet_writeCfg(*inet, "IPV4");
     } inet_setInterface();
 }
 
@@ -51,7 +52,7 @@ void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
     inet.prefixLen = cfg->readCfg("prefixLen", 0, g).toInt();
 }
 
-void App_NetAddr::inet_writeCfg(sNetAddr &inet, const QString &g)
+void App_NetAddr::inet_writeCfg(const sNetAddr &inet, const QString &g)
 {
     Cfg_Obj *cfg = mInetCfg;
     cfg->writeCfg("en", inet.en, g);
@@ -105,9 +106,8 @@ void App_NetAddr::inet_setIpV4()
         //qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("netcfg")) {
-                cmd = "netcfg -g %1 eth0";
-                str = cmd.arg(gw);
+            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
+                cmd = "netcfg -g %1 eth0"; str = cmd.arg(gw);
             } else {
                 cmd = "ip route replace default via %1 dev %2";
                 str = cmd.arg(gw, fn);
@@ -136,7 +136,7 @@ void App_NetAddr::inet_setIpV6()
         QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
         QString cmd, str;
-        if(QFile::exists("netcfg")) {
+        if(QFile::exists("/usr/data/clever/bin/netcfg")) {
             cmd = "netcfg -i %1/%2 eth0";
             str = cmd.arg(ip).arg(mask);
         } else {
@@ -145,7 +145,7 @@ void App_NetAddr::inet_setIpV6()
         } system(str.toStdString().c_str()); // qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("netcfg")) {
+            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
                 cmd = "netcfg -g %1 eth0";
                 str = cmd.arg(gw);
             } else {
@@ -162,11 +162,12 @@ void App_NetAddr::inet_setIpV6()
     }
 }
 
-void App_NetAddr::inet_saveCfg(int fc)
+void App_NetAddr::inet_saveCfg(int fc, const sNetInterface &net)
 {
-    sNetInterface *net = &(cm::dataPacket()->net);
-    if(fc) inet_writeCfg(net->inet6, "IPV6");
-    else inet_writeCfg(net->inet, "IPV4");
+    //sNetInterface *net = &(cm::dataPacket()->net);
+    if(fc) inet_writeCfg(net.inet6, "IPV6");
+    else inet_writeCfg(net.inet, "IPV4");
+    //QTimer::singleShot(1200,this,&App_NetAddr::inet_updateInterface);
 }
 
 void App_NetAddr::inet_dnsCfg()
@@ -204,9 +205,10 @@ void App_NetAddr::inet_dnsCfg()
 }
 
 int App_NetAddr::inet_dhcpUpdate()
-{   
+{
+    static int t = 30; t *= 2;
     sNetInterface *net = &(cm::dataPacket()->net);
-    int t = 60; if(net->inet.dhcp || net->inet6.dhcp) {
+    if(net->inet.dhcp || net->inet6.dhcp) {
         if(mCnt < 5*60) t = 1;
         else if(mCnt < 10*60) t = 2;
         else if(mCnt < 30*60) t = 3;
@@ -214,7 +216,7 @@ int App_NetAddr::inet_dhcpUpdate()
         else if(mCnt < 24*60*60) t = 8;
         else if(mCnt < 48*60*60) t = 10;
         else if(mCnt < 72*60*60) t = 15;
-        else t = 20;
+        else t = 30;
     }
 
     if((!net->inet.dhcp) && net->inet6.en && net->inet6.dhcp){

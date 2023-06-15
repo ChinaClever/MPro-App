@@ -28,7 +28,7 @@ QString Ota_Net::unzip(const QString &fn)
     QString dst = "/tmp/updater/ota_apps/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
     str = cm::execute(str.arg(fn)); throwMessage(str);
-    //system("chmod 777 -R /tmp/updater/ota_apps/");
+    system("chmod 777 -R /tmp/updater/ota_apps/");
     return dst;
 }
 
@@ -146,6 +146,7 @@ void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
     system("rm -rf /tmp/updater/ota_apps");
+    system("chmod 777 -R /usr/data/clever/");
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");

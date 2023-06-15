@@ -38,21 +38,26 @@ QString App_Smtp::smtp_uut()
     return str;
 }
 
+void App_Smtp::smtp_testInit()
+{
+    sSmtpCfg *cfg = &smtpCfg;
+    cfg->port = 25;
+    cfg->host = "smtp.qq.com";
+    cfg->pwd = "hltwgrkymjcbbjcd";
+    //   cfg->pwd = "Lzy123456";
+    cfg->from ="luozhiyong131@qq.com";
+    cfg->ct = 0; cfg->en = 1;
+    cfg->to[0] = "517345026@qq.com";
+
+    //    cfg->port = 465;
+    //    cfg->ct = 1;
+}
+
 void App_Smtp::sendMail()
 {
     //if(!smtpCfg.en) return;
     sSmtpCfg *cfg = &smtpCfg;
-
-//    cfg->port = 25;
-//    cfg->host = "smtp.qq.com";
-//    cfg->pwd = "hltwgrkymjcbbjcd";
-//    //cfg->pwd = "Lzy123456";
-//    cfg->from ="luozhiyong131@qq.com";
-//    cfg->ct = 0; cfg->en = 1;
-//    cfg->to[0] = "517345026@qq.com";
-
-//    cfg->port = 465;
-//    cfg->ct = 1;
+    //smtp_testInit();
 
     MimeMessage message;
     EmailAddress sender(cfg->from);
@@ -86,34 +91,65 @@ void App_Smtp::sendMail()
     SmtpClient smtp(cfg->host, cfg->port, ct);
     smtp.connectToHost(); //cout <<"AAAAAAAAAAAA";
     if (!smtp.waitForReadyConnected(5000)) {
-        cfg->lastErr += "Failed to connect to host!" + cfg->host;
-        smtp.quit(); return;
+        cfg->lastErr += "Failed to connect to host! " + cfg->host;
+        smtp.quit(); cout << cfg->lastErr; return;
     }
 
     smtp.login(cfg->from, cfg->pwd);
-    // cout <<"BBBBBBBBBBBBBB";
+    //cout <<"BBBBBBBBBBBBBB";
     if (!smtp.waitForAuthenticated(5000)) {
-        smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthPlain);
-        //smtp.login(cfg->from, cfg->pwd, SmtpClient::AuthLogin);
-        if (!smtp.waitForAuthenticated(5000)) cfg->lastErr += " Failed to login!" + cfg->from;
-        smtp.quit(); return;
+        cfg->lastErr += " Failed to login!" + cfg->from;
+        smtp.quit(); cout << cfg->lastErr; return;
     }
 
-    // cout <<"CCCCCCCCCCCCCCCCCC";
+    //cout <<"CCCCCCCCCCCCCCCCCC";
     smtp.sendMail(message);
     if (!smtp.waitForMailSent(5000)) {
         cfg->lastErr += " Failed to send mail!";
     }
-    smtp.quit();
-    cout << cfg->lastErr;
+    cfg->lastErr = "send mail ok";
+    smtp.quit(); cout << cfg->lastErr;
+}
+
+bool App_Smtp::smtp_inputCheck()
+{
+    QString s = ".com";
+    sSmtpCfg *cfg = &smtpCfg;
+    if(!cfg->host.contains(s)) {
+        cfg->lastErr += "host error " + cfg->host;
+        return false;
+    }
+
+    if(!cfg->from.contains(s)) {
+        cfg->lastErr += "outbox error " + cfg->from;
+        return false;
+    }
+
+    if(cfg->pwd.isEmpty()) {
+        cfg->lastErr += "Password error " + cfg->pwd;
+        return false;
+    }
+
+    bool ret = false;
+    for(int i=0; i<SMTP_TO_SIZE; i++) {
+        QString str = cfg->to[i];
+        if(str.size() && !str.contains(s)) {
+            cfg->lastErr += "inbox error " + str;
+            return false;
+        } else ret = true;
+    }
+    return ret;
 }
 
 void App_Smtp::smtp_run()
 {
     if(!smtp_isRun) {
-        smtp_isRun = true;
-        //cm::mdelay(500);
-        sendMail();
-        smtp_isRun = false;
+        smtp_isRun = true;        
+        sSmtpCfg *cfg = &smtpCfg;
+        cfg->lastErr.clear();
+        bool ret = smtp_inputCheck();
+        if(ret) { ret = cm::pingNet(cfg->host);
+        if(ret) sendMail(); else cfg->lastErr += "network error or host error!";
+        }  smtp_isRun = false;
     }
 }

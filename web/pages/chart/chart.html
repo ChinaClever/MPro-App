@@ -36,9 +36,9 @@
 				<div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_1"></div>
 					<br/>
 					<div align="center">
-						<span><span id ="lang_2"></span><span></span><select class ="devname" id ="dev" style ="width:8%;" onchange = "change(this);"></select></span>
+						<span><span id ="lang_2"></span><span></span><select class ="devname" id ="dev" style ="width:5%;" onchange = "change(this);"></select></span>
 						<span style="padding-left: 1%;" id ="lang_3"></span><span><select class ="typename" id ="type" style ="width:8%;" onchange = "change(this);"></select></span>
-						<span style="padding-left: 1%;" id ="lang_4"></span><span><select class ="topicname" id ="topic" style ="width:4%;" onchange = "change(this);"></select></span>
+						<span style="padding-left: 1%;" id ="lang_4"></span><span><select class ="topicname" id ="topic" style ="width:6%;" onchange = "change(this);"></select></span>
 						<span style="padding-left: 1%;" id ="lang_5"></span><span><select class ="num" id ="num" style ="width:4%;" onchange = "change(this);"></select></span>
 						<span style="padding-left: 1%;" id ="lang_6"></span><span><input  type = "date"  id = "start_date"></span>
 						<span> - </span><span><input  type = "date"  id = "end_date"></span>
@@ -128,7 +128,7 @@
 							lang[10] = ["回路","Loop","","",""];
 							lang[11] = ["输出位","Out bit","","",""];
 							lang[12] = ["组","Group","","",""];
-							lang[13] = ["双电源","Dual power","","",""];
+							lang[13] = ["机架","Dual power","","",""];
 							lang[14] = ["温湿度","Humiture","","",""];
 							lang[15] = ["电压","Voltage","","",""];
 							lang[16] = ["电流","Electric current","","",""];
@@ -255,7 +255,11 @@
 									fc = fc.slice(0,6);
 								}
 								pdu_log.log_hda(addr, fc, start, end);
-								alert("Is reading,please wait...");
+								if(0 == language){
+									alert("正在读取数据，请稍候...");
+								}else{
+									alert("Is reading data,please wait...!");
+								}	
 								read_data();
 							}else{}
 						}
@@ -272,12 +276,12 @@
 											alert("未开启历史数据或此时间段没有数据！");
 										}else{
 											alert("No historical data has been opened or there is no data in this time period!");
-										}
-										
+										}										
 									}
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
 									data_total = [];
+									dataLabels = [];
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];
 										data_total[i] = parseFloat(log_str.logs[i][5]).toFixed(3);

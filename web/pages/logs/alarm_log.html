@@ -33,10 +33,10 @@
 							<input type ="button" style = "width:15%" id  = "last" onclick="setData(this)">
 							<input type ="button" style = "width:11%" id  = "next" onclick="setData(this)">
 							<input type ="button" name="del" style = "width:11%" id  = "del" onclick="setData(this)">
-							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
+							<input type ="button" style = "width:8%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
-					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					<div class="grid-col grid-col-7 " style ="height: 150px;">
 					</div>
 				</div>
 			</div>
@@ -51,13 +51,18 @@
 		let language;
 		let addr = 0;
 		let alarm_log = 1;
+		pdu_cfg.logseetingCfg();
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
 		}, 800);
 
 		setTimeout(() => {
 			pdu_log.log_fun(alarm_log,1,0,0);
-		}, 1500);
+		}, 1200);
+
+		setTimeout(() => {
+			pdu_log.log_fun(alarm_log,1,0,0);
+		}, 1600);
 
 		let log_info = new Array("","LogNum","LogInfo");
 		let lang = new Array();
@@ -66,6 +71,7 @@
 		let log_num = 0,page_num = 1,page_size = 0;
 		let show_num = 0;
 		let start_ = 0;
+		let alarm_max_num;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -125,10 +131,13 @@
 					}
 				}
 			}
+			alarm_max_num = pdu_cfg.cfgValue(47,4,0,0);
 			return true;
 		}
 		setTimeout(function(){
-			log_num = parseInt(pdu_log.log_get(alarm_log,1,start_,show_num));
+			var res = pdu_log.log_get(alarm_log,1,start_,show_num);
+			if(res == null) return;
+			log_num = parseInt(res);
 			if(log_num > 20){
 				show_num = 20;
 				start_ = (log_num-20);
@@ -137,7 +146,21 @@
 				start_= 0;
 			}
 			pdu_log.log_fun(alarm_log,2,start_,show_num);
-		},980);
+		},1250);
+
+		setTimeout(function(){
+			var res = pdu_log.log_get(alarm_log,1,start_,show_num);
+			if(res == null) return;
+			log_num = parseInt(res);
+			if(log_num > 20){
+				show_num = 20;
+				start_ = (log_num-20);
+			}else{
+				show_num = log_num;
+				start_= 0;
+			}
+			pdu_log.log_fun(alarm_log,2,start_,show_num);
+		},1650);
 
 		setTimeout(function(){
 			var ret = read_data();
@@ -146,7 +169,7 @@
 				lang_fun();
 				showdata();
 			}
-		},1100);
+		},1300);
 
 		setTimeout(function(){
 			var ret = read_data();
@@ -155,7 +178,7 @@
 				lang_fun();
 				showdata();
 			}
-		},2500);
+		},2300);
 
 		/*setTimeout(function(){
 			read_data();
@@ -183,10 +206,13 @@
 			let size = document.getElementById("log_size");
 			let p = document.getElementById("page");
 			let p_n = document.getElementById("page_num");
+			if(log_num > alarm_max_num){
+				log_num = alarm_max_num;
+			}
 			size.innerHTML = log_num+lang[14][language];
 			p.value = page_num;
 			p_n.innerHTML = page_size;
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				//$("input").attr("disabled","disabled");
 				//$("select").attr("disabled","disabled");
 				$("input[name=del]").attr("disabled","disabled");
@@ -278,6 +304,7 @@
 				}
 				if(retVal == true){
 					pdu_log.log_fun(alarm_log,3,0,0);
+					show_num = 0;
 					flash_html(btn);
 				}else{					
 				}

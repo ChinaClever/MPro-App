@@ -136,7 +136,7 @@
     "base": "pages/integrate/",
     "subNav": [
       {
-        "name": "主动推送",
+        "name": "主动上报",
         "url": "push.html"
       },
       {
@@ -185,6 +185,10 @@
       {
         "name": "网络安全",
         "url": "net.html"
+      },
+      {
+        "name": "登陆安全",
+        "url": "login_security.html"
       }
     ]
   },
@@ -221,6 +225,7 @@
         "name": "远程认证服务",
         "url": "radius.html"
       }
+
     ]
   },  
   {
@@ -282,6 +287,10 @@
         "url": "net_diagnostics.html"
       },
       {
+        "name": "脚本服务",
+        "url": "shell.html"
+      },
+      {
         "name": "备份/恢复",
         "url": "backups.html"
       },
@@ -292,15 +301,6 @@
       {
         "name": "系统命令",
         "url": "sys_command.html"
-      },{
-        "name": "",
-        "url": ""
-      },{
-        "name": "",
-        "url": ""
-      },{
-        "name": "",
-        "url": ""
       }
     ]
   }

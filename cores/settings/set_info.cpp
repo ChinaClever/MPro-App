@@ -68,6 +68,8 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 15: ret = it->backlightTime; break;
     case 16: App_Core::bulid()->beep_once(); break;
     case 17: ret = it->standNeutral; break;
+    case 18: ret = it->webBackground; break;
+    case 19: ret = it->supplyVol; break;
     case 21: ret = it->jsonContent; break;
     default: cout << type; break;
     }
@@ -84,6 +86,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 1: key = "devSpec"; it->devSpec = value; break;
     case 3: key = "devMode"; it->devMode = value; break;
     case 4: key = "cascadeAddr"; it->cascadeAddr = value; break;
+    case 5: key = "runTime"; it->runTime = value; break;
     case 7: key = "buzzerSw"; it->buzzerSw = value; break;
     case 8: key = "groupEn"; it->groupEn = value; break;
     case 9: key = "sensorBoxEn"; it->sensorBoxEn = value; break;
@@ -95,6 +98,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 15: key = "backlightTime"; it->backlightTime = value; break;
     case 16: App_Core::bulid()->beep_once(); break;
     case 17: key = "standNeutral"; it->standNeutral = value; break;
+    case 18: key = "webBackground"; it->webBackground = value; break;
     case 21: key = "jsonContent"; it->jsonContent = value; break;
     case 22: key = "jsonCompress"; it->jsonCompress = value; break;
     default: ret = false; cout << fc; break;
@@ -166,7 +170,7 @@ QString Set_Info::getUut(int addr, uchar fc)
     case 4: ptr = it->qrcode; break;
     case 5: ptr = it->sn; break;
     case 6: ptr = it->devType; break;
-    default:  qDebug() << Q_FUNC_INFO; break;
+    default:  cout << fc << addr; break;
     }
 
     return ptr;

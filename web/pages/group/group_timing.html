@@ -37,7 +37,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" style="display: none;" id="lang_2"></button></span>
+								<span id="lang_1"></span><span id="readonly" style="padding-left: 35%;"><button onclick ="ReadOnlySet(this);" style="display: none;" id="lang_2"></button></span>
 									<span id="dev_sel" style = "float:right;display: none;"><span style = "padding-right: 5px;" id="lang_3"></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "Change(this);"></select></span>
 							</div>
 						</div>
@@ -65,15 +65,50 @@
 		var dev_name =new Array();
 		let pdu_data;
 		let t1 = 0;
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 		}else{
 			document.getElementById("lang_2").style.display="";
 		}
+		function dev_disp(){
+			let DataString = pdu_cfg.meta_value();
+			pdu_data = JSON.parse(DataString);
+			for(let i = 1;i<14;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["输出位监测","","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3]  = ["主机", "Master", "", "", ""];
+			lang[4]  = ["副机", "Slave", "", "", ""];
+
+			dev_name[0] = lang[3][language];
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
+				dev_name[i] =  lang[4][language] + i;
+			}
+			$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
+
+			for(let j = 1;j<3;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
+
+		}
 		function hidden(){
-			document.getElementsByClassName("page-cont")[0].style.display = "none";		
+			 dev_disp();
+			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			// document.getElementsByClassName("section-cont")[0].style.display = "none";
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+			 document.getElementById("readonly").style.display = "none";
+			 document.getElementById("lang_1").style.display = "none";
+			 return -1;
+
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -93,6 +128,11 @@
 					}, 100);
 				}
 				return ;
+			}else{
+				document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+				document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+				document.getElementById("readonly").style.display = "";
+				document.getElementById("lang_1").style.display = "";
 			}
 			if(pdu_data.pdu_info.group_en == 0){
 				if(t1 == 0){
@@ -163,6 +203,7 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
 				$('.table-striped').html(BuildTable(group_num));
 				LangFun();
 				ModeSet();
@@ -203,9 +244,9 @@
 				read = 0;
 				ros.style.backgroundColor = 'red';
 				if(0 == language){
-					alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次！")
+					alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次。开启关键设备保护功能后，无法进行定时设置！")
 				}else{
-					alert("The timing function supports two modes: specified date and daily execution. If no date is specified, it will be executed every day, and if a date is specified, it will only be executed once!")
+					alert("The timing function supports two modes: specified date and daily execution. If no date is specified, it will be executed every day, and if a date is specified, it will only be executed once。Unable to perform timing settings after enabling critical device protection function!")
 				}			
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");

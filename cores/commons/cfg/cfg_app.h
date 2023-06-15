@@ -24,6 +24,7 @@ class Cfg_App : public Cfg_Obj
 {
 public:
     Cfg_App(const QString& dir, QObject *parent = nullptr);
+    void app_serialNumber(const QString &sn);
     bool app_check(const QString &fn);
     bool app_pack(sAppVerIt &it);
     bool app_unpack(sAppVerIt &it);

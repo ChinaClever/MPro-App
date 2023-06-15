@@ -188,7 +188,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
                 mg_snprintf(file_path , sizeof(file_name) , "/usr/data/clever/cfg/%s",file_name);
-                mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 99999);
+                mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 2*1024*1024);
+                QString str = "mv " + QString(file_path) + " /usr/data/clever/cfg/logo.png";
+                system(str.toStdString().c_str());
             }
             memset(file_path , 0 , sizeof(file_path));
             memset(file_name , 0 , sizeof(file_name));

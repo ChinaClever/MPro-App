@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>network</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_7" onclick="readonlyset(this);"></button></span>
+							</div>
+						</div>
+					</div>
+					<div>
+							<textarea id="script_content"  onchange = "SetData(this);" style="height:290px;width:99%;font-size: 18px;padding-left: 15px;padding-top: 15px;border: 2px solid #000;"></textarea>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 30px;">
+					</div>
+					<div>
+						<br/>
+						<span style="text-align: center;" >
+							<!-- <input type ="button" style = "width:15%" id  = "start" onclick="setData(this)"> -->
+							<span id="lang_2"></span>
+							<select class ="devname" id ="ms" style = "width:6%;margin-left: 2px" onchange = "Change(this);"></select>
+							<span id="lang_10" style = "margin-left: 6%"></span>
+							<select style = "width:6%;margin-left: 2px" class ="script_type" id ="script_tp" style = "width:6%;margin-left: 2px" onchange = "setData(this);"></select>
+							<span style = "margin-left: 5%" id="lang_6"></span><input id="chk" type="checkbox" onchange ="setData(this)" style="width:auto;position:static;display: inline;">
+							<input type ="button" style = "width:10%;margin-left: 8%" id  = "exec" onclick="setData(this)">
+							<input type ="button" style = "width:10%;margin-left: 8%" id  = "lang_9" onclick="setData(this)">
+							<input type ="button" style = "width:10%;margin-left: 8%" id  = "clear" onclick="setData(this)">
+
+						</span>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 50px;">
+					</div>
+					<div>
+						<textarea id="result" readonly ="true" style="height:390px;width:99%;padding-left: 15px;border: 2px solid #000;"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="grid-col grid-col-7 " style ="height: 150px;">
+			</div>
+		</div>
+
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/pdu_rpc.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script>
+		let pdu_log = new PduLog;
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = 0;
+		let read = 1;
+		let shell_type = 50;
+		setTimeout(() => {
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,1,i,0);
+			}
+			for(let i = 2;i<6;i++){
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
+			}
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,0,i,0);
+			}			
+		}, 400);
+
+		let btn_name = new Array("exec","clear");
+
+		let dev_name =new Array();
+		let type =new Array();
+		let lang = new Array();
+		let script_num = new Array();
+		let script = new Array(3);
+		let scr_type = new Array();
+	
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			if(pdu_data == null){
+				ParseData();
+			}
+			language = pdu_data.pdu_info.language;
+		}
+		setTimeout(function(){
+			ParseData();
+			lang_init();
+			lang_fun();
+			$('.devname').html(BuildSel(10));
+			$('.script_type').html(BuildSelScrip(3));
+			read_data();
+			showdata();
+			ModeSet();
+		},700);
+
+		function lang_init(){
+			let i = 0;
+			for(i = 1;i<9;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["脚本编写","Script writing","","",""];
+			lang[2] = ["选择脚本:","Select Script","","",""];
+			lang[3] = ["脚本","Script","","",""];
+			lang[4] = ["脚本执行","Script Execution","","",""];
+			lang[5] = ["清空结果","Clear Results","","",""];
+			lang[6] = ["开机自启动：","Self start upon startup:","","",""];
+			lang[7] = ["阅读模式", "Reading mode", "", "", ""];
+			lang[8] = ["设置模式", "Setting mode", "", "", ""];
+			lang[9] = ["停止执行","Stop execution","","",""];
+			lang[10] = ["脚本类型：","Script type：","","",""];
+			lang[11] = ["shell","shell","","",""];
+			lang[12] = ["python","python","","",""];
+			lang[13] = ["lua","lua","","",""];
+			for(let i = 1;i < 11;i++){
+				dev_name[i] =  lang[3][language] + i;
+			}
+			for(let i = 0;i < 3;i++){
+				type[i] =  lang[11+i][language] ;
+			}
+			
+
+		}
+		function lang_fun(){
+			for(let i = 0;i<btn_name.length;i++){
+				document.getElementById(btn_name[i]).value = lang[4+i][language];
+			}
+			document.getElementById("lang_1" ).innerHTML  = lang[1][language];
+			document.getElementById("lang_2" ).innerHTML  = lang[2][language];
+			document.getElementById("lang_9" ).value  = lang[9][language];
+			document.getElementById("lang_10" ).innerHTML  = lang[10][language];
+			for(let i = 6;i<8;i++){
+				document.getElementById("lang_" + i).innerHTML = lang[i][language];
+			}
+			
+		}
+		function BuildSel(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i+1]+'</option>';
+			}
+			return tbody;
+		}
+		function BuildSelScrip(rows)
+		{
+			var tbody = '';
+			for(var i = 0;i<rows;i++)
+			{
+				tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+type[i]+'</option>';
+			}
+			return tbody;
+		}
+		function read_data(){
+			var id = document.getElementById("ms" ).value;
+			for(let i = 0;i<10;i++){
+				script_num[i] = pdu_cfg.cfgValue(shell_type,1,i,0);
+			}
+			for(let i = 0;i<3;i++){
+				script[i] = new Array(10);
+			}
+			for(let i = 0;i<3;i++){
+				for(j =0;j<10;j++){					
+					script[i][j] = pdu_cfg.cfgValue(shell_type,i+2,j,0);
+				}				
+			}	
+			for(let i = 0;i<10;i++){
+				scr_type[i] = pdu_cfg.cfgValue(shell_type,0,i,0);
+			}
+
+		}
+
+		function showdata(){
+			var id = document.getElementById("ms" ).value;
+			document.getElementById("script_content" ).value = script[0][id];
+			document.getElementById("result" ).value = script[2][id];
+			if(0 == script_num[id]){
+				document.getElementById("chk").checked = false;
+			}else{
+				document.getElementById("chk").checked = true;
+			}
+			document.getElementById("script_tp" ).value = scr_type[id];
+			if(top.login_permit_ != 0){
+				document.getElementById("lang_7").style.display="none";
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}else{
+			}
+		}
+		function showdata_(){
+			var id = document.getElementById("ms" ).value;
+			document.getElementById("result" ).value = script[2][id];
+			document.getElementById("script_tp" ).value = scr_type[id];
+		}
+		function Change(sel){
+			var id = document.getElementById("ms" ).value;
+				//let id = parseInt(sel.value);
+				setTimeout(function(){
+					for(let i = 0;i<10;i++){
+						pdu_cfg.getCfg(shell_type,1,i,0);
+					}
+					for(let i = 2;i<6;i++){
+						for(j =0;j<10;j++){
+							pdu_cfg.getCfg(shell_type,i,j,0);
+						}
+					}
+					for(let i = 0;i<10;i++){
+						pdu_cfg.getCfg(shell_type,0,i,0);
+					}
+				},100);
+				setTimeout(function(){
+					read_data();
+					showdata();
+				},400);
+
+		}
+		function readonlyset(ros) {
+				if (read === 1) {
+					read = 0;
+					ros.style.backgroundColor = 'red';
+					if(language == 0){
+						alert("非专业人员请勿操作该界面！");
+					}else{
+						alert("Non professional personnel are not allowed to operate this interface!!");
+					}
+					ros.innerHTML = lang[8][language];
+					document.getElementById("ms").disabled = false;
+					document.getElementById("script_content").disabled = false;
+					document.getElementById("result").disabled = false;
+					document.getElementById("script_tp").disabled = false;
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						iptname[i].disabled = false;
+					}
+				}
+				else {
+					read = 1;
+					ros.style.backgroundColor = '';
+					ros.innerHTML = lang[7][language];
+					document.getElementById("ms").disabled = true;
+					document.getElementById("script_content").disabled = true;
+					document.getElementById("result").disabled = true;
+					document.getElementById("script_tp").disabled = true;
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						iptname[i].disabled = true;
+					}
+				}
+		}
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+			document.getElementById("ms").disabled = true;
+			document.getElementById("script_content").disabled = true;
+			document.getElementById("result").disabled = true;
+			document.getElementById("script_tp").disabled = true;
+		}
+		function SetData(btn){
+			var id = parseInt(document.getElementById("ms" ).value);
+			if(btn.id == "script_content"){
+				pdu_cfg.setCfg(shell_type,2,btn.value,id,addr);
+			}else if(btn.id == "clear")
+				pdu_cfg.setCfg(shell_type,4,'',0,addr);
+		}
+		function FlashHtml(){
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,1,i,0);
+			}
+			for(let i = 2;i<6;i++){
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
+			}
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,0,i,0);
+			}
+			setTimeout(function(){
+				read_data();
+				showdata_();
+			},500);
+		}
+
+		function setData(btn){
+			var id = parseInt(document.getElementById("ms" ).value);
+			// var id = document.getElementById("ms" ).value;
+			if(btn.id == "lang_9"){
+				pdu_cfg.setCfg(shell_type,5,1,id,0);
+			}else if(btn.id == "exec"){
+				var cmd = document.getElementById("script_content" ).value;
+				pdu_cfg.setCfg(shell_type,2,cmd,id,0);
+				pdu_cfg.setCfg(shell_type,3,1,id,0);
+				setTimeout(function(){
+					FlashHtml();
+				},500);
+
+			}else if(btn.id == "clear"){
+				pdu_cfg.setCfg(shell_type,4,'',id,0);
+				setTimeout(function(){
+					FlashHtml();
+				},300);
+			}else if(btn.id == "chk"){
+				var id = parseInt(document.getElementById("ms" ).value);
+				if(btn.checked == true){
+					pdu_cfg.setCfg(shell_type,1,1,id,0);
+				}else{
+					pdu_cfg.setCfg(shell_type,1,0,id,0);
+				}
+			
+			}else if(btn.id == "script_tp"){
+				pdu_cfg.setCfg(shell_type,0,btn.value,id,0);
+			}
+			
+			
+		}
+		setInterval(function(){
+			// let id = document.getElementById("ms" ).value;
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,1,i,0);
+			}
+			for(let i = 2;i<6;i++){
+				for(j =0;j<10;j++){
+					pdu_cfg.getCfg(shell_type,i,j,0);
+				}
+			}
+			for(let i = 0;i<10;i++){
+				pdu_cfg.getCfg(shell_type,0,i,0);
+			}
+			read_data();
+			showdata_();
+		},2000);
+
+    </script>
+</body>
+</html>

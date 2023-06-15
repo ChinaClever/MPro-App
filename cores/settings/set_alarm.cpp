@@ -24,7 +24,7 @@ bool Set_Alarm::thresholdSlave(int fc)
 }
 
 bool Set_Alarm::setAlarm(sDataItem &unit)
-{   
+{
     return upMetaData(unit);
 }
 
@@ -40,6 +40,7 @@ QString Set_Alarm::opSrc(uchar addr, uchar txType)
     switch (txType) {
     case DTxType::TxWeb: str = QStringLiteral("[Web] "); break;
     case DTxType::TxSnmp: str = QStringLiteral("[SNMP] "); break;
+    case DTxType::TxModbus: str = QStringLiteral("[Modbus] "); break;
     case DTxType::TxSsh: str = QStringLiteral("[SSH/Telnet] "); break;
     case DTxType::TxRest: str = QStringLiteral("[REST] "); break;
     case DTxType::TxRpc: str = QStringLiteral("[RPC] "); break;
@@ -101,12 +102,11 @@ void Set_Alarm::oplog(const sDataItem &it)
     db.addr = it.addr;
     db.event_content = content;
     db.event_type = opSrc(it.addr, it.txType);
-    if(DType::Env != it.type) {
-        if(cm::cn()) db.event_type += QStringLiteral("告警设置;");
-        else db.event_type += "alarm settings;";
-    } else {
+    if(DTopic::Ele == it.topic) {
         if(cm::cn()) db.event_type += QStringLiteral("电能清除;");
         else db.event_type += "Electric energy clearing;";
-    }
-    Log_Core::bulid()->append(db);
+    } else {
+        if(cm::cn()) db.event_type += QStringLiteral("告警设置;");
+        else db.event_type += "alarm settings;";
+    } Log_Core::bulid()->append(db);
 }

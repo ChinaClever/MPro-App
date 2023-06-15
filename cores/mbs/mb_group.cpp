@@ -31,14 +31,25 @@ void Mb_Group::group_thresholdUpdate()
     appendData(size, obj->max, vs);
     appendData(size, obj->crMax, vs);
     appendData(size, obj->crMin, vs);
-    appendData2(size, obj->min, vs);
+    appendData(size, obj->min, vs);
     setRegs(MbReg_GroupThreshol, vs);
 }
 
 void Mb_Group::group_update()
 {
     group_dataUpdate();
+    group_relayUpdate();
     group_thresholdUpdate();
+}
+
+void Mb_Group::group_relayUpdate()
+{
+    sObjData *obj = &(mDevData->group);
+    vshort vs; int size = obj->size;
+    uint *ptr = obj->relay.reserve[3];
+    for(int i=0; i<size; ++i) ptr[i] = 0xff;
+    appendData(size, ptr, vs);
+    setRegs(MbReg_GroupRelay, vs);
 }
 
 void Mb_Group::group_ctrl(int id, ushort value)
@@ -52,12 +63,12 @@ void Mb_Group::group_ctrl(int id, ushort value)
     unit.rw = 1;
     unit.id = id+1;
     unit.addr = 0;
+    unit.value = value;
     unit.type = DType::Group;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
-    unit.txType = DTxType::TxSnmp;
-    unit.value = value;
-    Set_Core::bulid()->setting(unit);
+    unit.txType = DTxType::TxModbus;
+    if(value < 3) Set_Core::bulid()->setting(unit);
 }
 
 void Mb_Group::group_setting(ushort addr, ushort value)
@@ -70,7 +81,8 @@ void Mb_Group::group_setting(ushort addr, ushort value)
 
     switch (reg/50) {
     case 0: unit = &(obj->pow); break;
-    default: group_ctrl(id, value); return;
+    case 1: group_ctrl(id, value); return;
+    default: cout << addr << reg << value; return;
     }
 
     reg = reg%50/10; switch (reg) {

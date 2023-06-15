@@ -9,6 +9,7 @@ struct sWeb_Cfg{
 
     int https_en = 1;
     int https_port = 443;
+    int multi_users = 0;
 };
 
 class Web_Http: public Web_Rpc

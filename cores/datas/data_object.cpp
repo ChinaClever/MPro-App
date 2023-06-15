@@ -36,8 +36,22 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
 
 uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
 {
-    QList<uint> list;  uint ret = 0;
-    foreach(auto i, ls) if(ptr[i]) list << ptr[i];
+    QList<uint> list; uint ret = 0; //QList<uint> tmp;
+    foreach(auto i, ls) if(ptr[i]) if(!list.contains(ptr[i])) list << ptr[i];
+    //if(list.size()) std::sort(list.begin(), list.end());
+    //foreach(auto i, list) if(!tmp.contains(i)) tmp << i;
+    //if(tmp.size() > 2){
+    //    tmp.removeFirst(); tmp.removeLast();
+    //    if(tmp.size()) list = tmp;
+    //} else if(tmp.size() == 2) {
+    //    int rated = mDev->line.vol.rated[0];
+    //    uint max = qMax(tmp.first(), tmp.last());
+    //    uint min = qMin(tmp.first(), tmp.last());
+    //    uint temp_max = qAbs((int)max-rated);
+    //    uint temp_min = qAbs((int)min-rated);
+    //    if(temp_max >= temp_min) return min; else return max;
+    //} else if(1==tmp.size()) return tmp.first();
+
     if(list.size()) {
         std::sort(list.begin(), list.end());
         int k = (list.size() + 1) / 2;
@@ -107,10 +121,13 @@ void Data_Object::loopData(int id, int start, int end)
 
 void Data_Object::loopBreaker(int id)
 {
-    uint sw = 0; //mDev->cfg.nums.loopEachNum[id] = 0;
-    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
+    uint sw = 0; uint *cnt = &mDev->loop.relay.cnt[id];// mDev->cfg.nums.loopEachNum[id] = 0;
+    if(mDev->loop.cur.value[id] > 0.2 * COM_RATE_CUR) sw = 1;
     if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;
-    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
+    if(mDev->loop.pow.value[id] > 50) sw = 1;
+    if(sw) *cnt = 5; else if(*cnt) if(--(*cnt)) sw = 1;
+    if(!mDev->cfg.param.isBreaker) {sw = 2;}
+    mDev->loop.relay.sw[id] = sw;
 }
 
 void Data_Object::lineData(int id, int start, int end)

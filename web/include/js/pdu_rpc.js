@@ -91,7 +91,7 @@ class JsonRpc {
     static socket_req(){
         var method = "pduMetaData"; 
         var params = [0, 100, 0, 0, 0];   
-        obj.json_rpc_get(method, params);     
+        JsonRpc.build().json_rpc_get(method, params);     
         //JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
@@ -180,11 +180,29 @@ class JsonRpc {
         params.push(this.uuid);
         return this.json_rpc_obj(method, params);
     }
+
+    json_rpc_login(data) {
+        //var data = new Array();
+        var addr  = data[0];
+        var type = data[1];
+        var topic = data[2];
+        var sub =data[3];
+        var id = data[4];
+        var value = 255;
+
+        if(14 == type && 11 == topic) {
+            var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
+            this.root_map.set(key, 255);
+            const json = Object.fromEntries(this.root_map);        
+            sessionStorage.setItem('root_map',JSON.stringify(json));
+        }
+    }
    
     // RPC设置接口
     json_rpc_set(method, params) {
         this.isSetting = true;
-        params.push(this.uuid);
+        params.push(this.uuid);  
+        this.json_rpc_login(params);
         return this.json_rpc_obj(method, params);
     }
 
@@ -457,7 +475,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(41, fcs);
     }
     webCfg(){
-        var fcs = [1,2,3,4,5,6,7];
+        var fcs = [1,2,3,4,5,6,7,8];
         this.getCfgList(42, fcs);
     }
     ntpCfg(){
@@ -519,7 +537,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(47, fcs);
     }
     debugCfg(){
-        var fcs = [1,9,10,11,12,13];
+        var fcs = [1,9,10,11,12,13,17,18];
         let type_ = [1,1,1,2,2,2,3,6,6,3]; 
         let topic_ = [2,3,4,2,3,4,3,11,12,4]; 
         let fcs_ = [2,5,6,7,4];
@@ -605,30 +623,42 @@ class PduCore extends PduOta {
         var value = sessionStorage.getItem("uuid");
         var res = 0; if(value != null) {
             var host = window.location.host;
-            var ip = sessionStorage.getItem('host');    
+            var ip = sessionStorage.getItem('host');  
             if((value.length > 9) && (host == ip)) res = 1;
-        }
-
+        } 
+        
         if(0 == res) {
-            this.logged_out();
+            this.login_out();
             var url = window.location.protocol+"//";            
             url += window.location.host;
             window.location.replace(url);
-        }       
+        }
         
         return res;
     }
 
-    logged_out() {
+    login_out() {
         var sessionStorage = window.sessionStorage;
         sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', ' ');
+        sessionStorage.setItem('uuid', ' '); 
     }   
+
+    login_permit() {
+        var json = JSON.parse(this.meta_value(0));
+        let user = window.sessionStorage.getItem('username');
+        let res = 0; if(user && json) {
+            res = json.login_permits[user]; 
+            if(res == null) res = 0;            
+        }
+        return res;
+    }
 
 
     // 清除所有数据
     clear() {
+      //  this.login_out();
         this.rpc.clear();
+       // this.login_check();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
 

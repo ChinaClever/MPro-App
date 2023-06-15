@@ -237,14 +237,15 @@ struct sParameter {
     uint backlightTime; // 节能 时长 小时数
     uint groupEn; // 组开关使能
     uint sensorBoxEn; // 传感器盒子 0：禁用， 1：启用
-    uint powLogEn; // 总功率记录功能是否启用 0：禁用， 1：启用
+    uint supplyVol; // 12V开关电源电压
     uint jsonContent; // 0：自动 1：最少 2：最多
     uint runTime; // 总运行时间 单位天
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
     uint jsonCompress; // 0：不压缩 1：压缩
     uint standNeutral; // 0-标准,1-中性
-    uint reserve[18];
+    uint webBackground; // 网页背景颜色
+    uint reserve[17];
 };
 
 struct sRunTime
@@ -385,8 +386,9 @@ struct sWebCfg{
     ushort https_port;
 
     ushort strong_pwd; // 强密码
-    ushort idle_timeout; // 空闲超时时间 小时
-    ushort reserve[10];
+    ushort idle_timeout; // 空闲超时时间 分钟
+    ushort multi_users; // 多用户同时登陆
+    ushort reserve[9];
 };
 
 /**
@@ -432,7 +434,7 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
              EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap, EScript,
              EAlarm=80, ELog, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, EThreshold, ECmd=111};
 
 struct sCfgItem {

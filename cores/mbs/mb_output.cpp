@@ -76,7 +76,9 @@ void Mb_Output::output_relayUpdate()
 {
     sObjData *obj = &(mDevData->output);
     vshort vs; int size = obj->size;
-    appendData(size, obj->relay.sw, vs);
+    uint *ptr = obj->relay.reserve[3];
+    for(int i=0; i<size; ++i) ptr[i] = 0xff;
+    appendData(size, ptr, vs);
     setRegs(MbReg_OutputRelay, vs);
 }
 
@@ -85,7 +87,7 @@ void Mb_Output::output_update()
     output_objUpdate();
     output_dataUpdate();
     output_alarmUpdate();
-    //output_relayUpdate();
+    output_relayUpdate();
     output_thresholdUpdate();
 }
 
@@ -95,7 +97,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
     int id = reg % 50 + 1;
     if(reg >= 50) {
         OP_Core::bulid()->clearEle(id);
-    } else {
+    } else if(value < 3){
          //sRelayUnit *obj = &(mDevData->output.relay);
         //if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
 
@@ -106,7 +108,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
         unit.type = DType::Output;
         unit.topic = DTopic::Relay;
         unit.subtopic = DSub::Value;
-        unit.txType = DTxType::TxSnmp;
+        unit.txType = DTxType::TxModbus;
         unit.value = value;
         Set_Core::bulid()->setting(unit);
     }
@@ -124,7 +126,8 @@ void Mb_Output::output_setting(ushort addr, ushort value)
     switch (reg/250) {
     case 0: unit = &(obj->cur); break;
     case 1: unit = &(obj->pow); break;
-    default: OP_Core::bulid()->setDelay(id+1, value); return;
+    case 2: OP_Core::bulid()->setDelay(id+1, value); return;
+    default: cout << addr << value; return;
     }
 
     reg = reg%250/50; switch (reg) {

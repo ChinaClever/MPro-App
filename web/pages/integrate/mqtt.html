@@ -99,7 +99,7 @@
 			ParseData();
 			read_data();
 			lang_fun();
-			showdata();
+			show_connect_data();
 		//	if(pdu_cfg.cfgValue(19,10,0,0) =="false" || pdu_cfg.getCfg(19,10) =='0'){
 		//		document.getElementById("lang_12").innerHTML =	lang[21][language];
 		//	}else{
@@ -124,6 +124,9 @@
 			lang_fun();
 			showdata();
 		},500);
+		function show_connect_data(){
+			document.getElementById(id_name[9]).value = mqtt_data[10];
+		}
 		function showdata(){
 			for(var j = 0;j<id_name.length;j++){
 				if( j == 0 || j == 8){
@@ -144,7 +147,7 @@
 				}
 			}
 			document.getElementById(id_name[id_name.length-2]).innerHTML = mqtt_data[10];
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{
@@ -218,7 +221,7 @@
 				tbody +='<option value ="'+i+'">'+qos_[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id = "lang_14" type = "button" style ="width:75%"  onclick = "Set()"></input></td></tr>';
+			tbody += '<tr><td style="padding-left: 35%"><input id = "lang_14" type = "button" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px"  onclick = "Set()"></input></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

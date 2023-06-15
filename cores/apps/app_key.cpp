@@ -17,7 +17,7 @@ void App_Key::key_read()
 {
     int res = cm::execute("cmd_gpio get_value PA15").toInt();
     if(0 == res) {
-        if(mKeyCnt++ > 11) Set_Core::bulid()->factoryRestore();
+        if(mKeyCnt++ > 12) Set_Core::bulid()->factoryRestore();
         else {
             if(mKeyCnt > 8) beep_once();
             QTimer::singleShot(500,this, &App_Key::key_read);

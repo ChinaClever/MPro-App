@@ -24,6 +24,7 @@ private:
     void ldap();
     void login();
     void redis();
+    void script();
     void radius();
     void modbus();
     void syslog();

@@ -7,19 +7,19 @@ class App_NetAddr: public App_SensorBox
 public:
     explicit App_NetAddr(QObject *parent = nullptr);
     void inet_setInterface();
-    void inet_saveCfg(int fc);
+    void inet_saveCfg(int fc, const sNetInterface &net);
 
     void inet_initFunSlot();
     void inet_updateInterface();
     void inet_setInterfaceSlot();
+    void inet_readCfg(sNetAddr &inet, const QString &g);
 
 private:
     void inet_setIpV4();
     void inet_setIpV6();
     void inet_dnsCfg();
     int inet_dhcpUpdate();
-    void inet_readCfg(sNetAddr &inet, const QString &g);
-    void inet_writeCfg(sNetAddr &inet, const QString &g);
+    void inet_writeCfg(const sNetAddr &inet, const QString &g);
 
 private:
     int mCnt = 1;

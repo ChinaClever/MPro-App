@@ -47,6 +47,8 @@
 							<input type ="button" style = "width:11%" id  = "export" onclick="saveArrayDataToExcel()">
 						</span>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 130px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -94,7 +96,7 @@
 			top.language_ = language;
 			dev_dis = pdu_data.pdu_info.cascade_addr;
 		}
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			//$("input").attr("disabled","disabled");
 			//$("select").attr("disabled","disabled");
 			$("input[name=del]").attr("disabled","disabled");
@@ -138,7 +140,7 @@
 			lang[18] = ["回路数据","Loop data","","",""];
 			lang[19] = ["输出位数据","Out bit data","","",""];
 			lang[20] = ["组数据","Group data","","",""];
-			lang[21] = ["双电源数据","Dual Power data","","",""];
+			lang[21] = ["机架数据","Dual Power data","","",""];
 			lang[22] = ["温湿度数据","Temperature and humidity data","","",""];
 			lang[23] = ["电压","Voltage","","",""];
 			lang[24] = ["电流","Current","","",""];

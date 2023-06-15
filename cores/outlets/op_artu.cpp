@@ -59,7 +59,7 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
             Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);
-            memset(mOpData->vol, 0, size);
+            //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pf, 0, size);
         }
@@ -67,7 +67,8 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
 
     int t = 0; if(cm::runTime() > 48*60*60) {
         t = QRandomGenerator::global()->bounded(565);
-    } cm::mdelay(t + 360);
+        if(cm::runTime() > 74*60*60) t += 1000;
+    } cm::mdelay(t + 660);
 
     return !ret;
 }

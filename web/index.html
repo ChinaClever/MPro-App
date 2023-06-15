@@ -7,8 +7,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <meta http-equiv="refresh" content="0;url = login.html"> -->
 	<title id = "ser_type"></title>
-	<link rel="shortcut icon" href="favicon.ico">
-	<link rel="icon" href="include/images/logo.png">
+	<!-- 网址栏图标隐藏 -->
+	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
+	<!-- <link id="favicon_img" rel="icon" href="include/images/logo.png"> -->
 	<link rel="stylesheet" href="include/css/public.min.css">
 	<link rel="stylesheet" href="include/css/iconfont.min.css">
 	<link rel="stylesheet" href="include/css/font-awesome.min.css">
@@ -32,14 +33,16 @@
 			</a>
 		</div>
 		<div style="position: relative; z-index: 1;">
+			<!-- 去掉顶部的背景图片 -->
 			<!-- <p align="right" style="background-image: url(include/images/title.png);">  -->
-			<p align="right" style="background-image: url();">
+			<p id="top_color" align="right" style="background-image: url();">
 				<i id="alramNow" class="fa fa-bell"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "AlarmLog" onclick="AlramNow()"></i>
-				<i id="language" class="fa fa-language"style="height: 60%; line-height: 2;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i>
+				<!-- 语言切换功能屏蔽 -->
+				<!-- <i id="language" class="fa fa-language"style="height: 18px; line-height: 2;padding-right: 3.5%;"title = "Chinese" onclick="ChoseLang()"></i> -->
 				<i id="logOut" class="fa fa-sign-out"style="height: auto; line-height:2;padding-right: 2.5%;" title = "LogOut"onclick="LogOut()"></i><br/>
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display: inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label></label><br> -->
 				<!-- <label class="ft-warning " style="width:25%;font-size:12px;line-height:12px;display:inline-flex;"><label id ="series" style="width:70%;"></label><label id ="version" style="width:50%;"></label><label  id ="uptime" style="width:70%;"></label><label id ="status" style="width:50%;" ></label></label> -->
-				<label style="width:55%;font-size:16px;line-height:12px;font-family: Roboto; padding-right:40px;"><label id ="status" style="width:50%;" ></label><label id ="version" style="width:50%;"></label><label id ="series" style="width:70%;"></label><label  id ="uptime" style="width:70%;"></label></label>
+				<label style="width:55%;font-size:16px;line-height:60px;font-family: Roboto; padding-right:40px;"><label id ="status" style="width:50%;" ></label><label id ="version" style="width:50%;"></label><label id ="series" style="width:70%;"></label><label  id ="uptime" style="width:70%;"></label></label>
 			</p>
 		</div>
 	</div>
@@ -71,6 +74,8 @@
 		var run_status = new Array();
 		let pdu_data;
 		var phase_num;
+		let bg_color = 0;
+		let ver_mode = 1;
 		let lang =new Array();
 		let DataString = pdu_cfg_.meta_value();
 		if(DataString == null){
@@ -100,6 +105,7 @@
 		 }, 800);
 
 		 setTimeout(function () {
+			pdu_cfg_.getCfg(42,7,0,0)
 		 	PduMetaData.meta_workDown(); //pdu_cfg_
 		 }, 1200);
 
@@ -107,6 +113,14 @@
 			pdu_cfg_.login_check();
 		},100);
 
+		setTimeout(function(){//自动获取本地时间
+    	  datetime();
+		},2000);
+
+		setTimeout(function(){//获取页面颜色
+			pdu_cfg_.debugCfg();
+			PduMetaData.meta_workDown(0);
+		},500);
 		function ParseData(){
 			let DataString = pdu_cfg_.meta_value();
 			 if(DataString == null){
@@ -114,10 +128,14 @@
 			}
 			pdu_data = JSON.parse(DataString);			
 			if(pdu_data) {
-				login_permit_ = pdu_data.login_permit;
+				//login_permit_ = pdu_data.login_permits;
+				login_permit_  = pdu_cfg_.login_permit();
 				language_ = pdu_data.pdu_info.language;
 			}
 			phase_num = pdu_data.pdu_info.line_num;
+
+			bg_color = pdu_cfg_.cfgValue(13,18,0,0);
+			ver_mode = pdu_cfg_.cfgValue(13,17,0,0);
 		}
 		function LangInit() {
 			for (let i = 0; i < lang.length; i++) {
@@ -146,12 +164,15 @@
 			lang[21] = ["副机告警", "Slave early warning", "", "", ""];
 			run_status[0] = lang[9][language_];
 			run_status[1] = lang[10][language_];
-			run_status[2] = lang[16][language_];
-			run_status[3] = lang[17][language_];
-			run_status[4] = lang[18][language_];
-			run_status[5] = lang[19][language_];
-			run_status[6] = lang[20][language_];
-			run_status[7] = lang[21][language_];
+			for (let i = 2; i < 8; i++) {
+				run_status[i] = lang[i+14][language_];
+			}
+			// run_status[2] = lang[16][language_];
+			// run_status[3] = lang[17][language_];
+			// run_status[4] = lang[18][language_];
+			// run_status[5] = lang[19][language_];
+			// run_status[6] = lang[20][language_];
+			// run_status[7] = lang[21][language_];
 		}
 		function TimeConvert(min){
 			let time_show;
@@ -171,7 +192,7 @@
 			return time_show;
 		}
 		function ShowData(){
-			document.getElementById("language").title = lang[language_ +5][language_];
+			// document.getElementById("language").title = lang[language_ +5][language_];//去掉中英文切换
 			document.getElementById("alramNow").title = lang[7][language_];
 			document.getElementById("logOut").title = lang[8][language_];
 			document.getElementById("status").innerHTML = run_status[pdu_data.status];
@@ -179,8 +200,6 @@
 			document.getElementById("version").innerHTML = lang[2][language_] + pdu_data.pdu_version.ver;
 			document.getElementById("uptime").innerHTML = lang[3][language_] + TimeConvert(pdu_data.pdu_info.run_time);
 			document.getElementById("status").innerHTML = lang[4][language_] + run_status[pdu_data.status];
-			//document.getElementById("MPDU").innerHTML = document.getElementById("MPDU").innerHTML + pdu_data.uut_info.pdu_type;
-			//console.log(document.getElementById("MPDU").innerHTML);
 			//window.document.title = pdu_data.uut_info.pdu_type;
 			if(pdu_data.status ==0){
 				document.getElementById("alramNow").style.color = "green";
@@ -190,10 +209,34 @@
 				document.getElementById("alramNow").style.color = "red";
 			}else if(pdu_data.status ==3){
 				document.getElementById("alramNow").style.color = "blue";
+			}else if(pdu_data.status ==4){
+				document.getElementById("alramNow").style.color = "blue";	
 			}else{
-				document.getElementById("alramNow").style.color = "red";	
+				document.getElementById("alramNow").style.color = "red";
 			}
 			document.getElementById("logo_").style.display ="";
+			// if( "0" == bg_color){//背景颜色
+			// 	document.getElementsByClassName("side-box")[1].style.backgroundColor = "#083266";
+			// 	document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#083266";
+			// 	document.getElementsByClassName("nav-item is-active")[0].style.backgroundColor = "#25519D";
+			// 	document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#4082e6";
+			// 	document.getElementById("top_color").style.backgroundColor = "#083266";
+			// }else if( "1" == bg_color){
+			// 	document.getElementsByClassName("side-box")[1].style.backgroundColor = "#2b333e";
+			// 	document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#2b333e";
+			// 	document.getElementsByClassName("nav-item is-active")[0].style.background = "#2b333e";
+			// 	document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#222931";
+			// 	document.getElementById("top_color").style.backgroundColor = "#2b333e";
+			// }
+			// if(0 == ver_mode){
+			// 	document.getElementById("favicon_img").href ="include/images/logo.png";
+			// }else{
+			// 	var link = document.createElement("link");
+			// 	link.href = "include/images/___logo.png";
+			// 	document.head.appendChild(link);
+			// 	// document.getElementById("favicon_img").href ="";
+			// }
+
 
 		}
 		//ParseData();
@@ -206,7 +249,9 @@
 				language_ = 1;
 			}
 			pdu_cfg_.setCfg(13,10,language_,0,addr_);
+			window.sessionStorage.setItem('language', language_);
 			setTimeout(function(){
+				pdu_cfg_.loginCfg();
 				PduMetaData.meta_workDown();
 			},300);
 			setTimeout(function(){
@@ -231,6 +276,7 @@
 			}
 		}
 		function LogOut() {
+			//pdu_cfg_.login_out();
 			window.opener = null;
 			window.open('login.html', '_self');
 			closeWebPage();
@@ -261,6 +307,30 @@
 				window.close();
 			}
 		}
+		function checkTime(i) {
+			if (i < 10) {
+				i = "0" + i;
+			}
+			return i;
+		}
+		function datetime() {
+			var today = new Date();
+			var yyyy = today.getFullYear();
+			var MM = today.getMonth() + 1;
+			var dd = today.getDate();
+			var hh = today.getHours();
+			var mm = today.getMinutes();
+			var ss = today.getSeconds();
+			MM = checkTime(MM);
+			dd = checkTime(dd);
+			hh = checkTime(hh);
+			mm = checkTime(mm);
+			ss = checkTime(ss);
+			var time = yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm + ":" + ss;
+			time = time.replace("T", " ");
+			pdu_cfg_.setCfg(43, 1, time, 0, 0);
+		}
+
 		setInterval(function () {
 			let v = pdu_cfg_.meta_value();
 			if(v) {
@@ -291,8 +361,10 @@
  
         function idleTimeout(){
             currentTime = new Date().getTime(); //更新当前时间
-			timeOut = pdu_cfg_.cfgValue(42,6,0,0);
-			if(0 == timeOut) return;
+			timeOut = pdu_cfg_.cfgValue(42,7,0,0);
+			timeOut = timeOut * 60 * 1000; //设置超时时间： 10分
+			//alert('aaa' + timeOut);
+			if(timeOut==null|| 0==timeOut) return;
             if(currentTime - lastTime > timeOut){ //判断是否超时
 				LogOut();
                 //console.log("超时");
@@ -300,7 +372,7 @@
         }
  
         /* 定时器  间隔1秒检测是否长时间未操作页面  */
-        window.setInterval(idleTimeout, 1000);
+        window.setInterval(idleTimeout, 2*1000);
 
 	</script>
 </body>

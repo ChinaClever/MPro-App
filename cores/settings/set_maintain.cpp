@@ -10,18 +10,32 @@ Set_Maintain::Set_Maintain()
 
 }
 
+static void dev_restart()
+{
+    system("sync");
+    cm::mdelay(1000);
+    system("reboot");
+}
+
+
 bool Set_Maintain::syscmd(int fc)
 {
     bool ret=true; switch (fc) {
-    case 1: ret = system("reboot"); break;
-    case 2: ret = factoryRestore(); break;
+    case 1: m_thread = new std::thread(dev_restart); m_thread->detach(); break;
+    case 2: factoryRestore(); break;
+    case 3: clearLogs(); break;
     default: ret = false; cout << fc; break;
     }
-
     return ret;
 }
 
-bool Set_Maintain::factoryRestore()
+void Set_Maintain::clearLogs()
+{
+    system("chmod 777 /usr/data/clever/cfg/logs.db");
+    system("rm -rf /usr/data/clever/cfg/logs.db");
+}
+
+void Set_Maintain::factoryRestore()
 {
     //sEventItem it;
     //it.event_type = QStringLiteral("恢复");
@@ -33,16 +47,16 @@ bool Set_Maintain::factoryRestore()
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
     system("echo '1' > /usr/data/clever/cfg/factoryRestore");
-    fns << "logs.db" << "alarm.cfg" << "proc_cnt.ini";
-    fns << "cfg.ini" << "inet.ini";
+    fns << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini"; // << "logs.db";
+    if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
     foreach (const auto &fn, fns) {
         QString fmd = "rm -rf %1%2";
         QString cmd = fmd.arg(dir, fn);
         system(cmd.toLocal8Bit().data());
-    } system("sync"); system("reboot");
-
-    return true;
+    } //system("sync"); system("reboot");
+    m_thread = new std::thread(dev_restart);
+    m_thread->detach(); //子线程与主线程分离
 }
 
 QString Set_Maintain::backups(int fc)
@@ -93,6 +107,7 @@ QString Set_Maintain::batchBackup()
     QString dir = "usr/data/clever/cfg/";
     fns << "mac.ini" << "inet.ini" << "devParam.ini";
     fns << "logs.db" << "qrcode.png" << "proc_cnt.ini";
+    fns << "uuid.conf" << "sn.conf";
 
     QString zip = profileBackup();
     foreach (const auto &fn, fns) {
@@ -141,10 +156,13 @@ bool Set_Maintain::restory(const QString &fn)
     bool ret = true; if(QFile::exists(fn)) {
         QString fmd = "unzip -o %1 -d /";
         QString cmd = fmd.arg(fn); qDebug() << cmd;
+        system("chmod 775 /usr/data/clever/cfg/*");
         system(cmd.toLatin1().data()); //cm::mdelay(50);
+        system("chmod 775 /usr/data/clever/cfg/*");
         cm::execute("rm -rf " + fn);
-        cm::mdelay(1650);
-        system("reboot");
+        m_thread = new std::thread(dev_restart);
+        m_thread->detach(); //子线程与主线程分离
+        //cm::mdelay(1650); //system("reboot");
     } else ret = false;
     return ret;
 }

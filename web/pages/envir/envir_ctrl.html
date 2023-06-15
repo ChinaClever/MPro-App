@@ -76,19 +76,22 @@
 		let pdu_data;
 		let sensor_info_ = new Array();
     	let sensor_name = new Array("","","","","","","","","","","","");
+		let sensor_name_ = new Array("","","","","","");
     	let data = new Array();
 		let type_num = 0;
 		let lang = new Array();
 		let table_len = 8;
+		let sensor_box;/*传感器盒子*/
 		let Sensor_state = new Array("", "", "");
 		let Sensor_state_ = new Array("", "", "");
 		let addr = pdu_cfg.addr;
 		let num_arr = [0,1,2,3,0,1,2,3,0,1,0,0];
+		let num_arr_ = [0,1,0,1,0,1];
 		let other_arr = ["door","door","smoke","water"];
 		let tem_arr = ["tem_value","tem_rated","tem_alarm_status","tem_alarm_max","tem_alarm_min","tem_warn_min","tem_warn_max","tem_alarm_enable","","","tem_hda_en"];
 		let hum_arr = ["hum_value","hum_rated","hum_alarm_status","hum_alarm_max","hum_alarm_min","hum_warn_min","hum_warn_max","hum_alarm_enable","","","hum_hda_en"];
 		let k = 0;
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
@@ -99,6 +102,8 @@
 			let DataString = pdu_cfg.meta_value();
 			 pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			sensor_box = pdu_data.pdu_info.sensor_box;
+			if(1 == sensor_box){//传感器盒子
 			for(let i = 0; i<12;i++){
 				data[i] = new Array();
 				if(i<4){
@@ -137,6 +142,46 @@
 					data[i*1 + 4][0]  += "%";
 				}
 			}
+			}else{//无传感器盒子
+				for(let i = 0; i<6;i++){
+				data[i] = new Array();
+				if(i<2){
+					k = 0;
+					for(let key of tem_arr){
+						if(k == 8 || k == 9){
+						}else{
+							data[i][k] = pdu_data.pdu_data.env_item_list[key][num_arr_[i]];
+						}
+						k++;
+					}
+				}else if(i<4){
+					k = 0;
+					for(let key of hum_arr){
+						if(k == 8 || k == 9){
+						}else{
+							data[i][k] = pdu_data.pdu_data.env_item_list[key][num_arr_[i]];
+						}
+						k++;
+					}
+				}else{
+					data[i][0] = pdu_data.pdu_data.env_item_list[other_arr[i-4]][num_arr_[i]];
+				}
+			}
+			for(let i = 0;i<4;i++){
+				if(pdu_data.pdu_data.env_item_list.insert[i] == 0){
+					if(data[i*1][0] == 65535 ||data[i*1][0] == 0){
+						data[i*1][0] = "NA";
+					}
+					// if(data[i*1 +2][0] == 65535||data[i*1 +2][0] == 0){
+					// 	data[i*1 +2][0] = "NA";
+					// }
+
+				}else{
+					data[i*1][0] += "°C";
+					data[i*1 + 2][0]  += "%";
+				}
+			}
+			}
 		}
 		ParseData();
 		LangInit();
@@ -160,8 +205,8 @@
 			lang[14] = ["类型","Type","","",""];
 			lang[15] = ["状态","Status","","",""];
 			lang[16] = ["NA","NA","","",""];
-			lang[17] = ["开启","Open","","",""];
-			lang[18] = ["关闭","Close","","",""];
+			lang[17] = ["关闭","Close","","",""];
+			lang[18] = ["开启","Open","","",""];
 			lang[19] = ["温度1","Temperature 1","","",""];
 			lang[20] = ["温度2","Temperature 2","","",""];
 			lang[21] = ["温度3","Temperature 3","","",""];
@@ -193,8 +238,21 @@
 				Sensor_state[i] = lang[16 + i][language];
 				Sensor_state_[i] = lang[35 + i][language];
 			}
+			if(1 == sensor_box){
 			for(let i =0;i<sensor_name.length;i++){
 				sensor_name[i] = lang[19 + i][language];
+			}
+			}else{
+				for(let i =0;i<sensor_name.length;i++){
+					if(i < 2){
+						sensor_name_[i] = lang[19 + i][language];
+					}else if(i < 4){
+						sensor_name_[i] = lang[21 + i][language];
+					}else{
+						sensor_name_[i] = lang[23 + i][language];
+					}
+					
+				}
 			}
 		}
 		function Change(sel){
@@ -207,8 +265,13 @@
 			},100);
 			setTimeout(function(){
 				ParseData();
-				$('.tmp_hum_table').html(BuildTableTH(table_len));
-				$('.oth_table').html(BuildTableOth(table_len-4));
+				if(1 == sensor_box){
+					$('.tmp_hum_table').html(BuildTableTH(table_len));
+					$('.oth_table').html(BuildTableOth(table_len-4));
+				}else{
+					$('.tmp_hum_table').html(BuildTableTH(4));
+					$('.oth_table').html(BuildTableOth(2));
+				}
 				ShowData();
 				LangFun();
 				ModeSet();
@@ -228,8 +291,13 @@
 			}
 			document.getElementById("ms").value = addr;
 		}
-		$('.tmp_hum_table').html(BuildTableTH(table_len));
-		$('.oth_table').html(BuildTableOth(table_len-4));
+		if(1 == sensor_box){
+			$('.tmp_hum_table').html(BuildTableTH(table_len));
+			$('.oth_table').html(BuildTableOth(table_len-4));
+		}else{
+			$('.tmp_hum_table').html(BuildTableTH(4));
+			$('.oth_table').html(BuildTableOth(2));
+		}
 		$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
 		LangFun();
 		function BuildSel(rows)
@@ -244,7 +312,20 @@
 		ShowData();
 		ModeSet();
 		function ShowData_(){
-			for(var i = 1 ;i < table_len+ 1;i++){
+			if(1 == sensor_box){
+				for(var i = 1 ;i < table_len+ 1;i++){
+					var cs = document.getElementById('b'+(i-1));
+					if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
+						cs.bgColor = 'red';
+					}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
+						cs.bgColor = 'yellow';
+					}
+					else{
+						cs.bgColor = '';
+					}
+				}
+			}else{
+				for(var i = 1 ;i < 5;i++){
 				var cs = document.getElementById('b'+(i-1));
 				if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
 					cs.bgColor = 'red';
@@ -254,33 +335,62 @@
 				else{
 					cs.bgColor = '';
 				}
+			}				
 			}
 		}
 		function ShowData(){
-			for(var i = 1 ;i < table_len+ 1;i++){
-				var ss = document.getElementById('c'+(i-1));
-				var he = document.getElementById('l'+(i-1));
-				var cs = document.getElementById('b'+(i-1));
-				if(data[i - 1][7] == 1){
-					ss.checked = true;
+			if(1 == sensor_box){
+				for(var i = 1 ;i < table_len+ 1;i++){
+					var ss = document.getElementById('c'+(i-1));
+					var he = document.getElementById('l'+(i-1));
+					var cs = document.getElementById('b'+(i-1));
+					if(data[i - 1][7] == 1){
+						ss.checked = true;
+					}
+					else{
+						ss.checked = false;
+					}
+					if(data[i - 1][10] == 1){
+						he.checked = true;
+					}
+					else{
+						he.checked = false;
+					}
+					if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
+						cs.bgColor = 'red';
+					}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
+						cs.bgColor = 'yellow';
+					}
+					else{
+						cs.bgColor = '';
+					}
 				}
-				else{
-					ss.checked = false;
-				}
-				if(data[i - 1][10] == 1){
-					he.checked = true;
-				}
-				else{
-					he.checked = false;
-				}
-				if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
-					cs.bgColor = 'red';
-				}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
-					cs.bgColor = 'yellow';
-				}
-				else{
-					cs.bgColor = '';
-				}
+			}else{
+				for(var i = 1 ;i < 5;i++){
+					var ss = document.getElementById('c'+(i-1));
+					var he = document.getElementById('l'+(i-1));
+					var cs = document.getElementById('b'+(i-1));
+					if(data[i - 1][7] == 1){
+						ss.checked = true;
+					}
+					else{
+						ss.checked = false;
+					}
+					if(data[i - 1][10] == 1){
+						he.checked = true;
+					}
+					else{
+						he.checked = false;
+					}
+					if(data[i - 1][2] == 1 || data[i - 1][2] == 8){
+						cs.bgColor = 'red';
+					}else if(data[i - 1][2] == 2|| data[i - 1][2] == 4){
+						cs.bgColor = 'yellow';
+					}
+					else{
+						cs.bgColor = '';
+					}
+				}			
 			}
 		}
 		function ModeSet(modesel){
@@ -325,7 +435,13 @@
 		function FlashHtml(par)
 		{
 			par.parentNode.parentNode.parentNode.remove();
-			$('.tmp_hum_table').html(BuildTableTH(table_len));
+			if(1 == sensor_box){
+				$('.tmp_hum_table').html(BuildTableTH(table_len));
+				$('.oth_table').html(BuildTableOth(table_len-4));
+			}else{
+				$('.tmp_hum_table').html(BuildTableTH(4));
+				$('.oth_table').html(BuildTableOth(2));
+			}
 			ShowData();
 			LangFun();
 		}
@@ -342,12 +458,21 @@
 			}else{
 				type = 11;
 			}
-			if(number <= 4){
-				number1  = 11;
+			if(1 == sensor_box){
+				if(number <= 4){
+					number1  = 11;
+				}else{
+					number1  = 12;
+				}
+				id  = parseInt(number-1) % 4 + 1;
 			}else{
-				number1  = 12;
+				if(number <= 2){
+					number1  = 11;
+				}else{
+					number1  = 12;
+				}
+				id  = parseInt(number-1) % 2 + 1;
 			}
-			id  = parseInt(number-1) % 4 + 1;
 			if(ckd.checked == true){
 				stat = 1;
 			}else{
@@ -381,12 +506,21 @@
 				FlashHtml(ipt);
 				return ;
 			}
-			if(number <= 4){
-				number1  = 11;
+			if(1 == sensor_box){
+				if(number <= 4){
+					number1  = 11;
+				}else{
+					number1  = 12;
+				}
+				id  = parseInt(number - 1)%4 + 1;
 			}else{
-				number1  = 12;
+				if(number <= 2){
+					number1  = 11;
+				}else{
+					number1  = 12;
+				}
+				id  = parseInt(number - 1)%2 + 1;
 			}
-			id  = parseInt(number - 1)%4 + 1;
 			if(type1 === 'e'){
 				sub = 5;
 			}else if(type1 === 'f'){
@@ -417,17 +551,31 @@
 						<td width ="12%" id="lang_12"></td>\
 						<td width ="12%" id="lang_13"></td>';
 					}
-					tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "a'+ i + '">' + sensor_name[i]+'</td>';
-					tbody += '<td id = "b'+ i + '">'+ data[i][0]+'</td>';
-					tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "c'+ i + '"></input></td>';
-					tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "l'+ i + '"></input></td>';
-					// tbody += '<td id = "d'+ i +'">' + data[i][1]+'</td>';
-					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (data[i][4])  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (data[i][5])  +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (data[i][6]) +'"></input></td>';
-					tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (data[i][3])  +'"></input></td>';
-					tbody += '</tr>';
+					if(1 == sensor_box){
+						tbody += '<tr id = "tr'+ i + '">';
+						tbody += '<td id = "a'+ i + '">' + sensor_name[i]+'</td>';
+						tbody += '<td id = "b'+ i + '">'+ data[i][0]+'</td>';
+						tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "c'+ i + '"></input></td>';
+						tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "l'+ i + '"></input></td>';
+						// tbody += '<td id = "d'+ i +'">' + data[i][1]+'</td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (data[i][4])  +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (data[i][5])  +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (data[i][6]) +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (data[i][3])  +'"></input></td>';
+						tbody += '</tr>';
+					}else{
+						tbody += '<tr id = "tr'+ i + '">';
+						tbody += '<td id = "a'+ i + '">' + sensor_name_[i]+'</td>';
+						tbody += '<td id = "b'+ i + '">'+ data[i][0]+'</td>';
+						tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "c'+ i + '"></input></td>';
+						tbody += '<td><input  type = "checkbox" class = "input" onchange ="Cked(this)" id = "l'+ i + '"></input></td>';
+						// tbody += '<td id = "d'+ i +'">' + data[i][1]+'</td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "e'+ i + '"value="'+ (data[i][4])  +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "f'+ i + '"value="'+ (data[i][5])  +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "g'+ i + '"value="'+ (data[i][6]) +'"></input></td>';
+						tbody += '<td><input type = "text" onkeyup="ClearNum(this)" onchange ="SetData(this)" oninput = "if(value>100){value=100};if(value<0)value=0" class = "input" id = "h'+ i + '"value="'+ (data[i][3])  +'"></input></td>';
+						tbody += '</tr>';	
+					}
 				}
 				return '<thead>' + thead + '</thead>'
 					+ '<tbody>' + tbody + '</tbody>';
@@ -441,18 +589,27 @@
 					<td width ="70%"></td>\
 					<td width ="20%" id="lang_15"></td>';
 				}
-				if(i<2){
-					tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
-					tbody += '<td id = "j'+ i + '"></td>';
-					tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+8][0]] +'</td>';
-					tbody += '</tr>';				
+				if(1 == sensor_box){
+					if(i<2){
+						tbody += '<tr id = "tr'+ i + '">';
+						tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
+						tbody += '<td id = "j'+ i + '"></td>';
+						tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+8][0]] +'</td>';
+						tbody += '</tr>';				
+					}else{
+						tbody += '<tr id = "tr'+ i + '">';
+						tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
+						tbody += '<td id = "j'+ i + '"></td>';
+						tbody += '<td id = "k'+ i + '">'+ Sensor_state_[data[i+8][0]] +'</td>';
+						tbody += '</tr>';
+					}
 				}else{
-					tbody += '<tr id = "tr'+ i + '">';
-					tbody += '<td id = "i'+ i + '">' + sensor_name[i + 8]+'</td>';
-					tbody += '<td id = "j'+ i + '"></td>';
-					tbody += '<td id = "k'+ i + '">'+ Sensor_state_[data[i+8][0]] +'</td>';
-					tbody += '</tr>';
+						tbody += '<tr id = "tr'+ i + '">';
+						tbody += '<td id = "i'+ i + '">' + sensor_name_[i + 4]+'</td>';
+						tbody += '<td id = "j'+ i + '"></td>';
+						tbody += '<td id = "k'+ i + '">'+ Sensor_state[data[i+4][0]] +'</td>';
+						tbody += '</tr>';				
+
 				}
 
 			}

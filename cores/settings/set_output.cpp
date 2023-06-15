@@ -103,7 +103,7 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     bool ret = true; int id = unit.id; if(id) id--;
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
-    if((0==it->disabled[id]) || (unit.txType == DTxType::TxWeb)) {
+    if((0==it->disabled[id]) && (unit.value < 3)) { /* || (unit.txType == DTxType::TxWeb)*/
         if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
             if(unit.value) it->cnt[id] += 1;
             it->sw[id] = unit.value;
@@ -117,9 +117,9 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
 {
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     bool ret = false; int start = unit.type-1; int end = start + unit.id;
-    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
+    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);    
     for(int i=start; i<end; ++i) {
-        if((0==it->disabled[i]) || (unit.txType == DTxType::TxWeb)){
+        if((0==it->disabled[i]) && (unit.value < 2) && (i < it->size)){ /* || (unit.txType == DTxType::TxWeb)*/
             ret = true; if(unit.value) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
@@ -139,10 +139,13 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
     }
 
     sRelayUnit *relay = &(cm::masterDev()->output.relay);
-    foreach (const auto &i, ids) if(unit.value) relay->cnt[i] += 1;
+    foreach (const auto &i, ids){
+        if(relay->disabled[i]) ids.removeOne(i);
+        else if(unit.value) relay->cnt[i] += 1;
+    }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
-    if(0==it->disabled[id] || unit.txType == DTxType::TxWeb) {
+    if(0==it->disabled[id] && (unit.value < 2)) { /* || unit.txType == DTxType::TxWeb*/        
         OP_Core::bulid()->relaysCtrl(ids, unit.value);
     } else ret = false;
 
@@ -286,7 +289,7 @@ bool Set_Output::outputSetById(sCfgItem &it, const QVariant &v)
     case 2: ptr = obj->relay.timingOn[id]; break;
     case 3: ptr = obj->relay.timingOff[id]; break;
     default: res = false; cout << it.fc; break;
-    } cout << it.type << it.fc << v;
+    } //cout << it.type << it.fc << v;
 
     if(ptr){
         QByteArray array = v.toByteArray();

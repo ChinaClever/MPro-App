@@ -28,6 +28,8 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left recv_email"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -144,6 +146,9 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
+			if(document.getElementById("SmtpState").innerHTML !=''){
+				document.getElementById("SmtpState").style.color = 'red';	
+			}
 		}
 		function SetData(btn){
 			for(let i = 1;i<smtp_name.length;i++){
@@ -187,12 +192,34 @@
 					alert("请输入至少一个邮箱账号！");
 				}else{
 					alert("Please enter at least one email account！");
-				}
-				
+				}				
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
+				setTimeout(function(){
+					if(document.getElementById("SmtpState").innerHTML ==''){
+						if(0 == language){
+							alert("测试成功！");
+						}else{
+							alert("Test successful!");
+						}
+					}else{
+						if(0 == language){
+							alert("测试失败！");
+						}else{
+							alert("Test failed!");
+						}					
+					}
+				},3000);
+
 			}
 		}
+		setInterval(function(){
+			pdu_cfg.smtpCfg(); 
+			setTimeout(function(){
+				read_data();
+				document.getElementById("SmtpState").innerHTML = smtp_data[8][1];
+			},900);
+   		 },2000);
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
@@ -243,7 +270,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "SmtpRecvUsr4" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td><input id ="lang_17" style ="width:50%;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
+			tbody += '<tr><td style="padding-left: 35%"><input id ="lang_17" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px;" type = "button"  onclick = "Set()"></input></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

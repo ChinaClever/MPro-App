@@ -127,7 +127,8 @@
 			for(let i = 1;i<logset_name.length;i++){
 				document.getElementById(logset_name[i]).value =  logset_data[i];
 			}
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
+				document.getElementById("lang_12").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{

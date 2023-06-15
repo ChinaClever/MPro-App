@@ -50,7 +50,8 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             devInfo(dev->cfg, "pdu_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
-            if(dc > 2) json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
+            if(dc > 2) {loginPermit(json); outputVol(json);}
+            //json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
@@ -104,6 +105,22 @@ void Integr_JsonBuild::online(QJsonObject &json)
         sDevData *dev = cm::devData(i);
         array[i] = dev->offLine>1?1:0;
     } arrayAppend(array, size, "online", json);
+}
+
+void Integr_JsonBuild::loginPermit(QJsonObject &json)
+{
+    QJsonObject obj;
+    for(int i=0; i<USER_NUM; ++i) {
+        sDevLogin *it = &cm::dataPacket()->login[i];
+        if(strlen(it->user)) obj.insert(it->user, it->permit);
+    } json.insert("login_permits", obj);
+}
+
+void Integr_JsonBuild::outputVol(QJsonObject &json)
+{
+    int size = PACK_ARRAY_SIZE;
+    uint *ptr = cm::masterDev()->output.vol.value;
+    arrayAppend(ptr, size, "output_vol", json);
 }
 
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
@@ -287,12 +304,21 @@ void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObjec
     obj.insert("loop_num", it.nums.loopNum/r);
     //obj.insert("slave_num", it.nums.slaveNum/r);
     obj.insert("output_num", it.nums.outputNum/r);
-    obj.insert("board_num", it.nums.boardNum/r);
-    obj.insert("group_en", it.param.groupEn/r);
-    obj.insert("sensor_box", it.param.sensorBoxEn/r);
     obj.insert("cascade_addr", it.param.cascadeAddr/r);
-    obj.insert("stand_neutral", it.param.standNeutral/r);
-    obj.insert("run_time", it.param.runTime/r);
+
+    if(mDataContent > 2) {
+        obj.insert("board_num", it.nums.boardNum/r);
+        obj.insert("group_en", it.param.groupEn/r);
+        obj.insert("sensor_box", it.param.sensorBoxEn/r);
+        obj.insert("stand_neutral", it.param.standNeutral/r);
+        obj.insert("web_background", it.param.webBackground/r);
+        obj.insert("supply_vol", it.param.supplyVol/r);
+        obj.insert("language", it.param.language/r);
+        obj.insert("run_time", it.param.runTime/r);
+        obj.insert("breaker", it.param.isBreaker/r);
+        obj.insert("vh", it.param.vh/r);
+    }
+
     int num = cm::masterDev()->cfg.nums.slaveNum;
     obj.insert("slave_num", num);
 

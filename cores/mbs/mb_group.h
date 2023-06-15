@@ -13,6 +13,7 @@ protected:
 
 private:
     void group_dataUpdate();
+    void group_relayUpdate();
     void group_thresholdUpdate();
     void group_ctrl(int id, ushort value);
 };

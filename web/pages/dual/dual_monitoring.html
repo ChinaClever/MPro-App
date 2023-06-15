@@ -29,7 +29,7 @@
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
 								<span id="lang_1"></span>
-								<span style = "float:right;"><span style = "padding-right: 5px;" id="lang_2" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
+								<span id="dev_sel" style = "float:right;"><span style = "padding-right: 5px;" id="lang_2" ></span><select class ="devname" id ="ms" style ="width:100px;" onchange = "change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -74,14 +74,58 @@
 		let DataString = pdu_cfg.meta_value();
 		let pdu_data = JSON.parse(DataString);
 		pdu_cfg.setAddr(dual_addr);
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 		}else{
 		}
+		// function hidden(){
+		// 	document.getElementsByClassName("page-cont")[0].style.display = "none";	
+		// 	document.getElementsByClassName("section-cont")[0].style.display = "none";	
+		// }
+				function dev_disp(){
+			let DataString = pdu_cfg.meta_value();
+			pdu_data = JSON.parse(DataString);
+			slave_num = pdu_data.pdu_info.slave_num;
+			for(let i = 1;i<6;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["输出位监测","","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3]  = ["机柜", "Cabinet", "", "", ""];
+
+			for(let i = 0;i<(slave_num / 2);i++){
+					dev_name[i] =  lang[3][language] + (i+1);
+				}
+				$('.devname').html(BuildSel((slave_num / 2)));
+
+			for(let j = 1;j<3;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
+			document.getElementById("ms").value = slave_num/2;
+			function BuildSel(rows)
+			{
+				var tbody = '';
+				for(var i = 0;i<rows;i++)
+				{
+					tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+				}
+				return tbody;
+			}
+		}
 		function hidden(){
-			document.getElementsByClassName("page-cont")[0].style.display = "none";	
-			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+			 dev_disp();
+			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			// document.getElementsByClassName("section-cont")[0].style.display = "none";
+			document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+			 document.getElementById("lang_1").style.display = "none";
+			 return -1;
 		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -108,6 +152,7 @@
 				return ;
 			}
 			if(dev_mode != 2){
+				document.getElementsByClassName("page-cont")[0].style.display = "none";
 				if(t1 == 0){
 					let t2 =setInterval(function () {
 						if(0 == language){
@@ -120,6 +165,21 @@
 					}, 100);
 				}
 				hidden();
+				return ;
+			}
+			if(0 == slave_num){
+				document.getElementsByClassName("page-cont")[0].style.display = "none";	
+				if(t1 == 0){
+					let t2 =setInterval(function () {
+						if(0 == language){
+							alert("副机数量为0无机柜数据!");
+						}else{
+							alert("No cabinet data for 0 auxiliary units!");
+						}
+						clearInterval(t2);
+						t1 += 1;
+					}, 100);
+				}
 			}
 			let k = 0;
 			for(let i = 0;i<output_num;i++){
@@ -176,7 +236,7 @@
 		
 		function read_data(){
 			for(var i = 1 ;i < output_num + 1;i++){
-				//output_name[i] = dual_info_[i - 1][6];
+				// output_name[i] = dual_info_[i - 1][6];
 				output_name[i] = pdu_data.pdu_data.dual_item_list.name[i-1];
 				TotalPowVal[i] = parseFloat(dual_info_[i - 1][14]);
 				//TotalPowAlarm[i] = parseFloat(dual_info_[i - 1][11]);
@@ -213,6 +273,15 @@
 		function change(opt){
 			slave_addr = parseInt(opt.value);
 			dual_addr = parseInt(opt.value) * 2;
+			pdu_cfg.setAddr(dual_addr);
+			setTimeout(function(){
+				ParseData();
+				read_data();
+				$('.table-striped').html(buildTable(output_num));
+				//$('.devname').html(buildSel(slave_num/2));
+				showdata();
+				lang_fun();
+			},800);
 		}
 		function buildSel(rows)
 		{

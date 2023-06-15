@@ -8,6 +8,7 @@
 
 static void createDirectory()
 {
+    system("mkdir -p /tmp/script");
     system("mkdir -p /tmp/download");
     system("mkdir -p /usr/data/upload");
     system("mkdir -p /usr/data/etc/ssl");
@@ -29,20 +30,22 @@ static void initSystem()
     system("cmd_fb enable /dev/fb0");
     system("cmd_fb display /dev/fb0");
     system("rm -rf /usr/data/upload");
-    //system("chmod 755 -R /usr/data/clever");
-    system("chmod 777 /usr/data/clever/ver.ini");
+    system("chmod 775 -R /usr/data/clever/bin");
+    system("chmod 775 -R /usr/data/clever/app");
+    system("chmod 775 -R /usr/data/clever/cfg");
+    system("chmod 775 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
-    system("echo 3 > /proc/sys/vm/drop_caches");
+    //system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
     system("rm /usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png");
 
     //system("rm /usr/data/clever/web/favicon.ico");
-    system("rm /usr/data/clever/web/include/images/logo.png");
-    QString cmd = "ln -s /usr/data/clever/cfg/logo.png ";
+    //system("rm /usr/data/clever/web/include/images/logo.png");
+    QString cmd = "ln -sf /usr/data/clever/cfg/logo.png ";
     cmd += "/usr/data/clever/web/include/images/logo.png";
     system(cmd.toLocal8Bit().data());
 
-    cmd = "ln -s /usr/data/clever/cfg/qrcode.png ";
+    cmd = "ln -sf /usr/data/clever/cfg/qrcode.png ";
     cmd += "/usr/data/clever/awtk/release/assets/default/raw/images/xx/qrcode.png";
     system(cmd.toLocal8Bit().data()); createDirectory(); system("sync");
 }
@@ -63,7 +66,7 @@ static void init_netWork()
     system("ip link set eth0 up");
     //system("ip a flush dev eth0"); //　清掉所有IP地址
     system("ip link set eth0 multicast on");
-    system("ifconfig eth0 192.168.1.99 netmask 255.255.255.0");
+    system("ifconfig eth0 192.168.1.163 netmask 255.255.255.0");
     system("route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0");
     //system("dhclient");
 }
@@ -95,7 +98,7 @@ static void start_init()
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); initSystem(); system("sync");
-    if(cnt < 50) system("chmod 755 -R /usr/data/clever");
+    if(cnt < 150) system("chmod 775 -R /usr/data/clever");
 }
 
 int main(int argc, char *argv[])

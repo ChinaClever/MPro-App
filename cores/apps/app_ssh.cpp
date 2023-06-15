@@ -26,7 +26,7 @@ void App_Ssh::ssh_delUser()
         usr = ls.last();
         cmd = "deluser " + usr;
         system(cmd.toLatin1().data());
-        qDebug() << cmd;
+        //qDebug() << cmd;
     } //cout << ls.size() << ls;
 }
 

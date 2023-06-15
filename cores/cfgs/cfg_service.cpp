@@ -37,6 +37,7 @@ void Cfg_Service::readCfgParams()
     odbc();
     redis();
     login();
+    script();
     syslog();
     modbus();
     radius();
@@ -116,7 +117,7 @@ void Cfg_Service::web()
     QString prefix = "web"; QString key;
     sWebCfg *cfg = &cm::dataPacket()->web;
 
-    for(int i=1; i<8; ++i) {
+    for(int i=1; i<9; ++i) {
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
@@ -125,6 +126,7 @@ void Cfg_Service::web()
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
         case 6: key = "strong_pwd"; ptr = &cfg->strong_pwd;  value = 0; break;
         case 7: key = "idle_timeout"; ptr = &cfg->idle_timeout;  value = 0; break;
+        case 8: key = "multi_users"; ptr = &cfg->multi_users;  value = 0; break;
         default: key.clear(); break;
         }
 
@@ -138,14 +140,36 @@ void Cfg_Service::ssh()
 {
     sSshCfg *cfg = &App_Ssh::sshCfg;
     QString prefix = "ssh"; QString key;
+    QByteArray res;
 
     for(int i=1; i<5; ++i)  {
         switch (i) {
         case 1: key = "ssh_en";  cfg->ssh_en = mCfg->readCfg(key, 1, prefix).toInt(); break;
         case 2: key = "telnet_en";  cfg->telnet_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
-        case 3: key = "usr";  cfg->usr = mCfg->readCfg(key, "", prefix).toString();  break;
-        case 4: key = "pwd";  cfg->pwd =mCfg->readCfg(key, "", prefix).toString();  break;
+        case 3: key = "usr"; cfg->usr = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 4: key = "pwd"; res = mCfg->readCfg(key, "", prefix).toByteArray();
+            if(res.size() > 42) cfg->pwd = Sercret_Core::bulid()->rsa_decode(res);
+            else cfg->pwd = res;
+            break;
         }
+    }
+}
+
+
+void Cfg_Service::script()
+{
+    QString prefix = "script"; QString key;
+    sScriptCfg *cfg = &App_Script::scriptCfg;
+
+    for(int i=0; i<SCRIPT_SIZE; ++i) {
+        key = "type_" + QString::number(i);
+        cfg->type[i] = mCfg->readCfg(key, 0, prefix).toInt();
+
+        key = "startup_" + QString::number(i);
+        cfg->startup[i] = mCfg->readCfg(key, 0, prefix).toInt();
+
+        key = "cmd_" + QString::number(i);
+        cfg->cmd[i] = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 
@@ -218,8 +242,8 @@ void Cfg_Service::ntp()
         switch (i) {
         case 2: key = "udp_en";  it->udp_en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 3: key = "ntp_host";  it->ntp_host = mCfg->readCfg(key, "", prefix).toString();  break;
-        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "Asia/Shanghai", prefix).toString();  break;
-        }
+        case 4: key = "time_zone";  it->time_zone =mCfg->readCfg(key, "GMT+8", prefix).toString();  break;
+        } // GMT+8  Asia/Shanghai
     }
 }
 
@@ -320,8 +344,9 @@ void Cfg_Service::login()
             case 2: key = "pwd_%1";  ptr = it->pwd; break;
             case 3: key = "token_%1";  ptr = it->token; break;
             }
-            QString res = mCfg->readCfg(key.arg(k), "", prefix).toString();
-            qstrcpy(ptr, res.toUtf8().data());
+            QByteArray res = mCfg->readCfg(key.arg(k), "", prefix).toByteArray();
+            if(i == 2 && res.size()>42) res = Sercret_Core::bulid()->rsa_decode(res);
+            qstrncpy(ptr, res.data(), NAME_SIZE);
 
             key = "permit_%1"; it->permit = mCfg->readCfg(key.arg(k), "", prefix).toInt();
             key = "groupCtrl_%1"; it->groupCtrl = mCfg->readCfg(key.arg(k), 0xFF, prefix).toInt();
@@ -421,9 +446,8 @@ void Cfg_Service::whiteList()
         case 7: key = "ip2"; str = &it->ip[1]; break;
         case 8: key = "ip3"; str = &it->ip[2]; break;
         case 9: key = "ip4"; str = &it->ip[3]; break;
-        default: key.clear(); break;
-        }
-        if(str) *str = mCfg->readCfg(key, "", prefix).toString();
+        default: key.clear(); str = nullptr; break;
+        } if(str) *str = mCfg->readCfg(key, "", prefix).toString();
     }
 }
 

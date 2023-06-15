@@ -9,6 +9,7 @@ public:
     explicit App_RunTime(QObject *parent = nullptr);
     void runing_initFunSlot();
     void runing_onTimeoutDone();
+    void runing_cpuDone();
 
 private:
     QTimer *mTimer;

@@ -37,7 +37,8 @@ void Cascade_Master::masterReadDevs()
     }
 
     if(runTime() > 48*60*60) if(!hasCmdWrite()) t += 500;
-    t = QRandomGenerator::global()->bounded(t); mdelay(450+t);
+    if(!hasCmdWrite()) if(runTime() > 74*60*60) t += 1000;
+    t = QRandomGenerator::global()->bounded(t); mdelay(550+t);
 }
 
 void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
@@ -53,6 +54,7 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
                 it.event_content = tr("Connection from machine %1 is normal").arg(addr);
             } Log_Core::bulid()->append(it);
         } if(cm::runTime() > 48*60*60) v = 6; else v = 3;
+        if(cm::runTime() > 74*60*60) v = 10;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.addr = addr;

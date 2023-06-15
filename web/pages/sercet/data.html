@@ -35,6 +35,8 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left sm4"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 200px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -152,7 +154,7 @@
 				default:
 				break;
 			}
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{

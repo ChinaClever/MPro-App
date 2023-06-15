@@ -40,12 +40,12 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<i class="fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span><span style="padding-left:35%;"><button id="lang_2" style="display: none;" onclick="readonlyset(this);"></button></span>
+								<span id="lang_1"></span><span id="readonly" style="padding-left:35%;"><button id="lang_2" style="display: none;" onclick="readonlyset(this);"></button></span>
 								<!-- <span id ="sel" style="padding-left: 70px;display: none;" ><span style = "padding-right: 5px;">模式选择</span><select  id = "opt_" style ="width:10%;"  onchange ="modeset();"><option value="0">本机设置</option>
 									<option value="1">级联组设置</option><option value="2">本机房设置</option><option value="3">全部设置</option></select></span> -->
-								<span style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
+								<span id="dev_sel" style="float:right;"><span id="lang_3" style="padding-right: 5px;"></span><select
 										class="devname" id="ms" style="width:100px;"
-										onchange="change();"></select></span>
+										onchange="change(this);"></select></span>
 							</div>
 						</div>
 					</div>
@@ -83,16 +83,59 @@
 			let dual_arr = [14,13,11,9,10,16,15,8,0,0,12];
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				document.getElementById("lang_2").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{
 				document.getElementById("lang_2").style.display="";
 			}
+			function dev_disp(){
+				let dev_name =new Array();
+				let DataString = pdu_cfg.meta_value();
+				pdu_data = JSON.parse(DataString);
+				slave_num = pdu_data.pdu_info.slave_num;
+				for(let i = 1;i<6;i++){
+					lang[i] = new Array();
+				}
+				lang[1] = ["输出位监测","","","",""];
+				lang[2] = ["阅读模式","Reading mode","","",""];
+				lang[3] = ["设备选择:","Equipment selection:","","",""];
+				lang[4]  = ["机柜", "Cabinet", "", "", ""];
+
+				for(let i = 0;i<(slave_num / 2);i++){
+					dev_name[i] =  lang[4][language] + (i+1);
+				}
+				$('.devname').html(BuildSel((slave_num / 2)));
+
+				for(let j = 1;j<4;j++){
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
+				if (pdu_data.pdu_info.dev_mode == 0 ) {
+					document.getElementById("dev_sel").style.display = "none";
+				}else{
+					document.getElementById("dev_sel").style.display = "";	
+				}
+				document.getElementById("ms").value = slave_num / 2;
+				function BuildSel(rows)
+				{
+					var tbody = '';
+					for(var i = 0;i<rows;i++)
+					{
+						tbody += '<option id = "opt'+ i + '"value ="'+ i +'">'+dev_name[i]+'</option>';
+					}
+					return tbody;
+				}
+			}
 			function hidden(){
-				document.getElementsByClassName("page-cont")[0].style.display = "none";	
-				document.getElementsByClassName("section-cont")[0].style.display = "none";	
+				dev_disp();
+				// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+				// document.getElementsByClassName("section-cont")[0].style.display = "none";
+				document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+				document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+				document.getElementById("readonly").style.display = "none";
+				document.getElementById("lang_1").style.display = "none";
+				return -1;
 			}
 			pdu_cfg.setAddr(dual_addr);
 			function ParseData(){
@@ -117,8 +160,14 @@
 						}, 100);
 					}
 					return ;
+				}else{
+					document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+					document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+					document.getElementById("readonly").style.display = "";
+					document.getElementById("lang_1").style.display = "";
 				}
 				if(dev_mode != 2){
+					document.getElementsByClassName("page-cont")[0].style.display = "none";
 					if(t1 == 0){
 					let t2 =setInterval(function () {
 						if(0 == language){
@@ -131,6 +180,21 @@
 					}, 100);
 				}
 					hidden();
+					return
+				}
+				if(0 == slave_num){
+					document.getElementsByClassName("page-cont")[0].style.display = "none";	
+					if(t1 == 0){
+						let t2 =setInterval(function () {
+							if(0 == language){
+								alert("副机数量为0无机柜数据!");
+							}else{
+								alert("No cabinet data for 0 auxiliary units!");
+							}
+							clearInterval(t2);
+							t1 += 1;
+						}, 100);
+					}
 				}
 				let k = 0;
 				for(let i = 0;i<dual_num;i++){
@@ -204,6 +268,20 @@
 				}
 				document.getElementById("ms").selected = slave_addr;
 				return tbody;
+			}
+			function change(opt){
+			//	slave_addr = parseInt(opt.value);
+				dual_addr = parseInt(opt.value) * 2;
+				pdu_cfg.setAddr(dual_addr);
+				setTimeout(function(){
+					ParseData();
+					read_data();
+					$('.table-striped').html(buildTable(dual_num));
+					//$('.devname').html(buildSel(slave_num/2));
+					showdata();
+					lang_fun();
+					modeset();
+				},800);
 			}
 			function showdata() {
 				var cs = 0, ss = 0;

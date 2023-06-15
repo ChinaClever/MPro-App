@@ -99,6 +99,7 @@ QByteArray SerialPort::readSerial(int msecs)
                 cm::mdelay(123);
                 array += mSerial->readAll();
             } rcv.append(array);
+            if(array.size() > 1024*8) array.clear();
         } while (array.size());
     }
 

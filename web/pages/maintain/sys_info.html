@@ -32,12 +32,23 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left CoreInfo"></table>
 					</div>
-					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left Language"></table>			
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 150px;">
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<style>
+		.sele {
+			-moz-appearance:none;
+			-webkit-appearance:none;
+			appearance:none;
+		}
+		.sele::-ms-expand{display: none;}
+	</style>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
 	<script src="../../include/js/pdu_rpc.js"></script>
     <script src="../../include/js/public.min.js"></script>
@@ -49,18 +60,36 @@
 		var mode_set = new Array("","");
 		var ver_data = new Array();
 		let lang = new Array();
-		let ver_name = new Array("McName","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let type =new Array();
+		let serialNumber;
+		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
+			serialNumber = pdu_data.pdu_version.serialNumber;
 			language = pdu_data.pdu_info.language;
 		}
 		ParseData();
 		function read_data(){
-			for(var j = 0;j<24;j++){
-				if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
-					ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+			if(0 == language){
+				for(var j = 0;j<24;j++){
+					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+						ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+					}
 				}
+				ver_data[24] = serialNumber;
+			}else{
+				for(var j = 0;j<24;j++){
+					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+						if(j == 4){
+							continue;
+						}else{
+							ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
+						}
+					}
+				}
+				ver_data[24] = serialNumber;			
 			}
 		}
 		lang_init();
@@ -88,46 +117,106 @@
 			lang[18] = ["内核版本:","Kernel version:","","",""];
 			lang[19] = ["内存信息:","Memory information:","","",""];
 			lang[20] = ["存储状态:","Storage status:","","",""];
+			lang[21] = ["设备序列号:","Equipment serial number:","","",""];
+			lang[22] = ["语言:","Language:","","",""];
+			lang[23] = ["中文","Chinese","","",""];
+			lang[24] = ["英文","English","","",""];
+			for(let i = 0;i < 2;i++){
+				type[i] =  lang[23+i][language] ;
+			}
 		}
 		function lang_fun(){
-			for(let j = 1;j<21;j++){
-				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			// for(let j = 1;j<22;j++){
+			for(let j = 1;j<23;j++){
+				if(1 == language && j == 7){
+					continue;
+				}else{
+					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+				}
 			}
 		}
 		setTimeout(function(){
 			$('.McInfo').html(buildTableMc());
 			$('.BoradInfo').html(buildTableBorad());
 			$('.CoreInfo').html(buildTableCore());
+			$('.Language').html(buildTableLanguage());
 			lang_fun();
 			read_data();
 			ShowData();
 		},500);
 		function ShowData(){
-			for(var i = 0; i < (ver_name.length);i++){
-				if(ver_name[i] != ""){
-					document.getElementById(ver_name[i]).innerHTML = ver_data[i];
-				}
+			if(0 == language){
+				for(var i = 0; i < (ver_name.length);i++){
+					if(ver_name[i] != ""){
+						if(i == 0){
+							document.getElementById(ver_name[i]).innerHTML = ver_data[i];
+						}else if(i == 1){
+							document.getElementById(ver_name[i]).innerHTML = ver_data[24];
+						}else{
+							document.getElementById(ver_name[i]).innerHTML = ver_data[i-1];
+						}
+						
+					}
+				}				
+			}else{
+				for(var i = 0; i < (ver_name_.length);i++){
+					if(ver_name_[i] != ""){
+						if(i == 0){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+						}else if(i == 1){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[24];
+						}else if(i <5){
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i-1];
+						}else{
+							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+						}
+					}
 			}
+			}
+			//document.getElementById("language_sel" ).value = language;
 			if(top.login_permit_ == 0){
 			}else{
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
 		}
+		function ChoseLang(btn){
+			if(0 == language){
+				alert("请按F5重新刷新网页以更改语言设置！");	
+			}else{
+				alert("Please press F5 to refresh the webpage again to change the language settings！");
+			}
+			if(language == 1){
+				language = 0;
+			}else{
+				language = 1;
+			}
+			pdu_cfg.setCfg(13,10,language,0,addr);
+			setTimeout(function(){	
+			//	window.sessionStorage.setItem('language_sel', language);
+				pdu_cfg.loginCfg();
+				PduMetaData.meta_workDown();
+			},800);
+		}
+
 		function buildTableMc() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_2" ></td>\
 				<td width ="85%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td id = "McName"></td></tr>';
+			tbody += '<tr><td id="lang_21" ></td>';
+			tbody += '<td id = "ser_num"></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
 			tbody += '<td id = "McVer"></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td id = "McCode"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td id = "McUsrName"></td></tr>';
-			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td id = "McVerShow"></td></tr>';
+			if(0 == language){
+				tbody += '<tr><td id="lang_7" ></td>';
+				tbody += '<td id = "McVerShow"></td></tr>';
+			}			
 			tbody += '<tr><td id="lang_8" ></td>';
 			tbody += '<td id = "McReiyOnVer"></td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
@@ -164,6 +253,18 @@
 			tbody += '<td id = "MemSize"></td></tr>';
 			tbody += '<tr><td id="lang_20" ></td>';
 			tbody += '<td id = "DiskInfo"></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableLanguage() {
+			var thead = '',tbody = '';
+			tbody +='<tr><td width ="15%" id="lang_22" ></td>';		
+			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" onclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
+			// tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
+			// for(var i = 0; i<2;i++){
+			// 	tbody +='<option value ="'+i+'">'+type[i] +'</option>';
+			// }
+			// tbody += '</select></td></tr>';//下拉框方法
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}

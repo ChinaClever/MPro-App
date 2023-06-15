@@ -42,21 +42,31 @@
 		let language;
 		let addr = 0;
 		pdu_cfg.usrinfoCfg();
+		pdu_cfg.webCfg();
 		let usr_mark = 0;
 		let user_info = new Array("","UserName","Password","Identify","Jurisdiction","OutCtrl","","","","","","Verfity");
 		let opt_set = new Array();
 		let usrs_data = new Array();
 		let usrs_name_ = new Array("","","","","");
 		let jurisdiction = new Array();
+		let web_data = new Array();
 		let lang = new Array();
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
     	//let hasher = CryptoJS.algo.SHA256.create();
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
-		let pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
+		let pattern = /^.*(?=.{8,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
+			if(top.login_permit_ != 0){
+				hidden();
+			}
+		}
+		function hidden(){
+			 document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			 document.getElementsByClassName("section-cont")[0].style.display = "none";
+			 return -1;
 		}
 		ParseData();
 		function ReadData(){
@@ -72,6 +82,7 @@
 					usrs_data[4][i] = 1;
 				}
 			}
+			web_data[0] = pdu_cfg.cfgValue(42,6,0,addr);//获取强密码的值
 		}
 		function LangInit(){
 			for(let i = 0;i<19;i++){
@@ -108,8 +119,8 @@
 			}
 			document.getElementById("lang_18").value  = lang[18][language];
 			document.getElementById("lang_19").value  = lang[19][language];
-			document.getElementById("lang_20").innerHTML  = lang[20][language];
-			document.getElementById("lang_21").innerHTML  = lang[21][language];
+			//document.getElementById("lang_20").innerHTML  = lang[20][language];
+			//document.getElementById("lang_21").innerHTML  = lang[21][language];
 		}
 		LangInit();
 		setTimeout(function(){
@@ -126,7 +137,7 @@
 				document.getElementById(user_info[i]).value = usrs_data[i][0];
 			}
 			document.getElementById("conpsd").value = document.getElementById(user_info[2]).value;
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{
@@ -180,7 +191,6 @@
 			FlashHtml();
 		}
 
-
 		function SetVal(){
 			let val =  parseInt(document.getElementById("usrSel").value);
 			let usr_ = document.getElementById("UserName").value;
@@ -192,44 +202,54 @@
 			if(jur_ != 0){
 				jur_ = 2;
 			}
-			if(!pattern_.test(usr_))
-			{
+			if(parseInt(document.getElementById("usrSel").value) == 0){
 				if(0 == language){
-					alert("请输入5-16位用户名");
+					alert("第一个账户不能修改为访客权限!")
 				}else{
-					alert("Please enter a 5-16 digit username");
+					alert("The first account cannot be modified to visitor permissions!")
 				}
-				
-				return ;
-			}
-			if(document.getElementById("lang_21").checked == true){				
+				return -1;
 			}else{
+			}
+			//if(document.getElementById("lang_21").checked == true){				
+			//}else{
+			if(web_data[0] == 0){				
+			}else{
+				if(!pattern_.test(usr_))
+				{
+					if(0 == language){
+						alert("请输入5-16位用户名");
+					}else{
+						alert("Please enter a 5-16 digit username");
+					}
+					
+					return ;
+				}
 				if(!pattern.test(psd_) && psd_ == conpsd_){
 					if(0 == language){
-						alert("请输入6-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
+						alert("请输入8-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
 					}else{
-						alert("Please enter a 6-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
+						alert("Please enter a 8-16 digit username or password, which must contain at least one number, uppercase and lowercase letters");
 					}				
 				return ;
 				}
 				if(!pattern.test(ident_)){
 					if(0 == language){
-						alert("请输入6-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
+						alert("请输入8-16位验证信息,验证信息必须包含至少一个数字,大写和小写字母");
 					}else{
-						alert("Please enter 6-16 digit verification information, which must contain at least one digit, uppercase and lowercase letters");
+						alert("Please enter 8-16 digit verification information, which must contain at least one digit, uppercase and lowercase letters");
 					}
 				
 				return ;
 				}
-			}
-			if(ident_ == psd_){
-				if(0 == language){
-					alert("输入的验证信息和密码不能是同一个，请重新输入");
-				}else{
-					alert("The verification information and password entered cannot be the same. Please re-enter");
+				if(ident_ == psd_){
+					if(0 == language){
+						alert("输入的验证信息和密码不能是同一个，请重新输入");
+					}else{
+						alert("The verification information and password entered cannot be the same. Please re-enter");
+					}		
+					return ;
 				}
-		
-			return ;
 			}
 			for(i = 0;i < 5;i++){
 				if(i != val && usrs_data[1][i] != "" && usr_ == usrs_data[1][i]){
@@ -268,8 +288,8 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id ="lang_2"></td>\
 			<td width ="85%"></td>/tr>';
-			tbody += '<tr><td id ="lang_20"></td>';
-			tbody += '<td><input  type = "checkbox"  style="width:auto;position:static"  id = "lang_21"></input></td></tr>';
+			// tbody += '<tr><td id ="lang_20"></td>';/*免加密策略*/
+			// tbody += '<td><input  type = "checkbox"  style="width:auto;position:static"  id = "lang_21"></input></td></tr>';
 			tbody += '<tr><td id = "lang_3"></td>';
 			tbody += '<td><select id ="usrSel" onchange ="Set_(this.value)">';
 			for(var i = 0; i<usrs_name_.length;i++){
@@ -279,9 +299,9 @@
 			tbody += '<tr><td id = "lang_4"></td>';
 			tbody += '<td><input id ="UserName" type="text" style ="width:24.5%;ime-mode:disabled" maxlength="16" onkeyup ="Clear(this)" placeholder="用户名" onblur = "validataForm(this)" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_5"></td>';
-			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="密码"></form></td></tr>';
+			tbody += '<td><form><input id ="Password" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  onselectstart="return false" onpaste="return false"  placeholder="密码"></form></td></tr>';
 			tbody += '<tr><td id ="lang_6" ></td>';
-			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"  placeholder="确认密码" autocomplete="off"></form></td></tr>';
+			tbody += '<td><form><input id ="conpsd" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onblur = "validataForm(this)"   onselectstart="return false" onpaste="return false" placeholder="确认密码" autocomplete="off"></form></td></tr>';
 			tbody += '<tr><td id ="lang_7"></td>';
 			tbody += '<td><input id ="Identify" type="password"  style ="width:24.5%" maxlength="16" autocomplete="off" onkeyup ="Clear(this)"  onblur = "validataForm(this)"  placeholder="预留信息" autocomplete="off"></td></tr>';
 			tbody += '<tr><td id ="lang_8"></td>';
@@ -290,7 +310,7 @@
 				tbody +='<option value ="'+i+'">'+jurisdiction[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
-			tbody += '<tr><td><input id="lang_19" type = "button" style ="width:50%"  onclick = "deltet()"></td><td><input id="lang_18" type = "button" style ="width:10%"  onclick = "SetVal()"></td></tr>';
+			tbody += '<tr><td><input id="lang_19" type = "button" style ="width:50%"  onclick = "deltet()"></td><td><input id="lang_18" type = "button" style ="width:10%;background-color:#4082e6;color:#fff;;border:0px solid;line-height:25px"  onclick = "SetVal()"></td></tr>';
 			//tbody += '<tr><td><input id="lang_19" type = "button" style ="width:50%"  onclick = "deltet()"></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';

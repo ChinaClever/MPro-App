@@ -110,7 +110,7 @@
     ]
   },
   {
-    "name": "Environmental parameters",
+    "name": "Environmental data",
     "icon": "flag_fill",
     "base": "",
     "url": "pages/envir/envir_ctrl.html"
@@ -185,6 +185,10 @@
       {
         "name": "Cyber security",
         "url": "net.html"
+      },
+      {
+        "name": "Login Security",
+        "url": "login_security.html"
       }
     ]
   },
@@ -221,6 +225,7 @@
         "name": "Remote authentication service",
         "url": "radius.html"
       }
+      
     ]
   },  
   {
@@ -282,6 +287,10 @@
         "url": "net_diagnostics.html"
       },
       {
+        "name": "Script Service",
+        "url": "shell.html"
+      },
+      {
         "name": "Backup/Restore",
         "url": "backups.html"
       },
@@ -292,15 +301,6 @@
       {
         "name": "System command",
         "url": "sys_command.html"
-      },{
-        "name": "",
-        "url": ""
-      },{
-        "name": "",
-        "url": ""
-      },{
-        "name": "",
-        "url": ""
       }
     ]
   }

@@ -38,19 +38,22 @@
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
-		let pdu_metadata = new PduMetaData();
+		//let pdu_metadata = new PduMetaData();
 		let language;
 		var read =1;
 		let addr = 0;
 		let cfg = 13,num = 12;
 		pdu_cfg.modesetCfg();
+		pdu_cfg.debugCfg();
 		var mode_data = new Array();
+		var sensor_data = new Array();
 		let lang = new Array();
 		var dev_name =new Array();
 		let mode_set = new Array();
+		let sensor_set = new Array();
 		let opt_val = new Array();
 		let sel_len = new Array();
-		let id_val = new Array("","","","mode","addr","","","buz","","","","","","","","","","","","","","data_len");//,"group","energe","pow");
+		let id_val = new Array("","","","mode","addr","","","buz","","sensor","","","","","","","","","","","","data_len");//,"group","energe","pow");
 		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
 		let slave_num1 = 0;
 		let pdu_data;
@@ -106,9 +109,15 @@
 			lang[20]  = ["标准", "Standard", "", "", ""];
 			lang[21] = ["阅读模式","Reading mode","","",""];
 			lang[22] = ["设置模式","Setting mode","","",""];
+			lang[23] = ["传感器盒子:","Sensor box","","",""];
+			lang[24] = ["禁用","Disable","","",""];
+			lang[25] = ["启用","Enable","","",""];
 
 			for(let j = 0;j < 3;j++){
 				mode_set[j] = lang[12 +j][language];
+			}
+			for(let j = 0;j < 2;j++){
+				sensor_set[j] = lang[24 +j][language];
 			}
 			opt_val[0] = lang[10][language];
 			opt_val[1] = lang[11][language];
@@ -125,12 +134,14 @@
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
 			document.getElementById("lang_21").innerHTML = lang[21][language];
+			document.getElementById("lang_23").innerHTML = lang[23][language];
 		}
 		let modeset_arr = [3,4,7,21,8,9,10];
 		function ReadData(){
 			for(let i = 0;i<modeset_arr.length;i++){
 				mode_data[i] = pdu_cfg.cfgValue(cfg,modeset_arr[i],0,addr);
 			}
+			sensor_data = pdu_cfg.cfgValue(cfg,9,0,addr);
 		}
 		function ReadOnlySet(ros){
 			if(read === 1){
@@ -150,6 +161,7 @@
 				document.getElementById("buz").disabled = false;
 				document.getElementById("addr").disabled = false;
 				document.getElementById("mode").disabled = false;
+				document.getElementById("sensor").disabled = false;
 
 			}
 			else{
@@ -164,6 +176,7 @@
 				document.getElementById("buz").disabled = true;
 				document.getElementById("addr").disabled = true;
 				document.getElementById("mode").disabled = true;
+				document.getElementById("sensor").disabled = true;
 			}
 		}
 		function ModeSet(modesel){
@@ -176,6 +189,7 @@
 			document.getElementById("buz").disabled = true;
 			document.getElementById("addr").disabled = true;
 			document.getElementById("mode").disabled = true;
+			document.getElementById("sensor").disabled = true;
 		}
 		setTimeout(function(){
 			$('.mode_set').html(BuildTableMode());
@@ -205,8 +219,10 @@
 				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
+				document.getElementById("sensor").value = sensor_data;
 			}
-			if(top.login_permit_ == 1){
+			if(top.login_permit_ != 0){
+				document.getElementById("lang_21").style.display="none";
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{
@@ -215,9 +231,17 @@
 		function SetData(btn){
 			let mds_data = 0;
 			if(0 == language){
-				var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！");	
+				if(btn.id == "mode"&& btn.value == "2"){
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！A/C系列无机架功能");			
+				}else{
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！");	
+				}
 			}else{
-				var retVal = confirm("Please confirm whether to enable cascading or disable this function. Once enabled, the modbus RTU cascading mode will be turned off！");
+				if(btn.id == "mode"&& btn.value == "2"){
+					var retVal = confirm("请确认是否开启级联或禁用此功能，该功能开启后将关闭modbus RTU级联方式！A/C系列无机架功能");			
+				}else{
+					var retVal = confirm("Please confirm whether to enable cascading or disable this function. Once enabled, the modbus RTU cascading mode will be turned off! A/C series inorganic rack function！");
+				}				
 			}
 			if(retVal == true){
 				for(let  i = 0;i < id_val.length;i++){
@@ -313,6 +337,12 @@
 			tbody += '<td><select id ="data_len" onchange ="SetData_other(this)">';
 			for(var i = 0; i<sel_len.length;i++){
 				tbody +='<option value ="'+i+'">'+sel_len[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id = "lang_23"></td>';
+			tbody += '<td><select id ="sensor" onchange ="SetData_other(this)">';
+			for(var i = 0; i<sensor_set.length;i++){
+				tbody +='<option value ="'+i+'">'+sensor_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

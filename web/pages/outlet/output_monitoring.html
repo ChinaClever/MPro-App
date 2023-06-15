@@ -51,19 +51,49 @@
 		let pdu_data;
 		let t1 = 0;
 		let addr = pdu_cfg.addr;
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
 		}else{
 		}
-		function hidden(){
-			document.getElementsByClassName("page-cont")[0].style.display = "none";	
-			document.getElementsByClassName("section-cont")[0].style.display = "none";	
+		function dev_disp(){
+			let DataString = pdu_cfg.meta_value();
+			pdu_data = JSON.parse(DataString);
+			for(let i = 1;i<6;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["输出位监测","","","",""];
+			lang[2] = ["设备选择:","Equipment selection:","","",""];
+			lang[3]  = ["主机", "Master", "", "", ""];
+			lang[4]  = ["副机", "Slave", "", "", ""];
+
+			dev_name[0] = lang[3][language];
+			for(let i = 1;i<(pdu_data.pdu_info.slave_num+1);i++){
+				dev_name[i] =  lang[4][language] + i;
+			}
+			$('.devname').html(BuildSel((pdu_data.pdu_info.slave_num+1)));
+
+			for(let j = 1;j<3;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			if (pdu_data.pdu_info.dev_mode == 0 ) {
+				document.getElementById("dev_sel").style.display = "none";
+			}else{
+				document.getElementById("dev_sel").style.display = "";	
+			}
+			document.getElementById("ms").value = addr;
+
 		}
-		//function B_series(){
-			//document.getElementById("c").style.display = "none";
-			//document.getElementById("lang_5").style.display = "none";
-		//}
+		function hidden(){
+			 dev_disp();
+			// document.getElementsByClassName("page-cont")[0].style.display = "none";	
+			// document.getElementsByClassName("section-cont")[0].style.display = "none";
+			 document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "none";
+			 document.getElementsByClassName("table table-striped text-center")[0].style.display = "none";
+			 document.getElementById("lang_1").style.display = "none";
+			 return -1;
+
+		}
 
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -83,17 +113,21 @@
 					}, 100);
 				}
 				return ;
+			}else{
+			document.getElementsByClassName("fa fa-th-list fa-lg")[0].style.display = "";
+			document.getElementsByClassName("table table-striped text-center")[0].style.display = "";
+			 document.getElementById("lang_1").style.display = "";
 			}
-			//if(pdu_data.pdu_info.pdu_spec == 2){
-			//	B_series();
-			//}
+
 		}
 		ParseData();
 		LangInit();
 		function LangInit(){
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
+
 			}
+			
 			lang[1] = ["输出位监测","","","",""];
 			lang[2] = ["设备选择:","Equipment selection:","","",""];
 			lang[3] = ["序号","Serial number","","",""];
@@ -143,6 +177,7 @@
 			//},100);
 			setTimeout(function(){
 				ParseData();
+				LangInit();
 				$('.table-striped').html(BuildTable(pdu_data.pdu_info.output_num));
 				ShowData();
 				LangFun();
@@ -162,20 +197,22 @@
 				var hs = document.getElementById('c'+(i-1));
 				var ss = document.getElementById('d'+(i-1));
 				var cs = document.getElementById('e'+(i-1));
-				if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2|| pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
-					//hs.bgColor = 'yellow';
-					hs.style.color = 'yellow';
-				}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
-					//hs.bgColor = 'red';
-					hs.style.color = 'red';
-				}
-				else{
-					hs.bgColor = '';
-					hs.style.color = 'green';
-					if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
-						hs.style.color = 'black';
+				if(pdu_data.pdu_info.pdu_spec == 2){
+				}else{				
+					if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 2|| pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 4){
+						//hs.bgColor = 'yellow';
+						hs.style.color = 'yellow';
+					}else if(pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 1 || pdu_data.pdu_data.output_item_list.relay_alarm[i-1] == 8){
+						//hs.bgColor = 'red';
+						hs.style.color = 'red';
 					}
-					
+					else{
+						hs.bgColor = '';
+						hs.style.color = 'green';
+						if(State[pdu_data.pdu_data.output_item_list.relay_state[i-1]] == "关"){
+							hs.style.color = 'black';
+						}						
+					}
 				}
 				if(pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 2|| pdu_data.pdu_data.output_item_list.pow_alarm_status[i-1] == 4){
 					cs.bgColor = 'yellow';

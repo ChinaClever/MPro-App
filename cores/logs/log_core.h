@@ -29,6 +29,7 @@ public:
 
 private slots:
     void run();
+    void invAdcSlot();
     void timeoutDone();
     void initFunSlot();
     void saveLogSlot();
@@ -37,6 +38,8 @@ private:
     bool isRun=false;
     QTimer *timer;
     uint mCnt = 1;
+    uint mt = 567;
+    uint mLogCnt =1;
 
     Db_Hda *mHda;
     QList<sHdaItem> mHdaIts;

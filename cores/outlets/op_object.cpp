@@ -19,7 +19,7 @@ bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
 {
     bool ret = true;
     if(cm::runTime() < 48*60*60) dest = src;
-    if((src >= min) && (src < max)) {
+    if((src >= min) && (src <= max)) {
         dest = src; ret = true;
     } else {
         ret = false;
@@ -32,7 +32,7 @@ void OP_Object::faultLog(int id, uint *cnt, uint value)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60*60) num = 1;
+    if(cm::runTime() < 72*60*60) num = 1;
     if((cnt[id] == num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
@@ -59,8 +59,8 @@ void OP_Object::recoveryLog(int id, uint *cnt)
 {
     uint num = FAULT_NUM;
     uint *dtc = mDev->dtc.code;
-    if(cm::runTime() < 48*60*60) num = 1;
-    if((cnt[id] > num) && dtc[id]) {
+    if(cm::runTime() < 72*60*60) num = 1;
+    if((cnt[id] == num) && dtc[id]) {
         sEventItem it;
         if(dtc[id] & FaultCode::DTC_VOL) {
             it.event_type = tr("Vol recovery");

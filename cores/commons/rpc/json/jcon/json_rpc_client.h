@@ -29,7 +29,7 @@ public:
     JsonRpcClient(std::shared_ptr<JsonRpcSocket> socket,
                   QObject* parent = nullptr,
                   std::shared_ptr<JsonRpcLogger> logger = nullptr,
-                  int call_timeout_ms = 60000);
+                  int call_timeout_ms = 1000); ////========== 60000
 
     virtual ~JsonRpcClient();
 

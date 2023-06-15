@@ -15,6 +15,9 @@ public:
     static sSercretIt cfg;
     QByteArray encode(const QByteArray &raw);
     QByteArray decrypt(const QByteArray &raw);
+
+    QByteArray base64_encode(const QByteArray &raw);
+    QByteArray base64_decode(const QByteArray &raw);
 };
 
 #endif // SERCRET_CORE_H

@@ -52,20 +52,20 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         env->hum.value[2] = getShort(ptr); ptr += 2;
         env->tem.value[3] = getShort(ptr); ptr += 2;
         env->hum.value[3] = getShort(ptr); ptr += 2;
-        ptr += 8;  int k=0, j=4;// 报警上下限
+        ptr += 8; int k=0, j=4;// 报警上下限
         ushort alarm = getShort(ptr); //ptr += 2;
 
         env->isInsert[2] = (isInsert >> k++) & 1;
         env->isInsert[3] = (isInsert >> k++) & 1;
         env->smoke[0] = (isInsert >> k++) & 1;
         env->water[0] = (isInsert >> k++) & 1;
-        env->door[0] = (isInsert >> k++) & 1;
-        env->door[1] = (isInsert >> k++) & 1;
+        //env->door[0] = (isInsert >> k++) & 1;
+        //env->door[1] = (isInsert >> k++) & 1;
 
         if(env->smoke[0]) env->smoke[0] += (alarm >> j++) & 1;
         if(env->water[0]) env->water[0] += (alarm >> j++) & 1;
-        if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
-        if(env->door[1]) env->door[1] += (alarm >> j++) & 1;
+        //if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
+        //if(env->door[1]) env->door[1] += (alarm >> j++) & 1;
     } else  ret = false;    
     //cout << ret << env->isInsert[2] << env->isInsert[3];
 

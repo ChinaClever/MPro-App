@@ -31,6 +31,7 @@ void Data_Outlet::outletOverrunOff()
 {
     sObjData *obj = &(mDev->output);
     for(int i=0; i<obj->relay.size; ++i) {
+        if(obj->relay.disabled[i]) continue;
         bool ret = relayOverrunOff(*obj, i);
         if(ret) {
             OP_Core::bulid()->relayCtrl(i+1, 0);
@@ -49,10 +50,12 @@ void Data_Outlet::outletTiming()
 {
     sObjData *obj = &(mDev->output);
     for(int i=0; i<obj->relay.size; ++i) {
+        if(obj->relay.disabled[i]) continue;
         int res = relayTiming(*obj, i);
         if(res) {
+            res -= 1; sEventItem db;
             OP_Core::bulid()->relayCtrl(i+1, res);
-            sEventItem db; res -= 1; if(cm::cn()) {
+             if(cm::cn()) {
                 db.event_type = QStringLiteral("定时开关");
                 db.event_content = QStringLiteral("继电器 %1").arg(i+1);
                 if(res) db.event_content += QStringLiteral("接通");

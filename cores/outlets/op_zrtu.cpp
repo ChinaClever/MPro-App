@@ -76,6 +76,27 @@ void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
     }
 }
 
+bool OP_ZRtu::rtuLog(int addr, const QByteArray &array)
+{
+    bool ret = true;
+    static int cnt[DEV_NUM] = {0};
+    uchar *ptr = (uchar *)array.data();
+    uchar crc = Crc::XorNum(ptr, array.size()-1);
+    if(crc != (uchar)array.at(array.size()-1)) {
+        ret = false; if(1 == cnt[addr]++) {
+            sEventItem it; it.addr = addr;
+            if(cm::cn()) {
+                it.event_type = tr("执行板通讯");
+                it.event_content = tr("收到执行板 %1 异常通讯数据").arg(addr);
+            } else {
+                it.event_type = "Executive Board";
+                it.event_content = tr("Received abnormal communication data from execution board %1").arg(addr);
+            } Log_Core::bulid()->append(it);
+        } cout << cm::byteArrayToHexStr(array);
+    } else cnt[addr] = 0;
+    return ret;
+}
+
 bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
 {
     bool res = false; int k = 6; waitForLock();
@@ -84,12 +105,12 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
 
     QByteArray recv = transmit(cmd, sizeof(cmd));
-    if((recv.size() == zRcvLen) && (recv.at(2) == addr)) {
+    if(recv.size()) res = rtuLog(addr, recv);
+    if((recv.size() == zRcvLen) && (recv.at(2) == addr) && res) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
-        //cout << addr;
-        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
+        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen)); //cout << addr;
     } else {
         cout << addr << recv.size();
         sEventItem it; if(cm::cn()) {
@@ -123,15 +144,16 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);
-            memset(mOpData->vol, 0, size);
+            //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pf, 0, size);
         }
     }
 
     int t = 0; if(cm::runTime() > 48*60*60) {
-        if(!hasCmdWrite()) t = QRandomGenerator::global()->bounded(565);
-    } cm::mdelay(t + 456);
+        if(!hasCmdWrite()) if(cm::runTime() > 74*60*60) t += 1000;
+        if(!hasCmdWrite()) t += QRandomGenerator::global()->bounded(565);
+    } cm::mdelay(t + 656);
 
     return !ret;
 }

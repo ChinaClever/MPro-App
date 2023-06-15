@@ -20,7 +20,7 @@ void cm::mdelay(int msec)
     QTimer::singleShot(msec, &loop, SLOT(quit()));
     loop.exec();
 #else
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
     //阻塞方式延时,如果在主线程会卡住主界面
     QThread::msleep(msec);
 #else
@@ -37,9 +37,9 @@ QString cm::execute(const QString &cmd)
 {
     QProcess pro;
     pro.start(cmd);
-    pro.waitForFinished(); //qDebug() << cmd;
+    pro.waitForFinished(-1); //qDebug() << cmd;
     QByteArray bs = pro.readAllStandardOutput();
-    bs +=  pro.readAllStandardError();
+    bs +=  pro.readAllStandardError(); pro.kill();
     return QString::fromLocal8Bit(bs);
     //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
@@ -52,7 +52,7 @@ QString cm::executes(const QStringList &cmds)
         pro.waitForFinished();
     }
     QByteArray bs = pro.readAllStandardOutput();
-    bs +=  pro.readAllStandardError();
+    bs +=  pro.readAllStandardError(); pro.kill();
     return QString::fromLocal8Bit(bs);
 }
 
@@ -65,7 +65,7 @@ bool cm::pingNet(const QString& ip)
         bPingSuccess = true;
     }else {
         bPingSuccess = false;
-    }
+    } //cout << p_stdout;
 
     return bPingSuccess;
 }

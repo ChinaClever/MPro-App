@@ -9,8 +9,9 @@
 Agent_Core::Agent_Core(QObject *parent)
     : Agent_Trap{parent}
 {
-    mCfg = &snmpCfg; set_snmpdV3(); startSnmpd();
-    QTimer::singleShot(1333,this,&Agent_Core::startSnmpdV3);
+    system("rm -f /usr/data/etc/snmp/snmpd.conf");
+    mCfg = &snmpCfg; startSnmpd(); //set_snmpdV3();
+    QTimer::singleShot(2333,this,&Agent_Core::startSnmpdV3);
 }
 
 Agent_Core *Agent_Core::bulid(QObject *parent)
@@ -87,20 +88,18 @@ void Agent_Core::set_snmpdV3()
     } file.close();
 #else
     QString fn = "/usr/data/clever/cfg/snmpd.conf";
+    for(int i=57; i<65; ++i) {
+        QString str = "sed -i '%1c ' " + fn;
+        system(str.arg(i).toStdString().c_str());
+    }
+
     QString str, fmd; if(mCfg->enV3) {
         str = "sed -i '57crwuser %1' " + fn;
         system(str.arg(mCfg->usr).toStdString().c_str());
 
         fmd = "sed -i '58ccreateUser %1 MD5 \"%2\" %4 \"%3\"' " + fn;
         str = fmd.arg(mCfg->usr, mCfg->pwd, mCfg->key, mCfg->encrypt?"AES":"DES");
-        system(str.toStdString().c_str());
-    } else {
-        for(int i=57; i<63; ++i) {
-            QString str = "sed -i '%1c ' " + fn;
-            system(str.arg(i).toStdString().c_str());
-        }
-        //str = "sed -i '58c ' " + fn;
-        //system(str.toStdString().c_str());
+        system(str.toStdString().c_str());        
     }
 
     str = "sed -i '32crocommunity %1' " + fn;

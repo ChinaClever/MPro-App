@@ -26,8 +26,10 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left radius"></table>
 					</div>
-					<div class="grid-col grid-col-7 border-none">
+					<!-- <div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left ldap"></table>
+					</div> -->
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
 					</div>
 				</div>
 			</div>
@@ -46,7 +48,7 @@
 		let ldap_data = new Array();
 		let lang = new Array();
 		let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
-		let ldap_name = new Array("","LdapEn","LdapServer","LdapArea");
+		// let ldap_name = new Array("","LdapEn","LdapServer","LdapArea");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -57,9 +59,9 @@
 			for(var j = 1;j<radius_name.length;j++){
 				radius_data[j] = pdu_cfg.cfgValue(48,j,0,addr);
 			}
-			for(var j = 1;j<ldap_name.length;j++){
-				ldap_data[j] = pdu_cfg.cfgValue(49,j,0,addr);
-			}
+			// for(var j = 1;j<ldap_name.length;j++){
+			// 	ldap_data[j] = pdu_cfg.cfgValue(49,j,0,addr);
+			// }
 		}
 		lang_init();
 		function lang_init(){
@@ -74,10 +76,10 @@
 			lang[6] = ["NAS密钥:","NAS key:","","",""];
 			lang[7] = ["认证端口号:","Authentication port number:","","",""];
 			lang[8] = ["账号端口号:","Account port number:","","",""];
-			lang[9] = ["OpenLDAP设置","OpenLDAP setting","","",""];
-			lang[10] = ["服务启用:","Service activation:","","",""];
-			lang[11] = ["主服务:","Primary service:","","",""];
-			lang[12] = ["域账号:","Domain account:","","",""];
+			// lang[9] = ["OpenLDAP设置","OpenLDAP setting","","",""];
+			// lang[10] = ["服务启用:","Service activation:","","",""];
+			// lang[11] = ["主服务:","Primary service:","","",""];
+			// lang[12] = ["域账号:","Domain account:","","",""];
 			lang[13] = ["禁用","Disable","","",""];
 			lang[14] = ["启用","Enable","","",""];
 
@@ -85,13 +87,13 @@
 			mode_set[1] = lang[14][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<13;j++){
+			for(let j = 1;j<9;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 		}
 		setTimeout(function(){
 			$('.radius').html(buildTable());
-			$('.ldap').html(buildTable_());
+			// $('.ldap').html(buildTable_());
 			lang_fun();
 			read_data();
 			showdata();
@@ -101,20 +103,20 @@
 				document.getElementById(radius_name[i]).value = radius_data[i];
 				document.getElementById(radius_name[i]).disabled = false;
 			}
-			for(let i = 1;i<ldap_name.length;i++){
-				document.getElementById(ldap_name[i]).value = ldap_data[i];
-				document.getElementById(ldap_name[i]).disabled = false;
-			}
+			// for(let i = 1;i<ldap_name.length;i++){
+			// 	document.getElementById(ldap_name[i]).value = ldap_data[i];
+			// 	document.getElementById(ldap_name[i]).disabled = false;
+			// }
 			if(radius_data[1] == 0 || radius_data[1] == "false"){
 				for(let i = 2;i<radius_name.length;i++){
 					document.getElementById(radius_name[i]).disabled = true;
 				}
 			}
-			if(ldap_data[1] == 0 || ldap_data[1] == "false"){
-				for(let i = 2;i<ldap_name.length;i++){
-					document.getElementById(ldap_name[i]).disabled = true;
-				}
-			}
+			// if(ldap_data[1] == 0 || ldap_data[1] == "false"){
+			// 	for(let i = 2;i<ldap_name.length;i++){
+			// 		document.getElementById(ldap_name[i]).disabled = true;
+			// 	}
+			// }
 			if(top.login_permit_ == 0){
 			}else{
 				$("input").attr("disabled","disabled");
@@ -127,11 +129,11 @@
 					pdu_cfg.setCfg(48,i,btn.value,0,addr);
 				}
 			}
-			for(let i = 0;i<ldap_name.length;i++){
-				if(ldap_name[i] == btn.id){
-					pdu_cfg.setCfg(49,i,btn.value,0,addr);
-				}
-			}
+			// for(let i = 0;i<ldap_name.length;i++){
+			// 	if(ldap_name[i] == btn.id){
+			// 		pdu_cfg.setCfg(49,i,btn.value,0,addr);
+			// 	}
+			// }
 			btn.blur();
 				flash_html();
 		}
@@ -175,26 +177,26 @@
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
-		function buildTable_() {
-			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_9" ></td>\
-			<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_10" ></td>';
-			tbody += '<td><select id ="LdapEn" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
-			tbody += '<tr><td id="lang_11" ></td>';
-			tbody += '<td><input id = "LdapServer" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_12" ></td>';
-			tbody += '<td><input id = "LdapArea" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			tbody += '</td></tr>';
-			tbody += '<tr><td></td></tr>';
-			return '<thead>' + thead + '</thead>'
-				 + '<tbody>' + tbody + '</tbody>';
-		}
+		// function buildTable_() {
+		// 	var thead = '',tbody = '';
+		// 	thead = '<tr><td width ="15%" id="lang_9" ></td>\
+		// 	<td width ="85%"></td></tr>';
+		// 	tbody += '<tr><td id="lang_10" ></td>';
+		// 	tbody += '<td><select id ="LdapEn" onchange ="SetData(this)">';
+		// 	for(var i = 0; i<mode_set.length;i++){
+		// 		tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+		// 	}
+		// 	tbody += '</select></td></tr>';
+		// 	tbody += '<tr><td id="lang_11" ></td>';
+		// 	tbody += '<td><input id = "LdapServer" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+		// 	tbody += '</td></tr>';
+		// 	tbody += '<tr><td id="lang_12" ></td>';
+		// 	tbody += '<td><input id = "LdapArea" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+		// 	tbody += '</td></tr>';
+		// 	tbody += '<tr><td></td></tr>';
+		// 	return '<thead>' + thead + '</thead>'
+		// 		 + '<tbody>' + tbody + '</tbody>';
+		// }
     </script>
 </body>
 </html>

@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="./include/css/public.min.css">
 		<link rel="stylesheet" href="./include/css/iconfont.min.css">
 		<link rel="stylesheet" href="./include/css/font-awesome.min.css">
+		<link rel="stylesheet" href="./include/css/index.min.css">
 		<style>
 			.panel-default{
             border: none;
@@ -70,22 +71,22 @@
     <script>
 		//var pdu_metadata_ = new PduMetaData();
 		//https重定向到http
-		var target_protocol = "http:";
-		if(window.location.protocol != target_protocol){
-			window.location.href = target_protocol +
-			window.location.href.substring(window.location.protocol.length);
-		}
+		//var target_protocol = "http:";
+		//if(window.location.protocol != target_protocol){
+		//	window.location.href = target_protocol +
+		//	window.location.href.substring(window.location.protocol.length);
+		//}
 
 		let pdu_obj = PduCore.build();
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			PduMetaData.meta_workDown(0);
-		},400);
+		},600);
 
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			PduMetaData.meta_workDown(0);
-		},600);
+		},1100);
 
 		setTimeout(function(){
 			pdu_obj.login_check();
@@ -104,10 +105,13 @@
 		let board_num= "";
 		var mark = 1;
 		let pdu_data= "";
+		let login_permit_;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
 		let break_en = 0;
+		let output_cur_upper = new Array();
+		let output_cur_max = new Array();
 		let rating = new Array();
 		let rating_ = new Array();;
 		let out_vol = new Array(49);
@@ -115,7 +119,7 @@
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
 		let unite_id = new Array("phase_vol_","phase_cur_","phase_pow_","loop_vol_","loop_cur_","loop_pow_","output_cur_","envir_tmp_","envir_hum_","out_put_pow_");
-		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_");
+		let name_cfg_ = new Array("angle_","ver_mode_","dev_type_","serson_box_","ser_sel_","language_","mac_","bg_color");
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
@@ -128,10 +132,16 @@
 		function ParseData(){
 			let DataString = pdu_obj.meta_value();
 			pdu_data = JSON.parse(DataString);
+			login_permit_  = pdu_obj.login_permit();
 			if(pdu_data == null){
 				return;
 			}
-
+			if(login_permit_ != 0){
+				window.opener = null;
+				window.open('index.html', '_self');
+				//closeWebPage();
+				window.history.replaceState({}, document.title, window.location.origin);
+			}
 			//phase_num = pdu_obj.meta_Json_value(pdu_info, line_num);
 
 			phase_num = pdu_data.pdu_info.line_num;
@@ -162,7 +172,8 @@
 			//for(i= 0;i<10;i++){
 			//	cfg_data[i] = "";
 		//	}
-			cfg_data[6] = pdu_data.net_addr.mac;
+		//	cfg_data[6] = pdu_data.net_addr.mac;
+			cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
 			break_en = pdu_obj.cfgValue(cfg,11,0,addr);
 			cfg_data[0] = pdu_obj.cfgValue(cfg,12,0,addr);
 			cfg_data[1] = pdu_data.pdu_info.stand_neutral;
@@ -171,6 +182,7 @@
 			cfg_data[3] = pdu_obj.cfgValue(cfg,9,0,addr);
 			cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
 			cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
+			cfg_data[7] = pdu_obj.cfgValue(cfg,18,0,addr);
 			for(let i = 0;i<10;i++){
 				unite_data[i] = new Array();
 				unite_data[i][0] = pdu_obj.getValue(unite_name[i],unite_type[i],2,0);
@@ -194,7 +206,7 @@
 			}
 			m++;
 		},1100);
-		let ph
+		
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
 			document.getElementById("loop_").value = loop_num;
@@ -206,7 +218,7 @@
 				document.getElementById("board_num"+i).value = board_out[i - 1];
 			}
 			document.getElementById("break_").value = break_en;
-			for(i =0;i<7;i++){
+			for(i =0;i<8;i++){
 				document.getElementById(name_cfg_[i]).value = cfg_data[i];
 			}
 			for(let i = 0;i<10;i++){
@@ -225,8 +237,15 @@
 					document.getElementById("c"+i).checked = true;
 				}
 			}
+			//需要修改的重点突出
+			document.getElementById("phase_vol_0").style.backgroundColor = 'green';
+			document.getElementById("loop_vol_0").style.backgroundColor = 'green';
+			document.getElementById("phase_cur_0").style.backgroundColor = 'red';
+			document.getElementById("loop_cur_0").style.backgroundColor = 'red';
+			document.getElementById("output_cur_0").style.backgroundColor = 'red';
+			
 		}
-		function Set_(){
+		function Set_(btn){
 			//setTimeout(() => {
 			//	PduMetaData.meta_workDown();
 			//}, 100);
@@ -243,14 +262,28 @@
 			for(let i = 1;i < 5;i++){
 				pdu_obj.setCfg(num,6,document.getElementById("board_num"+i).value,(i -1),addr);
 			}
-			pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
+
 			pdu_obj.setCfg(11,6,document.getElementById("dev_type_").value,0,addr);
-			pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);
-			pdu_obj.setCfg(cfg,12,document.getElementById("angle_").value,0,addr);
-			pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
-			pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
-			pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,11,document.getElementById("break_").value,0,addr);							
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,12,document.getElementById("angle_").value,0,addr);
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
+			}	
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
+			}
+			if(btn.value == "0"||btn.value == "1"){
+				pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
+			}
+			if(btn.value == "1"||btn.value == "2"||btn.value == "3"||btn.value == "4"){
+				pdu_obj.setCfg(cfg,1,document.getElementById("ser_sel_").value,0,addr);
+			}								
 			pdu_obj.setCfg(41,11,document.getElementById("mac_").value,0,addr);
+
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
@@ -338,18 +371,41 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
-					sendFileData(f.name, new Uint8Array(r.result), 2048,"loading");
+					sendFileData(f.name, new Uint8Array(r.result), 2*1024*1024,"loading");
 				};
 			}
 		}
 		function chosefile(){
 			document.getElementById("info").value = document.getElementById("inputkey").value;
 		}
+		function bgColor_set(btn){
+			val  = parseInt(btn.value);
+			if(val == 0){				
+				pdu_obj.setCfg(cfg,18,btn.value,0,addr);
+			//	document.getElementsByClassName("side-box")[0].style.backgroundColor = "#083266";
+			}else if(val == 1){				
+				pdu_obj.setCfg(cfg,18,btn.value,0,addr);
+			//	document.getElementsByClassName("side-box")[0].style.backgroundColor = "#2b333e";
+			}
+			setTimeout(() => {
+				PduMetaData.meta_workDown();
+				pdu_obj.debugCfg();
+			}, 1500);
+			
+		}
 		function Set(){
+			var out_pow = new Array();
 			for(let  i = 1;i<=output_num;i++){
 				if(document.getElementById("c" + i).checked == true){
 					rating_[i] = document.getElementById("cur_val").value;
-				}				
+				}
+				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);;
+				// output_cur_upper[i] = parseInt(rating_[i])*0.8.toFixed(3);
+				output_cur_upper[i] = rating_[i]*0.8;
+				output_cur_max[i] = parseInt(rating_[i]);
+				pdu_obj.setData(output,cur_,7,i,rating_[i]*0.8);
+				pdu_obj.setData(output,cur_,4,i,output_cur_max[i]);
+				pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
 			}
 			pdu_obj.setCfg(97,2,1,0,addr);
@@ -426,27 +482,29 @@
 			tbody += '&nbsp&nbsp<input id = "out_num5" style ="width:2.5%;" type = "text" onchange = "Set_()" value="'+loop_out[4]+'"></input>';
 			tbody += '&nbsp&nbsp<input id = "out_num6" style ="width:2.5%;" type = "text" onchange = "Set_()" value="'+loop_out[5]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带断路器:</td>';
-			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" onchange = "Set_()" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
+			tbody += '<td><input id = "break_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="' + break_en + '"></input>(0-不带断路器,1-带断路器)</td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 
 			tbody += '<tr><td>屏幕方向角:</td>';
-			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_()"  value="'+cfg_data[0]+'">(0-垂直,1-水平)</input></td></tr>';
+			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_(this)"  value="'+cfg_data[0]+'">(0-垂直,1-水平)</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
-			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_()"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
+			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_(this)"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
 			tbody += '<tr><td>设备类型:</td>';
-			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_()" value="'+cfg_data[2]+'"></input></td></tr>';
+			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_(this)" value="'+cfg_data[2]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
-			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
+			tbody += '<td><input id = "serson_box_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[3]+'">(0-不带,1-带)</input></td></tr>';
 			tbody += '<tr><td>设备系列选择:</td>';
-			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
+			tbody += '<td><input id = "ser_sel_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[4]+'">(1-A系列,2-B系列,3-C系列,4-D系列)</input></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 
 			tbody += '<tr><td>语言选择:</td>';
-			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_()" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
+			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
-			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_()" value="'+cfg_data[6]+'"></input></td></tr>';
-			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_()" value="保存"></input></td><td></td></tr>';
+			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[6]+'"></input></td></tr>';
+			tbody += '<tr><td>背景颜色:</td>';
+			tbody += '<td><input id = "bg_color" style ="width:2.5%" type = "text" onchange = "bgColor_set(this)" value="'+cfg_data[7]+'"></input>(0-蓝色,1-黑色)</td></tr>';
+			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_(this)" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

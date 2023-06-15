@@ -37,6 +37,7 @@ private:
     void otaReboot();
 
 private slots:
+    void otaTimeoutDone();
     void rebootSlot(){system("reboot");}
     void otaRecvFinishSlot(const sOtaFile &it, bool ok);
 
@@ -49,6 +50,8 @@ private:
     QFile *mFile;
     sOtaFile mIt;
     Net_Udp *mNet;
+    QTimer *mOtaTimer;
+    int mOldCnt;
 };
 
 #endif // CASCADE_UPDATER_H

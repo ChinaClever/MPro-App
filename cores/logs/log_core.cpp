@@ -11,11 +11,12 @@ sLogCfg Log_Core::cfg;
 Log_Core::Log_Core(QObject *parent)
     : Log_Read{parent}
 {
-    uint t = 6*60*1000;
+    uint t = 1*60*60*1000;
     timer = new QTimer(this);
     timer->start(t + rand()%100);
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
     QTimer::singleShot(65,this,SLOT(initFunSlot()));
+    QTimer::singleShot(3367,this, SLOT(timeoutDone()));
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeoutDone()));
 }
 
 Log_Core *Log_Core::bulid(QObject *parent)
@@ -76,7 +77,7 @@ void Log_Core::append(const sDataItem &it)
     hda.topic = QString::number(it.topic);
     hda.indexes = QString::number(it.id + 1);
     hda.value = QString::number(it.value / cm::decimal(it));
-    mHdaIts << hda; run(); //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
+    mHdaIts << hda; run();  //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
 }
 
 void Log_Core::log_hda(const sDataItem &it)
@@ -108,29 +109,53 @@ void Log_Core::initFunSlot()
 void Log_Core::run()
 {
     if(!isRun) {
-        isRun = true;
-        QTimer::singleShot(567,this, SLOT(saveLogSlot()));
+        if(cm::runTime() > 48*60*60) mt += 1567;
+        int cnt = mEventIts.size() + mAlarmIts.size();
+        if(cnt > 10 || mLogCnt > 1000) {mt += 3567; timeoutDone();}
+        mLogCnt += cnt; QTimer::singleShot(mt,this, SLOT(saveLogSlot()));
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
-    }
+        isRun = true; mt = 567;
+    } else mt = 5567;
 }
 
 void Log_Core::saveLogSlot()
 {
     QWriteLocker locker(mRwLock);
-    QSqlDatabase::database().transaction(); //Db_Tran t;
+    QSqlDatabase::database().transaction();
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
     while(mEventIts.size()) mEvent->insertItem(mEventIts.takeFirst());
     while(mAlarmIts.size()) mAlarm->insertItem(mAlarmIts.takeFirst());
-    QSqlDatabase::database().commit(); cm::mdelay(10);
-    system("sync"); isRun = false;
+    QSqlDatabase::database().commit(); isRun = false; //cm::mdelay(100);
 }
 
 void Log_Core::timeoutDone()
 {
-    int cnt = 1; Db_Tran t; system("sync");
+    int cnt = 1; system("sync");
+    QWriteLocker locker(mRwLock); Db_Tran t;
     mHda->countsRemove(cfg.hdaCnt * cnt);
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);
-    system("echo 3 > /proc/sys/vm/drop_caches");
+    QTimer::singleShot(367,this, &Log_Core::invAdcSlot);
+    //system("echo 3 > /proc/sys/vm/drop_caches");
+}
+
+void Log_Core::invAdcSlot()
+{
+    QString cmd = "cmd_adc get_voltage 1";
+    if(QFile::exists("/usr/bin/cmd_adc")) {
+        QString res = cm::execute(cmd).remove("\n"); qDebug() << "ADC voltage" << res;
+        uint vol = res.remove("channel 1:adc sample voltage = ").toUInt() * 18.4;
+        cm::masterDev()->cfg.param.supplyVol = vol; //cout << vol;
+        if(vol < 11*1000 || vol > 13*1000) {
+            sEventItem it;  if(cm::cn()) {
+                it.event_type = QStringLiteral("电源检测");
+                it.event_content = QStringLiteral("ADC电压采样异常:%1V").arg(vol/1000.0);
+            } else {
+                it.event_type = "Power Detection";
+                it.event_content = "ADC voltage sampling abnormality ";
+                it.event_content += QString::number(vol/1000.0) + "V";
+            } append(it);
+        }
+    }
 }

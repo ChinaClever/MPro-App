@@ -73,7 +73,6 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.devMode = cfg->readCfg("devMode", 0, g).toInt();
     it.cascadeAddr = cfg->readCfg("cascadeAddr", 1, g).toInt();
     it.sensorBoxEn = cfg->readCfg("sensorBoxEn", 0, g).toInt();
-    it.powLogEn = cfg->readCfg("powLogEn", 0, g).toInt();
     it.buzzerSw = cfg->readCfg("buzzerSw", 1, g).toInt();
     it.drySw = cfg->readCfg("drySw", 0, g).toInt();
     it.isBreaker = cfg->readCfg("isBreaker", 1, g).toInt();
@@ -83,6 +82,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.jsonContent = cfg->readCfg("jsonContent", 1, g).toInt();
     it.jsonCompress = cfg->readCfg("jsonCompress", 0, g).toInt();
     it.standNeutral = cfg->readCfg("standNeutral", 0, g).toInt();
+    it.webBackground = cfg->readCfg("webBackground", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
     it.runTime = cfg->readCfg("runTime", 0, g).toInt();
     it.vh = cfg->readCfg("vh", 0, g).toInt();

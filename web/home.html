@@ -124,7 +124,8 @@
 						reflow:true
 					},
 					tooltip: {
-						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+						enabled:false
 					},
 					plotOptions: {
 						pie: {			
@@ -148,12 +149,41 @@
 						// borderWidth:0.3,
 						animation:false,  //旋转动画
 						center: ['50%', '50%'],
-						colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
+						// colors:['#13AB78','#ebebeb','#FFA701','#ebebeb','#FD4442','#ebebeb',],
+						// colors:['#ebebeb'],
 						name: 'Proportion',
 						data: [
-
-							['Use current',   phase_info[i][0]],
-							['Spare current',   phase_info[i][4]-phase_info[i][0]],
+							{
+								name:'Use current',
+								y:phase_info[i][0],
+							},
+							{
+								name:'Spare current',
+								y:phase_info[i][4]-phase_info[i][0],
+								color:'#ebebeb',
+							},
+							// ['Use current',   phase_info[i][0]],
+							// ['Spare current',   phase_info[i][4]-phase_info[i][0]],
+						],
+						zones:[
+							{	
+								name:'Use current',
+								value:0.8*phase_info[i][4],
+								color:'#13AB78',
+								//数据低于额定电流80%为绿色
+							},
+							{
+								name:'Use current',
+								value:0.99*phase_info[i][4],
+								color:'#FFA701',
+								//数据低于额定电流100%为橙色
+							},
+							{
+								name:'Use current',
+								color:'#FD4442',
+								//数据高于额定电流为红色
+					
+							}
 						]
 					}]
 
@@ -178,7 +208,8 @@
 				reflow:true
 			},
 			tooltip: {
-				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+				enabled:false
 			},
 			plotOptions: {
 				pie: {			
@@ -187,10 +218,10 @@
 						connectorWidth:0,  //取消数据标签线
 						distance:0,
 						// format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-						format: '<b>{point.y}{point.name}</b>',
+						format: '<b>{point.y}<br>{point.name}</b>',
 						style: {
 							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-							fontSize:16,				
+							fontSize:16,//字体大小				
 						}
 					},
 					point: {
@@ -252,7 +283,7 @@
 				<tr>
 					<td style=" width: 99%;">
 						<div
-							style=" width: 99%; margin-bottom: 0.8%;  margin-left:10px; height:151px; background:#ffffff; text-align:center;">
+							style=" width: 99%; margin-bottom: 0.8%;  margin-left:10px;  background:#ffffff; text-align:center;">
 							<!-- <div style="text-align:left; padding-left:20px; padding-top:8px; height:40px; border-bottom:#e1dfdf 2px solid; font-size:12px;" -->
 								<!-- id="lang_16"></div> -->
 							<table class="sensor_tab"
@@ -305,7 +336,7 @@
 					Minu = date.getMinutes();
 					Hou = date.getHours();
 					let dataLabels = new Array();
-					if(top.login_permit_ == 1){
+					if(top.login_permit_ != 0){
 						$("input").attr("disabled","disabled");
 						$("select").attr("disabled","disabled");
 					}else{
@@ -373,7 +404,7 @@
 							labels: dataLabels,
 							datasets: [
 								{
-									label: 'L1',
+									label: 'A Phase',
 									data: data_inlet1,
 									backgroundColor: 'rgb(75, 192, 192)',
 									borderColor: 'rgb(75, 192, 192)',
@@ -382,7 +413,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'L2',
+									label: 'B Phase',
 									data: data_inlet2,						
 									backgroundColor: 'rgb(128, 128, 128)',
 									borderColor: 'rgb(128, 128, 128)',
@@ -391,7 +422,7 @@
 									pointRadius: 2,
 								},
 								{
-									label: 'L3',
+									label: 'C Phase',
 									data: data_inlet3,
 									backgroundColor: 'rgb(70, 130, 180)',
 									borderColor: 'rgb(70, 130, 180)',
@@ -559,21 +590,34 @@
 		let total_title = new Array("kW", "kVA", "kWh", "Hz", "mA");
 		let lang = new Array(36);
 		let dev_name = new Array();
-		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2", "Water", "Smoke");
+		let head = new Array("Tmp", "Tmp", "Hum", "Hum", "Door1", "Door2");
+		let head_box = new Array("Tmp", "Tmp","Tmp", "Tmp", "Hum", "Hum", "Hum", "Hum","Door1", "Door2", "Water", "Smoke");
 		let stat_ = new Array("", "", "");
 		let serial_ = new Array("D", "A", "B", "C", "D");
 		let Sensor_state = new Array("NA", "", "");
 		let Sensor_state_ = new Array("NA", "", "");
 		let Sys_state = new Array("正常", "告警", "故障");
 		let loop_unit = new Array("", "", "", "A", "A", "V", "kW", "kWh");
+		let loop_unit_ = new Array("", "", "A", "A", "V", "kW", "kWh");
 		let sample_ = new Array(5, 0, 1);
 		let pdu_data;
+		let login_permit_;
+		let sensor_box;/*传感器盒子*/
 		let phase_arr = ["cur_value","vol_value","pf","cur_alarm_status","cur_alarm_max","pow_value"];
 		let loop_arr = ["breaker","apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let loop_arr1 = ["apparent_pow","cur_value","cur_alarm_max","vol_value","pow_value","ele"];
 		let total_arr = ["pow","apparent_pow","ele","pf"];
-		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];
+		let sensor_arr = ["tem_value","hum_value","tem_value","hum_value","door","door"];
+		let sensor_arr_box = ["tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","tem_value","hum_value","door","door","water","smoke"];/*插入传感器盒子*/
 		let sensor_id = [0,0,1,1,0,1,0,0];
+		let sensor_id_box = [0,0,1,1,2,2,3,3,0,1,0,0];/*传感器盒子*/
+
+		login_permit_  = pdu_cfg.login_permit();
+		if(login_permit_ != 0){
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+		}else{
+		}
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			if(DataString == null){
@@ -588,6 +632,7 @@
 			language = pdu_data.pdu_info.language;
 			top.language_ = language;
 			freq_ = pdu_data.pdu_info.pdu_hz;
+			sensor_box = pdu_data.pdu_info.sensor_box;
 			let k = 0;
 			phase_info = [];
 			for(let i = 0;i<phase_num;i++){
@@ -632,9 +677,16 @@
 				}
 			}
 			k = 0;
-			for(let key of sensor_arr){
-				sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id[k]];
-				k ++;
+			if(0 == sensor_box){
+				for(let key of sensor_arr){
+					sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id[k]];
+					k ++;
+				}
+			}else{
+				for(let key of sensor_arr_box){
+					sensor_info[k] = pdu_data.pdu_data.env_item_list[key][sensor_id_box[k]];
+					k ++;
+				}	
 			}
 			k = 0;
 			for(let key of total_arr){
@@ -653,7 +705,7 @@
 			$('.p2').html(BuildTablePhase(2));
 			$('.p3').html(BuildTablePhase(3));
 			$('.loop_table').html(BuildTableLoop(loop_num));
-			$('.sensor_tab').html(BuildTableSensor());
+			$('.sensor_tab').html(BuildTableSensor(sensor_box));
 			// $('.sys_table').html(BuildTableSystem());
 			$('.devname').html(BuildSel((slave_num + 1)));
 			ReadData();
@@ -723,6 +775,10 @@
 			lang[41] = ["告警", "Warning", "", "", ""];
 			lang[42] = ["断开", "Off", "", "", ""];
 			lang[43] = ["闭合", "On", "", "", ""];
+			lang[44] = ["温度3", "Temperature 3", "Temperature 3", "температура3", "Temperatura 3", "درجة الحرارة 3"];
+			lang[45] = ["湿度3", "Humidity 3", "Humidité 3", "влажность3", "Temperatura 3", "الرطوبة 3"];
+			lang[46] = ["温度4", "Temperature 4", "Temperature 4", "температура4", "Temperatura 4", "درجة الحرارة 4"];
+			lang[47] = ["湿度4", "Humidity 4", "Humidité 4", "влажность4", "Temperatura 4", "الرطوبة 4"];
 			dev_name[0] = lang[36][language];
 			for (let i = 1; i < (slave_num + 1); i++) {
 				dev_name[i] = lang[37][language] + i;
@@ -738,15 +794,27 @@
 		function LangFun() {
 			for (var i = 1; i < 36; i++) {
 				if ((i != 6 && i < 29) || i > 34) {
-					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){
+					if(pdu_data.pdu_data.loop_item_list.breaker == undefined && i == 9){//单相无开关状态
 						continue;
-					}else if(i == 7 || i == 16){
+					}else if(i == 7 || i == 16){//去掉回路和传感器
 						continue;
+					}else if(i == 27 || i == 28){//烟雾和水浸只插入传感器盒子显示
+						if(0 == sensor_box){
+							continue;
+						}
 					}else{
 						document.getElementById("lang_" + i).innerHTML = lang[i][language];
 					}
 
 				}
+			}
+			/*传感器盒子*/
+			if(1 == sensor_box){
+				for(var i = 44; i < 48; i++ ){
+					document.getElementById("lang_" + i).innerHTML = lang[i][language];
+				}
+				document.getElementById("lang_27").innerHTML = lang[27][language];
+				document.getElementById("lang_28").innerHTML = lang[28][language];
 			}
 			document.getElementById("ms").value = top.addr_;
 			if (pdu_data.pdu_info.dev_mode == 0 ) {
@@ -804,7 +872,7 @@
 					document.getElementById("l"+i).style.display = "none";
 				}
 			}
-
+			/*总数据*/
 			for (let i = 0; i < 5; i++) {
 				if (i < 2) {
 					//document.getElementById('dat' + (i + 1)).innerHTML = parseFloat(total_info[i]).toFixed(2);
@@ -815,8 +883,9 @@
 				}
 
 			}
+			/*相数据*/
 			for (let i = 0; i < phase_num; i++) {
-				document.getElementById('dat' + (72 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
+				document.getElementById('dat' + (80 + i)).innerHTML = parseFloat(phase_info[i][5]).toFixed(3);
 				//document.getElementById('dat' + (3 * i + 6)).innerHTML = parseFloat(phase_info[i][0]).toFixed(2);
 				document.getElementById('dat' + (3 * i + 7)).innerHTML = parseFloat(phase_info[i][1]).toFixed(1);
 				document.getElementById('dat' + (3 * i + 8)).innerHTML = parseFloat(phase_info[i][2]).toFixed(2);
@@ -832,6 +901,7 @@
 				}*/
 				//document.getElementById("progress" + (i + 1)).title = parseFloat(phase_info[i][0] / phase_info[i][4]).toFixed(2) * 100 + '%';
 			}
+			/*回路数据*/
 			for (let i = 0; i < loop_num; i++) {
 				if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 					for (j = 0; j < 8; j++) {
@@ -855,12 +925,12 @@
 					for (j = 0; j < 7; j++) {
 					if (j > 1 && j != 4 && j != 6) {
 						if (j == 5) {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(3) + loop_unit_[j];
 						} else {
-							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit[j];
+							document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(2) + loop_unit_[j];
 						}
 					} else if (j == 4 || j == 6) {
-						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit[j];
+						document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = parseFloat(loop_info[i][j]).toFixed(1) + loop_unit_[j];
 					} else {
 						//if (j == 1) {
 					//		document.getElementById('dat' + (16 + i * 8 + j)).innerHTML = stat_[loop_info[i][j]];
@@ -872,8 +942,32 @@
 				}
 
 			}
+			/*sensor*/
+			if(0 == sensor_box){
 			for (let i = 0; i < head.length; i++) {
-				if (i < 4) {//insert
+				if (i < 4) {//温湿度
+					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {/*未插入*/
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
+						}
+					} else {
+						if (i % 2 == 0) {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "°C";
+						} else {
+							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
+						}
+					}
+				} else if (i < 6) {//门禁
+					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
+				} else {//水浸和烟雾
+				//	document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
+				}
+			}
+			}else{/*传感器盒子*/
+				for (let i = 0; i < head_box.length; i++) {
+				if (i < 8) {//insert
 					if (pdu_data.pdu_data.env_item_list.insert[parseInt(i / 2)]  == 0) {
 						if (i % 2 == 0) {
 							document.getElementById('dat' + (64 + i)).innerHTML = "NA";
@@ -887,12 +981,31 @@
 							document.getElementById('dat' + (64 + i)).innerHTML = sensor_info[i] + "%";
 						}
 					}
-				} else if (i < 6) {
+				} else if (i < 10) {//门禁
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state[sensor_info[i]];
-				} else {
+				} else {//水浸和烟雾
 					document.getElementById('dat' + (64 + i)).innerHTML = Sensor_state_[sensor_info[i]];
 				}
 			}
+			}
+			if(0 == sensor_box){
+				for(let i = 0;i < 2;i++){//温湿度64-67
+				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 8){
+					document.getElementById('dat' + (65 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (65 + 2*i)).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 4){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'yellow';
+				}else if(pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 1 || pdu_data.pdu_data.env_item_list.tem_alarm_status[i] == 8){
+					document.getElementById('dat' + (64 + 2*i)).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
+				}
+				}				
+			}else{	//温湿度64-71		
 			for(let i = 0;i < pdu_data.pdu_data.env_item_list.hum_alarm_status.length;i++){
 				if(pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 2 || pdu_data.pdu_data.env_item_list.hum_alarm_status[i] == 4){
 					document.getElementById('dat' + (65 + 2*i)).bgColor = 'yellow';
@@ -909,22 +1022,43 @@
 					document.getElementById('dat' + (64 + 2*i)).bgColor = '';
 				}
 			}
-			for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
-				if(pdu_data.pdu_data.env_item_list.door[i] == 2){
-					document.getElementById('dat' + (68 + i)).bgColor = 'red';
-				}else{
-					document.getElementById('dat' + (68 + i)).bgColor = '';
+			}
+			if(0 == sensor_box){
+				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+						document.getElementById('dat' + (68 + i)).bgColor = 'red';
+					}else{
+						document.getElementById('dat' + (68 + i)).bgColor = '';
+					}
 				}
-			}
-			if(pdu_data.pdu_data.env_item_list.water[0] == 2){
-				document.getElementById('dat' + 70).bgColor = 'red';
+				// if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+				// 	document.getElementById('dat' + 70).bgColor = 'red';
+				// }else{
+				// 	document.getElementById('dat' + 70).bgColor = '';
+				// }
+				// if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+				// 	document.getElementById('dat' + 71).bgColor = 'red';
+				// }else{
+				// 	document.getElementById('dat' + 71).bgColor = '';
+				// }			
 			}else{
-				document.getElementById('dat' + 70).bgColor = '';
-			}
-			if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
-				document.getElementById('dat' + 71).bgColor = 'red';
-			}else{
-				document.getElementById('dat' + 71).bgColor = '';
+				for(let i = 0;i < pdu_data.pdu_data.env_item_list.door.length;i++){
+					if(pdu_data.pdu_data.env_item_list.door[i] == 2){
+						document.getElementById('dat' + (72 + i)).bgColor = 'red';
+					}else{
+						document.getElementById('dat' + (72 + i)).bgColor = '';
+					}
+				}
+				if(pdu_data.pdu_data.env_item_list.water[0] == 2){
+					document.getElementById('dat' + 74).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 74).bgColor = '';
+				}
+				if(pdu_data.pdu_data.env_item_list.smoke[0] == 2){
+					document.getElementById('dat' + 75).bgColor = 'red';
+				}else{
+					document.getElementById('dat' + 75).bgColor = '';
+				}
 			}
 			for(let i = 0;i < loop_num;i++){
 				if(pdu_data.pdu_data.loop_item_list.breaker == undefined){
@@ -982,16 +1116,16 @@
 						//tbody += '<span class = "span_data" style=" padding-top:28px;">' + total_title[i] + '</span></td></tr>';
 					} else if(i  == 2){
 						//tbody += '<br/>';
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 1) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
 						//tbody += '<td></td>';
 					}else if( i == 3){
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" id ="lang_' + (i + 2) + '"></span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + (i + 2) + '"></span>';
 						tbody += '<span class = "span_unit">' + total_title[i] + '</span></td>';
 					}else{
-						tbody += '<td style="padding-top:' + (15 - (i - 2) * 5) + 'px;"><span class = "span_tit" >PF:</span><br/>';
+						tbody += '<td style="padding-top:9px;height:25px;"><span class = "span_tit" >PF:</span><br/>';
 						tbody += '<span style="font-weight:900" class = "span_data" id ="dat' + i  + '"></span>';
 					}
 				}
@@ -1004,7 +1138,7 @@
 				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 7) + '" ></span>';
 				tbody += '<span class = "span_unit">V</span></td></td>';
 				tbody += '<td style="height:25px;"><td><span class = "span_tit" >P' + obj + ':</span><br/>';
-				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (71 + obj) + '" ></span>';
+				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (79 + obj) + '" ></span>';
 				tbody += '<span class = "span_unit">kW</span></td></td>';
 				tbody += '<td style="height:25px;"><td><span class = "span_tit" >PF' + obj + ':</span><br/>';
 				tbody += '<span style="font-weight:900" class = "span_data"  id="dat' + (3 * (obj - 1) + 8) + '" ></span>';
@@ -1016,14 +1150,14 @@
 			let tbody = '';
 			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
-				tbody += '<tr><td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
-				tbody += '<td width="12.5%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
+				tbody += '<tr><td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_9"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_10"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_11"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_12"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_13"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_14"></td>';
+				tbody += '<td width="12.4%" class="spacing" style="background:#d6d6d6;" id="lang_15"></td></tr>';			
 			}else{
 				// tbody += '<tr><td colspan="10" style="text-align:left; padding-left:20px;  height:40px; border-bottom:#e1dfdf 2px solid;" id="lang_7"></td></tr>';
 				tbody += '<tr><td width="14.2%" class="spacing" style="background:#d6d6d6;" id="lang_8"></td>';
@@ -1052,13 +1186,14 @@
 			
 			
 		}
-		function BuildTableSensor() {
+		function BuildTableSensor(sensor_box) {
 			let tbody = "";
 			tbody += '<tr><td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_17"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_18"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_19"></td>';
 			tbody += '<td width="25%" class="spacing" style="background:#d6d6d6;" id="lang_20"></td></tr>';
-			for (let i = 0; i < 4; i++) {
+			if(0 == sensor_box){
+			for (let i = 0; i < 3; i++) {
 				if (i % 2 == 0) {
 					// tbody += '<tr style="background:#e7e7e7;">';
 					tbody += '<tr>';
@@ -1072,7 +1207,46 @@
 						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
 					}
 				}
+
 				tbody += '</tr>';
+			}
+			}else{
+				for (let i = 0; i < 6; i++) {
+				if (i % 2 == 0) {
+					// tbody += '<tr style="background:#e7e7e7;">';
+					tbody += '<tr>';
+				} else {
+					tbody += '<tr style="border-width:1px  0px 1px ;border-style:solid;border-color: #e7e7e7;">';
+				}
+				if(i < 2){
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (21 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}
+				}else if(i < 4){
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (40 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}	
+				}else{
+					for (let j = 0; j < 4; j++) {
+					if (j % 2 == 0) {
+						tbody += '<td class="spacing" id="lang_' + (17 + i * 2 + parseInt(j / 2)) + '"></td>';
+					} else {
+						tbody += '<td class="spacing" id="dat' + (64 + i * 2 + parseInt(j / 2)) + '"></td>';
+					}
+				}	
+				}
+
+
+				tbody += '</tr>';
+			}	
 			}
 			return tbody;
 		}

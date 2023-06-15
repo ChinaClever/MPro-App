@@ -88,6 +88,7 @@
 		let type_arr = new Array("vol","cur","pow");
 		let addr = pdu_cfg.addr;
 		let pdu_data;
+		let breaker;
 
 		let energe_val = new Array();
 		let ckd_state = new Array();
@@ -103,7 +104,7 @@
 				webSocket.onopen=function(){}
 			}
 		},false);
-		if(top.login_permit_ == 1){
+		if(top.login_permit_ != 0){
 			document.getElementById("lang_2").style.display="none";
 			$("input").attr("disabled","disabled");
 			$("select").attr("disabled","disabled");
@@ -116,6 +117,7 @@
 			pdu_data = JSON.parse(DataString);
 			language = pdu_data.pdu_info.language;
 			loop_num = pdu_data.pdu_info.loop_num;
+			pdu_data.pdu_data.loop_item_list.breaker
 			for (let i = 1; i < pdu_data.pdu_info.loop_num + 1; i++) {
 				loop_info[i] = new Array();
 				let j = 0;
@@ -250,11 +252,20 @@
 			return tbody;
 		}
 		function ReadData(){
-			for(var i = 1 ;i < loop_num + 1;i++){
+			if(pdu_data.pdu_data.loop_item_list.breaker != undefined){
+				for(var i = 1 ;i < loop_num + 1;i++){
 				output_name[i] = "C" + i ;
 				energe_val[i] = output_info_[i - 1][11];
 				ckd_state[i] = output_info_[i - 1][12];
+				}
+			}else{
+				for(var i = 1 ;i < loop_num + 1;i++){
+				output_name[i] = "C" + i ;
+				energe_val[i] = output_info_[i - 1][10];
+				ckd_state[i] = output_info_[i - 1][11];
+				}				
 			}
+
 		}
 		function ShowData(){
 			for(var i = 1 ;i < pdu_data.pdu_info.loop_num + 1;i++){
