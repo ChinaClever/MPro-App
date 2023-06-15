@@ -26,6 +26,7 @@ private:
     //QMap<int, QProcess *> mMap;
     QTimer *mScriptTimer;
     QMap<int, FILE *> mMap;
+    QMap<int, QString> mCmdMap;
 };
 
 #endif // APP_SCRIPT_H
