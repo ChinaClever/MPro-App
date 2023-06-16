@@ -40,7 +40,8 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 void Log_Core::factoryRestore()
 {
-    QString fn = "/usr/data/clever/cfg/factoryRestore";
+    QString fn = "/usr/data/clever/cfg/factory_restore.ini";
+    QString dst = "/usr/data/clever/cfg/factory_restore.conf";
     sEventItem it; if(QFile::exists(fn)) {
         if(cm::cn()) {
             it.event_type = QStringLiteral("恢复");
@@ -48,7 +49,8 @@ void Log_Core::factoryRestore()
         } else {
             it.event_type = "restore";
             it.event_content = "restore factory settings";
-        } append(it); cm::execute("rm -rf " + fn);
+        } append(it); QString fmd = "mv %1 %2";
+        cm::execute(fmd.arg(fn, dst));
     }
 }
 

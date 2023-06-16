@@ -4,8 +4,8 @@
 #include "cfg_com.h"
 #include "cfg_alarmstream.h"
 
-#define CFG_ALARM_FN    "alarm.cfg"
-#define CFG_ALARM_DF    "alarm.df"
+#define CFG_ALARM_FN    "alarm.conf"
+#define CFG_ALARM_DF    "alarm.cfg"
 
 
 class Cfg_AlarmObj
