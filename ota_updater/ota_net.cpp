@@ -150,7 +150,7 @@ void Ota_Net::rebootSlot()
     system("chmod 777 /usr/data/clever/bin/*");
     system("chmod 777 /usr/data/clever/app/*");
     system("rm -rf /usr/data/clever/outlet/*");
-    system("rm -rf /usr/data/clever/cfg/proc_cnt.ini");
+    system("rm -rf /usr/data/clever/cfg/proc_cnt.conf");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot");
 }

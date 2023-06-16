@@ -41,6 +41,7 @@ App_Led::~App_Led()
 
 void App_Led::led_initFun()
 {
+    led_factoryRestore();
     int *rgb = mRgb; mLedIsRun = true;
     rgb[RGB_RED] = open("/sys/clever/led/red/switch", O_RDWR);
     if(rgb[RGB_RED] < 0) perror("open red");
@@ -50,10 +51,20 @@ void App_Led::led_initFun()
     if(rgb[RGB_BLUE] < 0) perror("open blue");
 }
 
+
+void App_Led::led_factoryRestore()
+{
+    QString fn = "/usr/data/clever/cfg/factory_restore.ini";
+    QString dst = "/usr/data/clever/cfg/factory_restore.conf";
+    if(QFile::exists(fn) || QFile::exists(dst)) m_fr = true; else m_fr = false;
+}
+
+
 void App_Led::led_delayOff()
 {
     int *rgb = mRgb; int t = 500;
     int status = cm::masterDev()->status;
+    if(!status && !m_fr) t /= 5;
     if(status == 3) t /= 5;
     for(int i=0; i<t; ++i) {
         if(mLedIsRun) cm::mdelay(1);

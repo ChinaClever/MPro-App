@@ -46,8 +46,8 @@ void Set_Maintain::factoryRestore()
     QString dir = "/usr/data/clever/cfg/";
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
-    system("echo '1' > /usr/data/clever/cfg/factoryRestore");
-    fns << "alarm.cfg" << "proc_cnt.ini" << "cfg.ini"; // << "logs.db";
+    system("echo '1' > /usr/data/clever/cfg/factory_restore.ini");
+    fns << "alarm.conf" << "proc_cnt.conf" << "cfg.ini"; // << "logs.db";
     if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
     foreach (const auto &fn, fns) {
@@ -105,8 +105,8 @@ QString Set_Maintain::batchBackup()
 {
     QStringList fns;
     QString dir = "usr/data/clever/cfg/";
-    fns << "mac.ini" << "inet.ini" << "devParam.ini";
-    fns << "logs.db" << "qrcode.png" << "proc_cnt.ini";
+    fns << "mac.conf" << "inet.ini" << "devParam.ini";
+    fns << "logs.db" << "qrcode.png" << "proc_cnt.conf";
     fns << "uuid.conf" << "sn.conf";
 
     QString zip = profileBackup();
