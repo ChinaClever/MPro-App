@@ -75,8 +75,8 @@ class JsonRpc {
     socket_open() {        
         var url = this.rpc_url();
         var ws = new WebSocket(url); JsonRpc._errCnt = 0;
-        ws.onclose = function (evt) {JsonRpc.socket_close(evt);};    
-        ws.onerror = function (evt) {JsonRpc.socket_error(evt);};   
+        //ws.onclose = function (evt) {JsonRpc.socket_close(evt);};    
+        //ws.onerror = function (evt) {JsonRpc.socket_error(evt);};   
         ws.onmessage = function (event) {JsonRpc.socket_recv(event);};
         ws.onopen = function () {JsonRpc.socket_req();};
         return ws;
