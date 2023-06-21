@@ -28,14 +28,13 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
     QString path = ""; //"/usr/data/clever/app/";
     QString fn = path + app;
     if(proc_isRun(app)) return;
-    //if(QFile::exists(app)) {
-        proc_time(proc);
-        proc_md5(proc, fn);
-        QString cmd = fn + " &";
-        system(cmd.toLatin1().data());
-        qDebug() << "process start " +cmd;
-        proc_log(app +" startup"); mdelay(150);
-    //} else qDebug() << "proc start err:" << fn;
+
+    proc_time(proc);
+    //proc_md5(proc, fn);
+    QString cmd = fn + " &";
+    system(cmd.toLatin1().data());
+    qDebug() << "process start " +cmd;
+    proc_log(app +" startup"); mdelay(150);
 }
 
 void ProcStart::proc_log(const QString &arg)
