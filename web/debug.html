@@ -41,7 +41,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div id="show_log">
 						<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
 						<button type ="button" onclick = "document.getElementById('inputkey').click()">选择logo</button> 
 						<input type = "text" value = "" id = "info" >
@@ -58,6 +58,11 @@
 					</div>
 					<div class="grid-col grid-col-7">
 						<table class="table table-border-none_ text-center vol_table"></table>
+					</div>
+					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:30px; background:#ffffff;">
+					</div>
+					<div class="grid-col grid-col-7">
+						<table class="table table-border-none_ text-center use_cnt"></table>
 					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
 					</div>
@@ -117,6 +122,7 @@
 		let rating = new Array();
 		let rating_ = new Array();;
 		let out_vol = new Array(49);
+		let use_cnt = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
@@ -125,11 +131,13 @@
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
+			use_cnt[i] = 0;
 		}
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
 		$('.vol_table').html(buildTableVol());
+		$('.use_cnt').html(buildTableUse());
 		let output_info_ = new Array();
 		function ParseData(){
 			let DataString = pdu_obj.meta_value();
@@ -203,6 +211,7 @@
 			for(i =1;i<=output_num;i++){
 				rating[i] = output_info_[i -1][6];
 				out_vol[i] = pdu_data.output_vol[i-1];
+				use_cnt[i] = pdu_data.pdu_data.output_item_list.relay_use_cnt[i-1]
 				rating_[i] = rating[i];
 			}
 		}
@@ -246,12 +255,23 @@
 					document.getElementById("c"+i).checked = true;
 				}
 			}
+
+			for(i =1;i<=output_num;i++){
+			//	use_cnt[i] = pdu_data.output_vol[i-1];
+				document.getElementById("use_cnt" + i).innerHTML = use_cnt[i];
+			}
+			if(cfg_data[1] == "2"){//定制版则隐藏log上传的功能
+				document.getElementById("show_log").style.display = "none";
+			}else{
+				document.getElementById("show_log").style.display = "";
+			}
+
 			//需要修改的重点突出
-			document.getElementById("phase_vol_0").style.backgroundColor = 'green';
-			document.getElementById("loop_vol_0").style.backgroundColor = 'green';
-			document.getElementById("phase_cur_0").style.backgroundColor = 'red';
-			document.getElementById("loop_cur_0").style.backgroundColor = 'red';
-			document.getElementById("output_cur_0").style.backgroundColor = 'red';
+			document.getElementById("phase_vol_0").style.borderColor = 'green';
+			document.getElementById("loop_vol_0").style.borderColor = 'green';
+			document.getElementById("phase_cur_0").style.borderColor = 'red';
+			document.getElementById("loop_cur_0").style.borderColor = 'red';
+			document.getElementById("output_cur_0").style.borderColor = 'red';
 			
 		}
 		function Set_(btn){
@@ -285,7 +305,7 @@
 			if(btn.value == "0"||btn.value == "1"){
 				pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
 			}
-			if(btn.value == "0"||btn.value == "1"){
+			if(btn.value == "0"||btn.value == "1" ||btn.value == "2"){
 				pdu_obj.setCfg(cfg,17,document.getElementById("ver_mode_").value,0,addr);
 			}
 			if(btn.value == "1"||btn.value == "2"||btn.value == "3"||btn.value == "4"){
@@ -408,23 +428,27 @@
 				if(document.getElementById("c" + i).checked == true){
 					rating_[i] = document.getElementById("cur_val").value;
 				}
-				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);;
-				// output_cur_upper[i] = parseInt(rating_[i])*0.8.toFixed(3);
-				output_cur_upper[i] = rating_[i]*0.8;
-				output_cur_max[i] = parseInt(rating_[i]);
-				pdu_obj.setData(output,cur_,7,i,rating_[i]*0.8);
-				pdu_obj.setData(output,cur_,4,i,output_cur_max[i]);
+				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);
+				output_cur_upper[i] = parseInt(rating_[i]*0.8);
+				// output_cur_max[i] = rating_[i];
+				pdu_obj.setData(output,cur_,4,i,rating_[i]);
 				pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
 				pdu_obj.setData(output,cur_,2,i,rating_[i]);
-			}
+				pdu_obj.setData(output,cur_,7,i,output_cur_upper[i]);
+			}		
 			pdu_obj.setCfg(97,2,1,0,addr);
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);
+
+
 		}
 		setInterval(function(){
-			$('.vol_table').html(buildTableVol());
-			ParseData();
+			let DataString = pdu_obj.meta_value();
+			pdu_data = JSON.parse(DataString);
+			for(i =1;i<=output_num;i++){
+				out_vol[i] = pdu_data.output_vol[i-1];
+			}
 			PduMetaData.meta_workDown(0);
 			for(i =1;i<=output_num;i++){
 				out_vol[i] = pdu_data.output_vol[i-1];
@@ -498,7 +522,7 @@
 			tbody += '<tr><td>屏幕方向角:</td>';
 			tbody += '<td><input id = "angle_" style ="width:2.5%" type = "text" onchange = "Set_(this)"  value="'+cfg_data[0]+'">(0-垂直,1-水平)</input></td></tr>';
 			tbody += '<tr><td>版本类型:</td>';
-			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_(this)"value="'+cfg_data[1]+'">(0-标准,1-中性)</input></td></tr>';
+			tbody += '<td><input id = "ver_mode_" style ="width:2.5%" type = "text" onchange = "Set_(this)"value="'+cfg_data[1]+'">(0-标准,1-中性,2-定制)</input></td></tr>';
 			tbody += '<tr><td>设备类型:</td>';
 			tbody += '<td><input id = "dev_type_" style ="width:8%" type = "text" onchange = "Set_(this)" value="'+cfg_data[2]+'"></input></td></tr>';
 			tbody += '<tr><td>带不带传感器盒子:</td>';
@@ -611,7 +635,7 @@
 				tbody +='<td width = "1.5%"></td>';
 			}
 			tbody +='</tr>';
-			tbody +='<tr><td width = "5%" style ="text-align:center"><input id = "cur_val" style ="width:20px;text-align:center" type = "text"  value ="0">A</input></td>';
+			tbody +='<tr><td width = "3%" style ="text-align:center"><input id = "cur_val" style ="width:20px;text-align:center" type = "text"  value ="0">A</input></td>';
 			for(let i = 0;i<12;i++){
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ ((i * 4)+1) + '"></input></td>';
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ ((i * 4)+2) + '"></input></td>';
@@ -634,7 +658,7 @@
 				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+2) + '</td>';
 				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+3) + '</td>';
 				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+4) + '</td>';
-				tbody +='<td width = "3%"></td>';
+				tbody +='<td width = "1%"></td>';
 			}
 			tbody +='</tr>';
 			tbody +='<tr><td width = "5%" style ="text-align:center">电压(V)</td>';
@@ -643,6 +667,51 @@
 				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+2) + '">'+out_vol[(i * 4)+2]+'</td>';
 				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+3) + '">'+out_vol[(i * 4)+3]+'</td>';
 				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+4) + '">'+out_vol[(i * 4)+4]+'</td>';
+				tbody +='<td width = "1%"></td>';
+			}
+			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
+				for(let i = 6;i<12;i++){
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+1) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+2) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+3) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+4) + '</td>';
+				tbody +='<td width = "1%"></td>';
+			}
+			tbody +='</tr>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">电压(V)</td>';
+			for(let i = 6;i<12;i++){
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+1) + '">'+out_vol[(i * 4)+1]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+2) + '">'+out_vol[(i * 4)+2]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+3) + '">'+out_vol[(i * 4)+3]+'</td>';
+				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+4) + '">'+out_vol[(i * 4)+4]+'</td>';
+				tbody +='<td width = "1%"></td>';
+			}
+			tbody +='</tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+
+		function buildTableUse() {
+			var thead = '',tbody = '';
+			// thead = '<tr><td width ="25%" style="font-size:20px;">继电器使用次数</td>\
+			// <td width ="75%"></td></tr>';
+			thead = '<tr><td style="font-size:20px;text-align:left" colspan = "31">继电器使用次数</td></tr>';
+
+			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
+				for(let i = 0;i<6;i++){
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+1) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+2) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+3) + '</td>';
+				tbody +='<td width = "3%" style ="text-align:center">'+ ((i * 4)+4) + '</td>';
+				tbody +='<td width = "3%"></td>';
+			}
+			tbody +='</tr>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">使用次数</td>';
+			for(let i = 0;i<6;i++){
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+1) + '">'+use_cnt[(i * 4)+1]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+2) + '">'+use_cnt[(i * 4)+2]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+3) + '">'+use_cnt[(i * 4)+3]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+4) + '">'+use_cnt[(i * 4)+4]+'</td>';
 				tbody +='<td width = "3%"></td>';
 			}
 			tbody +='<tr><td width = "5%" style ="text-align:center">输出位</td>';
@@ -654,18 +723,18 @@
 				tbody +='<td width = "3%"></td>';
 			}
 			tbody +='</tr>';
-			tbody +='<tr><td width = "5%" style ="text-align:center">电压(V)</td>';
+			tbody +='<tr><td width = "5%" style ="text-align:center">使用次数</td>';
 			for(let i = 6;i<12;i++){
-				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+1) + '">'+out_vol[(i * 4)+1]+'</td>';
-				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+2) + '">'+out_vol[(i * 4)+2]+'</td>';
-				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+3) + '">'+out_vol[(i * 4)+3]+'</td>';
-				tbody +='<td width = "3%" id = "vol'+ ((i * 4)+4) + '">'+out_vol[(i * 4)+4]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+1) + '">'+use_cnt[(i * 4)+1]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+2) + '">'+use_cnt[(i * 4)+2]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+3) + '">'+use_cnt[(i * 4)+3]+'</td>';
+				tbody +='<td width = "3%" id = "use_cnt'+ ((i * 4)+4) + '">'+use_cnt[(i * 4)+4]+'</td>';
 				tbody +='<td width = "3%"></td>';
 			}
 			tbody +='</tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
-		}
+			}
     </script>
 </body>
 </html>

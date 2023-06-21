@@ -281,7 +281,7 @@
 									log_str = window.JSON.parse(pdu_log.log_value(addr,fc));
 									log_num = getJsonLength(log_str.logs);
 									data_total = [];
-									dataLabels = [];
+									// dataLabels = [];
 									for(let i = 0;i<log_num;i++){
 										dataLabels[i] = log_str.logs[i][0];
 										data_total[i] = parseFloat(log_str.logs[i][5]).toFixed(3);
@@ -293,11 +293,11 @@
 									}else{
 										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][4])+topic_show[parseInt(log_str.logs[0][3])];	
 									}
-									if(parseInt(log_str.logs[0][3]) == 5){
-										type_text = "bar";
-									}else{
+								//	if(parseInt(log_str.logs[0][3]) == 5){
+								//		type_text = "bar";
+								//	}else{
 										type_text = "line";
-									}
+								//	}
 									if(t1 < 5){
 										if(t1 < 2){
 											uint_arr_ = y_val[t2];

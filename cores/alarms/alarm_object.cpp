@@ -145,6 +145,7 @@ bool Alarm_Object::setAll(uint *ptr, uint value, int size)
 bool Alarm_Object::alarmUnitCheck(sDataItem &index, sAlarmUnit *unit)
 {
     bool ret = true; int id = index.id; if(id) id -= 1;
+    if(index.txType == DTxType::TxWeb) return ret;
     uint v = index.value; switch (index.subtopic) {
     case DSub::VMax: if((v > (unit->rated[id])*1.3) || (v < unit->crMax[id])) ret = false; break;
     case DSub::VCrMax: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
