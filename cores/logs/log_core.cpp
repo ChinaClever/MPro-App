@@ -99,8 +99,24 @@ void Log_Core::log_hdaEle(const sDataItem &it)
     if(!(mCnt%sec)) append(it);
 }
 
+void Log_Core::timeCheck()
+{
+    QDateTime t = QDateTime::currentDateTime();
+    if(t.date().year() < 2023) {
+        sEventItem it; it.addr = 0;
+        if(cm::cn()) {
+            it.event_type = tr("系统时间错误");
+            it.event_content = tr("系统日期晚于2023年");
+        } else {
+            it.event_type = "System time error";
+            it.event_content = "System date is later than 2023";
+        } append(it);
+    }
+}
+
 void Log_Core::initFunSlot()
 {
+    timeCheck();
     sys_initfun();
     factoryRestore();
     mHda = Db_Hda::bulid();
