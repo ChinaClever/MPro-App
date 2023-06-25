@@ -37,6 +37,7 @@ void Aiot_LinkSdk::initAuthCfg()
 
 void Aiot_LinkSdk::sdkDeinit()
 {
+    g_aiot_auth_cfg.connect = 0;
     if(g_dm_handle) sdk_deinit();
     g_dm_handle = nullptr;
 }
