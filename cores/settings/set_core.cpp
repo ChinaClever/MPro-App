@@ -35,6 +35,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::ESsh: res = sshCfg(it.fc); break;
     case SFnCode::ENtp: res = ntpCfg(it.fc); break;
     case SFnCode::EWeb: res = webCfg(it.fc); break;
+    case SFnCode::EAIOT: res = aiotCfg(it.fc); break;
     case SFnCode::EMqtt: res = mqttCfg(it.fc); break;
     case SFnCode::EAmqp: res = amqpCfg(it.fc); break;
     case SFnCode::EPush: res = pushCfg(it.fc, it.id); break;
@@ -97,7 +98,8 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EODBC: ret = odbcSet(it.fc, v); break;
     case SFnCode::EINet: ret = netAddrSet(it, v); break;
     case SFnCode::EMqtt: ret = mqttSet(it.fc, v); break;
-    case SFnCode::EAmqp: ret = amqpSet(it.fc, v); break;
+    case SFnCode::EAmqp: ret = amqpSet(it.fc, v); break;        
+    case SFnCode::EAIOT: ret = aiotSet(it.fc, v); break;
     case SFnCode::EOta: ret = ota_updater(it.fc, v); break;
     case SFnCode::ERedis: ret = redisSet(it.fc, v); break;
     case SFnCode::ELogCfg: ret = logSet(it.fc, v); break;

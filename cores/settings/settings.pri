@@ -4,6 +4,7 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/set_aiot.h \
     $$PWD/set_alarm.h \
     $$PWD/set_core.h \
     $$PWD/set_diagnose.h \
@@ -20,6 +21,7 @@ HEADERS += \
     $$PWD/set_updater.h
 
 SOURCES += \
+    $$PWD/set_aiot.cpp \
     $$PWD/set_alarm.cpp \
     $$PWD/set_core.cpp \
     $$PWD/set_diagnose.cpp \

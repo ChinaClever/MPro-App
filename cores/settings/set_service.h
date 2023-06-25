@@ -1,8 +1,8 @@
 #ifndef SET_SERVICE_H
 #define SET_SERVICE_H
-#include "set_netaddr.h"
+#include "set_aiot.h"
 
-class Set_Service : public Set_NetAddr
+class Set_Service : public Set_Aiot
 {
 public:
     Set_Service();
@@ -12,6 +12,9 @@ public:
 
     QVariant ntpCfg(int fc);
     bool ntpSet(int fc, const QVariant &v);
+
+
+
 
     QVariant smtpCfg(int fc, int id);
     bool smtpSet(int fc, int id, const QVariant &v);

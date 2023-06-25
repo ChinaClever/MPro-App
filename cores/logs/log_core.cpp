@@ -57,6 +57,7 @@ void Log_Core::factoryRestore()
 void Log_Core::append(const sAlarmItem &it)
 {
     QString fmd = "alarm:%1 content:%2";
+    if(cm::cn()) fmd = tr("%1　 内容：%2");
     QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     Odbc_Core::bulid()->alarm(it);
