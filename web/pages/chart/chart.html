@@ -293,11 +293,11 @@
 									}else{
 										label_text  = lang[8 + parseInt(log_str.logs[0][2])][language]+parseInt(log_str.logs[0][4])+topic_show[parseInt(log_str.logs[0][3])];	
 									}
-								//	if(parseInt(log_str.logs[0][3]) == 5){
-								//		type_text = "bar";
-								//	}else{
+									if(parseInt(log_str.logs[0][3]) == 5){
+										type_text = "bar";
+									}else{
 										type_text = "line";
-								//	}
+									}
 									if(t1 < 5){
 										if(t1 < 2){
 											uint_arr_ = y_val[t2];
