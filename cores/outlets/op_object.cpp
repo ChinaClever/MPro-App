@@ -158,7 +158,7 @@ void OP_Object::eleFaultCheck(uchar k, uchar i)
     uint *dest = mDev->output.ele;
     if(mOpData->type) dest = mDev->loop.ele;
     if((dest[id] && src[i]) /*&& (src[i] < 1000)*/){
-        if(qAbs((int)src[i] - (int)dest[id]) > 2) {
+        if(qAbs((int)src[i] - (int)dest[id]) > 2*COM_RATE_ELE) {
             ret = false; faultLog(id, cnt, src[i]);
         } else cnt[id] = 0;
     }
