@@ -14,6 +14,7 @@
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
 #include "redis_obj.h"
+#include "aiot/aiot_core.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -28,6 +29,7 @@ void Cfg_Service::readCfgParams()
     ntp();
     web();
     rpc();
+    aiot();
     ldap();
     push();
     snmp();
@@ -212,6 +214,27 @@ void Cfg_Service::ldap()
         case 1: key = "en";  cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "url";  cfg->url = mCfg->readCfg(key, "", prefix).toString(); break;
         case 3: key = "user";  cfg->user = mCfg->readCfg(key, "", prefix).toString();  break;
+        }
+    }
+}
+
+void Cfg_Service::aiot()
+{
+    QString v;
+    QString prefix = "aiot"; QString key;
+    sAiotCfg *cfg = &Aiot_LinkSdk::aiotCfg;
+    for(int i=1; i<7; ++i)  {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; v = "iot-as-mqtt.cn-shanghai.aliyuncs.com";
+            cfg->host = mCfg->readCfg(key, v, prefix).toString(); break;
+        case 3: key = "product_key";  v = "a1i1fEXYWYV";
+            cfg->product_key = mCfg->readCfg(key, v, prefix).toString();  break;
+        case 4: key = "device_name";  v = "PDU1";
+            cfg->device_name = mCfg->readCfg(key, v, prefix).toString(); break;
+        case 5: key = "device_secret"; v = "b2ff799f727bd2287c6ac59eb13df7ad";
+            cfg->device_secret = mCfg->readCfg(key, v, prefix).toString(); break;
+        case 6: key = "time"; cfg->time = mCfg->readCfg(key, 10, prefix).toInt(); break;
         }
     }
 }
