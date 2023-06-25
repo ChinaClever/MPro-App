@@ -230,7 +230,7 @@
   },  
   {
     "name": "物联网云",
-    "icon": "flag_fill",
+    "icon": "service_fill",
     "base": "pages/aiot/",
     "subNav": [
       {
