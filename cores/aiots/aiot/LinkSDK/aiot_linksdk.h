@@ -4,7 +4,7 @@
 
 struct sAiotCfg
 {
-    bool en = true;
+    int en = true;
     int time = 10;
     char *connect = nullptr;
     QString host = "iot-as-mqtt.cn-shanghai.aliyuncs.com" ;

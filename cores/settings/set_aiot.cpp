@@ -12,7 +12,7 @@ QVariant Set_Aiot::aiotCfg(int fc)
     sAiotCfg *it = &Aiot_LinkSdk::aiotCfg;
     Aiot_Core *obj = Aiot_Core::bulid();
     QVariant ret; switch (fc) {
-    case 1: ret = it->en?1:0; break;
+    case 1: ret = it->en; break;
     case 2: ret = it->host; break;
     case 3: ret = it->product_key; break;
     case 4: ret = it->device_name; break;
@@ -22,6 +22,7 @@ QVariant Set_Aiot::aiotCfg(int fc)
     case 8: obj->setting(); break;
     default: cout << fc; break;
     }
+
     return ret;
 }
 
