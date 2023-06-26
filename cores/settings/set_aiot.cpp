@@ -12,7 +12,7 @@ QVariant Set_Aiot::aiotCfg(int fc)
     sAiotCfg *it = &Aiot_LinkSdk::aiotCfg;
     Aiot_Core *obj = Aiot_Core::bulid();
     QVariant ret; switch (fc) {
-    case 1: ret = it->en; break;
+    case 1: ret = it->en?1:0; break;
     case 2: ret = it->host; break;
     case 3: ret = it->product_key; break;
     case 4: ret = it->device_name; break;
@@ -33,7 +33,7 @@ bool Set_Aiot::aiotSet(int fc, const QVariant &v)
     QString prefix = "aiot"; QString key;
 
     switch (fc) {
-    case 1: key = "en"; it->en = v.toBool(); break;
+    case 1: key = "en"; it->en = v.toInt(); break;
     case 2: key = "host";  it->host = v.toString(); break;
     case 3: key = "product_key";  it->product_key = v.toString();  break;
     case 4: key = "device_name";  it->device_name = v.toString();  break;
