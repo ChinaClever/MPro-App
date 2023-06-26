@@ -261,20 +261,21 @@
 				document.getElementById("use_cnt" + i).innerHTML = use_cnt[i];
 			}
 			if(cfg_data[1] == "2"){//定制版则隐藏log上传的功能
-				document.getElementById("show_log").style.display = "none";
-			}else{
 				document.getElementById("show_log").style.display = "";
+			}else{
+				document.getElementById("show_log").style.display = "none";
 			}
 
-			for(i =0;i<5;i++){//三个功率置灰
+			for(i =0;i<5;i++){//三个功率置灰和回路电压
 				document.getElementById("phase_pow_"+i).disabled = true;
 				document.getElementById("loop_pow_"+i).disabled = true;
 				document.getElementById("out_put_pow_"+i).disabled = true;
+				document.getElementById("loop_vol_"+i).disabled = true;
 			}
 
 			//需要修改的重点突出
 			document.getElementById("phase_vol_0").style.borderColor = 'green';
-			document.getElementById("loop_vol_0").style.borderColor = 'green';
+			// document.getElementById("loop_vol_0").style.borderColor = 'green';
 			document.getElementById("phase_cur_0").style.borderColor = 'red';
 			document.getElementById("loop_cur_0").style.borderColor = 'red';
 			document.getElementById("output_cur_0").style.borderColor = 'red';
@@ -465,7 +466,7 @@
 	
 		function power_calculation(){
 
-			/*voltage calculation*/
+			/*电压计算*/
 			document.getElementById("phase_vol_"+1).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(1);
 			document.getElementById("phase_vol_"+2).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*0.8).toFixed(1);
 			document.getElementById("phase_vol_"+3).value =parseFloat(parseFloat(document.getElementById("phase_vol_"+0).value)*1.2).toFixed(1);
@@ -478,7 +479,7 @@
 			document.getElementById("loop_vol_"+4).value =parseFloat(parseFloat(document.getElementById("loop_vol_"+0).value)*1.2).toFixed(1);
 		
 
-			/*power calculation*/
+			/*功率计算*/
 			document.getElementById("phase_pow_"+0).value =parseFloat((parseInt(document.getElementById("phase_vol_"+0).value) * parseFloat(document.getElementById("phase_cur_"+0).value))/1000).toFixed(3);
 			document.getElementById("phase_pow_"+3).value =parseFloat(parseFloat(document.getElementById("phase_pow_"+0).value)*0.8).toFixed(3);
 			document.getElementById("phase_pow_"+4).value =document.getElementById("phase_pow_"+0).value;
@@ -491,7 +492,7 @@
 			document.getElementById("out_put_pow_"+3).value =parseFloat(parseFloat(document.getElementById("out_put_pow_"+0).value)*0.8).toFixed(3);
 			document.getElementById("out_put_pow_"+4).value =document.getElementById("out_put_pow_"+0).value;
 
-			/*current calculation*/
+			/*电流计算*/
 			document.getElementById("phase_cur_"+3).value =parseFloat(parseFloat(document.getElementById("phase_cur_"+0).value)*0.8).toFixed(2);
 			document.getElementById("phase_cur_"+4).value =document.getElementById("phase_cur_"+0).value;
 

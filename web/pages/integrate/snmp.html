@@ -161,6 +161,11 @@
 				$("button").attr("disabled","disabled");
 			}else{
 			}
+			if(0 != language){//英文隐藏下载按钮
+				document.getElementById("lang_16").style.display = "none";
+			}else{
+				document.getElementById("lang_16").style.display = "";
+			}
 		}
 		function SetData(btn){
 			for(let i = 0;i<snmp_name.length;i++){
