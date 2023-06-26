@@ -13,7 +13,8 @@ extern struct sDemoAuthCfg g_aiot_auth_cfg;
 sAiotCfg Aiot_LinkSdk::aiotCfg;
 Aiot_LinkSdk::Aiot_LinkSdk()
 {
-
+    sDemoAuthCfg *cfg = &g_aiot_auth_cfg;
+    aiotCfg.connect = &(cfg->connect);
 }
 
 Aiot_LinkSdk *Aiot_LinkSdk::build()
