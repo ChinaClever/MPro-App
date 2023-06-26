@@ -553,6 +553,10 @@ class PduCfgs extends PduCfgObj {
             this.getData(3,2,1,i);
         }
     }
+    alotCfg() {
+        var fcs = [1,2,3,4,5,6,7];
+        this.getCfgList(19, fcs);
+    }
 }
 
 // 日志操作接口
