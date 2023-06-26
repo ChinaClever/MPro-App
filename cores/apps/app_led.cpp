@@ -76,7 +76,8 @@ void App_Led::led_delayOff()
     }
 
     for(int i=0; i<t; ++i) {
-        if(mLedIsRun) cm::mdelay(1);
+        if(status == 3) cm::mdelay(1);
+        else if(!status && !m_fr) cm::mdelay(1);
     }
 }
 
@@ -86,6 +87,7 @@ void App_Led::led_workDown()
     int *rgb = mRgb; switch (dev->status) {
     case 2: RGB_ON(rgb[RGB_RED]); break;
     case 3: case 4: case 5: RGB_ON(rgb[RGB_BLUE]); break;
+    case 1: RGB_ON(rgb[RGB_RED]); RGB_ON(rgb[RGB_GREEN]); RGB_ON(rgb[RGB_RED]); break;
     default: if(RGB_ON(rgb[RGB_GREEN]) < 0)  perror("RGB_GREEN on fail\n"); break;
     } led_delayOff();
 }

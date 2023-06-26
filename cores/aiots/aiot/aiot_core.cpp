@@ -38,9 +38,9 @@ void Aiot_Core::workDown()
 
 void Aiot_Core::setting()
 {
-    *mCfg->connect = 0;
     sdkDeinit();
-    startSdk();
+    *mCfg->connect = 0;
+    if(mCfg->en) startSdk();
 }
 
 void Aiot_Core::run()

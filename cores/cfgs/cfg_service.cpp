@@ -219,11 +219,10 @@ void Cfg_Service::ldap()
 }
 
 void Cfg_Service::aiot()
-{
-    QString v;
+{    
     QString prefix = "aiot"; QString key;
     sAiotCfg *cfg = &Aiot_LinkSdk::aiotCfg;
-    for(int i=1; i<7; ++i)  {
+    QString v; for(int i=1; i<7; ++i)  {
         switch (i) {
         case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "host"; v = "iot-as-mqtt.cn-shanghai.aliyuncs.com";
