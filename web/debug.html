@@ -327,6 +327,7 @@
 		}
 		function AllSet(){
 			for(let i = 0;i<10;i++){
+				if(i==6 || i==7) continue;
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
@@ -367,6 +368,19 @@
 			}else{
 				ckd.checked = false;
 			}
+
+			let	out_pow = (parseInt(document.getElementById("loop_vol_"+0).value) * stat/1000).toFixed(3);
+			let	out_pow_upper = (parseInt(document.getElementById("loop_vol_"+0).value) * stat/1000 * 0.8).toFixed(3);
+			let	out_pow_max = out_pow;
+			let	output_cur_upper = parseInt(stat*0.8);
+	
+			pdu_obj.setData(output,cur_,2,num,stat);
+			pdu_obj.setData(output,cur_,4,num,stat);	
+			pdu_obj.setData(output,cur_,7,num,output_cur_upper);
+			pdu_obj.setData(output,pow_,2,num,out_pow);	
+			pdu_obj.setData(output,pow_,4,num,out_pow_max);
+			pdu_obj.setData(output,pow_,7,num,out_pow_upper);
+
 			rating_[num] = stat;
 		}
 		var setStatus = function(text,id,ok) {
@@ -429,26 +443,31 @@
 			}, 1500);
 			
 		}
-		function Set(){
+		function setFun(i) {
 			var out_pow = new Array();
-			for(let  i = 1;i<=output_num;i++){
-				if(document.getElementById("c" + i).checked == true){
-					rating_[i] = document.getElementById("cur_val").value;
-				}
-				out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);
-				output_cur_upper[i] = parseInt(rating_[i]*0.8);
-				// output_cur_max[i] = rating_[i];
-				pdu_obj.setData(output,cur_,4,i,rating_[i]);
-				pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
-				pdu_obj.setData(output,cur_,2,i,rating_[i]);
-				pdu_obj.setData(output,cur_,7,i,output_cur_upper[i]);
-			}		
+
+
+		}
+
+		function Set(){
+			// var out_pow = new Array();
+			// for(let  i = 1;i<=output_num;i++){
+			// 	// setFun(i);
+			// 	if(document.getElementById("c" + i).checked == true){
+			// 		rating_[i] = document.getElementById("cur_val").value;
+			// 	}
+			// 	out_pow[i] = (parseInt(document.getElementById("loop_vol_"+0).value) * rating_[i]/1000).toFixed(3);
+			// 	output_cur_upper[i] = rating_[i]*0.8;
+			// 	output_cur_max[i] = rating_[i];
+			// 	pdu_obj.setData(output,cur_,4,i,output_cur_max[i]);
+			// 	pdu_obj.setData(output,pow_,2,i,out_pow[i]);			
+			// 	pdu_obj.setData(output,cur_,2,i,rating_[i]);
+			// 	pdu_obj.setData(output,cur_,7,i,output_cur_upper[i]);
+			// }		
 			pdu_obj.setCfg(97,2,1,0,addr);
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 			}, 100);
-
-
 		}
 		setInterval(function(){
 			let DataString = pdu_obj.meta_value();
@@ -595,22 +614,22 @@
 				<td><input id = "'+unite_id[5]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[5]+3+'" style ="width:60.5%" type = "text" value ="7.040"></input></td>\
 				<td><input id = "'+unite_id[5]+4+'" style ="width:60.5%" type = "text" value ="7.040"></input></td><td></td></tr>';
-			tbody += '<tr><td>7</td><td>输出位电流(A)</td><td><input id = "'+unite_id[6]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="16"></input></td>\
+			tbody += '<tr style="display:none"><td>7</td><td>输出位电流(A)</td><td><input id = "'+unite_id[6]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" value ="16"></input></td>\
 				<td><input id = "'+unite_id[6]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[6]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[6]+3+'" style ="width:60.5%" type = "text"  value ="16"></input></td>\
 				<td><input id = "'+unite_id[6]+4+'" style ="width:60.5%" type = "text"  value ="16"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>输出位功率(kW)</td><td><input id = "'+unite_id[9]+0+'" style ="width:60.5%" type = "text" value ="2.20"></input></td>\
+			tbody += '<tr style="display:none"><td>8</td><td>输出位功率(kW)</td><td><input id = "'+unite_id[9]+0+'" style ="width:60.5%" type = "text" value ="2.20"></input></td>\
 				<td><input id = "'+unite_id[9]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[9]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[9]+3+'" style ="width:60.5%" type = "text"  value ="1.76"></input></td>\
 				<td><input id = "'+unite_id[9]+4+'" style ="width:60.5%" type = "text"  value ="2.20"></input></td><td></td></tr>';
-			tbody += '<tr><td>9</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="40"></input></td>\
+			tbody += '<tr><td>7</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="40"></input></td>\
 				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" value ="40"></input"></td>\
 				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>10</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="90"></input></td>\
+			tbody += '<tr><td>8</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="90"></input></td>\
 				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text"  value ="90"></input></td>\
