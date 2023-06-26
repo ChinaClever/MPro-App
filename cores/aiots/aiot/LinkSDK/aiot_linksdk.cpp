@@ -15,6 +15,7 @@ Aiot_LinkSdk::Aiot_LinkSdk()
 {
     sDemoAuthCfg *cfg = &g_aiot_auth_cfg;
     aiotCfg.connect = &(cfg->connect);
+    cfg->connect = 0;
 }
 
 Aiot_LinkSdk *Aiot_LinkSdk::build()
