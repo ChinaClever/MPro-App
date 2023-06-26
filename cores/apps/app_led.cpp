@@ -76,7 +76,8 @@ void App_Led::led_delayOff()
     }
 
     for(int i=0; i<t; ++i) {
-        if(mLedIsRun) cm::mdelay(1);
+        if(status == 3) cm::mdelay(1);
+        else if(!status && !m_fr) cm::mdelay(1);
     }
 }
 
