@@ -19,6 +19,7 @@ public:
     bool postProperty();
 
     bool postProperty(const QString &key, const QVariant& value, const QString &module);
+    bool postArrayProperty(const QString &key, const QList<double> &value, const QString &module);
     bool postArray(uint *ptr, int size, double unit, const QString &key, const QString &module);
 
 protected:
