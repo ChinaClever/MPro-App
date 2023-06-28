@@ -48,14 +48,14 @@ void Cfg_AlarmObj::readRelayCnt()
 
 bool Cfg_AlarmObj::saveAlarms()
 {
-    cm::mdelay(365); fillData();
-    QFile file(Cfg_Com::pathOfCfg(CFG_ALARM_FN));
+    cm::mdelay(365); //saveRelayCnt();
+    QFile file(Cfg_Com::pathOfCfg(CFG_ALARM_FN)); fillData();
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-    saveRelayCnt(); if(ret) {
+    if(ret) {
         QByteArray array = toDataStream();
         file.write(qCompress(array));
     }  Alarm_Updater::bulid()->upDevAlarm(0);
-    file.close(); system("sync");isRun = false;
+    file.close(); system("sync");isRun = false;    
     return ret;
 }
 
@@ -81,7 +81,7 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
         } it.event_content += file.errorString();
         Log_Core::bulid()->append(it);
         cout << Cfg_Com::pathOfCfg(fn);
-    } readRelayCnt();
+    } //readRelayCnt();
 
     return ret;
 }
