@@ -6,6 +6,7 @@
 
 #define CFG_ALARM_FN    "alarm.conf"
 #define CFG_ALARM_DF    "alarm.cfg"
+#define CFG_RELAY_FN    "relay.conf"
 
 
 class Cfg_AlarmObj
@@ -24,6 +25,8 @@ protected:
 private:
     void initAlarms();
     bool saveAlarms();
+    void saveRelayCnt();
+    void readRelayCnt();
     QByteArray toDataStream();
     cfg::_sDevData *deDataStream(QByteArray &array);
 

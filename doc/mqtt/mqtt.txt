@@ -1,2 +1,0 @@
-发布：pduMetaData/clientId
-订阅：pduSetting/clientId
