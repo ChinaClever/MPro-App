@@ -13,6 +13,8 @@ private:
     void initVer();
     void initUuid();
     void compileTime();
+    void initRoot(const QString &sn);
+    QString hashPassword(const QString& password);
 };
 
 #endif // APP_CORE_H

@@ -43,11 +43,26 @@ void App_Core::initUuid()
         cmd = cmd.arg(uuid, fn); qDebug() << cmd;
         system(cmd.toStdString().c_str());
     }  QString cmd = "cat %1";
-    QString res = cm::execute(cmd.arg(fn)).remove("\n");    
+    QString res = cm::execute(cmd.arg(fn)).remove("\n");
     res = res.remove("{").remove("}");
     char *ptr = cm::masterDev()->cfg.uut.uuid;
     qstrcpy(ptr, res.toLocal8Bit().data());
     qDebug() << res;
+}
+
+QString App_Core::hashPassword(const QString& password)
+{
+    QByteArray passwordBytes = password.toUtf8();
+    QByteArray hash = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
+    return QString::fromUtf8(hash.toHex()).right(8);
+}
+
+void App_Core::initRoot(const QString &sn)
+{
+    QString fmd = "echo -e '%1\n%1' |  passwd root";
+    QString cmd = fmd.arg(hashPassword(sn));
+    if(sn.size() < 3) cmd = fmd.arg("123456");
+    system(cmd.toStdString().c_str());
 }
 
 void App_Core::initVer()
@@ -73,6 +88,6 @@ void App_Core::initVer()
         QString sn = cm::execute("cat " + fn);
         qstrcpy(ver->serialNumber, sn.toUtf8().data());
         cfg.app_serialNumber(sn);
-    }
+    } initRoot(ver->serialNumber);
 }
 
