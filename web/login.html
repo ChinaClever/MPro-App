@@ -125,10 +125,11 @@
           GotoRegisterPage();
           clearInterval(time3);
       }
-      if(time3_num >  4 && ver_mode ==null&&language ==null){
-        clearInterval(time3);
-        $('.center_form').html(BuildDiv('signin'));
-      }else {
+      // if(time3_num >  4 && ver_mode ==null&&language ==null){
+      //   clearInterval(time3);
+      //   $('.center_form').html(BuildDiv('signin'));
+      // }
+      else {
         obj.loginCfg();
         obj.debugCfg();
       }

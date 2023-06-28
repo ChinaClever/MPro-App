@@ -327,7 +327,7 @@
 		}
 		function AllSet(){
 			for(let i = 0;i<10;i++){
-				if(i==6 || i==7) continue;
+				if(i==6 || i==9) continue;
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
@@ -619,16 +619,16 @@
 				<td><input id = "'+unite_id[9]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[9]+3+'" style ="width:60.5%" type = "text"  value ="1.76"></input></td>\
 				<td><input id = "'+unite_id[9]+4+'" style ="width:60.5%" type = "text"  value ="2.20"></input></td><td></td></tr>';
-			tbody += '<tr><td>7</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="40"></input></td>\
-				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" value ="40"></input"></td>\
-				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="90"></input></td>\
-				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
-				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text"  value ="90"></input></td>\
-				<td><input id = "'+unite_id[8]+4+'" style ="width:60.5%" type = "text"  value ="90"></input></td><td></td></tr>';
+			tbody += '<tr><td>7</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input></td>\
+				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input"></td>\
+				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input></td><td></td></tr>';
+			tbody += '<tr><td>8</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td>\
+				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td>\
+				<td><input id = "'+unite_id[8]+4+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td><td></td></tr>';
 			tbody += '<tr><td colspan = "3" ><input style ="width:100px" type = "button" onclick = "AllSet()" value="统一设置"></input></td><td></td><td></td><td></td><td></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
