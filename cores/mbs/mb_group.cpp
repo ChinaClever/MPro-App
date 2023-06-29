@@ -13,19 +13,19 @@ Mb_Group::Mb_Group(QObject *parent) : Mb_Output{parent}
 
 void Mb_Group::group_dataUpdate()
 {
-    vshort vs; int size = GROUP_NUM+6;
+    vshort vs; int size = GROUP_NUM+3;
     sObjData *obj = &(mDevData->group);
     appendData(size, obj->pow.value, vs);
     appendData(size, obj->artPow, vs);
     appendData(size, obj->pf, vs);
-    appendData2(size, obj->ele, vs);
+    appendData2(size-3, obj->ele, vs);
     appendData(size, obj->pow.alarm, vs);
     setRegs(MbReg_GroupData, vs);
 }
 
 void Mb_Group::group_thresholdUpdate()
 {
-    vshort vs; int size = GROUP_NUM+6;
+    vshort vs; int size = GROUP_NUM+3;
     sAlarmUnit *obj = &(mDevData->group.pow);
     appendData(size, obj->en, vs);
     appendData(size, obj->max, vs);
@@ -77,15 +77,15 @@ void Mb_Group::group_setting(ushort addr, ushort value)
     sObjData *obj = &(mDevData->group);
     sAlarmUnit *unit = nullptr;
     uint *ptr = nullptr;
-    int id = reg%10;
+    int id = reg%15;
 
-    switch (reg/50) {
+    switch (reg/80) {
     case 0: unit = &(obj->pow); break;
     case 1: group_ctrl(id, value); return;
     default: cout << addr << reg << value; return;
     }
 
-    reg = reg%50/10; switch (reg) {
+    reg = reg%15; switch (reg) {
     case 0: ptr = unit->en; break;
     case 1: ptr = unit->max; break;
     case 2: ptr = unit->crMax; break;
