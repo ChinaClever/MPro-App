@@ -22,7 +22,7 @@ typedef unsigned int uint;
 #define DEV_NUM 20
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 10
-#define GROUP_NUM 8
+#define GROUP_NUM 24
 #define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
 // 倍率定义
@@ -408,7 +408,7 @@ struct sDataPacket
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor, CabTg=11, CabLine, CabLoop};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
-          UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
+          UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11, RelayLifeEn};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh, TxRest};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
@@ -434,7 +434,7 @@ enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
              EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
-             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap, EScript,
+             EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap, EScript, EAIOT,
              EAlarm=80, ELog, EHda, EPro=91, EOta, EDgsNet, EDgsDev, EBR, ESys, EThreshold, ECmd=111};
 
 struct sCfgItem {

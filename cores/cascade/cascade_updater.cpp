@@ -199,7 +199,7 @@ void Cascade_Updater::otaRootfs(const QString &path)
 
 void Cascade_Updater::otaReboot()
 {
-    system("rm -rf /usr/data/clever/cfg/proc_cnt.ini");
+    system("rm -rf /usr/data/clever/cfg/proc_cnt.conf");
     system("rm -rf /usr/data/clever/outlet/*");
     system("chmod 777 -R /usr/data/clever/");
     system("chmod 777 /usr/data/clever/bin/*");

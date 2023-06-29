@@ -311,6 +311,7 @@
 										uint_arr_ = y_val1[t2];
 									}
 									config.type = type_text;
+									config.data.labels = dataLabels;
 									config.data.datasets[0].label = label_text;
 									config.data.datasets[0].data = data_total;
 									config.options.scales.y.title.text = uint_arr_;
@@ -407,7 +408,7 @@
 										min : 0
 									}
 								}
-							}
+							}						
 						};
 						function create_new_chart(){
 							document.getElementById('chart').remove();
@@ -422,36 +423,36 @@
 							ctx = document.getElementById('chart').getContext('2d');
 							chart = new Chart(ctx, config);
 						}
-						function change_mode(obj){
-							chart_type =parseInt(obj.value);
-							clearInterval(time1);
-							if(obj.value == 0){
-								total_name = "total_pow";
-							}else if(obj.value == 1){
-								total_name ="total_cur";
-							}else{
-								total_name ="total_vol";
-							}
-							create_new_chart();
-							set_data_show(chart_type);
-							config.data.datasets[0].label = total_name;
-							config.data.datasets[0].data = data_total;
+						// function change_mode(obj){
+						// 	chart_type =parseInt(obj.value);
+						// 	clearInterval(time1);
+						// 	if(obj.value == 0){
+						// 		total_name = "total_pow";
+						// 	}else if(obj.value == 1){
+						// 		total_name ="total_cur";
+						// 	}else{
+						// 		total_name ="total_vol";
+						// 	}
+						// 	create_new_chart();
+						// 	set_data_show(chart_type);
+						// 	config.data.datasets[0].label = total_name;
+						// 	config.data.datasets[0].data = data_total;
 
-							chart.update();
-						}
-						function flash_chart() {
-							if (config.data.datasets.length > 0) {
-								dataLabels.push(dataLabels);
-								data_total.push(data_total);
-								// total_name.push(total_name);
+						// 	chart.update();
+						// }
+						// function flash_chart() {
+						// 	if (config.data.datasets.length > 0) {
+						// 		dataLabels.push(dataLabels);
+						// 		data_total.push(data_total);
+						// 		// total_name.push(total_name);
 				
-								dataLabels.shift();
-								data_total.shift();
-								// total_name.shift();
+						// 		dataLabels.shift();
+						// 		data_total.shift();
+						// 		// total_name.shift();
 
-								chart.update();
-							}
-						}
+						// 		chart.update();
+						// 	}
+						// }
 						ctx = document.getElementById('chart').getContext('2d');
 						chart = new Chart(ctx, config);
 				

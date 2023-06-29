@@ -1,6 +1,7 @@
 #include "log_sys.h"
 #include "commons.h"
 #include <syslog.h>
+#include "aiot/aiot_core.h"
 
 #define CLEVER_LOG_TAG "clever"
 #define CLEVER_LOG_FLAGS (LOG_CONS | LOG_NDELAY)
@@ -37,6 +38,7 @@ void Log_Sys::sys_logAlarm(const QString& msg)
 {
     char *str = msg.toUtf8().data();
     if(sysLogCfg.en) CLEVER_WARNING("%s", str);
+    Aiot_Core::bulid()->event_post(msg);
 }
 
 void Log_Sys::sys_open()

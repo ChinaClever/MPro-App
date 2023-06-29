@@ -269,13 +269,13 @@
       // document.getElementById("rule").style.display ='';
      // document.getElementById("free_rule").style.display='';
       if(0 != language){
-        document.getElementById("username").placeholder = "User name that needs to be reset";
+        document.getElementById("username").placeholder = "User name that needs to be reset password";
         document.getElementById("psd").placeholder = "New Passward";
         document.getElementById("conpsd").placeholder = "Confirm Password";
         document.getElementById("ident").placeholder = "Verify verification information";
         document.getElementById("sign_in").value = "SUBMIT";
         document.getElementById("sub_title").innerHTML = "Reset Password";
-        document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 6, and at most 16 characters!";
+        document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 8, and at most 16 characters!";
      //   document.getElementById("free_rule").innerHTML = "Strong password: Unchecking ”Strong password“ eliminates the need to follow the above password and account rules!";
       }
     }
@@ -296,7 +296,7 @@
           document.getElementById("sign_in").value = "REGISTER";
           document.getElementById("reg_title_name").innerHTML = "Registration Page";
           document.getElementById("free_encryption").innerHTML = "Strong password";
-          document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 6, and at most 16 characters!";
+          document.getElementById("rule").innerHTML = "Account rules: The account can only contain uppercase and lowercase letters, numbers, at least 5, and at most 16 characters<br> Password rule: Passwords must contain uppercase and lowercase letters, numbers, at least 8, and at most 16 characters!";
           document.getElementById("free_rule").innerHTML = "Strong password: Unchecking ”Strong password“ eliminates the need to follow the above password and account rules!";
          }
     }
@@ -550,7 +550,7 @@
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button" style="padding-left:0px" value = "登陆" onclick="sign_in()"></input></p>';
       }else if(Reg === 'submite'){
         tbody += '<br/><br/><p class="title"><span id="sub_title">重置密码</span></p><span class="error" id = "Errinfo"></span>';
-        tbody += '<p><input id ="username" type="text" maxlength="16" onblur= "validataForm(this)"  placeholder="需重置的用户名"></p>';
+        tbody += '<p><input id ="username" type="text" maxlength="16" onblur= "validataForm(this)"  placeholder="需重置密码的用户名"></p>';
         tbody += '<p><input id ="psd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" onselectstart="return false" onpaste="return false" placeholder="新密码"></p>';
         tbody += '<p><input id ="conpsd" type="text" onfocus = \'this.type="password"\'  maxlength="16"; onblur = "validataForm(this)" onselectstart="return false" onpaste="return false" placeholder="确认密码"></p>';
         tbody += '<p><input id ="ident" type="text" maxlength="16" onblur = "validataForm(this)" autocomplete="off"  placeholder="校验验证信息"></p>';

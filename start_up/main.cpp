@@ -32,8 +32,8 @@ static void initSystem()
     system("rm -rf /usr/data/upload");
     system("chmod 775 -R /usr/data/clever/bin");
     system("chmod 775 -R /usr/data/clever/app");
-    system("chmod 775 -R /usr/data/clever/cfg");
-    system("chmod 775 /usr/data/clever/ver.ini");
+    system("chmod 664 -R /usr/data/clever/cfg");
+    system("chmod 664 /usr/data/clever/ver.ini");
     system("rm /usr/data/etc/snmp/snmpd.conf");
     //system("echo 3 > /proc/sys/vm/drop_caches");
     //system("mount -t nfs 192.168.1.117:/home/lzy/work/nfs /usr/data/nfs");
@@ -53,7 +53,7 @@ static void initSystem()
 static void init_netWork()
 {
     QString mac, deMac = "00:00:00:00:00:01";
-    QString fn =  "/usr/data/clever/cfg/mac.ini";
+    QString fn =  "/usr/data/clever/cfg/mac.conf";
     if(QFile::exists(fn)) { QFile file(fn);
         if(file.open(QIODevice::ReadOnly)) mac = file.readAll();
         file.close(); if(!mac.contains(deMac)) {
@@ -61,7 +61,7 @@ static void init_netWork()
             QString cmd = "ip link set eth0 address " + mac.mid(0, 17);
             system(cmd.toStdString().c_str()); qDebug() << cmd;
         }
-    } //else system("echo '00:00:00:00:00:01' > /usr/data/clever/cfg/mac.ini");
+    } //else system("echo '00:00:00:00:00:01' > /usr/data/clever/cfg/mac.conf");
 
     system("ip link set eth0 up");
     //system("ip a flush dev eth0"); //　清掉所有IP地址
@@ -92,13 +92,13 @@ static void start_init()
     int cnt = 0; init_mem();
     //system("mount -o remount,rw /usr/data/");
     system("mv /tmp/messages /tmp/kernel_messages");
-    QFile file("/usr/data/clever/cfg/proc_cnt.ini");
+    QFile file("/usr/data/clever/cfg/proc_cnt.conf");
     if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
         cnt = file.readAll().toInt(); file.seek(0);
         QString str = QString::number(cnt+1);
         file.write(str.toStdString().c_str());
     } file.close(); initSystem(); system("sync");
-    if(cnt < 150) system("chmod 775 -R /usr/data/clever");
+    if(cnt < 150) system("chmod 775 -R /usr/data/clever &");
 }
 
 int main(int argc, char *argv[])

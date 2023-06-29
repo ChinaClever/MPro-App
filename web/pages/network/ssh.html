@@ -39,6 +39,7 @@
 		let language;
 		let addr = 0;
 		pdu_cfg.sshCfg();
+		pdu_cfg.webCfg();
 		// var pattern = /^.*(?=.{6,16})(?=.*\d)(?=.*[A-Z]{2,})(?=.*[a-z]{2,})(?=.*[!@#$%^&*?\(\)]).*$/;
 		let pattern_ = /^[a-zA-Z0-9]{5,16}$/;
 		let pattern = /^.*(?=.{8,16})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).*$/;
@@ -47,6 +48,7 @@
 		var mode_set = new Array("","");
 		var ssh_data = new Array();
 		let lang = new Array();
+		let web_data = new Array();
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -57,6 +59,7 @@
 			for(var j = 1;j<ssh_name.length;j++){
 					ssh_data[j] = pdu_cfg.cfgValue(45,j,0,addr);
 			}
+			web_data[0] = pdu_cfg.cfgValue(42,6,0,addr);//获取强密码的值
 		}
 		lang_init();
 		function lang_init(){
@@ -118,6 +121,16 @@
 				let ssh_name = document.getElementById("SshName").value;
 				let ssh_psd = document.getElementById("SshPsd").value;
 				if(ssh_name!= "" && ssh_psd !=""){
+					if(web_data[0] == 0){	//不设置强密码
+						pdu_cfg.setCfg(45,3,ssh_name,0,addr);
+						pdu_cfg.setCfg(45,4,ssh_psd,0,addr);
+						pdu_cfg.setCfg(45,5,0,0,addr);
+						if(0 == language){
+							alert("创建成功!立即生效");	
+						}else{
+							alert("Created successfully! Effective immediately");
+						}				
+					}else{								
 					if(!pattern.test(ssh_psd)){
 						if(0 == language){
 							alert("请输入8-16位用户名或密码,用户名或密码必须包含至少一个数字,大写和小写字母");
@@ -135,6 +148,7 @@
 						}else{
 							alert("Created successfully! Effective immediately");
 						}						
+					}
 					}
 				}else {
 					pdu_cfg.setCfg(45,3,"",0,addr);

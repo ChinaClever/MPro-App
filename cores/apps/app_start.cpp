@@ -15,6 +15,7 @@
 #include "op_core.h"
 #include "odbc_core.h"
 #include "redis_core.h"
+#include "aiot/aiot_core.h"
 
 App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
@@ -43,6 +44,7 @@ void App_Start::initFunSlot()
 
 void App_Start::startThreadSlot()
 {
+    Aiot_Core::bulid();
     Data_Core::bulid();
     Mb_Core::bulid(this);
     Integr_Core::bulid(this);

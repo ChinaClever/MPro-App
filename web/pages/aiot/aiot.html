@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>integrate</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left alot"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+    <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let addr = 0;
+		let language;		
+		setTimeout(() => {
+			pdu_cfg.alotCfg();
+			// for(let i = 0;i<8;i++){
+			// 	pdu_cfg.getCfg(51,i,0,0);
+			// }	
+		}, 400);
+		let lang = new Array();
+		let id_name = new Array("enable","host_url","product_Key","device_name","device_secret","update","state");
+		var enable = new Array();
+		var alot_data = new Array();
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+
+		ParseData();
+		lang_init();		
+		function lang_init(){
+			for(let i = 1;i<15;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["物联网服务","IoT Services","","",""];
+			lang[2] = ["物联网设置","IoT Settings","","",""];
+			lang[3] = ["AloT开启:","AloT on:","","",""];
+			lang[4] = ["HostUrl:","HostUrl:","","",""];
+			lang[5] = ["ProductKey:","ProductKey:","","",""];
+			lang[6] = ["DeviceName:","DeviceName:","","",""];
+			lang[7] = ["DeviceSecret:","DeviceSecret:","","",""];
+			lang[8] = ["连接状态:","Connection status:","","",""];
+			lang[9] = ["更新频率(S):","Update frequency(S):","","",""];
+			lang[10] = ["立即生效","Effective immediately","","",""];
+			lang[11] = ["禁用","Disable","","",""];
+			lang[12] = ["启用","Enable","","",""];
+			lang[13] = ["已连接","Connected","","",""];
+			lang[14] = ["未连接","Disconnected","","",""];
+
+			for(let i = 0;i < 2;i++){
+				enable[i] =  lang[11+i][language] ;
+			}
+			// enable[0] = lang[11][language];
+			// enable[1] = lang[12][language];
+
+		}
+		function lang_fun(){
+			for(let j = 1;j<10;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			document.getElementById("lang_10").value  = lang[10][language];
+		}
+
+		setInterval(function () {
+			pdu_cfg.alotCfg();
+			ParseData();
+			read_data();
+			lang_fun();
+			show_connect_data();
+		 	}, 2500);
+		function read_data(){
+
+			for(var j = 1;j<8;j++){
+				alot_data[j] = pdu_cfg.cfgValue(51,j,0,addr);
+			}
+			if(alot_data[7] == 'false' || alot_data[7] == '0'){
+				alot_data[7] = lang[14][language];
+			}else{
+				alot_data[7] = lang[13][language];
+			}
+
+		}
+		setTimeout(function(){
+			read_data();
+			$('.alot').html(buildTable());
+			lang_fun();
+			showdata();
+		},500);
+		function show_connect_data(){
+			 document.getElementById(id_name[6]).innerHTML = alot_data[7];//连接状态
+		}
+		function showdata(){
+			document.getElementById(id_name[0]).value = alot_data[1];
+			for(var j = 0;j<id_name.length;j++){
+				 if( j == 0 ){
+					document.getElementById(id_name[j]).selected = alot_data[j +1];
+				 }else{
+					document.getElementById(id_name[j]).value = alot_data[j +1];
+				 }
+			}
+			for(var j = 0;j< 6;j++){
+				if(alot_data[1] == "0"){
+					document.getElementById(id_name[j+1]).disabled = true;
+				}else{
+					document.getElementById(id_name[j+1]).disabled = false;	
+				}
+			}
+			document.getElementById(id_name[id_name.length-1]).innerHTML = alot_data[7];
+			if(top.login_permit_ != 0){
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}else{
+			}
+		}
+		function flash_html(){
+			pdu_cfg.alotCfg();
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},500);
+		}
+		function changed(ipt){//单个保存
+			if(0 == language){
+				var retVal = confirm("请确认是否保存此次修改！");	
+			}else{
+				var retVal = confirm("Please confirm whether to save this modification！");
+			}
+			if(retVal ==true){
+				for(var i = 0 ;i<(id_name.length);i++){
+					if(ipt.id == id_name[i]){
+						pdu_cfg.setCfg(51,(i + 1),ipt.value,0,addr);
+					}
+				}
+				ipt.blur();
+				flash_html();
+			}else{}
+		}
+		function Set(){//立即生效
+			var sel =0;
+			if(0 == language){
+				var retVal = confirm("AloT开启或禁用后需要重启才能生效,请确认是否生效当前设置！");	
+			}else{
+				var retVal = confirm("After AloT is enabled or disabled, a reboot is required to take effect. Please confirm if the current settings are effective！");
+			}
+			if(retVal == true){
+				pdu_cfg.setCfg(51,8,0,0,addr);
+			}else{}
+		}
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id  = "lang_2"></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id  = "lang_8"></td>';
+			tbody += '<td id = "'+ id_name[6] +'"></td></tr>';
+			tbody += '<tr><td id  = "lang_3"></td>';
+			tbody += '<td><select style ="width:34.9%" id = "'+ id_name[0] +'" onchange ="changed(this)">';
+			for(var i = 0; i<enable.length;i++){
+				tbody +='<option value ="'+i+'">'+enable[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id  = "lang_4"></td>';
+			tbody += '<td><input  id = "'+ id_name[1] +'" style ="width:34.5%" type = "text"  onchange ="changed(this)" placeholder="0.0.0.0"></input></td></tr>';
+			tbody += '<tr><td id  = "lang_5"></td>';
+			tbody += '<td><input  id = "'+ id_name[2] +'" style ="width:34.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_6"></td>';
+			tbody += '<td><input  id = "'+ id_name[3] +'" style ="width:34.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_7"></td>';
+			tbody += '<td><input  id = "'+ id_name[4] +'" style ="width:34.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id  = "lang_9"></td>';
+			tbody += '<td><input id = "'+ id_name[5] +'" style ="width:34.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+
+			tbody += '<tr><td style="padding-left: 35%"><input id = "lang_10" type = "button" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px"  onclick = "Set()"></input></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+    </script>
+</body>
+</html>

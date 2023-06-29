@@ -40,7 +40,8 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 void Log_Core::factoryRestore()
 {
-    QString fn = "/usr/data/clever/cfg/factoryRestore";
+    QString fn = "/usr/data/clever/cfg/factory_restore.ini";
+    QString dst = "/usr/data/clever/cfg/factory_restore.conf";
     sEventItem it; if(QFile::exists(fn)) {
         if(cm::cn()) {
             it.event_type = QStringLiteral("恢复");
@@ -48,13 +49,15 @@ void Log_Core::factoryRestore()
         } else {
             it.event_type = "restore";
             it.event_content = "restore factory settings";
-        } append(it); cm::execute("rm -rf " + fn);
+        } append(it); QString fmd = "mv %1 %2";
+        cm::execute(fmd.arg(fn, dst));
     }
 }
 
 void Log_Core::append(const sAlarmItem &it)
 {
     QString fmd = "alarm:%1 content:%2";
+    if(cm::cn()) fmd = tr("%1　 内容：%2");
     QString str = fmd.arg(it.alarm_status, it.alarm_content);
     App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
     Odbc_Core::bulid()->alarm(it);
@@ -96,8 +99,24 @@ void Log_Core::log_hdaEle(const sDataItem &it)
     if(!(mCnt%sec)) append(it);
 }
 
+void Log_Core::timeCheck()
+{
+    QDateTime t = QDateTime::currentDateTime();
+    if(t.date().year() < 2023) {
+        sEventItem it; it.addr = 0;
+        if(cm::cn()) {
+            it.event_type = tr("系统时间错误");
+            it.event_content = tr("系统日期晚于2023年");
+        } else {
+            it.event_type = "System time error";
+            it.event_content = "System date is later than 2023";
+        } append(it);
+    }
+}
+
 void Log_Core::initFunSlot()
 {
+    timeCheck();
     sys_initfun();
     factoryRestore();
     mHda = Db_Hda::bulid();

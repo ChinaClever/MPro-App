@@ -21,16 +21,43 @@ void Cfg_AlarmObj::writeAlarms()
     }
 }
 
+void Cfg_AlarmObj::saveRelayCnt()
+{
+    static uint swCnt = 0;
+    int size = OUTPUT_NUM; uint cnt = 0;
+    uint *data = cm::masterDev()->output.relay.cnt;
+    for(int i=0; i<size; ++i) cnt += data[i];
+    if(cnt > swCnt) swCnt = cnt; else return;
+
+    QFile file(Cfg_Com::pathOfCfg(CFG_RELAY_FN));
+    if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QDataStream out(&file); out << quint32(size);
+        for(int i=0; i<size; ++i) out << data[i];
+    }file.close();
+}
+
+void Cfg_AlarmObj::readRelayCnt()
+{
+    int size = OUTPUT_NUM; uint cnt = 0;
+    uint *data = cm::masterDev()->output.relay.cnt;
+    for(int i=0; i<size; ++i) {cnt += data[i];} if(cnt) return;
+    QFile file(Cfg_Com::pathOfCfg(CFG_RELAY_FN));
+    if(file.open(QIODevice::ReadOnly)) {
+        QDataStream in(&file); in >> size;
+        for (int i=0; i<size; i++) in >> data[i];
+    } file.close();
+}
+
 bool Cfg_AlarmObj::saveAlarms()
 {
-    cm::mdelay(365); fillData();
-    QFile file(Cfg_Com::pathOfCfg(CFG_ALARM_FN));
+    cm::mdelay(365); saveRelayCnt();
+    QFile file(Cfg_Com::pathOfCfg(CFG_ALARM_FN)); fillData();
     bool ret = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     if(ret) {
         QByteArray array = toDataStream();
         file.write(qCompress(array));
     }  Alarm_Updater::bulid()->upDevAlarm(0);
-    file.close(); system("sync");isRun = false;
+    file.close(); system("sync");isRun = false;    
     return ret;
 }
 
@@ -56,7 +83,7 @@ bool Cfg_AlarmObj::readAlarm(const QString &fn)
         } it.event_content += file.errorString();
         Log_Core::bulid()->append(it);
         cout << Cfg_Com::pathOfCfg(fn);
-    }
+    } readRelayCnt();
 
     return ret;
 }

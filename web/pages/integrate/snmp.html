@@ -158,7 +158,13 @@
 			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+				$("button").attr("disabled","disabled");
 			}else{
+			}
+			if(0 != language){//英文隐藏下载按钮
+				document.getElementById("lang_16").style.display = "none";
+			}else{
+				document.getElementById("lang_16").style.display = "";
 			}
 		}
 		function SetData(btn){

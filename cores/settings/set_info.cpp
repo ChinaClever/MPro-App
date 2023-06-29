@@ -193,7 +193,7 @@ bool Set_Info::setUut(uchar fc, const QVariant &v)
     case 5: key = "sn";  ptr = it->sn; break;
     case 6: key = "devType";  ptr = it->devType; break;
     default: ret = false; cout << fc; break;
-    }
+    } //cout  << key << fc << v;
 
     if(ptr && fc) {
         qstrcpy(ptr, array.data());

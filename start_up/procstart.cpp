@@ -19,7 +19,9 @@ void ProcStart::proc_time(sRunTime &proc)
 
 void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
 {
-    QString str = md5(fn); proc.resetCnt += 1;
+    proc.resetCnt += 1;
+    if(fn.contains("cores")) return;
+    QString str = md5(fn);
     qstrcpy(proc.md5, str.toUtf8().data());
 }
 
@@ -28,14 +30,13 @@ void ProcStart::proc_start(sRunTime &proc, const QString &app)
     QString path = ""; //"/usr/data/clever/app/";
     QString fn = path + app;
     if(proc_isRun(app)) return;
-    //if(QFile::exists(app)) {
-        proc_time(proc);
-        proc_md5(proc, fn);
-        QString cmd = fn + " &";
-        system(cmd.toLatin1().data());
-        qDebug() << "process start " +cmd;
-        proc_log(app +" startup"); mdelay(150);
-    //} else qDebug() << "proc start err:" << fn;
+
+    proc_time(proc);
+    proc_md5(proc, fn);
+    QString cmd = fn + " &";
+    system(cmd.toLatin1().data());
+    qDebug() << "process start " +cmd;
+    proc_log(app +" startup"); mdelay(150);
 }
 
 void ProcStart::proc_log(const QString &arg)

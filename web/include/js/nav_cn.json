@@ -229,6 +229,17 @@
     ]
   },  
   {
+    "name": "物联网云",
+    "icon": "service_fill",
+    "base": "pages/aiot/",
+    "subNav": [
+      {
+        "name": "AIoT",
+        "url": "aiot.html"
+      }     
+    ]
+  },
+  {
     "name": "图表信息",
     "icon": "dynamic_fill",
     "base": "",

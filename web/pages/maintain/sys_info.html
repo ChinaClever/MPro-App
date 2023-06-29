@@ -62,6 +62,7 @@
 		let lang = new Array();
 		let type =new Array();
 		let serialNumber;
+		let supply_vol;
 		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
@@ -69,6 +70,7 @@
 			let pdu_data = JSON.parse(DataString);
 			serialNumber = pdu_data.pdu_version.serialNumber;
 			language = pdu_data.pdu_info.language;
+			supply_vol = pdu_data.pdu_info.supply_vol;
 		}
 		ParseData();
 		function read_data(){
@@ -121,6 +123,7 @@
 			lang[22] = ["语言:","Language:","","",""];
 			lang[23] = ["中文","Chinese","","",""];
 			lang[24] = ["英文","English","","",""];
+			lang[25] = ["电源电压：","Supply voltage：","","",""];
 			for(let i = 0;i < 2;i++){
 				type[i] =  lang[23+i][language] ;
 			}
@@ -134,6 +137,7 @@
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
+			document.getElementById("lang_25" ).innerHTML  = lang[25][language];
 		}
 		setTimeout(function(){
 			$('.McInfo').html(buildTableMc());
@@ -179,6 +183,7 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
+			document.getElementById("sup_vol").innerHTML = (supply_vol/1000).toFixed(1) + ' ' + 'V';
 		}
 		function ChoseLang(btn){
 			if(0 == language){
@@ -259,7 +264,9 @@
 		function buildTableLanguage() {
 			var thead = '',tbody = '';
 			tbody +='<tr><td width ="15%" id="lang_22" ></td>';		
-			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" onclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
+			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" ondblclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
+			tbody += '<tr><td id="lang_25" ></td>';
+			tbody += '<td id="sup_vol"></td></tr>';
 			// tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
 			// for(var i = 0; i<2;i++){
 			// 	tbody +='<option value ="'+i+'">'+type[i] +'</option>';
