@@ -13,7 +13,7 @@ Mb_Group::Mb_Group(QObject *parent) : Mb_Output{parent}
 
 void Mb_Group::group_dataUpdate()
 {
-    vshort vs; int size = GROUP_NUM+2;
+    vshort vs; int size = GROUP_NUM+6;
     sObjData *obj = &(mDevData->group);
     appendData(size, obj->pow.value, vs);
     appendData(size, obj->artPow, vs);
@@ -25,7 +25,7 @@ void Mb_Group::group_dataUpdate()
 
 void Mb_Group::group_thresholdUpdate()
 {
-    vshort vs; int size = GROUP_NUM+2;
+    vshort vs; int size = GROUP_NUM+6;
     sAlarmUnit *obj = &(mDevData->group.pow);
     appendData(size, obj->en, vs);
     appendData(size, obj->max, vs);
