@@ -75,6 +75,23 @@ bool Aiot_Object::postProperty(const QString &key, const QVariant& value, const 
 }
 
 /**
+ *  QList<double> array; for(int i=0; i<6; ++i) array.append(i+1);
+ *  postArrayProperty("loopBreakerStatus", array, "LoopParameters");
+ */
+bool Aiot_Object::postArrayProperty(const QString &key, const QList<double>& value, const QString &module)
+{
+
+    QString id = key; QJsonArray array;
+    if(module.size()) id.insert(0, module+":");
+    foreach (const auto it, value) array.append(it);
+    QJsonObject json; json.insert(id, array);
+
+    bool ret = mSdk->sendPropertyPost(json);
+    if(!ret) cout << module  << key << value;
+    return ret;
+}
+
+/**
  * eventPost("alarmLog", "EventList", "罗志勇");
  */
 bool Aiot_Object::eventPost(const QString &event_id, const QString &key, const QVariant& value)

@@ -12,7 +12,7 @@ extern "C" {
 
 struct sDemoAuthCfg
 {
-    char connect;
+    int connect;
     char url[256];
     char product_key[256];
     char device_name[256];

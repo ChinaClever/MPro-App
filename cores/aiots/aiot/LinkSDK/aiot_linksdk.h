@@ -6,7 +6,7 @@ struct sAiotCfg
 {
     int en = true;
     int time = 10;
-    char *connect = nullptr;
+    int *connect = nullptr;
     QString host = "iot-as-mqtt.cn-shanghai.aliyuncs.com" ;
     QString product_key = "a1i1fEXYWYV";
     QString device_name = "PDU1";

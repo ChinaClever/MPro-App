@@ -32,6 +32,7 @@ bool Set_Maintain::syscmd(int fc)
 void Set_Maintain::clearLogs()
 {
     system("chmod 777 /usr/data/clever/cfg/logs.db");
+    system("rm -rf /usr/data/clever/cfg/relay.conf");
     system("rm -rf /usr/data/clever/cfg/logs.db");
 }
 

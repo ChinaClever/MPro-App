@@ -408,7 +408,7 @@ struct sDataPacket
 enum DType{Tg, Line, Loop, Output, Group, Dual, Env=6, Sensor, CabTg=11, CabLine, CabLoop};
 enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVol, Tem=11, Hum, Door1=21, Door2, Water, Smoke, Wind};
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
-          UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11};
+          UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11, RelayLifeEn};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh, TxRest};
 enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};

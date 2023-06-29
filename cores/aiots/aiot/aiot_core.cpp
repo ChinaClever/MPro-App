@@ -28,7 +28,7 @@ void Aiot_Core::workDown()
         basePost(); devCfgPost();
         linePost(); totalPost();
         loopPost(); outletPost();
-        //eventPost("alarmLog", "EventList", "罗志勇");
+        //eventPost("alarmLog", "EventList", "罗志勇");        
 
         postProperty();
         cm::mdelay(t);
