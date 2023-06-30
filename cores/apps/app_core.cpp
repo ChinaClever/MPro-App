@@ -38,6 +38,7 @@ void App_Core::initUuid()
 {
     QString fn = "/usr/data/clever/cfg/uuid.conf";
     if(!QFile::exists(fn)) {
+        if(QDate::currentDate().year() < 2023) return;
         QString uuid = QUuid::createUuid().toString();
         QString cmd = "echo '%1' > %2";
         cmd = cmd.arg(uuid, fn); qDebug() << cmd;
@@ -82,12 +83,15 @@ void App_Core::initVer()
         qstrcpy(ver->upgradeDate, it.upgradeDate.toUtf8().data());
         qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark));
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
-    } else {ver->md5[0] = 0; cout << CFG_APP << "error";} initUuid();
+    } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
     QString fn = "/usr/data/clever/cfg/sn.conf";
     if(it.sn.isEmpty() && QFile::exists(fn)) {
         QString sn = cm::execute("cat " + fn);
         qstrcpy(ver->serialNumber, sn.toUtf8().data());
         cfg.app_serialNumber(sn);
     } initRoot(ver->serialNumber);
+
+    int t = QRandomGenerator::global()->bounded(965);
+    QTimer::singleShot(t+5,this, &App_Core::initUuid);
 }
 

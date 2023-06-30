@@ -11,6 +11,7 @@ protected:
     void output_update();
     void output_ctrl(ushort addr, ushort value);
     void output_setting(ushort addr, ushort value);
+    void output_dualCtrl(ushort addr, ushort value);
 
 private:
     void output_dataObj(vshort &vs, int id);

@@ -96,6 +96,7 @@ void Mb_Setting::registerRecvSlot(int address, ushort value)
     else if(address < 7000) output_ctrl(address, value);
     else if(address < 7050) env_setting(address, value);
     else if(address < 7160) group_setting(address, value);
+    else if(address < 7325) output_dualCtrl(address, value);
     else if(address == 8001) restoreFactoryDefaults();
     if(address > MbReg_Setting) Set_Core::bulid()->writeAlarm();
 }

@@ -79,7 +79,7 @@ void Mb_Group::group_setting(ushort addr, ushort value)
     uint *ptr = nullptr;
     int id = reg%15;
 
-    switch (reg/80) {
+    switch (reg/75) {
     case 0: unit = &(obj->pow); break;
     case 1: group_ctrl(id, value); return;
     default: cout << addr << reg << value; return;
