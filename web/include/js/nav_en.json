@@ -229,7 +229,7 @@
     ]
   }, 
   {
-    "name": "IoT Cloud",
+    "name": "Cloud services",
     "icon": "service_fill",
     "base": "pages/aiot/",
     "subNav": [

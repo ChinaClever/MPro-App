@@ -327,28 +327,36 @@
 				tbody = '';
 			if(rows == 0){
 				thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_4">序号</td>\
-					<td width ="30%" id="lang_5">单元名称</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td></tr>';
+					<td width ="10%" id="lang_5">单元名称</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[8] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[9] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[10] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[11] +'</td></tr>';
 			}
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr style="background:#d6d6d6;"><td width ="6%" id="lang_4">序号</td>\
-					<td width ="30%" id="lang_5">单元名称</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
-					<td width ="8%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td></tr>';
+					<td width ="10%" id="lang_5">单元名称</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[0] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[1] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[2] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[3] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[4] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[5] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[6] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[7] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[8] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[9] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[10] +'</td>\
+					<td width ="7%">'+ pdu_data.pdu_data.group_item_list.name[11] +'</td></tr>';
 				}
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
@@ -361,6 +369,10 @@
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "h'+ i + '" </input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "i'+ i + '" </input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "j'+ i + '" </input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "k'+ i + '" </input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "l'+ i + '" </input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "m'+ i + '" </input></td>';
+				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "n'+ i + '" </input></td>';
 				tbody += '</tr>';
 			}
 

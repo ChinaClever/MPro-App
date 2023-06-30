@@ -201,6 +201,7 @@ QString Set_Output::grouping(int addr, int id)
     QString res; if(addr == 0xff) addr = 0;
     QList<int> ids = Data_Core::bulid()->outletByGroup(id-1, addr);
     foreach(auto &i, ids) res += QString::number(i+1) +";";
+    //cout << addr << id << res;
     return res;
 }
 
@@ -266,6 +267,7 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
     foreach(auto &str, strs) {
         int id = str.toInt(); if(id) id -= 1; ptr[id] = 1;
     } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
+    //cout << it.type << it.fc << v;
 
     return ret;
 }

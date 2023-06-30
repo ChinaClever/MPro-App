@@ -511,7 +511,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(28, fcs);
     }
     OutInGroup(){
-        for(let j = 1;j<8 + 1;j++){
+        for(let j = 1;j<12 + 1;j++){
             this.getCfg(25,j,0,this.addr);
         }
     }
