@@ -235,8 +235,16 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         oid = "2.4." +QString::number(i+1);
         addObjAlarm(addr, oid, name+"rw-group", it->group, i, 4);
 
-        oid = "3.2." +QString::number(i+1);
-        addRelayGroup(addr, oid, name+"ctrl-group", it->output.relay, i);
+        //oid = "3.2." +QString::number(i+1);
+        //addRelayGroup(addr, oid, name+"ctrl-group", it->output.relay, i);
+    }
+
+    size = it->output.relay.size;
+    if(size) {
+        for(int i=0; i<size; ++i) {
+            QString oid = "3.2." +QString::number(i+1);
+            addRelayGroup(addr, oid, name+"ctrl-group", it->output.relay, i);
+        }
     }
 
     size = it->dual.size;
@@ -250,6 +258,7 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         oid = "3.3." +QString::number(i+1);
         addRelayGroup(addr, oid, name+"ctrl-dual", it->output.relay, i);
     }
+
 
     size = it->env.size;if(!size) size = SENOR_NUM/2;
     for(int i=0; i<size; ++i) {

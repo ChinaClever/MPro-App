@@ -22,7 +22,7 @@ typedef unsigned int uint;
 #define DEV_NUM 20
 #define ARRAY_SIZE 255    //一包数据最长
 #define USER_NUM 10
-#define GROUP_NUM 8
+#define GROUP_NUM 12
 #define PACK_ARRAY_SIZE   (OUTPUT_NUM+12)
 
 // 倍率定义

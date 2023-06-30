@@ -79,7 +79,10 @@ void Mb_Output::output_relayUpdate()
     uint *ptr = obj->relay.reserve[3];
     for(int i=0; i<size; ++i) ptr[i] = 0xff;
     appendData(size, ptr, vs);
+
     setRegs(MbReg_OutputRelay, vs);
+    setRegs(MbReg_OutputEle, vs);
+    setRegs(MbReg_DualCtr, vs);
 }
 
 void Mb_Output::output_update()
@@ -91,12 +94,30 @@ void Mb_Output::output_update()
     output_thresholdUpdate();
 }
 
+void Mb_Output::output_dualCtrl(ushort addr, ushort value)
+{
+    ushort reg = addr - MbReg_DualCtr;
+     int id = reg % 50 + 1;
+    if(value < 3) {
+        sDataItem unit;
+        unit.rw = 1;
+        unit.id = 2;
+        unit.addr = 0;
+        unit.type = id*2-1;
+        unit.topic = DTopic::Relay;
+        unit.subtopic = DSub::Relays;
+        unit.txType = DTxType::TxModbus;
+        unit.value = value;
+        Set_Core::bulid()->setting(unit);
+    }
+}
+
 void Mb_Output::output_ctrl(ushort addr, ushort value)
 {
     ushort reg = addr - MbReg_OutputRelay;
     int id = reg % 50 + 1;
     if(reg >= 50) {
-        OP_Core::bulid()->clearEle(id);
+        if(value < 2) OP_Core::bulid()->clearEle(id-1);
     } else if(value < 3){
          //sRelayUnit *obj = &(mDevData->output.relay);
         //if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
@@ -113,7 +134,6 @@ void Mb_Output::output_ctrl(ushort addr, ushort value)
         Set_Core::bulid()->setting(unit);
     }
 }
-
 
 void Mb_Output::output_setting(ushort addr, ushort value)
 {

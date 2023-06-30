@@ -26,17 +26,17 @@ enum eMbRegs {
     MbReg_OutputData = 501, // 输出位参数
     MbReg_OutputAlarm = 1201,
     MbReg_OutputRelay = 6901,
+    MbReg_OutputEle = 6951,
     MbReg_OutputThreshol = 6301,
 
     MbReg_GroupData = 1601,
     MbReg_GroupThreshol = 7101,
-    MbReg_GroupRelay = 7151,
+    MbReg_GroupRelay = 7191,
 
-    MbReg_EnvData = 1771,
-    MbReg_EnvAlarm = 1781,
-    MbReg_EnvSensor = 1791,
+    MbReg_EnvData = 1951,
+    MbReg_EnvAlarm = 1961,
+    MbReg_EnvSensor = 1971,
     MbReg_EnvThreshol = 7001,
-
 
     MbReg_Setting = 6000,    // 配置参数
     MbReg_SetAddr = 60001, // 通讯地址
@@ -46,6 +46,7 @@ enum eMbRegs {
     MbReg_SetDry = 6006, // 报警干接点开关
 
     MbReg_Restores = 4000,  // 恢复出厂设置
+    MbReg_DualCtr = 7301,
 };
 
 
