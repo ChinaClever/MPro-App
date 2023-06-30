@@ -214,7 +214,13 @@
 			}else{
 				document.getElementById("alramNow").style.color = "red";
 			}
-			document.getElementById("logo_").style.display ="";
+
+			if(pdu_data.pdu_info.stand_neutral == 1){
+				document.getElementById("logo_").style.display ="none";
+			}else{
+				document.getElementById("logo_").style.display ="";
+			}
+
 			// if( "0" == bg_color){//背景颜色
 			// 	document.getElementsByClassName("side-box")[1].style.backgroundColor = "#083266";
 			// 	document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#083266";

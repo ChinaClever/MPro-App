@@ -61,7 +61,7 @@
 					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:30px; background:#ffffff;">
 					</div>
-					<div class="grid-col grid-col-7">
+					<div style="display: none;" class="grid-col grid-col-7">
 						<table class="table table-border-none_ text-center use_cnt"></table>
 					</div>
 					<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:100px; background:#ffffff;">
@@ -122,7 +122,7 @@
 		let rating = new Array();
 		let rating_ = new Array();;
 		let out_vol = new Array(49);
-		let use_cnt = new Array(49);
+		// let use_cnt = new Array(49);
 		let unite_data = new Array();
 		let unite_name = new Array(phase,phase,phase,loop,loop,loop,output,envir,envir,output);
 		let unite_type = new Array(vol_,cur_,pow_,vol_,cur_,pow_,cur_,tmp_,hum_,pow_);
@@ -131,13 +131,13 @@
 		let unite_sub = new Array(2,5,6,7,4);
 		for(i = 1;i<49;i++){
 			out_vol[i] = 0;
-			use_cnt[i] = 0;
+			// use_cnt[i] = 0;
 		}
 		$('.set_table').html(buildTable());
 		$('.threshold_table').html(buildTableThreshold());
 		$('.out_table').html(buildTableOutput());
 		$('.vol_table').html(buildTableVol());
-		$('.use_cnt').html(buildTableUse());
+		// $('.use_cnt').html(buildTableUse());
 		let output_info_ = new Array();
 		function ParseData(){
 			let DataString = pdu_obj.meta_value();
@@ -211,7 +211,7 @@
 			for(i =1;i<=output_num;i++){
 				rating[i] = output_info_[i -1][6];
 				out_vol[i] = pdu_data.output_vol[i-1];
-				use_cnt[i] = pdu_data.pdu_data.output_item_list.relay_use_cnt[i-1]
+				// use_cnt[i] = pdu_data.pdu_data.output_item_list.relay_use_cnt[i-1]
 				rating_[i] = rating[i];
 			}
 		}
@@ -256,10 +256,10 @@
 				}
 			}
 
-			for(i =1;i<=output_num;i++){
+			// for(i =1;i<=output_num;i++){
 			//	use_cnt[i] = pdu_data.output_vol[i-1];
-				document.getElementById("use_cnt" + i).innerHTML = use_cnt[i];
-			}
+				// document.getElementById("use_cnt" + i).innerHTML = use_cnt[i];
+			// }
 			if(cfg_data[1] == "2"){//定制版则隐藏log上传的功能
 				document.getElementById("show_log").style.display = "";
 			}else{
@@ -308,6 +308,7 @@
 			}
 			if(btn.value == "0"||btn.value == "1"){
 				pdu_obj.setCfg(cfg,10,document.getElementById("language_").value,0,addr);
+				window.sessionStorage.setItem('language', btn.value );
 			}	
 			if(btn.value == "0"||btn.value == "1"){
 				pdu_obj.setCfg(cfg,9,document.getElementById("serson_box_").value,0,addr);
@@ -323,11 +324,11 @@
 			setTimeout(() => {
 				PduMetaData.meta_workDown();
 				pdu_obj.debugCfg();
-			}, 1500);
+			}, 1000);
 		}
 		function AllSet(){
 			for(let i = 0;i<10;i++){
-				if(i==6 || i==7) continue;
+				if(i==6 || i==9) continue;
 				for(let j = 0;j<5;j++){
 					if(document.getElementById(unite_id[i]+j).value == unite_data[i][j]){
 					}else{
@@ -619,16 +620,16 @@
 				<td><input id = "'+unite_id[9]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
 				<td><input id = "'+unite_id[9]+3+'" style ="width:60.5%" type = "text"  value ="1.76"></input></td>\
 				<td><input id = "'+unite_id[9]+4+'" style ="width:60.5%" type = "text"  value ="2.20"></input></td><td></td></tr>';
-			tbody += '<tr><td>7</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="40"></input></td>\
-				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" value ="40"></input"></td>\
-				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" value ="40"></input></td><td></td></tr>';
-			tbody += '<tr><td>8</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="power_calculation()" readonly ="true" value ="90"></input></td>\
-				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" value ="0"></input></td>\
-				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text"  value ="0"></input></td>\
-				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text"  value ="90"></input></td>\
-				<td><input id = "'+unite_id[8]+4+'" style ="width:60.5%" type = "text"  value ="90"></input></td><td></td></tr>';
+			tbody += '<tr><td>7</td><td>温度(℃)</td><td><input id = "'+unite_id[7]+0+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input></td>\
+				<td><input id = "'+unite_id[7]+1+'" style ="width:60.5%" type ="text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[7]+2+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[7]+3+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input"></td>\
+				<td><input id = "'+unite_id[7]+4+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="40"></input></td><td></td></tr>';
+			tbody += '<tr><td>8</td><td>湿度(%)</td><td><input id = "'+unite_id[8]+0+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td>\
+				<td><input id = "'+unite_id[8]+1+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[8]+2+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="0"></input></td>\
+				<td><input id = "'+unite_id[8]+3+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td>\
+				<td><input id = "'+unite_id[8]+4+'" style ="width:60.5%" type = "text" onchange ="AllSet()" value ="90"></input></td><td></td></tr>';
 			tbody += '<tr><td colspan = "3" ><input style ="width:100px" type = "button" onclick = "AllSet()" value="统一设置"></input></td><td></td><td></td><td></td><td></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

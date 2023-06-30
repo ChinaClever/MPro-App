@@ -169,6 +169,7 @@
 			lang[18] = ["关","Close","","",""];
 			lang[19]  = ["主机", "Master", "", "", ""];
 			lang[20]  = ["副机", "Slave", "", "", ""];
+			lang[21] = ["使用次数","Number of uses","","",""];
 			dev_name[0] = lang[19][language];
 			for(let i = 1;i<( pdu_data.pdu_info.slave_num+1);i++){
 				dev_name[i] =  lang[20][language] + i;
@@ -183,6 +184,7 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("lang_21").innerHTML  = lang[21][language];
 			if(read == 0){
 				document.getElementById("lang_2").innerHTML  = lang[14][language];
 			}
@@ -485,8 +487,9 @@
 			for (var i = 0; i < rows; i++) {
 				if (i === 0) {
 					thead = '<tr style="background:#d6d6d6;"><td width ="5%" id="lang_4"></td>\
-					<td width ="24%" id="lang_5"></td>\
+					<td width ="14%" id="lang_5"></td>\
 					<td width ="10%" id="lang_6"></td>\
+					<td width ="10%" id="lang_21"></td>\
 					<td width ="10%" id="lang_7"></td>\
 					<td width ="10%" id="lang_8"></td>\
 					<td width ="10%" id="lang_9"></td>\
@@ -499,6 +502,7 @@
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '" >'+pdu_data.pdu_data.output_item_list.name[i]+'</td>';
 				tbody += '<td id = "c'+ i + '">'+ State[pdu_data.pdu_data.output_item_list.relay_state[i]] +'</td>';
+				tbody += '<td id = "l'+ i + '">'+ pdu_data.pdu_data.output_item_list.relay_use_cnt[i] +'</td>';
 				tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_powerup_delay[i]+'"></input></td>';
 				tbody += '<td><input type = "text" onchange ="SetData(this)"  class = "input" id = "j'+ i + '" value = "'+pdu_data.pdu_data.output_item_list.relay_reset_delay[i]+'"></input></td>';
 				tbody += '<td><input  type = "checkbox" onchange ="Cked(this)" class = "input" id = "e'+ i + '"></input></td>';
@@ -513,6 +517,7 @@
 					tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 					tbody += '<td id = "b'+ i + '">'+lang[16][language]+'</td>';
 					tbody += '<td id = "c'+ i + '"></td>';
+					tbody += '<td id = "l'+ i + '"></td>';
 					tbody += '<td><input type = "text" onchange ="SetData(this)" class = "input" id = "d'+ i + '" ></input></td>';
 					//tbody += '<td><input type = "text" onchange ="SetData(this)" oninput = "if(value<5){value=5};" class = "input" id = "j'+ i + '" ></input></td>';
 					tbody += '<td><input type = "text" onchange ="SetData(this)"  class = "input" id = "j'+ i + '" ></input></td>';
