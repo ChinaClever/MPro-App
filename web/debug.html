@@ -263,10 +263,12 @@
 
 			setInterval(function () {
 				cfg_data[1] = pdu_data.pdu_info.stand_neutral;
-				if(cfg_data[1] == "2"){//定制版则隐藏log上传的功能
+				if(cfg_data[1] == "2"){//定制版则显示log上传的功能
 					document.getElementById("show_log").style.display = "";
+					document.getElementById("bg").style.display = "";
 				}else{
 					document.getElementById("show_log").style.display = "none";
+					document.getElementById("bg").style.display = "none";
 				}
 			},1000);
 
@@ -569,7 +571,7 @@
 			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
 			tbody += '<tr><td>MAC地址:</td>';
 			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[6]+'"></input></td></tr>';
-			tbody += '<tr><td>背景颜色:</td>';
+			tbody += '<tr id="bg" style="display:none"><td>背景颜色:</td>';
 			tbody += '<td><input id = "bg_color" style ="width:2.5%" type = "text" onchange = "bgColor_set(this)" value="'+cfg_data[7]+'"></input>(0-蓝色,1-黑色)</td></tr>';
 			tbody += '<tr><td><input style ="width:100px" type = "button" onclick = "Set_(this)" value="保存"></input></td><td></td></tr>';
 			tbody += '<tr><td></td><td></td></tr>';
