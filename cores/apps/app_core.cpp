@@ -35,7 +35,7 @@ void App_Core::compileTime()
 }
 
 void App_Core::initUuid()
-{
+{    
     QString fn = "/usr/data/clever/cfg/uuid.conf";
     if(!QFile::exists(fn)) {
         if(QDate::currentDate().year() < 2023) return;
