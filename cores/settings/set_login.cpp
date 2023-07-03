@@ -22,6 +22,7 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 3: res = it->token; break;
     case 4: res = it->permit; break;
     case 5: res = it->groupCtrl; break;
+    case 9: res = it->reserve[3]; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 

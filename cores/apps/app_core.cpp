@@ -64,6 +64,7 @@ void App_Core::initRoot(const QString &sn)
     QString pwd = "123456"; if(sn.size() > 3) pwd = hashPassword(sn);
     QString cmd = fmd.arg(pwd); system(cmd.toStdString().c_str());
     char *ptr = cm::dataPacket()->login[0].reserve[3];
+    //QByteArray ba = pwd.toLatin1().toBase64();
     qstrcpy(ptr, pwd.toStdString().c_str());
 }
 

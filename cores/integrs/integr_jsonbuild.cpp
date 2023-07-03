@@ -51,7 +51,6 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             verInfo(dev->cfg.vers, "pdu_version", json);
             if(dc > 2) {loginPermit(json); outputVol(json);}
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
-            if(!addr && dc > 2) json.insert("root_pwd", cm::dataPacket()->login[0].reserve[3]);
             //json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
         }
         QDateTime datetime = QDateTime::currentDateTime();
