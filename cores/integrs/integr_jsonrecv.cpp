@@ -191,6 +191,26 @@ bool Integr_JsonRecv::pduCfgSet(const QJsonObject &object)
     return ret;
 }
 
+bool Integr_JsonRecv::pduRelayCtrl(const QJsonObject &object)
+{
+    sDataItem it; bool ret = true;
+    QString key = "pduRelaysCtrl";
+    it.topic = DTopic::Relay;
+    it.subtopic = DSub::Relays;
+
+    if (object.contains(key)) {
+        QJsonObject obj = getObject(object, key);
+        double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
+        res = getData(obj, "start"); if(res >= 0) it.type = res;
+        res = getData(obj, "num"); if(res >= 0) it.id = res;
+        it.value =  getValue(obj, "on").toInt();
+        it.txType = DTxType::TxJson;
+        emit recvSetSig(it);
+    }else ret = false;
+
+    return ret;
+}
+
 QVariant Integr_JsonRecv::pduCfgGet(const QJsonObject &object)
 {
     QString key = "pduCfgGet";
@@ -206,6 +226,7 @@ bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
     //bool ret = versionNumber(object); //if(ret) {
     bool ret = pduDataSet(object);
     if(!ret) ret = pduCfgSet(object);
+    if(!ret) ret = pduRelayCtrl(object);
 
     return ret;
 }

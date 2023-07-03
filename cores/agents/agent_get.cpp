@@ -94,7 +94,7 @@ void Agent_Get::addUnitAlarm(uchar addr, uchar key, const QString &oidPrefix,
 }
 
 void Agent_Get::addUnitData(uchar addr, uchar key, const QString &oidPrefix,
-                             const QString &oidName, sAlarmUnit &it, int index)
+                            const QString &oidName, sAlarmUnit &it, int index)
 {
     int id = 1; QString name = oidName + "-";
     QString oid = oidPrefix + QString::number(key) +".";
@@ -103,7 +103,7 @@ void Agent_Get::addUnitData(uchar addr, uchar key, const QString &oidPrefix,
 }
 
 void Agent_Get::addRelayUnit(uchar addr, const QString &oidPrefix,
-                            const QString &oidName, sRelayUnit &it, int index)
+                             const QString &oidName, sRelayUnit &it, int index)
 {
     if(!it.size) return;
     int id = 1; QString oid = oidPrefix + ".1.";
@@ -118,7 +118,7 @@ void Agent_Get::addRelayUnit(uchar addr, const QString &oidPrefix,
 }
 
 void Agent_Get::addRelayGroup(uchar addr, const QString &oidPrefix,
-                            const QString &oidName, sRelayUnit &it, int index)
+                              const QString &oidName, sRelayUnit &it, int index)
 {
     if(!it.size) return;
     int id = 1; QString oid = oidPrefix + ".1.";
@@ -126,8 +126,17 @@ void Agent_Get::addRelayGroup(uchar addr, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"switch", it.sw[index]);
 }
 
+void Agent_Get::addRelayDual(uchar addr, const QString &oidPrefix,
+                             const QString &oidName, sRelayUnit &it, int index)
+{
+    //if(!it.size) return;
+    int id = 1; QString oid = oidPrefix + ".1.";
+    QString name = tr("%1-%2-relay-").arg(oidName).arg(index+1);
+    addOidValue(addr, id++, oid, name+"switch", it.sw[index]);
+}
+
 void Agent_Get::addOutputEle(uchar addr, const QString &oidPrefix,
-                            const QString &oidName, sObjData &it, int index)
+                             const QString &oidName, sObjData &it, int index)
 {
     if(!it.size) return;
     int id = 1; QString oid = oidPrefix + ".2.";
@@ -151,7 +160,7 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
 }
 
 void Agent_Get::addObjAlarm(uchar addr, const QString &oidPrefix,
-                           const QString &oidName, sObjData &it, int index, int type)
+                            const QString &oidName, sObjData &it, int index, int type)
 {
     int id = 0; QString oid = oidPrefix + ".";
     QString name = tr("%1-%2-").arg(oidName).arg(index+1);
@@ -171,7 +180,7 @@ void Agent_Get::addEnvData(uchar addr, const QString &oidPrefix,
 }
 
 void Agent_Get::addEnvAlarm(uchar addr, const QString &oidPrefix,
-                           const QString &oidName, sEnvData &it, int index)
+                            const QString &oidName, sEnvData &it, int index)
 {
     int id = 1; QString oid = oidPrefix + ".";
     QString name = tr("%1-%2-").arg(oidName).arg(index+1);
@@ -235,30 +244,27 @@ void Agent_Get::addDevData(uchar addr, sDevData *it)
         oid = "2.4." +QString::number(i+1);
         addObjAlarm(addr, oid, name+"rw-group", it->group, i, 4);
 
-        //oid = "3.2." +QString::number(i+1);
-        //addRelayGroup(addr, oid, name+"ctrl-group", it->output.relay, i);
-    }
-
-    size = it->output.relay.size;
-    if(size) {
-        for(int i=0; i<size; ++i) {
-            QString oid = "3.2." +QString::number(i+1);
-            addRelayGroup(addr, oid, name+"ctrl-group", it->output.relay, i);
-        }
+        oid = "3.2." +QString::number(i+1);
+        addRelayGroup(addr, oid, name+"ctrl-group", it->group.relay, i);
     }
 
     size = it->dual.size;
     for(int i=0; i<size; ++i) {
         QString oid = "1.5." +QString::number(i+1);
-        addObjData(addr, oid, name+"read-dual", it->group, i);
+        addObjData(addr, oid, name+"read-dual", it->dual, i);
 
         oid = "2.5." +QString::number(i+1);
-        addObjAlarm(addr, oid, name+"rw-dual", it->group, i, 5);
+        addObjAlarm(addr, oid, name+"rw-dual", it->dual, i, 5);
 
-        oid = "3.3." +QString::number(i+1);
-        addRelayGroup(addr, oid, name+"ctrl-dual", it->output.relay, i);
+        //oid = "3.3." +QString::number(i+1);
+        //addRelayGroup(addr, oid, name+"ctrl-dual", it->output.relay, i);
     }
 
+    size = it->output.relay.size;
+    for(int i=0; i<size; ++i) {
+        QString oid = "3.3." +QString::number(i+1);
+        addRelayDual(addr, oid, name+"ctrl-dual", it->dual.relay, i);
+    }
 
     size = it->env.size;if(!size) size = SENOR_NUM/2;
     for(int i=0; i<size; ++i) {

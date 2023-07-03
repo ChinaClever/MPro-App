@@ -23,6 +23,7 @@ private:
 
     void addOutputEle(uchar addr, const QString &oidPrefix, const QString &oidName, sObjData &it, int index);
     void addRelayGroup(uchar addr, const QString &oidPrefix, const QString &oidName, sRelayUnit &it, int index);
+    void addRelayDual(uchar addr, const QString &oidPrefix, const QString &oidName, sRelayUnit &it, int index);
     void addRelayUnit(uchar addr, const QString &oidPrefix, const QString &oidName, sRelayUnit &it, int index);
     void addEnvData(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);
     void addEnvAlarm(uchar addr, const QString &oidPrefix, const QString &oidName, sEnvData &it, int index);

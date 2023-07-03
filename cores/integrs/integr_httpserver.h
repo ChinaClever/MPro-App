@@ -17,6 +17,7 @@ private:
     static bool pduMetaData(const QByteArray &body);
     static bool getting(const QByteArray &body);
     static bool setting(const QByteArray &body);
+    static bool relayCtrl(const QByteArray &body);
     static void replyValue(const QJsonValue &v);
     static bool replyHttp(const QString &msg, const int &httpStatusCode=200);
     static void onHttpAccepted(const QPointer<JQHttpServer::Session> &session);

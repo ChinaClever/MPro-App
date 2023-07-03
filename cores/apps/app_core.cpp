@@ -35,7 +35,7 @@ void App_Core::compileTime()
 }
 
 void App_Core::initUuid()
-{
+{    
     QString fn = "/usr/data/clever/cfg/uuid.conf";
     if(!QFile::exists(fn)) {
         if(QDate::currentDate().year() < 2023) return;
@@ -61,9 +61,11 @@ QString App_Core::hashPassword(const QString& password)
 void App_Core::initRoot(const QString &sn)
 {
     QString fmd = "echo -e '%1\n%1' |  passwd root";
-    QString cmd = fmd.arg(hashPassword(sn));
-    if(sn.size() < 3) cmd = fmd.arg("123456");
-    system(cmd.toStdString().c_str());
+    QString pwd = "123456"; if(sn.size() > 3) pwd = hashPassword(sn);
+    QString cmd = fmd.arg(pwd); system(cmd.toStdString().c_str());
+    char *ptr = cm::dataPacket()->login[0].reserve[3];
+    //QByteArray ba = pwd.toLatin1().toBase64();
+    qstrcpy(ptr, pwd.toStdString().c_str());
 }
 
 void App_Core::initVer()
