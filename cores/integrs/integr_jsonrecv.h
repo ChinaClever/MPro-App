@@ -33,6 +33,7 @@ public:
     double pduDataGet(const QJsonObject &object);
     bool pduDataSet(const QJsonObject &object);    
     bool pduCfgSet(const QJsonObject &object);
+    bool pduRelayCtrl(const QJsonObject &object);
     QVariant pduCfgGet(const QJsonObject &object);
     bool analyticalData(const QJsonObject &object);
 

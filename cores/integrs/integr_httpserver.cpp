@@ -102,6 +102,13 @@ bool Integr_HttpServer::setting(const QByteArray &body)
     return ret;
 }
 
+bool Integr_HttpServer::relayCtrl(const QByteArray &body)
+{
+    bool ret = Integr_JsonRecv::bulid()->recv(body);
+    if(ret) replyHttp("ok", 200); else replyHttp("error", 431);
+    return ret;
+}
+
 bool Integr_HttpServer::execute(const QByteArray &body)
 {
     bool ret = true;
@@ -112,7 +119,7 @@ bool Integr_HttpServer::execute(const QByteArray &body)
         QString res = cm::execute(cmd); replyHttp(res, 200);
         //system(cmd.toLatin1().data());
     } else {
-        ret = replyHttp("error:" + cmd, 431);
+        ret = replyHttp("error:" + cmd, 441);
     }
     return ret;
 }
@@ -132,11 +139,12 @@ void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &se
         else replyHttp(err, 413);
     } else if(method.contains("POST")) {
         if(url.contains("pduSetting")) setting(body);
+        else if(url.contains("pduCtrl")) relayCtrl(body);
         else if(url.contains("upload")) upload(body);
         else replyHttp(err, 423);
     } else if(method.contains("PUT")) {
         if(url.contains("execute")) execute(body);
-        else replyHttp(err, 433);
+        else replyHttp(err, 443);
     }
 }
 

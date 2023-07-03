@@ -105,7 +105,9 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if((0==it->disabled[id]) && (unit.value < 3)) { /* || (unit.txType == DTxType::TxWeb)*/
         if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
-            if(unit.value) it->cnt[id] += 1;
+            if(unit.value) { if(unit.id) it->cnt[id] += 1;
+                else for(int i=0; i<it->size; ++i) it->cnt[i] += 1;
+            }
             it->sw[id] = unit.value;
         } else ret = false;
     } else ret = false;
