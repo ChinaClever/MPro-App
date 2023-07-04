@@ -85,12 +85,14 @@
 		let pdu_obj = PduCore.build();
 		setTimeout(function(){
 			pdu_obj.debugCfg();
+			pdu_obj.loginCfg();
 			pdu_obj.getCfg(41,11,0,0);
 			PduMetaData.meta_workDown(0);
 		},600);
 
 		setTimeout(function(){
 			pdu_obj.debugCfg();
+			pdu_obj.loginCfg();
 			pdu_obj.getCfg(41,11,0,0);
 			PduMetaData.meta_workDown(0);
 		},1100);
@@ -113,6 +115,7 @@
 		var mark = 1;
 		let pdu_data= "";
 		let login_permit_;
+		let admin_password;
 		let board_out = new Array(0,0,0,0);
 		let loop_out = new Array(0,0,0,0,0,0);
 		let cfg_data = new Array(10);
@@ -190,7 +193,7 @@
 			// cfg_data[4] = pdu_obj.cfgValue(cfg,1,0,addr);
 			// cfg_data[5] = pdu_obj.cfgValue(cfg,10,0,addr);
 			// cfg_data[7] = pdu_obj.cfgValue(cfg,18,0,addr);
-
+			admin_password = pdu_obj.cfgValue(14,9,0,addr);
 			cfg_data[6] = pdu_obj.cfgValue(41,11,0,addr);
 			break_en = pdu_data.pdu_info.breaker;
 			cfg_data[0] = pdu_data.pdu_info.vh;
@@ -285,6 +288,8 @@
 			document.getElementById("phase_cur_0").style.borderColor = 'red';
 			document.getElementById("loop_cur_0").style.borderColor = 'red';
 			document.getElementById("output_cur_0").style.borderColor = 'red';
+
+			document.getElementById("admin_psw").innerHTML = admin_password;
 			
 		}
 		function Set_(btn){
@@ -569,6 +574,10 @@
 
 			tbody += '<tr><td>语言选择:</td>';
 			tbody += '<td><input id = "language_" style ="width:2.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[5]+'"></input>(0-中文,1-英文)</td></tr>';
+			
+			tbody += '<tr><td>管理员密码:</td>';
+			tbody += '<td id = "admin_psw"></td></tr>';
+
 			tbody += '<tr><td>MAC地址:</td>';
 			tbody += '<td><input id = "mac_" style ="width:24.5%" type = "text" onchange = "Set_(this)" value="'+cfg_data[6]+'"></input></td></tr>';
 			tbody += '<tr id="bg" style="display:none"><td>背景颜色:</td>';
