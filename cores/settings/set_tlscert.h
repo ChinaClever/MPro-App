@@ -25,6 +25,7 @@ private:
     bool createTlsCert();
     bool systemCmd(QString str);
     void tlsCertLog(int fc);
+    void tlsCertName();
 
 private:
     sTlsCertIt mTlsCert;

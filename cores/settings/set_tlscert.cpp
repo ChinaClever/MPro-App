@@ -92,6 +92,22 @@ bool Set_TlsCert::createTlsCert()
     return ret;
 }
 
+void Set_TlsCert::tlsCertName()
+{
+    QString dir = "/usr/data/clever/certs";
+    QStringList fs = File::entryList(dir);
+    foreach (const auto &it, fs) {
+        if(it == "." || it == "..") continue;
+        QString fmd = "mv %1/%2 %1/%3"; QString dst;
+        if(it.contains("key.pem")) {
+            dst = "client-key.pem";
+        } else if(it.contains("cert.pem ")) {
+            dst = "client-cert.pem";
+        } else continue;
+        if(dst.size()) cm::execute(fmd.arg(dir, it, dst));
+    }
+}
+
 void Set_TlsCert::tlsCertLog(int fc)
 {
     sEventItem db;
@@ -104,7 +120,7 @@ void Set_TlsCert::tlsCertLog(int fc)
         break;
 
     case 1:
-        db.event_content = QStringLiteral("用户已上传TLS证书");
+        db.event_content = QStringLiteral("用户已上传TLS证书"); tlsCertName();
         if(cm::language()) db.event_content = "User has uploaded TLS certificate";
         break;
 
