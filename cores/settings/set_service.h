@@ -13,9 +13,6 @@ public:
     QVariant ntpCfg(int fc);
     bool ntpSet(int fc, const QVariant &v);
 
-
-
-
     QVariant smtpCfg(int fc, int id);
     bool smtpSet(int fc, int id, const QVariant &v);
 

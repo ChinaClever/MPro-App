@@ -21,9 +21,9 @@ void Agent_Trap::initTrapSlot()
     Alarm_Updater *alarm = Alarm_Updater::bulid();
     connect(alarm, &Alarm_Updater::alarmSig, this, &Agent_Trap::alarmSlot);
 
-    timer = new QTimer(this);
+    //timer = new QTimer(this);
     //timer->start(3000); ////==========
-    connect(timer, &QTimer::timeout, this, &Agent_Trap::timeoutDone);
+    //connect(timer, &QTimer::timeout, this, &Agent_Trap::timeoutDone);
 }
 
 void Agent_Trap::timeoutDone()
@@ -93,13 +93,14 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 //  V2 命令  版本   -c 共同体  管理机  Enterprise-OID  snmp代理地址   陷阱类型 oid   数据类型    数据类型
 void Agent_Trap::sendTrap(const QString &ip, const QString &dstOid, const QString &oid, const QString &msg)
 {
+    sAgentCfg *cfg = &Agent_Core::snmpCfg;
     if(snmpCfg.enV3) {
-
-    }
-
-    {
-        QString cmd = "snmptrap -v 2c -c public %1 '' %2 %3 s '%4'";
-        QString str = cmd.arg(ip, dstOid, oid, msg);
+        QString fmd = "snmptrap -v 3 -a MD5 -A %1 -x %2 -X %3 -u %4 %5 '' %6 %7 s '%8'";
+        QString cmd = fmd.arg(cfg->pwd, cfg->encrypt?"AES ":"DES", cfg->key, cfg->usr,ip, dstOid, oid, msg);
+        system(cmd.toLatin1().data());
+    } else  {
+        QString cmd = "snmptrap -v 2c -c %5 %1 '' %2 %3 s '%4'";
+        QString str = cmd.arg(ip, dstOid, oid, msg, cfg->get);
         system(str.toLatin1().data());
     }
 }

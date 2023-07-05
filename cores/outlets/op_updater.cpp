@@ -123,9 +123,9 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 4000);
     if(!recv.contains("Start Updat")) { cm::mdelay(3250);
-        recv = transmit(cmd, sizeof(cmd), 5000);
+        recv = transmit(cmd, sizeof(cmd), 5500);
         if(!recv.isEmpty()) isOta = false;
         //if(!recv.contains("Start Updat")) isOta = false;
     } emit otaSig(id, recv);
