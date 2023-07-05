@@ -33,7 +33,7 @@ QVariant Set_TlsCert::getTlsCert(uchar fc)
 
 static void tls_log()
 {
-    cm::mdelay(1540);
+    cm::mdelay(2540);
     Set_Core::bulid()->upTlsCertLog();
 }
 
