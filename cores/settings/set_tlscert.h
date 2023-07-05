@@ -20,6 +20,7 @@ public:
 
     QVariant getTlsCert(uchar fc);
     bool setTlsCert(uchar fc, const QVariant &v);
+    void upTlsCertLog() {tlsCertLog(1);}
 
 private:
     bool createTlsCert();
@@ -29,6 +30,7 @@ private:
 
 private:
     sTlsCertIt mTlsCert;
+    std::thread *mThread=nullptr;
 };
 
 #endif // SET_TLSCERT_H
