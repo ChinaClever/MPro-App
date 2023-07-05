@@ -32,11 +32,9 @@ QVariant Set_TlsCert::getTlsCert(uchar fc)
 
 bool Set_TlsCert::setTlsCert(uchar fc, const QVariant &v)
 {
-    cout << fc << v;
+    //cout << fc << v;
     QString str = v.toString();
-    bool ret = false;
-    switch(fc)
-    {
+    bool ret = true; switch(fc) {
         case 11: mTlsCert.country = str;break;
         case 12: mTlsCert.province = str;break;
         case 13: mTlsCert.city = str;break;
@@ -45,6 +43,8 @@ bool Set_TlsCert::setTlsCert(uchar fc, const QVariant &v)
         case 16: mTlsCert.certname = str;break;
         case 17: mTlsCert.mail = str;break;
         case 31: ret = createTlsCert();break;
+        case 32: tlsCertLog(v.toInt()); break;
+        default : ret = false; cout << fc << v; break;
     }
     return ret;
 }
@@ -88,5 +88,26 @@ bool Set_TlsCert::createTlsCert()
     str = "openssl x509 -req -extfile /etc/ssl/openssl.cnf -extensions v3_req -in /usr/data/clever/certs/client-req.csr -out /usr/data/clever/certs/client-cert.pem -signkey /usr/data/clever/certs/client-key.pem -CAkey /usr/data/clever/certs/root-key.key -CAcreateserial -days 3650";
     if(ret) ret = systemCmd(str);
 #endif
+    tlsCertLog(0);
     return ret;
+}
+
+void Set_TlsCert::tlsCertLog(int fc)
+{
+    sEventItem db;
+    db.event_type = QStringLiteral("证书管理");
+    if(cm::language()) db.event_type = "certificates";
+    switch (fc) {
+    case 0:
+        db.event_content = QStringLiteral("创建新的TLS证书");
+        if(cm::language()) db.event_content = "Create a new TLS certificate";
+        break;
+
+    case 1:
+        db.event_content = QStringLiteral("用户已上传TLS证书");
+        if(cm::language()) db.event_content = "User has uploaded TLS certificate";
+        break;
+
+    default: cout << fc; break;
+    } Log_Core::bulid()->append(db);
 }

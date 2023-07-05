@@ -141,6 +141,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             }else{
                 mg_snprintf(file_path , sizeof(file_name) , "/usr/data/clever/certs/%s",file_name);
                 mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 99999);
+                system("pdu_cmd pduCfgSet 32 32 1");
             }
             memset(file_path , 0 , sizeof(file_path));
             memset(file_name , 0 , sizeof(file_name));
