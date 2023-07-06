@@ -213,9 +213,9 @@
 				read = 1;
 				ros.style.backgroundColor = 'red';
 				if(pdu_data.pdu_info.language == 0){
-					alert("启用超限断电后，电流超过限定值，继电器会断开！");
+					alert("启用超限断电功能后，输出位电流超过设定最大值时，该输出位电源会被中断！");
 				}else{
-					alert("After enabling the power outage beyond the limit, if the current exceeds the limit value, the relay will disconnect!");
+					alert("After enabling the over limit power off function, when the output bit current exceeds the set maximum value, the power supply of the output bit will be interrupted!");
 				}
 				ros.innerHTML = lang[8][language];
 				var iptname = document.getElementsByTagName("input");

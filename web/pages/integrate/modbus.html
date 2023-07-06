@@ -45,6 +45,7 @@
 		var baud_name = new Array("9600","19200","38400","57600","115200");
 		var databits_name = new Array("5","6","7","8");
 		var parity_name = new Array("None","Even","Odd");
+		var parity_name_ = new Array("无","奇","偶");
 		var stopbits_name = new Array("1","2");
 		var select_name = new Array("rtu","addr","baud","parity","databits","stopbits","","","","","tcp","tcp_port");
 		var modbus_data = new Array();
@@ -223,7 +224,12 @@
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><select id ="parity" onchange ="SetData(this)">';
 			for(var i = 0; i<parity_name.length;i++){
-				tbody +='<option value ="'+i+'">'+parity_name[i] +'</option>';
+				if(0 == language){
+					tbody +='<option value ="'+i+'">'+parity_name_[i] +'</option>';
+				}else{
+					tbody +='<option value ="'+i+'">'+parity_name[i] +'</option>';
+				}
+				
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';

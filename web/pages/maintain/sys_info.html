@@ -106,7 +106,7 @@
 			lang[5] = ["校验码:","Check code:","","",""];
 			lang[6] = ["用户名:","User name:","","",""];
 			lang[7] = ["版本说明:","Release note:","","",""];
-			lang[8] = ["依赖版本号:","Dependent version number","","",""];
+			lang[8] = ["历史版本号:","Historical version number：","","",""];
 			lang[9] = ["编译时间:","Compile time:","","",""];
 			lang[10] = ["发布日期:","Release date:","","",""];
 			lang[11] = ["升级日期:","Upgrade date:","","",""];
@@ -218,8 +218,8 @@
 			tbody += '<td id = "McCode"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td id = "McUsrName"></td></tr>';
-			if(0 == language){
-				tbody += '<tr><td id="lang_7" ></td>';
+			if(0 == language){//市场部要求将版本说明取消显示
+				tbody += '<tr style="display:none"><td id="lang_7" ></td>';
 				tbody += '<td id = "McVerShow"></td></tr>';
 			}			
 			tbody += '<tr><td id="lang_8" ></td>';

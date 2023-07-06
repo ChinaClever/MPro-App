@@ -62,7 +62,7 @@
 			lang[3] = ["机房名称:","Computer room name:","","",""];
 			lang[4] = ["位置信息:","Position information:","","",""];
 			lang[5] = ["设备名称:","Device name:","","",""];
-			lang[6] = ["二维码显示内容:","QR code display content:","","",""];
+			lang[6] = ["二维码扫描:","QR code scanning:","","",""];
 			lang[7] = ["设备SN码:","Equipment SN code:","","",""];
 			lang[8] = ["设备类型:","Equipment selection:","","",""];
 			lang[9] = ["UUID:","UUID:","","",""];
@@ -106,6 +106,9 @@
 				$("select").attr("disabled","disabled");
 				$("textarea").attr("disabled","disabled");
 			}else{
+			}
+			if(0 != language){
+				document.getElementById("qr_disp").innerHTML = "The content filled in the above fields can be obtained by scanning the QR code on the local display screen of the main control module";
 			}
 			//FlashHtml();
 		}
@@ -192,6 +195,9 @@
 			tbody += '</td></tr>';
 			tbody += '<tr><td id = "lang_6"></td>';
 			tbody += '<td><input id = "qr"  style="height:90px;width:32%;resize: none;" type="textarea" rows="4" cols="37" onkeyup = "checklength(this,40)" onchange = "SetData(this)" autofocus></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td>';
+			tbody += '<td style="color:grey;" id="qr_disp"> 上栏位填写的内容均可由主控模组本地显示屏中二维码扫描获取';
 			tbody += '</td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';

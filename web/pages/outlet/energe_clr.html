@@ -353,11 +353,6 @@
 			if(read === 0){
 				read = 1;
 				ros.style.backgroundColor = 'red';
-				if(pdu_data.pdu_info.language == 0){
-					alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
-				}else{
-					alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
-				}
 				ros.innerHTML =  lang[9][language];
 				var btnname = document.getElementsByTagName("input");
 				for(var j = 0; j<btnname.length;j++)

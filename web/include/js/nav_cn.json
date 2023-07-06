@@ -198,7 +198,7 @@
     "base": "pages/network/",
     "subNav": [
       {
-        "name": "网络连接",
+        "name": "网络设置",
         "url": "base.html"
       },
       {
@@ -229,12 +229,12 @@
     ]
   },  
   {
-    "name": "云端服务",
+    "name": "云端管理",
     "icon": "service_fill",
     "base": "pages/aiot/",
     "subNav": [
       {
-        "name": "AIoT",
+        "name": "路径设置",
         "url": "aiot.html"
       }     
     ]
@@ -312,6 +312,18 @@
       {
         "name": "系统命令",
         "url": "sys_command.html"
+      },
+      {
+        "name": "",
+        "url": " "
+      },
+      {
+        "name": "",
+        "url": " "
+      },
+      {
+        "name": "",
+        "url": " "
       }
     ]
   }

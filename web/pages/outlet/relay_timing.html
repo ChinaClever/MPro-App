@@ -242,9 +242,9 @@
 				read = 0;
 				ros.style.backgroundColor = 'red';
 				if(0 == language){
-					alert("定时功能支持指定日期和每天执行两种模式，未指定日期时即每天执行，指定日期时只执行一次。开启关键设备保护功能后，无法进行定时设置！")
+					alert("定时功能支持单次生效和每日生效两种模式，不指定日期即默认为每日生效，指定日期即默认为单次生效；开启了关键设备保护功能的输出位，定时开关不生效。")
 				}else{
-					alert("The timing function supports two modes: specified date and daily execution. If no date is specified, it will be executed every day, and if a date is specified, it will only be executed once。Unable to perform timing settings after enabling critical device protection function!")
+					alert("The timing function supports two modes: single effective and daily effective. If no date is specified, it defaults to daily effective. If a date is specified, it defaults to single effective; When the output bit of key equipment protection function is turned on, the Time switch does not take effect.")
 				}
 				ros.innerHTML = lang[14][language];
 				var iptname = document.getElementsByTagName("input");

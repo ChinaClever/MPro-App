@@ -72,6 +72,9 @@
 			lang[11] = ["条","Strip","","",""];
 			lang[12] = ["阅读模式","Reading mode","","",""];
 			lang[13] = ["设置模式","Setting mode","","",""];
+			lang[14] = ["天","Day","","",""];
+			lang[15] = ["小时","Hour","","",""];
+
 			enable[0] = lang[10][language];
 			enable[1] = lang[9][language];
 		}
@@ -169,10 +172,10 @@
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><input id = "EnergeDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input>';
+			tbody += '<td><input id = "EnergeDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input><span style="color:grey;">(1~7'+lang[14][language]+')<span>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "HistoryDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input>';
+			tbody += '<td><input id = "HistoryDelay" onchange ="SetData(this)" style ="width:15%" type = "text"></input><span style="color:grey;">(1~24'+lang[15][language]+')<span>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><input id = "AlarmMaxNum" onchange ="SetData(this)" style ="width:15%" type = "text" oninput = "if(value>10000){value=10000};"></input><span style="color:grey;">(0~10000'+lang[11][language]+')<span>';
