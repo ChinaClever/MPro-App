@@ -53,7 +53,7 @@ void App_Script::script_kill(int id)
 {    
 #if USE_PRO
     if(mMap.contains(id)) {
-        mMap[id]->kill(); mMap.remove(id);
+        mMap[id]->kill(); mMap.remove(id);        
         scriptCfg.result[id].clear();
     }
 #else

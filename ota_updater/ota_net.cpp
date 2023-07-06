@@ -155,12 +155,26 @@ void Ota_Net::rebootSlot()
     system("sync"); system("reboot");
 }
 
+bool Ota_Net::outletCheck(const QString &dir)
+{
+    bool ret = false;
+    QStringList fs = File::entryList(dir+"/outlet");
+    foreach (const auto it, fs) {
+        if(it.contains(".bin"))  {
+            throwMessage("outlet software updater");
+            ret = true;
+        }
+    }
+    return ret;
+}
+
 bool Ota_Net::versionCheck(const QString &dir)
 {
     sAppVerIt it;
     Cfg_App app(dir, this);
     bool ret = app.app_unpack(it);
     throwMessage(dir); if(ret) {
+        if(outletCheck(dir)) return ret;
         throwMessage("version check ok");
         QString str = cm::masterDev()->cfg.vers.releaseDate;
         if(str.size()) {
