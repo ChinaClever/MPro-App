@@ -44,6 +44,12 @@ void Cfg_App::app_serialNumber(const QString &sn)
     writeCfg("sn", sn, g);
 }
 
+void Cfg_App::app_oldVersion(const QString &ver)
+{
+    QString g = "app_pack";
+    writeCfg("oldVersion", ver, g);
+}
+
 bool Cfg_App::app_pack(sAppVerIt &it)
 {
     QString g = "app_pack";
@@ -84,7 +90,7 @@ bool Cfg_App::app_unpack(sAppVerIt &it)
     if(str.isEmpty()) { str = dt; writeCfg("upgradeDate", dt, g);}
     it.upgradeDate = str;
 
-    str = it.dev + it.usr + it.ver + it.remark + it.oldVersion + it.releaseDate;
+    str = it.dev + it.usr + it.ver + it.releaseDate; /* + it.remark + it.oldVersion*/
     str = QCryptographicHash::hash(str.toLatin1(),QCryptographicHash::Md5).toHex();
     return  it.md5 == str;
 }

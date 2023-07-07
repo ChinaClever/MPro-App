@@ -105,9 +105,9 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if((0==it->disabled[id]) && (unit.value < 3)) { /* || (unit.txType == DTxType::TxWeb)*/
         if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
-            if(unit.value) { if(unit.id) it->cnt[id] += 1;
-                else for(int i=0; i<it->size; ++i) it->cnt[i] += 1;
-            }
+            if(unit.value) {
+                if(unit.id) { if(it->sw[id]) return false; else it->cnt[id] += 1; }
+                else for(int i=0; i<it->size; ++i) if(0==it->sw[id]) it->cnt[i] += 1; }
             it->sw[id] = unit.value;
         } else ret = false;
     } else ret = false;
@@ -122,7 +122,7 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
     //if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if((0==it->disabled[i]) && (unit.value < 2) && (i < it->size)){ /* || (unit.txType == DTxType::TxWeb)*/
-            ret = true; if(unit.value) it->cnt[i] += 1;
+            ret = true; if(unit.value & !it->sw[i]) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
 
@@ -143,7 +143,7 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
     sRelayUnit *relay = &(cm::masterDev()->output.relay);
     foreach (const auto &i, ids){
         if(relay->disabled[i]) ids.removeOne(i);
-        else if(unit.value) relay->cnt[i] += 1;
+        else if(unit.value && !relay->sw[i]) relay->cnt[i] += 1;
     }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
