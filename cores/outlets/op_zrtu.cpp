@@ -146,7 +146,9 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             int size = sizeof(mOpData->vol);
             //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
+            memset(mOpData->pow, 0, size);
             memset(mOpData->pf, 0, size);
+            mOpData->version = 0;
         }
     }
 
