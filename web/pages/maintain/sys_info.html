@@ -185,6 +185,10 @@
 			}
 			document.getElementById("sup_vol").innerHTML = (supply_vol/1000).toFixed(1) + ' ' + 'V';
 		}
+		function disp_ver(btn){
+			document.getElementById("disp_vers").style.display = "";
+		}
+
 		function ChoseLang(btn){
 			if(0 == language){
 				alert("请按F5重新刷新网页以更改语言设置！");	
@@ -212,14 +216,14 @@
 			tbody += '<td id = "McName"></td></tr>';
 			tbody += '<tr><td id="lang_21" ></td>';
 			tbody += '<td id = "ser_num"></td></tr>';
-			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<tr><td id="lang_4" ondblclick ="disp_ver(this)" ></td>';
 			tbody += '<td id = "McVer"></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td id = "McCode"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td id = "McUsrName"></td></tr>';
 			if(0 == language){//市场部要求将版本说明取消显示
-				tbody += '<tr style="display:none"><td id="lang_7" ></td>';
+				tbody += '<tr id="disp_vers" style="display:none"><td id="lang_7" ></td>';
 				tbody += '<td id = "McVerShow"></td></tr>';
 			}			
 			tbody += '<tr><td id="lang_8" ></td>';

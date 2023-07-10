@@ -53,6 +53,7 @@
 
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
+      obj.loginCfg();
 		},1600);
 
     setTimeout(function(){
@@ -83,15 +84,15 @@
       if(time1_num== 20 ){
         clearInterval(time1);
       }
-      web_service = obj.cfgValue(42,3,0,0);
-      if(web_service != null){
-        if(web_service == 1){
+      // web_service = obj.cfgValue(42,3,0,0);
+      // if(web_service != null){
+      //   if(web_service == 1){
           if(window.location.protocol === "http:"){
             window.location.href = window.location.href.replace("http:","https:")
           }
-        }
+        // }
         clearInterval(time1);
-      }
+      // }
       time1_num ++;
     },350);
     function LangInit(){
@@ -169,7 +170,7 @@
 			}
 			return i;
 		}
-    function datetime() {
+    function datetime() {//自动获取本地时间
 			var today = new Date();
 			var yyyy = today.getFullYear();
 			var MM = today.getMonth() + 1;
@@ -186,7 +187,11 @@
 
 			//document.getElementById('DateTime').value = time;
       time = time.replace("T", " ");
-			obj.setCfg(43, 1, time, 0, 0);
+      var userAgent = navigator.userAgent;
+      if (userAgent.indexOf("Firefox") > -1) {//检测到火狐浏览器不自动更新PDU时间
+      }else{
+        obj.setCfg(43, 1, time, 0, 0);
+      }			
 		}
     
     function sign_in(){

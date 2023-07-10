@@ -334,7 +334,11 @@
 			ss = checkTime(ss);
 			var time = yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm + ":" + ss;
 			time = time.replace("T", " ");
-			pdu_cfg_.setCfg(43, 1, time, 0, 0);
+			var userAgent = navigator.userAgent;
+			if (userAgent.indexOf("Firefox") > -1) {//检测到火狐浏览器不自动更新PDU时间
+     		}else{
+       		 	pdu_cfg_.setCfg(43, 1, time, 0, 0);
+    		}	
 		}
 
 		setInterval(function () {
