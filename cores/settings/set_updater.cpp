@@ -66,9 +66,10 @@ bool Set_Updater::ota_logErr(int fc, const QString &fn)
     QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
-        cfg.app_unpack(ver);
-        it.ver = ver.ver;
-        it.md5 = ver.md5;
+        cfg.app_unpack(ver); it.ver = ver.ver; it.md5 = ver.md5;
+        QString version = cm::masterDev()->cfg.vers.ver;
+        if(version.isEmpty()) version = ver.oldVersion;
+        it.oldVersion = version;
 
         switch (fc) {
         case 401: if(cm::cn()) str = "未升级：目前软件版本高于升级升级";
@@ -86,7 +87,7 @@ bool Set_Updater::ota_logErr(int fc, const QString &fn)
         default: str = ver.remark; break;
         }
         it.remark = "[error] " + str;
-        it.oldVersion = ver.oldVersion;
+        //it.oldVersion = ver.oldVersion;
         it.releaseDate = ver.releaseDate;
     } else {
         QString file = fn.split("/").last().remove(".zip");
