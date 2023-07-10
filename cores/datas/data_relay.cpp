@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "data_relay.h"
+#include "cfg_core.h"
 
 Data_Relay::Data_Relay()
 {
@@ -35,7 +36,7 @@ int Data_Relay::relayTiming(sObjData &obj, int id)
         ret = relayTimingCheck(it->timingOff, id) ? 1:0;
         if(!ret) {
             ret = relayTimingCheck(it->timingOn, id) ? 2:0;
-            if(ret) obj.relay.cnt[id] += 1;
+            if(ret) {obj.relay.cnt[id] += 1; Cfg_Core::bulid()->writeAlarms();}
         }
     }
     return ret;
