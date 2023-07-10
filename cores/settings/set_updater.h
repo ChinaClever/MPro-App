@@ -13,8 +13,8 @@ public:
 private:
     void ota_log();
     bool ota_outlet();
-    bool ota_error(const QString &fn);
-    bool ota_logErr(const QString &fn);
+    bool ota_error(int fc, const QString &fn);
+    bool ota_logErr(int fc, const QString &fn);
     bool ota_cascade(const QString &fn);
 };
 

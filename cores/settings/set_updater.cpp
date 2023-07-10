@@ -49,26 +49,45 @@ void Set_Updater::ota_log()
     sOtaItem it; sAppVerIt ver; Cfg_App cfg(dir);
     bool ret = cfg.app_unpack(ver);
     if(ret) {
-        it.ver = ver.ver;
-        it.md5 = ver.md5;
         it.remark = "[OK] " + ver.remark;
-        it.oldVersion = ver.oldVersion;
         it.releaseDate = ver.releaseDate;
+        it.ver = ver.ver; it.md5 = ver.md5;
+        QString version = cm::masterDev()->cfg.vers.ver;
+        if(version.isEmpty()) version = ver.oldVersion;
+        it.oldVersion = version;
         Log_Core::bulid()->append(it);
+        cfg.app_oldVersion(version);
     }
 }
 
-bool Set_Updater::ota_logErr(const QString &fn)
-{    
-    bool ret = true;
+bool Set_Updater::ota_logErr(int fc, const QString &fn)
+{
+    bool ret = true; QString str;
     QString dir = "/tmp/updater/ota_apps/";
     sOtaItem it; if(QFile::exists(dir+"ver.ini")) {
         sAppVerIt ver; Cfg_App cfg(dir);
-        cfg.app_unpack(ver);
-        it.ver = ver.ver;
-        it.md5 = ver.md5;
-        it.remark = "[error] " + ver.remark;
-        it.oldVersion = ver.oldVersion;
+        cfg.app_unpack(ver); it.ver = ver.ver; it.md5 = ver.md5;
+        QString version = cm::masterDev()->cfg.vers.ver;
+        if(version.isEmpty()) version = ver.oldVersion;
+        it.oldVersion = version;
+
+        switch (fc) {
+        case 401: if(cm::cn()) str = "未升级：目前软件版本高于升级升级";
+            else str = "Not upgraded: The current software version is higher than the upgraded version";
+            break;
+
+        case 402: if(cm::cn()) str = "未升级：升级包中的目标设备型号不相符";
+            else str = "Not upgraded: The target device model in the upgrade package does not match";
+            break;
+
+        case 403: if(cm::cn()) str = "未升级：升级包已损坏";
+            else str = "Not upgraded: The upgrade package is corrupt";
+            break;
+
+        default: str = ver.remark; break;
+        }
+        it.remark = "[error] " + str;
+        //it.oldVersion = ver.oldVersion;
         it.releaseDate = ver.releaseDate;
     } else {
         QString file = fn.split("/").last().remove(".zip");
@@ -120,9 +139,9 @@ bool Set_Updater::ota_outlet()
     return ret;
 }
 
-bool Set_Updater::ota_error(const QString &fn)
+bool Set_Updater::ota_error(int fc, const QString &fn)
 {
-    bool ret = ota_logErr(fn);
+    bool ret = ota_logErr(fc, fn);
     if(ret) ret = ota_cascade(fn);
     return ret?1:0;
 }
@@ -134,7 +153,7 @@ int Set_Updater::ota_updater(int fc, const QVariant &v)
     case DOtaCode::DOta_Net:  break;
     case DOtaCode::DOta_Web:  break;
     case DOtaCode::DOta_Rootfs:  break;
-    default: return ota_error(v.toString());
+    default: return ota_error(fc, v.toString());
     }
 
     QString fn = v.toString();

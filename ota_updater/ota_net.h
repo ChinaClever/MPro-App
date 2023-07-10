@@ -27,6 +27,7 @@ private slots:
     void throwMessage(const QString &msg) {qDebug().noquote() << msg; mDtls->throwMessage(msg);}
 
 private:
+    int mLastError=0;
     Dtls_Recver *mDtls;
 
 protected:

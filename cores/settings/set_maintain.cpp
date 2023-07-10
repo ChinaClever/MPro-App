@@ -13,7 +13,7 @@ Set_Maintain::Set_Maintain()
 static void dev_restart()
 {
     system("sync");
-    cm::mdelay(1000);
+    cm::mdelay(2500);
     system("reboot");
 }
 

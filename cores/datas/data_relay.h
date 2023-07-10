@@ -9,7 +9,7 @@ public:
 
 protected:
     bool relayOverrunOff(const sObjData &obj, int id);
-    int relayTiming(const sObjData &obj, int id);
+    int relayTiming(sObjData &obj, int id);
 
 private:
     bool relayTimingCheck(const char (*str)[NAME_SIZE], int id);

@@ -72,8 +72,8 @@ void App_Core::initVer()
 {
     sVersions *ver = &(cm::masterDev()->cfg.vers);
     sAppVerIt it; Cfg_App cfg("/usr/data/clever/");
-    bool ret = cfg.app_unpack(it); if(ret) {
-        cm::buildDateTime(ver->compileDate);
+    if(QFile::exists("/usr/data/clever/ver.ini")) {
+        cfg.app_unpack(it); cm::buildDateTime(ver->compileDate);
         qstrcpy(ver->ver, it.ver.toUtf8().data());
         qstrcpy(ver->md5, it.md5.toUtf8().data());
         qstrcpy(ver->usr, it.usr.toUtf8().data());
@@ -86,6 +86,7 @@ void App_Core::initVer()
         qstrncpy(ver->remark, it.remark.toUtf8().data(), sizeof(ver->remark));
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
     } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
+
     QString fn = "/usr/data/clever/cfg/sn.conf";
     if(it.sn.isEmpty() && QFile::exists(fn)) {
         QString sn = cm::execute("cat " + fn);
