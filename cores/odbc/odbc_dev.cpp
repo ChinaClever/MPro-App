@@ -132,17 +132,6 @@ bool Odbc_Dev::dev_poll(int addr)
     return ret;
 }
 
-//uint Odbc_Dev::devKey(int addr)
-//{
-//    if(!mKeys.contains(addr)) {
-//        QString fmd = "SELECT `id` FROM `pdu_dev` where pdu_id='%1' and cascade_addr=%2";
-//        QString cmd = fmd.arg(cfg.pdukey).arg(addr);
-//        uint id = cntBySql(cmd);
-//        if(id) mKeys[addr] = id;
-//    }
-//    return mKeys[addr];
-//}
-
 void Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
 {
     sDevData *dev = cm::devData(addr);
@@ -168,5 +157,4 @@ void Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
     it.line_num = nums->lineNum;
     it.loop_num = nums->loopNum;
     it.output_num = nums->outputNum;
-
 }

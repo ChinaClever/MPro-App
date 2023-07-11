@@ -29,8 +29,6 @@ class Odbc_Dev : public Odbc_Index
 public:
     Odbc_Dev();
 
-    //uint devKey(int addr);
-
 protected:
     bool dev_createTable();
     bool dev_polls();
@@ -42,9 +40,6 @@ private:
     bool dev_insert(const sOdbcDevIt &it);
     void dev_params(int addr, sOdbcDevIt &it);
     bool dev_modifyItem(const sOdbcDevIt &it, const QString &fmd);
-
-private:
-    //QMap<int, uint> mKeys;
 };
 
 #endif // ODBC_DEV_H

@@ -163,7 +163,7 @@ void Odbc_Core::workDown()
 
 void Odbc_Core::run()
 {
-    if(!isRun) {
+    if(!isRun && cfg.en) {
         isRun = true;
         QtConcurrent::run(this,&Odbc_Core::workDown);
     }

@@ -46,7 +46,7 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
     QString cmd = fmd.arg(SFnCode::EOta).arg(bit);
     int ret = cm::execute(cmd).toInt();
     cmd += " res:" + QString::number(ret);
-    throwMessage(cmd);
+    throwMessage(cmd); cm::mdelay(255);
     return ret;
 }
 
