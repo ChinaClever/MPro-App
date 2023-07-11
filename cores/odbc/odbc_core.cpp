@@ -150,6 +150,14 @@ void Odbc_Core::insertItems()
     while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());
 }
 
+void Odbc_Core::clearItems()
+{
+    mAlarmIts.clear();
+    mDataIts.clear();
+    mHdaIts.clear();
+    mThIts.clear();
+}
+
 void Odbc_Core::workDown()
 {
     bool ret = db_open();
@@ -157,7 +165,8 @@ void Odbc_Core::workDown()
         createTables();
         dev_polls();
         insertItems();
-    } db_close();
+    }else clearItems();
+    db_close();
     isRun = false;
 }
 
