@@ -36,7 +36,7 @@ bool Odbc_Data::data_insert(const sOdbcDataIt &it)
 
 bool Odbc_Data::data_modifyItem(const sOdbcDataIt &it, const QString &cmd)
 {
-    uint pdu_id = devKey(it.addr);
+    uint pdu_id = getPduId(it.addr);
     QSqlQuery query(mDb); query.prepare(cmd);
     query.bindValue(":pdu_id",pdu_id);
     query.bindValue(":addr",it.addr);
@@ -60,7 +60,7 @@ bool Odbc_Data::data_update(const sOdbcDataIt &it)
 
 int Odbc_Data::data_counts(const sOdbcDataIt &it)
 {
-    uint pdu_id = devKey(it.addr);
+    uint pdu_id = getPduId(it.addr);
     QString fmd = "select 1 from pdu_data "
                   "where pdu_id=%1 and addr=%2 and type=%3 "
                   "and topic=%4 and indexes=%5 "

@@ -37,7 +37,7 @@ bool Odbc_Hda::hda_insert(const sOdbcHdaIt &it)
 
 bool Odbc_Hda::hda_modifyItem(const sOdbcHdaIt &it, const QString &fmd)
 {
-    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
+    uint pdu_id = getPduId(it.addr); QSqlQuery query(mDb);
     QString cmd = fmd.arg(pdu_id).arg(it.addr).arg(it.type)
             .arg(it.topic).arg(it.indexes).arg(it.value);
     query.prepare(cmd); bool ret = query.exec();

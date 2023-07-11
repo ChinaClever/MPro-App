@@ -161,7 +161,7 @@ bool Ota_Net::outletCheck(const QString &dir)
     QStringList fs = File::entryList(dir+"/outlet");
     foreach (const auto it, fs) {
         if(it.contains(".bin"))  {
-            throwMessage("outlet software updater");
+            throwMessage("outlet software updater"+it);
             ret = true;
         }
     }

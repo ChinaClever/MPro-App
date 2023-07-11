@@ -129,6 +129,7 @@ void Odbc_Core::event(const sEventItem &item)
 void Odbc_Core::createTables()
 {
     if(1 == cfg.okCnt) {
+        index_createTable();
         dev_createTable();
         th_createTable();
         hda_createTable();
@@ -154,8 +155,8 @@ void Odbc_Core::workDown()
     bool ret = db_open();
     if(ret) {
         createTables();
-        dev_polls();
-        insertItems();
+        if(ret) dev_polls();
+        if(ret) insertItems();
     } db_close();
     isRun = false;
 }

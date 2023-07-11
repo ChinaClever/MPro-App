@@ -8,6 +8,7 @@ HEADERS +=  \
     $$PWD/odbc_dev.h \
     $$PWD/odbc_event.h \
     $$PWD/odbc_hda.h \
+    $$PWD/odbc_index.h \
     $$PWD/odbc_obj.h \
     $$PWD/odbc_sql.h \
     $$PWD/odbc_threshold.h
@@ -19,6 +20,7 @@ SOURCES +=  \
     $$PWD/odbc_dev.cpp \
     $$PWD/odbc_event.cpp \
     $$PWD/odbc_hda.cpp \
+    $$PWD/odbc_index.cpp \
     $$PWD/odbc_obj.cpp \
     $$PWD/odbc_sql.cpp \
     $$PWD/odbc_threshold.cpp
