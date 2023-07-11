@@ -151,7 +151,6 @@ void Odbc_Core::insertItems()
 
 void Odbc_Core::workDown()
 {
-    cm::mdelay(650);
     bool ret = db_open();
     if(ret) {
         createTables();
@@ -164,7 +163,7 @@ void Odbc_Core::workDown()
 void Odbc_Core::run()
 {
     if(!isRun && cfg.en) {
-        isRun = true;
+        isRun = true; cm::mdelay(650);
         QtConcurrent::run(this,&Odbc_Core::workDown);
     }
 }
