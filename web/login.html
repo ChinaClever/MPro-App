@@ -84,15 +84,15 @@
       if(time1_num== 20 ){
         clearInterval(time1);
       }
-      // web_service = obj.cfgValue(42,3,0,0);
-      // if(web_service != null){
-      //   if(web_service == 1){
+      web_service = obj.cfgValue(42,3,0,0);
+      if(web_service != null){
+        if(web_service == 1){
           if(window.location.protocol === "http:"){
             window.location.href = window.location.href.replace("http:","https:")
           }
-        // }
+        }
         clearInterval(time1);
-      // }
+      }
       time1_num ++;
     },350);
     function LangInit(){
@@ -106,7 +106,7 @@
     
     }
     language = obj.cfgValue(13,10,0,0);
-    ver_mode = obj.cfgValue(13,17,0,0);
+    // ver_mode = obj.cfgValue(13,17,0,0);
 
     document.onkeydown = function(e){
       var keyNum = window.event?e.keyCode:e.which;
@@ -121,9 +121,8 @@
 
     let time3 = setInterval(function(){//定时取数据，有用户名数据进登陆界面，否则进注册
       var language = obj.cfgValue(13,10,0,0);
-      obj.debugCfg();
-      obj.loginCfg();
-      // if(time3_num > 3){
+      var ver_mode = obj.cfgValue(13,17,0,0); 
+
       if(time3_num >  3 && ver_mode != "" && language != ""&&ver_mode !=null&&language !=null){
           GotoRegisterPage();
           clearInterval(time3);
@@ -139,8 +138,8 @@
         obj.debugCfg();
       }
       setTimeout(function(){
-        ver_mode = obj.cfgValue(13,17,0,0);    
-         user_name = obj.cfgValue(user,1,0,0);
+        ver_mode = obj.cfgValue(13,17,0,0);   
+        user_name = obj.cfgValue(user,1,0,0);
         identify = obj.cfgValue(user,3,0,0);
         if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
@@ -158,7 +157,7 @@
          }
          clearInterval(time3);
       }
-	  	},400);           
+	  	},450);           
       // document.getElementById('username').value = '';
       // document.getElementById('psd').value ='';
       time3_num ++;
