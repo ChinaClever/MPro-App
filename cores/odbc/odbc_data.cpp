@@ -81,7 +81,7 @@ bool Odbc_Data::data_duplicate(const sOdbcDataIt &it)
 bool Odbc_Data::data_poll(const sOdbcDataIt &it)
 {
     bool ret = true; //data_duplicate(it);
-    if(cfg.okCnt > 1) {
+    if(cfg.okCnt > 15) {
         ret = data_update(it);
     } else {
         ret = data_counts(it);

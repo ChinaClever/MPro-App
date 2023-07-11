@@ -80,12 +80,12 @@ uint Odbc_Index::getPduId(const QString &uuid)
 {
     uint id = 0;
     if(mKeys.contains(uuid)) id = mKeys[uuid];
-    else {
+    if(0 == id) {
         id = index_uuid(uuid);
         if(0 == id) {
             mDb.transaction();
             index_poll(uuid);
-            mDb.commit();
+            mDb.commit(); cm::mdelay(100);
             id = index_uuid(uuid);
         }
     }
@@ -96,13 +96,14 @@ uint Odbc_Index::getPduId(const QString &uuid)
 uint Odbc_Index::index_uuid(const QString &uuid)
 {
     QString fmd = "SELECT `id` FROM `pdu_index` where uuid='%1'";
-    QString cmd = fmd.arg(cfg.pdukey);
+    QString cmd = fmd.arg(uuid);
     mKeys[uuid] = cntBySql(cmd);
+    //cout << cmd << mKeys;
     return mKeys[uuid];
 }
 
 uint Odbc_Index::getPduId(int addr)
 {
     char *uuid = cm::devData(addr)->cfg.uut.uuid;
-    return index_uuid(uuid);
+    return getPduId(uuid);
 }

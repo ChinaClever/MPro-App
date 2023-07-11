@@ -95,7 +95,6 @@ bool Odbc_Dev::dev_update(const sOdbcDevIt &it)
                   "loop_num         = :loop_num,"
                   "output_num       = :output_num,"
 
-
                   "sw_version       = :sw_version,"
                   "sn               = :sn,"
                   "qrcode           = :qrcode"
@@ -114,10 +113,10 @@ bool Odbc_Dev::dev_polls()
 {
     int ret = false;
     if(cfg.pdukey.size()) {
-        if(cfg.okCnt==1) mDb.transaction();
+        if(cfg.okCnt < 15) mDb.transaction();
         int num = cm::masterDev()->cfg.nums.slaveNum;
         for(int i=0; i<=num; ++i) ret = dev_poll(i);
-        if(cfg.okCnt==1) mDb.commit();
+        if(cfg.okCnt < 15) mDb.commit();
     }
     return ret;
 }
@@ -132,7 +131,7 @@ bool Odbc_Dev::dev_poll(int addr)
     return ret;
 }
 
-void Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
+bool Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
 {
     sDevData *dev = cm::devData(addr);
     it.cascade_addr = addr;
@@ -157,4 +156,6 @@ void Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
     it.line_num = nums->lineNum;
     it.loop_num = nums->loopNum;
     it.output_num = nums->outputNum;
+
+    return it.pdu_id;
 }

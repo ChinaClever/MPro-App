@@ -42,7 +42,8 @@ void Odbc_Core::append(const sOdbcDataIt &it)
 
 void Odbc_Core::append(const sOdbcEventIt &it)
 {
-    if(!cfg.en) return;
+    int sec = cm::masterDev()->proc.core.runSec;
+    if(!cfg.en || sec < 5) return;
     mEventIts << it; run();
 }
 
@@ -78,9 +79,9 @@ void Odbc_Core::data(const sDataItem &item)
     it.topic = item.topic;
     it.indexes = item.id;
     it.value = item.value / cm::decimal(item);
-    append(it); hda(item);
+    append(it); hda(item); //cout << cfg.okCnt << mDataIts.size();
 
-    if(1 == cfg.okCnt  && cfg.status && item.type != DTopic::Relay) {
+    if((cfg.okCnt<15)  && cfg.status && item.type != DTopic::Relay) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
             dt.subtopic = i;
@@ -128,7 +129,7 @@ void Odbc_Core::event(const sEventItem &item)
 
 void Odbc_Core::createTables()
 {
-    if(1 == cfg.okCnt) {
+    if(cfg.okCnt < 15) {
         index_createTable();
         dev_createTable();
         th_createTable();
@@ -143,7 +144,7 @@ void Odbc_Core::insertItems()
 {
     db_transaction(); //QWriteLocker locker(mLock);
     while(mThIts.size()) th_poll(mThIts.takeFirst());
-    while(mHdaIts.size())  hda_insert(mHdaIts.takeFirst());
+    while(mHdaIts.size()) hda_insert(mHdaIts.takeFirst());
     while(mDataIts.size()) data_poll(mDataIts.takeFirst());
     while(mEventIts.size()) event_insert(mEventIts.takeFirst());
     while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());
@@ -154,8 +155,8 @@ void Odbc_Core::workDown()
     bool ret = db_open();
     if(ret) {
         createTables();
-        if(ret) dev_polls();
-        if(ret) insertItems();
+        dev_polls();
+        insertItems();
     } db_close();
     isRun = false;
 }

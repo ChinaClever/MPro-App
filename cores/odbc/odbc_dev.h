@@ -38,7 +38,7 @@ private:
     int dev_counts(const sOdbcDevIt &it);
     bool dev_update(const sOdbcDevIt &it);
     bool dev_insert(const sOdbcDevIt &it);
-    void dev_params(int addr, sOdbcDevIt &it);
+    bool dev_params(int addr, sOdbcDevIt &it);
     bool dev_modifyItem(const sOdbcDevIt &it, const QString &fmd);
 };
 

@@ -88,7 +88,7 @@ bool Odbc_Threshold::th_duplicate(const sOdbcThIt &it)
 
 bool Odbc_Threshold::th_poll(const sOdbcThIt &it)
 {
-    bool ret = true; if(cfg.okCnt > 1) {
+    bool ret = true; if(cfg.okCnt > 15) {
         ret = th_update(it);
     } else {
         ret = th_counts(it);
