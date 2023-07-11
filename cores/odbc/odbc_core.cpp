@@ -129,7 +129,7 @@ void Odbc_Core::event(const sEventItem &item)
 
 void Odbc_Core::createTables()
 {
-    if(cfg.okCnt < 15) {
+    if(cfg.okCnt < 3) {
         index_createTable();
         dev_createTable();
         th_createTable();
