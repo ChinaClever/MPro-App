@@ -245,7 +245,7 @@ void Sql_Statement::setTableMarking(const QString &marking)
 
 bool Sql_Statement::createTable()
 {
-    QString val = "id INTEGER primary key autoincrement not null, dtime VCHAR,";
+    QString val = "id INTEGER primary key autoincrement not null, dtime DATETIME,";
     for(int i=1; i<headList().size(); ++i) val += headList().at(i) + " VCHAR,";
     val.chop(1); QString sql = "create table if not exists %1(%2);";
     return sqlQuery(sql.arg(tableName(), val));

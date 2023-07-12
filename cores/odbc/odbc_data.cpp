@@ -21,6 +21,7 @@ bool Odbc_Data::data_createTable()
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
                   "`value` DECIMAL(9,3) UNSIGNED NOT NULL , "
                   "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }

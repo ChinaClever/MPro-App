@@ -80,7 +80,8 @@ void Odbc_Core::data(const sDataItem &item)
     it.value = item.value / cm::decimal(item);
     hda(item); if(cfg.dataPoll) append(it); else return;
 
-    if((cfg.okCnt<10)  && cfg.status && item.type != DTopic::Relay) {
+    if(item.type > DTopic::Relay && item.type < DTopic::Ele)
+    if((cfg.okCnt<10)  && cfg.status) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
             dt.subtopic = i;
@@ -172,7 +173,8 @@ void Odbc_Core::workDown()
 void Odbc_Core::run()
 {
     if(!isRun && cfg.en) {
-        isRun = true; cm::mdelay(650);
-        QtConcurrent::run(this,&Odbc_Core::workDown);
+        isRun = true; cm::mdelay(65);
+        int t = QRandomGenerator::global()->bounded(565);
+        cm::mdelay(t); QtConcurrent::run(this,&Odbc_Core::workDown);
     }
 }

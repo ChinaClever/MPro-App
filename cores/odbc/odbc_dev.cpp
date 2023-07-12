@@ -34,6 +34,7 @@ bool Odbc_Dev::dev_createTable()
                   "`qrcode` VARCHAR(128) NULL ,"
                   "`create_time` TIMESTAMP NOT NULL ,"
                   "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }

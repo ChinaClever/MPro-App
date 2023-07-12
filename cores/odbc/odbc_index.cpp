@@ -14,7 +14,7 @@ bool Odbc_Index::index_createTable()
 {
     QString sql = "CREATE TABLE IF NOT EXISTS `%1`.`pdu_index` ( "
                   "`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , "
-                  "`uuid` VARCHAR(64) NOT NULL , "
+                  "`uuid` VARCHAR(64) NOT NULL UNIQUE , "
                   "`dev_key` VARCHAR(64) NULL , "
                   "`create_time` TIMESTAMP NOT NULL ,"
                   "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
