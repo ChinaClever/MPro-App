@@ -37,7 +37,7 @@ void Odbc_Core::append(const sOdbcAlarmIt &it)
 void Odbc_Core::append(const sOdbcDataIt &it)
 {
     uint sec = cfg.dataPoll; if(!cfg.en || !sec) return;
-    if(!(mCnt%sec) || 1 == cfg.okCnt){mDataIts << it; run();}
+    if(!(mCnt%sec) || cfg.okCnt < 5){mDataIts << it; run();}
 }
 
 void Odbc_Core::append(const sOdbcEventIt &it)
@@ -70,8 +70,7 @@ void Odbc_Core::hda(const sDataItem &item)
 
 void Odbc_Core::data(const sDataItem &item)
 {
-    uint sec = cfg.dataPoll;
-    if(!cfg.en || !sec || isDbRun) return;
+    if(!cfg.en || isDbRun) return;
 
     sOdbcDataIt it;
     it.addr = item.addr;
@@ -79,9 +78,9 @@ void Odbc_Core::data(const sDataItem &item)
     it.topic = item.topic;
     it.indexes = item.id;
     it.value = item.value / cm::decimal(item);
-    append(it); hda(item); //cout << cfg.okCnt << mDataIts.size();
+    hda(item); if(cfg.dataPoll) append(it); else return;
 
-    if((cfg.okCnt<15)  && cfg.status && item.type != DTopic::Relay) {
+    if((cfg.okCnt<10)  && cfg.status && item.type != DTopic::Relay) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
             dt.subtopic = i;
@@ -165,7 +164,7 @@ void Odbc_Core::workDown()
         createTables();
         dev_polls();
         insertItems();
-    }else clearItems();
+    } else clearItems();
     db_close();
     isRun = false;
 }
