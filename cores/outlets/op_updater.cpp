@@ -55,12 +55,10 @@ bool OP_Updater::ota_updates()
         sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
         for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
-            up->results[i] = 1;
-            ret = ota_update(i, fn);
-            emit otaFinish(i, ret);
-            if(ret) up->results[i] = 2;
-            else up->results[i] = 3;
-            cm::mdelay(5*1200);
+            up->results[i] = 1; ret = ota_update(i, fn);
+            if(!ret) {cm::mdelay(1200); ret = ota_update(i, fn);}
+            if(ret) up->results[i] = 2; else up->results[i] = 3;
+            emit otaFinish(i, ret); cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
         if(ret) system("rm -rf /usr/data/clever/outlet/*");
