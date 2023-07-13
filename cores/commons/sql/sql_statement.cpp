@@ -219,10 +219,11 @@ bool Sql_Statement::updateColumn(const QString& column_name, QString value, cons
 bool Sql_Statement::clear()
 {
     QString sql = "TRUNCATE TABLE %1";
-    sqlQuery(sql.arg(tableName())); sql = "delete from %1";
-    bool ret = sqlQuery(sql.arg(tableName()));
-    if(ret) {sql = "VACUUM"; ret = sqlQuery(sql);}
-    return ret;
+    sqlQuery(sql.arg(tableName()));
+
+    sql = "delete from %1";
+    sqlQuery(sql.arg(tableName()));
+    return sqlQuery("VACUUM");
 }
 
 QString Sql_Statement::tableMarking()
