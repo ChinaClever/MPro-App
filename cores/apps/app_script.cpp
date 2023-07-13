@@ -85,8 +85,8 @@ void App_Script::script_execute(int id)
         QStringList arguments; arguments << fn;
         pro->setProgram(program); pro->setArguments(arguments);
         //pro->setProcessChannelMode(QProcess::MergedChannels);   //设置读取标准输出模式
-        connect(pro, &QProcess::readyReadStandardError,[this](){this->script_readProcess();});
-        connect(pro, &QProcess::readyReadStandardOutput,[this](){this->script_readProcess();});
+        connect(pro, &QProcess::readyReadStandardError,[&](){this->script_readProcess();});
+        connect(pro, &QProcess::readyReadStandardOutput,[&](){this->script_readProcess();});
         script_kill(id); mMap[id] = pro; pro->start();
 #else
         mCmdMap[id] = cmd = program + " " + fn;

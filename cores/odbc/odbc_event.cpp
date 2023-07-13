@@ -19,6 +19,7 @@ bool Odbc_Event::event_createTable()
                   "`event_type` VARCHAR(256) NOT NULL , "
                   "`event_content` VARCHAR(256) NOT NULL , "
                   "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = MyISAM;";
     return sqlQuery(sql.arg(cfg.db));
 }
@@ -34,7 +35,7 @@ bool Odbc_Event::event_insert(const sOdbcEventIt &it)
 
 bool Odbc_Event::event_modifyItem(const sOdbcEventIt &it, const QString &fmd)
 {
-    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
+    uint pdu_id = getPduId(it.addr); QSqlQuery query(mDb);
     QString cmd = fmd.arg(pdu_id) .arg(it.event_type, it.event_content);
     query.prepare(cmd); bool ret = query.exec();
     if(!ret) throwError("pdu_event", query.lastError());

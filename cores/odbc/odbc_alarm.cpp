@@ -18,6 +18,7 @@ bool Odbc_Alarm::alarm_createTable()
                   "`alarm_status` VARCHAR(256) NOT NULL , "
                   "`alarm_content` VARCHAR(256) NOT NULL , "
                   "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = MyISAM;";
     return sqlQuery(sql.arg(cfg.db));
 }
@@ -34,7 +35,7 @@ bool Odbc_Alarm::alarm_insert(const sOdbcAlarmIt &it)
 
 bool Odbc_Alarm::alarm_modifyItem(const sOdbcAlarmIt &it, const QString &fmd)
 {
-    uint pdu_id = devKey(it.addr); QSqlQuery query(mDb);
+    uint pdu_id = getPduId(it.addr); QSqlQuery query(mDb);
     QString cmd = fmd.arg(pdu_id).arg(it.alarm_status, it.alarm_content);
     query.prepare(cmd); bool ret = query.exec();
     if(!ret) throwError("pdu_alarm", query.lastError());

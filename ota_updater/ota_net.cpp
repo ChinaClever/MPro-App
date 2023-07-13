@@ -46,7 +46,7 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
     QString cmd = fmd.arg(SFnCode::EOta).arg(bit);
     int ret = cm::execute(cmd).toInt();
     cmd += " res:" + QString::number(ret);
-    throwMessage(cmd);
+    throwMessage(cmd); cm::mdelay(255);
     return ret;
 }
 
@@ -161,7 +161,7 @@ bool Ota_Net::outletCheck(const QString &dir)
     QStringList fs = File::entryList(dir+"/outlet");
     foreach (const auto it, fs) {
         if(it.contains(".bin"))  {
-            throwMessage("outlet software updater");
+            throwMessage("outlet software updater"+it);
             ret = true;
         }
     }

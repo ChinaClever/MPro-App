@@ -23,6 +23,7 @@ public:
 private:
     void run();
     void workDown();
+    void clearItems();
     void insertItems();
     void createTables();
 

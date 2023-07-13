@@ -132,7 +132,7 @@ bool Set_Updater::ota_outlet()
     foreach (const auto &fn, fns) {
         if((fn == ".") || (fn == "..")) continue;
         setbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        OP_Core::bulid()->ota_start(dir+fn); //cout << fns;
+        OP_Core::bulid()->ota_start(dir+fn); cout << fns;
         ret = true; break;
     }
 

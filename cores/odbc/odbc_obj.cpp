@@ -68,7 +68,8 @@ bool Odbc_Obj::db_commit()
     bool ret = true; if (mDb.driver()->hasFeature(QSqlDriver::Transactions)) {
         ret = mDb.commit(); if(!ret) mDb.rollback();
     } else {
+        cout << ret;
         //ret = mDb.exec("COMMIT"); if(!ret) sqlQuery("ROLLBACK");
-    } isDbRun = false;
+    } isDbRun = false; cm::mdelay(143);
     return ret;
 }
