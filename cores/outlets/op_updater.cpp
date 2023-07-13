@@ -63,7 +63,7 @@ bool OP_Updater::ota_updates()
             cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
+        if(ret) system("rm -rf /usr/data/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 
