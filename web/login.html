@@ -120,19 +120,21 @@
     }
 
     let time3 = setInterval(function(){//定时取数据，有用户名数据进登陆界面，否则进注册
-      var language = obj.cfgValue(13,10,0,0);
+      // var language = obj.cfgValue(13,10,0,0);
+      language = window.sessionStorage.getItem('language');
       var ver_mode = obj.cfgValue(13,17,0,0); 
 
-      if(time3_num >  3 && ver_mode != "" && language != ""&&ver_mode !=null&&language !=null){
+      if(time3_num >  3  && (language != null)){
           GotoRegisterPage();
           clearInterval(time3);
       } 
-      if(time3_num >  4 && ver_mode ==null&&language ==null){//超过一定时间一直连接不上强制进入登陆界面
-        localStorage.clear();
-        sessionStorage.clear();
-        clearInterval(time3);
-        $('.center_form').html(BuildDiv('signin'));
-      }
+      // if(time3_num >  6 && ver_mode ==null){//超过一定时间一直连接不上强制进入登陆界面
+      //   alert(time3_num);
+      //   localStorage.clear();
+      //   sessionStorage.clear();
+      //   clearInterval(time3);
+      //   $('.center_form').html(BuildDiv('signin'));
+      // }
       else {
         obj.loginCfg();
         obj.debugCfg();
