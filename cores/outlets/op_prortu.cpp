@@ -3,22 +3,22 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "op_zrtu.h"
+#include "op_prortu.h"
 #include "log_core.h"
 
-OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
+OP_ProRtu::OP_ProRtu(QObject *parent) : OP_ProCtrl{parent}
 {
 
 }
 
-void OP_ZRtu::rtuThrowMessage(const QString &msg)
+void OP_ProRtu::rtuThrowMessage(const QString &msg)
 {
     QString str = "rtu outlet " + msg;
     QString ip = cm::dataPacket()->ota.host;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
-bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
+bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
     uchar *ptr = (uchar *)array.data();
@@ -62,7 +62,7 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
     return ret;
 }
 
-void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
+void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
         m_array[addr] = cmd; sEventItem it;
@@ -76,7 +76,7 @@ void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
     }
 }
 
-bool OP_ZRtu::rtuLog(int addr, const QByteArray &array)
+bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
 {
     bool ret = true;
     static int cnt[DEV_NUM] = {0};
@@ -97,7 +97,7 @@ bool OP_ZRtu::rtuLog(int addr, const QByteArray &array)
     return ret;
 }
 
-bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
+bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
 {
     bool res = false; int k = 6; waitForLock();
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
@@ -127,7 +127,7 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
     return res;
 }
 
-bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
+bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
@@ -162,7 +162,7 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
     return !ret;
 }
 
-bool OP_ZRtu::readData(int addr)
+bool OP_ProRtu::readData(int addr)
 {
     if(isOta) return false;
     bool ret = sendReadCmd(addr, mOpData); fillData(addr); //cout << addr << ret;
