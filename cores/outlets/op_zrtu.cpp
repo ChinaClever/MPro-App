@@ -144,11 +144,13 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
             Log_Core::bulid()->append(it);
 
             int size = sizeof(mOpData->vol);
-            //memset(mOpData->vol, 0, size);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pow, 0, size);
             memset(mOpData->pf, 0, size);
             mOpData->version = 0;
+
+            uint vol = cm::adcVol();
+            if(vol < 8*1000) memset(mOpData->vol, 0, size);
         }
     }
 

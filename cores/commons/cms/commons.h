@@ -19,6 +19,7 @@ QString byteArrayToUcharStr(const QByteArray &array);
 
 bool cn();
 bool language();
+uint adcVol();
 sDevData *masterDev();
 sDataPacket *dataPacket();
 sDevData *devData(uchar id);

@@ -55,9 +55,9 @@ bool OP_Updater::ota_updates()
         sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
         for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
-            up->results[i] = 1; ret = ota_update(i, fn);
-            if(!ret) {cm::mdelay(1200); ret = ota_update(i, fn);}
-            if(ret) up->results[i] = 2; else up->results[i] = 3;
+            up->results[i] = 1; for(int k=0; k<3; ++k) {
+                ret = ota_update(i, fn); if(ret) break; else cm::mdelay(1200);
+            } if(ret) up->results[i] = 2; else up->results[i] = 3;
             emit otaFinish(i, ret); cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
@@ -68,6 +68,7 @@ bool OP_Updater::ota_updates()
     return ret;
 }
 
+#if 0
 bool OP_Updater::ota_update(int addr, QByteArray &array)
 {
     bool ret = initOta(addr);
@@ -82,6 +83,7 @@ bool OP_Updater::ota_update(int addr, QByteArray &array)
 
     return ret;
 }
+#endif
 
 void OP_Updater::onOtaProgress(uchar addr, int v)
 {
@@ -95,14 +97,14 @@ void OP_Updater::onOtaProgress(uchar addr, int v)
 bool OP_Updater::ota_update(int addr, const QString &fn)
 {
     QFile file(fn);  bool ret = false; int max = 1024;
-    if(file.exists() && file.open(QIODevice::ReadOnly)) {
+    if(file.exists() && file.open(QIODevice::ReadOnly)) {       
         ret = initOta(addr); uint size = file.size(), len=0;
-        while (!file.atEnd() && ret) {
+        file.seek(0); while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data); len += data.size();
             int v = (len*1000.0)/size; emit otaProgress(addr, v);
             if(ret) cm::mdelay(325); else break;
-        } file.close();
+        } file.close(); if(len+1024 < size) ret = false;
     } else cout << addr << fn;
 
     return ret;
