@@ -86,7 +86,7 @@ void App_NetAddr::inet_setInterfaceSlot()
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
     cm::mdelay(1); inet_isRun = false;
-    system("arp -a &");
+    //system("arp -a &");
 }
 
 void App_NetAddr::inet_setIpV4()

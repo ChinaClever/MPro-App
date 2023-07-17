@@ -346,7 +346,7 @@ void Cfg_Service::odbc()
         case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
         case 7: key = "pdukey"; cfg->pdukey = mCfg->readCfg(key, "", prefix).toString(); break;
         case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 0, prefix).toInt();break;
-        case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, 5, prefix).toInt(); break;
+        case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, 30, prefix).toInt(); break;
         default: key.clear(); break;
         }
     }
