@@ -9,15 +9,17 @@ struct sOdbcDevIt {
 
     QString room_name;
     QString dev_position;
-    int cascade_addr;
 
     QString dev_type;
     int dev_spec;
     int dev_mode;
-    int slave_num;
     int line_num;
     int loop_num;
     int output_num;
+
+    QString ip_v4;
+    int cascade_addr;
+    int slave_num;
 
     QString sw_version;
     QString sn;
