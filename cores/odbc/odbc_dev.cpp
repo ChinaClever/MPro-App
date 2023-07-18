@@ -32,8 +32,8 @@ bool Odbc_Dev::dev_createTable()
                   "`sw_version` VARCHAR(64) NULL ,"
                   "`sn` VARCHAR(32) NULL ,"
                   "`qrcode` VARCHAR(128) NULL ,"
-                  "`create_time` TIMESTAMP NOT NULL ,"
-                  "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`createtime` DATETIME NOT NULL DEFAULT NOW(),"
+                  "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW() ,"
                   " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
@@ -44,11 +44,11 @@ bool Odbc_Dev::dev_insert(const sOdbcDevIt &it)
     QString cmd = "INSERT INTO `pdu_dev` "
                   "(`id`, `pdu_id`, `run_status`, `room_name`, `dev_position`, `cascade_addr`, "
                   "`dev_type`, `dev_spec`, `dev_mode`, `slave_num`, `line_num`, `loop_num`, `output_num`, "
-                  "`sw_version`, `sn`, `qrcode`, `create_time`) "
+                  "`sw_version`, `sn`, `qrcode`, `createtime`) "
 
                   "VALUES (NULL, :pdu_id, :run_status, :room_name, :dev_position, :cascade_addr,"
                   ":dev_type, :dev_spec, :dev_mode, :slave_num, :line_num, :loop_num, :output_num,"
-                  ":sw_version, :sn, :qrcode, CURRENT_TIMESTAMP)";
+                  ":sw_version, :sn, :qrcode, NOW())";
     return dev_modifyItem(it,cmd);
 }
 

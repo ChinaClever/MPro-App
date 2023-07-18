@@ -19,18 +19,17 @@ bool Odbc_Hda::hda_createTable()
                   "`topic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
                   "`value` DECIMAL(9,3) UNSIGNED NOT NULL , "
-                  "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`createtime` DATETIME on update NOW() NOT NULL DEFAULT NOW() ,"
                   " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }
 
-
 bool Odbc_Hda::hda_insert(const sOdbcHdaIt &it)
 {
     QString cmd = "INSERT INTO `pdu_hda` "
-                  "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `create_time`) "
-                  "VALUES (NULL, '%1', '%2', '%3', '%4', '%5', CURRENT_TIMESTAMP)";
+                  "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `createtime`) "
+                  "VALUES (NULL, '%1', '%2', '%3', '%4', '%5', NOW())";
    return hda_modifyItem(it,cmd);
 }
 

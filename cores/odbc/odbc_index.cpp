@@ -16,8 +16,8 @@ bool Odbc_Index::index_createTable()
                   "`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , "
                   "`uuid` VARCHAR(64) NOT NULL UNIQUE , "
                   "`dev_key` VARCHAR(64) NULL , "
-                  "`create_time` TIMESTAMP NOT NULL ,"
-                  "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`createtime` DATETIME NOT NULL DEFAULT NOW(),"
+                  "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW(),"
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }
@@ -26,8 +26,8 @@ bool Odbc_Index::index_createTable()
 bool Odbc_Index::index_insert(const sOdbcIndexIt &it)
 {
     QString cmd = "INSERT INTO `pdu_index` "
-                  "(`id`, `uuid`, `dev_key`,`create_time`) "
-                  "VALUES (NULL, :uuid, :dev_key, CURRENT_TIMESTAMP)";
+                  "(`id`, `uuid`, `dev_key`,`createtime`) "
+                  "VALUES (NULL, :uuid, :dev_key, NOW())";
     return index_modifyItem(it,cmd);
 }
 

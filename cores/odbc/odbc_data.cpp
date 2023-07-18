@@ -20,7 +20,7 @@ bool Odbc_Data::data_createTable()
                   "`topic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
                   "`value` DECIMAL(9,3) UNSIGNED NOT NULL , "
-                  "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW() ,"
                   " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
@@ -29,8 +29,8 @@ bool Odbc_Data::data_createTable()
 bool Odbc_Data::data_insert(const sOdbcDataIt &it)
 {
     QString cmd = "INSERT INTO `pdu_data` "
-                  "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `update_time`) "
-                  "VALUES (NULL, :pdu_id, :type, :topic, :indexes, :value, CURRENT_TIMESTAMP)";
+                  "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `updatetime`) "
+                  "VALUES (NULL, :pdu_id, :type, :topic, :indexes, :value, NOW())";
     return data_modifyItem(it,cmd);
 }
 
@@ -72,8 +72,8 @@ int Odbc_Data::data_counts(const sOdbcDataIt &it)
 bool Odbc_Data::data_duplicate(const sOdbcDataIt &it)
 {
     QString fmd =  "INSERT INTO `pdu_data` "
-                   "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `update_time`) "
-                   "VALUES (NULL, :pdu_id, :type, :topic, :indexes, :value, CURRENT_TIMESTAMP) "
+                   "(`id`, `pdu_id`, `type`, `topic`, `indexes`, `value`, `updatetime`) "
+                   "VALUES (NULL, :pdu_id, :type, :topic, :indexes, :value, NOW()) "
                    "ON DUPLICATE KEY UPDATE "
                    "pdu_id=:pdu_id, type=:type, topic=:topic,indexes=:indexes";
     return data_modifyItem(it,fmd);

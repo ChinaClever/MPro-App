@@ -18,7 +18,7 @@ bool Odbc_Event::event_createTable()
                   "`pdu_id` INT(11) UNSIGNED NOT NULL , "
                   "`event_type` VARCHAR(256) NOT NULL , "
                   "`event_content` VARCHAR(256) NOT NULL , "
-                  "`create_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`createtime` DATETIME on update NOW() NOT NULL DEFAULT NOW() ,"
                   " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb;";
     return sqlQuery(sql.arg(cfg.db));
@@ -27,8 +27,8 @@ bool Odbc_Event::event_createTable()
 bool Odbc_Event::event_insert(const sOdbcEventIt &it)
 {
     QString cmd = "INSERT INTO `pdu_event` "
-                  "(`id`, `pdu_id`, `event_type`, `event_content`, `create_time`) "
-                  "VALUES (NULL, '%1', '%2', '%3', CURRENT_TIMESTAMP)";
+                  "(`id`, `pdu_id`, `event_type`, `event_content`, `createtime`) "
+                  "VALUES (NULL, '%1', '%2', '%3', NOW())";
     return event_modifyItem(it, cmd);
 }
 
