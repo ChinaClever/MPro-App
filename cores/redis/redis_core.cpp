@@ -38,7 +38,7 @@ void Redis_Core::workDown()
         QString key = cm::devData(i)->cfg.uut.uuid;
         QByteArray array = Integr_JsonBuild::bulid()->getJson(i);
         if(cfg->key.size()) key = cfg->key +":" + QString::number(i);
-        bool ret = set(key, "json", array); if(ret) expipe(key, cfg->alive);
+        bool ret = set(key, "pduMetaData", array); if(ret) expipe(key, cfg->alive);
     }
 }
 
