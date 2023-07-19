@@ -131,6 +131,7 @@ void Odbc_Core::createTables()
 {
     if(cfg.okCnt < 3) {
         index_createTable();
+        uut_createTable();
         dev_createTable();
         th_createTable();
         hda_createTable();
@@ -163,9 +164,10 @@ void Odbc_Core::workDown()
 {
     bool ret = db_open();
     if(ret) {
-        createTables();
-        dev_polls();
-        insertItems();
+        createTables(); insertItems();
+        if(cfg.okCnt < 5 || !(cfg.okCnt % 15)) {
+            uut_polls(); dev_polls();
+        }
     } else clearItems();
     db_close();
     isRun = false;

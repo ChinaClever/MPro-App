@@ -166,6 +166,19 @@ bool Alarm_Updater::upTgObjData(sDataItem &index, sTgObjData &it)
     index.topic = DTopic::Pow;
     ret |= upTgUnit(index, it.pow);
 
+    index.id = 0;
+    index.value = it.pow.value;
+    index.subtopic = DSub::Value;
+    Odbc_Core::bulid()->data(index);
+
+    index.value = it.artPow;
+    index.topic = DTopic::ArtPow;
+    Odbc_Core::bulid()->data(index);
+
+    index.value = it.ele;
+    index.topic = DTopic::Ele;
+    Odbc_Core::bulid()->data(index);
+
     return ret;
 }
 

@@ -29,13 +29,13 @@ void Redis_Obj::disconnect()
     if(mRedis) mRedis->disconnect();
 }
 
-void Redis_Obj::subscribe()
+void Redis_Obj::subscribe(const QString &sub)
 {
     sRedisCfg *cfg = &redisCfg;
-    if(mSubscribe || cfg->subscribe.isEmpty()) return ;
+    if(mSubscribe /*|| cfg->subscribe.isEmpty()*/) return ;
     auto cf = initConnectionConfig();
     mSubscribe = new RedisClient::Connection(cf); mSubscribe->connect();
-    RedisClient::Command command({"subscribe", cfg->subscribe}, cfg->db);//m_orderId是订阅的频道号
+    RedisClient::Command command({"subscribe", sub.toLatin1()}, cfg->db);//m_orderId是订阅的频道号
     command.setCallBack(this, [&](RedisClient::Response result, QString err) {
         if(result.isArray()){
             QStringList message = result.value().toStringList();
@@ -74,13 +74,13 @@ bool Redis_Obj::set(const QByteArray &key, const QMap<QByteArray, QVariant> &map
     return ret;
 }
 
-bool Redis_Obj::set(const QByteArray &key, const QByteArray &field, const QByteArray &value)
+bool Redis_Obj::set(const QString &key, const QString &filed, const QByteArray &value)
 {
     if(!mRedis) return false;
     bool ret = mRedis->isConnected();
     if(ret) {
         QList<QByteArray> rawCmd;
-        rawCmd << "HMSET" << key << field << value;
+        rawCmd << "HMSET" << key.toLatin1() << filed.toLatin1() << value;
         RedisClient::Response r = mRedis->command(rawCmd, redisCfg.db);
         QString res = RedisClient::Response::valueToHumanReadString(r.value());
         if(!res.contains("OK")) ret = false;
@@ -89,13 +89,13 @@ bool Redis_Obj::set(const QByteArray &key, const QByteArray &field, const QByteA
     return ret;
 }
 
-bool Redis_Obj::expipe(const QByteArray &key, int sec)
+bool Redis_Obj::expipe(const QString &key, int sec)
 {
     if(!mRedis) return false;
     bool ret = mRedis->isConnected();
     if(ret) {
         QList<QByteArray> rawCmd;
-        rawCmd << "EXPIRE" << key << QByteArray::number(sec);
+        rawCmd << "EXPIRE" << key.toLatin1() << QByteArray::number(sec);
         RedisClient::Response r = mRedis->command(rawCmd, redisCfg.db);
         QString res = RedisClient::Response::valueToHumanReadString(r.value());
         if(!res.contains("1")) ret = false;

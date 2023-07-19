@@ -29,6 +29,7 @@ private:
     uint index_uuid(const QString &uuid);
 
 private:
+    QString m_addr;
     QMap<QString, uint> mKeys;
 };
 

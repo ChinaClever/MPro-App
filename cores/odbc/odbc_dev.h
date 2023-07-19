@@ -1,16 +1,13 @@
 #ifndef ODBC_DEV_H
 #define ODBC_DEV_H
-#include "odbc_index.h"
+#include "odbc_uut.h"
 
 struct sOdbcDevIt {
     int id = -1;
     uint pdu_id=0;
     int run_status;
-
-    QString room_name;
-    QString dev_position;
-
     QString dev_type;
+
     int dev_spec;
     int dev_mode;
     int line_num;
@@ -18,15 +15,13 @@ struct sOdbcDevIt {
     int output_num;
 
     QString ip_v4;
+    QString ip_v6;
     int cascade_addr;
     int slave_num;
-
     QString sw_version;
-    QString sn;
-    QString qrcode;
 };
 
-class Odbc_Dev : public Odbc_Index
+class Odbc_Dev : public Odbc_Uut
 {
 public:
     Odbc_Dev();

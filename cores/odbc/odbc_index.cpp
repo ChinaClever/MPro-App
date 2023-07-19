@@ -14,7 +14,7 @@ bool Odbc_Index::index_createTable()
 {
     QString sql = "CREATE TABLE IF NOT EXISTS `%1`.`pdu_index` ( "
                   "`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , "
-                  "`uuid` VARCHAR(64) NOT NULL UNIQUE , "
+                  "`uuid` VARCHAR(64) NULL , "
                   "`dev_key` VARCHAR(64) NULL , "
                   "`createtime` DATETIME NOT NULL DEFAULT NOW(),"
                   "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW(),"
@@ -66,13 +66,11 @@ bool Odbc_Index::index_update(const sOdbcIndexIt &it)
 
 bool Odbc_Index::index_poll(const QString &uuid)
 {
-    sOdbcIndexIt it;
-    it.uuid = uuid;
-    it.dev_key = cfg.pdukey;
+    sOdbcIndexIt it; it.uuid = uuid;
+    it.dev_key = cfg.pdukey+":"+m_addr;
     bool ret = index_counts(it);
     if(ret) ret = index_update(it);
     else ret = index_insert(it);
-
     return ret;
 }
 
@@ -104,6 +102,7 @@ uint Odbc_Index::index_uuid(const QString &uuid)
 
 uint Odbc_Index::getPduId(int addr)
 {
+    m_addr = QString::number(addr);
     char *uuid = cm::devData(addr)->cfg.uut.uuid;
     return getPduId(uuid);
 }

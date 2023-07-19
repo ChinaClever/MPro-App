@@ -24,7 +24,8 @@ Redis_Core *Redis_Core::bulid(QObject *parent)
 
 void Redis_Core::redisHandleMessage(const QStringList &msg)
 {
-    if(msg.at(1) == redisCfg.subscribe) {
+    QString ip = cm::dataPacket()->net.inet.ip;
+    if(msg.at(1) == redisCfg.subscribe || msg.at(1) == ip) {
         Integr_JsonRecv::bulid()->recv(msg.last().toUtf8());
     } else qDebug() << "error redisHandleMessage" << msg;
 }
@@ -32,14 +33,13 @@ void Redis_Core::redisHandleMessage(const QStringList &msg)
 void Redis_Core::workDown()
 {
     sRedisCfg *cfg = &redisCfg;
-    QMap<QByteArray, QVariant> map;
     int size = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<=size; ++i) {
+        QString key = cm::devData(i)->cfg.uut.uuid;
         QByteArray array = Integr_JsonBuild::bulid()->getJson(i);
-        map[QByteArray::number(i)] = array;
+        if(cfg->key.size()) key = cfg->key +":" + QString::number(i);
+        bool ret = set(key, "json", array); if(ret) expipe(key, cfg->alive);
     }
-    bool ret = set(cfg->key, map);
-    if(ret) expipe(cfg->key, cfg->alive);
 }
 
 void Redis_Core::run()
@@ -47,11 +47,10 @@ void Redis_Core::run()
     while(isRun) {        
         int t = QRandomGenerator::global()->bounded(100);
         int sec = redisCfg.sec; cm::mdelay(sec*1000+t);
-        if(redisCfg.en && redisCfg.subscribe.size()) {
-            connectServer();
-            subscribe();
-            workDown();
-            disconnect();
+        if(redisCfg.en) {
+            connectServer(); QString sub = redisCfg.subscribe;
+            if(sub.isEmpty()) sub = cm::dataPacket()->net.inet.ip;
+            subscribe(sub); workDown(); disconnect();
         }
     }
 }
