@@ -74,9 +74,34 @@
 		var run_status = new Array();
 		let pdu_data;
 		var phase_num;
-		let bg_color = 0;
+		//let bg_color = 0;
 		let ver_mode = 1;
 		let lang =new Array();
+		
+		var Time1 = setInterval(function(){//设置背景颜色
+			let m = 0;
+			let bg_color = window.sessionStorage.getItem('bg_color');
+			if(bg_color == null) bg_color = 0;
+
+			if( "0" == bg_color){//背景颜色
+				// document.getElementsByClassName("side-box")[1].style.backgroundColor = "#083266";
+				// document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#083266";
+				// document.getElementsByClassName("nav-item is-active")[0].style.backgroundColor = "#25519D";
+				// document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#4082e6";
+				// document.getElementById("top_color").style.backgroundColor = "#083266";
+			}else if( "1" == bg_color){
+				document.getElementsByClassName("side-box")[1].style.backgroundColor = "#2b333e";
+				document.getElementsByClassName("sys-title")[0].style.backgroundColor = "#2b333e";
+				document.getElementsByClassName("nav-item is-active")[0].style.background = "#2b333e";
+				document.getElementsByClassName("nav-item is-active")[0].style.borderColor = "#222931";
+				document.getElementById("top_color").style.backgroundColor = "#2b333e";
+			}
+			if(m>=100){
+				clearInterval(Time1);
+			}
+			m++;
+		 }, 5);
+
 		let DataString = pdu_cfg_.meta_value();
 		if(DataString == null){
 			DataString = sessionStorage.getItem(addr_+'_100_0_0_0');
@@ -118,7 +143,7 @@
 		},2000);
 
 		setTimeout(function(){//获取页面颜色
-			pdu_cfg_.debugCfg();
+			//pdu_cfg_.debugCfg();
 			PduMetaData.meta_workDown(0);
 		},500);
 		function ParseData(){
@@ -134,7 +159,7 @@
 			}
 			phase_num = pdu_data.pdu_info.line_num;
 
-			bg_color = pdu_cfg_.cfgValue(13,18,0,0);
+			//bg_color = pdu_cfg_.cfgValue(13,18,0,0);
 			ver_mode = pdu_cfg_.cfgValue(13,17,0,0);
 		}
 		function LangInit() {

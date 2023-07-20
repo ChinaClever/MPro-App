@@ -206,6 +206,10 @@ class JsonRpc {
             sessionStorage.setItem('language', value);
         }
 
+        if((0 == addr) && (13 == type) && (18 == topic)) {
+            sessionStorage.setItem('bg_color', value);
+        }
+
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value);
         const json = Object.fromEntries(this.root_map);        
