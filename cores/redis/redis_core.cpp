@@ -6,6 +6,7 @@
 #include "redis_core.h"
 #include "commons.h"
 #include "integr_core.h"
+#include "alarm_log.h"
 
 Redis_Core::Redis_Core(QObject *parent)
     : Redis_Obj{parent}
@@ -38,7 +39,10 @@ void Redis_Core::workDown()
         QString key = cm::devData(i)->cfg.uut.uuid;
         QByteArray array = Integr_JsonBuild::bulid()->getJson(i);
         if(cfg->key.size()) key = cfg->key +":" + QString::number(i);
-        bool ret = set(key, "pduMetaData", array); if(ret) expipe(key, cfg->alive);
+        bool ret = set(key, "pduMetaData", array);
+        QString msg = Alarm_Log::bulid()->getCurrentAlarm(i+1);
+        if(ret) set(key, "pduAlarmInfo", msg.toUtf8());
+        if(ret) expipe(key, cfg->alive);
     }
 }
 
