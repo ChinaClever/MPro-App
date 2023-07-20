@@ -1,9 +1,9 @@
 #ifndef OP_CORE_H
 #define OP_CORE_H
 
-#include "op_zrtu.h"
+#include "op_prortu.h"
 
-class OP_Core : public OP_ZRtu
+class OP_Core : public OP_ProRtu
 {
     explicit OP_Core(QObject *parent = nullptr);
 public:

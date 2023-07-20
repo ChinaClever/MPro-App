@@ -161,20 +161,15 @@ void Log_Core::timeoutDone()
 
 void Log_Core::invAdcSlot()
 {
-    QString cmd = "cmd_adc get_voltage 1";
-    if(QFile::exists("/usr/bin/cmd_adc")) {
-        QString res = cm::execute(cmd).remove("\n"); qDebug() << "ADC voltage" << res;
-        uint vol = res.remove("channel 1:adc sample voltage = ").toUInt() * 18.4;
-        cm::masterDev()->cfg.param.supplyVol = vol; //cout << vol;
-        if(vol < 11*1000 || vol > 13*1000) {
-            sEventItem it;  if(cm::cn()) {
-                it.event_type = QStringLiteral("电源检测");
-                it.event_content = QStringLiteral("ADC电压采样异常:%1V").arg(vol/1000.0);
-            } else {
-                it.event_type = "Power Detection";
-                it.event_content = "ADC voltage sampling abnormality ";
-                it.event_content += QString::number(vol/1000.0) + "V";
-            } append(it);
-        }
+    uint vol = cm::adcVol();
+    if(vol < 11*1000 || vol > 13*1000) {
+        sEventItem it;  if(cm::cn()) {
+            it.event_type = QStringLiteral("电源检测");
+            it.event_content = QStringLiteral("ADC电压采样异常:%1V").arg(vol/1000.0);
+        } else {
+            it.event_type = "Power Detection";
+            it.event_content = "ADC voltage sampling abnormality ";
+            it.event_content += QString::number(vol/1000.0) + "V";
+        } append(it);
     }
 }

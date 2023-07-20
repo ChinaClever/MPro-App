@@ -6,7 +6,7 @@
 #include "op_core.h"
 
 OP_Core::OP_Core(QObject *parent)
-    : OP_ZRtu{parent}
+    : OP_ProRtu{parent}
 {
     qint32 baudRate = QSerialPort::Baud19200;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))

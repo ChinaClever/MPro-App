@@ -1,12 +1,12 @@
-#ifndef OP_ZCTRL_H
-#define OP_ZCTRL_H
+#ifndef OP_PROCTRL_H
+#define OP_PROCTRL_H
 
 #include "op_artu.h"
 
-class OP_ZCtrl : public OP_ARtu
+class OP_ProCtrl : public OP_ARtu
 {
 public:
-    explicit OP_ZCtrl(QObject *parent = nullptr);
+    explicit OP_ProCtrl(QObject *parent = nullptr);
 
 private:
     void writeCtrlCmd(uchar *cmd, int k);
@@ -15,4 +15,4 @@ private:
     void funDelay(uint *buf) override;
 };
 
-#endif // OP_ZCTRL_H
+#endif // OP_PROCTRL_H

@@ -42,6 +42,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
+        json.insert("uuid", dev->cfg.uut.uuid);
         uutInfo(dev->cfg.uut, "uut_info", json);
 
         if(dc > 1) {
@@ -55,6 +56,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
+        json.insert("pdu_alarm", Alarm_Log::bulid()->getCurrentAlarm(addr+1));
         json.insert("version", JSON_VERSION);
     } else {
         cout << dev->offLine;

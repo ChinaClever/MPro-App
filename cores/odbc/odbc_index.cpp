@@ -14,10 +14,10 @@ bool Odbc_Index::index_createTable()
 {
     QString sql = "CREATE TABLE IF NOT EXISTS `%1`.`pdu_index` ( "
                   "`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , "
-                  "`uuid` VARCHAR(64) NOT NULL UNIQUE , "
+                  "`uuid` VARCHAR(64) NULL , "
                   "`dev_key` VARCHAR(64) NULL , "
-                  "`create_time` TIMESTAMP NOT NULL ,"
-                  "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`createtime` DATETIME NOT NULL DEFAULT NOW(),"
+                  "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW(),"
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
 }
@@ -26,8 +26,8 @@ bool Odbc_Index::index_createTable()
 bool Odbc_Index::index_insert(const sOdbcIndexIt &it)
 {
     QString cmd = "INSERT INTO `pdu_index` "
-                  "(`id`, `uuid`, `dev_key`,`create_time`) "
-                  "VALUES (NULL, :uuid, :dev_key, CURRENT_TIMESTAMP)";
+                  "(`id`, `uuid`, `dev_key`,`createtime`) "
+                  "VALUES (NULL, :uuid, :dev_key, NOW())";
     return index_modifyItem(it,cmd);
 }
 
@@ -66,13 +66,11 @@ bool Odbc_Index::index_update(const sOdbcIndexIt &it)
 
 bool Odbc_Index::index_poll(const QString &uuid)
 {
-    sOdbcIndexIt it;
-    it.uuid = uuid;
-    it.dev_key = cfg.pdukey;
+    sOdbcIndexIt it; it.uuid = uuid;
+    it.dev_key = cfg.pdukey+":"+m_addr;
     bool ret = index_counts(it);
     if(ret) ret = index_update(it);
     else ret = index_insert(it);
-
     return ret;
 }
 
@@ -104,6 +102,7 @@ uint Odbc_Index::index_uuid(const QString &uuid)
 
 uint Odbc_Index::getPduId(int addr)
 {
+    m_addr = QString::number(addr);
     char *uuid = cm::devData(addr)->cfg.uut.uuid;
     return getPduId(uuid);
 }

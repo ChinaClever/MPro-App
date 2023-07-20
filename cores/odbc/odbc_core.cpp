@@ -24,7 +24,7 @@ Odbc_Core *Odbc_Core::bulid()
 
 void Odbc_Core::append(const sOdbcThIt &it)
 {
-    if(!cfg.en) return;
+    if(!cfg.en || isDbRun) return;
     mThIts << it; run();
 }
 
@@ -36,7 +36,7 @@ void Odbc_Core::append(const sOdbcAlarmIt &it)
 
 void Odbc_Core::append(const sOdbcDataIt &it)
 {
-    uint sec = cfg.dataPoll; if(!cfg.en || !sec) return;
+    uint sec = cfg.dataPoll; if(!cfg.en || !sec || isDbRun) return;
     if(!(mCnt%sec) || cfg.okCnt < 5){mDataIts << it; run();}
 }
 
@@ -70,7 +70,7 @@ void Odbc_Core::hda(const sDataItem &item)
 
 void Odbc_Core::data(const sDataItem &item)
 {
-    if(!cfg.en || isDbRun) return;
+    if(!cfg.en) return;
 
     sOdbcDataIt it;
     it.addr = item.addr;
@@ -80,7 +80,7 @@ void Odbc_Core::data(const sDataItem &item)
     it.value = item.value / cm::decimal(item);
     hda(item); if(cfg.dataPoll) append(it); else return;
 
-    if(item.type > DTopic::Relay && item.type < DTopic::Ele)
+    if(item.topic > DTopic::Relay && item.topic < DTopic::Ele)
     if((cfg.okCnt<10)  && cfg.status) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
@@ -131,6 +131,7 @@ void Odbc_Core::createTables()
 {
     if(cfg.okCnt < 3) {
         index_createTable();
+        uut_createTable();
         dev_createTable();
         th_createTable();
         hda_createTable();
@@ -143,15 +144,16 @@ void Odbc_Core::createTables()
 void Odbc_Core::insertItems()
 {
     db_transaction(); //QWriteLocker locker(mLock);
-    while(mThIts.size()) th_poll(mThIts.takeFirst());
+    while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());
+    while(mEventIts.size()) event_insert(mEventIts.takeFirst());
     while(mHdaIts.size()) hda_insert(mHdaIts.takeFirst());
     while(mDataIts.size()) data_poll(mDataIts.takeFirst());
-    while(mEventIts.size()) event_insert(mEventIts.takeFirst());
-    while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());
+    while(mThIts.size()) th_poll(mThIts.takeFirst());
 }
 
 void Odbc_Core::clearItems()
 {
+    mEventIts.clear();
     mAlarmIts.clear();
     mDataIts.clear();
     mHdaIts.clear();
@@ -162,9 +164,10 @@ void Odbc_Core::workDown()
 {
     bool ret = db_open();
     if(ret) {
-        createTables();
-        dev_polls();
-        insertItems();
+        createTables(); insertItems();
+        if(cfg.okCnt < 5 || !(cfg.okCnt % 15)) {
+            uut_polls(); dev_polls();
+        }
     } else clearItems();
     db_close();
     isRun = false;

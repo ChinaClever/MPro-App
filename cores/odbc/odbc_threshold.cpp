@@ -21,7 +21,7 @@ bool Odbc_Threshold::th_createTable()
                   "`subtopic` TINYINT(3) UNSIGNED NOT NULL , "
                   "`indexes` TINYINT(3) UNSIGNED NOT NULL , "
                   "`value` DECIMAL(6,2) UNSIGNED NOT NULL , "
-                  "`update_time` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,"
+                  "`updatetime` DATETIME on update NOW() NOT NULL DEFAULT NOW() ,"
                   " FOREIGN KEY(`pdu_id`) REFERENCES `%1`.`pdu_index`(`id`) ON DELETE CASCADE ON UPDATE CASCADE , "
                   " PRIMARY KEY (`id`)) ENGINE = InnoDb";
     return sqlQuery(sql.arg(cfg.db));
@@ -31,8 +31,8 @@ bool Odbc_Threshold::th_createTable()
 bool Odbc_Threshold::th_insert(const sOdbcThIt &it)
 {
     QString cmd = "INSERT INTO `pdu_threshold` "
-                  "(`id`, `pdu_id`, `type`, `topic`, `subtopic`, `indexes`, `value`, `update_time`) "
-                  "VALUES (NULL, :pdu_id, :type, :topic, :subtopic, :indexes, :value, CURRENT_TIMESTAMP)";
+                  "(`id`, `pdu_id`, `type`, `topic`, `subtopic`, `indexes`, `value`, `updatetime`) "
+                  "VALUES (NULL, :pdu_id, :type, :topic, :subtopic, :indexes, :value, NOW())";
     return th_modifyItem(it,cmd);
 }
 
@@ -80,8 +80,8 @@ int Odbc_Threshold::th_counts(const sOdbcThIt &it)
 bool Odbc_Threshold::th_duplicate(const sOdbcThIt &it)
 {
     QString fmd =  "INSERT INTO `pdu_threshold` "
-                  "(`id`, `pdu_id`, `type`, `topic`, `subtopic`, `indexes`, `value`, `update_time`) "
-                  "VALUES (NULL, :pdu_id, :type, :topic, :subtopic, :indexes, :value, CURRENT_TIMESTAMP) "
+                  "(`id`, `pdu_id`, `type`, `topic`, `subtopic`, `indexes`, `value`, `updatetime`) "
+                  "VALUES (NULL, :pdu_id, :type, :topic, :subtopic, :indexes, :value, NOW()) "
                   "ON DUPLICATE KEY UPDATE "
                   "pdu_id=:pdu_id, type=:type, topic=:topic,subtopic=:subtopic,indexes=:indexes";
     return th_modifyItem(it,fmd);
