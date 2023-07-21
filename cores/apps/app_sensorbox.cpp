@@ -94,8 +94,8 @@ void App_SensorBox::box_offline()
     env->isInsert[3] = (isInsert >> k++) & 1;
     env->smoke[0] = (isInsert >> k++) & 1;
     env->water[0] = (isInsert >> k++) & 1;
-    env->door[0] = (isInsert >> k++) & 1;
-    env->door[1] = (isInsert >> k++) & 1;
+    //env->door[0] = (isInsert >> k++) & 1;
+    //env->door[1] = (isInsert >> k++) & 1;
 }
 
 void App_SensorBox::sensorBox_run()
