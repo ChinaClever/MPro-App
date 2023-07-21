@@ -74,12 +74,13 @@ void Log_Core::append(const sEventItem &it)
 
 void Log_Core::append(const sDataItem &it)
 {
-    sHdaItem hda;
+    sHdaItem hda; int offset = 0;
     hda.addr = QString::number(it.addr);
     hda.type = QString::number(it.type);
     hda.topic = QString::number(it.topic);
-    hda.indexes = QString::number(it.id + 1);
-    hda.value = QString::number(it.value / cm::decimal(it));
+    hda.indexes = QString::number(it.id + 1);    
+    if(DType::Env == it.type && DTopic::Tem == it.topic) if(it.value) offset= 400;
+    hda.value = QString::number(((int)it.value-offset) / cm::decimal(it));
     mHdaIts << hda; run();  //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
 }
 

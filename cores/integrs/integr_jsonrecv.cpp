@@ -52,7 +52,7 @@ QString Integr_JsonRecv::getString(const QByteArray &msg, const QString &key)
 
 double Integr_JsonRecv::getData(const QJsonObject &object, const QString &key)
 {
-    double ret = -1;
+    double ret = -255;
     QJsonValue value = getValue(object, key);
     if(value.isDouble()) {
         ret = value.toDouble();
@@ -134,8 +134,10 @@ bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDa
         res = getData(obj, "topic"); if(res >= 0) it.topic = res;
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "value"); if(res >= 0){res *= cm::decimal(it); it.value = res;}
-        it.txType = DTxType::TxJson;
+        res = getData(obj, "value"); if(res >= -40){res *= cm::decimal(it);
+            if((DType::Env == it.type) && (DTopic::Tem==it.topic))
+                if(it.subtopic > DSub::Size && it.subtopic < DSub::EnAlarm) res += 400;
+            it.value = res;} it.txType = DTxType::TxJson;
     } else ret = false;
     return ret;
 }

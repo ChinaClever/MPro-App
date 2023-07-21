@@ -15,7 +15,7 @@ public:
 
 private:
     void strListAppend(const char (*ptr)[NAME_SIZE], int size, const QString &key, QJsonObject &json);
-    void arrayAppend(const uint *ptr, int size, const QString &key, QJsonObject &json, double r=1);
+    void arrayAppend(const uint *ptr, int size, const QString &key, QJsonObject &json, double r=1, int offset=0);
     void alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r);
     void relayUnit(const sRelayUnit &it, const QString &key, QJsonObject &json);
     void ObjData(const sObjData &it, const QString &key, QJsonObject &json, int type=0);

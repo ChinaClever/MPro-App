@@ -62,6 +62,8 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
         //env->door[0] = (isInsert >> k++) & 1;
         //env->door[1] = (isInsert >> k++) & 1;
 
+        if(env->tem.value[2]) env->tem.value[2] += 400;
+        if(env->tem.value[3]) env->tem.value[3] += 400;
         if(env->smoke[0]) env->smoke[0] += (alarm >> j++) & 1;
         if(env->water[0]) env->water[0] += (alarm >> j++) & 1;
         //if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
@@ -92,8 +94,8 @@ void App_SensorBox::box_offline()
     env->isInsert[3] = (isInsert >> k++) & 1;
     env->smoke[0] = (isInsert >> k++) & 1;
     env->water[0] = (isInsert >> k++) & 1;
-    env->door[0] = (isInsert >> k++) & 1;
-    env->door[1] = (isInsert >> k++) & 1;
+    //env->door[0] = (isInsert >> k++) & 1;
+    //env->door[1] = (isInsert >> k++) & 1;
 }
 
 void App_SensorBox::sensorBox_run()

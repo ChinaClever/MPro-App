@@ -73,10 +73,11 @@ void App_Sensor::env_workDown()
                 env->isInsert[i] = 0;
             } else {
                 sscanf(t, "%d:%d", v, v+1);
-                if((v[0] < 100) && (v[1] < 100)) {
+                if((v[0] < 1500) && (v[1] < 100)) {
                     env->isInsert[i] = 1;
                     env->hum.value[i] = v[1];
-                    env->tem.value[i] = v[0]*10;
+                    env->tem.value[i] = v[0];
+                    //cout << env->tem.value[i];
                 }
             }
         } else env->isInsert[i] = 0;
