@@ -138,11 +138,11 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
 
     if(dc) {
         arrayAppend(it.rated, size, key+"_rated", json, r, offset);
-        arrayAppend(it.en, size, key+"_alarm_enable", json);
         arrayAppend(it.min, size, key+"_alarm_min", json, r, offset);
         arrayAppend(it.max, size, key+"_alarm_max", json, r, offset);
         arrayAppend(it.crMin, size, key+"_warn_min", json, r, offset);
         arrayAppend(it.crMax, size, key+"_warn_max", json, r, offset);
+        arrayAppend(it.en, size, key+"_alarm_enable", json);
         arrayAppend(it.hda, size, key+"_hda_en", json);
     }
 }
