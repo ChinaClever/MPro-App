@@ -59,12 +59,14 @@ void Odbc_Core::hda(const sDataItem &item)
     uint sec = cfg.hdaPoll * 60;
     if(!cfg.en || !sec) return;
 
+    int offset = 0;
     sOdbcHdaIt it;
     it.addr = item.addr;
     it.type = item.type;
     it.topic = item.topic;
     it.indexes = item.id;
-    it.value = item.value / cm::decimal(item);
+    if(DType::Env == it.type && DTopic::Tem == it.topic) if(item.value) offset = 400;
+    it.value = ((int)item.value-offset) / cm::decimal(item);
     append(it);
 }
 
