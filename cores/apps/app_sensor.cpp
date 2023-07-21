@@ -77,7 +77,7 @@ void App_Sensor::env_workDown()
                     env->isInsert[i] = 1;
                     env->hum.value[i] = v[1];
                     env->tem.value[i] = v[0];
-                    //cout << env->tem.value[i];
+                    //cout << i <<  env->tem.value[i];
                 }
             }
         } else env->isInsert[i] = 0;
@@ -87,7 +87,7 @@ void App_Sensor::env_workDown()
 void App_Sensor::env_delay()
 {
     int r = QRandomGenerator::global()->bounded(565);
-    if(cm::runTime() > 48*60*60){r += 1000;}  cm::mdelay(3500 + r);
+    if(cm::runTime() > 48*60*60){r += 1500;}  cm::mdelay(3500 + r);
 }
 
 void App_Sensor::env_run()
