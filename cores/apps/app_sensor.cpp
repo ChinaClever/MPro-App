@@ -87,7 +87,7 @@ void App_Sensor::env_workDown()
 void App_Sensor::env_delay()
 {
     int r = QRandomGenerator::global()->bounded(565);
-    if(cm::runTime() > 48*60*60){r += 1500;}  cm::mdelay(3500 + r);
+    if(cm::runTime() > 72*60*60){r += 4500;} cm::mdelay(3500 + r);
 }
 
 void App_Sensor::env_run()
