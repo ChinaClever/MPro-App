@@ -232,9 +232,9 @@ uint cm::adcVol()
 {
     QString cmd = "cmd_adc get_voltage 1";
     uint vol = 0; if(QFile::exists("/usr/bin/cmd_adc")) {
-        QString res = cm::execute(cmd).remove("\n"); qDebug() << "ADC voltage" << res;
+        QString res = cm::execute(cmd).remove("\n"); //qDebug() << "ADC voltage" << res;
         vol = res.remove("channel 1:adc sample voltage = ").toUInt() * 18.4;
-        masterDev()->cfg.param.supplyVol = vol; //cout << vol;
+        masterDev()->cfg.param.supplyVol = vol; qDebug() << "ADC voltage" << vol;
     }
     return vol;
 }

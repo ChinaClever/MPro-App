@@ -81,8 +81,8 @@ bool App_SensorBox::box_readData()
     QByteArray recv = mSerial->transmit(cmd, sizeof(cmd));
     if(recv.size() > 20) res = box_recvPacket(recv);
     int t = 0; if(cm::runTime() > 72*60*60) {
-        t = QRandomGenerator::global()->bounded(3865);
-    } cm::mdelay(t + 865);
+        t = QRandomGenerator::global()->bounded(2365);
+    } cm::mdelay(t + 1365);
     return res;
 }
 
