@@ -36,9 +36,9 @@ void Redis_Core::workDown()
     sRedisCfg *cfg = &redisCfg;
     int size = cm::masterDev()->cfg.nums.slaveNum;
     for(int i=0; i<=size; ++i) {
-        QString key = cm::devData(i)->cfg.uut.uuid;
-        QByteArray array = Integr_JsonBuild::bulid()->getJson(i);
-        if(cfg->key.size()) key = cfg->key +":" + QString::number(i);
+        QByteArray array = Integr_JsonBuild::bulid()->getJson(i); QString key;
+        if(cfg->key.size()) key = cfg->key +":" + QString::number(i)+":";
+        key += cm::devData(i)->cfg.uut.uuid;
         bool ret = set(key, "pduMetaData", array);
         QString msg = Alarm_Log::bulid()->getCurrentAlarm(i+1);
         if(ret) set(key, "pduAlarmInfo", msg.toUtf8());
