@@ -93,7 +93,7 @@
 		setTimeout(function(){
 			pdu_obj.debugCfg();
 			pdu_obj.loginCfg();
-			pdu_obj.getCfg(41,11,0,0);
+			// pdu_obj.getCfg(41,11,0,0);
 			PduMetaData.meta_workDown(0);
 		},1100);
 
@@ -226,7 +226,7 @@
 				ShowData();
 			}
 			m++;
-		},1100);
+		},1300);
 		
 		function ShowData(){
 			document.getElementById("phase_").value = phase_num;
@@ -680,7 +680,7 @@
 				tbody +='<td width = "1.5%"></td>';
 			}
 			tbody +='</tr>';
-			tbody +='<tr><td width = "3%" style ="text-align:center"><input id = "cur_val" style ="width:20px;text-align:center" type = "text"  value ="0">A</input></td>';
+			tbody +='<tr><td width = "5%" style ="text-align:center"><input id = "cur_val" style ="width:20px;text-align:center" type = "text"  value ="0">A</input></td>';
 			for(let i = 0;i<12;i++){
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ ((i * 4)+1) + '"></input></td>';
 				tbody +='<td width = "1.5%"><input type = "checkbox" class = "input" onchange ="cked(this)" id = "c'+ ((i * 4)+2) + '"></input></td>';
