@@ -30,12 +30,12 @@ public:
     ~Mqtt_Client();
 
 signals:
-    void publish(const QByteArray &payload);
+    void publish(int addr, const QByteArray &payload);
     void received(const QByteArray &payload);
 
 private slots:
     void onConnected();
-    void onPublish(const QByteArray &payload);
+    void onPublish(int addr, const QByteArray &payload);
     void onDisconnected();//{cfg.isConnected = false;}
     void onReceived(const QMQTT::Message& message);
     void onError(const QMQTT::ClientError error) {qDebug() << Q_FUNC_INFO << error;}
@@ -44,6 +44,7 @@ private:
     void subscribe();
     bool createMqtt();
     void connectToHost();
+    bool uuidCheck(const QString &topic);
 
 private:
     quint16 m_number=0;
