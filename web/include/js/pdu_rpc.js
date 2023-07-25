@@ -156,13 +156,13 @@ class JsonRpc {
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
-        if(this.ws.readyState == WebSocket.OPEN){
-            this.ws.send(msg);
-        } else if(JsonRpc._errCnt++ > 2) {
-             ret = false;
-             this.ws.close();
-             this.ws = this.socket_open(); 
-        }
+        // if(this.ws.readyState == WebSocket.OPEN){
+            this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+        // } else if(JsonRpc._errCnt++ > 2) {
+        //      ret = false;
+        //      this.ws.close();
+        //      this.ws = this.socket_open(); 
+        // }
         return ret;
     }
 
@@ -204,6 +204,10 @@ class JsonRpc {
 
         if((0 == addr) && (13 == type) && (10 == topic)) {
             sessionStorage.setItem('language', value);
+        }
+
+        if((0 == addr) && (13 == type) && (18 == topic)) {
+            sessionStorage.setItem('bg_color', value);
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
