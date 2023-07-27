@@ -72,12 +72,12 @@ void Ota_Usb::usb_otaSlot()
     QString dir = "/tmp/mass_storage/sda1/ota_apps/";
     cm::mdelay(2357); bool ret = QFile::exists(dir + "ver.ini");
     if(!ret) {
-        dir = "/tmp/mass_storage/sda2/ota_apps/";
-        ret = QFile::exists(dir + "ver.ini");
-    } if(!ret) {
         system("mkdir -p /tmp/mass_storage/sda");
         system("mount /dev/sda /tmp/mass_storage/sda");
         dir = "/tmp/mass_storage/sda/ota_apps/";
+        ret = QFile::exists(dir + "ver.ini");
+    } if(!ret) {
+        dir = "/tmp/mass_storage/sda2/ota_apps/";
         ret = QFile::exists(dir + "ver.ini");
     } qDebug() << "USB:" + dir << ret; if(ret) {
         sOtaFile it; it.fc = 21; it.path = dir;
