@@ -106,7 +106,7 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     if((0==it->disabled[id]) && (unit.value < 3)) { /* || (unit.txType == DTxType::TxWeb)*/
         if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
             if(unit.value) {
-                if(unit.id) { if(it->sw[id]) return false; else it->cnt[id] += 1; }
+                if(unit.id) { if(it->sw[id] && (unit.txType != DTxType::TxSnmp)) return false; else it->cnt[id] += 1; }
                 else for(int i=0; i<it->size; ++i) if(0==it->sw[id]) it->cnt[i] += 1; }
             it->sw[id] = unit.value;
         } else ret = false;
