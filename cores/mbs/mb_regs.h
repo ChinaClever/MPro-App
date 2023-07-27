@@ -31,7 +31,7 @@ enum eMbRegs {
 
     MbReg_GroupData = 1601,
     MbReg_GroupThreshol = 7101,
-    MbReg_GroupRelay = 7191,
+    MbReg_GroupRelay = 7176,
 
     MbReg_EnvData = 1951,
     MbReg_EnvAlarm = 1961,
