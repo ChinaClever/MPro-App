@@ -78,6 +78,7 @@ void Mb_Group::group_setting(ushort addr, ushort value)
     sAlarmUnit *unit = nullptr;
     uint *ptr = nullptr;
     int id = reg%15;
+    //cout << id << reg << addr << value;
 
     switch (reg/75) {
     case 0: unit = &(obj->pow); break;
@@ -85,7 +86,7 @@ void Mb_Group::group_setting(ushort addr, ushort value)
     default: cout << addr << reg << value; return;
     }
 
-    reg = reg%15; switch (reg) {
+    reg = reg/15; switch (reg) {
     case 0: ptr = unit->en; break;
     case 1: ptr = unit->max; break;
     case 2: ptr = unit->crMax; break;

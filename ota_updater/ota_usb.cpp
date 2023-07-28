@@ -14,10 +14,10 @@
 #include <linux/netlink.h>
 #define UEVENT_BUFFER_SIZE 2048
 
-
 Ota_Usb::Ota_Usb(QObject *parent)
     : Ota_Net{parent}
 {
+    system("mkdir -p /tmp/mass_storage/sda1");
     QTimer::singleShot(1678,this,SLOT(usb_initSlot()));
     system("echo host > /sys/class/usb_role/13500000.otg_new-role-switch/role");
 }
@@ -66,15 +66,24 @@ void Ota_Usb::usb_run()
     close(CppLive);
 }
 
-
 void Ota_Usb::usb_otaSlot()
 {
+    system("mount /dev/sda1 /tmp/mass_storage/sda1");
     QString dir = "/tmp/mass_storage/sda1/ota_apps/";
     cm::mdelay(2357); bool ret = QFile::exists(dir + "ver.ini");
-    //system("chmod 777 -R /tmp/mass_storage/sda1/ota_apps/");
-    qDebug() << "USB:" + dir << ret; if(ret) {
+    if(!ret) {
+        system("mkdir -p /tmp/mass_storage/sda");
+        system("mount /dev/sda /tmp/mass_storage/sda");
+        dir = "/tmp/mass_storage/sda/ota_apps/";
+        ret = QFile::exists(dir + "ver.ini");
+    } if(!ret) {
+        dir = "/tmp/mass_storage/sda2/ota_apps/";
+        ret = QFile::exists(dir + "ver.ini");
+    } qDebug() << "USB:" + dir << ret; if(ret) {
         sOtaFile it; it.fc = 21; it.path = dir;
         ota_updater(it, DOta_Usb, true);
     } system("umount /tmp/mass_storage/sda1");
+    system("umount /tmp/mass_storage/sda2");
+    system("umount /tmp/mass_storage/sda");
     isUsbRun = false;
 }

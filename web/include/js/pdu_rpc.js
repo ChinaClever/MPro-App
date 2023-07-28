@@ -689,6 +689,7 @@ class PduCore extends PduOta {
             var url = window.location.protocol+"//";            
             url += window.location.host;
             window.location.replace(url);
+            //location.reload();
         }
         
         return res;
