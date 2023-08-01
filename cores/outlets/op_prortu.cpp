@@ -110,6 +110,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
         hardwareLog(addr, QByteArray((char *)cmd, zCmdLen)); //cout << addr;
     } else {
         cout << addr << recv.size();
@@ -120,6 +121,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
             it.event_type = "Executive board communication";
             it.event_content = tr("Execution board %1 data read error: len=%2").arg(addr).arg(recv.size());
         } rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
         //it.content +=cm::byteArrayToHexStr(recv);
         Log_Core::bulid()->append(it);
     }
@@ -143,7 +145,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
             else it.event_content = tr("Execution board %1 dropped").arg(addr);
             Log_Core::bulid()->append(it);
 
-            int size = sizeof(mOpData->vol);
+            int size = mDev->cfg.nums.boards[addr-1];//sizeof(mOpData->vol);
             memset(mOpData->cur, 0, size);
             memset(mOpData->pow, 0, size);
             memset(mOpData->pf, 0, size);
@@ -151,6 +153,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 
             uint vol = cm::adcVol();
             if(vol < 8*1000) memset(mOpData->vol, 0, size);
+            if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
         }
     }
 
