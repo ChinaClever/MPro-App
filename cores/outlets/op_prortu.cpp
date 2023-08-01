@@ -67,10 +67,10 @@ void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
     if(m_array[addr] != cmd) {
         m_array[addr] = cmd; sEventItem it;
         if(cm::cn()) {it.event_type = tr("执行板通讯");
-            it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
+            it.event_content = tr("执行板无响应 地址:%1 ").arg(addr);
         } else {
             it.event_type = "Executive board communication";
-            it.event_content = tr("No response from the execution board addr:%1 ").arg(addr+1);
+            it.event_content = tr("No response from the execution board addr:%1 ").arg(addr);
         } rtuThrowMessage(it.event_type + it.event_content);
         Log_Core::bulid()->append(it);
     }
@@ -144,17 +144,19 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
             if(cm::cn()) it.event_content = tr("执行板 %1 掉线").arg(addr);
             else it.event_content = tr("Execution board %1 dropped").arg(addr);
             Log_Core::bulid()->append(it);
-
-            int size = mDev->cfg.nums.boards[addr-1];//sizeof(mOpData->vol);
-            memset(mOpData->cur, 0, size);
-            memset(mOpData->pow, 0, size);
-            memset(mOpData->pf, 0, size);
-            mOpData->version = 0;
-
-            uint vol = cm::adcVol();
-            if(vol < 8*1000) memset(mOpData->vol, 0, size);
-            if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
         }
+    }
+
+    if(v < 3) {
+        int size = sizeof(mOpData->vol);
+        memset(mOpData->cur, 0, size);
+        memset(mOpData->pow, 0, size);
+        memset(mOpData->pf, 0, size);
+        mOpData->version = 0;
+
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
+        if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
+        //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);
     }
 
     int t = 0; if(cm::runTime() > 48*60*60) {
@@ -168,7 +170,9 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 bool OP_ProRtu::readData(int addr)
 {
     if(isOta) return false;
-    bool ret = sendReadCmd(addr, mOpData); fillData(addr); //cout << addr << ret;
-    return setEndisable(addr, ret, mOpData->ens[addr]);
+    bool ret = sendReadCmd(addr, mOpData);
+    setEndisable(addr, ret, mOpData->ens[addr]);
+    fillData(addr); //cout << addr << ret;
+    return ret;
 }
 

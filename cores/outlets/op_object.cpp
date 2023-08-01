@@ -183,9 +183,10 @@ void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev; uchar k = 0;
     sOpIt *it = mOpData; addr -= 1;
+    int size = dev->cfg.nums.boards[addr];
     if(mDev->dtc.fault) mDev->dtc.fault -= 1;
     for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
-    for(int i=0; i<it->size; ++i) {
+    for(int i=0; i<size; ++i) {
         volFaultCheck(k, i);
         curFaultCheck(k, i);
         powFaultCheck(k, i);
