@@ -46,7 +46,8 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
     uchar *ptr = (uchar *)array.data();
     sEnvData *env = &(cm::masterDev()->env);
     if((*ptr++ == 0x01) && (*ptr++ == 0x03))  {
-        int len = getShort(ptr); ptr += 2;
+        int len = getShort(ptr);
+        if(len == 22) ptr += 2; else return false;
         ushort isInsert = getShort(ptr); ptr += 2;
         env->tem.value[2] = getShort(ptr); ptr += 2;
         env->hum.value[2] = getShort(ptr); ptr += 2;
@@ -105,6 +106,7 @@ void App_SensorBox::sensorBox_run()
             bool ret = box_open();
             if(ret){
                 ret = box_readData();
+                if(!ret) ret = box_readData();
                 if(!ret) ret = box_readData();
                 if(!ret) box_offline();
             }
