@@ -73,7 +73,7 @@ void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
             it.event_content = tr("No response from the execution board addr:%1 ").arg(addr);
         } rtuThrowMessage(it.event_type + it.event_content);
         Log_Core::bulid()->append(it);
-    }
+    } cout << addr << cm::byteArrayToHexStr(cmd);;
 }
 
 bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
@@ -111,7 +111,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
         mOpData->size = mDev->cfg.nums.boards[addr-1];
-        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen)); //cout << addr;
+        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size();
         sEventItem it; if(cm::cn()) {
