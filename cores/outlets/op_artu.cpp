@@ -89,7 +89,7 @@ bool OP_ARtu::loop_readData()
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
     QByteArray recv = transmit(cmd, sizeof(cmd)); //cout << recv.size();
     if((recv.size() == 62) && (recv.at(2) == addr)) {
-        res = loop_recvPacket(recv, mOpData);
+        res = loop_recvPacket(recv, mOpData);        
         loop_setEndisable(res, mOpData->ens[0]); loop_fillData();
     } else if(recv.size()) cout << recv.size();
 
