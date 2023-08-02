@@ -46,7 +46,8 @@ bool App_SensorBox::box_recvPacket(const QByteArray &array)
     uchar *ptr = (uchar *)array.data();
     sEnvData *env = &(cm::masterDev()->env);
     if((*ptr++ == 0x01) && (*ptr++ == 0x03))  {
-        int len = getShort(ptr); ptr += 2;
+        int len = getShort(ptr); //cout << len;
+        if(len == 22) ptr += 2; else return false;
         ushort isInsert = getShort(ptr); ptr += 2;
         env->tem.value[2] = getShort(ptr); ptr += 2;
         env->hum.value[2] = getShort(ptr); ptr += 2;
@@ -80,7 +81,7 @@ bool App_SensorBox::box_readData()
     uchar cmd[] = {0x01, 0x03, 0x00, 0x00, 0x00, 0x0B, 0x04, 0x0D};
     QByteArray recv = mSerial->transmit(cmd, sizeof(cmd));
     if(recv.size() > 20) res = box_recvPacket(recv);
-    int t = 0; if(cm::runTime() > 72*60*60) {
+    int t = 0; if(cm::runTime() > 72*60*60 ) {
         t = QRandomGenerator::global()->bounded(2365);
     } cm::mdelay(t + 1365);
     return res;
@@ -105,6 +106,7 @@ void App_SensorBox::sensorBox_run()
             bool ret = box_open();
             if(ret){
                 ret = box_readData();
+                if(!ret) ret = box_readData();
                 if(!ret) ret = box_readData();
                 if(!ret) box_offline();
             }

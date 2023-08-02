@@ -49,21 +49,29 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
             sEventItem it; it.event_type = tr("Metering plate");
             if(cm::cn()) it.event_content = tr("计量板连接正常");
             else it.event_content = "The connection of the metering board is normal";
-            Log_Core::bulid()->append(it);
+            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Metering plate");
             if(cm::cn()) it.event_content = tr("总计量板异常");
             else it.event_content = "Abnormal total metering board";
-            Log_Core::bulid()->append(it);
-
-            int size = sizeof(mOpData->vol);
-            //memset(mOpData->vol, 0, size);
-            memset(mOpData->cur, 0, size);
-            memset(mOpData->pf, 0, size);
+            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
         }
     }
+
+    if(v < 3) {
+        int size = sizeof(mOpData->vol);
+        memset(mOpData->cur, 0, size);
+        memset(mOpData->pow, 0, size);
+        memset(mOpData->pf, 0, size);
+        mOpData->version = 0;
+
+        mOpData->size = mDev->cfg.nums.loopNum;
+        if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
+        //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);
+    }
+
 
     int t = 0; if(cm::runTime() > 48*60*60) {
         t = QRandomGenerator::global()->bounded(565);
@@ -81,9 +89,9 @@ bool OP_ARtu::loop_readData()
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
     QByteArray recv = transmit(cmd, sizeof(cmd)); //cout << recv.size();
     if((recv.size() == 62) && (recv.at(2) == addr)) {
-        res = loop_recvPacket(recv, mOpData);
-        if(res) loop_fillData();
+        res = loop_recvPacket(recv, mOpData);        
+        loop_setEndisable(res, mOpData->ens[0]); loop_fillData();
     } else if(recv.size()) cout << recv.size();
 
-    return loop_setEndisable(res, mOpData->ens[0]);
+    return res;
 }

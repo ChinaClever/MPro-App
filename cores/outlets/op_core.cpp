@@ -39,6 +39,6 @@ void OP_Core::run()
                 ret |= readData(i+1);
             }
         }  cm::mdelay(10);
-        if(ret) mDev->dtc.fault = 1;
+        if(!ret && (mDev->dtc.fault < 5)) mDev->dtc.fault += 1;
     }
 }
