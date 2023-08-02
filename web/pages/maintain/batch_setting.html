@@ -33,7 +33,7 @@
 						<div align="center">
 							<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
 							<button id = "lang_6" type ="button" onclick = "document.getElementById('inputkey').click()"></button> 
-							<input type = "text" value = "" id = "info" >
+							<input style=" width: 30%;" type = "text" value = "" id = "info" >
 							<label id  = "loading"></label>
 						</div><br/>
 						<div align = "center"><button  id = "lang_7" onclick = 'upload_data()'></button></div>
@@ -101,8 +101,10 @@
 				var url = '/upload_batch?offset=' + offset + '&name=' + encodeURIComponent(name);
 				var ok = true;
 				setStatus(
-					'Uploading ' + name + ', bytes ' + offset + '..' +
-					(offset + chunk.length) + ' of ' + data.length,id,ok);
+					// 'Uploading ' + name + ', bytes ' + offset + '..' +
+					// (offset + chunk.length) + ' of ' + data.length,id,ok);
+					'Uploading ' + name + ', bytes ' + 
+					(data.length/1024/1024).toFixed(2)+'M',id,ok);
 				fetch(url, opts)
 					.then(function(res) {
 					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
@@ -114,6 +116,8 @@
 					});
 			};
 			sendChunk(0);
+			document.getElementById('lang_6').disabled = true;//将按钮置灰防止多次点击
+			document.getElementById('lang_7').disabled = true;
 		};
 		function download(){
 			let url = window.location.origin;

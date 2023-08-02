@@ -33,7 +33,7 @@
 						<div align="center">
 							<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
 							<button id = "lang_6" type ="button" onclick = "document.getElementById('inputkey').click()"></button> 
-							<input type = "text" value = "" id = "info" >
+							<input style=" width: 30%;" type = "text" value = "" id = "info" >
 							<label id  = "loading"></label>
 						</div><br/>
 						<div align = "center"><button  id = "lang_7" onclick = 'upload_data()'></button></div>
@@ -106,10 +106,12 @@
 					method: 'POST',
 					body: r.result,
 					}).then(function(res) {
-					document.getElementById('loading').innerText = 'Uploaded ' + r.result.byteLength + ' bytes';
+					document.getElementById('loading').innerText = 'Uploaded ' + (r.result.byteLength /1024/1024).toFixed(2)+ 'M';
 					document.getElementById('loading').style.color = 'green';
 					});
 				};
+				document.getElementById('lang_6').disabled = true;//将按钮置灰防止多次点击
+				document.getElementById('lang_7').disabled = true;
 			}
 		}
 		function chosefile(){
