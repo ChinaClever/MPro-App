@@ -49,14 +49,14 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
             sEventItem it; it.event_type = tr("Metering plate");
             if(cm::cn()) it.event_content = tr("计量板连接正常");
             else it.event_content = "The connection of the metering board is normal";
-            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Metering plate");
             if(cm::cn()) it.event_content = tr("总计量板异常");
             else it.event_content = "Abnormal total metering board";
-            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         }
     }
 

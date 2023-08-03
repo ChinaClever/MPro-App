@@ -72,7 +72,7 @@ void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
             it.event_type = "Executive board communication";
             it.event_content = tr("No response from the execution board addr:%1 ").arg(addr);
         } rtuThrowMessage(it.event_type + it.event_content);
-        if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+        if(cm::runTime() > 5) Log_Core::bulid()->append(it);
     } cout << addr << cm::byteArrayToHexStr(cmd);;
 }
 
@@ -91,7 +91,7 @@ bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
             } else {
                 it.event_type = "Executive Board";
                 it.event_content = tr("Received abnormal communication data from execution board %1").arg(addr);
-            } if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+            } if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         } cout << cm::byteArrayToHexStr(array);
     } else cnt[addr] = 0;
     return ret;
@@ -129,7 +129,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
         } rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         mOpData->size = mDev->cfg.nums.boards[addr-1];
         //it.content +=cm::byteArrayToHexStr(recv);
-        if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+        if(cm::runTime() > 5) Log_Core::bulid()->append(it);
     }
 
     return res;
@@ -142,14 +142,14 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
             sEventItem it; it.event_type = tr("Output");
             if(cm::cn()) it.event_content = tr("执行板 %1 连接正常").arg(addr);
             else it.event_content = tr("Execution board %1 is connected normally").arg(addr);
-            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Output");
             if(cm::cn()) it.event_content = tr("执行板 %1 掉线").arg(addr);
             else it.event_content = tr("Execution board %1 dropped").arg(addr);
-            if(cm::runTime() > 30) Log_Core::bulid()->append(it);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         }
     }
 

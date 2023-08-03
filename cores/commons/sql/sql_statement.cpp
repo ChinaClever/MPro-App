@@ -70,7 +70,7 @@ bool Sql_Statement::remove(const QString &condition)
 {
     QString sql = "DELETE FROM %1 WHERE %2";
     bool ret = sqlQuery(sql.arg(tableName(), condition));
-    if(ret) {sql = "VACUUM "; ret = sqlQuery(sql);}
+    //if(ret) {sql = "VACUUM "; ret = sqlQuery(sql);}
     return ret;
 }
 
