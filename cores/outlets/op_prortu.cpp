@@ -99,12 +99,18 @@ bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
 
 bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
 {
-    bool res = false; int k = 6; waitForLock();
+    bool res = false; int k = 6; waitForLock(); QByteArray recv;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
+    int cnt = 1; if(cm::runTime() > 72*60*60) cnt = 3;
 
-    QByteArray recv = transmit(cmd, sizeof(cmd));
+    for(int i=0; i<cnt; ++i) {
+        recv = transmit(cmd, sizeof(cmd));
+        if(recv.size() == zRcvLen) break;
+        else cm::mdelay(1000);
+    }
+
     if(recv.size()) res = rtuLog(addr, recv);
     if((recv.size() == zRcvLen) && (recv.at(2) == addr) && res) {
         res = recvPacket(recv, it);

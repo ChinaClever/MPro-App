@@ -27,12 +27,14 @@ bool Cascade_Master::masterRead(uchar addr)
 
 void Cascade_Master::masterReadDevs()
 {
-    using namespace cm; int t = 100;
+    using namespace cm; int t = 100; bool ret;
     uint size = masterDev()->cfg.nums.slaveNum;
+    int cnt = 1; if(cm::runTime() > 24*60*60) cnt = 3;
     for(uint i=1; i<=size; ++i) {
-        bool ret = masterRead(i); // cout << ret << i;
-        if(!ret) {mdelay(1000); ret = masterRead(i);}
-        setEndisable(i, ret, devData(i)->offLine);
+        for (int k = 0; k < cnt; ++k) {
+            ret = masterRead(i);
+            if(ret) break; else mdelay(1500);
+        } setEndisable(i, ret, devData(i)->offLine);
         if(hasCmdWrite()) return;
     }
 

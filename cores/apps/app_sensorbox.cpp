@@ -105,10 +105,9 @@ void App_SensorBox::sensorBox_run()
         if(cm::masterDev()->cfg.param.sensorBoxEn) {
             bool ret = box_open();
             if(ret){
-                ret = box_readData();
-                if(!ret) ret = box_readData();
-                if(!ret) ret = box_readData();
-                if(!ret) box_offline();
+                for(int i=0; i<3; ++i) {
+                    ret = box_readData(); if(ret) break;
+                } if(!ret) box_offline();
             }
         } else {
             box_close();

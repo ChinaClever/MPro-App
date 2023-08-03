@@ -69,11 +69,11 @@ void App_Sensor::env_workDown()
     sEnvData *env = &cm::masterDev()->env;
     int *th = mFds; char t[32]; uint v[2];
     for(int i=0; i<2; ++i) {
-        if(th[i] >= 0) {
-            int ret = read(th[i], t, sizeof(t));
-            if(ret < 0 && env->isInsert[i]) {
-                cm::mdelay(1500); ret = read(th[i], t, sizeof(t));
-                if(ret < 0) {cm::mdelay(1500); ret = read(th[i], t, sizeof(t));}
+        int ret = 0; if(th[i] >= 0) {
+            for (int k = 0; k < 3; ++k) {
+                ret = read(th[i], t, sizeof(t));
+                if(ret < 0 && env->isInsert[i]) cm::mdelay(1500);
+                else break;
             }
 
             if(ret < 0) {
