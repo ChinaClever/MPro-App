@@ -41,7 +41,7 @@ void App_Sensor::env_initFun()
         QString cmd = fmd.arg(i);
         th[i] = open(cmd.toLocal8Bit().data(), O_RDONLY);
         if(th[i] < 0) cout << "env open err" << i << fmd;
-        //else mEnvIsRun = true;
+        else cm::mdelay(1000); // mEnvIsRun = true;
     }
 }
 
@@ -49,6 +49,7 @@ int App_Sensor::door_initFun()
 {
     int fd = open("/dev/door", O_RDONLY);
     if(fd < 0) cout << "open /dev/door failed";
+    else cm::mdelay(1000);
     return fd;
 }
 
@@ -69,7 +70,13 @@ void App_Sensor::env_workDown()
     int *th = mFds; char t[32]; uint v[2];
     for(int i=0; i<2; ++i) {
         if(th[i] >= 0) {
-            if(read(th[i], t, sizeof(t)) < 0) {
+            int ret = read(th[i], t, sizeof(t));
+            if(ret < 0 && env->isInsert[i]) {
+                cm::mdelay(1500); ret = read(th[i], t, sizeof(t));
+                if(ret < 0) {cm::mdelay(1500); ret = read(th[i], t, sizeof(t));}
+            }
+
+            if(ret < 0) {
                 env->isInsert[i] = 0;
             } else {
                 sscanf(t, "%d:%d", v, v+1);
