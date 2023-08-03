@@ -86,17 +86,16 @@ QString Set_Alarm::opContent(const sDataItem &index)
 
     if(cm::cn()) str += QStringLiteral("修改为:%1 %2");
     else str += QStringLiteral("modify to:%1 %2 ");
-    return str.arg((index.value-offset)/rate).arg(suffix);
+    return str.arg(((int)index.value-offset)/rate).arg(suffix);
 }
 
 void Set_Alarm::oplog(const sDataItem &it)
 {
     QString content = QStringLiteral("全部");
     if(!cm::cn()){content ="all ";}if(it.id) {
-        if(cm::cn()) content = QStringLiteral("第");
-        content = QString::number(it.id);
-    }
-    content += Alarm_Log::bulid()->alarmType(it);
+        if(cm::cn()) content = QStringLiteral("第%1个").arg(it.id);
+        else content = QString::number(it.id);
+    } content += Alarm_Log::bulid()->alarmType(it);
     content += opContent(it);
 
     sEventItem db;
