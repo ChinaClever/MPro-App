@@ -262,7 +262,7 @@
 					tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
 					tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
 					tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
-					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
+					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(1) + '</td>';
 					tbody += '</tr>';					
 				}else{
 					tbody += '<tr id = "tr'+ i + '">';
@@ -272,7 +272,7 @@
 					tbody += '<td id = "d'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i]).toFixed(2) + '</td>';
 					tbody += '<td id = "e'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i]).toFixed(3) +'</td>';
 					tbody += '<td id = "f'+ i + '">'+ parseFloat(pdu_data.pdu_data.output_item_list.pf[i]).toFixed(2) +'</td>';
-					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(2) + '</td>';
+					tbody += '<td id = "g'+ i + '">' + parseFloat(pdu_data.pdu_data.output_item_list.ele[i]).toFixed(1) + '</td>';
 					tbody += '</tr>';
 				}
 
@@ -285,7 +285,7 @@
 				document.getElementById('d'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.cur_value[i])).toFixed(2);
 				document.getElementById('e'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.pow_value[i])).toFixed(3);
 				document.getElementById('f'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.pf[i])).toFixed(2);
-				document.getElementById('g'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.ele[i])).toFixed(2);
+				document.getElementById('g'+i).innerHTML = (parseFloat(pdu_data.pdu_data.output_item_list.ele[i])).toFixed(1);
 				document.getElementById('c'+i).innerHTML = State[pdu_data.pdu_data.output_item_list.relay_state[i]];
 			}
 		}
