@@ -21,7 +21,7 @@ void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1; it.rated[i] = rated;
-        it.max[i] = it.crMax[i] = rated * 1.2;
+        it.max[i] = it.crMax[i] = rated * 1.25+10;
         it.min[i] = it.crMin[i] = rated * 0.8;
     }
 }

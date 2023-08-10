@@ -58,7 +58,7 @@ void App_Sensor::door_workDown()
     static int fd = door_initFun();
     int data[2]; if(fd < 0) return;
     sEnvData *env = &cm::masterDev()->env;
-    int ret = read(fd, data, sizeof(data));
+    int ret = read(fd, data, sizeof(data));    
     if(ret < 0) cout << "read /dev/door failed";
     else for(int i=0; i<2; ++i)  env->door[i] = data[i] +1;
     // close(fd); cout << data[0] +1 << data[1] +1;
