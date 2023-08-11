@@ -44,6 +44,11 @@ void OP_Updater::ota_reboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
+
+    QString dir = "/tmp/mass_storage/sda/ota_apps/ver.ini";
+    QString dir1 = "/tmp/mass_storage/sda1/ota_apps/ver.ini";
+    QString dir2 = "/tmp/mass_storage/sda2/ota_apps/ver.ini";
+    while(QFile::exists(dir) || QFile::exists(dir1) || QFile::exists(dir2)) cm::mdelay(1000);
     system("sync"); system("reboot");
 }
 
