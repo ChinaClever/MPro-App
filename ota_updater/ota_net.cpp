@@ -158,7 +158,7 @@ void Ota_Net::rebootSlot()
 bool Ota_Net::outletCheck(const QString &dir)
 {
     bool ret = false;
-    QStringList fs = File::entryList(dir+"/outlet");
+    QStringList fs = File::entryList(dir+"outlet");
     foreach (const auto it, fs) {
         if(it.contains(".bin"))  {
             throwMessage("outlet software updater"+it);

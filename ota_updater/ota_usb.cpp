@@ -82,8 +82,10 @@ void Ota_Usb::usb_otaSlot()
     } qDebug() << "USB:" + dir << ret; if(ret) {
         sOtaFile it; it.fc = 21; it.path = dir;
         ota_updater(it, DOta_Usb, true);
-    } system("umount /tmp/mass_storage/sda1");
-    system("umount /tmp/mass_storage/sda2");
-    system("umount /tmp/mass_storage/sda");
+    }
+
+    QString cmd = "umount " + dir;
+    QStringList fs = File::entryList(dir+"outlet");
+    if(fs.isEmpty()) system(cmd.toStdString().c_str());
     isUsbRun = false;
 }

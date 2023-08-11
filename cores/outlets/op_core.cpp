@@ -31,6 +31,7 @@ void OP_Core::run()
         bool ret = 0;
         int size = mDev->cfg.nums.boardNum; // cout << size;
         if(1 == mDev->cfg.param.devSpec) {
+            cmsWrite(175); ota_updates();
             ret |= loop_readData();
         } else if(size) {
             for(int i=0; i<size; ++i) {
