@@ -132,8 +132,8 @@ ushort Crc::Rtu(const QByteArray &array)
 void Crc::RtuAppend(QByteArray &array)
 {
     ushort crc = Rtu(array);
-    array.append(0xff & crc);
     array.append(crc >> 8);
+    array.append(0xff & crc);
 }
 
 uchar Crc::XorNum(uchar *buf, int len)
