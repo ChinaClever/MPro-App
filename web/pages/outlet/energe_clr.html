@@ -392,7 +392,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "a'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "b'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
+				tbody += '<td id = "c'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(1) +'</td>';
 				tbody += '<td id = "d'+ i + '"></td>';
 				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "f'+ i + '"></input></td>';
 				tbody += '<td><input id = "e'+ i + '" type = "button" onclick = "BtnClick(this)" value="'+lang[10][language]+'"></input></td>';
@@ -415,7 +415,7 @@
 		}
 		function PutData(){
 				for(let i = 0;i < output_num;i++){
-					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+					document.getElementById('c' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(1);
 				}
 		}
 		setInterval(function(){
