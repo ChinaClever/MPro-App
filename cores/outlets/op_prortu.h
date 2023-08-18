@@ -1,12 +1,12 @@
-#ifndef OP_ZRTU_H
-#define OP_ZRTU_H
+#ifndef OP_PRORTU_H
+#define OP_PRORTU_H
 
-#include "op_zctrl.h"
+#include "op_proctrl.h"
 
-class OP_ZRtu : public OP_ZCtrl
+class OP_ProRtu : public OP_ProCtrl
 {
 public:
-    explicit OP_ZRtu(QObject *parent = nullptr);
+    explicit OP_ProRtu(QObject *parent = nullptr);
 
 protected:
     bool readData(int addr) override;
@@ -23,4 +23,4 @@ private:
     QByteArray m_array[DEV_NUM];
 };
 
-#endif // OP_ZRTU_H
+#endif // OP_PRORTU_H

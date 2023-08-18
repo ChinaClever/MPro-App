@@ -298,9 +298,9 @@
 		}
 		function SetData(btn) {
 			if(0 == language){
-				var retVal = confirm("请确认是否选择此时区!");	
+				var retVal = confirm("请确认是否保存此次修改！");	
 			}else{
-				var retVal = confirm("Please confirm whether to select this time zone！");
+				var retVal = confirm("Please confirm whether to save this modification！");
 			}
 			if(retVal ==true){
 				for (let i = 1; i < ntp_info.length; i++) {
@@ -365,9 +365,9 @@
 		function Set() {
 			var sel = 0;
 			if(0 == language){
-				var retVal = confirm("请确认是否保存此次修改！");	
+				var retVal = confirm("该功能仅在PDU接入至互联网时可用！");	
 			}else{
-				var retVal = confirm("Please confirm whether to save this modification！");
+				var retVal = confirm("This function is only available when the PDU is connected to the internet！");
 			}
 			if (retVal ==true) {
 				pdu_cfg.setCfg(43, 5, 0, 0, addr);
@@ -403,7 +403,7 @@
 			tbody += '<tr><td id="lang_3" ></td>';
 			tbody += '<td  id ="DevTime" ></td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><span><input id = "NtpServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input></span><span style="margin-left:97px"><input id="lang_7" type = "button" style ="width:15%"  onclick = "Set()"></input></span>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
 			tbody += '<td><div><select class ="devname" id ="ms" style = "width:50%;margin-left: 2px" onchange = "chose_time_zone(this);"></select></div>';
@@ -417,7 +417,7 @@
 				}
 			}
 			tbody += '</ul></div></td></tr>';
-			tbody += '<tr><td><input id="lang_7" type = "button" style ="width:65%"  onclick = "Set()"></input></td></tr>';
+			// tbody += '<tr><td><input id="lang_7" type = "button" style ="width:65%"  onclick = "Set()"></input></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';

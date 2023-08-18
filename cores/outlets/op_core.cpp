@@ -6,7 +6,7 @@
 #include "op_core.h"
 
 OP_Core::OP_Core(QObject *parent)
-    : OP_ZRtu{parent}
+    : OP_ProRtu{parent}
 {
     qint32 baudRate = QSerialPort::Baud19200;
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
@@ -31,6 +31,7 @@ void OP_Core::run()
         bool ret = 0;
         int size = mDev->cfg.nums.boardNum; // cout << size;
         if(1 == mDev->cfg.param.devSpec) {
+            cmsWrite(175); ota_updates();
             ret |= loop_readData();
         } else if(size) {
             for(int i=0; i<size; ++i) {
@@ -39,6 +40,6 @@ void OP_Core::run()
                 ret |= readData(i+1);
             }
         }  cm::mdelay(10);
-        if(ret) mDev->dtc.fault = 1;
+        if(!ret && (mDev->dtc.fault < 5)) mDev->dtc.fault += 1;
     }
 }

@@ -18,6 +18,7 @@ private:
     int cmd_updater(const QString &fn, int bit);
     bool up_rootfs(const QString &path);
     bool rootfsExists(const QString &path);
+    bool outletCheck(const QString &dir);
 
 private slots:
     void rebootSlot();
@@ -26,6 +27,7 @@ private slots:
     void throwMessage(const QString &msg) {qDebug().noquote() << msg; mDtls->throwMessage(msg);}
 
 private:
+    int mLastError=0;
     Dtls_Recver *mDtls;
 
 protected:

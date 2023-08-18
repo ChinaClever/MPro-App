@@ -52,7 +52,7 @@ QString Integr_JsonRecv::getString(const QByteArray &msg, const QString &key)
 
 double Integr_JsonRecv::getData(const QJsonObject &object, const QString &key)
 {
-    double ret = -1;
+    double ret = -255;
     QJsonValue value = getValue(object, key);
     if(value.isDouble()) {
         ret = value.toDouble();
@@ -134,8 +134,10 @@ bool Integr_JsonRecv::dataItem(const QString key, const QJsonObject &object, sDa
         res = getData(obj, "topic"); if(res >= 0) it.topic = res;
         res = getData(obj, "subtopic"); if(res >= 0) it.subtopic = res;
         res = getData(obj, "id"); if(res >= 0) it.id = res;
-        res = getData(obj, "value"); if(res >= 0){res *= cm::decimal(it); it.value = res;}
-        it.txType = DTxType::TxJson;
+        res = getData(obj, "value"); if(res >= -40){res *= cm::decimal(it);
+            if((DType::Env == it.type) && (DTopic::Tem==it.topic))
+                if(it.subtopic > DSub::Size && it.subtopic < DSub::EnAlarm) res += 400;
+            it.value = res;} it.txType = DTxType::TxJson;
     } else ret = false;
     return ret;
 }
@@ -191,6 +193,26 @@ bool Integr_JsonRecv::pduCfgSet(const QJsonObject &object)
     return ret;
 }
 
+bool Integr_JsonRecv::pduRelayCtrl(const QJsonObject &object)
+{
+    sDataItem it; bool ret = true;
+    QString key = "pduRelaysCtrl";
+    it.topic = DTopic::Relay;
+    it.subtopic = DSub::Relays;
+
+    if (object.contains(key)) {
+        QJsonObject obj = getObject(object, key);
+        double res = getData(obj, "addr"); if(res >= 0) it.addr = res;
+        res = getData(obj, "start"); if(res >= 0) it.type = res;
+        res = getData(obj, "num"); if(res >= 0) it.id = res;
+        it.value =  getValue(obj, "on").toInt();
+        it.txType = DTxType::TxJson;
+        emit recvSetSig(it);
+    }else ret = false;
+
+    return ret;
+}
+
 QVariant Integr_JsonRecv::pduCfgGet(const QJsonObject &object)
 {
     QString key = "pduCfgGet";
@@ -206,6 +228,7 @@ bool Integr_JsonRecv::analyticalData(const QJsonObject &object)
     //bool ret = versionNumber(object); //if(ret) {
     bool ret = pduDataSet(object);
     if(!ret) ret = pduCfgSet(object);
+    if(!ret) ret = pduRelayCtrl(object);
 
     return ret;
 }

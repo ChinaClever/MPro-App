@@ -63,6 +63,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
 {
     double rate = 1;
     QString str, suffix;
+    int offset = 0;
 
     switch (index.topic) {
     case DTopic::Vol: rate = COM_RATE_VOL; suffix = "V"; break;
@@ -70,7 +71,7 @@ QString Set_Alarm::opContent(const sDataItem &index)
     case DTopic::Pow: rate = COM_RATE_POW; suffix = "kW"; break;
     case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C"; break;
     case DTopic::Hum: rate = COM_RATE_HUM; suffix = "%";break;
-    }
+    } if(DTopic::Tem == index.topic) offset = 400;
 
     switch (index.subtopic) {
     case DSub::Rated: if(cm::cn()) str = QStringLiteral("额定值"); else str = "rated value "; break;
@@ -85,17 +86,16 @@ QString Set_Alarm::opContent(const sDataItem &index)
 
     if(cm::cn()) str += QStringLiteral("修改为:%1 %2");
     else str += QStringLiteral("modify to:%1 %2 ");
-    return str.arg(index.value/rate).arg(suffix);
+    return str.arg(((int)index.value-offset)/rate).arg(suffix);
 }
 
 void Set_Alarm::oplog(const sDataItem &it)
 {
     QString content = QStringLiteral("全部");
     if(!cm::cn()){content ="all ";}if(it.id) {
-        if(cm::cn()) content = QStringLiteral("第");
-        content = QString::number(it.id);
-    }
-    content += Alarm_Log::bulid()->alarmType(it);
+        if(cm::cn()) content = QStringLiteral("第%1个").arg(it.id);
+        else content = QString::number(it.id);
+    } content += Alarm_Log::bulid()->alarmType(it);
     content += opContent(it);
 
     sEventItem db;

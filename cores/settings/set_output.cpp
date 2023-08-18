@@ -104,9 +104,19 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     if((0==it->disabled[id]) && (unit.value < 3)) { /* || (unit.txType == DTxType::TxWeb)*/
-        if(id < it->size) {OP_Core::bulid()->relayCtrl(unit.id, unit.value);
-            if(unit.value) it->cnt[id] += 1;
-            it->sw[id] = unit.value;
+        if(id < it->size) { OP_Core::bulid()->relayCtrl(unit.id, unit.value);
+            if(unit.value) {
+                if(unit.id) {
+                    if(unit.value == sRelay::Reset) it->cnt[id] += 1;
+                    else if(it->sw[id] && (unit.txType != DTxType::TxSnmp)) return false;
+                    else it->cnt[id] += 1;
+                } else {
+                    for(int i=0; i<it->size; ++i) {
+                        if(unit.value == sRelay::Reset) {if(it->sw[id]) it->cnt[i] += 1;}
+                        else if(0==it->sw[id]) it->cnt[i] += 1;
+                    }
+                }
+            } if(unit.value < sRelay::Reset) it->sw[id] = unit.value;
         } else ret = false;
     } else ret = false;
 
@@ -117,10 +127,10 @@ bool Set_Output::outputsCtrl(const sDataItem &unit)
 {
     sRelayUnit *it = &(cm::masterDev()->output.relay);
     bool ret = false; int start = unit.type-1; int end = start + unit.id;
-    if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);    
+    //if(unit.type == DType::Dual) it = &(cm::masterDev()->dual.relay);
     for(int i=start; i<end; ++i) {
         if((0==it->disabled[i]) && (unit.value < 2) && (i < it->size)){ /* || (unit.txType == DTxType::TxWeb)*/
-            ret = true; if(unit.value) it->cnt[i] += 1;
+            ret = true; if(unit.value & !it->sw[i]) it->cnt[i] += 1;
         } else {ret = false; break;}
     }
 
@@ -141,7 +151,7 @@ bool Set_Output::groupCtrl(const sDataItem &unit)
     sRelayUnit *relay = &(cm::masterDev()->output.relay);
     foreach (const auto &i, ids){
         if(relay->disabled[i]) ids.removeOne(i);
-        else if(unit.value) relay->cnt[i] += 1;
+        else if(unit.value && !relay->sw[i]) relay->cnt[i] += 1;
     }
 
     sRelayUnit *it = &(cm::masterDev()->group.relay);
@@ -201,6 +211,7 @@ QString Set_Output::grouping(int addr, int id)
     QString res; if(addr == 0xff) addr = 0;
     QList<int> ids = Data_Core::bulid()->outletByGroup(id-1, addr);
     foreach(auto &i, ids) res += QString::number(i+1) +";";
+    //cout << addr << id << res;
     return res;
 }
 
@@ -266,6 +277,7 @@ bool Set_Output::groupingSet(sCfgItem &it, const QVariant &v)
     foreach(auto &str, strs) {
         int id = str.toInt(); if(id) id -= 1; ptr[id] = 1;
     } if(strs.size()) Cfg_Core::bulid()->groupWrite(); else ret = false;
+    //cout << it.type << it.fc << v;
 
     return ret;
 }

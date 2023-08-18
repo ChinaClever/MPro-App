@@ -21,7 +21,7 @@ void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1; it.rated[i] = rated;
-        it.max[i] = it.crMax[i] = rated * 1.2;
+        it.max[i] = it.crMax[i] = rated * 1.25+10;
         it.min[i] = it.crMin[i] = rated * 0.8;
     }
 }
@@ -67,14 +67,16 @@ void Cfg_AlarmInitial::initTgObjData(sTgObjData &it)
 void Cfg_AlarmInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
-    setAlarmUnit(it.tem, size, 60*COM_RATE_TEM);
+    setAlarmUnit(it.tem, size, 100*COM_RATE_TEM);
     setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
 
     for(int i=0; i<size; ++i) {
-        it.tem.crMax[i] = 60*COM_RATE_TEM;
+        it.tem.min[i] = 40*COM_RATE_TEM;
+        it.tem.crMin[i] = 40*COM_RATE_TEM;
+        it.tem.crMax[i] = 100*COM_RATE_TEM;
         it.hum.crMax[i] = 99*COM_RATE_HUM;
 
-        it.tem.rated[i] = 100*COM_RATE_TEM;
+        it.tem.rated[i] = 150*COM_RATE_TEM;
         it.hum.rated[i] = 100*COM_RATE_HUM;
     }
 }

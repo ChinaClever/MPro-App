@@ -1,6 +1,6 @@
 #ifndef APP_SCRIPT_H
 #define APP_SCRIPT_H
-
+#define USE_PRO 1
 #include "app_netaddr.h"
 #define SCRIPT_SIZE 20
 struct sScriptCfg {
@@ -23,10 +23,13 @@ private:
     void script_readProcess();
 
 private:
-    //QMap<int, QProcess *> mMap;
+#if USE_PRO
+    QMap<int, QProcess *> mMap;
+#else
     QTimer *mScriptTimer;
     QMap<int, FILE *> mMap;
     QMap<int, QString> mCmdMap;
+#endif
 };
 
 #endif // APP_SCRIPT_H

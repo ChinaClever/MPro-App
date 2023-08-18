@@ -42,6 +42,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         json.insert("addr", addr);
         devData(dev, "pdu_data", json);
         json.insert("status", dev->status);
+        json.insert("uuid", dev->cfg.uut.uuid);
         uutInfo(dev->cfg.uut, "uut_info", json);
 
         if(dc > 1) {
@@ -49,12 +50,13 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             faultCode(dev, json);
             devInfo(dev->cfg, "pdu_info", json);
             verInfo(dev->cfg.vers, "pdu_version", json);
-            if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             if(dc > 2) {loginPermit(json); outputVol(json);}
+            if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             //json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
         }
         QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
+        json.insert("pdu_alarm", Alarm_Log::bulid()->getCurrentAlarm(addr+1));
         json.insert("version", JSON_VERSION);
     } else {
         cout << dev->offLine;
@@ -83,11 +85,11 @@ void Integr_JsonBuild::saveJsons()
     for(int i=0; i<=size; ++i) saveJson(i);
 }
 
-void Integr_JsonBuild::arrayAppend(const uint *ptr, int size,
-                                   const QString &key, QJsonObject &json, double r)
+void Integr_JsonBuild::arrayAppend(const uint *ptr, int size, const QString &key,
+                                   QJsonObject &json, double r, int offset)
 {
     QJsonArray array;
-    for(int i=0; i<size; ++i) array.append(ptr[i]/r);
+    for(int i=0; i<size; ++i) array.append(ptr[i]?((int)ptr[i]-offset)/r:0);
     if(array.size()) json.insert(key, QJsonValue(array));
 }
 
@@ -126,7 +128,8 @@ void Integr_JsonBuild::outputVol(QJsonObject &json)
 void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJsonObject &json, double r)
 {
     int size = it.size; bool dc = false;
-    arrayAppend(it.value, size, key+"_value", json, r);
+    int offset = 0; if(key == "tem") offset = 400;
+    arrayAppend(it.value, size, key+"_value", json, r, offset);
     arrayAppend(it.alarm, size, key+"_alarm_status", json);
 
     if(mDataContent == 0){
@@ -134,12 +137,12 @@ void Integr_JsonBuild::alarmUnit(const sAlarmUnit &it, const QString &key, QJson
     } else if(mDataContent > 1) dc = true;
 
     if(dc) {
-        arrayAppend(it.rated, size, key+"_rated", json, r);
+        arrayAppend(it.rated, size, key+"_rated", json, r, offset);
+        arrayAppend(it.min, size, key+"_alarm_min", json, r, offset);
+        arrayAppend(it.max, size, key+"_alarm_max", json, r, offset);
+        arrayAppend(it.crMin, size, key+"_warn_min", json, r, offset);
+        arrayAppend(it.crMax, size, key+"_warn_max", json, r, offset);
         arrayAppend(it.en, size, key+"_alarm_enable", json);
-        arrayAppend(it.min, size, key+"_alarm_min", json, r);
-        arrayAppend(it.max, size, key+"_alarm_max", json, r);
-        arrayAppend(it.crMin, size, key+"_warn_min", json, r);
-        arrayAppend(it.crMax, size, key+"_warn_max", json, r);
         arrayAppend(it.hda, size, key+"_hda_en", json);
     }
 }

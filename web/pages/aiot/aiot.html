@@ -19,7 +19,7 @@
 						<div class = "panel panel-default">
 							<div class ="panel-heading">
 								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
-								<span id="lang_1"></span>
+								<span id="lang_1"></span><span style="padding-left: 35%;"><button id="lang_15" onclick="readonlyset(this);"></button></span>
 							</div>
 						</div>
 					</div>
@@ -36,12 +36,10 @@
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let addr = 0;
+		let read = 1;
 		let language;		
 		setTimeout(() => {
 			pdu_cfg.alotCfg();
-			// for(let i = 0;i<8;i++){
-			// 	pdu_cfg.getCfg(51,i,0,0);
-			// }	
 		}, 400);
 		let lang = new Array();
 		let id_name = new Array("enable","host_url","product_Key","device_name","device_secret","update","state");
@@ -62,10 +60,10 @@
 			lang[1] = ["物联网服务","IoT Services","","",""];
 			lang[2] = ["物联网设置","IoT Settings","","",""];
 			lang[3] = ["AloT开启:","AloT on:","","",""];
-			lang[4] = ["HostUrl:","HostUrl:","","",""];
-			lang[5] = ["ProductKey:","ProductKey:","","",""];
-			lang[6] = ["DeviceName:","DeviceName:","","",""];
-			lang[7] = ["DeviceSecret:","DeviceSecret:","","",""];
+			lang[4] = ["云服务器:","HostUrl:","","",""];
+			lang[5] = ["产品识别码:","ProductKey:","","",""];
+			lang[6] = ["设备名称:","DeviceName:","","",""];
+			lang[7] = ["设备密钥:","DeviceSecret:","","",""];
 			lang[8] = ["连接状态:","Connection status:","","",""];
 			lang[9] = ["更新频率(S):","Update frequency(S):","","",""];
 			lang[10] = ["立即生效","Effective immediately","","",""];
@@ -73,6 +71,8 @@
 			lang[12] = ["启用","Enable","","",""];
 			lang[13] = ["已连接","Connected","","",""];
 			lang[14] = ["未连接","Disconnected","","",""];
+			lang[15] = ["阅读模式", "Reading mode", "", "", ""];
+			lang[16] = ["设置模式", "Setting mode", "", "", ""];
 
 			for(let i = 0;i < 2;i++){
 				enable[i] =  lang[11+i][language] ;
@@ -86,13 +86,14 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			document.getElementById("lang_10").value  = lang[10][language];
+			document.getElementById("lang_15").innerHTML  = lang[15][language];
 		}
 
 		setInterval(function () {
 			pdu_cfg.alotCfg();
 			ParseData();
 			read_data();
-			lang_fun();
+			//lang_fun();
 			show_connect_data();
 		 	}, 2500);
 		function read_data(){
@@ -112,6 +113,7 @@
 			$('.alot').html(buildTable());
 			lang_fun();
 			showdata();
+			ModeSet();
 		},500);
 		function show_connect_data(){
 			 document.getElementById(id_name[6]).innerHTML = alot_data[7];//连接状态
@@ -136,6 +138,7 @@
 			if(top.login_permit_ != 0){
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
+				document.getElementById("lang_15").style.display="none";
 			}else{
 			}
 		}
@@ -173,6 +176,49 @@
 				pdu_cfg.setCfg(51,8,0,0,addr);
 			}else{}
 		}
+		function readonlyset(ros) {
+				if (read === 1) {
+					read = 0;
+					ros.style.backgroundColor = 'red';
+					// if(language == 0){
+					// 	alert("所有可编辑栏位在编辑完毕后进入下一栏位编辑时都将自动保存生效！");
+					// }else{
+					// 	alert("All editable fields will automatically save and take effect when entering the next field for editing after editing!");
+					// }
+					ros.innerHTML = lang[16][language];
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						if(alot_data[1] == "0"){//禁用模式则输入框还是置灰
+						}else{
+							iptname[i].disabled = false;
+						}
+						
+					}
+					document.getElementById("lang_10").disabled = false;
+					document.getElementById("enable").disabled = false;
+				}
+				else {
+					read = 1;
+					ros.style.backgroundColor = '';
+					ros.innerHTML = lang[15][language];
+					var iptname = document.getElementsByTagName("input");
+					for (var i = 0; i < iptname.length; i++) {
+						iptname[i].disabled = true;
+					}
+					document.getElementById("lang_10").disabled = true;
+					document.getElementById("enable").disabled = true;
+				}
+		}
+		function ModeSet(modesel){
+			var iptname = document.getElementsByTagName("input");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
+			document.getElementById("lang_10").disabled = true;
+			document.getElementById("enable").disabled = true;
+		}
+
 		function buildTable() {
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id  = "lang_2"></td>\

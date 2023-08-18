@@ -193,10 +193,10 @@ sDevData *cm::masterDev()
 #endif
 const QDateTime cm::buildDateTime()
 {
-   QString dateTime;
-   dateTime += __DATE__; dateTime += __TIME__;
-   dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
-   return QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
+    QString dateTime;
+    dateTime += __DATE__; dateTime += __TIME__;
+    dateTime.replace("  "," 0");//注意" "是两个空格，用于日期为单数时需要转成“空格+0”
+    return QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
 }
 
 void cm::buildDateTime(char *ptr)
@@ -205,26 +205,36 @@ void cm::buildDateTime(char *ptr)
     qstrcpy(ptr, str.toUtf8().data());
 }
 
-
 double cm::decimal(const sDataItem &it)
 {
     double res = 1; if(DTopic::Relay == it.topic) res = 1;
     else if((it.subtopic > DSub::Size) && (it.subtopic <  DSub::EnAlarm))
     {
         switch (it.topic) {
-            case DTopic::Vol: res = COM_RATE_VOL; break;
-            case DTopic::Cur: res = COM_RATE_CUR; break;
-            case DTopic::Pow: res = COM_RATE_POW; break;
-            case DTopic::Ele: res = COM_RATE_ELE; break;
-            case DTopic::PF: res = COM_RATE_PF; break;
-            case DTopic::ArtPow: res = COM_RATE_POW; break;
-            case DTopic::LineVol: res = COM_RATE_VOL; break;
-            case DTopic::ReactivePow: res = COM_RATE_POW; break;
-            case DTopic::Tem: res = COM_RATE_TEM; break;
-            case DTopic::Hum: res = COM_RATE_HUM; break;
+        case DTopic::Vol: res = COM_RATE_VOL; break;
+        case DTopic::Cur: res = COM_RATE_CUR; break;
+        case DTopic::Pow: res = COM_RATE_POW; break;
+        case DTopic::Ele: res = COM_RATE_ELE; break;
+        case DTopic::PF: res = COM_RATE_PF; break;
+        case DTopic::ArtPow: res = COM_RATE_POW; break;
+        case DTopic::LineVol: res = COM_RATE_VOL; break;
+        case DTopic::ReactivePow: res = COM_RATE_POW; break;
+        case DTopic::Tem: res = COM_RATE_TEM; break;
+        case DTopic::Hum: res = COM_RATE_HUM; break;
             //default: cout << it.topic; break;
-            } if(it.subtopic == DSub::Alarm) res = 1;
+        } if(it.subtopic == DSub::Alarm) res = 1;
     }
 
     return res;
+}
+
+uint cm::adcVol()
+{
+    QString cmd = "cmd_adc get_voltage 1";
+    uint vol = 0; if(QFile::exists("/usr/bin/cmd_adc")) {
+        QString res = cm::execute(cmd).remove("\n"); //qDebug() << "ADC voltage" << res;
+        vol = res.remove("channel 1:adc sample voltage = ").toUInt() * 18.4;
+        masterDev()->cfg.param.supplyVol = vol; qDebug() << "ADC voltage" << vol;
+    }
+    return vol;
 }

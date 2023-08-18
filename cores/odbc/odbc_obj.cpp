@@ -39,7 +39,7 @@ bool Odbc_Obj::db_open()
 
         ret = db->open();
         if(!ret) ret = db->open();
-        if(ret) qDebug() << "odbc connect ok" << cfg.okCnt++;
+        if(ret) cfg.okCnt++; // qDebug() << "odbc connect ok" <<
         else {cfg.errCnt++, throwError(ODBC_NAME, db->lastError());}
         cfg.status = ret;
     }
@@ -68,7 +68,8 @@ bool Odbc_Obj::db_commit()
     bool ret = true; if (mDb.driver()->hasFeature(QSqlDriver::Transactions)) {
         ret = mDb.commit(); if(!ret) mDb.rollback();
     } else {
+        cout << ret;
         //ret = mDb.exec("COMMIT"); if(!ret) sqlQuery("ROLLBACK");
-    } isDbRun = false;
+    } isDbRun = false; cm::mdelay(143);
     return ret;
 }

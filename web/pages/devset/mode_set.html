@@ -50,6 +50,7 @@
 		let lang = new Array();
 		var dev_name =new Array();
 		let mode_set = new Array();
+		let rack_set = new Array();
 		let sensor_set = new Array();
 		let opt_val = new Array();
 		let sel_len = new Array();
@@ -57,6 +58,7 @@
 		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
 		let slave_num1 = 0;
 		let pdu_data;
+		let rack_stu;
 		let device_num = 10;
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -64,6 +66,7 @@
 			output_num = pdu_data.pdu_info.output_num;
 			slave_num = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
+			rack_stu = pdu_data.pdu_info.dev_mode;
 			let k = 0;
 			for(let i = 0;i<output_num;i++){
 				output_info_[i] = new Array();
@@ -80,6 +83,7 @@
 			let pdu_data = JSON.parse(DataString);
 			slave_num1 = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
+			rack_stu = pdu_data.pdu_info.dev_mode;
 		}
 		ParseData();
 		LangInit();
@@ -100,7 +104,7 @@
 			lang[11] = ["启用","Enable","","",""];
 			lang[12] = ["禁用","Disable","","",""];
 			lang[13] = ["启用","Enable","","",""];
-			lang[14] = ["机架","Rack","","",""];
+			lang[14] = ["机架功能：","Rack function:","","",""];
 			lang[15] = ["RTU","RTU","","",""];
 			lang[16]  = ["主机", "Master", "", "", ""];
 			lang[17]  = ["副机", "Slave", "", "", ""];
@@ -112,9 +116,13 @@
 			lang[23] = ["传感器盒子:","Sensor box","","",""];
 			lang[24] = ["禁用","Disable","","",""];
 			lang[25] = ["启用","Enable","","",""];
+			lang[26] = ["禁用","Disable","","",""];
+			lang[27] = ["启用","Enable","","",""];
 
-			for(let j = 0;j < 3;j++){
+
+			for(let j = 0;j < 2;j++){
 				mode_set[j] = lang[12 +j][language];
+				rack_set[j] = lang[26 +j][language];
 			}
 			for(let j = 0;j < 2;j++){
 				sensor_set[j] = lang[24 +j][language];
@@ -133,6 +141,7 @@
 			for(let i = 1;i < 9; i++){
 				document.getElementById("lang_" + i).innerHTML = lang[i][language];
 			}
+			document.getElementById("lang_14").innerHTML = lang[14][language];
 			document.getElementById("lang_21").innerHTML = lang[21][language];
 			document.getElementById("lang_23").innerHTML = lang[23][language];
 		}
@@ -157,12 +166,11 @@
 				for(var i = 0; i<iptname.length;i++){
 					iptname[i].disabled = false;
 				}
-				document.getElementById("data_len").disabled = false;
-				document.getElementById("buz").disabled = false;
-				document.getElementById("addr").disabled = false;
-				document.getElementById("mode").disabled = false;
-				document.getElementById("sensor").disabled = false;
-
+				var iptname = document.getElementsByTagName("select");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = false;
+				}
 			}
 			else{
 				read = 1;
@@ -172,11 +180,18 @@
 				for(var i = 0; i<iptname.length;i++){
 					iptname[i].disabled = true;
 				}
-				document.getElementById("data_len").disabled = true;
-				document.getElementById("buz").disabled = true;
-				document.getElementById("addr").disabled = true;
-				document.getElementById("mode").disabled = true;
-				document.getElementById("sensor").disabled = true;
+				var iptname = document.getElementsByTagName("select");
+				for(var i = 0; i<iptname.length;i++)
+				{
+					iptname[i].disabled = true;
+				}
+				// document.getElementById("data_len").disabled = true;
+				// document.getElementById("buz").disabled = true;
+				// document.getElementById("addr").disabled = true;
+				// document.getElementById("mode").disabled = true;
+				// document.getElementById("sensor").disabled = true;
+				// document.getElementById("rack_set").disabled = true;
+
 			}
 		}
 		function ModeSet(modesel){
@@ -185,11 +200,11 @@
 			{
 				iptname[i].disabled = true;
 			}
-			document.getElementById("data_len").disabled = true;
-			document.getElementById("buz").disabled = true;
-			document.getElementById("addr").disabled = true;
-			document.getElementById("mode").disabled = true;
-			document.getElementById("sensor").disabled = true;
+			var iptname = document.getElementsByTagName("select");
+			for(var i = 0; i<iptname.length;i++)
+			{
+				iptname[i].disabled = true;
+			}
 		}
 		setTimeout(function(){
 			$('.mode_set').html(BuildTableMode());
@@ -206,18 +221,29 @@
 						document.getElementById(id_val1[1]).disabled = true;
 						document.getElementById("slave").disabled = true;
 						document.getElementById("slave_").style.display = "none";
+						document.getElementById("rack").style.display = "none";
 					}else{
 						document.getElementById(id_val1[1]).disabled = false;
 						document.getElementById("slave").disabled = false;
 						if(mode_data[1] != 0){
 							document.getElementById("slave_").style.display = "none";
+							document.getElementById("rack").style.display = "none";
 						}else{
 							document.getElementById("slave_").style.display = "";
+							document.getElementById("rack").style.display = "";
 						}
 					}
 				}
-				document.getElementById(id_val1[i]).value = mode_data[i];
-				document.getElementById(id_val1[i]).value = mode_data[i];
+				if(i == 0 && mode_data[i] > 0){//机架
+					document.getElementById(id_val1[i]).value = 1;	
+				}else{
+					document.getElementById(id_val1[i]).value = 0;
+				}
+				if(i > 0){
+					document.getElementById(id_val1[i]).value = mode_data[i];	
+				}
+				// document.getElementById(id_val1[i]).value = mode_data[i];
+				// document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
 				document.getElementById("sensor").value = sensor_data;
 			}
@@ -226,6 +252,11 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}else{
+			}
+			if(rack_stu == 2){
+				document.getElementById("rack_sel").value = 1;				
+			}else{
+				document.getElementById("rack_sel").value = 0;	
 			}
 		}
 		function SetData(btn){
@@ -255,6 +286,25 @@
 			}else{
 				ShowData();
 			}
+		}
+		function SetData_Rack(btn){
+			if(0 == language){
+				if(btn.value == "1"){
+					alert("启用机架功能后，默认每架机柜内A、B路PDU进行两两级联，通过A、B路两条PDU端口级监测功能获取服务器A、B路电源负载分担情况。注：同一台服务器的A、B路电源分别插在A、B路PDU相同编号的输出位上！")
+				}
+			}else{
+				if(btn.value == "1"){
+					alert("After enabling the rack function, by default, the A and B PDUs in each cabinet are cascaded in pairs, and the load sharing of server A and B power sources is obtained through the port level monitoring function of the A and B PDUs. Note: The A and B power supplies of the same server are respectively plugged into the output bits of the A and B PDUs with the same number！")
+				}
+			}
+			pdu_cfg.setCfg(cfg,3,parseInt(btn.value)+1,0,addr);
+
+			setTimeout(function(){
+				PduMetaData.meta_workDown();
+				btn.blur();
+				FlashHtml();
+			},1500);
+		
 		}
 		function SetData_other(btn){
 			let mds_data = 0;
@@ -318,6 +368,14 @@
 			tbody += '<tr id ="slave_" style ="display:none;"><td id = "lang_5"></td>';
 			tbody += '<td><input id = "slave" style ="width:24.5%" type = "text" onchange = "Set(this)" oninput = "if(value>9){value=9}" placeholder="1~10"></input>';
 			tbody += '</td></tr>';
+
+			tbody += '<tr id="rack"><td  id = "lang_14"></td>';
+			tbody += '<td><select id="rack_sel" onchange ="SetData_Rack(this)">';
+			for(var i = 0; i<rack_set.length;i++){
+				tbody +='<option value ="'+i+'">'+rack_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'

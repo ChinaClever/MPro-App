@@ -3,22 +3,22 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "op_zrtu.h"
+#include "op_prortu.h"
 #include "log_core.h"
 
-OP_ZRtu::OP_ZRtu(QObject *parent) : OP_ZCtrl{parent}
+OP_ProRtu::OP_ProRtu(QObject *parent) : OP_ProCtrl{parent}
 {
 
 }
 
-void OP_ZRtu::rtuThrowMessage(const QString &msg)
+void OP_ProRtu::rtuThrowMessage(const QString &msg)
 {
     QString str = "rtu outlet " + msg;
     QString ip = cm::dataPacket()->ota.host;
     if(ip.size()) mNet->writeDatagram(str.toUtf8(), QHostAddress(ip), 21437);
 }
 
-bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
+bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
 {
     bool ret = false; int op = 14;
     uchar *ptr = (uchar *)array.data();
@@ -62,21 +62,21 @@ bool OP_ZRtu::recvPacket(const QByteArray &array, sOpIt *obj)
     return ret;
 }
 
-void OP_ZRtu::hardwareLog(int addr, const QByteArray &cmd)
+void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
 {
     if(m_array[addr] != cmd) {
         m_array[addr] = cmd; sEventItem it;
         if(cm::cn()) {it.event_type = tr("执行板通讯");
-            it.event_content = tr("执行板无响应 addr:%1 ").arg(addr+1);
+            it.event_content = tr("执行板无响应 地址:%1 ").arg(addr);
         } else {
             it.event_type = "Executive board communication";
-            it.event_content = tr("No response from the execution board addr:%1 ").arg(addr+1);
+            it.event_content = tr("No response from the execution board addr:%1 ").arg(addr);
         } rtuThrowMessage(it.event_type + it.event_content);
-        Log_Core::bulid()->append(it);
-    }
+        if(cm::runTime() > 5) Log_Core::bulid()->append(it);
+    } cout << addr << cm::byteArrayToHexStr(cmd);;
 }
 
-bool OP_ZRtu::rtuLog(int addr, const QByteArray &array)
+bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
 {
     bool ret = true;
     static int cnt[DEV_NUM] = {0};
@@ -91,26 +91,33 @@ bool OP_ZRtu::rtuLog(int addr, const QByteArray &array)
             } else {
                 it.event_type = "Executive Board";
                 it.event_content = tr("Received abnormal communication data from execution board %1").arg(addr);
-            } Log_Core::bulid()->append(it);
+            } if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         } cout << cm::byteArrayToHexStr(array);
     } else cnt[addr] = 0;
     return ret;
 }
 
-bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
+bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
 {
-    bool res = false; int k = 6; waitForLock();
+    bool res = false; int k = 6; waitForLock(); QByteArray recv;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
+    int cnt = 1; if(cm::runTime() > 36*60*60) cnt = 3;
 
-    QByteArray recv = transmit(cmd, sizeof(cmd));
+    for(int i=0; i<cnt; ++i) {
+        recv = transmit(cmd, sizeof(cmd));
+        if(recv.size() == zRcvLen) break;
+        else cm::mdelay(1200);
+    }
+
     if(recv.size()) res = rtuLog(addr, recv);
     if((recv.size() == zRcvLen) && (recv.at(2) == addr) && res) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
-        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen)); //cout << addr;
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
+        hardwareLog(addr, QByteArray((char *)cmd, zCmdLen));
     } else {
         cout << addr << recv.size();
         sEventItem it; if(cm::cn()) {
@@ -120,34 +127,42 @@ bool OP_ZRtu::sendReadCmd(int addr, sOpIt *it)
             it.event_type = "Executive board communication";
             it.event_content = tr("Execution board %1 data read error: len=%2").arg(addr).arg(recv.size());
         } rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
         //it.content +=cm::byteArrayToHexStr(recv);
-        Log_Core::bulid()->append(it);
+        if(cm::runTime() > 5) Log_Core::bulid()->append(it);
     }
 
     return res;
 }
 
-bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
+bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 {
     if(ret) {
         if(v == 1) {
             sEventItem it; it.event_type = tr("Output");
             if(cm::cn()) it.event_content = tr("执行板 %1 连接正常").arg(addr);
             else it.event_content = tr("Execution board %1 is connected normally").arg(addr);
-            Log_Core::bulid()->append(it);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         } v = 5;
     } else if(v > 1){
         if(--v == 1)  {
             sEventItem it; it.event_type = tr("Output");
             if(cm::cn()) it.event_content = tr("执行板 %1 掉线").arg(addr);
             else it.event_content = tr("Execution board %1 dropped").arg(addr);
-            Log_Core::bulid()->append(it);
-
-            int size = sizeof(mOpData->vol);
-            //memset(mOpData->vol, 0, size);
-            memset(mOpData->cur, 0, size);
-            memset(mOpData->pf, 0, size);
+            if(cm::runTime() > 5) Log_Core::bulid()->append(it);
         }
+    }
+
+    if(v < 3) {
+        int size = sizeof(mOpData->vol);
+        memset(mOpData->cur, 0, size);
+        memset(mOpData->pow, 0, size);
+        memset(mOpData->pf, 0, size);
+        mOpData->version = 0;
+
+        mOpData->size = mDev->cfg.nums.boards[addr-1];
+        if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
+        //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);
     }
 
     int t = 0; if(cm::runTime() > 48*60*60) {
@@ -158,10 +173,12 @@ bool OP_ZRtu::setEndisable(int addr, bool ret, uchar &v)
     return !ret;
 }
 
-bool OP_ZRtu::readData(int addr)
+bool OP_ProRtu::readData(int addr)
 {
     if(isOta) return false;
-    bool ret = sendReadCmd(addr, mOpData); fillData(addr); //cout << addr << ret;
-    return setEndisable(addr, ret, mOpData->ens[addr]);
+    bool ret = sendReadCmd(addr, mOpData);
+    setEndisable(addr, ret, mOpData->ens[addr]);
+    fillData(addr); //cout << addr << ret;
+    return ret;
 }
 

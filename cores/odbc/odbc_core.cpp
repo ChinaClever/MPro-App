@@ -24,7 +24,7 @@ Odbc_Core *Odbc_Core::bulid()
 
 void Odbc_Core::append(const sOdbcThIt &it)
 {
-    if(!cfg.en) return;
+    if(!cfg.en || isDbRun) return;
     mThIts << it; run();
 }
 
@@ -36,13 +36,14 @@ void Odbc_Core::append(const sOdbcAlarmIt &it)
 
 void Odbc_Core::append(const sOdbcDataIt &it)
 {
-    uint sec = cfg.dataPoll; if(!cfg.en || !sec) return;
-    if(!(mCnt%sec) || 1 == cfg.okCnt){mDataIts << it; run();}
+    uint sec = cfg.dataPoll; if(!cfg.en || !sec || isDbRun) return;
+    if(!(mCnt%sec) || cfg.okCnt < 5){mDataIts << it; run();}
 }
 
 void Odbc_Core::append(const sOdbcEventIt &it)
 {
-    if(!cfg.en) return;
+    int sec = cm::masterDev()->proc.core.runSec;
+    if(!cfg.en || sec < 5) return;
     mEventIts << it; run();
 }
 
@@ -58,19 +59,20 @@ void Odbc_Core::hda(const sDataItem &item)
     uint sec = cfg.hdaPoll * 60;
     if(!cfg.en || !sec) return;
 
+    int offset = 0;
     sOdbcHdaIt it;
     it.addr = item.addr;
     it.type = item.type;
     it.topic = item.topic;
     it.indexes = item.id;
-    it.value = item.value / cm::decimal(item);
+    if(DType::Env == it.type && DTopic::Tem == it.topic) if(item.value) offset = 400;
+    it.value = ((int)item.value-offset) / cm::decimal(item);
     append(it);
 }
 
 void Odbc_Core::data(const sDataItem &item)
 {
-    uint sec = cfg.dataPoll;
-    if(!cfg.en || !sec || isDbRun) return;
+    if(!cfg.en) return;
 
     sOdbcDataIt it;
     it.addr = item.addr;
@@ -78,9 +80,10 @@ void Odbc_Core::data(const sDataItem &item)
     it.topic = item.topic;
     it.indexes = item.id;
     it.value = item.value / cm::decimal(item);
-    append(it); hda(item);
+    hda(item); if(cfg.dataPoll) append(it); else return;
 
-    if(1 == cfg.okCnt  && cfg.status && item.type != DTopic::Relay) {
+    if(item.topic > DTopic::Relay && item.topic < DTopic::Ele)
+    if((cfg.okCnt<10)  && cfg.status) {
         sDataItem dt = item;
         for(int i=DSub::Rated; i<DSub::DPeak; ++i) {
             dt.subtopic = i;
@@ -128,7 +131,9 @@ void Odbc_Core::event(const sEventItem &item)
 
 void Odbc_Core::createTables()
 {
-    if(1 == cfg.okCnt) {
+    if(cfg.okCnt < 3) {
+        index_createTable();
+        uut_createTable();
         dev_createTable();
         th_createTable();
         hda_createTable();
@@ -141,29 +146,40 @@ void Odbc_Core::createTables()
 void Odbc_Core::insertItems()
 {
     db_transaction(); //QWriteLocker locker(mLock);
-    while(mThIts.size()) th_poll(mThIts.takeFirst());
-    while(mHdaIts.size())  hda_insert(mHdaIts.takeFirst());
-    while(mDataIts.size()) data_poll(mDataIts.takeFirst());
-    while(mEventIts.size()) event_insert(mEventIts.takeFirst());
     while(mAlarmIts.size()) alarm_insert(mAlarmIts.takeFirst());
+    while(mEventIts.size()) event_insert(mEventIts.takeFirst());
+    while(mHdaIts.size()) hda_insert(mHdaIts.takeFirst());
+    while(mDataIts.size()) data_poll(mDataIts.takeFirst());
+    while(mThIts.size()) th_poll(mThIts.takeFirst());
+}
+
+void Odbc_Core::clearItems()
+{
+    mEventIts.clear();
+    mAlarmIts.clear();
+    mDataIts.clear();
+    mHdaIts.clear();
+    mThIts.clear();
 }
 
 void Odbc_Core::workDown()
 {
-    cm::mdelay(650);
     bool ret = db_open();
     if(ret) {
-        createTables();
-        dev_polls();
-        insertItems();
-    } db_close();
+        createTables(); insertItems();
+        if(cfg.okCnt < 5 || !(cfg.okCnt % 15)) {
+            uut_polls(); dev_polls();
+        }
+    } else clearItems();
+    db_close();
     isRun = false;
 }
 
 void Odbc_Core::run()
 {
-    if(!isRun) {
-        isRun = true;
-        QtConcurrent::run(this,&Odbc_Core::workDown);
+    if(!isRun && cfg.en) {
+        isRun = true; cm::mdelay(65);
+        int t = QRandomGenerator::global()->bounded(565);
+        cm::mdelay(t); QtConcurrent::run(this,&Odbc_Core::workDown);
     }
 }

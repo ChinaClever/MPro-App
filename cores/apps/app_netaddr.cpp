@@ -86,6 +86,7 @@ void App_NetAddr::inet_setInterfaceSlot()
     if(net->inet6.en) inet_setIpV6();
     else mInetCfg->writeCfg("en", 0, "IPV6");
     cm::mdelay(1); inet_isRun = false;
+    //system("arp -a &");
 }
 
 void App_NetAddr::inet_setIpV4()
@@ -209,10 +210,11 @@ int App_NetAddr::inet_dhcpUpdate()
     static int t = 30; t *= 2;
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet.dhcp || net->inet6.dhcp) {
-        if(mCnt < 5*60) t = 1;
-        else if(mCnt < 10*60) t = 2;
-        else if(mCnt < 30*60) t = 3;
-        else if(mCnt < 60*60) t = 5;
+        if(mCnt < 15*60) t = 1;
+        else if(mCnt < 30*60) t = 2;
+        else if(mCnt < 60*60) t = 3;
+        else if(mCnt < 4*60*60) t = 4;
+        else if(mCnt < 12*60*60) t = 6;
         else if(mCnt < 24*60*60) t = 8;
         else if(mCnt < 48*60*60) t = 10;
         else if(mCnt < 72*60*60) t = 15;

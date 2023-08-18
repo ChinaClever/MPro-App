@@ -156,13 +156,13 @@ class JsonRpc {
     // WS套接字发送数据
     socket_send(msg) {
         var ret = true;
-        if(this.ws.readyState == WebSocket.OPEN){
-            this.ws.send(msg);
-        } else if(JsonRpc._errCnt++ > 2) {
-             ret = false;
-             this.ws.close();
-             this.ws = this.socket_open(); 
-        }
+         if(this.ws.readyState <= WebSocket.OPEN){
+            this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+         } else if(JsonRpc._errCnt++ > 2) {
+              ret = false;
+              this.ws.close();
+              this.ws = this.socket_open(); 
+         }
         return ret;
     }
 
@@ -204,6 +204,10 @@ class JsonRpc {
 
         if((0 == addr) && (13 == type) && (10 == topic)) {
             sessionStorage.setItem('language', value);
+        }
+
+        if((0 == addr) && (13 == type) && (18 == topic)) {
+            sessionStorage.setItem('bg_color', value);
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
@@ -448,6 +452,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfg(14, 1, 0, 0);
         this.getCfg(42, 3, 0, 0);
         this.getCfg(42, 6, 0, 0);
+        this.getCfg(14, 9, 0, 0);
     }
 
     mqttCfg() {
@@ -511,7 +516,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(28, fcs);
     }
     OutInGroup(){
-        for(let j = 1;j<8 + 1;j++){
+        for(let j = 1;j<12 + 1;j++){
             this.getCfg(25,j,0,this.addr);
         }
     }
@@ -684,6 +689,7 @@ class PduCore extends PduOta {
             var url = window.location.protocol+"//";            
             url += window.location.host;
             window.location.replace(url);
+            //location.reload();
         }
         
         return res;

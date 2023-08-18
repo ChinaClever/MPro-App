@@ -3,14 +3,14 @@
  *  Created on: 2022年10月1日
  *      Author: Lzy
  */
-#include "op_zctrl.h"
+#include "op_proctrl.h"
 
-OP_ZCtrl::OP_ZCtrl(QObject *parent) : OP_ARtu{parent}
+OP_ProCtrl::OP_ProCtrl(QObject *parent) : OP_ARtu{parent}
 {
 
 }
 
-void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
+void OP_ProCtrl::writeCtrlCmd(uchar *cmd, int k)
 {
     sDevData *dev = cm::masterDev();
     for(int i=0; i<3; ++i) {
@@ -26,7 +26,7 @@ void OP_ZCtrl::writeCtrlCmd(uchar *cmd, int k)
     }
 }
 
-void OP_ZCtrl::funSwitch(uchar *on, uchar *off, uchar all)
+void OP_ProCtrl::funSwitch(uchar *on, uchar *off, uchar all)
 {
     int k = 5;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x00, 0xA2, 0xB2};
@@ -43,7 +43,7 @@ void OP_ZCtrl::funSwitch(uchar *on, uchar *off, uchar all)
     writeCtrlCmd(cmd, k);
 }
 
-void OP_ZCtrl::funClearEle(uchar *buf)
+void OP_ProCtrl::funClearEle(uchar *buf)
 {
     int k = 5;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x00, 0xA4, 0xB4};
@@ -53,7 +53,7 @@ void OP_ZCtrl::funClearEle(uchar *buf)
 }
 
 
-void OP_ZCtrl::funDelay(uint *buf)
+void OP_ProCtrl::funDelay(uint *buf)
 {
     int k = 5;
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x00, 0xA3, 0xB3};

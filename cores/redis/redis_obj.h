@@ -40,15 +40,15 @@ public:
     explicit Redis_Obj(QObject *parent = nullptr);
     static sRedisCfg redisCfg;
 
-    bool expipe(const QByteArray &key, int sec);
+    bool expipe(const QString &key, int sec);
     bool set(const QByteArray &key, const QMap<QByteArray, QVariant> &map);
-    bool set(const QByteArray &key, const QByteArray &field, const QByteArray &value);
+    bool set(const QString &key, const QString &filed, const QByteArray &value);
 
 protected:
-    void subscribe();
     void disconnect();
     bool connectServer();
     auto initConnectionConfig();
+    void subscribe(const QString &sub);
     virtual void redisHandleMessage(const QStringList &msg)=0;
 
 private slots:

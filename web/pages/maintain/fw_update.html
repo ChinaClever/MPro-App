@@ -30,7 +30,7 @@
 						<div align="center">
 							<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
 							<button id = "lang_3" type ="button" onclick = "document.getElementById('inputkey').click()"></button> 
-							<input style=" width: 20%;" type = "text" value = "" id = "info" >
+							<input style=" width: 30%;" type = "text" value = "" id = "info" >
 							<label id  = "loading"></label>
 						</div><br/>
 						<div align = "center"><button  id = "lang_4" onclick = 'upload_data()'></button></div>
@@ -237,6 +237,11 @@
 			}else{
 				document.getElementById('c').innerHTML = update_method[5];
 			}
+			if(document.getElementById('c').innerHTML != update_method[0]){
+				document.getElementById('c').bgColor = 'yellow';
+			}else{
+				document.getElementById('c').bgColor = '';
+			}
 		//	for(let i=0; i<17; i++){
 		//		let j =4*i;
 		//	}
@@ -260,8 +265,10 @@
 				var url = '/upload_fw?offset=' + offset + '&name=' + encodeURIComponent(name);
 				var ok = true;
 				setStatus(
-					'Uploading ' + name + ', bytes ' + offset + '..' +
-					(offset + chunk.length) + ' of ' + data.length,id,ok);
+					// 'Uploading ' + name + ', bytes ' + offset + '..' +
+					// (offset + chunk.length) + ' of ' + data.length,id,ok);
+					'Uploading ' + name + ', bytes ' + 
+					 (data.length/1024/1024).toFixed(2)+'M',id,ok);
 				fetch(url, opts)
 					.then(function(res) {
 					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
@@ -274,6 +281,8 @@
 			};
 			sendChunk(0);
 			read_data();
+			document.getElementById('lang_3').disabled = true;//将按钮置灰防止多次点击
+			document.getElementById('lang_4').disabled = true;
 		};
 		function upload_data(){
 			let  key = document.getElementById("info").value;

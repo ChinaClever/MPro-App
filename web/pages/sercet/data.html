@@ -162,9 +162,19 @@
 		}
 		function SetData(btn){
 			if(0 == language){
-				var retVal = confirm("请确认是否开启此功能！");	
+				if(btn.id == "Encrptyen" && (btn.value == 1 || btn.value == 2 || btn.value ==3)){
+					// var retVal = confirm("该功能旨在对主动数据推送、RPC集成、REST集成、MQTT集成、AMQP服务等数据交换过程进行加密！");
+					var retVal = confirm("该功能只在主动上报里面设备反控启用了之后才生效，启用该功能后在主动上报里面只有发送对应的加密数据才能对PDU进行控制！");	
+				}else{
+					var retVal = confirm("请确认是否开启此功能！");	
+				}
 			}else{
-				var retVal = confirm("Confirm whether to enable this function！");
+				if(btn.id == "Encrptyen" && (btn.value == 1 || btn.value == 2 || btn.value ==3)){
+					// var retVal = confirm("This feature aims to encrypt data exchange processes such as active data push, RPC integration, REST integration, MQTT integration, AMQP service, etc！");
+					var retVal = confirm("This function only takes effect after the equipment reverse control in Active Reporting is enabled. After enabling this function, only the corresponding encrypted data can be sent in Active Reporting to control the PDU！");	
+				}else{
+					var retVal = confirm("Confirm whether to enable this function！");
+				}			
 			}
 			if(retVal == true){
 				for(var j = 1;j<35;j++){

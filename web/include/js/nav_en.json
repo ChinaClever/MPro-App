@@ -183,7 +183,7 @@
         "url": "tlscert.html"
       },
       {
-        "name": "Cyber security",
+        "name": "Network security",
         "url": "net.html"
       },
       {
@@ -198,7 +198,7 @@
     "base": "pages/network/",
     "subNav": [
       {
-        "name": "Internet connection",
+        "name": "Network Settings",
         "url": "base.html"
       },
       {
@@ -222,19 +222,19 @@
         "url": "syslog.html"
       },
       {
-        "name": "Remote authentication service",
+        "name": "Remote authentication",
         "url": "radius.html"
       }
       
     ]
   }, 
   {
-    "name": "IoT Cloud",
+    "name": "cloud management",
     "icon": "service_fill",
     "base": "pages/aiot/",
     "subNav": [
       {
-        "name": "AIoT",
+        "name": "Path Settings",
         "url": "aiot.html"
       }     
     ]
@@ -312,6 +312,18 @@
       {
         "name": "System command",
         "url": "sys_command.html"
+      },
+      {
+        "name": "",
+        "url": " "
+      },
+      {
+        "name": "",
+        "url": " "
+      },
+      {
+        "name": "",
+        "url": " "
       }
     ]
   }

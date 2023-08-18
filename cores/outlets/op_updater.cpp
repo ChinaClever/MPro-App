@@ -44,6 +44,11 @@ void OP_Updater::ota_reboot()
     system("rm -rf /usr/data/clever/outlet/*");
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
+
+    QString dir = "/tmp/mass_storage/sda/ota_apps/ver.ini";
+    QString dir1 = "/tmp/mass_storage/sda1/ota_apps/ver.ini";
+    QString dir2 = "/tmp/mass_storage/sda2/ota_apps/ver.ini";
+    while(QFile::exists(dir) || QFile::exists(dir1) || QFile::exists(dir2)) cm::mdelay(1000);
     system("sync"); system("reboot");
 }
 
@@ -55,21 +60,20 @@ bool OP_Updater::ota_updates()
         sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
         for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
         for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
-            up->results[i] = 1;
-            ret = ota_update(i, fn);
-            emit otaFinish(i, ret);
-            if(ret) up->results[i] = 2;
-            else up->results[i] = 3;
-            cm::mdelay(5*1200);
+            up->results[i] = 1; for(int k=0; k<3; ++k) {
+                ret = ota_update(i, fn); if(ret) break; else cm::mdelay(1200);
+            } if(ret) up->results[i] = 2; else up->results[i] = 3;
+            emit otaFinish(i, ret); cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        if(ret) system("rm -rf /usr/data/updater/clever/outlet/*");
+        if(ret) system("rm -rf /usr/data/clever/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 
     return ret;
 }
 
+#if 0
 bool OP_Updater::ota_update(int addr, QByteArray &array)
 {
     bool ret = initOta(addr);
@@ -84,6 +88,7 @@ bool OP_Updater::ota_update(int addr, QByteArray &array)
 
     return ret;
 }
+#endif
 
 void OP_Updater::onOtaProgress(uchar addr, int v)
 {
@@ -97,14 +102,14 @@ void OP_Updater::onOtaProgress(uchar addr, int v)
 bool OP_Updater::ota_update(int addr, const QString &fn)
 {
     QFile file(fn);  bool ret = false; int max = 1024;
-    if(file.exists() && file.open(QIODevice::ReadOnly)) {
+    if(file.exists() && file.open(QIODevice::ReadOnly)) {       
         ret = initOta(addr); uint size = file.size(), len=0;
-        while (!file.atEnd() && ret) {
+        file.seek(0); while (!file.atEnd() && ret) {
             QByteArray data = file.read(max);
             ret = sendPacket(addr, data); len += data.size();
             int v = (len*1000.0)/size; emit otaProgress(addr, v);
             if(ret) cm::mdelay(325); else break;
-        } file.close();
+        } file.close(); if(len+1024 < size) ret = false;
     } else cout << addr << fn;
 
     return ret;
@@ -123,9 +128,9 @@ bool OP_Updater::initOta(int id)
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0xCF};
     cmd[2] = id; cmd[15] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    QByteArray recv = transmit(cmd, sizeof(cmd), 3000);
+    QByteArray recv = transmit(cmd, sizeof(cmd), 4000);
     if(!recv.contains("Start Updat")) { cm::mdelay(3250);
-        recv = transmit(cmd, sizeof(cmd), 5000);
+        recv = transmit(cmd, sizeof(cmd), 5500);
         if(!recv.isEmpty()) isOta = false;
         //if(!recv.contains("Start Updat")) isOta = false;
     } emit otaSig(id, recv);
@@ -142,7 +147,7 @@ bool OP_Updater::sendPacket(int addr, const QByteArray &array)
 
     for(int i=array.size(); i<1024; ++i) data.append((char)0);
     Crc::RtuAppend(data); QByteArray recv = transmit(data, 3000);
-    if(recv.contains("success")) ret = true;
+    if(recv.contains("success")) ret = true; else cout << recv.size() << recv;
     emit otaSig(addr, recv);
     return ret;
 }

@@ -20,12 +20,13 @@ Data_Core *Data_Core::bulid()
 
 void Data_Core::upAlarm()
 {
+    if(cm::runTime() < 12) return;
     Alarm_Updater::bulid()->run();
 }
 
 void Data_Core::run()
 {
-    cm::mdelay(8769);
+    cm::mdelay(2169);
     while(isRun) {
         outletWork();
         cm::mdelay(399); tgWork();

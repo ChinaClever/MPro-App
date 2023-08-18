@@ -119,27 +119,30 @@ QString Alarm_Log::alarmContent(const sDataItem &index)
     double rate = 1;
     int id = index.id;
     QString str, suffix;
+    int offset = 0;
 
     switch (index.topic) {
     case DTopic::Vol: rate = COM_RATE_VOL; suffix = "V"; break;
     case DTopic::Cur: rate = COM_RATE_CUR; suffix = "A"; break;
     case DTopic::Pow: rate = COM_RATE_POW; suffix = "KW"; break;
-    case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C"; break;
+    case DTopic::Tem: rate = COM_RATE_TEM; suffix = "°C";  offset=40; break;
     case DTopic::Hum: rate = COM_RATE_HUM; suffix = "%";break;
-    }
+    } if(DTopic::Tem == index.topic) offset= 40;
+
 
     Alarm_Object obj;
     if(index.type) {
         sAlarmUnit *unit = obj.getAlarmUnit(index);
+        double value = unit->value[id]/rate; if(value > 0) value -= offset;
         if(unit) {
             if(cm::cn()) str = tr("当前值:%1%6　告警最小值:%2%6 预警最小值:%3%6 预警最大值:%4%6 告警最大值:%5%6");
             else str = "Current value:%1%6 Alarm minimum value:%2%6, early warning minimum value:%3%6 "
                         "early warning maximum value:%4%6 Alarm maximum value:%5%6";
-            str  = str.arg(unit->value[id]/rate)
-                    .arg(unit->min[id] / rate)
-                    .arg(unit->crMin[id] / rate)
-                    .arg(unit->crMax[id] / rate)
-                    .arg(unit->max[id] / rate)
+            str  = str.arg(value)
+                    .arg(unit->min[id] / rate  - offset)
+                    .arg(unit->crMin[id] / rate - offset)
+                    .arg(unit->crMax[id] / rate - offset)
+                    .arg(unit->max[id] / rate - offset)
                     .arg(suffix);
         } else qDebug() << Q_FUNC_INFO;
     } else {

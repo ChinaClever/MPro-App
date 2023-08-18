@@ -13,7 +13,7 @@ Set_Maintain::Set_Maintain()
 static void dev_restart()
 {
     system("sync");
-    cm::mdelay(1000);
+    cm::mdelay(2500);
     system("reboot");
 }
 
@@ -91,6 +91,15 @@ QString Set_Maintain::profileBackup()
     system("rm -rf /tmp/download/*");
     system(cmd.toLocal8Bit().data());
 
+    QStringList fns;
+    QString dir = "usr/data/clever/cfg/";
+    fns << "mac.conf" << "uuid.conf" << "sn.conf";
+    foreach (const auto &fn, fns) {
+        QString fmd = "zip -d %1 %2%3";
+        QString cmd = fmd.arg(dst, dir, fn);
+        system(cmd.toLocal8Bit().data());
+    }
+
     sEventItem it; if(cm::cn()) {
         it.event_type = QStringLiteral("备份");
         it.event_content = QStringLiteral("设备设置备份");
@@ -106,9 +115,9 @@ QString Set_Maintain::batchBackup()
 {
     QStringList fns;
     QString dir = "usr/data/clever/cfg/";
-    fns << "mac.conf" << "inet.ini" << "devParam.ini";
+    fns << "inet.ini" << "devParam.ini";
     fns << "logs.db" << "qrcode.png" << "proc_cnt.conf";
-    fns << "uuid.conf" << "sn.conf";
+    //fns << "uuid.conf" << "sn.conf" << "mac.conf";
 
     QString zip = profileBackup();
     foreach (const auto &fn, fns) {

@@ -42,7 +42,7 @@ void Integr_PushThread::mqttPush(const QByteArray &array)
 {
     sMqttCfg *cfg = &Mqtt_Client::cfg; if(!cfg->sec) return;
     if(cfg->isConnected && (0 == (mCnt%cfg->sec))) {
-        emit Mqtt_Client::bulid()->publish(array);
+        emit Mqtt_Client::bulid()->publish(mAddr, array);
     }
 }
 
@@ -55,7 +55,7 @@ void Integr_PushThread::amqpPush(const QByteArray &array)
 }
 
 void Integr_PushThread::onPushSlot()
-{
+{    
     udpPush(mArray);
     mqttPush(mArray);
     httpPush(mArray);
@@ -70,7 +70,7 @@ void Integr_PushThread::workDown()
             mArray = mJson->getJson(i); //cout << mArray.size();
             if(cm::masterDev()->cfg.param.jsonCompress) {
                 mArray = cm::zipCompress(mArray); //cout << mArray.size();
-            } emit pushSig();
+            } mAddr = i; emit pushSig();
         } if(isRun) delay(20);
     }
 }

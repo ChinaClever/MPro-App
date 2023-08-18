@@ -155,11 +155,18 @@ bool Agent_Set::relayDualCtrl(const QVariant &value)
 {
     sDataItem unit;
     unit.rw = 1;
-    unit.id = mIndex.id;
     unit.addr = mIndex.addr;
+#if 1
+    unit.id = 2;
+    unit.type = mIndex.id*2-1;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::Relays;
+#else
+    unit.id = mIndex.id;
     unit.type = DType::Dual;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
+#endif
     unit.txType = DTxType::TxSnmp;
     unit.value = value.toUInt();
     return Set_Core::bulid()->setting(unit);

@@ -70,7 +70,7 @@ bool Sql_Statement::remove(const QString &condition)
 {
     QString sql = "DELETE FROM %1 WHERE %2";
     bool ret = sqlQuery(sql.arg(tableName(), condition));
-    if(ret) {sql = "VACUUM "; ret = sqlQuery(sql);}
+    //if(ret) {sql = "VACUUM "; ret = sqlQuery(sql);}
     return ret;
 }
 
@@ -218,10 +218,12 @@ bool Sql_Statement::updateColumn(const QString& column_name, QString value, cons
 
 bool Sql_Statement::clear()
 {
-    QString sql = "delete from %1";
-    bool ret = sqlQuery(sql.arg(tableName()));
-    if(ret) {sql = "VACUUM"; ret = sqlQuery(sql);}
-    return ret;
+    QString sql = "TRUNCATE TABLE %1";
+    sqlQuery(sql.arg(tableName()));
+
+    sql = "delete from %1";
+    sqlQuery(sql.arg(tableName()));
+    return sqlQuery("VACUUM");
 }
 
 QString Sql_Statement::tableMarking()
@@ -245,7 +247,7 @@ void Sql_Statement::setTableMarking(const QString &marking)
 
 bool Sql_Statement::createTable()
 {
-    QString val = "id INTEGER primary key autoincrement not null, dtime VCHAR,";
+    QString val = "id INTEGER primary key autoincrement not null, dtime DATETIME,";
     for(int i=1; i<headList().size(); ++i) val += headList().at(i) + " VCHAR,";
     val.chop(1); QString sql = "create table if not exists %1(%2);";
     return sqlQuery(sql.arg(tableName(), val));

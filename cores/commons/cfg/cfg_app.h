@@ -14,7 +14,7 @@ struct sAppVerIt {
     QString dev; // 设备类型
     QString remark; // 发布说明
     QStringList apps; // 程序名称
-    QString oldVersion; // 旧版本号
+    QString oldVersion; // 依赖版本号
     QString releaseDate; // 发布时间
     QString upgradeDate; // 升级日期
 };
@@ -25,6 +25,7 @@ class Cfg_App : public Cfg_Obj
 public:
     Cfg_App(const QString& dir, QObject *parent = nullptr);
     void app_serialNumber(const QString &sn);
+    void app_oldVersion(const QString &ver);
     bool app_check(const QString &fn);
     bool app_pack(sAppVerIt &it);
     bool app_unpack(sAppVerIt &it);

@@ -99,20 +99,35 @@ void Mqtt_Client::onDisconnected()
     qDebug() << "mqtt disconnected" << cfg.isConnected;
 
 }
-void Mqtt_Client::onPublish(const QByteArray &payload)
+void Mqtt_Client::onPublish(int addr, const QByteArray &payload)
 {
-    if(cfg.isConnected && cfg.clientId.size()) {
-        QString topic = "pduMetaData/"+ cfg.clientId;
+    if(cfg.isConnected /*&& cfg.clientId.size()*/) {
+        QString topic = "pduMetaData/";
+        if(cfg.clientId.isEmpty()) topic += cm::devData(addr)->cfg.uut.uuid;
+        else topic += cfg.clientId + "/" + QString::number(addr);
         QMQTT::Message message(m_number++, topic, payload, cfg.qos);
         m_client->publish(message);
     }
+}
+
+bool Mqtt_Client::uuidCheck(const QString &topic)
+{
+    bool ret = false;
+    for(int i=0; i<DEV_NUM; ++i) {
+        sDevData *dev = cm::devData(i);
+        if(dev->offLine || i==0) {
+            QString uuid = cm::devData(i)->cfg.uut.uuid;
+            if(uuid == topic && topic.size()) return true;
+        }
+    }
+    return ret;
 }
 
 void Mqtt_Client::onReceived(const QMQTT::Message& message)
 {
     QString room = cm::masterDev()->cfg.uut.room;
     QString topic = message.topic().remove("pduSetting/");
-    if((topic == cfg.clientId) || (topic == room) || topic == "all") {
+    if((topic == cfg.clientId) || (topic == room) || (topic == "all") || uuidCheck(topic)) {
         emit received(message.payload());
     }
     //qDebug() << "publish received: \""<< message.topic() << message.payload();

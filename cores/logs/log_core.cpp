@@ -74,12 +74,13 @@ void Log_Core::append(const sEventItem &it)
 
 void Log_Core::append(const sDataItem &it)
 {
-    sHdaItem hda;
+    sHdaItem hda; int offset = 0;
     hda.addr = QString::number(it.addr);
     hda.type = QString::number(it.type);
     hda.topic = QString::number(it.topic);
-    hda.indexes = QString::number(it.id + 1);
-    hda.value = QString::number(it.value / cm::decimal(it));
+    hda.indexes = QString::number(it.id + 1);    
+    if(DType::Env == it.type && DTopic::Tem == it.topic) if(it.value) offset= 400;
+    hda.value = QString::number(((int)it.value-offset) / cm::decimal(it));
     mHdaIts << hda; run();  //cout << hda.addr << hda.type << hda.topic << hda.indexes << hda.value;
 }
 
@@ -161,20 +162,15 @@ void Log_Core::timeoutDone()
 
 void Log_Core::invAdcSlot()
 {
-    QString cmd = "cmd_adc get_voltage 1";
-    if(QFile::exists("/usr/bin/cmd_adc")) {
-        QString res = cm::execute(cmd).remove("\n"); qDebug() << "ADC voltage" << res;
-        uint vol = res.remove("channel 1:adc sample voltage = ").toUInt() * 18.4;
-        cm::masterDev()->cfg.param.supplyVol = vol; //cout << vol;
-        if(vol < 11*1000 || vol > 13*1000) {
-            sEventItem it;  if(cm::cn()) {
-                it.event_type = QStringLiteral("电源检测");
-                it.event_content = QStringLiteral("ADC电压采样异常:%1V").arg(vol/1000.0);
-            } else {
-                it.event_type = "Power Detection";
-                it.event_content = "ADC voltage sampling abnormality ";
-                it.event_content += QString::number(vol/1000.0) + "V";
-            } append(it);
-        }
+    uint vol = cm::adcVol();
+    if(vol < 11*1000 || vol > 13*1000) {
+        sEventItem it;  if(cm::cn()) {
+            it.event_type = QStringLiteral("电源检测");
+            it.event_content = QStringLiteral("ADC电压采样异常:%1V").arg(vol/1000.0);
+        } else {
+            it.event_type = "Power Detection";
+            it.event_content = "ADC voltage sampling abnormality ";
+            it.event_content += QString::number(vol/1000.0) + "V";
+        } append(it);
     }
 }

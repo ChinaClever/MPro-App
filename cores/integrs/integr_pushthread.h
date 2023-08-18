@@ -54,8 +54,9 @@ private:
     void mqttPush(const QByteArray &array);
     void amqpPush(const QByteArray &array);
 
-private:    
+private:
     uint mCnt = 0;
+    int mAddr = 0;
     QByteArray mArray;
     bool isRun = true;
     Net_Udp *mUdp = nullptr;

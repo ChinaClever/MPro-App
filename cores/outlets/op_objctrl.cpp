@@ -20,7 +20,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
         if(id) { if(sRelay::On != unit->sw[--id]) mList.takeLast(); } else {
             for(int i=0; i<unit->size; ++i) if(sRelay::On == unit->sw[i]) os << i+1; else cs << i+1;
             if(cs.size()) mList = os; //cout << cs << os << mList;
-        } int t = unit->resetDelay[id]; if(!t) t = 1;
+        } int t = unit->resetDelay[id]; if(!t) t = 5;
         if(mList.size()) QTimer::singleShot(t*1000,this,SLOT(relayResetSlot()));
     }
 }

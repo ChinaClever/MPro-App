@@ -46,7 +46,7 @@ int Ota_Net::cmd_updater(const QString &fn, int bit)
     QString cmd = fmd.arg(SFnCode::EOta).arg(bit);
     int ret = cm::execute(cmd).toInt();
     cmd += " res:" + QString::number(ret);
-    throwMessage(cmd);
+    throwMessage(cmd); cm::mdelay(255);
     return ret;
 }
 
@@ -131,7 +131,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
         if(bit != DOtaCode::DOta_Usb) {
             QString fn = it.path + it.file;
             clrbit(mOta->work, bit);
-            cmd_updater(fn, 400);
+            cmd_updater(fn, 400+mLastError);
             cm::mdelay(1100);
             if(!mOta->work) {
                 QString cmd = "rm -f " + fn;
@@ -155,28 +155,43 @@ void Ota_Net::rebootSlot()
     system("sync"); system("reboot");
 }
 
+bool Ota_Net::outletCheck(const QString &dir)
+{
+    bool ret = false;
+    QStringList fs = File::entryList(dir+"outlet");
+    foreach (const auto it, fs) {
+        if(it.contains(".bin"))  {
+            throwMessage("outlet software updater"+it);
+            ret = true;
+        }
+    }
+    return ret;
+}
+
 bool Ota_Net::versionCheck(const QString &dir)
 {
     sAppVerIt it;
     Cfg_App app(dir, this);
     bool ret = app.app_unpack(it);
     throwMessage(dir); if(ret) {
+        if(outletCheck(dir)) return ret;
         throwMessage("version check ok");
         QString str = cm::masterDev()->cfg.vers.releaseDate;
         if(str.size()) {
             QDate ct = QDate::fromString(str.mid(0,10), "yyyy-MM-dd");
             QDate date = QDate::fromString(it.releaseDate.mid(0,10), "yyyy-MM-dd");
-            throwMessage("version release date " +it.releaseDate); if(date < ct) {
+            throwMessage("version release date " +it.releaseDate); if(date < ct) {                
                 QString msg = "version release date err: currnet date %1 up date:%2";
-                throwMessage(msg.arg(str, it.releaseDate)); ret = false;
+                throwMessage(msg.arg(str, it.releaseDate)); mLastError = 1; ret = false;
             } else {
                 throwMessage("version dev type "+it.dev);
                 str = cm::masterDev()->cfg.vers.dev;if(str.size()) {
                     if(str != it.dev) {
                         QString msg = "version dev type err: currnet type %1 up type:%2";
                         throwMessage(msg.arg(str, it.dev)); ret = false;
+                        if(!dir.contains("/tmp/mass_storage/sda1")) mLastError = 2;
                     } else if(it.md5 == cm::masterDev()->cfg.vers.md5) {
-                        QString msg = "version dev md5 err: md5=%1";
+                        QString msg = "version dev md5 err: md5=%1"; mLastError = 3;
                         throwMessage(msg.arg(it.md5)); ret = false;
                     } else {
                         app.app_upgradeDate();

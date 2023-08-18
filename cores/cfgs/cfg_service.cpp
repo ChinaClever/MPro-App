@@ -123,7 +123,7 @@ void Cfg_Service::web()
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
-        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
+        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 1; break;
         case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
         case 6: key = "strong_pwd"; ptr = &cfg->strong_pwd;  value = 0; break;
@@ -345,7 +345,7 @@ void Cfg_Service::odbc()
         case 5: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
         case 6: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
         case 7: key = "pdukey"; cfg->pdukey = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 30, prefix).toInt();break;
+        case 8: key = "dataPoll"; cfg->dataPoll = mCfg->readCfg(key, 0, prefix).toInt();break;
         case 9: key = "hdaPoll"; cfg->hdaPoll = mCfg->readCfg(key, 30, prefix).toInt(); break;
         default: key.clear(); break;
         }
