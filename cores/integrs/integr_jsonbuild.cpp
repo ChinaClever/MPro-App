@@ -121,7 +121,7 @@ void Integr_JsonBuild::loginPermit(QJsonObject &json)
 void Integr_JsonBuild::outputVol(QJsonObject &json)
 {
     int size = PACK_ARRAY_SIZE;
-    uint *ptr = cm::masterDev()->output.vol.value;
+    uint *ptr = cm::masterDev()->output.vol.reserve[5];
     arrayAppend(ptr, size, "output_vol", json);
 }
 

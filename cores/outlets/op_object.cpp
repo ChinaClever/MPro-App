@@ -97,6 +97,7 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
     uint *src = mOpData->vol;
     uint *cnt = mDev->dtc.cnt[0];
     uint *dest = mDev->output.vol.value;
+    uint *tmp = mDev->output.vol.reserve[5];
     int devSpec = mDev->cfg.param.devSpec;
     int isBreaker = mDev->cfg.param.isBreaker;
     if(mOpData->type) dest = mDev->loop.vol.value;
@@ -108,7 +109,7 @@ bool OP_Object::volFaultCheck(uchar k, uchar i)
         if(cm::runTime() > 48*60*60) {
             if(cnt[id] > FAULT_NUM) dest[id] = mDev->line.vol.value[0];
         }
-    }
+    }tmp[id] = mOpData->tmp_vol[i];
     return ret;
 }
 
