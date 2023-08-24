@@ -66,9 +66,10 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
         memset(mOpData->pow, 0, size);
         memset(mOpData->pf, 0, size);
         mOpData->version = 0;
+        mDev->dtc.fault = 3;
 
         mOpData->size = mDev->cfg.nums.loopNum;
-        if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
+        //if(cm::runTime() < 74*60*60) memset(mOpData->vol, 0, size);
         //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);
     }
 
