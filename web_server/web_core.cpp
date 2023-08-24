@@ -14,7 +14,7 @@
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
-    QTimer::singleShot(840,this,SLOT(initFunSlot()));
+    QTimer::singleShot(4840,this,SLOT(initFunSlot()));
 }
 
 Web_Core *Web_Core::bulid(QObject *parent)

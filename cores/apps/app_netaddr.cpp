@@ -248,6 +248,7 @@ void App_NetAddr::inet_updateInterface()
             if(hostIp != QHostAddress(QHostAddress::LocalHost)) {
                 switch (hostIp.protocol()) {
                 case QAbstractSocket::IPv4Protocol:
+                    memset(net->inet.ip, 0, NAME_SIZE);
                     net->inet.prefixLen = entry.prefixLength();//获取子网掩码
                     qstrcpy(net->inet.ip, hostIp.toString().toLatin1().constData()); //获取ip
                     qstrcpy(net->inet.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
