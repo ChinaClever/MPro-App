@@ -76,7 +76,7 @@ void Cfg_AlarmInitial::initEnvData(sEnvData &it)
         it.tem.crMax[i] = 80*COM_RATE_TEM;
         it.hum.crMax[i] = 99*COM_RATE_HUM;
 
-        it.tem.rated[i] = 150*COM_RATE_TEM;
+        it.tem.rated[i] = 140*COM_RATE_TEM;
         it.hum.rated[i] = 100*COM_RATE_HUM;
     }
 }
