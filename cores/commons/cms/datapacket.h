@@ -352,7 +352,8 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
-    char reserve[4][NAME_SIZE];
+    char updatetime[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
 };
 
 struct sOtaUpIt

@@ -132,7 +132,14 @@ void Data_Object::loopBreaker(int id)
 
 void Data_Object::lineData(int id, int start, int end)
 {
+    int dtc = mDev->dtc.fault;
+    static uint vol[LINE_NUM] = {0, 0, 0};
     sumObjData(id, mDev->line, mDev->loop, start, end);
+    if(mDev->line.vol.value[id]) {
+        vol[id] = mDev->line.vol.value[id];
+    } else if(dtc == FaultCode::DTC_OK) {
+       mDev->line.vol.value[id] = vol[id];
+    }
 }
 
 

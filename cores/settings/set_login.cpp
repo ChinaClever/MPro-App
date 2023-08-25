@@ -21,8 +21,9 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 2: res = it->pwd; break;
     case 3: res = it->token; break;
     case 4: res = it->permit; break;
-    case 5: res = it->groupCtrl; break;
-    case 9: res = it->reserve[3]; break;
+    case 5: res = it->updatetime; break;
+    case 6: res = it->groupCtrl; break;
+    case 9: res = it->reserve[2]; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
@@ -42,7 +43,8 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 2: key = "pwd_%1"; ptr = it->pwd; break;
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
-    case 5: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
+    case 5: key = "updatetime_%1"; ptr = it->updatetime; break;
+    case 6: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
     case 11: ret = loginCheck(v.toString()); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
@@ -52,6 +54,10 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
             QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key.arg(id), str, prefix); //cout << str.size() << str;
         } else cfg->writeCfg(key.arg(id), v, prefix);
+
+        QString dt = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qstrcpy(it->updatetime, dt.toStdString().c_str()); key = "updatetime_%1";
+        if(type != 5) cfg->writeCfg(key.arg(id), dt, prefix);
     }
 
     if(ptr) {

@@ -360,11 +360,12 @@ void Cfg_Service::login()
 
     for(int k=0; k<USER_NUM; ++k) {
         sDevLogin *it = &(packet->login[k]);
-        for(int i=1; i<4; ++i) {
+        for(int i=1; i<5; ++i) {
             switch (i) {
             case 1: key = "user_%1";  ptr = it->user; break;
             case 2: key = "pwd_%1";  ptr = it->pwd; break;
             case 3: key = "token_%1";  ptr = it->token; break;
+            case 4: key = "updatetime_%1";  ptr = it->updatetime; break;
             }
             QByteArray res = mCfg->readCfg(key.arg(k), "", prefix).toByteArray();
             if(i == 2 && res.size()>42) res = Sercret_Core::bulid()->rsa_decode(res);
