@@ -44,10 +44,9 @@ bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
         obj->chipStatus = *ptr++; // 01表示执行版计量芯片模块损坏，00表示正常。
         ptr++; obj->type = 0;
 
-        for(int i=0; i<obj->size; ++i) obj->tmp_vol[i] = obj->vol[i];
         for(int i=1; i<obj->size-1; ++i) {
             obj->vol[i] = getShort(ptr); ptr += 2;
-        }
+        } for(int i=0; i<obj->size; ++i) obj->tmp_vol[i] = obj->vol[i];
 
         //for(int i=0; i<op; ++i) {
         //    obj->activePow[i] = obj->vol[i] * obj->cur[i] / 100.0;
