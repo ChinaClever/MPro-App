@@ -51,6 +51,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::EFtp: res = ftpCfg(it.fc); break;
     case SFnCode::ELdap: res = ldapCfg(it.fc); break;
     case SFnCode::EODBC: res = odbcCfg(it.fc); break;
     case SFnCode::ELogCfg: res = logCfg(it.fc); break;
@@ -89,6 +90,7 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EThreshold: ret = thresholdSlave(it.fc); break;
 
     case SFnCode::ESys: ret = syscmd(it.fc); break;
+    case SFnCode::EFtp: ret = ftpSet(it.fc, v); break;
     case SFnCode::EBR: ret = restores(it.fc, v); break;
     case SFnCode::ESsh: ret = sshSet(it.fc, v); break;
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;

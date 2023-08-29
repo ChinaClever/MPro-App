@@ -31,6 +31,9 @@ protected:
     QVariant redisCfg(uchar fc);
     bool redisSet(uchar fc, const QVariant &v);
 
+    QVariant ftpCfg(uchar fc);
+    bool ftpSet(uchar fc, const QVariant &v);
+
 private:
     int toBaud(int value);
     int baudTo(int value);
