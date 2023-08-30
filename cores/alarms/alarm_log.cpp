@@ -193,8 +193,9 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
         if(index.type) it.alarm_status += tr("%１").arg(index.id+1);
     } it.alarm_status += alarmType(index) +", ";
 
-    if(index.topic == DTopic::Relay) {        
+    if(index.topic == DTopic::Relay) {
         it.alarm_content = alarmRelay(value);
+#if 0
          if(DType::Loop == index.type) {
             Alarm_Object obj;
             sDataItem item = index;
@@ -203,6 +204,7 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
             double v = unit->value[index.id] /COM_RATE_VOL;
             it.alarm_content += tr("vol = %1V").arg(v);
          }
+#endif
     }else if(index.type == DType::Sensor) {
         it.alarm_content = alarmSensor(value);
     }else {

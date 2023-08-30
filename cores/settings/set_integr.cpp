@@ -12,6 +12,7 @@
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
 #include "redis_core.h"
+#include "ftps/ftp_core.h"
 
 Set_Integr::Set_Integr()
 {
@@ -303,6 +304,58 @@ bool Set_Integr::redisSet(uchar fc, const QVariant &v)
 }
 
 
+QVariant Set_Integr::ftpCfg(uchar fc)
+{
+    sFtpCfg *cfg = &Ftp_Core::ftpCfg;
+    QVariant res = 0; switch (fc) {
+    case 1: res = cfg->en; break;
+    case 2: res = cfg->host; break;
+    case 3: res = cfg->user; break;
+    case 4: res = cfg->pwd; break;
+    case 5: res = cfg->path; break;
+    case 6: res = cfg->port; break;
+    case 7: res = cfg->updateTime; break;
+    case 8: res = cfg->backupTime; break;
+    case 9: res = cfg->total; break;
+    case 10: res = cfg->line; break;
+    case 11: res = cfg->loop; break;
+    case 12: res = cfg->outlet; break;
+    case 13: res = cfg->dualPower; break;
+    default: cout << fc; break;
+    }
+    return res;
+}
+
+
+bool Set_Integr::ftpSet(uchar fc, const QVariant &v)
+{
+    sFtpCfg *cfg = &Ftp_Core::ftpCfg;
+    QString prefix = "ftp";  QString key;
+    bool ret = true; switch (fc) {
+    case 1: key = "en"; cfg->en = v.toInt(); break;
+    case 2: key = "host"; cfg->host = v.toString(); break;
+    case 3: key = "user"; cfg->user = v.toString(); break;
+    case 4: key = "pwd"; cfg->pwd = v.toString(); break;
+    case 5: key = "path"; cfg->path =v.toString(); break;
+    case 6: key = "port"; cfg->port = v.toInt(); break;
+    case 7: key = "updateTime"; cfg->updateTime = v.toInt(); break;
+    case 8: key = "backupTime"; cfg->backupTime = v.toInt(); break;
+    case 9: key = "total"; cfg->total = v.toInt(); break;
+    case 10: key = "line"; cfg->line = v.toInt(); break;
+    case 11: key = "loop"; cfg->loop = v.toInt(); break;
+    case 12: key = "outlet"; cfg->outlet = v.toInt(); break;
+    case 13: key = "dualPower"; cfg->dualPower = v.toInt(); break;
+    case 15: Ftp_Core::bulid()->csv_test(); break;
+    default: ret = false; cout << fc; break;
+    }
+
+    if(ret && key.size()) {
+        Cfg_Com *cfg = Cfg_Com::bulid();
+        cfg->writeCfg(key, v, prefix);
+    }
+
+    return ret;
+}
 
 QVariant Set_Integr::odbcCfg(uchar fc)
 {

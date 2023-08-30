@@ -242,7 +242,7 @@ bool Integr_JsonRecv::checkInput(const QByteArray &msg, QJsonObject &obj)
             obj = doc.object();
             ret = true;
         }
-    }
+    } else cout << msg;
     return ret;
 }
 

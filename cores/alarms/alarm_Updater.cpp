@@ -62,6 +62,20 @@ bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
     return false;
 }
 
+bool Alarm_Updater::upLoopVol(const sDataItem &index)
+{
+    bool ret = true;
+    if(index.type == DType::Loop && index.topic == DTopic::Vol) {
+        sDevData *dev = cm::devData(index.addr);
+        sDevCfg *cfg = &dev->cfg; int dtc = dev->dtc.fault;
+        if(cfg->param.isBreaker && dtc == FaultCode::DTC_OK) {
+            int breaker = cm::masterDev()->loop.relay.sw[index.id];
+            if(breaker == sRelay::Off) ret = false;
+        }
+    }
+    return ret;
+}
+
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
 {
     bool ret = upCorrectData(i, it);
@@ -72,8 +86,9 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     if(value < it.min[i]) alarm = AlarmCode::Min;
     else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
     uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
-    if(it.alarm[i] != alarm)  {
-        if(it.cnt[i]++ > t) {
+    if(index.topic == DTopic::Vol) t += 2;
+    if(it.alarm[i] != alarm)   {
+        if(it.cnt[i]++ > t && upLoopVol(index)) {
             Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;

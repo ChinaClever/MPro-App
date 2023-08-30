@@ -352,7 +352,8 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
-    char reserve[4][NAME_SIZE];
+    char updatetime[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
 };
 
 struct sOtaUpIt
@@ -431,7 +432,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
-             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28,
+             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28, EFtp,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap, EScript, EAIOT,

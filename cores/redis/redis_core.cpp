@@ -28,7 +28,7 @@ void Redis_Core::redisHandleMessage(const QStringList &msg)
     QString ip = cm::dataPacket()->net.inet.ip;
     if(msg.at(1) == redisCfg.subscribe || msg.at(1) == ip) {
         Integr_JsonRecv::bulid()->recv(msg.last().toUtf8());
-    } else qDebug() << "error redisHandleMessage" << msg;
+    } else cout << "error redisHandleMessage" << msg;
 }
 
 void Redis_Core::workDown()

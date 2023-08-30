@@ -19,6 +19,7 @@ public slots:
     void run();
 
 private:
+    bool upLoopVol(const sDataItem &index);
     bool upCorrectData(int i, sAlarmUnit &it);
     bool upRelayUnit(sDataItem &index, sRelayUnit &it);
     bool upAlarmItem(sDataItem &index, int i, sAlarmUnit &it);

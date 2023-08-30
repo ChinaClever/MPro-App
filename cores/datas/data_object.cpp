@@ -132,9 +132,16 @@ void Data_Object::loopBreaker(int id)
 
 void Data_Object::lineData(int id, int start, int end)
 {
+    int dtc = mDev->dtc.fault;
+    static uint volArray[LINE_NUM] = {0, 0, 0};
     sumObjData(id, mDev->line, mDev->loop, start, end);
+    uint vol = mDev->line.vol.value[id];
+    if(vol > 196*COM_RATE_VOL) {
+        volArray[id] = mDev->line.vol.value[id];
+    } else if(vol < COM_MIN_VOL && dtc == FaultCode::DTC_OK) {
+       mDev->line.vol.value[id] = volArray[id];
+    }
 }
-
 
 void Data_Object::lineDataNoLoop(int id, int start, int end)
 {
