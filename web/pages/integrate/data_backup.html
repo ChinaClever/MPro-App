@@ -139,6 +139,7 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
+
 		}
 
 		function SetData(btn){
@@ -198,7 +199,7 @@
 			tbody += '<tr><td id="lang_7" ></td>';
 			tbody += '<td><input id = "path" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td id="lang_8" onchange ="SetData(this)" ></td>';
+			tbody += '<tr style="display:none"><td id="lang_8" ></td>';//端口号隐藏
 			tbody += '<td><input id = "port" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_9" ></td>';
@@ -207,25 +208,7 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "backup_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[23][language]+'<span>';
 			tbody += '</td></tr>';
-			// tbody += '<tr><td id="lang_11" ></td>';
-			// tbody += '<td><input id = "tg_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
-			// tbody += '</td></tr>';
-			// tbody += '<tr><td id="lang_12" ></td>';
-			// tbody += '<td><input id = "phase_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
-			// tbody += '</td></tr>';
-			// tbody += '<tr><td id="lang_13" onchange ="SetData(this)" ></td>';
-			// tbody += '<td><input id = "loop_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
-			// tbody += '</td></tr>';
-			// tbody += '<tr><td id="lang_14" ></td>';
-			// tbody += '<td><input id = "output_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
-			// tbody += '</td></tr>';
-			// tbody += '<tr><td id="lang_15" ></td>';
-			// tbody += '<td><input id = "dual_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
-			// // tbody += '<td><input id = "dual_data" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
-			// tbody += '</td></tr>';
-			// tbody += '<tr><td style="padding-left: 35%"><input id="lang_16" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px" type = "button"  onclick = "SetData(this)"></input></td></tr>';
 
-			// tbody += '<tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
