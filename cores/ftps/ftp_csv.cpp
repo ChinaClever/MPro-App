@@ -23,7 +23,7 @@ void Ftp_Csv::csv_saves()
         csv_totalSave(i);
     }
 
-    int t = 45 + QRandomGenerator::global()->bounded(25);
+    int t = 45 + QRandomGenerator::global()->bounded(35);
     cm::mdelay(t*1000); system("rm -rf /tmp/csv/*");
 }
 
