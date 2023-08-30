@@ -23,14 +23,14 @@ void Ftp_Upload::uploads(const QString &fn)
 
 void Ftp_Upload::upload_ftp(const QString &fn)
 {
-    QString fmd = "curl -u %1:%2 -T %3 ftp://%4:%5 &"; sFtpCfg *cfg = &ftpCfg;
+    QString fmd = "curl -u %1:%2 -T %3 ftp://%4:%5 "; sFtpCfg *cfg = &ftpCfg;
     QString cmd = fmd.arg(cfg->user, cfg->pwd, mDir+fn, cfg->host, cfg->path);
     upload_system(cmd);
 }
 
 void Ftp_Upload::upload_ftps(const QString &fn)
 {
-    QString fmd = "curl -k -u %1:%2 -T %3 ftps://%4:%5 &"; sFtpCfg *cfg = &ftpCfg;
+    QString fmd = "curl -k -u %1:%2 -T %3 ftps://%4:%5 "; sFtpCfg *cfg = &ftpCfg;
     QString cmd = fmd.arg(cfg->user, cfg->pwd, mDir+fn, cfg->host, cfg->path);
     upload_system(cmd);
 }
@@ -51,6 +51,6 @@ void Ftp_Upload::upload_sftp(const QString &fn)
 
 void Ftp_Upload::upload_system(const QString &cmd)
 {
-    int t = 540 + QRandomGenerator::global()->bounded(800);
+    int t = 1540 + QRandomGenerator::global()->bounded(800);
     cm::mdelay(t); system(cmd.toStdString().c_str());
 }

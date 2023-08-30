@@ -170,14 +170,14 @@ void Cfg_Service::ftp()
         case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
         case 3: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
         case 4: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 5: key = "path"; cfg->pwd = mCfg->readCfg(key, "/", prefix).toString(); break;
+        case 5: key = "path"; cfg->path = mCfg->readCfg(key, "/", prefix).toString(); break;
         case 6: key = "total"; cfg->total = mCfg->readCfg(key, 1, prefix).toInt(); break;
         case 7: key = "line"; cfg->line = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 8: key = "loop"; cfg->loop = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 9: key = "outlet"; cfg->outlet = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 11: key = "dualPower"; cfg->dualPower = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 12: key = "updateTime"; cfg->updateTime = mCfg->readCfg(key, 15, prefix).toInt(); break;
-        case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 12, prefix).toInt(); break;
+        case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
         case 14: key = "port"; cfg->port = mCfg->readCfg(key, 0, prefix).toInt(); break;
         }
     }
