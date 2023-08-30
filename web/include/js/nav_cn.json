@@ -166,6 +166,10 @@
       {
         "name": "Modbus协议",
         "url": "modbus.html"
+      },
+      {
+        "name": "数据自动备份",
+        "url": "data_backup.html"
       }
     ]
   }, 

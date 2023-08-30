@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>network</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left radius"></table>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/pdu_rpc.js"></script>
+    <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = 0;
+		pdu_cfg.radiusCfg();
+		let mode_set = new Array("","");
+		let radius_data = new Array();
+		let ldap_data = new Array();
+		let lang = new Array();
+		let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
+
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
+		function read_data(){
+			for(var j = 1;j<radius_name.length;j++){
+				radius_data[j] = pdu_cfg.cfgValue(48,j,0,addr);
+			}
+
+		}
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<14;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["数据自动备份","Radius server","","",""];
+			lang[2] = ["数据自动备份","Radius setting","","",""];
+			lang[3] = ["是否启用:","Radius enable:","","",""];
+			lang[4] = ["本地认证启用:","Enable local authentication:","","",""];
+			lang[5] = ["认证服务器:","Authentication server","","",""];
+			lang[6] = ["NAS密钥:","NAS key:","","",""];
+			lang[7] = ["认证端口号:","Authentication port number:","","",""];
+			lang[8] = ["账号端口号:","Account port number:","","",""];
+
+			lang[13] = ["禁用","Disable","","",""];
+			lang[14] = ["启用","Enable","","",""];
+
+			mode_set[0] = lang[13][language];
+			mode_set[1] = lang[14][language];
+		}
+		function lang_fun(){
+			for(let j = 1;j<9;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+		}
+		setTimeout(function(){
+			$('.radius').html(buildTable());
+			lang_fun();
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			for(let i = 1;i<radius_name.length;i++){
+				document.getElementById(radius_name[i]).value = radius_data[i];
+				document.getElementById(radius_name[i]).disabled = false;
+			}
+
+			if(radius_data[1] == 0 || radius_data[1] == "false"){
+				for(let i = 2;i<radius_name.length;i++){
+					document.getElementById(radius_name[i]).disabled = true;
+				}
+			}
+
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
+		}
+		function SetData(btn){
+			for(let i = 0;i<radius_name.length;i++){
+				if(radius_name[i] == btn.id){
+					pdu_cfg.setCfg(48,i,btn.value,0,addr);
+				}
+			}
+
+			btn.blur();
+				flash_html();
+		}
+		function flash_html(){
+			pdu_cfg.radiusCfg();
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},500);
+		}
+
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="15%" id="lang_2" ></td>\
+			<td width ="85%"></td></tr>';
+			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<td><select id ="RadiusEn" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><select id ="RadiusLocalEn" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><input id = "RadiusServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td><input id = "RadiusKey" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<td><input id = "RadiusLocalPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_8" onchange ="SetData(this)" ></td>';
+			tbody += '<td><input id = "RadiusPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td></tr>';
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+
+    </script>
+</body>
+</html>
