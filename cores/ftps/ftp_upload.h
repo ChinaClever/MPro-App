@@ -13,6 +13,7 @@ private:
     void upload_ftp(const QString &fn);
     void upload_ftps(const QString &fn);
     void upload_sftp(const QString &fn);
+    void upload_system(const QString &cmd);
 };
 
 #endif // FTP_UPLOAD_H
