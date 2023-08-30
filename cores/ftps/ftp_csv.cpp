@@ -187,7 +187,7 @@ void Ftp_Csv::csv_test()
     if(!ftpCfg.en) return ;
     if(ftpCfg.user.isEmpty() || ftpCfg.pwd.isEmpty()) return ;
     if(ftpCfg.host.isEmpty() || ftpCfg.path.isEmpty()) return ;
-    csv_testRun();
+    QtConcurrent::run(this, &Ftp_Csv::csv_testRun);
 }
 
 void Ftp_Csv::csv_testRun()
