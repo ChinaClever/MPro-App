@@ -24,7 +24,10 @@
 						</div>
 					</div>
 					<div class="grid-col grid-col-7 border-none">
-						<table class="table table-border-none text-left radius"></table>
+						<table class="table table-border-none text-left data_back"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left data_check"></table>
 					</div>
 					<div class="grid-col grid-col-7 " style ="height: 100px;">
 					</div>
@@ -39,12 +42,11 @@
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
 		let addr = 0;
-		pdu_cfg.radiusCfg();
+		pdu_cfg.data_backCfg();
 		let mode_set = new Array("","");
-		let radius_data = new Array();
-		let ldap_data = new Array();
+		let backup_data = new Array();
 		let lang = new Array();
-		let radius_name = new Array("","RadiusEn","RadiusLocalEn","RadiusServer","RadiusKey","RadiusLocalPort","RadiusPort");
+		let backup_name = new Array("","backup_en","server_ip","account","password","path","port","record_time","backup_time","tg_data","phase_data","loop_data","output_data","dual_data");
 
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -53,8 +55,8 @@
 		}
 		ParseData();
 		function read_data(){
-			for(var j = 1;j<radius_name.length;j++){
-				radius_data[j] = pdu_cfg.cfgValue(48,j,0,addr);
+			for(var j = 1;j<backup_name.length;j++){
+				backup_data[j] = pdu_cfg.cfgValue(29,j,0,addr);
 			}
 
 		}
@@ -63,42 +65,73 @@
 			for(let i = 1;i<14;i++){
 				lang[i] = new Array();
 			}
-			lang[1] = ["数据自动备份","Radius server","","",""];
-			lang[2] = ["数据自动备份","Radius setting","","",""];
-			lang[3] = ["是否启用:","Radius enable:","","",""];
-			lang[4] = ["本地认证启用:","Enable local authentication:","","",""];
-			lang[5] = ["认证服务器:","Authentication server","","",""];
-			lang[6] = ["NAS密钥:","NAS key:","","",""];
-			lang[7] = ["认证端口号:","Authentication port number:","","",""];
-			lang[8] = ["账号端口号:","Account port number:","","",""];
+			lang[1] = ["数据自动备份","Automatic data backup","","",""];
+			lang[2] = ["自动备份设置","Automatic backup settings","","",""];
+			lang[3] = ["是否开启:","Disable or enable:","","",""];
+			lang[4] = ["服务器地址:","Server address:","","",""];
+			lang[5] = ["登陆账号:","Login account：","","",""];
+			lang[6] = ["认证密码:","Authenticate Password:","","",""];
+			lang[7] = ["远程路径:","Remote path:","","",""];
+			lang[8] = ["端口号:","Port:","","",""];
+			lang[9] = ["记录时间:","Recording time:","","",""];
+			lang[10] = ["备份时间:","Backup time:","","",""];
+			lang[11] = ["统计数据:","Statistical data:","","",""];
+			lang[12] = ["相数据:","Phase data:","","",""];
+			lang[13] = ["回路数据:","Circuit data:","","",""];
+			lang[14] = ["输出位数据:","Output bit data:","","",""];
+			lang[15] = ["双电源数据:","Dual power data:","","",""];
+			lang[16] = ["测试","Test","","",""];
 
-			lang[13] = ["禁用","Disable","","",""];
-			lang[14] = ["启用","Enable","","",""];
+			lang[17] = ["禁用","Disable","","",""];
+			lang[18] = ["ftp","ftp","","",""];
+			lang[19] = ["scp","scp","","",""];
+			lang[20] = ["FTPS","FTPS","","",""];
+			lang[21] = ["SFTP","SFTP","","",""];
+			lang[22] = ["分钟","Minute","","",""];
+			lang[23] = ["小时","Hour","","",""];
+			
+			 for(let i = 0; i < 5; i++ ){
+				mode_set[i] = lang[17+i][language];				
+			 }
 
-			mode_set[0] = lang[13][language];
-			mode_set[1] = lang[14][language];
 		}
 		function lang_fun(){
-			for(let j = 1;j<9;j++){
+			for(let j = 1;j<16;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("lang_16").value  = lang[16][language];
 		}
 		setTimeout(function(){
-			$('.radius').html(buildTable());
+			$('.data_back').html(buildTable());
+			$('.data_check').html(buildTableChk());
 			lang_fun();
 			read_data();
 			showdata();
 		},500);
 		function showdata(){
-			for(let i = 1;i<radius_name.length;i++){
-				document.getElementById(radius_name[i]).value = radius_data[i];
-				document.getElementById(radius_name[i]).disabled = false;
+			for(let i = 1;i<backup_name.length;i++){
+				if(i < 9){//统计数据之前
+					document.getElementById(backup_name[i]).value = backup_data[i];
+					document.getElementById(backup_name[i]).disabled = false;
+				}else{//统计数据
+					if(backup_data[i] == 0){
+						document.getElementById(backup_name[i]).checked = false;
+					}else{
+						document.getElementById(backup_name[i]).checked = true;
+					}					
+				}
 			}
 
-			if(radius_data[1] == 0 || radius_data[1] == "false"){
-				for(let i = 2;i<radius_name.length;i++){
-					document.getElementById(radius_name[i]).disabled = true;
+			if(backup_data[1] == 0 || backup_data[1] == "false"){
+				for(let i = 2;i<backup_name.length;i++){
+					document.getElementById(backup_name[i]).disabled = true;
 				}
+				document.getElementById("lang_16").disabled = true;
+			}else{
+				for(let i = 2;i<backup_name.length;i++){
+					document.getElementById(backup_name[i]).disabled = false;
+				}
+				document.getElementById("lang_16").disabled = false;
 			}
 
 			if(top.login_permit_ == 0){
@@ -107,18 +140,36 @@
 				$("select").attr("disabled","disabled");
 			}
 		}
+
 		function SetData(btn){
-			for(let i = 0;i<radius_name.length;i++){
-				if(radius_name[i] == btn.id){
-					pdu_cfg.setCfg(48,i,btn.value,0,addr);
+			for(let i = 0;i<backup_name.length;i++){
+				if(backup_name[i] == btn.id){
+					if(i < 9){
+						pdu_cfg.setCfg(29,i,btn.value,0,addr);
+					}else{
+						if(btn.checked == true){
+							pdu_cfg.setCfg(29,i,1,0,addr);
+						}else{
+							pdu_cfg.setCfg(29,i,0,0,addr);	
+						}
+
+					}
+					
 				}
 			}
-
+			if(btn.id == "lang_16"){
+				pdu_cfg.setCfg(29,15,0,0,addr);
+				if(0 == language){
+                alert("已发送测试文件！");
+			      	}else{
+                alert("Test file has been sent!");
+              } 
+			}
 			btn.blur();
 				flash_html();
 		}
 		function flash_html(){
-			pdu_cfg.radiusCfg();
+			pdu_cfg.data_backCfg();
 			setTimeout(function(){
 				read_data();
 				showdata();
@@ -127,34 +178,82 @@
 
 		function buildTable() {
 			var thead = '',tbody = '';
-			thead = '<tr><td width ="15%" id="lang_2" ></td>\
-			<td width ="85%"></td></tr>';
+			thead = '<tr><td width ="17%" id="lang_2" ></td>\
+			<td width ="83%"></td></tr>';
 			tbody += '<tr><td id="lang_3" ></td>';
-			tbody += '<td><select id ="RadiusEn" onchange ="SetData(this)">';
+			tbody += '<td><select id ="backup_en" onchange ="SetData(this)">';
 			for(var i = 0; i<mode_set.length;i++){
 				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
 			tbody += '<tr><td id="lang_4" ></td>';
-			tbody += '<td><select id ="RadiusLocalEn" onchange ="SetData(this)">';
-			for(var i = 0; i<mode_set.length;i++){
-				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
-			}
-			tbody += '</select></td></tr>';
+			tbody += '<td><input id = "server_ip" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
-			tbody += '<td><input id = "RadiusServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "account" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "RadiusKey" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '<td><input id = "password" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
-			tbody += '<td><input id = "RadiusLocalPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
+			tbody += '<td><input id = "path" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_8" onchange ="SetData(this)" ></td>';
-			tbody += '<td><input id = "RadiusPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
+			tbody += '<td><input id = "port" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
 			tbody += '</td></tr>';
-			tbody += '<tr><td></td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "record_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[22][language]+'<span>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_10" ></td>';
+			tbody += '<td><input id = "backup_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[23][language]+'<span>';
+			tbody += '</td></tr>';
+			// tbody += '<tr><td id="lang_11" ></td>';
+			// tbody += '<td><input id = "tg_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			// tbody += '</td></tr>';
+			// tbody += '<tr><td id="lang_12" ></td>';
+			// tbody += '<td><input id = "phase_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			// tbody += '</td></tr>';
+			// tbody += '<tr><td id="lang_13" onchange ="SetData(this)" ></td>';
+			// tbody += '<td><input id = "loop_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			// tbody += '</td></tr>';
+			// tbody += '<tr><td id="lang_14" ></td>';
+			// tbody += '<td><input id = "output_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			// tbody += '</td></tr>';
+			// tbody += '<tr><td id="lang_15" ></td>';
+			// tbody += '<td><input id = "dual_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			// // tbody += '<td><input id = "dual_data" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			// tbody += '</td></tr>';
+			// tbody += '<tr><td style="padding-left: 35%"><input id="lang_16" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px" type = "button"  onclick = "SetData(this)"></input></td></tr>';
+
+			// tbody += '<tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableChk() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="17%" " ></td><td width ="16%"></td>\
+			<td width ="17%" " ></td><td width ="16%"></td>\
+			<td width ="17%" " ></td><td width ="16%"></td>';
+
+			 tbody += '<tr><td id="lang_11" ></td>';
+			 tbody += '<td><input id = "tg_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_12" ></td>';
+			 tbody += '<td><input id = "phase_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_13" onchange ="SetData(this)" ></td>';
+		     tbody += '<td><input id = "loop_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td></tr>';
+			 tbody += '<tr><td id="lang_14" ></td>';
+			 tbody += '<td><input id = "output_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_15" ></td>';
+			 tbody += '<td><input id = "dual_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td></tr>';
+			 tbody += '<tr><td></td></tr>';
+ 			 tbody += '<tr><td style="padding-left: 35%"><input id="lang_16" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px" type = "button"  onclick = "SetData(this)"></input></td></tr>';
+			  tbody += '<tr><td></td></tr>';
+			  return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
 
