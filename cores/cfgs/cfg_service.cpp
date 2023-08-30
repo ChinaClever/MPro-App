@@ -170,7 +170,7 @@ void Cfg_Service::ftp()
         case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
         case 3: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
         case 4: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
-        case 5: key = "path"; cfg->pwd = mCfg->readCfg(key, "/", prefix).toString(); break;
+        case 5: key = "path"; cfg->path = mCfg->readCfg(key, "/", prefix).toString(); break;
         case 6: key = "total"; cfg->total = mCfg->readCfg(key, 1, prefix).toInt(); break;
         case 7: key = "line"; cfg->line = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 8: key = "loop"; cfg->loop = mCfg->readCfg(key, 0, prefix).toInt(); break;
