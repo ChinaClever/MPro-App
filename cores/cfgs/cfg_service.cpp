@@ -177,7 +177,7 @@ void Cfg_Service::ftp()
         case 9: key = "outlet"; cfg->outlet = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 11: key = "dualPower"; cfg->dualPower = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 12: key = "updateTime"; cfg->updateTime = mCfg->readCfg(key, 15, prefix).toInt(); break;
-        case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 24, prefix).toInt(); break;
+        case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 12, prefix).toInt(); break;
         case 14: key = "port"; cfg->port = mCfg->readCfg(key, 0, prefix).toInt(); break;
         }
     }
