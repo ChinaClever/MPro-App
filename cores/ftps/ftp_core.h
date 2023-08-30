@@ -7,6 +7,7 @@ class Ftp_Core : public Ftp_Data
     Ftp_Core();
 public:
     static Ftp_Core *bulid();
+    ~Ftp_Core();
     void run();
 
 private:
@@ -15,6 +16,7 @@ private:
 
 private:
     int mCnt = 0;
+    bool isRun = true;
 };
 
 #endif // FTP_CORE_H

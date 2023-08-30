@@ -14,8 +14,7 @@ Ftp_Csv::Ftp_Csv()
 }
 
 void Ftp_Csv::csv_saves()
-{
-    system("rm -rf /tmp/csv/*");
+{    
     for(int i=0; i<DEV_NUM; ++i) {
         csv_outletSave(i);
         csv_lineSave(i);
@@ -23,6 +22,9 @@ void Ftp_Csv::csv_saves()
         csv_dualSave(i);
         csv_totalSave(i);
     }
+
+    int t = 35 + QRandomGenerator::global()->bounded(25);
+    cm::mdelay(t*1000); system("rm -rf /tmp/csv/*");
 }
 
 

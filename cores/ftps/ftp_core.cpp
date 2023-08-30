@@ -10,6 +10,11 @@ Ftp_Core::Ftp_Core()
     QtConcurrent::run(this,&Ftp_Core::run);
 }
 
+Ftp_Core::~Ftp_Core()
+{
+    isRun = false;
+}
+
 Ftp_Core *Ftp_Core::bulid()
 {
     static Ftp_Core* sington = nullptr;
@@ -32,7 +37,7 @@ void Ftp_Core::workDown()
 
 void Ftp_Core::run()
 {
-    while(1) {
+    while(isRun) {
         mdelay();
         workDown();
     }
