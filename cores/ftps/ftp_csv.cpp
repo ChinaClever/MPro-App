@@ -174,10 +174,11 @@ void Ftp_Csv::csv_totalSave(int addr)
 void Ftp_Csv::csv_save(const QString &fn, const QString& title, const QStringList &header, QtCSV::StringData &data)
 {
     if(data.rowCount() > 0) {
-        data.insertRow(0, title);
-        data.insertRow(1, header);
-        QString filePath = mDir + fn;
-        QtCSV::Writer::write(filePath, data);
+        QStringList head ,footer; QString filePath = mDir + fn;
+        QtCSV::Writer::WriteMode mode = QtCSV::Writer::REWRITE;
+        QTextCodec* codec = QTextCodec::codecForName("GB2312");
+        data.insertRow(0, title); data.insertRow(1, header);
+        QtCSV::Writer::write(filePath, data, ",", "\"", mode, head, footer, codec);
         uploads(fn);
     } data.clear();
 }
