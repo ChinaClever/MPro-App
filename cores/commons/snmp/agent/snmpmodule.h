@@ -21,6 +21,7 @@ class SnmpModule : public QObject, public QSNMPModule
 public:
     explicit SnmpModule(QSNMPAgent * snmpAgent, QObject *parent = nullptr);
 
+    void addSysOid();
     bool addOid(const sOidIt &it);
     virtual QVariant snmpGetValue(const QSNMPVar * var);
     virtual bool snmpSetValue(const QSNMPVar * var, const QVariant & v);

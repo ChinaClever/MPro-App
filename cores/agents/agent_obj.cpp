@@ -15,6 +15,7 @@ Agent_Obj::Agent_Obj(QObject *parent)
 void Agent_Obj::initAgentSlot()
 {
     mSnmp = SnmpAgent::bulid(this);
+    mSnmp->addSysOid();
 }
 
 bool Agent_Obj::addOid(uchar addr, uint oid, const QString &oidPrefix, const QString &name, char *ptr, bool isWrite)
