@@ -32,7 +32,7 @@ bool SnmpModule::addOid(const sOidIt &it)
 
 void SnmpModule::addSysOid()
 {
-    QSNMPType_e type = QSNMPType_OctetStr;
+    QSNMPType_e type = QSNMPType_ObjectId;
     QSNMPMaxAccess_e maxAccess = QSNMPMaxAccess_ReadOnly;
     QSNMPOid  moduleOid = QSNMPOid() << 1 << 3 << 6 << 1 << 2 << 1;
     this->snmpCreateVar("sysObjectID", type, maxAccess, moduleOid, 1, toOid("2"));
@@ -55,8 +55,10 @@ QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
         default: qDebug() << "Error: snmpGetValue" << var->fullName(); break;
         }
     } else {
-        if(var->name().contains("sysObjectID")) res = "1.3.6.1.4.1.30966.11";
-        else qDebug() << var->name();
+        if(var->name().contains("sysObjectID")) {
+            QSNMPOid  oid = QSNMPOid() << 1 << 3 << 6 << 1 << 4 << 1 << 30966 << 11;
+            res.setValue(oid); //res = "1.3.6.1.4.1.30966.11";
+        } else qDebug() << var->name();
     }
 
     return res;
