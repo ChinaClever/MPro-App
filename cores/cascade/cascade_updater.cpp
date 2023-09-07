@@ -158,8 +158,8 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
         QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
         str = cm::execute(cmd); throwMessage(str);
-        Set_Core::bulid()->ota_updater(11, fn);
-        otaRootfs(dir);
+        Set_Core::bulid()->ota_updater(1, fn);
+        otaRootfs(dir); cm::mdelay(100);
 
         cm::dataPacket()->ota.slave.isRun = 0;
         clrbit(cm::dataPacket()->ota.work, DOta_Slave);

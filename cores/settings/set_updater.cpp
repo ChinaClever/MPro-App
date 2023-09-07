@@ -149,10 +149,10 @@ bool Set_Updater::ota_error(int fc, const QString &fn)
 int Set_Updater::ota_updater(int fc, const QVariant &v)
 {
     bool ret = false; switch (fc) {
-    case DOtaCode::DOta_Usb:  break;
-    case DOtaCode::DOta_Net:  break;
-    case DOtaCode::DOta_Web:  break;
-    case DOtaCode::DOta_Rootfs:  break;
+    case DOtaCode::DOta_Usb: break;
+    case DOtaCode::DOta_Net: break;
+    case DOtaCode::DOta_Web: break;
+    case DOtaCode::DOta_Rootfs: break;
     default: return ota_error(fc, v.toString());
     }
 
