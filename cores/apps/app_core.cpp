@@ -60,9 +60,9 @@ QString App_Core::hashPassword(const QString& password)
 
 void App_Core::initRoot(const QString &sn)
 {
-    QString fmd = "echo -e '%1\n%1' |  passwd root";
+    QString fmd = "echo -e '%1\n%1' | passwd root";
     QString pwd = "123456"; if(sn.size() > 3) pwd = hashPassword(sn);
-    QString cmd = fmd.arg(pwd); system(cmd.toStdString().c_str());
+    QString cmd = fmd.arg(pwd); system(cmd.toLatin1().data());
     char *ptr = cm::dataPacket()->login[0].reserve[2];
     //QByteArray ba = pwd.toLatin1().toBase64();
     qstrcpy(ptr, pwd.toStdString().c_str());
