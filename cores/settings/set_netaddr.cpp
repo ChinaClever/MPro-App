@@ -33,7 +33,11 @@ QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
     case 17: res = inet->reserve[1]; break;
     case 18: res = inet->reserve[2]; break;
     default: cout << sub << fc; break;
+    } if(10 == fc) {
+        QString str = cm::executeCommand("ethtool eth0 | grep Speed");
+        res = res.toString() + " - " + str;
     }
+
     return res;
 }
 
