@@ -1,22 +1,39 @@
-QT -= gui
+QT       += core gui
 
-CONFIG += c++17 console
-CONFIG -= app_bundle
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CM_PATH = ../../cores/commons
-include($$CM_PATH/rpc/json/jsonrpc.pri)
+include(common/common.pri)
 
-HEADERS += \
-    sshrpcclient.h
+
 
 SOURCES += \
-        main.cpp \
-        sshrpcclient.cpp
+    envwid.cpp \
+    keythread.cpp \
+    linewid.cpp \
+    loopwid.cpp \
+    main.cpp \
+    mainwindow.cpp
 
+HEADERS += \
+    envwid.h \
+    keythread.h \
+    linewid.h \
+    loopwid.h \
+    mainwindow.h
+
+FORMS += \
+    envwid.ui \
+    linewid.ui \
+    loopwid.ui \
+    mainwindow.ui
+
+# Default rules for deployment.
 contains(TARGET_ARCH, x86_64) {
     # Default rules for deployment.
     qnx: target.path = /tmp/$${TARGET}/bin
@@ -26,4 +43,3 @@ contains(TARGET_ARCH, x86_64) {
     target.path = /tmp
     INSTALLS = target
 }
-

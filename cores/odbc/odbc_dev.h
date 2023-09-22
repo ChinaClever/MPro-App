@@ -5,7 +5,6 @@
 struct sOdbcDevIt {
     int id = -1;
     uint pdu_id=0;
-    int run_status;
     QString dev_type;
 
     int dev_spec;
