@@ -31,8 +31,9 @@ bool OP_ARtu::loop_recvPacket(const QByteArray &array, sOpIt *it)
         //cout << sw << *ptr++ << *ptr++;
 
         for(int i=0; i<op; ++i) {
-            it->activePow[i] = it->vol[i] * it->cur[i] / 1000.0;
+            it->activePow[i] = it->vol[i] * it->cur[i] / (COM_RATE_VOL*COM_RATE_CUR);
             if(it->pow[i]) it->pf[i] = it->pow[i] * 100.0 / it->activePow[i]; else it->pf[i] = 0;
+            if(it->pow[i] > it->activePow[i]) it->activePow[i] += it->activePow[i]*0.01;
             it->reactivePow[i] = it->activePow[i] - it->pow[i];
             //cout << it->pow[i] << it->activePow[i] << it->pf[i];
         }
