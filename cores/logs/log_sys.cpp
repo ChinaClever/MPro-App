@@ -27,7 +27,9 @@ Log_Sys::Log_Sys(QObject *parent)
 {
     mRwLock = log_rwLock();
 }
-
+/**
+ * 将日志消息发送到系统日志
+ */
 void Log_Sys::sys_logInfo(const QString& msg)
 {
     char *str = msg.toUtf8().data(); //cout << msg;

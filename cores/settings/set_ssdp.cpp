@@ -9,7 +9,7 @@
 Set_Ssdp::Set_Ssdp(QObject *parent)
     : Ssdp_Obj{parent}
 {
-    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();
+    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();  /*执行SSDP绑定操作*/
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
     connect(j, &Integr_JsonRecv::recvCfgSig, this, &Set_Ssdp::recvCfgSlot);
     connect(this, &Ssdp_Obj::recvSig, this, &Set_Ssdp::recvSlot);

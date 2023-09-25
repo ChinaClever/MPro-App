@@ -74,15 +74,15 @@ void Cascade_Master::setEndisable(int addr, bool ret, uchar &v)
 
 bool Cascade_Master::masterSeting(const sDataItem &unit)
 {
-    uchar fc = fc_setting; if(isOta || getAddress()) return isOta;
+    uchar fc = fc_setting; if(isOta || getAddress()) return isOta;  /*是否处于OTA模式*/
     QByteArray array = cm::toByteArray(unit);
-    return writeData(fc, unit.addr, array);
+    return writeData(fc, unit.addr, array); /*调用函数将数据写入到设备中，并将写入操作的结果作为函数的返回值*/
 }
 
 
 bool Cascade_Master::masterSetCfg(const sCfgItem &it, const QVariant &v)
 {
-    uchar fc = fc_setCfg; if(isOta || getAddress()) return isOta;
+    uchar fc = fc_setCfg; if(isOta || getAddress()) return isOta;   /*是否处于OTA模式*/
     QByteArray array; QDataStream in(&array, QIODevice::WriteOnly);
     in << cm::toByteArray(it) << v;
     return writeData(fc, it.addr, array);

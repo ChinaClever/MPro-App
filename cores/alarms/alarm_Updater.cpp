@@ -304,39 +304,44 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     return ret;
 }
 
+/**
+ *更新设备运行状态：正常、预警、告警、升级、故障等等
+ */
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
     bool ret = mCrAlarm = 0;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
-    uchar *ptr = &cm::masterDev()->status;
-    Alarm_Log::bulid()->currentAlarmClear(addr);
+    uchar *ptr = &cm::masterDev()->status;  /*获取主机设备当前状态*/
+    Alarm_Log::bulid()->currentAlarmClear(addr);    /*清除该设备当前告警*/
     //if(0 == addr) dev->offLine = 5;
 
-    if(dev->offLine > 1) {
-        ret = upDevData(index, dev);
-        dev->alarm = ret ? 2:0;
-        dev->status = dev->alarm;
-        if(!ret && mCrAlarm) dev->status = 1;
-        if(dev->dtc.fault) dev->status = 4;
-        if(addr && (0 == *ptr) && mCrAlarm) *ptr=6;
-        if(addr && (0 == *ptr) && dev->alarm) *ptr=7;
-        if(cm::dataPacket()->ota.work) dev->status = 3;
-    } else if(dev->offLine <= 1) {
-        dev->status = 5; if(!(*ptr)) *ptr=5;
-        if(addr) Alarm_Log::bulid()->appendSlaveOffline(addr);
-    } dev->cfg.param.runStatus = dev->status;
+    if(dev->offLine > 1) {  /*副机设备在线*/
+        ret = upDevData(index, dev);    /*更新设备数据，计算相、回路、输出位、分组、环境数据是否达到告警值*/
+        dev->alarm = ret ? 2:0;         /*根据返回值来设置设备的告警状态，0表示正常*/
+        dev->status = dev->alarm;       /*将告警状态给设备的状态*/
+        if(!ret && mCrAlarm) dev->status = 1;   /*如果 ret 为0且 mCrAlarm 为真，将设备状态置为预警*/
+        if(dev->dtc.fault) dev->status = 4;     /*设备故障时将设备状态置为故障*/
+        if(addr && (0 == *ptr) && mCrAlarm) *ptr=6;     /*如果设备为副机且mCrAlarm 为真且主机当前工作状态为0，将主机设备状态置为副机预警*/
+        if(addr && (0 == *ptr) && dev->alarm) *ptr=7;   /*如果设备为副机且当前工作状态为告警且主机当前工作状态为0，将主机设备状态置为副机告警*/
+        if(cm::dataPacket()->ota.work) dev->status = 3; /*如果当前为升级状态，将主机设备状态置为升级*/
+    } else if(dev->offLine <= 1) {      /*副机设备不在线*/
+        dev->status = 5; if(!(*ptr)) *ptr=5;    /*将主机设备状态置为副机离线*/
+        if(addr) Alarm_Log::bulid()->appendSlaveOffline(addr);  /*将副机离线事件记录到数据库*/
+    } dev->cfg.param.runStatus = dev->status;       /*将设备的状态赋值给设备运行状态*/
 
     return ret;
 }
-
+/**
+ * 更新设备运行状态,生成二维码
+ */
 void Alarm_Updater::run()
 {
     int num = 0; sDevCfg *cfg = &cm::masterDev()->cfg;
-    if(cfg->param.devMode) num = cfg->nums.slaveNum;
-    else Alarm_Log::bulid()->currentAllAlarmClear();
-    for(int i=0; i<num+1; ++i) upDevAlarm(i);
-    Alarm_Log::bulid()->generateQRcode();
+    if(cfg->param.devMode) num = cfg->nums.slaveNum;    /*未禁用级联则获取副机数量*/
+    else Alarm_Log::bulid()->currentAllAlarmClear();    /*禁用级联则清除当前所有设备的告警*/
+    for(int i=0; i<num+1; ++i) upDevAlarm(i);   /*更新设备运行状态：正常、预警、告警、升级、故障等等*/
+    Alarm_Log::bulid()->generateQRcode();   /*生成二维码*/
     Log_Core::bulid()->log_addCnt();
     Odbc_Core::bulid()->addCnt();
 }

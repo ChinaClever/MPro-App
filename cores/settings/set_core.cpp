@@ -129,12 +129,12 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
 int Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {
     int ret = false;
-    if(it.addr==0 || it.addr==0xff) {
-        ret = setParam(it, v);
+    if(it.addr==0 || it.addr==0xff) {   /*主机*/
+        ret = setParam(it, v);  /*/根据不同的Type，调用不同的设置函数*/
     }
 
-    if(it.addr) {
-        int num = cm::masterDev()->cfg.nums.slaveNum;
+    if(it.addr) {   /*副机*/
+        int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);        
     } if(it.type == SFnCode::EDual) { it.addr += 1; Cascade_Core::bulid()->masterSetCfg(it, v);}
 
@@ -145,18 +145,18 @@ int Set_Core::setting(sDataItem &it)
 {
     int ret = true;
 
-    if(it.rw) {
-        if(it.addr==0 || it.addr==0xff) {
+    if(it.rw) {   /*写数据*/
+        if(it.addr==0 || it.addr==0xff) {   /*主机*/
             if(it.topic == DTopic::Relay) {
-                ret = relaySet(it);
+                ret = relaySet(it); /*开关设置*/
             } else {
-                ret = setAlarm(it);
+                ret = setAlarm(it); /*告警设置*/
             }
-            if(ret) writeAlarm();
+            if(ret) writeAlarm();   /*保存报警配置*/
         }
 
-        if(it.addr) {
-            int num = cm::masterDev()->cfg.nums.slaveNum;
+        if(it.addr) {   /*副机*/
+            int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
         } if((it.topic != DTopic::Relay) && ret) setAlarmLog(it);
         if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}

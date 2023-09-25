@@ -193,8 +193,8 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
         if(index.type) it.alarm_status += tr("%１").arg(index.id+1);
     } it.alarm_status += alarmType(index) +", ";
 
-    if(index.topic == DTopic::Relay) {
-        it.alarm_content = alarmRelay(value);
+    if(index.topic == DTopic::Relay) {  /*开关*/
+        it.alarm_content = alarmRelay(value);   /*告警内容赋值给it.alarm_content变量*/
 #if 0
          if(DType::Loop == index.type) {
             Alarm_Object obj;
@@ -205,18 +205,18 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
             it.alarm_content += tr("vol = %1V").arg(v);
          }
 #endif
-    }else if(index.type == DType::Sensor) {
-        it.alarm_content = alarmSensor(value);
+    }else if(index.type == DType::Sensor) { /*传感器*/
+        it.alarm_content = alarmSensor(value);  /*告警内容赋值给it.alarm_content变量*/
     }else {
-        it.alarm_status += alarmStatus(value);
-        it.alarm_content = alarmContent(index);
+        it.alarm_status += alarmStatus(value);  /*告警内容赋值给it.alarm_status变量*/
+        it.alarm_content = alarmContent(index); /*告警内容赋值给it.alarm_content变量*/
     }
     return it;
 }
 
 void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
-    sAlarmItem it = alarmItem(index, value);
+    sAlarmItem it = alarmItem(index, value);    /*告警项目*/
     Log_Core::bulid()->append(it);
     //qDebug() << it.module << it.content;
 }
