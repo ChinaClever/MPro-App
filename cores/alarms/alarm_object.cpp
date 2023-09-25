@@ -302,20 +302,24 @@ void Alarm_Object::clearEle(sDataItem &index)
             start = id * num; end = (id+1) * num;
             if(cfg->param.devSpec == 1) {
                 num = cfg->nums.loopNum / size;
-                start = 64+id * num; end = 64+(id+1) * num;
-            } OP_Core::bulid()->clearEle(start, end);
+                start = id * num; end = (id+1) * num;
+                OP_Core::bulid()->clearEle_A(start, end);
+            } else OP_Core::bulid()->clearEle(start, end);
             for(int i=start; i<end; ++i) cm::masterDev()->line.ele[i] = 0;
+            //cout << start << end << id;
         } else if((DType::Loop == index.type) && (cfg->param.devSpec > 1)) {
             for(int i=0; i<index.id; ++i) {
                 if(i) start += cfg->nums.loopEachNum[i-1];
                 end += cfg->nums.loopEachNum[i];
             } OP_Core::bulid()->clearEle(start, end);
             for(int i=start; i<end; ++i) cm::masterDev()->loop.ele[i] = 0;
-        } else {
-            int id = index.id; if(1 == cfg->param.devSpec) {
-                id += 64; cm::masterDev()->loop.ele[index.id-1] = 0;
-            } else cm::masterDev()->output.ele[index.id-1] = 0;
-            OP_Core::bulid()->clearEle(id); //cout << index.id;
+        } else {            
+            if(1 == cfg->param.devSpec) {
+                OP_Core::bulid()->clearEle_A(index.id);
+            } else {
+                OP_Core::bulid()->clearEle(index.id);
+            } cm::masterDev()->output.ele[index.id-1] = 0;
+            //cout << index.id << id;
         }
     } else {
         OP_Core::bulid()->clearEle(0);

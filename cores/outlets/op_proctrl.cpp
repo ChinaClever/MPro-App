@@ -50,6 +50,8 @@ void OP_ProCtrl::funClearEle(uchar *buf)
     for(int i=0; i<10; i++) cmd[k++] = buf[i];
     for(int i=0; i<48; i++) cmd[k++] = 0x00;  //预留位
     writeCtrlCmd(cmd, k);
+    //QByteArray array((char *)cmd, zCmdLen);
+    //cout << cm::byteArrayToHexStr(array);
 }
 
 
