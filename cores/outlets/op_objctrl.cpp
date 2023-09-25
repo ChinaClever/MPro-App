@@ -129,23 +129,23 @@ void OP_ObjCtrl::closeSwitch(int id)
 
 void OP_ObjCtrl::clearAllEle()
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0xFF;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0xFF;
     funClearEle(cmd);
 }
 
 void OP_ObjCtrl::clearEle(int start, int end)
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0;
     for(int i=start; i<end; i++) setBitControl(i, cmd);
     funClearEle(cmd);
 }
 
 void OP_ObjCtrl::setClearEle(int id)
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0;
     setBitControl(id, cmd);
     funClearEle(cmd);
 }
