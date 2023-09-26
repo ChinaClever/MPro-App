@@ -158,8 +158,9 @@ void OP_ObjCtrl::clearEle_A(int start, int end)
 void OP_ObjCtrl::clearEle_A(int id)
 {
     uchar cmd[10];
+    int num = mDev->cfg.nums.loopNum;
     for(int i=0; i<10; i++) cmd[i] = 0;
-    if(mDev->cfg.nums.loopNum > 5) {
+    if(num > 5) {
         switch (id) {
         case 1: id = 0; break;
         case 2: id = 3; break;
@@ -169,7 +170,9 @@ void OP_ObjCtrl::clearEle_A(int id)
         case 6: id = 5; break;
         default: cout << id; break;
         }
-    } setBitControl(id, &cmd[8]);
+    } else id -= 1;
+
+    setBitControl(id, &cmd[8]);
     funClearEle(cmd);
 }
 
