@@ -45,8 +45,8 @@ void Cascade_Core::cascadeSlaveLog(int addr, bool recv)
 void Cascade_Core::workFun()
 {
     uchar addr = getAddress();
-    cmsWrite(195); if(addr) {
-        QByteArray rcv = readSerial(); if(rcv.size() > 6) {
+    cmsWrite(195); if(addr) {   /*从机*/
+        QByteArray rcv = readSerial(); if(rcv.size() > 6) { /*从串口读取数据*/
             rcv = qUncompress(rcv); if(rcv.size()) {
                 QVector<c_sFrame> its = replyData(rcv);
                 for(auto &it: its) workDown(it);
@@ -61,9 +61,9 @@ void Cascade_Core::workFun()
 void Cascade_Core::run()
 {
     cm::mdelay(2210);while(isRun) {
-        if(cm::masterDev()->cfg.param.devMode) {
-            if(isOpened()) workFun(); else initFunSlot();
-        } else if(isOpened()) closeSerial();
+        if(cm::masterDev()->cfg.param.devMode) {    /*非禁用级联模式*/
+            if(isOpened()) workFun(); else initFunSlot();   /*如果串口打开则执行workFun()函数，否则初始化串口*/
+        } else if(isOpened()) closeSerial();    /*禁用级联模式时，如果串口打开了则关闭串口*/
         else cm::mdelay(1);
     }
 }

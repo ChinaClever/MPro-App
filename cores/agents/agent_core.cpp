@@ -10,8 +10,8 @@ Agent_Core::Agent_Core(QObject *parent)
     : Agent_Trap{parent}
 {
     system("rm -f /usr/data/etc/snmp/snmpd.conf");
-    mCfg = &snmpCfg; startSnmpd(); //set_snmpdV3();
-    QTimer::singleShot(2333,this,&Agent_Core::startSnmpdV3);
+    mCfg = &snmpCfg; startSnmpd(); //set_snmpdV3(); /*启动snmpd进程*/
+    QTimer::singleShot(2333,this,&Agent_Core::startSnmpdV3);    /*启动SNMP V3功能*/
 }
 
 Agent_Core *Agent_Core::bulid(QObject *parent)
@@ -47,11 +47,11 @@ void Agent_Core::startSnmpd()
     QString fn = "snmpd.conf";
     QString cmd = "snmpd -f -Lo -C -c ";
     QString ret = cm::execute("proc_run snmpd");
-    if(ret.toInt()) return ;
+    if(ret.toInt()) return ;    /*检查snmpd进程是否已经在运行，如果是，则函数返回*/
 
     QString custom = "/usr/data/clever/cfg/";
     if(QFile::exists(custom + fn)) {
-        cmd += custom + fn + " &";
+        cmd += custom + fn + " &";      /*如果文件"custom + fn"存在，将cmd追加为custom + fn + &*/
     } else if(QFile::exists("/usr/data/etc/"+fn)) {
         cmd += "/usr/data/etc/"+ fn + " &";
     } else {

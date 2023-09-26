@@ -71,7 +71,9 @@ void SerialPort::waitForSend(int size)
         cm::mdelay(2*ms+50);
     }
 }
-
+/**
+ * 将命令写入串口，并等待发送完成
+ */
 void SerialPort::cmsWrite(int msecs)
 {
     QWriteLocker locker(mRwLock);  while(mCmdList.size()) {
