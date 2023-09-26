@@ -15,6 +15,7 @@ OP_Object::OP_Object(QObject *parent) : SerialPort{parent}
     //for(int i=0; i<PACK_ARRAY_SIZE; ++i) m_swCnt[i] =1;
 }
 
+
 bool OP_Object::dataFiltering(uint &dest, uint &src, uint max, uint min)
 {
     bool ret = true;
