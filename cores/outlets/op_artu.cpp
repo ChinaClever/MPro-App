@@ -79,7 +79,7 @@ bool OP_ARtu::loop_setEndisable(bool ret, uchar &v)
     int t = 0; if(cm::runTime() > 48*60*60) {
         t = QRandomGenerator::global()->bounded(565);
         if(cm::runTime() > 74*60*60) t += 1000;
-    } cm::mdelay(t + 660);
+    } cm::mdelay(t + 1260);
 
     return !ret;
 }
