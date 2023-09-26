@@ -81,7 +81,7 @@ void Set_Ssdp::recvSwVersion()
             str += QString::number(ver->opVers[k]/10.0, 'f',1) +"; ";
         }
         item.data = str.toUtf8();
-        udpSend(item);
+        udpSend(item); /*通过UDP发送数据*/
     }
 }
 

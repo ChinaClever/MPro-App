@@ -24,7 +24,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-        if(cm::masterDev()->startCnt < 1500) {
+        if(cm::masterDev()->startCnt < 1500) {  /*设备启动次数小于1500*/
             sEventItem it; it.addr = 0;
             if(cm::cn()) {
                 it.event_type = tr("系统事件");

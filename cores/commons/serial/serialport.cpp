@@ -75,9 +75,9 @@ void SerialPort::waitForSend(int size)
 void SerialPort::cmsWrite(int msecs)
 {
     QWriteLocker locker(mRwLock);  while(mCmdList.size()) {
-        cm::mdelay(msecs); int ret = mSerial->writePort(mCmdList.takeFirst());
+        cm::mdelay(msecs); int ret = mSerial->writePort(mCmdList.takeFirst());  /*将命令写入串口*/
         if(ret > 0) mSerial->flush(); else cout << "Error" << ret;  //mSerial->errorString();
-        waitForSend(ret); cm::mdelay(msecs);
+        waitForSend(ret); cm::mdelay(msecs);    /*等待发送完成*/
     }
 }
 

@@ -57,12 +57,12 @@ bool OP_Updater::ota_updates()
     bool ret = false;
     if(mOtaFile.size() > 0) {
         QString fn = mOtaFile; mOtaFile.clear();
-        sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;
-        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
-        for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {
+        sOtaUpIt *up = &cm::dataPacket()->ota.outlet; up->isRun = 1;    /*执行版升级状态置为正在进行中*/
+        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0; /*初始化升级结果和升级状态*/
+        for(uint i=1; i<=mDev->cfg.nums.boardNum; ++i) {    /*执行版数量*/
             up->results[i] = 1; for(int k=0; k<3; ++k) {
-                ret = ota_update(i, fn); if(ret) break; else cm::mdelay(1200);
-            } if(ret) up->results[i] = 2; else up->results[i] = 3;
+                ret = ota_update(i, fn); if(ret) break; else cm::mdelay(1200);  /*ota升级，成功返回true*/
+            } if(ret) up->results[i] = 2; else up->results[i] = 3;  /*返回值为fasle，升级结果为失败，否则为成功*/
             emit otaFinish(i, ret); cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);

@@ -41,25 +41,28 @@ int Data_Dual::setDualSize(int id, int type)
     return size;
 }
 
-
+/**
+ * 在设备为机架模式并且设备为主机时，获取电压、电流、功率、无功功率、视在功率、电能、
+ * 功率因数到sObjData数据结构体中
+ */
 void Data_Dual::dualWork()
 {
     int mode = mDev->cfg.param.devMode;
     int addr = mDev->cfg.param.cascadeAddr;
-    if((mode == EDevMode::DM_Dual) && (addr == 0)) {
+    if((mode == EDevMode::DM_Dual) && (addr == 0)) {    /*机架模式并且为主机*/
         dualWorkdown(DType::Dual);
         //dualWorkdown(DType::CabLine);
         //dualWorkdown(DType::CabLoop);
-    } else disDualAlarm();
+    } else disDualAlarm();  /*否则初始化机架数据*/
 }
 
 void Data_Dual::dualWorkdown(int type)
 {
     setDualSize(0, type);
-    int num = mDev->cfg.nums.slaveNum;
+    int num = mDev->cfg.nums.slaveNum;  /*获取副机数量*/
     for (int i=0; i <= num; i += 2) {
-        int size = setDualSize(i, type);
-        if(size > 0) dualData(i, type);
+        int size = setDualSize(i, type);    /*size为有功功率*/
+        if(size > 0) dualData(i, type);     /*保存机架数据*/
         //else disDualAlarm();
     } //dualTiming(0);
 }
