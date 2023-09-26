@@ -306,7 +306,6 @@ void Alarm_Object::clearEle(sDataItem &index)
                 OP_Core::bulid()->clearEle_A(start, end);
             } else OP_Core::bulid()->clearEle(start, end);
             for(int i=start; i<end; ++i) cm::masterDev()->line.ele[i] = 0;
-            //cout << start << end << id;
         } else if((DType::Loop == index.type) && (cfg->param.devSpec > 1)) {
             for(int i=0; i<index.id; ++i) {
                 if(i) start += cfg->nums.loopEachNum[i-1];
@@ -319,7 +318,6 @@ void Alarm_Object::clearEle(sDataItem &index)
             } else {
                 OP_Core::bulid()->clearEle(index.id);
             } cm::masterDev()->output.ele[index.id-1] = 0;
-            //cout << index.id << id;
         }
     } else {
         OP_Core::bulid()->clearEle(0);

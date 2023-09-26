@@ -152,7 +152,7 @@ void OP_ObjCtrl::setClearEle(int id)
 
 void OP_ObjCtrl::clearEle_A(int start, int end)
 {
-    for(int i=start; i<end; i++) clearEle_A(i);
+    for(int i=start; i<end; i++) clearEle_A(i+1);
 }
 
 void OP_ObjCtrl::clearEle_A(int id)
