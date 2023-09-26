@@ -159,16 +159,17 @@ void OP_ObjCtrl::clearEle_A(int id)
 {
     uchar cmd[10];
     for(int i=0; i<10; i++) cmd[i] = 0;
-    switch (id) {
-    case 1: id = 0; break;
-    case 2: id = 3; break;
-    case 3: id = 1; break;
-    case 4: id = 4; break;
-    case 5: id = 2; break;
-    case 6: id = 5; break;
-    default: cout << id; break;
-    }
-    setBitControl(id, &cmd[8]);
+    if(mDev->cfg.nums.loopNum > 5) {
+        switch (id) {
+        case 1: id = 0; break;
+        case 2: id = 3; break;
+        case 3: id = 1; break;
+        case 4: id = 4; break;
+        case 5: id = 2; break;
+        case 6: id = 5; break;
+        default: cout << id; break;
+        }
+    } setBitControl(id, &cmd[8]);
     funClearEle(cmd);
 }
 
