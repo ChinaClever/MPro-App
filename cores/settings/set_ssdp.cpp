@@ -71,9 +71,9 @@ void Set_Ssdp::recvSwVersion()
     //int addr =cm::masterDev()->cfg.param.cascadeAddr;
     //if(devMode) if(addr) return;
 
-    int num = cm::masterDev()->cfg.nums.slaveNum;
+    int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
     for(int i=0; i<=num; i++) {        
-        int op = cm::devData(i)->cfg.nums.boardNum;
+        int op = cm::devData(i)->cfg.nums.boardNum; /*获取执行板数量*/
         sVersions *ver = &(cm::devData(i)->cfg.vers);
         str = "addr:" + QString::number(i); //else str.clear();
         str += fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
