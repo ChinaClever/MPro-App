@@ -13,11 +13,11 @@ Integr_Core::Integr_Core(QObject *parent)
 
 void Integr_Core::httpServer()
 {
-    int en = pushCfg.http.enServer;
-    int port = pushCfg.http.port;
+    int en = pushCfg.http.enServer; /*HTTPserver开启*/
+    int port = pushCfg.http.port;   /*HTTP端口号3066*/
     switch (en) {
-    case 1: Integr_HttpServer::initHttpServer(en, port); break;
-    case 2: Integr_HttpServer::initHttpsServer(en, port); break;
+    case 1: Integr_HttpServer::initHttpServer(en, port); break; /*启用http服务器*/
+    case 2: Integr_HttpServer::initHttpsServer(en, port); break;    /*启用https服务器*/
     } qDebug() << Q_FUNC_INFO << en << port;
 }
 

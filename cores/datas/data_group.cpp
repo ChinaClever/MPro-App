@@ -13,7 +13,7 @@ Data_Group::Data_Group() : Data_Line{}
 void Data_Group::setGroupSize()
 {
     sObjData *obj = &(mDev->group); obj->vol.size = obj->cur.size =0; int size = 0;
-    if(mDev->cfg.param.groupEn && mDev->output.pow.size) size = GROUP_NUM;
+    if(mDev->cfg.param.groupEn && mDev->output.pow.size) size = GROUP_NUM;  /*分组启用并且输出位功率不为0*/
     obj->size = obj->pow.size = size;
 
     if(size & mDev->output.relay.size) size = GROUP_NUM; else size = 0;
@@ -25,20 +25,22 @@ QList<int> Data_Group::outletByGroup(int id, int addr)
     QList<int> res;
     sDevData *dev = cm::devData(addr);
     uchar *ptr = dev->cfg.nums.group[id];
-    for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;
+    for(int i=0; i<OUTPUT_NUM; ++i) if(ptr[i]) res << i;    /*如果ptr[i]不为零，将i添加到res列表中*/
 
-    return res;
+    return res; /*返回res列表，包含与指定分组相关的输出位索引*/
 }
-
+/**
+ * 分组超限断电，分组定时
+ */
 void Data_Group::groupWork()
 {
     sDevData *dev = cm::masterDev();
     for(int i=0; i<GROUP_NUM; ++i) {
         QList<int> ls;
-        if(dev->group.size) ls = outletByGroup(i); // cfg.param.groupEn
-        sumObjData(i, mDev->group, mDev->output, ls);
+        if(dev->group.size) ls = outletByGroup(i); // cfg.param.groupEn     /*获取与指定分组相关的输出位列表*/
+        sumObjData(i, mDev->group, mDev->output, ls);   /*计算电压、电流、功率、无功功率、视在功率、电能、功率因数*/
         //cout << i << ls << mDev->group.pow.value[i];
-    } setGroupSize(); groupOverrunOff(); groupTiming();
+    } setGroupSize(); groupOverrunOff(); groupTiming(); /*分组超限断电，分组定时*/
 }
 
 void Data_Group::disGroupAlarm(int id)

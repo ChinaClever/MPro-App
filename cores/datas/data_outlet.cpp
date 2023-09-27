@@ -13,8 +13,8 @@ Data_Outlet::Data_Outlet()
 void Data_Outlet::outletNums()
 {    
     sObjData *obj = &(mDev->output);
-    int size = mDev->cfg.nums.outputNum; obj->vol.size =0;
-    if((0==size) && (mDev->cfg.param.devSpec > 1)) {
+    int size = mDev->cfg.nums.outputNum; obj->vol.size =0;  /*获取输出位数量*/
+    if((0==size) && (mDev->cfg.param.devSpec > 1)) {    /*不为A系列*/
         for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) size += mDev->cfg.nums.boards[i];
         mDev->cfg.nums.outputNum = size;
     } obj->size = obj->cur.size = obj->pow.size = obj->relay.size = size;
@@ -70,7 +70,9 @@ void Data_Outlet::outletTiming()
     }
 }
 
-
+/**
+ * 获取输出位数量。输出位定时，并将其写入数据库。输出位超限断电，并将其写入数据库
+ */
 void Data_Outlet::outletWork()
 {
     outletNums();

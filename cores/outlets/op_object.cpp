@@ -191,23 +191,23 @@ void OP_Object::fillData(uchar addr)
 {
     sDevData *dev = mDev; uchar k = 0;
     sOpIt *it = mOpData; addr -= 1;
-    int size = dev->cfg.nums.boards[addr];
+    int size = dev->cfg.nums.boards[addr];  /*获取每块执行版输出位数量*/
     if(mDev->dtc.fault) mDev->dtc.fault -= 1;
     for(int i=0; i<addr; ++i) k += dev->cfg.nums.boards[i];
     for(int i=0; i<size; ++i) {
-        volFaultCheck(k, i);
-        curFaultCheck(k, i);
+        volFaultCheck(k, i);    /*检查电压是否正常*/
+        curFaultCheck(k, i);    /*检查电流是否正常*/
         powFaultCheck(k, i);
         eleFaultCheck(k, i);
         //dev->output.relay.sw[k+i] = it->sw[i];
-        relayCheck(dev->output.relay.sw[k+i], it->sw[i]);
+        relayCheck(dev->output.relay.sw[k+i], it->sw[i]);   /*检查开关状态*/
     }
 
     dev->offLine = 5;
-    dev->rtu.hzs[addr] = it->hz;
+    dev->rtu.hzs[addr] = it->hz;    /*赋值给执行板电压频率*/
     //dev->cfg.nums.boards[addr] = it->size;
-    dev->cfg.vers.opVers[addr] = it->version;
-    dev->rtu.chipStates[addr] = it->chipStatus;
+    dev->cfg.vers.opVers[addr] = it->version;   /*每块执行版软件版本*/
+    dev->rtu.chipStates[addr] = it->chipStatus; /*执行版计量芯片状态*/
     for(int i=0; i<8; ++i) dev->rtu.offLines[i] = it->ens[i];
 }
 

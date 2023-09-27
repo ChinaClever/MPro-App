@@ -12,7 +12,7 @@ OP_Core::OP_Core(QObject *parent)
 #if (QT_VERSION > QT_VERSION_CHECK(5,15,0))
     bool ret = openSerial("/dev/ttyUSB0", baudRate);
 #else
-    bool ret = openSerial("/dev/ttyS5", baudRate);
+    bool ret = openSerial("/dev/ttyS5", baudRate);  /*打开串口并设置波特率19200*/
 #endif
     if(ret) QtConcurrent::run(this,&OP_Core::run);
 }
@@ -29,14 +29,14 @@ void OP_Core::run()
     cm::mdelay(1240);
     while (isRun) {
         bool ret = 0;
-        int size = mDev->cfg.nums.boardNum; // cout << size;
-        if(1 == mDev->cfg.param.devSpec) {
-            cmsWrite(175); ota_updates();
-            ret |= loop_readData();
+        int size = mDev->cfg.nums.boardNum; // cout << size;    /*获取执行版数量*/
+        if(1 == mDev->cfg.param.devSpec) {  /*A系列*/
+            cmsWrite(175); ota_updates();   /*将命令写入串口，并等待发送完成，执行OTA更新操作*/
+            ret |= loop_readData(); /*获取回路数据*/
         } else if(size) {
             for(int i=0; i<size; ++i) {
-                cmsWrite(175);
-                ota_updates();
+                cmsWrite(175);  /*将命令写入串口，并等待发送完成*/
+                ota_updates();  /*执行OTA更新的操作*/
                 ret |= readData(i+1);
             }
         }  cm::mdelay(10);
