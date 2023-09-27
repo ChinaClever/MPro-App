@@ -47,14 +47,14 @@ void Cascade_Core::workFun()
     uchar addr = getAddress();
     cmsWrite(195); if(addr) {   /*从机*/
         QByteArray rcv = readSerial(); if(rcv.size() > 6) { /*从串口读取数据*/
-            rcv = qUncompress(rcv); if(rcv.size()) {
+            rcv = qUncompress(rcv); if(rcv.size()) {    /*解压从串口获取的数据*/
                 QVector<c_sFrame> its = replyData(rcv);
-                for(auto &it: its) workDown(it);
+                for(auto &it: its) workDown(it);    /*对its元素进行遍历， 分别调用workDown函数处理*/
             } cascadeSlaveLog(addr, rcv.isEmpty());
         }
-    } else {
-        ota_updates();
-        masterReadDevs();
+    } else {    /*主机*/
+        ota_updates();  /*执行OTA更新的操作*/
+        masterReadDevs();   /*读取主设备的信息*/
     }
 }
 

@@ -15,7 +15,9 @@ Cascade_Updater::Cascade_Updater(QObject *parent) : Cascade_Object{parent}
             this, &Cascade_Updater::otaRecvFinishSlot);
     connect(mOtaTimer, SIGNAL(timeout()), this, SLOT(otaTimeoutDone()));
 }
-
+/**
+ * 将指定的调试信息发送到网络上的特定主机，用于调试和日志记录
+ */
 void Cascade_Updater::throwMessage(const QString &msg)
 {
     QString str = "cascade updater " + msg;
@@ -25,15 +27,15 @@ void Cascade_Updater::throwMessage(const QString &msg)
 
 bool Cascade_Updater::ota_update(int addr, const sOtaFile &it)
 {
-    sOtaUpIt *up = &(cm::dataPacket()->ota.slave);
+    sOtaUpIt *up = &(cm::dataPacket()->ota.slave);  /*级联升级状态*/
     bool ret = false; int max = 3*1024; int i=0, pro=0;
     mFile->close(); mFile->setFileName(it.path + it.file);
-    if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {
-        ret = otaSendInit(fc_mask, it); cm::mdelay(150);  //addr
+    if(mFile->exists() && mFile->open(QIODevice::ReadOnly)) {   /*文件存在且成功以只读模式打开*/
+        ret = otaSendInit(fc_mask, it); cm::mdelay(150);  //addr    /*初始化OTA升级状态*/
         if(!ret) { cm::mdelay(650); ret = otaSendInit(fc_mask, it);} //addr
         while (!mFile->atEnd() && ret) {
             QByteArray data = mFile->read(max);
-            ret = otaSendPacket(fc_mask, data); //addr
+            ret = otaSendPacket(fc_mask, data); //addr  /*OTA发送数据*/
             if(!ret) { ret = otaSendPacket(fc_mask, data); //addr
                 throwMessage(tr("Error: addr=%1: ota update packet failed").arg(addr)); }
             if(ret) {
@@ -58,17 +60,17 @@ void Cascade_Updater::ota_updates()
 {
     if(mIt.file.size()) {
         sDevData *dev = cm::masterDev();
-        uint size = dev->cfg.nums.slaveNum;
+        uint size = dev->cfg.nums.slaveNum;     /*获取副机数量*/
         sOtaUpIt *up = &(cm::dataPacket()->ota.slave);
-        if(size) setbit(cm::dataPacket()->ota.work, DOta_Slave);
-        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0;
-        for(uint i=0; i<size; ++i) {
+        if(size) setbit(cm::dataPacket()->ota.work, DOta_Slave);    /*副机OTA升级*/
+        for(int i=0; i<DEV_NUM; ++i) up->progs[i] = up->results[i] = 0; /*升级进度和升级结果数组清空*/
+        for(uint i=0; i<size; ++i) {    /*循环遍历从设备*/
             throwMessage(tr("addr=%1: %2").arg(i+1).arg(0));
             if(cm::devData(i+1)->offLine > 1) ota_update(i+1, mIt);
             cm::mdelay(1000);break; //if(i<size-1) {cm::mdelay(12*1000);}
-        } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave);
+        } mIt.file.clear(); clrbit(cm::dataPacket()->ota.work, DOta_Slave); /*将DOta_Slave位设置为0，表示副机的OTA升级结束*/
         if(cm::dataPacket()->ota.work) isOta = false; else otaReboot();
-        up->isRun = 0; cm::mdelay(255);
+        up->isRun = 0; cm::mdelay(255); /*升级状态设置为完成*/
     }
 }
 
