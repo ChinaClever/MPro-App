@@ -15,6 +15,7 @@ CLEVER_SP706=y
 CLEVER_PCF8563=y
 CLEVER=y
 CLEVER_BEEP=y
+CLEVER_DOOR=y
 CLEVER_LED=y
 CLEVER_SHT30=y
 MD_KEYBOARD_GPIO=y
@@ -223,10 +224,11 @@ MD_SOC_X2000_BASE:=y
 # MD_SOC_X1600_510 is not set
 MD_SOC_X2000:=y
 MD_SOC_DIR=soc/x2000
-# MD_X2000_ADC is not set
+MD_X2000_ADC=y
+MD_X2000_ADC_VREF=1800
 MD_X2000_GPIO=y
 MD_X2000_WATCHDOG=y
-# MD_X2000_DTRNG is not set
+MD_X2000_DTRNG=y
 MD_X2000_I2C=y
 # MD_X2000_I2C0_BUS is not set
 MD_X2000_I2C1_BUS=y
@@ -269,12 +271,14 @@ MD_X2000_MAC=y
 MD_X2000_PHY_CLK_RATE=50000000
 MD_X2000_PHY_CLK_DELAY_US=0
 MD_X2000_MAC0=y
-MD_X2000_MAC0_RMII_MODE=y
-# MD_X2000_MAC0_RGMII_MODE is not set
+# MD_X2000_MAC0_RMII_MODE is not set
+MD_X2000_MAC0_RGMII_MODE=y
 MD_X2000_MAC0_PHY_PROBE_MASK=0x0
 MD_X2000_MAC0_PHY_RESET_TIME_US=100000
-MD_X2000_MAC0_PHY_RESET_GPIO=PC05
+MD_X2000_MAC0_PHY_RESET_GPIO=PC00
 MD_X2000_MAC0_PHY_VALID_LEVEL=0
+MD_X2000_MAC0_RX_CLK_DELAY_UNIT=2
+MD_X2000_MAC0_TX_CLK_DELAY_UNIT=56
 # MD_X2000_MAC0_TX_CLK is not set
 MD_X2000_MAC0_CRYSTAL_CLK=y
 # MD_X2000_MAC0_VIRTUAL_PHY is not set
@@ -284,7 +288,7 @@ MD_X2000_MAC0_CRYSTAL_CLK=y
 # MD_X2000_MAC1_VIRTUAL_PHY is not set
 # MD_X2000_AIC is not set
 # MD_X2000_ICODEC is not set
-# MD_X2000_HASH is not set
+MD_X2000_HASH=y
 # MD_X2000_EFUSE is not set
 # MD_X2000_UTILS is not set
 # MD_X2000_MSC is not set
@@ -300,7 +304,7 @@ MD_X2000_ROTATOR:=y
 # MD_X2000_CONN_ISP is not set
 # MD_X2000_CONN_PCM is not set
 # MD_X2000_CONN_FS is not set
-# MD_X2000_AES is not set
+MD_X2000_AES=y
 # MD_SOC_X2000_510 is not set
 APP_br=y
 # APP_br_sh_utils_wait_file is not set
@@ -343,12 +347,16 @@ APP_libhardware2_fb_cmd=y
 # APP_libhardware2_camera is not set
 # APP_libhardware2_pwm is not set
 # APP_libhardware2_pwm_battery is not set
-# APP_libhardware2_adc is not set
+APP_libhardware2_adc=y
+APP_libhardware2_adc_cmd=y
 # APP_libhardware2_i2c is not set
-# APP_libhardware2_rtc is not set
+APP_libhardware2_rtc=y
+APP_libhardware2_rtc_cmd=y
 # APP_libhardware2_efuse is not set
-# APP_libhardware2_watchdog is not set
-# APP_libhardware2_dtrng is not set
+APP_libhardware2_watchdog=y
+APP_libhardware2_watchdog_cmd=y
+APP_libhardware2_dtrng=y
+APP_libhardware2_dtrng_cmd=y
 APP_libhardware2_keyboard=y
 APP_libhardware2_keyboard_cmd=y
 APP_libhardware2_keyboard_cmd_test=y
@@ -365,17 +373,25 @@ APP_libhardware2_gpio_cmd=y
 # APP_libhardware2_jpeg_display is not set
 # APP_libhardware2_input_dev_listen is not set
 # APP_libhardware2_alsa is not set
-# APP_libhardware2_rmem is not set
-# APP_libhardware2_rotator is not set
-# APP_libhardware2_hash is not set
-# APP_libhardware2_aes is not set
+APP_libhardware2_rmem=y
+APP_libhardware2_rotator=y
+APP_libhardware2_hash=y
+APP_libhardware2_hash_cmd=y
+APP_libhardware2_aes=y
+APP_libhardware2_aes_cmd=y
 # APP_libhardware2_v4l2_camera is not set
-# APP_libhardware2_mdio_cmd is not set
+APP_libhardware2_mdio_cmd=y
 # APP_libhardware2_jpeg_decode_cmd is not set
 APP_libhardware2_nemc=y
 APP_libhardware2_nemc_cmd=y
 # APP_libmedia is not set
-# APP_libutils2 is not set
+APP_libutils2=y
+APP_libutils2_boot_time=y
+APP_libutils2_boot_time_cmd=y
+APP_libutils2_uevent_cmd=y
+APP_libutils2_usb_device_state_cmd=y
+APP_libutils2_image_format_conversion=y
+APP_libutils2_message_queue=y
 # APP_libimpf is not set
 # APP_libisp is not set
 # APP_test_shell is not set
@@ -390,7 +406,8 @@ APP_libhardware2_nemc_cmd=y
 # APP_FaceApp is not set
 # APP_EVOL is not set
 # APP_ILOCKAPP is not set
-# APP_lvgl is not set
+APP_lvgl=y
+APP_lvgl_demo_widgets=y
 # APP_usb_mtp is not set
 # APP_iniparser is not set
 # APP_alsa_aeq is not set
