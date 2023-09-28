@@ -9,4 +9,5 @@ sFtpCfg Ftp_Object::ftpCfg;
 Ftp_Object::Ftp_Object()
 {
     system("mkdir -p /tmp/csv");
+    system("mkdir -p /tmp/xlsx");
 }

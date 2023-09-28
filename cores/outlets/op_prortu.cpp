@@ -73,7 +73,7 @@ void OP_ProRtu::hardwareLog(int addr, const QByteArray &cmd)
             it.event_content = tr("No response from the execution board addr:%1 ").arg(addr);
         } rtuThrowMessage(it.event_type + it.event_content);
         if(cm::runTime() > 5) Log_Core::bulid()->append(it);
-    } cout << addr << cm::byteArrayToHexStr(cmd);;
+    } //cout << addr << cm::byteArrayToHexStr(cmd);;
 }
 
 bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
