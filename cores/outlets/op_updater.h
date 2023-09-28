@@ -25,6 +25,7 @@ private:
     void throwMessage(const QString &msg);
     bool ota_update(int addr, const QString &fn);
     bool ota_update(int addr, QByteArray &array);
+    bool ota_updateA(sOtaUpIt *up, const QString &fn);
     bool sendPacket(int addr, const QByteArray &array);
 
 private slots:

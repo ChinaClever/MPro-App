@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "ftp_csv.h"
-//#include "qtcsv/reader.h"
+#include "ftp_xlsx.h"
 #include "qtcsv/writer.h"
 
 
@@ -25,6 +25,7 @@ void Ftp_Csv::csv_saves()
 
     int t = 35 + QRandomGenerator::global()->bounded(25);
     cm::mdelay(t*1000); system("rm -rf /tmp/csv/*");
+    system("rm -rf /tmp/xlsx/*");
 }
 
 
@@ -42,8 +43,8 @@ QString Ftp_Csv::csv_fileName(int addr, const QString &suffix)
     QString str = csv_headerCommon(addr).trimmed();
     QString file = str.replace(".", "_").replace(" ", "_");
     QDateTime dateTime = QDateTime::currentDateTime();
-    str = dateTime.toString("_yyyyMMdd_hhmmss_");
-    file += str + suffix + ".csv";
+    str = dateTime.toString("_yyyyMMdd_hhmmss_"); file += str + suffix;
+    if(ftpCfg.csvXlsx) file += ".csv"; else file += ".xlsx";
     return file;
 }
 
@@ -72,7 +73,7 @@ void Ftp_Csv::csv_outletSave(int addr)
 {
     QString title; QString fn = csv_fileName(addr, "outlet");
     QStringList header = csv_outletHeader(addr, title);
-    csv_save(fn, title, header, mCsvData[addr].outlet);
+    csv_save(fn, title, header, mCsvData[addr].outlet);    
 }
 
 
@@ -174,12 +175,18 @@ void Ftp_Csv::csv_totalSave(int addr)
 void Ftp_Csv::csv_save(const QString &fn, const QString& title, const QStringList &header, QtCSV::StringData &data)
 {
     if(data.rowCount() > 0) {
-        QStringList head ,footer; QString filePath = mDir + fn;
-        QtCSV::Writer::WriteMode mode = QtCSV::Writer::REWRITE;
-        QTextCodec* codec = QTextCodec::codecForName("GB2312");
-        data.insertRow(0, title); data.insertRow(1, header);
-        QtCSV::Writer::write(filePath, data, ",", "\"", mode, head, footer, codec);
-        uploads(fn);
+        if(ftpCfg.csvXlsx) {
+            QStringList head ,footer; QString filePath = mDir + fn;
+            QtCSV::Writer::WriteMode mode = QtCSV::Writer::REWRITE;
+            QTextCodec* codec = QTextCodec::codecForName("GB2312");
+            data.insertRow(0, title); data.insertRow(1, header); mDir="/tmp/csv/";
+            QtCSV::Writer::write(filePath, data, ",", "\"", mode, head, footer, codec);            
+        } else {
+            QList<QStringList> items;
+            items << QStringList(title) << header;
+            for(int i=0; i<data.rowCount(); ++i) items << data.rowValues(i);
+            Ftp_Xlsx::bulid()->wirte(fn, items); mDir = "/tmp/xlsx/";
+        } cm::mdelay(150); uploads(fn);
     } data.clear();
 }
 

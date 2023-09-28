@@ -125,7 +125,7 @@ void Cfg_Service::web()
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
-        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 1; break;
+        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
         case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
         case 6: key = "strong_pwd"; ptr = &cfg->strong_pwd;  value = 0; break;
@@ -164,7 +164,7 @@ void Cfg_Service::ftp()
     sFtpCfg *cfg = &Ftp_Object::ftpCfg;
     QString prefix = "ftp"; QString key;
 
-    for(int i=1; i<15; ++i)  {
+    for(int i=1; i<17; ++i)  {
         switch (i) {
         case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
         case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
@@ -179,6 +179,7 @@ void Cfg_Service::ftp()
         case 12: key = "updateTime"; cfg->updateTime = mCfg->readCfg(key, 15, prefix).toInt(); break;
         case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
         case 14: key = "port"; cfg->port = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 15: key = "csvXlsx"; cfg->csvXlsx = mCfg->readCfg(key, 0, prefix).toInt(); break;
         }
     }
 }

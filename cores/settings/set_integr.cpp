@@ -321,6 +321,7 @@ QVariant Set_Integr::ftpCfg(uchar fc)
     case 11: res = cfg->loop; break;
     case 12: res = cfg->outlet; break;
     case 13: res = cfg->dualPower; break;
+    case 14: res = cfg->csvXlsx; break;
     default: cout << fc; break;
     }
     return res;
@@ -345,6 +346,7 @@ bool Set_Integr::ftpSet(uchar fc, const QVariant &v)
     case 11: key = "loop"; cfg->loop = v.toInt(); break;
     case 12: key = "outlet"; cfg->outlet = v.toInt(); break;
     case 13: key = "dualPower"; cfg->dualPower = v.toInt(); break;
+    case 14: key = "csvXlsx"; cfg->csvXlsx = v.toInt(); break;
     case 15: Ftp_Core::bulid()->csv_test(); break;
     default: ret = false; cout << fc; break;
     }

@@ -17,6 +17,7 @@ struct sFtpCfg
     int dualPower = 1;
     int updateTime = 1;
     int backupTime = 1;
+    int csvXlsx = 0;
 };
 
 class Ftp_Object
