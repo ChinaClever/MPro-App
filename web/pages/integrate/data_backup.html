@@ -44,9 +44,10 @@
 		let addr = 0;
 		pdu_cfg.data_backCfg();
 		let mode_set = new Array("","");
+		let type_set = new Array("","");
 		let backup_data = new Array();
 		let lang = new Array();
-		let backup_name = new Array("","backup_en","server_ip","account","password","path","port","record_time","backup_time","tg_data","phase_data","loop_data","output_data","dual_data");
+		let backup_name = new Array("","backup_en","server_ip","account","password","path","port","record_time","backup_time","tg_data","phase_data","loop_data","output_data","dual_data","doc_type");
 
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
@@ -62,7 +63,7 @@
 		}
 		lang_init();
 		function lang_init(){
-			for(let i = 1;i<14;i++){
+			for(let i = 1;i<30;i++){
 				lang[i] = new Array();
 			}
 			lang[1] = ["数据自动备份","Automatic data backup","","",""];
@@ -89,9 +90,15 @@
 			lang[21] = ["SFTP","SFTP","","",""];
 			lang[22] = ["分钟","Minute","","",""];
 			lang[23] = ["小时","Hour","","",""];
+			lang[24] = ["文档类型","Document type","","",""];
+			lang[25] = ["xlsx","xlsx","","",""];
+			lang[26] = ["csv","csv","","",""];
 			
 			 for(let i = 0; i < 5; i++ ){
 				mode_set[i] = lang[17+i][language];				
+			 }
+			 for(let i = 0; i < 2; i++ ){
+				type_set[i] = lang[25+i][language];				
 			 }
 
 		}
@@ -100,6 +107,7 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			document.getElementById("lang_16").value  = lang[16][language];
+			document.getElementById("lang_24").innerHTML  = lang[24][language];
 		}
 		setTimeout(function(){
 			$('.data_back').html(buildTable());
@@ -113,12 +121,14 @@
 				if(i < 9){//统计数据之前
 					document.getElementById(backup_name[i]).value = backup_data[i];
 					document.getElementById(backup_name[i]).disabled = false;
-				}else{//统计数据
+				}else if(i < 14){//统计数据
 					if(backup_data[i] == 0){
 						document.getElementById(backup_name[i]).checked = false;
 					}else{
 						document.getElementById(backup_name[i]).checked = true;
 					}					
+				}else{
+					document.getElementById(backup_name[i]).value = backup_data[i];
 				}
 			}
 
@@ -145,7 +155,7 @@
 		function SetData(btn){
 			for(let i = 0;i<backup_name.length;i++){
 				if(backup_name[i] == btn.id){
-					if(i < 9){
+					if(i < 9 || i == 14){
 						pdu_cfg.setCfg(29,i,btn.value,0,addr);
 					}else{
 						if(btn.checked == true){
@@ -208,6 +218,11 @@
 			tbody += '<tr><td id="lang_10" ></td>';
 			tbody += '<td><input id = "backup_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[23][language]+'<span>';
 			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_24" ></td>';
+			tbody += '<td><select id ="doc_type" onchange ="SetData(this)">';
+			for(var i = 0; i<type_set.length;i++){
+				tbody +='<option value ="'+i+'">'+type_set[i] +'</option>';
+			}
 
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';

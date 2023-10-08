@@ -335,11 +335,11 @@ bool Alarm_Object::eleValue(sDataItem &index)
     }
 
     if(ptr) {
-        if(index.rw){
-            if(index.id) ptr[index.id-1] = index.value;
-            else setAll(ptr, index.value, obj->size);
+        if(index.rw){   /*写*/
+            if(index.id) ptr[index.id-1] = index.value; /*单个设置*/
+            else setAll(ptr, index.value, obj->size);   /*统一设置*/
             if(DTopic::Ele == index.topic) clearEle(index);
-        } else index.value = ptr[index.id];
+        } else index.value = ptr[index.id];     /*读*/
     }
 
     return ret;

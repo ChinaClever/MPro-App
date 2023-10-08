@@ -20,7 +20,9 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
     }
     return sington;
 }
-
+/**
+ * 获取当前告警
+ */
 QString Alarm_Log::getCurrentAlarm(int addr)
 {
     QString res; if(addr) {
@@ -64,7 +66,9 @@ void Alarm_Log::generateQRcode()
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode; //cout << str << alarm;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
-
+/**
+ * 根据传入的type和topic，返回对应的告警类型和字符串
+ */
 QString Alarm_Log::alarmType(const sDataItem &index)
 {
     QString str;
