@@ -7,7 +7,6 @@
 #include "ftp_xlsx.h"
 #include "qtcsv/writer.h"
 
-
 Ftp_Csv::Ftp_Csv()
 {
 
