@@ -200,16 +200,26 @@ void Ftp_Csv::csv_test()
 
 void Ftp_Csv::csv_testRun()
 {
-    QStringList strList;
-    strList << "one" << "two" << "three";
+    if(ftpCfg.csvXlsx) {
+        QStringList strList;
+        strList << "one" << "two" << "three";
 
-    QtCSV::StringData strData;
-    strData.addRow(strList);
-    strData.addEmptyRow();
-    strData << strList << "this is the last row";
+        QtCSV::StringData strData;
+        strData.addRow(strList);
+        strData.addEmptyRow();
+        strData << strList << "this is the last row";
 
-    // write to file
-    QString fn = "test.csv";
-    QtCSV::Writer::write(mDir+fn, strData);
-    uploads(fn);
+        // write to file
+        QString fn = "test.csv";
+        QtCSV::Writer::write(mDir+fn, strData);
+        mDir="/tmp/csv/"; uploads(fn);
+    } else {
+        QString fn = "test.xlsx";
+        QStringList title;
+        QList<QStringList> items;
+        title << "one" << "two" << "three";
+        items << QStringList("test") << QStringList(title);
+        Ftp_Xlsx::bulid()->wirte(fn, items);
+        mDir="/tmp/xlsx/"; uploads(fn);
+    }
 }

@@ -52,5 +52,5 @@ void Ftp_Upload::upload_sftp(const QString &fn)
 void Ftp_Upload::upload_system(const QString &cmd)
 {
     int t = 1540 + QRandomGenerator::global()->bounded(800);
-    cm::mdelay(t); system(cmd.toStdString().c_str());
+    cm::mdelay(t); qDebug() << cmd; system(cmd.toStdString().c_str());
 }
