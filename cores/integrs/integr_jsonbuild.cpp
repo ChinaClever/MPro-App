@@ -53,8 +53,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             if(dc > 2) {loginPermit(json); outputVol(json);}
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             //json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
-        }
-        QDateTime datetime = QDateTime::currentDateTime();
+        } QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("pdu_alarm", Alarm_Log::bulid()->getCurrentAlarm(addr+1));
         json.insert("version", JSON_VERSION);
