@@ -12,8 +12,8 @@ Cfg_AlarmInitial::Cfg_AlarmInitial()
 
 bool Cfg_AlarmInitial::initialData()
 {
-    sDevData *dev = cm::masterDev();    
-    initDevData(dev);
+    sDevData *dev = cm::masterDev();
+    initDevData(dev); writeAlarms();
     return true;
 }
 
