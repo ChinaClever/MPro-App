@@ -63,12 +63,14 @@
 		let type =new Array();
 		let serialNumber;
 		let supply_vol;
+		let hd_ver_num;
 		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			serialNumber = pdu_data.pdu_version.serialNumber;
+			hd_ver_num = pdu_data.pdu_version.hwVersion;
 			language = pdu_data.pdu_info.language;
 			supply_vol = pdu_data.pdu_info.supply_vol;
 		}
@@ -102,7 +104,7 @@
 			lang[1] = ["系统信息","System information","","",""];
 			lang[2] = ["主控板信息","Main control board information","","",""];
 			lang[3] = ["主控模块名称:","Main control module name:","","",""];
-			lang[4] = ["版本号:","Version number:","","",""];
+			lang[4] = ["软件版本号:","Software version number:","","",""];
 			lang[5] = ["校验码:","Check code:","","",""];
 			lang[6] = ["用户名:","User name:","","",""];
 			lang[7] = ["版本说明:","Release note:","","",""];
@@ -124,6 +126,7 @@
 			lang[23] = ["中文","Chinese","","",""];
 			lang[24] = ["英文","English","","",""];
 			lang[25] = ["电源电压：","Supply voltage：","","",""];
+			lang[26] = ["硬件版本号：","Hardware version number:","","",""];
 			for(let i = 0;i < 2;i++){
 				type[i] =  lang[23+i][language] ;
 			}
@@ -138,6 +141,7 @@
 				}
 			}
 			document.getElementById("lang_25" ).innerHTML  = lang[25][language];
+			document.getElementById("lang_26" ).innerHTML  = lang[26][language];
 		}
 		setTimeout(function(){
 			$('.McInfo').html(buildTableMc());
@@ -218,6 +222,8 @@
 			tbody += '<td id = "ser_num"></td></tr>';
 			tbody += '<tr><td id="lang_4" ondblclick ="disp_ver(this)" ></td>';
 			tbody += '<td id = "McVer"></td></tr>';
+			tbody += '<tr><td id="lang_26" ></td>';
+			tbody += '<td > '+hd_ver_num+'</td></tr>';
 			tbody += '<tr><td id="lang_5" ></td>';
 			tbody += '<td id = "McCode"></td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';

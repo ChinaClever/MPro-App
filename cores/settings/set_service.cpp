@@ -24,7 +24,6 @@ QVariant Set_Service::logCfg(int fc)
     case 6: ret = cfg->hdaCnt; break;
     default: cout << fc; break;
     }
-
     return ret;
 }
 
