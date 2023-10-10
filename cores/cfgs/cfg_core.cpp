@@ -26,6 +26,7 @@ void Cfg_Core::writeAlarmDefault()
 
 void Cfg_Core::slaveAlarmDefault()
 {
+    writeAlarms();
     QString cmd = "rm -f %1";
     QString dir = "/usr/data/clever/cfg/";
     system(cmd.arg(dir+CFG_ALARM_DF).toLatin1().data());
