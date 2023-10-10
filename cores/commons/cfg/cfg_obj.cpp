@@ -67,7 +67,7 @@ void Cfg_Obj::writeCfg(const QMap<QString,QVariant> &map, const QString &g)
 void Cfg_Obj::writeCfg(const QString& key, const QVariant &v, const QString& g)
 {
     QMap<QString,QVariant> map;
-    map.insert(key, v); writeCfg(map, g);
+    map.insert(key, v); writeCfg(map, g);   /*将配置项和对应的参数插入到map中，然后写入配置文件*/
 }
 
 QVariantList Cfg_Obj::readCfg(const QStringList &keys, const QString &g)

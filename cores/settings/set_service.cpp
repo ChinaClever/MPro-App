@@ -211,7 +211,7 @@ QVariant Set_Service::ntpCfg(int fc)
     sNtpCfg *it = &App_Ntp::ntpCfg;
     App_Core *obj = App_Core::bulid();
     switch (fc) {
-    case 1: ret = obj->ntp_time(); break;
+    case 1: ret = obj->ntp_time(); break;   /*获取当前日期和时间并转换成指定格式*/
     case 2: ret = it->udp_en; break;
     case 3: ret = it->ntp_host; break;
     case 4: ret = it->time_zone; break;
@@ -329,7 +329,7 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
-        cfg->writeCfg(key, v, prefix);
+        cfg->writeCfg(key, v, prefix);  /*将配置参数写入配置文件*/
     }
     return ret;
 }
