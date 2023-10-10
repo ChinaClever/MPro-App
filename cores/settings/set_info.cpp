@@ -43,6 +43,19 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     return res;
 }
 
+bool Set_Info::setSwVersion(int fc, const QVariant &v)
+{
+    bool ret = true;
+    if(9 == fc) {
+        QString fmd = "echo '%1' > %2";
+        QString fn = "/usr/data/clever/cfg/prod_date.conf";
+        QString cmd = fmd.arg(v.toString(), fn);
+        system(cmd.toStdString().c_str());
+    }else ret = false;
+
+    return ret;
+}
+
 int Set_Info::devInfoCfg(int addr, int type)
 {
     sDevData *dev = cm::devData(addr);

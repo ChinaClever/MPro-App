@@ -205,7 +205,8 @@ struct sVersions
     char upgradeDate[NAME_SIZE]; // 升级时间
     char serialNumber[NAME_SIZE]; // 序列号
     char hwVersion[NAME_SIZE]; // 硬件版本
-    char reserve[3][NAME_SIZE]; // 预留
+    char prodDate[NAME_SIZE]; // 生产日期
+    char reserve[2][NAME_SIZE]; // 预留
     uint opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
