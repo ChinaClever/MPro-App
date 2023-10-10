@@ -94,6 +94,12 @@ void App_Core::initVer()
         cfg.app_serialNumber(sn);
     } initRoot(ver->serialNumber);
 
+    fn = "/usr/data/clever/cfg/prod_date.conf";
+    if(QFile::exists(fn)) {
+        QString res = cm::execute("cat " + fn);
+        qstrcpy(ver->prodDate, res.toUtf8().data());
+    }
+
     int t = QRandomGenerator::global()->bounded(965);
     QTimer::singleShot(t+5,this, &App_Core::initUuid);
 }

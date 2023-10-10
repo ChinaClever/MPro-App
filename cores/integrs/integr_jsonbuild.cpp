@@ -288,6 +288,7 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     obj.insert("releaseDate", it.releaseDate);
     obj.insert("upgradeDate", it.upgradeDate);
     obj.insert("serialNumber", it.serialNumber);
+    obj.insert("prodDate", it.prodDate);
 
     QJsonArray vs;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);

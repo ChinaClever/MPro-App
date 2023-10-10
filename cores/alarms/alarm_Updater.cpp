@@ -59,18 +59,18 @@ bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
     it.crMax[i] = qMin(it.max[i], it.crMax[i]);
     it.crMin[i] = qMin(it.crMin[i], it.crMax[i]);
     it.min[i] = qMin(it.crMin[i], it.min[i]);
-    return false;
+    return false;   /*更新成功则返回false*/
 }
 
 bool Alarm_Updater::upLoopVol(const sDataItem &index)
 {
     bool ret = true;
-    if(index.type == DType::Loop && index.topic == DTopic::Vol) {
+    if(index.type == DType::Loop && index.topic == DTopic::Vol) {   /*回路电压*/
         sDevData *dev = cm::devData(index.addr);
         sDevCfg *cfg = &dev->cfg; int dtc = dev->dtc.fault;
-        if(cfg->param.isBreaker && dtc == FaultCode::DTC_OK) {
+        if(cfg->param.isBreaker && dtc == FaultCode::DTC_OK) {  /*有断路器并且没有故障*/
             int breaker = cm::masterDev()->loop.relay.sw[index.id];
-            if(breaker == sRelay::Off) ret = false;
+            if(breaker == sRelay::Off) ret = false;     /*断路器关闭则反击false*/
         }
     }
     return ret;
@@ -81,19 +81,19 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     bool ret = upCorrectData(i, it);
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
-    if(value > it.max[i]) alarm = AlarmCode::Max;
-    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
-    if(value < it.min[i]) alarm = AlarmCode::Min;
-    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
-    uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
-    if(index.topic == DTopic::Vol) t += 2;
+    if(value > it.max[i]) alarm = AlarmCode::Max;   /*alarm=8*/
+    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;  /*alarm=4*/
+    if(value < it.min[i]) alarm = AlarmCode::Min;   /*alarm=1*/
+    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;  /*alarm=2*/
+    uint t = 0; if(cm::runTime() > 48*60*60) t = 5; /*运行时间大于48小时，t=5*/
+    if(index.topic == DTopic::Vol) t += 2;  /*topic为电压， t=7*/
     if(it.alarm[i] != alarm)   {
         if(it.cnt[i]++ > t && upLoopVol(index)) {
             Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;
         } else alarm = AlarmCode::Ok;
-    } else it.cnt[i] = 0;
+    } else it.cnt[i] = 0;   /*将连续报警次数置0*/
 
     if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
     if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;

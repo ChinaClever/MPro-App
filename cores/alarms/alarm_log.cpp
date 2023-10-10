@@ -25,23 +25,23 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
  */
 QString Alarm_Log::getCurrentAlarm(int addr)
 {
-    QString res; if(addr) {
-        res = m_currentAlarm[addr-1];
-    } else {
+    QString res; if(addr) { /*为副机*/
+        res = m_currentAlarm[addr-1];   /*获取副机告警信息*/
+    } else {    /*为主机则获取所有设备的当前告警信息信息*/
         for(int i=0; i<DEV_NUM; ++i) {
             if(m_currentAlarm[i].size())
-                res += m_currentAlarm[i];
+                res += m_currentAlarm[i];   /*判断如果有告警则添加到res书组*/
         }
     }
-    return res;
+    return res; /*返回存储告警信息的res变量*/
 }
 
 void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
     //QString str = QString::number(++m_id) +"、";
-    QString str = it.alarm_status + it.alarm_content;
-    if(str.size()) m_currentAlarm[it.addr] += str + "\n";
+    QString str = it.alarm_status + it.alarm_content;   /*获取告警状态和告警内容*/
+    if(str.size()) m_currentAlarm[it.addr] += str + "\n";   /*如果告警信息存在，将告警内容和告警状态添加到 m_currentAlarm 变量*/
     //cout << m_currentAlarm[it.addr].size() << str;
 }
 
@@ -58,11 +58,14 @@ void Alarm_Log::resetAwtk()
     system("awtk &");
     //cout << "awtk";
 }
-
+/**
+ * 根据当前告警记录生成二维码，先从告警记录中提取数据，如果提取的数据为空，则使用主设备配置中的二维码数据，
+ * 如果提取的数据不为空，则更新二维码数据并生成新的二维码
+ */
 void Alarm_Log::generateQRcode()
 {
     static QString alarm=" "; QString str = m_currentAlarm[0];
-    if(str.size()) str = str.split("\n").first().split(";").first();
+    if(str.size()) str = str.split("\n").first().split(";").first();    /*判断警告信息是否存在*/
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode; //cout << str << alarm;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }

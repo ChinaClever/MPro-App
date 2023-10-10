@@ -17,6 +17,7 @@ protected:
 
     int devInfoCfg(int addr, int type);
     bool setInfoCfg(int fc, int value);
+    bool setSwVersion(int fc, const QVariant &v);
     QVariant softwareVersion(int addr, int type);
     QVariant proStartupLog(const sCfgItem &it);
     virtual bool modbusSet(uchar, int){return false;};
