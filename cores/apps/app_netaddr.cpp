@@ -72,7 +72,8 @@ void App_NetAddr::inet_setInterface()
         sNetInterface *net = &(cm::dataPacket()->net);
         if(net->inet.dhcp || net->inet6.dhcp) t = 9500;
         QTimer::singleShot(87,this,&App_NetAddr::inet_setInterfaceSlot);
-        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
+        QTimer::singleShot(1543,this,&App_NetAddr::inet_setInterfaceSlot);
+        QTimer::singleShot(1654,this,&App_NetAddr::inet_updateInterface);
         if(t) QTimer::singleShot(t+587,this,&App_NetAddr::inet_setInterfaceSlot);
         if(t) QTimer::singleShot(2*t+587,this,&App_NetAddr::inet_setInterfaceSlot);
     }
