@@ -28,6 +28,7 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 6: res = it->compileDate; break;
     case 7: res = it->releaseDate; break;
     case 8: res = it->upgradeDate; break;
+    case 9: res = it->prodDate; break;
     case 11: res = it->opVers[0]; break;
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
