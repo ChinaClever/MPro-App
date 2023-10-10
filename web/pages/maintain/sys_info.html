@@ -64,8 +64,8 @@
 		let serialNumber;
 		let supply_vol;
 		let hd_ver_num;
-		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
-		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -78,14 +78,14 @@
 		function read_data(){
 			if(0 == language){
 				for(var j = 0;j<24;j++){
-					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+					if(j <= 9 || (j > 10 && j<15)||(j>20 && j<24)){
 						ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
 					}
 				}
 				ver_data[24] = serialNumber;
 			}else{
 				for(var j = 0;j<24;j++){
-					if(j < 9 || (j > 10 && j<15)||(j>20 && j<24)){
+					if(j <= 9 || (j > 10 && j<15)||(j>20 && j<24)){
 						if(j == 4){
 							continue;
 						}else{
@@ -127,6 +127,7 @@
 			lang[24] = ["英文","English","","",""];
 			lang[25] = ["电源电压：","Supply voltage：","","",""];
 			lang[26] = ["硬件版本号：","Hardware version number:","","",""];
+			lang[27] = ["调试时间：","Debug time:","","",""];
 			for(let i = 0;i < 2;i++){
 				type[i] =  lang[23+i][language] ;
 			}
@@ -140,8 +141,10 @@
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
-			document.getElementById("lang_25" ).innerHTML  = lang[25][language];
-			document.getElementById("lang_26" ).innerHTML  = lang[26][language];
+			for(let j = 25;j<28;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			
 		}
 		setTimeout(function(){
 			$('.McInfo').html(buildTableMc());
@@ -277,6 +280,8 @@
 			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" ondblclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
 			tbody += '<tr><td id="lang_25" ></td>';
 			tbody += '<td id="sup_vol"></td></tr>';
+			tbody += '<tr><td id="lang_27" ></td>';
+			tbody += '<td id="DebugDate" ></td></tr>';
 			// tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
 			// for(var i = 0; i<2;i++){
 			// 	tbody +='<option value ="'+i+'">'+type[i] +'</option>';
