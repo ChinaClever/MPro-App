@@ -57,5 +57,5 @@ void Log_Sys::sys_initfun()
         QString cmd = fmd.arg(cfg->host).arg(cfg->port);
         system(cmd.toLocal8Bit().data()); //cout << cmd;
         QTimer::singleShot(567,this, &Log_Sys::sys_open);
-    }
+    } else system("killall rsyslogd");
 }

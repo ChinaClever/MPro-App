@@ -21,6 +21,7 @@ void App_NetAddr::inet_initFunSlot()
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
     if(net->inet.dhcp || (net->inet6.dhcp && net->inet6.en)) system("udhcpc &");
+    else system("killall dhcpd");
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
