@@ -64,8 +64,8 @@
 		let serialNumber;
 		let supply_vol;
 		let hd_ver_num;
-		let ver_name_ = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
-		let ver_name = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name_en = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name_cn = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -157,29 +157,29 @@
 		},500);
 		function ShowData(){
 			if(0 == language){
-				for(var i = 0; i < (ver_name.length);i++){
-					if(ver_name[i] != ""){
+				for(var i = 0; i < (ver_name_cn.length);i++){
+					if(ver_name_cn[i] != ""){
 						if(i == 0){
-							document.getElementById(ver_name[i]).innerHTML = ver_data[i];
+							document.getElementById(ver_name_cn[i]).innerHTML = ver_data[i];
 						}else if(i == 1){
-							document.getElementById(ver_name[i]).innerHTML = ver_data[24];
+							document.getElementById(ver_name_cn[i]).innerHTML = ver_data[24];
 						}else{
-							document.getElementById(ver_name[i]).innerHTML = ver_data[i-1];
+							document.getElementById(ver_name_cn[i]).innerHTML = ver_data[i-1];
 						}
 						
 					}
 				}				
 			}else{
-				for(var i = 0; i < (ver_name_.length);i++){
-					if(ver_name_[i] != ""){
+				for(var i = 0; i < (ver_name_en.length);i++){
+					if(ver_name_en[i] != ""){
 						if(i == 0){
-							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+							document.getElementById(ver_name_en[i]).innerHTML = ver_data[i];
 						}else if(i == 1){
-							document.getElementById(ver_name_[i]).innerHTML = ver_data[24];
+							document.getElementById(ver_name_en[i]).innerHTML = ver_data[24];
 						}else if(i <5){
-							document.getElementById(ver_name_[i]).innerHTML = ver_data[i-1];
+							document.getElementById(ver_name_en[i]).innerHTML = ver_data[i-1];
 						}else{
-							document.getElementById(ver_name_[i]).innerHTML = ver_data[i];
+							document.getElementById(ver_name_en[i]).innerHTML = ver_data[i];
 						}
 					}
 			}
@@ -190,7 +190,7 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
-			document.getElementById("sup_vol").innerHTML = (supply_vol/1000).toFixed(1) + ' ' + 'V';
+			document.getElementById("SupVol").innerHTML = (supply_vol/1000).toFixed(1) + ' ' + 'V';
 		}
 		function disp_ver(btn){
 			document.getElementById("disp_vers").style.display = "";
@@ -279,7 +279,7 @@
 			tbody +='<tr><td width ="15%" id="lang_22" ></td>';		
 			tbody += '<td><input id ="language_sel" style="border-style:none;background-color:#fff" type = "button" ondblclick ="ChoseLang(this)"  value = "'+ type[language] +'"></input></td></tr>';		
 			tbody += '<tr><td id="lang_25" ></td>';
-			tbody += '<td id="sup_vol"></td></tr>';
+			tbody += '<td id="SupVol"></td></tr>';
 			tbody += '<tr><td id="lang_27" ></td>';
 			tbody += '<td id="DebugDate" ></td></tr>';
 			// tbody += '<td><select class="sele" style="border:0px;outline:none;background:#fff" id ="language_sel" width ="10%" onchange ="ChoseLang(this)">';
