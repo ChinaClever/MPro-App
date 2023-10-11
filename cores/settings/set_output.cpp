@@ -113,7 +113,8 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
                 } else {
                     for(int i=0; i<it->size; ++i) {
                         if(unit.value == sRelay::Reset) {if(it->sw[id]) it->cnt[i] += 1;}
-                        else if(0==it->sw[id]) it->cnt[i] += 1;
+                        else if(0==it->sw[i]) it->cnt[i] += 1;
+                        if(unit.value < sRelay::Reset) it->sw[i] = unit.value;
                     }
                 }
             } if(unit.value < sRelay::Reset) it->sw[id] = unit.value;
