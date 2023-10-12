@@ -59,16 +59,16 @@ void Log_Core::append(const sAlarmItem &it)
     QString fmd = "alarm:%1 content:%2";
     if(cm::cn()) fmd = tr("%1　 内容：%2");
     QString str = fmd.arg(it.alarm_status, it.alarm_content);   /*使用alarm_status和alarm_content填充格式化字符串fmd*/
-    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);   /*调用发生SMTP邮件函数和系统告警日志函数*/
+    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(it);   /*调用发生SMTP邮件函数和系统告警日志函数*/
     Odbc_Core::bulid()->alarm(it);  /*调用alarm函数，对数据库进行报警记录*/
     mAlarmIts << it; run();     /*将结构体it添加到mAlarmIts中*/
 }
 
 void Log_Core::append(const sEventItem &it)
 {
-    QString fmd = "type:%1 content:%2";
-    QString str = fmd.arg(it.event_type, it.event_content);     /*使用fmd.arg函数将event_type和event_content的值填充到格式字符串中，生成一个格式化的字符串str*/
-    sys_logInfo(str); mEventIts << it; run();   /*run函数控制日志核心的运行操作*/
+    //QString fmd = "type:%1 content:%2";
+    //QString str = fmd.arg(it.event_type, it.event_content);     /*使用fmd.arg函数将event_type和event_content的值填充到格式字符串中，生成一个格式化的字符串str*/
+    sys_logInfo(it); mEventIts << it; run();   /*run函数控制日志核心的运行操作*/
     Odbc_Core::bulid()->event(it);  /*将事件添加到数据库*/
 }
 
