@@ -160,6 +160,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
         memset(mOpData->pf, 0, size);
         mOpData->version = 0;
         mDev->dtc.fault = 6;
+        mOpData->temp = 0;
         mOpData->size = mDev->cfg.nums.boards[addr-1];
         /*if(cm::runTime() < 74*60*60)*/ memset(mOpData->tmp_vol, 0, size);
         //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);
