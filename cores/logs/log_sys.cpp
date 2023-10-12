@@ -39,6 +39,7 @@ void Log_Sys::sys_logInfo(const sEventItem &it)
         QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
 
         QJsonObject jsonObject;
+        jsonObject.insert("dev", "PDU");
         jsonObject.insert("uuid", uuid);
         jsonObject.insert("event", json);
         jsonObject.insert("datetime", it.datetime);
@@ -58,6 +59,7 @@ void Log_Sys::sys_logAlarm(const sAlarmItem &it)
         QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
 
         QJsonObject jsonObject;
+        jsonObject.insert("dev", "PDU");
         jsonObject.insert("uuid", uuid);
         jsonObject.insert("alarm", json);
         jsonObject.insert("datetime", it.datetime);

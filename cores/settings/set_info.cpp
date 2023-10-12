@@ -40,6 +40,9 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 23: res = cm::execute("df -h /usr/data/"); break;
     case 24: res = cm::execute("ssh -V"); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
+    } if(type > 10 && type < 20) {
+        int temp = it->opVers[10 + type-11];
+        if(temp) res = res.toString() + "   temp:" + QString::number(temp) + "°C";
     }
     return res;
 }

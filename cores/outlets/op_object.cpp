@@ -206,6 +206,7 @@ void OP_Object::fillData(uchar addr)
     dev->offLine = 5;
     dev->rtu.hzs[addr] = it->hz;    /*赋值给执行板电压频率*/
     //dev->cfg.nums.boards[addr] = it->size;
+    dev->cfg.vers.opVers[10+addr] = it->temp;
     dev->cfg.vers.opVers[addr] = it->version;   /*每块执行版软件版本*/
     dev->rtu.chipStates[addr] = it->chipStatus; /*执行版计量芯片状态*/
     for(int i=0; i<8; ++i) dev->rtu.offLines[i] = it->ens[i];

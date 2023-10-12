@@ -42,7 +42,7 @@ bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
         ptr += 3; //忽略三位97
         obj->version = *ptr++;
         obj->chipStatus = *ptr++; // 01表示执行版计量芯片模块损坏，00表示正常。
-        ptr++; obj->type = 0;
+        obj->temp = *ptr++; obj->type = 0;
 
         for(int i=1; i<obj->size-1; ++i) {
             obj->vol[i] = getShort(ptr); ptr += 2;

@@ -25,6 +25,7 @@ struct sOpIt
     uint reactivePow[OP_ARRAY_SIZE]; // 无功功率
     uint chipStatus; //  01表示执行版计量芯片模块损坏，00表示正常
     uint version;  // 执行板软件版本号
+    uint temp; // 执行板MCU温度
     uchar ens[DEV_NUM];
 };
 
