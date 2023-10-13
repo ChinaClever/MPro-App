@@ -290,9 +290,12 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     obj.insert("serialNumber", it.serialNumber);
     obj.insert("prodDate", it.prodDate);
 
-    QJsonArray vs;
+    QJsonArray vs, temps;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
     obj.insert("op_vers", vs); json.insert(key, obj);
+
+    for(uint i=0; i<6; ++i) temps.append(it.opVers[10+i]/1.0);
+    obj.insert("mcu_temp", temps); json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)

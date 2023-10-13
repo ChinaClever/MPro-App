@@ -42,7 +42,8 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     default: qDebug() << Q_FUNC_INFO << type; break;
     } if(type > 10 && type < 20) {
         int temp = it->opVers[10 + type-11];
-        if(temp) res = res.toString() + "   temp:" + QString::number(temp) + "°C";
+        QString str = "  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; temp:";
+        str += QString::number(temp) + "°C"; if(temp) res = res.toString() + str;
     }
     return res;
 }
