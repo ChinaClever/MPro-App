@@ -157,7 +157,10 @@ class JsonRpc {
     socket_send(msg) {
         var ret = true;
          if(this.ws.readyState <= WebSocket.OPEN){
-            this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+            if(this.ws.readyState == 0){
+            }else{
+                this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+            }          
          } else if(JsonRpc._errCnt++ > 2) {
               ret = false;
               this.ws.close();
