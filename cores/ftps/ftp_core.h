@@ -12,10 +12,10 @@ public:
 
 private:
     void workDown();
-    void mdelay() {cm::mdelay(60*1000); mCnt++;}
+    void mdelay() {cm::mdelay(60*1000);}
 
 private:
-    int mCnt = 0;
+    int mCnt = 1;
     bool isRun = true;
 };
 

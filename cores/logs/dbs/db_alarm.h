@@ -3,7 +3,7 @@
 #include "db_obj.h"
 
 struct sAlarmItem : public Db_ObjItem{
-    int addr;
+    int addr=0;
     QString alarm_status;
     QString alarm_content;
 };

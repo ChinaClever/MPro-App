@@ -30,17 +30,46 @@ Log_Sys::Log_Sys(QObject *parent)
 /**
  * 将日志消息发送到系统日志
  */
-void Log_Sys::sys_logInfo(const QString& msg)
+void Log_Sys::sys_logInfo(const sEventItem &it)
 {
-    char *str = msg.toUtf8().data(); //cout << msg;
-    if(sysLogCfg.en==2) CLEVER_INFO("%s", str);
+    if(sysLogCfg.en==2){
+        QJsonObject json;
+        json.insert("type", it.event_type);
+        json.insert("content", it.event_content);
+        QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
+
+        QJsonObject jsonObject;
+        jsonObject.insert("dev", "PDU");
+        jsonObject.insert("uuid", uuid);
+        jsonObject.insert("event", json);
+        jsonObject.insert("datetime", it.datetime);
+        QJsonDocument jsonDocument(jsonObject);
+        QString jsonString = jsonDocument.toJson(); // QJsonDocument::Compact
+        char *str = jsonString.toUtf8().data(); //cout << msg;
+        CLEVER_INFO("%s", str);
+    }
 }
 
-void Log_Sys::sys_logAlarm(const QString& msg)
+void Log_Sys::sys_logAlarm(const sAlarmItem &it)
 {
-    char *str = msg.toUtf8().data();
-    if(sysLogCfg.en) CLEVER_WARNING("%s", str);
-    Aiot_Core::bulid()->event_post(msg);
+    if(sysLogCfg.en) {
+        QJsonObject json;
+        json.insert("status", it.alarm_status);
+        json.insert("content", it.alarm_content);
+        QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
+
+        QJsonObject jsonObject;
+        jsonObject.insert("dev", "PDU");
+        jsonObject.insert("uuid", uuid);
+        jsonObject.insert("alarm", json);
+        jsonObject.insert("datetime", it.datetime);
+        QJsonDocument jsonDocument(jsonObject);
+        QString jsonString = jsonDocument.toJson(); // QJsonDocument::Compact
+
+        Aiot_Core::bulid()->event_post(jsonString);
+        char *str = jsonString.toUtf8().data();
+        CLEVER_WARNING("%s", str);
+    }
 }
 
 void Log_Sys::sys_open()
@@ -57,5 +86,5 @@ void Log_Sys::sys_initfun()
         QString cmd = fmd.arg(cfg->host).arg(cfg->port);
         system(cmd.toLocal8Bit().data()); //cout << cmd;
         QTimer::singleShot(567,this, &Log_Sys::sys_open);
-    }
+    } else system("killall rsyslogd");
 }

@@ -94,7 +94,7 @@ void Set_Output::relayOpLog(const sDataItem &it)
     db.event_type = opSrc(it.addr, it.txType);
     if(cm::cn()) db.event_type += QStringLiteral("继电器 控制");
     else db.event_type += QStringLiteral("relay control");
-    Log_Core::bulid()->append(db);
+    db.addr = it.addr; Log_Core::bulid()->append(db);
 }
 
 bool Set_Output::outputCtrl(const sDataItem &unit)
@@ -113,7 +113,8 @@ bool Set_Output::outputCtrl(const sDataItem &unit)
                 } else {
                     for(int i=0; i<it->size; ++i) {
                         if(unit.value == sRelay::Reset) {if(it->sw[id]) it->cnt[i] += 1;}
-                        else if(0==it->sw[id]) it->cnt[i] += 1;
+                        else if(0==it->sw[i]) it->cnt[i] += 1;
+                        if(unit.value < sRelay::Reset) it->sw[i] = unit.value;
                     }
                 }
             } if(unit.value < sRelay::Reset) it->sw[id] = unit.value;
@@ -245,7 +246,7 @@ void Set_Output::opNameLog(const sCfgItem &it, const QVariant &v)
     sEventItem db;
     db.event_content = str;
     db.event_type = opSrc(it.addr, it.txType);
-    db.event_type += op;
+    db.event_type += op; db.addr = it.addr;
     Log_Core::bulid()->append(db);
 }
 

@@ -40,5 +40,6 @@ void Ftp_Core::run()
     while(isRun) {
         mdelay();
         workDown();
+        mCnt++;
     }
 }

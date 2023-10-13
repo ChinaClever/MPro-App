@@ -42,7 +42,7 @@ bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
         ptr += 3; //忽略三位97
         obj->version = *ptr++;
         obj->chipStatus = *ptr++; // 01表示执行版计量芯片模块损坏，00表示正常。
-        ptr++; obj->type = 0;
+        obj->temp = *ptr++; obj->type = 0;
 
         for(int i=1; i<obj->size-1; ++i) {
             obj->vol[i] = getShort(ptr); ptr += 2;
@@ -160,6 +160,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
         memset(mOpData->pf, 0, size);
         mOpData->version = 0;
         mDev->dtc.fault = 6;
+        mOpData->temp = 0;
         mOpData->size = mDev->cfg.nums.boards[addr-1];
         /*if(cm::runTime() < 74*60*60)*/ memset(mOpData->tmp_vol, 0, size);
         //else if(cm::adcVol() < 8*1000) memset(mOpData->vol, 0, size);

@@ -16,8 +16,8 @@ class Log_Sys : public QThread
 public:
     explicit Log_Sys(QObject *parent = nullptr);
     static sSysLogCfg sysLogCfg;
-    void sys_logAlarm(const QString& msg);
-    void sys_logInfo(const QString& msg);
+    void sys_logAlarm(const sAlarmItem &it);
+    void sys_logInfo(const sEventItem &it);
 
 public slots:
     void sys_open();
