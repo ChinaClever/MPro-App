@@ -50,7 +50,7 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ret && key.size()) {
-        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type && strong_pwd) {
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type && strong_pwd) {  /*启用了强密码*/
             QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key.arg(id), str, prefix); //cout << str.size() << str;
         } else cfg->writeCfg(key.arg(id), v, prefix);
@@ -112,18 +112,18 @@ void Set_Login::loginLocking(bool ok)
 int Set_Login::loginCheck(const QString &str)
 {
     QStringList ls = str.split(";");
-    int ret = loginTryLock();
+    int ret = loginTryLock();   /*连续输入多次账户密码错误则锁定*/
     if(ret) return 0-ret;
 
-    if(ls.size() == 2) {
+    if(ls.size() == 2) {    /*输入了账户和密码*/
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
-        if(cfg->en) {
+        if(cfg->en) {   /*启用了radius功能*/
             int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
-            if((res == -1) && cfg->local) ret = loginAuth(ls);
+            if((res == -1) && cfg->local) ret = loginAuth(ls);  /*radius认证失败且开启了本地认证*/
             else ret = res; cout << ret;
         } else {
-            ret = loginAuth(ls);
-            loginLocking(ret);
+            ret = loginAuth(ls);    /*进行登陆验证*/
+            loginLocking(ret);  /*如果登陆验证失败则错误次数加1*/
         }
     } else if(App_Ldap::ldapCfg.en && ls.size()) {
         bool res = App_Core::bulid()->ldap_work(ls.last());

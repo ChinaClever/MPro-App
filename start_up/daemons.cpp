@@ -77,9 +77,9 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
 {
     bool ret = true;
     if(proc.runSec > proc.daemonSec) {
-        proc.daemonSec = proc.runSec;
-    } else if(!proc_isRun(name)){
-        resetProc(proc, name);
+        proc.daemonSec = proc.runSec;   /*确保守护进程处于进程运行的最长时间*/
+    } else if(!proc_isRun(name)){   /*检查进程是否在运行*/
+        resetProc(proc, name);      /*该程序不在运行则重新运行该程序*/
         ret = false; qDebug() << __FUNCTION__ << name;
     } mdelay(100);
     return ret;

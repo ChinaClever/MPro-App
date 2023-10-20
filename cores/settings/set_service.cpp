@@ -279,16 +279,16 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     default: ret = false; cout<< fc; break;
     } //cout << key << fc << v;
 
-    if(3 == fc && it->http_redirect && !it->https_en) {
-        it->http_redirect = 0; return false;
+    if(3 == fc && it->http_redirect && !it->https_en) { /*启用了重定向功能并且未启用https*/
+        it->http_redirect = 0; return false;    /*关闭重定向*/
     } else if(4 == fc && it->http_redirect && !it->https_en) {
-        it->https_en = 1; return false;
+        it->https_en = 1; return false;  /*开启https*/
     }
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
-        if(!it->http_en && !it->https_en) {
+        if(!it->http_en && !it->https_en) { /*如果http和https都未启用，则强制开启http*/
             key = "http_en"; it->http_en =1;
             cfg->writeCfg(key, 1, prefix);
         }
