@@ -575,7 +575,7 @@ class PduCfgs extends PduCfgObj {
         }
     }
     sysinfoCfg() {
-        var fcs = [0,1,2,3,4,5,6,7,8,9,11,12,13,14,21,22,23];
+        var fcs = [0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,21,22,23];
         this.getCfgList(30, fcs);
     }
     fwupdateCfg(slave_num,board_num) {

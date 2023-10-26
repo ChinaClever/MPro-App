@@ -64,8 +64,9 @@
 		let serialNumber;
 		let supply_vol;
 		let hd_ver_num;
-		let ver_name_en = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
-		let ver_name_cn = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","","","","","","","CoreVer","MemSize","DiskInfo");
+		let dev_type;
+		let ver_name_en = new Array("McName","ser_num","McVer","McCode","McUsrName","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","Borad5Ver","Borad6Ver","","","","","CoreVer","MemSize","DiskInfo");
+		let ver_name_cn = new Array("McName","ser_num","McVer","McCode","McUsrName","McVerShow","McReiyOnVer","McCompileTime","McReleaseDate","McUpdateDate","DebugDate","","Borad1Ver","Borad2Ver","Borad3Ver","Borad4Ver","Borad5Ver","Borad6Ver","","","","","CoreVer","MemSize","DiskInfo");
 		function ParseData(){
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
@@ -73,19 +74,21 @@
 			hd_ver_num = pdu_data.pdu_version.hwVersion;
 			language = pdu_data.pdu_info.language;
 			supply_vol = pdu_data.pdu_info.supply_vol;
+			dev_type = pdu_data.uut_info.pdu_type;
 		}
 		ParseData();
 		function read_data(){
 			if(0 == language){
-				for(var j = 0;j<24;j++){
-					if(j <= 9 || (j > 10 && j<15)||(j>20 && j<24)){
+				for(var j = 1;j<24;j++){
+					if(j <= 9 || (j > 10 && j<17)||(j>20 && j<24)){
 						ver_data[j] = pdu_cfg.cfgValue(30,j,0,addr);
 					}
 				}
-				ver_data[24] = serialNumber;
+				ver_data[0] = dev_type;	//读取pud类型
+				ver_data[24] = serialNumber;	//增加硬件版本号
 			}else{
-				for(var j = 0;j<24;j++){
-					if(j <= 9 || (j > 10 && j<15)||(j>20 && j<24)){
+				for(var j = 1;j<24;j++){
+					if(j <= 9 || (j > 10 && j<17)||(j>20 && j<24)){
 						if(j == 4){
 							continue;
 						}else{
@@ -93,6 +96,7 @@
 						}
 					}
 				}
+				ver_data[0] = dev_type;	//读取pud类型
 				ver_data[24] = serialNumber;			
 			}
 		}
@@ -128,6 +132,8 @@
 			lang[25] = ["电源电压：","Supply voltage：","","",""];
 			lang[26] = ["硬件版本号：","Hardware version number:","","",""];
 			lang[27] = ["调试时间：","Debug time:","","",""];
+			lang[28] = ["第五块执行板版本号:","Version number of thr fifth executive board:","","",""];
+			lang[29] = ["第六块执行板版本号:","Version number of thr sixth executive board:","","",""];
 			for(let i = 0;i < 2;i++){
 				type[i] =  lang[23+i][language] ;
 			}
@@ -141,7 +147,7 @@
 					document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 				}
 			}
-			for(let j = 25;j<28;j++){
+			for(let j = 25;j<30;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			
@@ -184,6 +190,13 @@
 					}
 			}
 			}
+			for(var i = 1; i < 7; i++){	//未读到执行本则隐藏
+				if(ver_data[i+10] == "0"){
+					document.getElementById("borad"+i).style.display = "none";
+				}else{
+					document.getElementById("borad"+i).style.display = "";
+				}
+			}
 			//document.getElementById("language_sel" ).value = language;
 			if(top.login_permit_ == 0){
 			}else{
@@ -192,6 +205,7 @@
 			}
 			document.getElementById("SupVol").innerHTML = (supply_vol/1000).toFixed(1) + ' ' + 'V';
 		}
+
 		function disp_ver(btn){
 			document.getElementById("disp_vers").style.display = "";
 		}
@@ -250,14 +264,18 @@
 			var thead = '',tbody = '';
 			thead = '<tr><td width ="15%" id="lang_12" ></td>\
 				<td width ="85%"></td></tr>';
-			tbody += '<tr><td id="lang_13" ></td>';
+			tbody += '<tr id = "borad1"><td id="lang_13" ></td>';
 			tbody += '<td id = "Borad1Ver"></td></tr>';
-			tbody += '<tr><td id="lang_14" ></td>';
+			tbody += '<tr id = "borad2"><td id="lang_14" ></td>';
 			tbody += '<td id = "Borad2Ver"></td></tr>';
-			tbody += '<tr><td id="lang_15" ></td>';
+			tbody += '<tr id = "borad3"><td id="lang_15" ></td>';
 			tbody += '<td id = "Borad3Ver"></td></tr>';
-			tbody += '<tr><td id="lang_16" ></td>';
+			tbody += '<tr id = "borad4"><td id="lang_16" ></td>';
 			tbody += '<td id = "Borad4Ver"></td></tr>';
+			tbody += '<tr id = "borad5"><td id="lang_28" ></td>';
+			tbody += '<td id = "Borad5Ver"></td></tr>';
+			tbody += '<tr id = "borad6"><td id="lang_29" ></td>';
+			tbody += '<td id = "Borad6Ver"></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
 		}
