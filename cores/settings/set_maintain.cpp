@@ -57,14 +57,14 @@ void Set_Maintain::factoryRestore()
         system(cmd.toLocal8Bit().data());
     } //system("sync"); system("reboot");
     m_thread = new std::thread(dev_restart);
-    m_thread->detach(); //子线程与主线程分离
+    m_thread->detach(); /*子线程与主线程分离*/
 }
 
 QString Set_Maintain::backups(int fc)
 {
     QString res; switch (fc) {
-    case 1: res = profileBackup(); break;
-    case 2: res = batchBackup(); break;
+    case 1: res = profileBackup(); break;   /*配置文件备份*/
+    case 2: res = batchBackup(); break; /*批量配置文件备份*/
     default: cout << fc; break;
     }
 
@@ -74,8 +74,8 @@ QString Set_Maintain::backups(int fc)
 bool Set_Maintain::restores(int fc, const QVariant &v)
 {
     bool ret=true; switch (fc) {
-    case 1: ret = profileRestore(v.toString()); break;
-    case 2: ret = batchRestore(v.toString()); break;
+    case 1: ret = profileRestore(v.toString()); break;  /*配置文件恢复*/
+    case 2: ret = batchRestore(v.toString()); break;    /*批量配置文件恢复*/
     default: ret = false; cout << fc; break;
     }
 

@@ -20,14 +20,16 @@ void Cfg_AlarmObj::writeAlarms()
         QtConcurrent::run(this,&Cfg_AlarmObj::alarm_run);
     }
 }
-
+/**
+ * 保存继电器计数器的配置，将值写入配置文件
+ */
 void Cfg_AlarmObj::saveRelayCnt()
 {
     static uint swCnt = 0;
     int size = OUTPUT_NUM; uint cnt = 0;
-    uint *data = cm::masterDev()->output.relay.cnt;
-    for(int i=0; i<size; ++i) cnt += data[i];
-    if(cnt > swCnt) swCnt = cnt; else return;
+    uint *data = cm::masterDev()->output.relay.cnt; /*获取继电器控制次数*/
+    for(int i=0; i<size; ++i) cnt += data[i];   /*将每个计数器的值累加到cnt*/
+    if(cnt > swCnt) swCnt = cnt; else return;   /*计数器的值大于swCnt，则更新swCnt的值*/
 
     QFile file(Cfg_Com::pathOfCfg(CFG_RELAY_FN));
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
