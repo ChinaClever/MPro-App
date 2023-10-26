@@ -48,7 +48,7 @@ void Set_Maintain::factoryRestore()
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
     system("echo '1' > /usr/data/clever/cfg/factory_restore.ini");
-    fns << "alarm.conf" << "proc_cnt.conf" << "cfg.ini"; // << "logs.db";
+    fns << "proc_cnt.conf" << "cfg.ini"; // << "alarm.conf" << "logs.db";
     if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
     foreach (const auto &fn, fns) {
