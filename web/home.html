@@ -842,8 +842,10 @@
 			}else{
 				for ( i = 0; i < 3; i++) {
 					top.inletA_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
-					top.inletB_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);			
-					top.inletC_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					// top.inletB_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);			
+					// top.inletC_data[i][49] = parseFloat(phase_info[0][sample_[i]]).toFixed(2);
+					top.inletB_data[i][49] = 0;			
+					top.inletC_data[i][49] = 0;
 			}
 		}
 		}
