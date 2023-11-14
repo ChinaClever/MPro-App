@@ -106,6 +106,7 @@ void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
         it.lifeEn[i] = 0;
         it.maxCnt[i] = 50000;
         it.resetDelay[i] = 5;
+        it.powerUpDelay[i] = 1;
     }
 }
 
