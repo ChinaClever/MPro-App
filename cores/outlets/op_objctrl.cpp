@@ -177,15 +177,18 @@ void OP_ObjCtrl::clearEle_A(int id)
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.powerUpDelay;
-    for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
-    funDelay(cmd);
+    if(dev->cfg.param.devSpec > 2) {
+        uint *cmd = dev->output.relay.powerUpDelay;
+        for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
+        funDelay(cmd);
+    }
 }
 
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.powerUpDelay;
-    cmd[id-1] = sec;
-    funDelay(cmd);
+    if(dev->cfg.param.devSpec > 2) {
+        uint *cmd = dev->output.relay.powerUpDelay;
+        cmd[id-1] = sec; funDelay(cmd);
+    }
 }

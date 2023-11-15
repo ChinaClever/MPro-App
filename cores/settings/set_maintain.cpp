@@ -4,6 +4,7 @@
  *      Author: Lzy
  */
 #include "set_maintain.h"
+#include "op_core.h"
 
 Set_Maintain::Set_Maintain()
 {
@@ -44,6 +45,7 @@ void Set_Maintain::factoryRestore()
     //Log_Core::bulid()->append(it);
 
     QStringList fns;
+    OP_Core::bulid()->setDelay(0, 1);
     QString dir = "/usr/data/clever/cfg/";
     Cfg_Core::bulid()->devParamRestoreFactory();
     system("chmod 777 /usr/data/clever/cfg/*");
