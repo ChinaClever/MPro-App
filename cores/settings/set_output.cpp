@@ -28,7 +28,11 @@ void Set_Output::relayOpLog(const sDataItem &it)
             else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
             else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
             else str += QStringLiteral(" 输出位继电器 ");
-            if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
+            switch (it.value) {
+            case 2: str += QStringLiteral("复位"); break;
+            case 1: str += QStringLiteral("闭合"); break;
+            case 0: str += QStringLiteral("断开"); break;
+            } //if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
         } else {
             if(it.type == DType::Group) str += "group switch ";
             else if(it.type == DType::Dual) str += "group switch ";
