@@ -76,8 +76,8 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
         result = pduLogFun(params);
     }else if (strcmp(method, "pduLogHda") == 0) {
         result = pduLogHda(params);
-    }else if (strcmp(method, "execute") == 0) {
-        result = execute(params);
+    // }else if (strcmp(method, "execute") == 0) {
+    //    result = execute(params);
     }else {
         response = mg_mprintf("{%Q:%.*s, %Q:{%Q:%d,%Q:%Q}", "id", (int) id.len, id.ptr,
                               "error", "code", -32601, "message", "Method not found");
@@ -98,6 +98,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
 {
     char keyFile[126]={0}, certFile[126]={0};
     //static FILE* fp = nullptr; static int state = 0;
+    static char uid[FILE_LEN]={0};
     static char file_path[FILE_LEN]={0};
     static char file_name[FILE_LEN]={0};
     qstrcpy(keyFile, File::keyFile().toLatin1().data());
@@ -136,6 +137,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         }else if(mg_http_match_uri(hm, "/upload")){
             //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
@@ -148,6 +152,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         }else if(mg_http_match_uri(hm, "/upload_fw")){
             //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s",file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
@@ -161,6 +168,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             //            mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             //            Web_Obj::bulid()->restores(2,file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
@@ -175,6 +185,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s" , file_path);
             //Web_Obj::bulid()->restores(1,file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
@@ -185,6 +198,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         }else if(mg_http_match_uri(hm, "/upload_logo")){
             //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/cfg/%s" , file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
@@ -210,9 +226,13 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
 
 void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message *hm,const char *path)
 {
+    static char uid[FILE_LEN]={0};
     struct mg_http_serve_opts opts;
     memset(&opts , 0 , sizeof(opts));
     opts.mime_types = "foo=a/b,txt=c/d";
+    mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+    if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+
     if(0 == strcmp("/index.html/client-cert.pem" , path)){
         mg_http_serve_file(c , hm , File::certFile().toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/client-key.pem" , path)){

@@ -99,6 +99,7 @@
 				var chunk = data.subarray(offset, offset + chunkSize) || '';
 				var opts = {method: 'POST', body: chunk};
 				var url = '/upload_batch?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_cfg.getUuid();
 				var ok = true;
 				setStatus(
 					// 'Uploading ' + name + ', bytes ' + offset + '..' +
@@ -122,6 +123,7 @@
 		function download(){
 			let url = window.location.origin;
 			url += "/index.html/cfg_batch.zip";
+			url += "?uid=" + pdu_cfg.getUuid();
 			window.open(url,'_blank');
 		}
 		function upload_data(){

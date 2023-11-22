@@ -149,8 +149,10 @@ bool OP_Updater::initOta(int id)
 
 bool OP_Updater::sendPacket(int addr, const QByteArray &array)
 {
-    bool ret = false; QByteArray data;
-    data.append(0x7B); data.append(addr);
+    bool ret = false; QByteArray data; data.append(0x7B);
+    if(array.size()==1024) data.append(addr);
+    else data.append(0xC0 +addr);
+
     data.append(array.size() / 256);
     data.append(array.size() % 256);
     data.append(array);

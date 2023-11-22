@@ -125,6 +125,7 @@
 				var chunk = data.subarray(offset, offset + chunkSize) || '';
 				var opts = {method: 'POST', body: chunk};
 				var url = '/upload?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_cfg.getUuid();
 				var ok = true;
 				setStatus(
 					'Uploading ' + name + ', bytes ' + offset + '..' +
@@ -313,9 +314,11 @@
 			let url = window.location.origin;
 			if(obj.id == "lang_24"){
 				url += "/index.html/client-key.pem";
+				url += "?uid=" + pdu_cfg.getUuid();
 				window.open(url,'_blank');
 			}else{
 				url += "/index.html/client-cert.pem";
+				url += "?uid=" + pdu_cfg.getUuid();
 				window.open(url,'_blank');
 			}
 		}

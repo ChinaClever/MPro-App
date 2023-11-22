@@ -69,6 +69,7 @@
 		function download(){
 			let url = window.location.origin;
 			url += "/index.html/diagnosis.zip";
+			url += "?uid=" + pdu_cfg.getUuid();
 			window.open(url,'_blank');
 		}
 		function buildTable() {

@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #include <string.h>
 #define setbit(x,y) x|=(1<<y)
+static QString g_ip_addr = "";
+QString web_ip_addr(){return g_ip_addr;}
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
@@ -26,7 +28,8 @@ Web_Core *Web_Core::bulid(QObject *parent)
 
 void Web_Core::initFunSlot()
 {
-    init_share_mem(); if(mRun) web_initFun();
+    sDataPacket *shm = init_share_mem();
+    if(mRun) web_initFun(shm->net.inet.ip);
     timer = new QTimer(this); timer->start(1000); mgr_init();
     connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
 }
@@ -54,7 +57,7 @@ sDataPacket *Web_Core::init_share_mem()
     return shm;
 }
 
-void Web_Core::web_initFun()
+void Web_Core::web_initFun(char *ip)
 {
     QString t = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     qstrcpy(mRun->start, t.toLatin1().data());
@@ -65,6 +68,7 @@ void Web_Core::web_initFun()
     QDateTime dt = QLocale(QLocale::English).toDateTime(dateTime, "MMM dd yyyyhh:mm:ss");
     QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
     qstrcpy(mRun->compileTime, str.toUtf8().data());
+    g_ip_addr = ip; //qstrcpy(mRun->md5, ip);
 }
 
 void Web_Core::web_onTimeoutDone()

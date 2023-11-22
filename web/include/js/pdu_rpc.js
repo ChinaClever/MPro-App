@@ -51,15 +51,17 @@
  *  Created on: 2023年2月1日
  *      Author: Lzy
  */
+
+
 class JsonRpc {
     static _errCnt = 0;
     static _instance = null;
 
     constructor() {
         this.rpcid = 0; 
-        this.uuid = ' ';
         this.timeOut = 65; // HTTP最小超时时间 
         this.isSetting = false; // 是否在设置模式
+        this.uuid = btoa(window.location.host);
         this.root_map = this.rpc_map(); // 唯一的Map表，此表会存储所有的数据
         this.ws = this.socket_open(); // 自动建立连接
     }
@@ -86,6 +88,9 @@ class JsonRpc {
         return map;
     }
 
+    rpc_uid() {
+        return this.uuid;
+    }
 
     // 自动生成URL
     rpc_url() {
@@ -186,7 +191,8 @@ class JsonRpc {
         var value = data[5];
        
         if(-1 == parseInt(value)) { 
-            window.sessionStorage.setItem('uuid', ' ');
+            var uid = btoa(window.location.host);
+            window.sessionStorage.setItem('uuid', uid);
             var url = window.location.protocol+"//";            
             url += window.location.host; this.ws.close(); 
             window.location.replace(url);
@@ -285,6 +291,10 @@ class PduMetaData {
         this.addr = addr;
         PduMetaData.m_addr = addr;
         PduMetaData.meta_workDown();
+    }
+
+    getUuid() {
+        return this.rpc.rpc_uid();
     }
 
     getAddr() {
@@ -704,8 +714,9 @@ class PduCore extends PduOta {
 
     login_out() {
         var sessionStorage = window.sessionStorage;
+        var uid = btoa(window.location.host);
         sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', ' '); 
+        sessionStorage.setItem('uuid', uid); 
     }   
 
     login_permit() {
