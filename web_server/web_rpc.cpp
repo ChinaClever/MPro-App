@@ -81,9 +81,7 @@ char *Web_Rpc::pduSetParam(mg_str &r)
     if(its.at(1) == 14 && its.at(2) == 11) {
         if(1 == ret) value = QString::number(ret) + "; " + mObj->createUuid();
         else value = ret; //?1:0; cout << value;
-    } //else if(its.at(1) == 14 && its.at(2) == 12) value = ret;
-
-    cout << its << value;
+    } // cout << its << value;
     return responRpcString(its, value.toString());
 }
 
