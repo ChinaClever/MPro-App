@@ -19,6 +19,15 @@ QStringList File::entryList(const QString &p)
     return results;
 }
 
+bool File::cipp(const QString &fn)
+{
+    bool containsSpace = fn.contains(' ');
+    bool containsSemicolon = fn.contains(';');
+
+    // 如果存在空格或分号，返回 true；否则返回 false
+    return containsSpace || containsSemicolon;
+}
+
 QString File::md5(const QString &fn)
 {
     QFile sourceFile(fn);

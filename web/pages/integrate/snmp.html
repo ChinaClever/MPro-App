@@ -78,6 +78,7 @@
 		function download(obj){
 			let url = window.location.origin;
 			url += "/index.html/snmp.mib";
+			url += "?uid=" + pdu_cfg.getUuid();
 			window.open(url,'_blank');
 		}
 		function lang_init(){

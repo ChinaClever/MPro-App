@@ -28,12 +28,13 @@ public:
     QString diag(); // 下载诊断功能
     QString getIpv6En(); // ipv6标志
     QString createUuid();
-    bool checkUuid(mg_str &r);
-    bool checkUuid(const QString &uuid);
+    bool checkUuid(mg_str &r, bool set=false);
+    bool checkUuid(const QString &uuid, bool set);
+    QString md5Hash(const QString& input);
 
 private:
     JsonRpc_Client *mRpc;
-    QString mUuid = " ";
+    QStringList mUuidList;
 };
 
 #define cout qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz") << "[" << __FILE__ << ":" << Q_FUNC_INFO << ":" << __LINE__ << "]"

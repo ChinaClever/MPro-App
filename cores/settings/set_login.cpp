@@ -30,6 +30,13 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     return res;
 }
 
+int Set_Login::reserveCheck(const QString &str, int id)
+{
+    QString token = cm::dataPacket()->login[id].token;
+    if(str.size()) if(token == str) return 1;
+    return 0;
+}
+
 
 int Set_Login::loginSet(uchar type, const QVariant &v, int id)
 {
@@ -46,6 +53,7 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 5: key = "updatetime_%1"; ptr = it->updatetime; break;
     case 6: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
     case 11: ret = loginCheck(v.toString()); break;
+    case 12: ret = reserveCheck(v.toString(), id); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 

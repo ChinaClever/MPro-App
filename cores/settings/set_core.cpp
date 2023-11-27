@@ -119,7 +119,7 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
+    //case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;  /////////========
     default: cout << it.type; break;
     }
 
