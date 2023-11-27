@@ -228,6 +228,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     sNtpCfg *it = &App_Ntp::ntpCfg;
     App_Core *obj = App_Core::bulid();
     QString prefix = "ntp"; QString key;
+    if(1==fc || 3==fc || 4==fc) if(cm::cipp(v.toString())) return false;
 
     switch (fc) {
     case 1: ret = obj->ntp_time(v.toString()); break;

@@ -96,6 +96,7 @@ bool cm::pingNet(const QString& ip)
 
 bool cm::qrcodeGenerator(const QString& msg)
 {
+    if(msg.contains("'")) return false; // 过滤单引号
     QString fn = "/usr/data/clever/cfg/qrcode.png";
     QString cmd = "qrencode -o %1 -s 6 '%2 '";
     QString qr = cmd.arg(fn, msg);
@@ -104,6 +105,18 @@ bool cm::qrcodeGenerator(const QString& msg)
     system(qr.toUtf8().data());
     //cout << qr;
     return true;
+}
+
+bool cm::cipp(const QString& str)
+{
+    const QString specialChars = ";|&\n$";
+    for (const QChar& c : str) {
+        if (specialChars.contains(c)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /***

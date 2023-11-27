@@ -15,6 +15,7 @@ private:
     void loginLocking(bool ok);
     int loginAuth(const QStringList &ls);
     int loginCheck(const QString &str);
+    int reserveCheck(const QString &str, int id);
 
 private:
     int mFailCnt=0;

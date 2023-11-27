@@ -16,6 +16,7 @@ QByteArray zipCompress(const QByteArray &array);
 QByteArray zipUncompress(const QByteArray &array);
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
+bool cipp(const QString& str);
 
 bool cn();
 bool language();

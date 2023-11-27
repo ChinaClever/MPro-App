@@ -91,6 +91,8 @@ void Web_Http::process_json_message(mg_connection *c, mg_str &frame)
     free(method);
 }
 
+
+
 // This RESTful server implements the following endpoints:
 //   /websocket - upgrade to Websocket, and implement websocket echo server
 //   any other URI serves static files from s_web_root
@@ -139,6 +141,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
 
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
@@ -154,6 +157,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
 
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
@@ -170,6 +174,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
 
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
@@ -187,6 +192,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
 
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
@@ -200,6 +206,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
 
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");

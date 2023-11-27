@@ -95,6 +95,12 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
 
 bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
 {
+    // 过滤单引号或者转义单引号
+    if(fc > 1 && fc < 17) {
+        QString str = v.toString(); // 防止命令注入
+        if(str.contains("'") || str.contains("\'")) return false;
+    }
+
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
     bool ret = true; switch (fc) {

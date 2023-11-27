@@ -66,7 +66,7 @@ char *Web_Rpc::pduReadParam(mg_str &r)
 {
     bool ret = true; QString value;
     QVector<uint> its = mObj->getNumbers(r, 5);
-    if(its.at(1) != 14) ret = mObj->checkUuid(r);  //cout << its;
+    ret = mObj->checkUuid(r); // if(its.at(1) != 14)  //cout << its;
     if(ret) value = mObj->getCfg(its.at(1), its.at(2), its.at(3), its.at(0));   
     return responRpcString(its, value);
 }
@@ -76,7 +76,7 @@ char *Web_Rpc::pduSetParam(mg_str &r)
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5); int ret = 1;
     if(value.toString().isNull()) value = mObj->getNumber(r, 5); //cout << its << value;
-    if(its.at(1) != 14) ret = mObj->checkUuid(r, true);
+    ret = mObj->checkUuid(r, its.at(1) != 14); // if(its.at(1) != 14)
     if(ret) ret = mObj->setCfg(its.at(1), its.at(2), value,its.at(3), its.at(0));
     if(its.at(1) == 14 && its.at(2) == 11) {
         if(1 == ret) value = QString::number(ret) + "; " + mObj->createUuid();
