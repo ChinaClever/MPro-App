@@ -1,12 +1,12 @@
 [
   {
-    "name": "Font page",
+    "name": "Home page",
     "icon": "homepage_fill",
     "base": "",
     "url": "home.html"
   },
   {
-    "name": "Enter",
+    "name": "Input",
     "icon": "flashlight_fill",
     "base": "pages/inlet/",
     "subNav": [
