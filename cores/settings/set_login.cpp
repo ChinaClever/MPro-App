@@ -24,7 +24,8 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 5: res = it->updatetime; break;
     case 6: res = it->groupCtrl; break;
     case 9: res = it->reserve[2]; break;
-    default:  qDebug() << Q_FUNC_INFO; break;
+    case 12: res = (int)it->reserve[1][0]; break;
+    default: cout << type << id; break;
     }
 
     return res;
@@ -32,8 +33,10 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
 
 int Set_Login::reserveCheck(const QString &str, int id)
 {
-    QString token = cm::dataPacket()->login[id].token;
-    if(str.size()) if(token == str) return 1;
+    sDevLogin *it = &(cm::dataPacket()->login[id]);
+    QString token = it->token;
+    if(str.size() && token == str) it->reserve[1][0] = 1;
+    else it->reserve[1][0] = 0;
     return 0;
 }
 
@@ -85,7 +88,8 @@ int Set_Login::loginAuth(const QStringList &ls)
         sDevLogin *it = &(cm::dataPacket()->login[i]);
         QString usr = it->user, pwd = it->pwd;
         if((ls.first() == usr) && (ls.last() == pwd)) {
-            ret = 1; mPermit = it->permit; break;
+            it->reserve[1][0] = 0; ret = 1;
+            mPermit = it->permit; break;
         }
     }
     return ret;
@@ -139,7 +143,7 @@ int Set_Login::loginCheck(const QString &str)
     }
 
     if(ret > 0) {
-        sEventItem db; if(cm::cn()) {
+        sEventItem db; if(cm::cn()) {            
             db.event_type = QStringLiteral("用户登陆");
             db.event_content = QStringLiteral("登陆账号为 %1").arg(ls.first());
         } else {

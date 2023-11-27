@@ -145,7 +145,8 @@
         dev_type = obj.cfgValue(11,6,0,0);
         ver_mode = obj.cfgValue(13,17,0,0);   
         user_name = obj.cfgValue(user,1,0,0);
-        identify = obj.cfgValue(user,3,0,0);
+        // identify = obj.cfgValue(user,3,0,0);
+
         if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
@@ -320,43 +321,53 @@
       let psd = document.getElementById('psd').value;
       let conpsd = document.getElementById('conpsd').value;
       let ident = document.getElementById('ident').value;
+      obj.setCfg(user, 12, ident, 0, 0);/*用户的预留信息存到后台*/
+      setTimeout(function(){
+        obj.getCfg(user, 12, 0, 0);
+      },300);
+
+      setTimeout(function(){
+        identify = obj.cfgValue(user,12,0,0);
       // if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || ident != identify){
-      if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || ident != identify){         
-        if(0 == language){
-				  alert("输入有误请重新输入！");
-			  }else{
-          alert("Input error, please re-enter!！");
-        } 
-      }
-      else{
-        // if(!pattern.test(psd)){
-        //   if(0 == language){
-				// 		alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
-				// 	}else{
-				// 		alert("Please enter a 6-16 digit  password, which must contain at least one number, uppercase and lowercase letters");
-				// 	}
-        //   return ;
-        // }
-       // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
-        obj.setCfg(user,2,psd,0,0);
-        setTimeout(function(){
-          var div= document.getElementsByClassName('center_form');
-          for(var i = 0; i<div[0].childElementCount;i++){
-            div[0].removeChild(div[0].childNodes[i]);
+        if(user =='' || psd == '' || conpsd == ''||ident == '' || psd != conpsd||usr != user_name || identify != "1"){         
+          if(0 == language){
+            alert("输入有误请重新输入！");
+          }else{
+            alert("Input error, please re-enter!！");
+          } 
+        }
+        else{
+          // if(!pattern.test(psd)){
+          //   if(0 == language){
+          // 		alert("请输入6-16位密码,密码必须包含至少一个数字,大写和小写字母");
+          // 	}else{
+          // 		alert("Please enter a 6-16 digit  password, which must contain at least one number, uppercase and lowercase letters");
+          // 	}
+          //   return ;
+          // }
+        // psd = CryptoJS.PBKDF2(psd,psd,{keySize:4,hasher,iterations:1000}).toString().toUpperCase().substring(0,31);
+          obj.setCfg(user,2,psd,0,0);
+          setTimeout(function(){
+            var div= document.getElementsByClassName('center_form');
+            for(var i = 0; i<div[0].childElementCount;i++){
+              div[0].removeChild(div[0].childNodes[i]);
+            }
+            $('.center_form').html(BuildDiv('signin'));
+            if(0 != language){
+            document.getElementById("username").placeholder = "User name";
+            document.getElementById("psd").placeholder = "Passward";
+            document.getElementById("sign_in").value = "SIGIN";
+            document.getElementById("title_name").innerHTML = dev_type+"Management System";
+            document.getElementById("reset").innerHTML = "Reset Password";
           }
-          $('.center_form').html(BuildDiv('signin'));
-          if(0 != language){
-          document.getElementById("username").placeholder = "User name";
-          document.getElementById("psd").placeholder = "Passward";
-          document.getElementById("sign_in").value = "SIGIN";
-          document.getElementById("title_name").innerHTML = dev_type+"Management System";
-          document.getElementById("reset").innerHTML = "Reset Password";
-         }
-         if(ver_mode == 0){
-          document.getElementById("title_log").style.display = "";
-         }
+          if(ver_mode == 0){
+            document.getElementById("title_log").style.display = "";
+          }
         },800);
-      }
+        
+      } 
+    },500);
+   
     }
     function register1(){
       var language = window.sessionStorage.getItem('language');
