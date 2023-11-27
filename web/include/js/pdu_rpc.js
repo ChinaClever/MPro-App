@@ -463,7 +463,7 @@ class PduCfgs extends PduCfgObj {
     loginCfg() {
         this.getCfg(13, 10, 0, 0);
         this.getCfg(14, 1, 0, 0);
-        this.getCfg(42, 3, 0, 0);
+        //this.getCfg(42, 3, 0, 0);
         this.getCfg(42, 6, 0, 0);
         this.getCfg(14, 9, 0, 0);
     }
