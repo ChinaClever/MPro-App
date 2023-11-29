@@ -91,7 +91,7 @@
     ]
   }, 
   {
-    "name": "Frame",
+    "name": "Rack",
     "icon": "createtask_fill",
     "base": "pages/dual/",
     "subNav": [
