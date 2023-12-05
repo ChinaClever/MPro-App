@@ -95,11 +95,8 @@ QVariant Set_Integr::snmpCfg(uchar fc, int id)
 
 bool Set_Integr::snmpSet(uchar fc, int id, const QVariant &v)
 {
-    // 过滤单引号或者转义单引号
-    if(fc > 1 && fc < 17) {
-        QString str = v.toString(); // 防止命令注入
-        if(str.contains("'") || str.contains("\'")) return false;
-    }
+    // 防止命令注入 过滤单引号或者转义单引号
+    if(fc > 1 && fc < 17 && cm::cipp(v)) return false;
 
     sAgentCfg *cfg = &(Agent_Core::snmpCfg);
     QString prefix = "snmp";  QString key;
@@ -336,8 +333,11 @@ QVariant Set_Integr::ftpCfg(uchar fc)
 
 bool Set_Integr::ftpSet(uchar fc, const QVariant &v)
 {
+    // 防止命令注入 过滤单引号或者转义单引号
+    if(fc > 1 && fc < 6 && cm::cipp(v)) return false;
+
     sFtpCfg *cfg = &Ftp_Core::ftpCfg;
-    QString prefix = "ftp";  QString key;
+    QString prefix = "ftp"; QString key;
     bool ret = true; switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
     case 2: key = "host"; cfg->host = v.toString(); break;

@@ -52,7 +52,7 @@ bool Integr_HttpServer::download(const QByteArray &body)
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     QString fn = it->getString(body, "file");
     if(fn.at(0) != '/') fn.insert(0, '/');
-    if(QFile::exists(fn)) {
+    if(QFile::exists(fn) && !fn.contains("../")) {
         mSession->replyFile(fn);
     } else {
         QString str = "error: file does not exist, ";

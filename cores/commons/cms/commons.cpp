@@ -107,17 +107,19 @@ bool cm::qrcodeGenerator(const QString& msg)
     return true;
 }
 
-bool cm::cipp(const QString& str)
+bool cm::cipp(const QVariant& v)
 {
-    const QString specialChars = ";|&\n$";
-    for (const QChar& c : str) {
+    const QString specialChars = "`;|&\n$'\'";
+    QString str = v.toString();
+    for (QChar c : str) {
         if (specialChars.contains(c)) {
-            return true;
+            cout << v; return true;
         }
     }
-
     return false;
 }
+
+
 
 /***
   *判断一个字符串是否为纯数字
