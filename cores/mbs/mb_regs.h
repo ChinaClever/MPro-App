@@ -12,7 +12,6 @@ enum eMbRegs {
     MbReg_Version  =   22,    // 0x100-0x999 0x100-0x999
     MbReg_CompileTime  = 24,  // 软件编译时间 YYYYMMDD（字符串）
 
-
     MbReg_LineData = 101, // 相电压、相电流、相有功功率
     MbReg_LineAlarm = 1011,
     MbReg_LineThreshol = 6101,
