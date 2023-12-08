@@ -18,5 +18,5 @@ void Mb_Update::mbUpdates(int addr)
     upDevInfo(); line_update();
     loop_update(); output_update();
     group_update(); env_update(); mbSetUpdate();
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
 }
