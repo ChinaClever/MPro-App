@@ -11,7 +11,7 @@ public:
 
 protected:
     void line_update();
-    void line_setting(ushort addr, ushort value);
+    void line_setting(ushort addr, ushort address, ushort value);
 
 private:
     void line_dataObj(vshort &vs, int id);

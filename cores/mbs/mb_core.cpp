@@ -27,11 +27,6 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
 
 void Mb_Core::initFunSlot()
 {
-    // mCfg->enTcp = 1;
-    // mCfg->port = 1502;
-    //cm::masterDev()->cfg.param.devMode = DevMode::DM_Rtu;/////////////////
-    //mCfg->enRtu = 1;/////////////////
-
     emit connectTcpSig();
     emit connectRtuSig();
 }
@@ -71,7 +66,10 @@ void Mb_Core::connectTcpSlot()
 {
     bool ret = false; mTcp->disconnectModbus();
     if(mCfg->enTcp) ret =mTcp->connectTcp(mCfg->addrTcp, mCfg->port);
-    if(ret) mTcp->mbUpdates();
+    if(ret) {
+        int cnt = cm::masterDev()->cfg.nums.slaveNum;
+        for(int i=0; i<cnt; ++i) mTcp->mbUpdates(i);
+    }
 }
 
 void Mb_Core::connectRtuSlot()
@@ -80,7 +78,7 @@ void Mb_Core::connectRtuSlot()
     int res = cm::masterDev()->cfg.param.devMode;
     if(res == EDevMode::DM_Rtu && mCfg->enRtu) {
         ret = mRtu->connectRtu(*mCfg);
-        if(ret) mRtu->mbUpdates();
+        if(ret) mRtu->mbUpdates(0);
         else cout << mCfg->addrRtu << ret;
     }
 }
@@ -88,13 +86,14 @@ void Mb_Core::connectRtuSlot()
 void Mb_Core::run()
 {
     static uint cnt = 0;
-    bool ret = true;
-    if(cnt++ %2) {
+    bool ret = true; if(cnt++ %2) {
         ret = mRtu->isConnectedModbus();
-        if(ret) mRtu->mbUpdates();
+        if(ret) mRtu->mbUpdates(0);
     } else {
-        ret = mTcp->isConnectedModbus();
-        if(ret) mTcp->mbUpdates();
+        if(mTcp->isConnectedModbus()) {
+            int cnt = cm::masterDev()->cfg.nums.slaveNum;
+            for(int i=0; i<=cnt; ++i) mTcp->mbUpdates(i);
+        }
     }
 }
 

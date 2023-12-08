@@ -11,7 +11,7 @@ public:
 
 protected:
     void loop_update();
-    void loop_setting(ushort addr, ushort value);
+    void loop_setting(ushort addr, ushort address, ushort value);
 
 private:
     void loop_dataObj(vshort &vs, int id);

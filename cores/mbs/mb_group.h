@@ -9,13 +9,13 @@ public:
 
 protected:
     void group_update();
-    void group_setting(ushort addr, ushort value);
+    void group_setting(ushort addr, ushort address, ushort value);
 
 private:
     void group_dataUpdate();
     void group_relayUpdate();
     void group_thresholdUpdate();
-    void group_ctrl(int id, ushort value);
+    void group_ctrl(ushort addr, int id, ushort value);
 };
 
 #endif // MB_GROUP_H

@@ -24,7 +24,7 @@ void Mb_Setting::upSetData()
     vshort vs;
     vs << Mb_Core::modbusCfg.addrRtu;
     vs << mDevData->cfg.param.buzzerSw;
-    setRegs(MbReg_Setting+1, vs);
+    setRegs(mStartReg+MbReg_Setting+1, vs);
 
     //qint64 timestamp = QDateTime::currentSecsSinceEpoch();
     //vs << timestamp/0xffff; vs << timestamp%0xffff;
@@ -35,18 +35,26 @@ void Mb_Setting::upSetData()
 
 void Mb_Setting::addrSet(ushort &v)
 {
-    if(cm::runTime() < 1*60*60) {
+    if(mDevData->cfg.param.modbusRtuAddr != v) {
         Cfg_Com::bulid()->writeCfg("addr", v, "modbus");
         Mb_Core::modbusCfg.addrRtu = v; setAddress(v);
         mDevData->cfg.param.modbusRtuAddr = v;
     } cout << "modbus set addr OK" << v;
 }
 
-void Mb_Setting::buzzerSw(ushort &v)
+void Mb_Setting::buzzerSw(uchar addr, ushort &v)
 {
-    mDevData->cfg.param.buzzerSw = v;
-    cout << "modbus set Buzzer switch OK" << v;
-    Cfg_Core::bulid()->devParamWrite("buzzerSw", v, "devParams");
+    sDevData *dev = cm::devData(addr);
+    if(dev->cfg.param.buzzerSw != v) {
+        sCfgItem it;
+        it.addr = addr;
+        it.type = SFnCode::EModbus;
+        it.fc = 7; setCfg(it, v);
+    }
+
+    //mDevData->cfg.param.buzzerSw = v;
+    //cout << "modbus set Buzzer switch OK" << v;
+    //Cfg_Core::bulid()->devParamWrite("buzzerSw", v, "devParams");
 }
 
 void Mb_Setting::drySw(ushort &v)
@@ -56,14 +64,14 @@ void Mb_Setting::drySw(ushort &v)
     Cfg_Core::bulid()->devParamWrite("buzzerSw", v, "devParams");
 }
 
-void Mb_Setting::startSet(ushort addr, ushort &value)
+void Mb_Setting::startSet(ushort addr, ushort reg, ushort &value)
 {
-    switch (addr) {
+    switch (reg) {
     case MbReg_SetAddr: addrSet(value); break;
-    case MbReg_SetBuzzer: buzzerSw(value); break;
+    case MbReg_SetBuzzer: buzzerSw(addr, value); break;
     case MbReg_SetDry: drySw(value); break;
-    case MbReg_SetEle: OP_Core::bulid()->clearEle(0); break;
-        //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
+    case MbReg_SetEle: output_clearEle(addr, 0);  break;
+     //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
     }
 }
 
@@ -81,22 +89,26 @@ void Mb_Setting::timeSet(ushort addr, ushort &value)
     }
 }
 
-
-void Mb_Setting::restoreFactoryDefaults()
+void Mb_Setting::restoreFactoryDefaults(ushort addr)
 {
-    //Set_Core::bulid()->factoryRestore();
+    sCfgItem it;
+    it.addr = addr;
+    it.type = SFnCode::ESys;
+    it.fc = 1; setCfg(it, 1);
 }
 
 void Mb_Setting::registerRecvSlot(int address, ushort value)
 {
-    if(address < 6100) startSet(address, value);
-    else if(address < 6150) line_setting(address, value);
-    else if(address < 6300) loop_setting(address, value);
-    else if(address < 6900) output_setting(address, value);
-    else if(address < 7000) output_ctrl(address, value);
-    else if(address < 7050) env_setting(address, value);
-    else if(address < 7300) group_setting(address, value);
-    else if(address < 7325) output_dualCtrl(address, value);
-    else if(address == 8001) restoreFactoryDefaults();
-    if(address > MbReg_Setting) Set_Core::bulid()->writeAlarm();
+    ushort reg = address % MbReg_MaxSize;
+    ushort addr = address / MbReg_MaxSize;
+    if(reg < 3100) startSet(addr, reg, value);
+    else if(reg < 3150) line_setting(addr, reg, value);
+    else if(reg < 3300) loop_setting(addr, reg, value);
+    else if(reg < 3900) output_setting(addr, reg, value);
+    else if(reg < 4000) output_ctrl(addr, reg, value);
+    else if(reg < 4050) env_setting(addr, reg, value);
+    else if(reg < 4300) group_setting(addr, reg, value);
+    else if(reg < 4325) output_dualCtrl(addr, reg, value);
+    else if(reg == MbReg_MaxSize-1) restoreFactoryDefaults(addr);
+    //if(address > MbReg_Setting) Set_Core::bulid()->writeAlarm();
 }

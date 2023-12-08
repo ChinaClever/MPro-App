@@ -23,9 +23,8 @@ void Mb_Output::output_dataObj(vshort &vs, int id)
 void Mb_Output::output_objUpdate()
 {
     vshort vs; int size = mDevData->output.size;
-    for(int i=0; i<size; ++i) {
-        output_dataObj(vs, i);
-    } setRegs(MbReg_OutputValue, vs);
+    for(int i=0; i<size; ++i) output_dataObj(vs, i);
+    setRegs(mStartReg + MbReg_OutputValue, vs);
 }
 
 void Mb_Output::output_dataUpdate()
@@ -39,7 +38,7 @@ void Mb_Output::output_dataUpdate()
     appendData2(size, obj->ele, vs);       
     appendData(size, obj->relay.sw, vs);
     appendData(size, obj->reactivePow, vs);
-    setRegs(MbReg_OutputData, vs);
+    setRegs(mStartReg + MbReg_OutputData, vs);
 }
 
 void Mb_Output::output_alarmUpdate()
@@ -49,7 +48,7 @@ void Mb_Output::output_alarmUpdate()
     appendData(size, obj->relay.alarm, vs);
     appendData(size, obj->cur.alarm, vs);
     appendData(size, obj->pow.alarm, vs);
-    setRegs(MbReg_OutputAlarm, vs);
+    setRegs(mStartReg + MbReg_OutputAlarm, vs);
 }
 
 void Mb_Output::output_thresholdObj(const sAlarmUnit &unit, vshort &vs)
@@ -69,7 +68,7 @@ void Mb_Output::output_thresholdUpdate()
     output_thresholdObj(obj->cur, vs);
     output_thresholdObj(obj->pow, vs);
     appendData(size, obj->relay.powerUpDelay, vs);
-    setRegs(MbReg_OutputThreshol, vs);
+    setRegs(mStartReg + MbReg_OutputThreshol, vs);
 }
 
 void Mb_Output::output_relayUpdate()
@@ -80,9 +79,9 @@ void Mb_Output::output_relayUpdate()
     for(int i=0; i<size; ++i) ptr[i] = 0xff;
     appendData(size, ptr, vs);
 
-    setRegs(MbReg_OutputRelay, vs);
-    setRegs(MbReg_OutputEle-1, vs);
-    setRegs(MbReg_DualCtr, vs);
+    setRegs(mStartReg + MbReg_OutputRelay, vs);
+    setRegs(mStartReg + MbReg_OutputEle-1, vs);
+    setRegs(mStartReg + MbReg_DualCtr, vs);
 }
 
 void Mb_Output::output_update()
@@ -94,73 +93,96 @@ void Mb_Output::output_update()
     output_thresholdUpdate();
 }
 
-void Mb_Output::output_dualCtrl(ushort addr, ushort value)
+void Mb_Output::output_dualCtrl(ushort addr, ushort address, ushort value)
 {
-    ushort reg = addr - MbReg_DualCtr;
+    ushort reg = address - MbReg_DualCtr;
      int id = reg % 50 + 1;
     if(value < 3) {
         sDataItem unit;
-        unit.rw = 1;
         unit.id = 2;
-        unit.addr = 0;
+        unit.addr = addr;
         unit.type = id*2-1;
         unit.topic = DTopic::Relay;
         unit.subtopic = DSub::Relays;
-        unit.txType = DTxType::TxModbus;
-        unit.value = value;
-        Set_Core::bulid()->setting(unit);
+        setting(unit, value);
     }
 }
 
-void Mb_Output::output_ctrl(ushort addr, ushort value)
+
+void Mb_Output::output_clearEle(uchar addr, uchar id)
+{
+    sDataItem unit;
+    unit.id = id;
+    unit.addr = addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Ele;
+    unit.subtopic = DSub::Value;
+    if(1 == mDevData->cfg.param.devSpec) unit.type = DType::Loop;
+    setting(unit, 0); //OP_Core::bulid()->clearEle(0);
+}
+
+
+void Mb_Output::output_ctrl(ushort addr, ushort address, ushort value)
 {
     if(value > 2) return ;
-    ushort reg = addr - MbReg_OutputRelay;
+    ushort reg = address - MbReg_OutputRelay;
     if(reg < 49) {
-        //sRelayUnit *obj = &(mDevData->output.relay);
-        //if(obj->en[id-1]) OP_Core::bulid()->relayCtrl(id, value);
-
         sDataItem unit;
-        unit.rw = 1;
-        unit.addr = 0;
-        unit.value = value;
+        unit.addr = addr;
         unit.id = reg % 50 + 1;
         unit.type = DType::Output;
         unit.topic = DTopic::Relay;
         unit.subtopic = DSub::Value;
-        unit.txType = DTxType::TxModbus;
-        Set_Core::bulid()->setting(unit);
+
+        if(value < 2) {
+            uint *ptr = cm::devData(addr)->output.relay.sw;
+            if(ptr[unit.id] == value) return;
+        } setting(unit, value);
     } else {
         int id = (reg+1) % 50;
-        OP_Core::bulid()->clearEle(id);
+        output_clearEle(addr, id);
     }
 }
 
-void Mb_Output::output_setting(ushort addr, ushort value)
+
+void Mb_Output::output_upDelay(uchar addr, uchar id, ushort value)
 {
-    ushort reg = addr - MbReg_OutputThreshol;
-    sObjData *obj = &(mDevData->output);
-    sAlarmUnit *unit = nullptr;
-    uint *ptr = nullptr;
-    int id = reg%50;
+    sDataItem unit;
+    unit.id = id;
+    unit.addr = addr;
+    unit.type = DType::Output;
+    unit.topic = DTopic::Relay;
+    unit.subtopic = DSub::UpDelay;
+
+    uint *ptr = cm::devData(addr)->output.relay.powerUpDelay;
+    if(ptr[unit.id] != value) setting(unit, value);
+}
+
+void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
+{
+    ushort reg = address - MbReg_OutputThreshol;
+    sObjData *obj = &(cm::devData(addr)->output);
+    sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
+    int id = reg%50; sDataItem it; it.id = id+1;
+    it.type = DType::Output; it.addr = addr;
 
     switch (reg/250) {
-    case 0: unit = &(obj->cur); break;
-    case 1: unit = &(obj->pow); break;
-    case 2: OP_Core::bulid()->setDelay(id+1, value); return;
-    default: cout << addr << value; return;
+    case 0: unit = &(obj->cur); it.topic = DTopic::Cur; break;
+    case 1: unit = &(obj->pow); it.topic = DTopic::Pow; break;
+    case 2: output_upDelay(addr, id, value); return;
+    default: cout << addr << address << value; return;
     }
 
     reg = reg%250/50; switch (reg) {
-    case 0: ptr = unit->en; break;
-    case 1: ptr = unit->max; break;
-    case 2: ptr = unit->crMax; break;
-    case 3: ptr = unit->crMin; break;
-    case 4: ptr = unit->min; break;
-    default: cout << addr; break;
+    case 0: ptr = unit->en; it.subtopic = DSub::EnAlarm; break;
+    case 1: ptr = unit->max; it.subtopic = DSub::VMax; break;
+    case 2: ptr = unit->crMax; it.subtopic = DSub::VCrMax; break;
+    case 3: ptr = unit->crMin; it.subtopic = DSub::VCrMin; break;
+    case 4: ptr = unit->min; it.subtopic = DSub::VMin; break;
+    default: cout << addr << address; break;
     }
 
     bool ret = alarmUnitCheck(reg, id, unit, value);
-    if(ptr && ret) ptr[id] = value;
+    if(ptr && ret && ptr[id] != value) setting(it, value);
 }
 

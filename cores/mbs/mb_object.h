@@ -15,6 +15,8 @@ protected:
     bool setReg(ushort reg, ushort v) {return setRegister(reg, v);}
     bool setRegs(ushort reg, const vshort &v) {return setRegisters(reg, v);}
     bool setReg2(ushort reg, uchar h, uchar l) {return setRegister(reg, getShort(h, l));}
+    int setCfg(sCfgItem &it, const QVariant &v);
+    int setting(sDataItem &it, uint value);
 
 private:
     void initFucRegs();
@@ -36,6 +38,7 @@ protected:
     }
 
 protected:
+    uchar mStartReg = 0;
     sDevData *mDevData;
 };
 
