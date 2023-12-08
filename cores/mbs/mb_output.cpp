@@ -155,7 +155,7 @@ void Mb_Output::output_upDelay(uchar addr, uchar id, ushort value)
     unit.subtopic = DSub::UpDelay;
 
     uint *ptr = cm::devData(addr)->output.relay.powerUpDelay;
-    if(ptr[unit.id] != value) setting(unit, value);
+    if(ptr[unit.id] != value) {setting(unit, value);} ptr[id] = value;
 }
 
 void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
@@ -179,10 +179,11 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
     case 2: ptr = unit->crMax; it.subtopic = DSub::VCrMax; break;
     case 3: ptr = unit->crMin; it.subtopic = DSub::VCrMin; break;
     case 4: ptr = unit->min; it.subtopic = DSub::VMin; break;
-    default: cout << addr << address; break;
+    default: cout << addr << address; return;
     }
 
     bool ret = alarmUnitCheck(reg, id, unit, value);
     if(ptr && ret && ptr[id] != value) setting(it, value);
+    if(ptr) ptr[id] = value;
 }
 

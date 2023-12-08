@@ -96,8 +96,8 @@ void Mb_Env::env_setting(ushort addr, ushort address, ushort value)
     default: cout << addr << address; break;
     }
 
-
     bool ret = alarmUnitCheck(reg, id, unit, value);
     if(ptr && ret && ptr[id] != value) setting(it, value);
+    if(ptr) ptr[id] = value;
 }
 

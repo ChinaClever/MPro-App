@@ -13,8 +13,8 @@ Mb_Update::Mb_Update(QObject *parent)
 
 void Mb_Update::mbUpdates(int addr)
 {
-    mDevData = cm::devData(addr);
     mStartReg = addr*MbReg_MaxSize;
+    mDevData = cm::devData(addr);
     upDevInfo(); line_update();
     loop_update(); output_update();
     group_update(); env_update(); mbSetUpdate();

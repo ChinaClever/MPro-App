@@ -99,6 +99,8 @@ void Mb_Setting::restoreFactoryDefaults(ushort addr)
 
 void Mb_Setting::registerRecvSlot(int address, ushort value)
 {
+    cout << address << value;
+
     ushort reg = address % MbReg_MaxSize;
     ushort addr = address / MbReg_MaxSize;
     if(reg < 3100) startSet(addr, reg, value);

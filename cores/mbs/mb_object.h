@@ -38,7 +38,7 @@ protected:
     }
 
 protected:
-    uchar mStartReg = 0;
+    uint mStartReg = 0;
     sDevData *mDevData;
 };
 
