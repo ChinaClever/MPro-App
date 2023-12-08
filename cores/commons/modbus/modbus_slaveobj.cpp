@@ -28,7 +28,7 @@ bool Modbus_SlaveObj::initUnitMap()
     //reg.insert(QModbusDataUnit::Coils, { QModbusDataUnit::Coils, 9000, 800});
     //reg.insert(QModbusDataUnit::DiscreteInputs, { QModbusDataUnit::DiscreteInputs, 0, 1999 });
     //reg.insert(QModbusDataUnit::InputRegisters, { QModbusDataUnit::InputRegisters, 0, 1999 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 5000*10});
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 5000*11});
     bool ret = mDev->setMap(reg); if(!ret) throwError("Error: ModbusDataUnitMap");
     return ret;
 }
