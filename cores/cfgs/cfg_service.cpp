@@ -125,7 +125,7 @@ void Cfg_Service::web()
         switch (i) {
         case 1: key = "http_en"; ptr = &cfg->http_en; value = 1; break;
         case 2: key = "http_port"; ptr = &cfg->http_port; value = 80; break;
-        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 1; break;
+        case 3: key = "http_redirect"; ptr = &cfg->http_redirect; value = 0; break;
         case 4: key = "https_en"; ptr = &cfg->https_en; value = 1; break;
         case 5: key = "https_port"; ptr = &cfg->https_port;  value = 443; break;
         case 6: key = "strong_pwd"; ptr = &cfg->strong_pwd;  value = 0; break;
