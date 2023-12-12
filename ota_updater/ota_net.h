@@ -9,6 +9,8 @@ class Ota_Net : public Ota_Obj
 public:
     explicit Ota_Net(QObject *parent = nullptr);
     void ota_updater(const sOtaFile &it, int bit, bool ok);
+    void throwMessage(const QString &msg) {qDebug().noquote() << msg; mDtls->throwMessage(msg);}
+    void ota_error(int error) {mLastError=error;}
 
 private:
     bool coreRuning();
@@ -24,7 +26,6 @@ private slots:
     void rebootSlot();
     void startSlot(const QString &host);
     void finishSlot(const sOtaFile &it, bool ok);
-    void throwMessage(const QString &msg) {qDebug().noquote() << msg; mDtls->throwMessage(msg);}
 
 private:
     int mLastError=0;

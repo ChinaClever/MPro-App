@@ -84,7 +84,25 @@ bool Set_Updater::ota_logErr(int fc, const QString &fn)
             else str = "Not upgraded: The upgrade package is corrupt";
             break;
 
-        default: str = ver.remark; break;
+        case 404: if(cm::cn()) str = "未升级：签名信息错误";
+            else str = "Not upgraded: incorrect signature information";
+            break;
+
+        case 411: if(cm::cn()) str = "未升级：校验文件不存在";
+            else str = "Not upgraded: The verification file does not exist";
+            break;
+
+        case 412: if(cm::cn()) str = "未升级：MD5校验码格式不对";
+            else str = "Not upgraded: MD5 checksum format is incorrect";
+            break;
+
+        case 413: if(cm::cn()) str = "未升级：签名信息格式不对";
+            else str = "Not upgraded: The signature information format is incorrect";
+            break;
+
+        default: if(cm::cn()) str = "未升级：升级包错误";
+            else str = "Not upgraded: The upgrade package is corrupt";
+            break;
         }
         it.remark = "[error] " + str;
         //it.oldVersion = ver.oldVersion;

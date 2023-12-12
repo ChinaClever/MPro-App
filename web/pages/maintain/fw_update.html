@@ -285,6 +285,38 @@
 			document.getElementById('lang_3').disabled = true;//将按钮置灰防止多次点击
 			document.getElementById('lang_4').disabled = true;
 		};
+
+
+
+		//////////////////////////====================
+		var sendFileSig = function(name, data, chunkSize,id){
+			var sendChunk = function(offset) {
+				var chunk = data.subarray(offset, offset + chunkSize) || '';
+				var opts = {method: 'POST', body: chunk};
+				var url = '/upload_sig?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_cfg.getUuid();
+				var ok = true;
+				setStatus(
+					// 'Uploading ' + name + ', bytes ' + offset + '..' +
+					// (offset + chunk.length) + ' of ' + data.length,id,ok);
+					'Uploading ' + name + ', bytes ' + 
+					 (data.length).toFixed(2)+'bytes',id,ok);
+				fetch(url, opts)
+					.then(function(res) {
+					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
+					ok = res.ok;
+					return res.text();
+					})
+					.then(function(text) {
+					if (!ok) setStatus('Error: ' + text,id,ok);
+					});
+			};
+			sendChunk(0);
+			read_data();
+			document.getElementById('lang_3').disabled = true;//将按钮置灰防止多次点击
+			document.getElementById('lang_4').disabled = true;
+		};	
+
 		function upload_data(){
 			let  key = document.getElementById("info").value;
 			if(key != ""){
@@ -293,6 +325,8 @@
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
+					//////////////////////////====================
+					sendFileSig(f.name, new Uint8Array(r.result), 10*1024,"loading");
 					sendFileData(f.name, new Uint8Array(r.result), 10*1024*1024,"loading");
 				};
 			}

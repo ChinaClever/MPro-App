@@ -136,6 +136,7 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
             if(!mOta->work) {
                 QString cmd = "rm -f " + fn;
                 system(cmd.toLocal8Bit());
+                system("rm -rf /usr/data/upload/*");
                 system("sync"); system("reboot");
             }
         }
@@ -211,7 +212,7 @@ void Ota_Net::finishSlot(const sOtaFile &it, bool ok)
 {
     if(ok && it.sig.size()) {
         ok = sign_verify(it); QString msg = "RSA Verified ";
-        if(ok) msg += "ok"; else msg += "error";
+        if(ok) msg += "ok"; else {msg += "error"; mLastError = 4;}
         throwMessage(msg);
     } ota_updater(it, DOta_Net, ok);
 }
