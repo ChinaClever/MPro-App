@@ -55,8 +55,6 @@
 
 
 
-
-
 class JsonRpc {
     static _errCnt = 0;
     static _instance = null;
@@ -217,7 +215,7 @@ class JsonRpc {
         }
 
         if((0 == addr) && (13 == type) && (10 == topic)) {
-            sessionStorage.setItem('language', value);
+            sessionStorage.setItem('language', value); this.cnt = 0;
         }
 
         if((0 == addr) && (13 == type) && (18 == topic)) {
@@ -227,7 +225,7 @@ class JsonRpc {
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value); this.cnt += 1;
 
-        if((this.cnt %10 == 0) || (this.cnt < 3)) {
+        if((this.cnt %10 == 1) || (this.cnt < 15)) {
             const json = Object.fromEntries(this.root_map);       
             sessionStorage.setItem(btoa('root_map'), JSON.stringify(json));
         }
@@ -481,8 +479,8 @@ class PduCfgs extends PduCfgObj {
 
     loginCfg() {
         this.getCfg(13, 10, 0, 0);
+        this.getCfg(13, 17, 0, 0);
         this.getCfg(14, 1, 0, 0);
-        //this.getCfg(42, 3, 0, 0);
         this.getCfg(42, 6, 0, 0);
         this.getCfg(14, 9, 0, 0);
     }
@@ -756,4 +754,3 @@ class PduCore extends PduOta {
        // this.login_check();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
-

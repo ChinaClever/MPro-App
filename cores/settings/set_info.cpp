@@ -152,8 +152,8 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     QString key, prefix = "devNums";
     sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
     bool ret = true; switch(it.fc) {
-    case DType::Line: key = "lineNum"; dev->lineNum = value; break;
-    case DType::Loop: key = "loopNum"; dev->loopNum = value; break;
+    case DType::Line: key = "lineNum"; if(value>3){value = 3;} dev->lineNum = value; break;
+    case DType::Loop: key = "loopNum"; if(value>6){value = 6;} dev->loopNum = value; break;
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break;

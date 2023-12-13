@@ -47,6 +47,7 @@
     //var obj = new PduCfgItem;
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
+      obj.placesetCfg();
 			obj.login_out();
       obj.loginCfg();
 		},1000);
@@ -54,18 +55,22 @@
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
       obj.placesetCfg();
-		},300);
+      obj.loginCfg();
+		},599);
 
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
+      obj.placesetCfg();
       obj.loginCfg();
 		},1600);
 
     setTimeout(function(){
+      obj.loginCfg();
       datetime();
 		},2000);
 
     setTimeout(function(){
+      obj.loginCfg();
       obj.debugCfg();
 		},2000);
 
@@ -80,7 +85,7 @@
     let web_service = 0;
     let language = 0 ;
     let ver_mode = 1;
-    let dev_type;
+    let dev_type ='';
     let lang = new Array();
     lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
@@ -128,12 +133,12 @@
     let time3 = setInterval(function(){//定时取数据，有用户名数据进登陆界面，否则进注册
       language = window.sessionStorage.getItem('language');
       dev_type = obj.cfgValue(11,6,0,0);
-      if(dev_type == null){
+      if(dev_type == ''){
         obj.placesetCfg();
       }
       var ver_mode = obj.cfgValue(13,17,0,0); 
 
-      if(time3_num >  3  && (language != null)){
+      if((time3_num > 5) && (language != null) && (dev_type != '')) { // 
           GotoRegisterPage();
           clearInterval(time3);
       } 
@@ -146,6 +151,7 @@
         ver_mode = obj.cfgValue(13,17,0,0);   
         user_name = obj.cfgValue(user,1,0,0);
         identify = obj.cfgValue(user,3,0,0);
+        if(dev_type == null) dev_type = ''
         if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
@@ -162,11 +168,11 @@
          }
          clearInterval(time3);
       }
-	  	},450);           
+	  	},550);           
       // document.getElementById('username').value = '';
       // document.getElementById('psd').value ='';
       time3_num ++;
-    },500);
+    },600);
 
     function checkTime(i) {
 			if (i < 10) {
