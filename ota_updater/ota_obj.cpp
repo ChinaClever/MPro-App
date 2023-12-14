@@ -60,7 +60,7 @@ void Ota_Obj::sign_init()
             "bQIDAQAB\n"
             "-----END PUBLIC KEY-----";
     system(fmd.arg(pubkey).toLocal8Bit());
-    cout << fmd.arg(pubkey);
+    //cout << fmd.arg(pubkey);
 }
 
 

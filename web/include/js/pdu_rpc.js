@@ -53,8 +53,6 @@
  */
 
 
-
-
 class JsonRpc {
     static _errCnt = 0;
     static _instance = null;
@@ -151,6 +149,8 @@ class JsonRpc {
         //JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
+        params = [0, 13, 18, 0, 0];
+        JsonRpc.socket_reqSend(method, params);
         params = [0, 13, 10, 0, 0];
         JsonRpc.socket_reqSend(method, params);
         params = [0, 42, 3, 0, 0];
@@ -219,13 +219,13 @@ class JsonRpc {
         }
 
         if((0 == addr) && (13 == type) && (18 == topic)) {
-            sessionStorage.setItem('bg_color', value);
+            sessionStorage.setItem('bg_color', value); this.cnt = 0;
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
         this.root_map.set(key, value); this.cnt += 1;
 
-        if((this.cnt %10 == 1) || (this.cnt < 15)) {
+        if((this.cnt %5 == 1) || (this.cnt < 15)) {
             const json = Object.fromEntries(this.root_map);       
             sessionStorage.setItem(btoa('root_map'), JSON.stringify(json));
         }
@@ -480,6 +480,7 @@ class PduCfgs extends PduCfgObj {
     loginCfg() {
         this.getCfg(13, 10, 0, 0);
         this.getCfg(13, 17, 0, 0);
+        this.getCfg(13, 18, 0, 0);
         this.getCfg(14, 1, 0, 0);
         this.getCfg(42, 6, 0, 0);
         this.getCfg(14, 9, 0, 0);
