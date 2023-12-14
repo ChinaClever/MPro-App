@@ -47,8 +47,9 @@ void Ota_Obj::runing_onTimeoutDone()
 
 void Ota_Obj::sign_init()
 {
-    system("echo '' > /tmp/rsa/signature.sig");
+    system("rm -f /tmp/rsa/*");
     system("echo '' > /tmp/rsa/public.pem");
+    system("echo '' > /tmp/rsa/signature.sig");
     QString fmd = "echo '%1' > /tmp/rsa/public.pem";
     QString pubkey = "-----BEGIN PUBLIC KEY-----\n"
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuvQJUSeObNKKQYhh5fvB\n"
@@ -69,7 +70,7 @@ bool Ota_Obj::sign_verify(const sOtaFile &it)
     bool ret = false; sign_init();
     QString pubKey = "/tmp/rsa/public.pem";
     QString fmd = "echo '%1' > /tmp/rsa/signature.sig";
-    QString cmd = fmd.arg(it.sig); system(cmd.toLocal8Bit()); cout << cmd;
+    QString cmd = fmd.arg(it.sig); system(cmd.toLocal8Bit()); //cout << cmd;
     system("openssl base64 -A -d -in /tmp/rsa/signature.sig -out /tmp/rsa/sign.sig");
     fmd = "openssl dgst -sha256 -verify %1 -signature /tmp/rsa/sign.sig %2";
     cmd = fmd.arg(pubKey, it.path + it.file); QString str = cm::execute(cmd);
