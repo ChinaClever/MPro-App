@@ -73,7 +73,7 @@
 			</div>
 		</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
 	<script src="../../doc-lib/highlight.pack.js"></script>
 	<script src="../../doc-lib/doc.js"></script>
@@ -306,7 +306,7 @@
 			}
 		}
 		function BtnClick(btn){
-			let num = parseInt(btn.id.slice(1))+1;
+			let num = parseInt(btn.id.slice(3))+1;
 			let stat = 0;
 			if(0 == language){
 				var retVal = confirm("您已更改表单，请确认提交！");	
@@ -674,7 +674,7 @@
 				tbody += '<tr id = "tr'+ i + '">';
 				tbody += '<td id = "ena'+ i + '">' + (parseInt(i)+1) + '</td>';
 				tbody += '<td id = "enb'+ i + '">'+ output_name[i + 1] +'</td>';
-				tbody += '<td id = "enc'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(2) +'</td>';
+				tbody += '<td id = "enc'+ i + '">'+ parseFloat(energe_val[i + 1]).toFixed(1) +'</td>';
 				tbody += '<td id = "end'+ i + '"></td>';
 				tbody += '<td><input name = "vol"  type = "checkbox" class = "input" onchange ="Cked(this)" id = "ck'+ i + '"></input></td>';
 				tbody += '<td><input id = "ene'+ i + '" type = "button" onclick = "BtnClick(this)" value="'+lang[45][language]+'"></input></td>';
@@ -700,7 +700,7 @@
 				for(let j = 0;j<3;j++){
 					document.getElementById(type_arr[j]+(i)).childNodes[1].innerHTML = (parseFloat(loop_info[i + 1][0 + j * 11])).toFixed(j+1);	
 				}
-				document.getElementById('enc' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(2);
+				document.getElementById('enc' + i).innerHTML = parseFloat(energe_val[i+1]).toFixed(1);
 			}
 		}
 		let Time2 = setInterval(function(){

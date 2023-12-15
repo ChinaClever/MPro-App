@@ -15,6 +15,7 @@ private:
     void ntp();
     void web();
     void rpc();
+    void ftp();
     void aiot();
     void smtp();
     void push();

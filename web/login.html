@@ -35,7 +35,7 @@
     }
   </style>
   <script src="./include/js/jquery-1.11.3.min.js"></script>
-	<script src="./include/js/pdu_rpc.js"></script>
+	<script src="./include/js/rpc.min.js"></script>
 	<script src="./include/js/crypto-js.min.js"></script>
   <script>
 		window.history.pushState(null,null,document.URL);
@@ -47,20 +47,30 @@
     //var obj = new PduCfgItem;
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
+      obj.placesetCfg();
 			obj.login_out();
       obj.loginCfg();
 		},1000);
+    
+    setTimeout(function(){
+      PduMetaData.meta_workDown(0);
+      obj.placesetCfg();
+      obj.loginCfg();
+		},599);
 
     setTimeout(function(){
       PduMetaData.meta_workDown(0);
+      obj.placesetCfg();
       obj.loginCfg();
 		},1600);
 
     setTimeout(function(){
+      obj.loginCfg();
       datetime();
 		},2000);
 
     setTimeout(function(){
+      obj.loginCfg();
       obj.debugCfg();
 		},2000);
 
@@ -75,6 +85,7 @@
     let web_service = 0;
     let language = 0 ;
     let ver_mode = 1;
+    let dev_type ='';
     let lang = new Array();
     lang[3] = ["Account rule: An account can contain only uppercase letters, lowercase letters, and digits, and must contain at least 5 characters to a maximum of 16 characters.<br>Password rules: The password must contain uppercase letters, lowercase letters, numbers, and at least 8 characters and a maximum of 16 characters", "账号规则：账号中只能包含大写字母、小写字母、数字,且至少5个字符，最多16个字符！<br>密码规则：密码中必须包含大写字母、小写字母、数字,且至少6个字符，最多16个字符！", "", "", "", ""];
     let user_name = "",identify = "";
@@ -121,27 +132,26 @@
 
     let time3 = setInterval(function(){//定时取数据，有用户名数据进登陆界面，否则进注册
       language = window.sessionStorage.getItem('language');
+      dev_type = obj.cfgValue(11,6,0,0);
+      if(dev_type == ''){
+        obj.placesetCfg();
+      }
       var ver_mode = obj.cfgValue(13,17,0,0); 
 
-      if(time3_num >  3  && (language != null)){
+      if((time3_num > 5) && (language != null) && (dev_type != '')) { // 
           GotoRegisterPage();
           clearInterval(time3);
       } 
-      // if(time3_num >  6 && ver_mode ==null){//超过一定时间一直连接不上强制进入登陆界面
-      //   alert(time3_num);
-      //   localStorage.clear();
-      //   sessionStorage.clear();
-      //   clearInterval(time3);
-      //   $('.center_form').html(BuildDiv('signin'));
-      // }
       else {
         obj.loginCfg();
         obj.debugCfg();
       }
       setTimeout(function(){
+        dev_type = obj.cfgValue(11,6,0,0);
         ver_mode = obj.cfgValue(13,17,0,0);   
         user_name = obj.cfgValue(user,1,0,0);
         identify = obj.cfgValue(user,3,0,0);
+        if(dev_type == null) dev_type = ''
         if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
@@ -150,7 +160,7 @@
           document.getElementById("username").placeholder = "User name";
           document.getElementById("psd").placeholder = "Passward";
           document.getElementById("sign_in").value = "SIGIN";
-          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("title_name").innerHTML = dev_type+"Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
          }
          if(ver_mode == 0){
@@ -158,11 +168,11 @@
          }
          clearInterval(time3);
       }
-	  	},450);           
+	  	},550);           
       // document.getElementById('username').value = '';
       // document.getElementById('psd').value ='';
       time3_num ++;
-    },500);
+    },600);
 
     function checkTime(i) {
 			if (i < 10) {
@@ -345,7 +355,7 @@
           document.getElementById("username").placeholder = "User name";
           document.getElementById("psd").placeholder = "Passward";
           document.getElementById("sign_in").value = "SIGIN";
-          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("title_name").innerHTML = dev_type+"Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
          }
          if(ver_mode == 0){
@@ -421,7 +431,7 @@
           document.getElementById("username").placeholder = "User name";
           document.getElementById("psd").placeholder = "Passward";
           document.getElementById("sign_in").value = "SIGIN";
-          document.getElementById("title_name").innerHTML = "MPDU Pro Management System";
+          document.getElementById("title_name").innerHTML = dev_type+"Management System";
           document.getElementById("reset").innerHTML = "Reset Password";
          }
          if(ver_mode == 0){
@@ -553,7 +563,7 @@
         tbody += '<p><input id ="ident" type="text" maxlength="16"; autocomplete="off" onblur = "validataForm(this)"  placeholder="设置验证信息"></p>';
         tbody += '<p class = "signIn_btn"><input id = "sign_in" type = "button"  value = "注册" onclick="register1()"></input></p>';
       }else if(Reg==='signin') {
-        tbody += '<br/><br/><br/><br/><p class="title"><img id="title_log" src ="./include/images/login_logo.png"  style="margin-right:10px;display: none;" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB" id ="title_name">MPDU Pro管理系统</span></p><span class="error" id = "Errinfo"></span>';
+        tbody += '<br/><br/><br/><br/><p class="title"><img id="title_log" src ="./include/images/login_logo.png"  style="margin-right:10px;display: none;" align="center"> <span style ="font-family: FZLanTingHeiS-R-GB" id ="title_name">'+dev_type+'管理系统</span></p><span class="error" id = "Errinfo"></span>';
         tbody += '<p><input id ="username" type="text" maxlength="16" placeholder="用户名"  onblur = "validataForm(this)" oninput ="check();" autocomplete="off"></p>';
         tbody += '<p><input id ="psd" type="text" data="passworedtype" onfocus = \'this.type="password"\' maxlength="16" autocomplete="off" oninput ="check();" onblur = "validataForm(this)" onselectstart="return false" onpaste="return false" placeholder="密码"></p>';
         tbody += '<div class="chk"><span></span><span><a id = "reset" href ="javascript:submite();">重置密码</a></span></div><p></p>';

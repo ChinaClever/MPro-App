@@ -15,8 +15,8 @@ void Data_Env::setEnvSize()
 {
     int size = 4;
     for(int i=0; i<SENOR_NUM; ++i) {
-        if(mDev->env.isInsert[i]) size = 2;
-    } if(mDev->cfg.param.sensorBoxEn) size = SENOR_NUM;
+        if(mDev->env.isInsert[i]) size = 2; /*检测到插入传感器*/
+    } if(mDev->cfg.param.sensorBoxEn) size = SENOR_NUM; /*传感器盒子启用时，size为4*/
     mDev->env.size = mDev->env.tem.size = mDev->env.hum.size = size;
 }
 
@@ -33,6 +33,6 @@ void Data_Env::initData()
 
 void Data_Env::envWork()
 {
-    setEnvSize();
-    initData();
+    setEnvSize();   /*设置温湿度数据的个数*/
+    initData();     /*初始化温湿度的值*/
 }

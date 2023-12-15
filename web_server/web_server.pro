@@ -29,6 +29,6 @@ SOURCES += \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /tmp
 !isEmpty(target.path): INSTALLS += target
 

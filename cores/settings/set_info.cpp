@@ -28,6 +28,7 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 6: res = it->compileDate; break;
     case 7: res = it->releaseDate; break;
     case 8: res = it->upgradeDate; break;
+    case 9: res = it->prodDate; break;
     case 11: res = it->opVers[0]; break;
     case 12: res = it->opVers[1]; break;
     case 13: res = it->opVers[2]; break;
@@ -39,8 +40,26 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     case 23: res = cm::execute("df -h /usr/data/"); break;
     case 24: res = cm::execute("ssh -V"); break;
     default: qDebug() << Q_FUNC_INFO << type; break;
+    } if(type > 10 && type < 20) {
+        int temp = it->opVers[10 + type-11];
+        QString str = "  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; temp:";
+        str += QString::number(temp) + "°C"; if(temp) res = res.toString() + str;
     }
     return res;
+}
+
+bool Set_Info::setSwVersion(int fc, const QVariant &v)
+{
+    bool ret = true;
+    if(9 == fc) {
+        if(cm::cipp(v)) return false;
+        QString fmd = "echo '%1' > %2";
+        QString fn = "/usr/data/clever/cfg/prod_date.conf";
+        QString cmd = fmd.arg(v.toString(), fn);
+        system(cmd.toStdString().c_str());
+    }else ret = false;
+
+    return ret;
 }
 
 int Set_Info::devInfoCfg(int addr, int type)
@@ -133,8 +152,8 @@ bool Set_Info::setCfgNum(const sCfgItem &it, int value)
     QString key, prefix = "devNums";
     sDevNums *dev = &(cm::devData(it.addr)->cfg.nums);
     bool ret = true; switch(it.fc) {
-    case DType::Line: key = "lineNum"; dev->lineNum = value; break;
-    case DType::Loop: key = "loopNum"; dev->loopNum = value; break;
+    case DType::Line: key = "lineNum"; if(value>3){value = 3;} dev->lineNum = value; break;
+    case DType::Loop: key = "loopNum"; if(value>6){value = 6;} dev->loopNum = value; break;
     case DType::Output: key = "outputNum"; dev->outputNum = value; break;
     case 4: key = "boardNum"; dev->boardNum = value; break;
     case 5: key = "slaveNum"; dev->slaveNum = value; break;

@@ -51,17 +51,20 @@
  *  Created on: 2023年2月1日
  *      Author: Lzy
  */
+
+
 class JsonRpc {
     static _errCnt = 0;
     static _instance = null;
 
     constructor() {
         this.rpcid = 0; 
-        this.uuid = ' ';
         this.timeOut = 65; // HTTP最小超时时间 
-        this.isSetting = false; // 是否在设置模式
+        this.isSetting = false; // 是否在设置模式        
+        this.uuid = btoa(window.location.host);
         this.root_map = this.rpc_map(); // 唯一的Map表，此表会存储所有的数据
         this.ws = this.socket_open(); // 自动建立连接
+        this.cnt = 0;
     }
 
     // 生成唯一实例
@@ -75,17 +78,20 @@ class JsonRpc {
     rpc_map() {
         var map = new Map();
         var sessionStorage = window.sessionStorage;
-        var value = sessionStorage.getItem("root_map");
+        var value = sessionStorage.getItem(btoa('root_map'));
         if(value != null) {
             let json = JSON.parse(value);
             let arr = Object.entries(json);
             map = new Map(arr);
         }   
-        value = sessionStorage.getItem('uuid');
+        value = sessionStorage.getItem(btoa('uuid'));
         if(value != null)  this.uuid = value;
         return map;
     }
 
+    rpc_uid() {
+        return this.uuid;
+    }
 
     // 自动生成URL
     rpc_url() {
@@ -143,6 +149,8 @@ class JsonRpc {
         //JsonRpc.socket_reqSend(method, params);
 
         method = "pduReadParam"; 
+        params = [0, 13, 18, 0, 0];
+        JsonRpc.socket_reqSend(method, params);
         params = [0, 13, 10, 0, 0];
         JsonRpc.socket_reqSend(method, params);
         params = [0, 42, 3, 0, 0];
@@ -157,7 +165,10 @@ class JsonRpc {
     socket_send(msg) {
         var ret = true;
          if(this.ws.readyState <= WebSocket.OPEN){
-            this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+            if(this.ws.readyState == 0){
+            }else{
+                this.ws.send(msg);  //由于HTTP登陆会出现连接不上的情况，故一直发送数据
+            }          
          } else if(JsonRpc._errCnt++ > 2) {
               ret = false;
               this.ws.close();
@@ -183,7 +194,8 @@ class JsonRpc {
         var value = data[5];
        
         if(-1 == parseInt(value)) { 
-            window.sessionStorage.setItem('uuid', ' ');
+            var uid = btoa(window.location.host);
+            window.sessionStorage.setItem(btoa('uuid'), uid);
             var url = window.location.protocol+"//";            
             url += window.location.host; this.ws.close(); 
             window.location.replace(url);
@@ -195,25 +207,28 @@ class JsonRpc {
         if((14 == parseInt(type)) && (11 == parseInt(topic))) {
             if(1 == parseInt(value[0])) {   
                 var host = window.location.host;
-                sessionStorage.setItem('host', host);
+                sessionStorage.setItem(btoa('host'), host);
                 this.uuid = value.slice(3); value = 1;
-                sessionStorage.setItem('uuid', this.uuid);
+                sessionStorage.setItem(btoa('uuid'), this.uuid);
                 // alert(value); alert(this.uuid);
             } 
         }
 
         if((0 == addr) && (13 == type) && (10 == topic)) {
-            sessionStorage.setItem('language', value);
+            sessionStorage.setItem('language', value); this.cnt = 0;
         }
 
         if((0 == addr) && (13 == type) && (18 == topic)) {
-            sessionStorage.setItem('bg_color', value);
+            sessionStorage.setItem('bg_color', value); this.cnt = 0;
         }
 
         var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
-        this.root_map.set(key, value);
-        const json = Object.fromEntries(this.root_map);        
-        sessionStorage.setItem('root_map',JSON.stringify(json));
+        this.root_map.set(key, value); this.cnt += 1;
+
+        if((this.cnt %5 == 1) || (this.cnt < 15)) {
+            const json = Object.fromEntries(this.root_map);       
+            sessionStorage.setItem(btoa('root_map'), JSON.stringify(json));
+        }
 
         return true;
     }
@@ -233,6 +248,17 @@ class JsonRpc {
         return this.json_rpc_obj(method, params);
     }
 
+    chineseToBase64(chineseString) {
+        // 将中文字符串转换为 Latin1 编码
+        const latin1String = unescape(encodeURIComponent(chineseString));
+      
+        // 使用 btoa() 函数进行 Base64 编码
+        const base64String = btoa(latin1String);
+      
+        return base64String;
+      }
+
+
     json_rpc_login(data) {
         //var data = new Array();
         var addr  = data[0];
@@ -245,8 +271,8 @@ class JsonRpc {
         if(14 == type && 11 == topic) {
             var key = addr+'_'+type+'_'+topic+'_'+sub+'_'+id;
             this.root_map.set(key, 255);
-            const json = Object.fromEntries(this.root_map);        
-            sessionStorage.setItem('root_map',JSON.stringify(json));
+            const json = Object.fromEntries(this.root_map); 
+            sessionStorage.setItem(btoa('root_map'), JSON.stringify(json));
         }
     }
    
@@ -282,6 +308,10 @@ class PduMetaData {
         this.addr = addr;
         PduMetaData.m_addr = addr;
         PduMetaData.meta_workDown();
+    }
+
+    getUuid() {
+        return this.rpc.rpc_uid();
     }
 
     getAddr() {
@@ -449,8 +479,9 @@ class PduCfgs extends PduCfgObj {
 
     loginCfg() {
         this.getCfg(13, 10, 0, 0);
+        this.getCfg(13, 17, 0, 0);
+        this.getCfg(13, 18, 0, 0);
         this.getCfg(14, 1, 0, 0);
-        this.getCfg(42, 3, 0, 0);
         this.getCfg(42, 6, 0, 0);
         this.getCfg(14, 9, 0, 0);
     }
@@ -572,7 +603,7 @@ class PduCfgs extends PduCfgObj {
         }
     }
     sysinfoCfg() {
-        var fcs = [0,1,2,3,4,5,6,7,8,11,12,13,14,21,22,23];
+        var fcs = [0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,21,22,23];
         this.getCfgList(30, fcs);
     }
     fwupdateCfg(slave_num,board_num) {
@@ -609,6 +640,10 @@ class PduCfgs extends PduCfgObj {
     alotCfg() {
         var fcs = [1,2,3,4,5,6,7];
         this.getCfgList(51, fcs);
+    }
+    data_backCfg() {
+        var fcs = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+        this.getCfgList(29, fcs);
     }
 }
 
@@ -677,10 +712,10 @@ class PduCore extends PduOta {
 
     login_check() {
         var sessionStorage = window.sessionStorage;
-        var value = sessionStorage.getItem("uuid");
+        var value = sessionStorage.getItem(btoa('uuid'));
         var res = 0; if(value != null) {
             var host = window.location.host;
-            var ip = sessionStorage.getItem('host');  
+            var ip = sessionStorage.getItem(btoa('host'));  
             if((value.length > 9) && (host == ip)) res = 1;
         } 
         
@@ -697,8 +732,9 @@ class PduCore extends PduOta {
 
     login_out() {
         var sessionStorage = window.sessionStorage;
-        sessionStorage.setItem('host', ' ');
-        sessionStorage.setItem('uuid', ' '); 
+        var uid = btoa(window.location.host);
+        sessionStorage.setItem(btoa('host'), ' ');
+        sessionStorage.setItem(btoa('uuid'), uid); 
     }   
 
     login_permit() {
@@ -719,6 +755,3 @@ class PduCore extends PduOta {
        // this.login_check();
     }
 } //var obj = PduCore.build(); setTimeout(function(){ obj.demo(); }, obj.getTimeOut()); setTimeout(function(){  var res = obj.cfgValue(30,0); alert(res); }, 2*obj.getTimeOut());
-
-
-

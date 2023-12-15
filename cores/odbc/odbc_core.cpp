@@ -168,7 +168,7 @@ void Odbc_Core::workDown()
     if(ret) {
         createTables(); insertItems();
         if(cfg.okCnt < 5 || !(cfg.okCnt % 15)) {
-            uut_polls(); dev_polls();
+            uut_polls(); dev_polls(); index_polls();
         }
     } else clearItems();
     db_close();

@@ -44,6 +44,30 @@ QString cm::execute(const QString &cmd)
     //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
+
+QString cm::executeCommand(const QString &cmd)
+{
+    FILE* pipe = popen(cmd.toStdString().c_str(), "r");
+    if (!pipe)  return NULL;
+
+    char buffer[128];
+    char* result = NULL;
+    size_t resultSize = 0;
+    size_t bufferSize = sizeof(buffer);
+
+    while (fgets(buffer, bufferSize, pipe) != NULL) {
+        size_t len = strlen(buffer);
+        char* temp = (char*)realloc(result, resultSize + len + 1);
+        if (!temp) { free(result); pclose(pipe); return NULL; }
+        result = temp; strcpy(result + resultSize, buffer);
+        resultSize += len;
+    }
+
+    QString res = result;
+    pclose(pipe); free(result);
+    return res;
+}
+
 QString cm::executes(const QStringList &cmds)
 {
     QProcess pro;
@@ -72,6 +96,7 @@ bool cm::pingNet(const QString& ip)
 
 bool cm::qrcodeGenerator(const QString& msg)
 {
+    if(msg.contains("'")) return false; // 过滤单引号
     QString fn = "/usr/data/clever/cfg/qrcode.png";
     QString cmd = "qrencode -o %1 -s 6 '%2 '";
     QString qr = cmd.arg(fn, msg);
@@ -81,6 +106,20 @@ bool cm::qrcodeGenerator(const QString& msg)
     //cout << qr;
     return true;
 }
+
+bool cm::cipp(const QVariant& v)
+{
+    const QString specialChars = "`;|&\n$'\'";
+    QString str = v.toString();
+    for (QChar c : str) {
+        if (specialChars.contains(c)) {
+            cout << v; return true;
+        }
+    }
+    return false;
+}
+
+
 
 /***
   *判断一个字符串是否为纯数字

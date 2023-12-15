@@ -112,29 +112,36 @@ void Data_Object::sumObjData(int id, sObjData &dest, const sObjData &src, const 
 
 void Data_Object::loopData(int id, int start, int end)
 {
-    sumObjData(id, mDev->loop, mDev->output, start, end);
-    uint *ptr = mDev->output.vol.value; uint sw = 0;
-    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1;
-    for(int i=start; i<end; ++i) if(ptr[i] > 50 *COM_RATE_VOL) sw = 1;
-    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;
+    sumObjData(id, mDev->loop, mDev->output, start, end);   /*计算电压、电流、功率、无功功率、视在功率、电能、功率因数*/
+    uint *ptr = mDev->output.vol.value; uint sw = 0;    /*获取输出位电压的值*/
+    if(mDev->loop.cur.value[id] > 0.2*COM_RATE_CUR) sw = 1; /*回电流>20A将SW置1*/
+    for(int i=start; i<end; ++i) if(ptr[i] > 50 *COM_RATE_VOL) sw = 1;  /*输出位电压的值>500V将SW置1*/
+    if(!mDev->cfg.param.isBreaker) {sw = 2;} mDev->loop.relay.sw[id] = sw;  /*如果没有断路器，回路开关状态置为复位*/
 }
 
 void Data_Object::loopBreaker(int id)
 {
-    uint sw = 0; uint *cnt = &mDev->loop.relay.cnt[id];// mDev->cfg.nums.loopEachNum[id] = 0;
-    if(mDev->loop.cur.value[id] > 0.2 * COM_RATE_CUR) sw = 1;
-    if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;
-    if(mDev->loop.pow.value[id] > 50) sw = 1;
+    uint sw = 0; uint *cnt = &mDev->loop.relay.cnt[id];// mDev->cfg.nums.loopEachNum[id] = 0;   /*获取继电器的控制次数*/
+    if(mDev->loop.cur.value[id] > 0.2 * COM_RATE_CUR) sw = 1;   /*回电流>20A将SW置1*/
+    if(mDev->loop.vol.value[id] > 50 *COM_RATE_VOL) sw = 1;     /*回路电压的值>500V将SW置1*/
+    if(mDev->loop.pow.value[id] > 50) sw = 1;       /*回路有功功率的值>50将SW置1*/
     if(sw) *cnt = 5; else if(*cnt) if(--(*cnt)) sw = 1;
-    if(!mDev->cfg.param.isBreaker) {sw = 2;}
+    if(!mDev->cfg.param.isBreaker) {sw = 2;}    /*如果没有断路器，回路开关状态置为复位*/
     mDev->loop.relay.sw[id] = sw;
 }
 
 void Data_Object::lineData(int id, int start, int end)
 {
+    int dtc = mDev->dtc.fault;
+    static uint volArray[LINE_NUM] = {0, 0, 0};
     sumObjData(id, mDev->line, mDev->loop, start, end);
+    uint vol = mDev->line.vol.value[id];
+    if(vol > 196*COM_RATE_VOL) {
+        volArray[id] = mDev->line.vol.value[id];
+    } else if(vol < COM_MIN_VOL && dtc == FaultCode::DTC_OK) {
+       mDev->line.vol.value[id] = volArray[id];
+    }
 }
-
 
 void Data_Object::lineDataNoLoop(int id, int start, int end)
 {

@@ -205,7 +205,8 @@ struct sVersions
     char upgradeDate[NAME_SIZE]; // 升级时间
     char serialNumber[NAME_SIZE]; // 序列号
     char hwVersion[NAME_SIZE]; // 硬件版本
-    char reserve[3][NAME_SIZE]; // 预留
+    char prodDate[NAME_SIZE]; // 生产日期
+    char reserve[2][NAME_SIZE]; // 预留
     uint opVers[DEV_NUM]; // 每块执行板软件版本
 };
 
@@ -352,7 +353,8 @@ struct sDevLogin
     char token[NAME_SIZE];
     char user[NAME_SIZE];
     char pwd[NAME_SIZE];
-    char reserve[4][NAME_SIZE];
+    char updatetime[NAME_SIZE];
+    char reserve[3][NAME_SIZE];
 };
 
 struct sOtaUpIt
@@ -410,7 +412,7 @@ enum DTopic{Relay=1, Vol, Cur, Pow, Ele, PF, ArtPow, ReactivePow, HdaEle, LineVo
 enum DSub{Size, Value, Rated, Alarm, VMax, VMin, VCrMin, VCrMax, EnAlarm, DPeak, DStamp, DHda,
           UpDelay=4, ResetDelay, OverrunOff, TimingEn, RelayEn, RelayCnt, Relays=11, RelayLifeEn};
 enum DTxType{Tx, TxWeb, TxModbus, TxSnmp, TxRpc, TxJson, TxWebocket, TxSsh, TxRest};
-enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs};
+enum DOtaCode{DOta_ok, DOta_Usb, DOta_Net, DOta_Web, DOta_Slave, DOta_Outlet, DOta_Rootfs, DOta_Down};
 enum FaultCode{DTC_OK, DTC_VOL=1, DTC_CUR=2, DTC_ELE=4, DTC_POW=8, DTC_CASCADE=16};
 enum AlarmCode{Ok, Min=1, CrMin=2, CrMax=4, Max=8};
 enum EDevMode{DM_Rtu, DM_Cascade, DM_Dual};
@@ -431,7 +433,7 @@ struct sDataItem
 };
 
 enum SFnCode{OutputName=10, Uuts, ECfgNum, EDevInfo, EDevLogin,
-             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28,
+             EModbus, ESnmp, ERpc, EPush, EMqtt, EAmqp, EODBC, ERedis=28, EFtp,
              EOutput=22, EGroup, EDual, EGrouping, EGroupSet,
              EVersion=30, ESercret, ETlsCert, EWhiteList,
              EINet=41, EWeb, ENtp, ESmtp, ESsh, ESysLog, ELogCfg, ERadius, ELdap, EScript, EAIOT,

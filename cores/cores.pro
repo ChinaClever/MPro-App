@@ -14,6 +14,7 @@ include(logs/logs.pri)
 include(apps/apps.pri)
 include(rpcs/rpcs.pri)
 include(odbc/odbc.pri)
+include(ftps/ftps.pri)
 include(aiots/aiots.pri)
 include(datas/datas.pri)
 include(redis/redis.pri)
@@ -35,7 +36,7 @@ contains(TARGET_ARCH, x86_64) {
     else: unix:!android: target.path = /tmp/$${TARGET}/bin
     !isEmpty(target.path): INSTALLS += target
 } else {
-    target.path = /usr/data/clever/app
+    target.path = /tmp
     INSTALLS = target
 }
 

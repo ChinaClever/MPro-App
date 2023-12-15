@@ -10,7 +10,9 @@ Alarm_Object::Alarm_Object()
 {
 
 }
-
+/**
+ * 根据传入的告警类型，获取对应的告警值
+ */
 char Alarm_Object::alarmValue(const sDataItem &index)
 {
     char alarm = -1;
@@ -43,7 +45,9 @@ char Alarm_Object::alarmValue(const sDataItem &index, sRelay::Alarm type)
     alarm = (alarm==type) ? 1: 0;
     return alarm;
 }
-
+/**
+ * 根据传入的type，获取对应的对象数据，相数据、回路数据、组数据、输出位数据、双电原数据、机柜相、机柜回路
+ */
 sObjData *Alarm_Object::getObjData(const sDataItem &index)
 {
     sObjData *obj = nullptr;
@@ -70,35 +74,37 @@ sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index, sObjData *obj)
     case DTopic::Pow: unit = &(obj->pow); break;
     default: cout << index.topic; break;
     }
-    return unit;
+    return unit;    /*返回获取的单位，电压、电流、功率*/
 }
 
 sAlarmUnit *Alarm_Object::getAlarmUnit(const sDataItem &index)
 {
     sObjData *obj = nullptr; sAlarmUnit *unit = nullptr;
-    if(DType::Tg == index.type) return unit;
+    if(DType::Tg == index.type) return unit;    /*如果type是统计数据则直接返回空*/
     sDevData *dev = cm::devData(index.addr);
 
-    if(index.type == DType::Env) {
+    if(index.type == DType::Env) {  /*如果type是环境数据*/
         switch (index.topic) {
         case DTopic::Tem: unit = &(dev->env.tem);break;
         case DTopic::Hum: unit = &(dev->env.hum);break;
         default: cout << index.topic; break;
         }
-    } else {
+    } else {    /*如果type不是环境数据*/
         obj = getObjData(index);
         unit = getAlarmUnit(index, obj);
     }
 
     return unit;
 }
-
+/**
+ * 获取统计数据的告警单位，电压、电流、功率
+ */
 sTgUnit *Alarm_Object::getTgAlarmUnit(const sDataItem &index)
 {
     sTgUnit *unit = nullptr;
     sTgObjData *obj = &(cm::devData(index.addr)->tg);
-    if(DType::CabTg == index.type) obj = &(cm::devData(index.addr)->cabTg);
-    if((DType::Tg == index.type) || (DType::CabTg == index.type)) {
+    if(DType::CabTg == index.type) obj = &(cm::devData(index.addr)->cabTg); /*机柜统计数据*/
+    if((DType::Tg == index.type) || (DType::CabTg == index.type)) {/*统计数据或机柜统计数据*/
         switch (index.topic) {
         case DTopic::Vol: unit = &(obj->vol); break;
         case DTopic::Cur: unit = &(obj->cur); break;
@@ -107,9 +113,11 @@ sTgUnit *Alarm_Object::getTgAlarmUnit(const sDataItem &index)
         }
     }
 
-    return unit;
+    return unit;   /*返回获取的单位，电压、电流、功率*/
 }
-
+/**
+ * 获取开关
+ */
 sRelayUnit *Alarm_Object::getRelayUnit(const sDataItem &index)
 {
     sRelayUnit *unit = nullptr;
@@ -128,7 +136,7 @@ bool Alarm_Object::setAll(uint *ptr, sDataItem &index, sAlarmUnit *unit)
     uint value = index.value;
     for(int i=0; i<size; ++i) {
         sDataItem it = index; it.id = i+1;
-        ret = alarmUnitCheck(it, unit);
+        ret = alarmUnitCheck(it, unit); /*检查每一个id的值是否符合要求*/
         if(!ret) return ret;
     }
 
@@ -138,14 +146,16 @@ bool Alarm_Object::setAll(uint *ptr, sDataItem &index, sAlarmUnit *unit)
 bool Alarm_Object::setAll(uint *ptr, uint value, int size)
 {
     if(0 == size) size = OUTPUT_NUM;
-    for(int i=0; i<size; ++i)  ptr[i] = value;
+    for(int i=0; i<size; ++i)  ptr[i] = value;  /*全部设置*/
     return true;
 }
-
+/**
+ * 检查告警值是否符合要求，不符合则返回false
+ */
 bool Alarm_Object::alarmUnitCheck(sDataItem &index, sAlarmUnit *unit)
 {
     bool ret = true; int id = index.id; if(id) id -= 1;
-    if(index.txType == DTxType::TxWeb) return ret;
+    if(index.txType == DTxType::TxWeb) return ret;  /*通讯类型为网页则直接返回true*/
     uint v = index.value; switch (index.subtopic) {
     case DSub::VMax: if((v > (unit->rated[id])*1.3) || (v < unit->crMax[id])) ret = false; break;
     case DSub::VCrMax: if((v > unit->max[id]) || (v < unit->crMin[id])) ret = false; break;
@@ -295,27 +305,32 @@ void Alarm_Object::clearEle(sDataItem &index)
 {
     int start=0, end=0; if(index.id) {
         sDevCfg *cfg = &cm::masterDev()->cfg;
-        if(DType::Line == index.type) {
+        if(DType::Line == index.type) {      /*type为相*/
             int id = index.id; if(id) id -= 1;
-            int size = cfg->nums.lineNum;
-            int num = cfg->nums.outputNum / size;
-            if(cfg->param.devSpec == 1) num = cfg->nums.loopNum / size;
+            int size = cfg->nums.lineNum;   /*相数量*/
+            int num = cfg->nums.outputNum / size;   /*输出位数量*/
             start = id * num; end = (id+1) * num;
-            OP_Core::bulid()->clearEle(start, end);
+            if(cfg->param.devSpec == 1) {   /*A系列*/
+                num = cfg->nums.loopNum / size;
+                start = id * num; end = (id+1) * num;
+                OP_Core::bulid()->clearEle_A(start, end);   /*清除A系列电能*/
+            } else OP_Core::bulid()->clearEle(start, end);  /*清除BCD系列电能*/
             for(int i=start; i<end; ++i) cm::masterDev()->line.ele[i] = 0;
-        } else if((DType::Loop == index.type) && (cfg->param.devSpec > 1)) {
+        } else if((DType::Loop == index.type) && (cfg->param.devSpec > 1)) {    /*type为回路并且不为A系列*/
             for(int i=0; i<index.id; ++i) {
                 if(i) start += cfg->nums.loopEachNum[i-1];
                 end += cfg->nums.loopEachNum[i];
             } OP_Core::bulid()->clearEle(start, end);
             for(int i=start; i<end; ++i) cm::masterDev()->loop.ele[i] = 0;
-        } else {
-            OP_Core::bulid()->clearEle(index.id);
-            cm::masterDev()->output.ele[index.id-1] = 0;
-            if(1 == cfg->param.devSpec) cm::masterDev()->loop.ele[index.id-1] = 0;
+        } else {            
+            if(1 == cfg->param.devSpec) {
+                OP_Core::bulid()->clearEle_A(index.id);
+            } else {
+                OP_Core::bulid()->clearEle(index.id);
+            } cm::masterDev()->output.ele[index.id-1] = 0;
         }
     } else {
-        OP_Core::bulid()->clearEle(0);
+        OP_Core::bulid()->clearEle(0);  /*id为0则清除所有电能*/
     }
 }
 
@@ -330,11 +345,11 @@ bool Alarm_Object::eleValue(sDataItem &index)
     }
 
     if(ptr) {
-        if(index.rw){
-            if(index.id) ptr[index.id-1] = index.value;
-            else setAll(ptr, index.value, obj->size);
+        if(index.rw){   /*写*/
+            if(index.id) ptr[index.id-1] = index.value; /*单个设置*/
+            else setAll(ptr, index.value, obj->size);   /*统一设置*/
             if(DTopic::Ele == index.topic) clearEle(index);
-        } else index.value = ptr[index.id];
+        } else index.value = ptr[index.id];     /*读*/
     }
 
     return ret;
@@ -356,13 +371,15 @@ bool Alarm_Object::tgValue(sDataItem &index)
     } else ret = tgAlarmUnitValue(index);
     return ret;
 }
-
+/**
+ * 更新元数据
+ */
 bool Alarm_Object::upMetaData(sDataItem &index)
 {
     bool  ret = false; uchar addr = index.addr;
     if(addr >= 0xff) index.addr = 0;
 
-    if(index.addr > DEV_NUM) {cout << index.addr; return ret;}
+    if(index.addr > DEV_NUM) {cout << index.addr; return ret;}  /*addr>20，返回false*/
     switch (index.type) {
     case DType::Sensor: return sensorValue(index);
     case DType::Tg: case DType::CabTg: return tgValue(index);

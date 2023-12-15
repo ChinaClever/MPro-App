@@ -16,6 +16,7 @@ QByteArray zipCompress(const QByteArray &array);
 QByteArray zipUncompress(const QByteArray &array);
 QString byteArrayToHexStr(const QByteArray &array);
 QString byteArrayToUcharStr(const QByteArray &array);
+bool cipp(const QVariant &v);
 
 bool cn();
 bool language();
@@ -25,6 +26,7 @@ sDataPacket *dataPacket();
 sDevData *devData(uchar id);
 QString execute(const QString &cmd);
 QString executes(const QStringList &cmds);
+QString executeCommand(const QString &cmd);
 uint runTime(uchar id=0);
 
 void buildDateTime(char *ptr);

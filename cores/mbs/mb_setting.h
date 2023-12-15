@@ -13,14 +13,13 @@ protected:
 
 private:
     void upSetData();
-
-    void addrSet(ushort &v);
-    void buzzerSw(ushort &v);
     void drySw(ushort &v);
-    void startSet(ushort addr, ushort &value);
+    void addrSet(ushort &v);
+    void buzzerSw(uchar addr, ushort &v);
+    void startSet(ushort addr, ushort reg, ushort &value);
     void timeSet(ushort addr, ushort &value);
     void datetimeSet(ushort addr, ushort &value);
-    void restoreFactoryDefaults();
+    void restoreFactoryDefaults(ushort addr);
 
 private slots:
     //void rcvDataSlot(int address, vshort values);

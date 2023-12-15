@@ -52,7 +52,7 @@ bool Integr_HttpServer::download(const QByteArray &body)
     Integr_JsonRecv *it = Integr_JsonRecv::bulid();
     QString fn = it->getString(body, "file");
     if(fn.at(0) != '/') fn.insert(0, '/');
-    if(QFile::exists(fn)) {
+    if(QFile::exists(fn) && !fn.contains("../")) {
         mSession->replyFile(fn);
     } else {
         QString str = "error: file does not exist, ";
@@ -126,17 +126,17 @@ bool Integr_HttpServer::execute(const QByteArray &body)
 
 void Integr_HttpServer::onHttpAccepted(const QPointer<JQHttpServer::Session> &session)
 {
-    QString err = "error: Interface not supported";
-    QByteArray body = session->requestBody();
-    QString method = session->requestMethod();
-    QString url = session->requestUrl();
+    QString err = "error: Interface not supported"; /*错误信息*/
+    QByteArray body = session->requestBody();   /*获取HTTP请求的请求体，并将其存储在body中*/
+    QString method = session->requestMethod();  /*获取HTTP请求的请求方法（GET、POST、PUT等），并将其存储在method中*/
+    QString url = session->requestUrl();    /*获取HTTP请求的请求URL*/
     mSession = session;
 
     if(method.contains("GET")) {
-        if(url.contains("pduMetaData")) pduMetaData(body);
+        if(url.contains("pduMetaData")) pduMetaData(body);  /*如果URL包含"pduMetaData"，则调用pduMetaData函数并传递请求体body*/
         else if(url.contains("pduGetting")) getting(body);
         else if(url.contains("download")) download(body);
-        else replyHttp(err, 413);
+        else replyHttp(err, 413);   /*如果URL不匹配上述条件，则调用replyHttp函数，回复HTTP响应，将错误消息err和状态码413返回给客户端*/
     } else if(method.contains("POST")) {
         if(url.contains("pduSetting")) setting(body);
         else if(url.contains("pduCtrl")) relayCtrl(body);
@@ -155,7 +155,7 @@ void Integr_HttpServer::initHttpServer(bool en, int port)
     if(en) {
         tcpServerManage = new JQHttpServer::TcpServerManage(2);
         tcpServerManage->setHttpAcceptedCallback(std::bind(onHttpAccepted, std::placeholders::_1 ));
-        const auto listenSucceed = tcpServerManage->listen(QHostAddress::Any, port);
+        const auto listenSucceed = tcpServerManage->listen(QHostAddress::Any, port);    /*以指定的IP地址和端口号开始监听HTTP请求*/
         qDebug() << "HTTP server listen:" << port << listenSucceed;
     }
 }

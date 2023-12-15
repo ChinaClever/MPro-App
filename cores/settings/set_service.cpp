@@ -24,7 +24,6 @@ QVariant Set_Service::logCfg(int fc)
     case 6: ret = cfg->hdaCnt; break;
     default: cout << fc; break;
     }
-
     return ret;
 }
 
@@ -68,6 +67,7 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
     bool ret = true;
     sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
     QString prefix = "syslog"; QString key;
+    if(2==fc || 3==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
@@ -186,6 +186,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     App_Core *obj = App_Core::bulid();
     QString prefix = "ssh"; QString key; bool ret = true;
     ushort strong_pwd = cm::dataPacket()->web.strong_pwd;
+    if(3==fc || 4==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: key = "ssh_en"; cfg->ssh_en = v.toInt(); break;
@@ -212,7 +213,7 @@ QVariant Set_Service::ntpCfg(int fc)
     sNtpCfg *it = &App_Ntp::ntpCfg;
     App_Core *obj = App_Core::bulid();
     switch (fc) {
-    case 1: ret = obj->ntp_time(); break;
+    case 1: ret = obj->ntp_time(); break;   /*获取当前日期和时间并转换成指定格式*/
     case 2: ret = it->udp_en; break;
     case 3: ret = it->ntp_host; break;
     case 4: ret = it->time_zone; break;
@@ -229,6 +230,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     sNtpCfg *it = &App_Ntp::ntpCfg;
     App_Core *obj = App_Core::bulid();
     QString prefix = "ntp"; QString key;
+    if(1==fc || 3==fc || 4==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: ret = obj->ntp_time(v.toString()); break;
@@ -280,16 +282,16 @@ bool Set_Service::webSet(int fc, const QVariant &v)
     default: ret = false; cout<< fc; break;
     } //cout << key << fc << v;
 
-    if(3 == fc && it->http_redirect && !it->https_en) {
-        it->http_redirect = 0; return false;
+    if(3 == fc && it->http_redirect && !it->https_en) { /*启用了重定向功能并且未启用https*/
+        it->http_redirect = 0; return false;    /*关闭重定向*/
     } else if(4 == fc && it->http_redirect && !it->https_en) {
-        it->https_en = 1; return false;
+        it->https_en = 1; return false;  /*开启https*/
     }
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
         cfg->writeCfg(key, v, prefix);
-        if(!it->http_en && !it->https_en) {
+        if(!it->http_en && !it->https_en) { /*如果http和https都未启用，则强制开启http*/
             key = "http_en"; it->http_en =1;
             cfg->writeCfg(key, 1, prefix);
         }
@@ -330,7 +332,7 @@ bool Set_Service::raduisSet(int fc, const QVariant &v)
 
     if(key.size()){
         Cfg_Com *cfg = Cfg_Com::bulid();
-        cfg->writeCfg(key, v, prefix);
+        cfg->writeCfg(key, v, prefix);  /*将配置参数写入配置文件*/
     }
     return ret;
 }

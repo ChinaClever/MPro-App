@@ -12,11 +12,13 @@ App_Smtp::App_Smtp(QObject *parent)
 {
     //QTimer::singleShot(5432,this,&App_Smtp::smtp_testMail);
 }
-
+/**
+ * 发送SMTP邮件
+ */
 void App_Smtp::smtp_sendMail(const QString &content, bool ok)
 {
-    if(smtpCfg.en || ok) {
-        mList << content;
+    if(smtpCfg.en || ok) {     /*smtp配置启用*/
+        mList << content;      /*将参数content添加到mList中*/
          if(!smtp_isRun) QTimer::singleShot(1345,this,&App_Smtp::smtp_run);
         //if(!smtp_isRun) QtConcurrent::run(this, &App_Smtp::smtp_run);
     }

@@ -30,6 +30,18 @@ bool SnmpModule::addOid(const sOidIt &it)
     return ret;
 }
 
+void SnmpModule::addSysOid()
+{
+    QSNMPType_e type = QSNMPType_ObjectId;
+    QSNMPMaxAccess_e maxAccess = QSNMPMaxAccess_ReadOnly;
+    QSNMPOid  moduleOid = QSNMPOid() << 1 << 3 << 6 << 1 << 2 << 1;
+    this->snmpCreateVar("sysObjectID", type, maxAccess, moduleOid, 1, toOid("2"));
+    type = QSNMPType_Integer; maxAccess = QSNMPMaxAccess_ReadOnly;
+    this->snmpCreateVar("sysService", type, maxAccess, moduleOid, 1, toOid("7"));
+    //    type = QSNMPType_OctetStr; maxAccess = QSNMPMaxAccess_ReadWrite;
+    //    this->snmpCreateVar("sysLocation", type, maxAccess, moduleOid, 1, toOid("6"));
+}
+
 QSNMPOid SnmpModule::toOid(const QString &oid)
 {
     QSNMPOid res;
@@ -37,15 +49,22 @@ QSNMPOid SnmpModule::toOid(const QString &oid)
     return res << 0; ////////===========
 }
 
-
 QVariant SnmpModule::snmpGetValue(const QSNMPVar * var)
-{
-    QVariant res; QString str;
+{    
     void *v = mShash.value(var->name());
-    switch ((QSNMPType_e)var->type()) {
-    case QSNMPType_Integer: res = *((int *)v); break;
-    case QSNMPType_OctetStr: res = (char *)v; break;
-    default: qDebug() << "Error: snmpGetValue" << var->fullName(); break;
+    QVariant res; /*QString str;*/ if(v) {
+        switch ((QSNMPType_e)var->type()) {
+        case QSNMPType_Integer: res = *((int *)v); break;
+        case QSNMPType_OctetStr: res = (char *)v; break;
+        default: qDebug() << "Error: snmpGetValue" << var->fullName(); break;
+        }
+    } else {
+        if(var->name().contains("sysObjectID")) {
+            QSNMPOid  oid = QSNMPOid() << 1 << 3 << 6 << 1 << 4 << 1 << 30966 << 11;
+            res.setValue(oid); //res = "1.3.6.1.4.1.30966.11";
+        } else if(var->name().contains("sysLocation")) res = "Location";
+        else if(var->name().contains("sysService")) res = 4;
+        else qDebug() << var->name();
     }
 
     return res;

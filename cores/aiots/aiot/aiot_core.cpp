@@ -47,8 +47,8 @@ void Aiot_Core::run()
 {
     while(isRun) {
         cm::mdelay(3500); if(mCfg->en) {
-            bool ret = startSdk(); //cout << ret;
-            while(ret) workDown();
+            bool ret = startSdk(); //cout << ret;  /*初始化SDK*/
+            while(ret) workDown(); /*初始化完成开始启动功能*/
             sdkDeinit();
         }
     }

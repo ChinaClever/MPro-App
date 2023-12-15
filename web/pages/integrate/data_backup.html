@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>network</title>
+		<link rel="stylesheet" href="../../include/css/public.min.css">
+		<link rel="stylesheet" href="../../include/css/iconfont.min.css">
+		<link rel="stylesheet" href="../../include/css/font-awesome.min.css">
+	</head>
+<body>
+	<div class="page-cont">
+		<div class="section">
+			<div class="section-cont">
+				<div class="grid-row">
+					<div class="grid-col grid-col-7">
+						<div class = "panel panel-default">
+							<div class ="panel-heading">
+								<i class = "fa fa-th-list fa-lg " style="padding-right:5px;"></i>
+								<span id="lang_1"></span>
+							</div>
+						</div>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left data_back"></table>
+					</div>
+					<div class="grid-col grid-col-7 border-none">
+						<table class="table table-border-none text-left data_check"></table>
+					</div>
+					<div class="grid-col grid-col-7 " style ="height: 100px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../../include/js/jquery-1.11.3.min.js"></script>
+    <script src="../../include/js/public.min.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
+    <script>
+		let pdu_cfg = top.pdu_cfg_;
+		let language;
+		let addr = 0;
+		pdu_cfg.data_backCfg();
+		let mode_set = new Array("","");
+		let type_set = new Array("","");
+		let backup_data = new Array();
+		let lang = new Array();
+		let backup_name = new Array("","backup_en","server_ip","account","password","path","port","record_time","backup_time","tg_data","phase_data","loop_data","output_data","dual_data","doc_type");
+
+		function ParseData(){
+			let DataString = pdu_cfg.meta_value();
+			let pdu_data = JSON.parse(DataString);
+			language = pdu_data.pdu_info.language;
+		}
+		ParseData();
+		function read_data(){
+			for(var j = 1;j<backup_name.length;j++){
+				backup_data[j] = pdu_cfg.cfgValue(29,j,0,addr);
+			}
+
+		}
+		lang_init();
+		function lang_init(){
+			for(let i = 1;i<30;i++){
+				lang[i] = new Array();
+			}
+			lang[1] = ["数据自动备份","Automatic data backup","","",""];
+			lang[2] = ["自动备份设置","Automatic backup settings","","",""];
+			lang[3] = ["是否开启:","Disable or enable:","","",""];
+			lang[4] = ["服务器地址:","Server address:","","",""];
+			lang[5] = ["登陆账号:","Login account：","","",""];
+			lang[6] = ["认证密码:","Authenticate Password:","","",""];
+			lang[7] = ["远程路径:","Remote path:","","",""];
+			lang[8] = ["端口号:","Port:","","",""];
+			lang[9] = ["记录时间:","Recording time:","","",""];
+			lang[10] = ["备份时间:","Backup time:","","",""];
+			lang[11] = ["统计数据:","Statistical data:","","",""];
+			lang[12] = ["相数据:","Phase data:","","",""];
+			lang[13] = ["回路数据:","Circuit data:","","",""];
+			lang[14] = ["输出位数据:","Output bit data:","","",""];
+			lang[15] = ["双电源数据:","Dual power data:","","",""];
+			lang[16] = ["测试","Test","","",""];
+
+			lang[17] = ["禁用","Disable","","",""];
+			lang[18] = ["ftp","ftp","","",""];
+			lang[19] = ["scp","scp","","",""];
+			lang[20] = ["FTPS","FTPS","","",""];
+			lang[21] = ["SFTP","SFTP","","",""];
+			lang[22] = ["分钟","Minute","","",""];
+			lang[23] = ["小时","Hour","","",""];
+			lang[24] = ["文档类型","Document type","","",""];
+			lang[25] = ["xlsx","xlsx","","",""];
+			lang[26] = ["csv","csv","","",""];
+			
+			 for(let i = 0; i < 5; i++ ){
+				mode_set[i] = lang[17+i][language];				
+			 }
+			 for(let i = 0; i < 2; i++ ){
+				type_set[i] = lang[25+i][language];				
+			 }
+
+		}
+		function lang_fun(){
+			for(let j = 1;j<16;j++){
+				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
+			}
+			document.getElementById("lang_16").value  = lang[16][language];
+			document.getElementById("lang_24").innerHTML  = lang[24][language];
+		}
+		setTimeout(function(){
+			$('.data_back').html(buildTable());
+			$('.data_check').html(buildTableChk());
+			lang_fun();
+			read_data();
+			showdata();
+		},500);
+		function showdata(){
+			for(let i = 1;i<backup_name.length;i++){
+				if(i < 9){//统计数据之前
+					document.getElementById(backup_name[i]).value = backup_data[i];
+					document.getElementById(backup_name[i]).disabled = false;
+				}else if(i < 14){//统计数据
+					if(backup_data[i] == 0){
+						document.getElementById(backup_name[i]).checked = false;
+					}else{
+						document.getElementById(backup_name[i]).checked = true;
+					}					
+				}else{
+					document.getElementById(backup_name[i]).value = backup_data[i];
+				}
+			}
+
+			if(backup_data[1] == 0 || backup_data[1] == "false"){
+				for(let i = 2;i<backup_name.length;i++){
+					document.getElementById(backup_name[i]).disabled = true;
+				}
+				document.getElementById("lang_16").disabled = true;
+			}else{
+				for(let i = 2;i<backup_name.length;i++){
+					document.getElementById(backup_name[i]).disabled = false;
+				}
+				document.getElementById("lang_16").disabled = false;
+			}
+
+			if(top.login_permit_ == 0){
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+			}
+
+		}
+
+		function SetData(btn){
+			for(let i = 0;i<backup_name.length;i++){
+				if(backup_name[i] == btn.id){
+					if(i < 9 || i == 14){
+						pdu_cfg.setCfg(29,i,btn.value,0,addr);
+					}else{
+						if(btn.checked == true){
+							pdu_cfg.setCfg(29,i,1,0,addr);
+						}else{
+							pdu_cfg.setCfg(29,i,0,0,addr);	
+						}
+
+					}
+					
+				}
+			}
+			if(btn.id == "lang_16"){
+				pdu_cfg.setCfg(29,15,0,0,addr);
+				if(0 == language){
+                alert("已发送测试文件！");
+			      	}else{
+                alert("Test file has been sent!");
+              } 
+			}
+			btn.blur();
+				flash_html();
+		}
+		function flash_html(){
+			pdu_cfg.data_backCfg();
+			setTimeout(function(){
+				read_data();
+				showdata();
+			},500);
+		}
+
+		function buildTable() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="17%" id="lang_2" ></td>\
+			<td width ="83%"></td></tr>';
+			tbody += '<tr><td id="lang_3" ></td>';
+			tbody += '<td><select id ="backup_en" onchange ="SetData(this)">';
+			for(var i = 0; i<mode_set.length;i++){
+				tbody +='<option value ="'+i+'">'+mode_set[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id="lang_4" ></td>';
+			tbody += '<td><input id = "server_ip" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_5" ></td>';
+			tbody += '<td><input id = "account" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_6" ></td>';
+			tbody += '<td><input id = "password" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_7" ></td>';
+			tbody += '<td><input id = "path" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr style="display:none"><td id="lang_8" ></td>';//端口号隐藏
+			tbody += '<td><input id = "port" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_9" ></td>';
+			tbody += '<td><input id = "record_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[22][language]+'<span>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_10" ></td>';
+			tbody += '<td><input id = "backup_time" onchange ="SetData(this)" style ="width:24.5%" type = "text" ></input><span style="color:grey;">'+ ' '+lang[23][language]+'<span>';
+			tbody += '</td></tr>';
+			tbody += '<tr><td id="lang_24" ></td>';
+			tbody += '<td><select id ="doc_type" onchange ="SetData(this)">';
+			for(var i = 0; i<type_set.length;i++){
+				tbody +='<option value ="'+i+'">'+type_set[i] +'</option>';
+			}
+
+			return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+		function buildTableChk() {
+			var thead = '',tbody = '';
+			thead = '<tr><td width ="17%" " ></td><td width ="16%"></td>\
+			<td width ="17%" " ></td><td width ="16%"></td>\
+			<td width ="17%" " ></td><td width ="16%"></td>';
+
+			 tbody += '<tr><td id="lang_11" ></td>';
+			 tbody += '<td><input id = "tg_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_12" ></td>';
+			 tbody += '<td><input id = "phase_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_13" onchange ="SetData(this)" ></td>';
+		     tbody += '<td><input id = "loop_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td></tr>';
+			 tbody += '<tr><td id="lang_14" ></td>';
+			 tbody += '<td><input id = "output_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td>';
+			 tbody += '<td id="lang_15" ></td>';
+			 tbody += '<td><input id = "dual_data"  onchange ="SetData(this)" style="width:auto;position:static" type = "checkbox"  placeholder=""></input>';
+			 tbody += '</td></tr>';
+			 tbody += '<tr><td></td></tr>';
+ 			 tbody += '<tr><td style="padding-left: 35%"><input id="lang_16" style ="width:150px;background-color:#4082e6;color:#fff;border:0px solid;line-height:25px" type = "button"  onclick = "SetData(this)"></input></td></tr>';
+			  tbody += '<tr><td></td></tr>';
+			  return '<thead>' + thead + '</thead>'
+				 + '<tbody>' + tbody + '</tbody>';
+		}
+
+    </script>
+</body>
+</html>

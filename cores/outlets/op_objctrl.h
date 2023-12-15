@@ -10,7 +10,9 @@ public:
     explicit OP_ObjCtrl(QObject *parent = nullptr);
 
     void clearEle(int id);
+    void clearEle_A(int id);
     void clearEle(int start, int end);
+    void clearEle_A(int start, int end);
     void relayCtrl(int id, int on);
     void setDelay(int id, uchar sec);
     void orderCtrl(int on, uchar all=1);

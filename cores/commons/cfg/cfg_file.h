@@ -19,6 +19,7 @@ namespace File {
     bool CheckMd5(const sOtaFile &it);
     bool CheckMd5(const QString &fn);
     bool AppendMd5(const QString &fn);
+    bool cipp(const QString &fn);
 
 #ifdef CRC_H
     bool CheckCrc(const QString &fn);

@@ -24,7 +24,7 @@ contains(TARGET_ARCH, x86_64) {
     else: unix:!android: target.path = /tmp/$${TARGET}/bin
     !isEmpty(target.path): INSTALLS += target
 } else {
-    target.path = /usr/data/clever/app
+    target.path = /tmp
     INSTALLS = target
 }
 

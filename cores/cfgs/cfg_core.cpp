@@ -25,21 +25,20 @@ void Cfg_Core::writeAlarmDefault()
 }
 
 void Cfg_Core::slaveAlarmDefault()
-{
+{    
     QString cmd = "rm -f %1";
     QString dir = "/usr/data/clever/cfg/";
     system(cmd.arg(dir+CFG_ALARM_DF).toLatin1().data());
-
-    cmd = "cp -af %1 %2"; cm::mdelay(1543);
+    cmd = "cp -af %1 %2"; writeAlarms(); cm::mdelay(1543);
     cmd = cmd.arg(dir+CFG_ALARM_FN, dir+CFG_ALARM_DF);
     system(cmd.toLatin1().data()); qDebug() << cmd;
 }
 
 bool Cfg_Core::readSettings()
 {
-    bool ret = readAlarm(CFG_ALARM_FN);
-    if(!ret) ret = readAlarm(CFG_ALARM_DF);
-    if(!ret) ret = initialData();
+    bool ret = readAlarm(CFG_ALARM_FN); /*读取"alarm.conf"文件*/
+    if(!ret) ret = readAlarm(CFG_ALARM_DF); /*如果前一次读取报警设置失败则读取"alarm.cfg"文件*/
+    if(!ret) ret = initialData();  /*如果前二次读取报警设置失败则初始化数据*/
 
     return ret;
 }

@@ -37,7 +37,7 @@
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
 		let language;
@@ -165,7 +165,7 @@
 			tbody += '<td><input id = "RadiusServer" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_6" ></td>';
-			tbody += '<td><input id = "RadiusKey" onchange ="SetData(this)" style ="width:24.5%" type = "text" placeholder="0.0.0.0"></input>';
+			tbody += '<td><input id = "RadiusKey" onchange ="SetData(this)" style ="width:24.5%" type = "text"></input>';
 			tbody += '</td></tr>';
 			tbody += '<tr><td id="lang_7" ></td>';
 			tbody += '<td><input id = "RadiusLocalPort" onchange ="SetData(this)" style ="width:24.5%" type = "text" oninput = "if(value>65535){value=65535};if(value<1)value=1" placeholder="1~65535"></input>';

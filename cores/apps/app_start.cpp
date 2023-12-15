@@ -16,6 +16,7 @@
 #include "odbc_core.h"
 #include "redis_core.h"
 #include "aiot/aiot_core.h"
+#include "ftps/ftp_core.h"
 
 App_Start::App_Start(QObject *parent)
     : App_RunTime{parent}
@@ -40,6 +41,7 @@ void App_Start::initFunSlot()
     Set_Ssdp::bulid(this);
     Log_Core::bulid(this);
     Set_Core::bulid();
+    Ftp_Core::bulid();
 }
 
 void App_Start::startThreadSlot()

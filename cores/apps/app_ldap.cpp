@@ -14,6 +14,7 @@ App_Ldap::App_Ldap(QObject *parent)
 
 bool App_Ldap::ldap_work(const QString &pwd)
 {
+    return false; // 此功能未启用
     QString fmd = "ldapbind %1 %2 %3"; sLdapCfg *cfg = &ldapCfg;
     QString str = fmd.arg(cfg->url, cfg->user, pwd);
     bool ret = false; str = cm::execute(str);

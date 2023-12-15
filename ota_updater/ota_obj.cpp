@@ -47,8 +47,9 @@ void Ota_Obj::runing_onTimeoutDone()
 
 void Ota_Obj::sign_init()
 {
-    system("echo '' > /tmp/rsa/signature.sig");
+    system("rm -f /tmp/rsa/*");
     system("echo '' > /tmp/rsa/public.pem");
+    system("echo '' > /tmp/rsa/signature.sig");
     QString fmd = "echo '%1' > /tmp/rsa/public.pem";
     QString pubkey = "-----BEGIN PUBLIC KEY-----\n"
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuvQJUSeObNKKQYhh5fvB\n"

@@ -19,6 +19,18 @@ QStringList File::entryList(const QString &p)
     return results;
 }
 
+bool File::cipp(const QString &fn)
+{
+    const QString specialChars = " `;|&\n$'\'";
+    for (QChar c : fn) {
+        if (specialChars.contains(c)) {
+            qDebug() << fn;
+            return true;
+        }
+    }
+    return false;
+}
+
 QString File::md5(const QString &fn)
 {
     QFile sourceFile(fn);

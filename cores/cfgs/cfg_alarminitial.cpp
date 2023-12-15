@@ -12,8 +12,8 @@ Cfg_AlarmInitial::Cfg_AlarmInitial()
 
 bool Cfg_AlarmInitial::initialData()
 {
-    sDevData *dev = cm::masterDev();    
-    initDevData(dev);
+    sDevData *dev = cm::masterDev();
+    initDevData(dev); writeAlarms();
     return true;
 }
 
@@ -67,16 +67,16 @@ void Cfg_AlarmInitial::initTgObjData(sTgObjData &it)
 void Cfg_AlarmInitial::initEnvData(sEnvData &it)
 {
     uchar size = SENOR_NUM;
-    setAlarmUnit(it.tem, size, 100*COM_RATE_TEM);
+    setAlarmUnit(it.tem, size, 80*COM_RATE_TEM);
     setAlarmUnit(it.hum, size, 99*COM_RATE_HUM);
 
     for(int i=0; i<size; ++i) {
         it.tem.min[i] = 40*COM_RATE_TEM;
         it.tem.crMin[i] = 40*COM_RATE_TEM;
-        it.tem.crMax[i] = 100*COM_RATE_TEM;
+        it.tem.crMax[i] = 80*COM_RATE_TEM;
         it.hum.crMax[i] = 99*COM_RATE_HUM;
 
-        it.tem.rated[i] = 150*COM_RATE_TEM;
+        it.tem.rated[i] = 140*COM_RATE_TEM;
         it.hum.rated[i] = 100*COM_RATE_HUM;
     }
 }
@@ -106,6 +106,7 @@ void Cfg_AlarmInitial::initRelayUnit(sRelayUnit &it, uchar size)
         it.lifeEn[i] = 0;
         it.maxCnt[i] = 50000;
         it.resetDelay[i] = 5;
+        it.powerUpDelay[i] = 1;
     }
 }
 

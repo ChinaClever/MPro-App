@@ -70,7 +70,7 @@
 			</div>
 		</div>
     <script src="./include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="./include/js/fn_public.js"></script>
     <script src="./include/js/public.min.js"></script>
     <script>
@@ -433,6 +433,7 @@
 				var chunk = data.subarray(offset, offset + chunkSize) || '';
 				var opts = {method: 'POST', body: chunk};
 				var url = '/upload_logo?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_obj.getUuid();
 				var ok = true;
 				setStatus(
 					'Uploading ' + name + ', bytes ' + offset + '..' +

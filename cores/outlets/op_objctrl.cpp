@@ -16,7 +16,7 @@ void OP_ObjCtrl::relayCtrl(int id, int on)
         if(sRelay::On == on) openSwitch(id-1); else closeSwitch(id-1);
     } else orderCtrl(on, 1);
     if(sRelay::Reset == on) {
-         QList<int> os,cs; sRelayUnit *unit = &(mDev->output.relay); mList << id;
+        QList<int> os,cs; sRelayUnit *unit = &(mDev->output.relay); mList << id;
         if(id) { if(sRelay::On != unit->sw[--id]) mList.takeLast(); } else {
             for(int i=0; i<unit->size; ++i) if(sRelay::On == unit->sw[i]) os << i+1; else cs << i+1;
             if(cs.size()) mList = os; //cout << cs << os << mList;
@@ -129,39 +129,66 @@ void OP_ObjCtrl::closeSwitch(int id)
 
 void OP_ObjCtrl::clearAllEle()
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0xFF;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0xFF;
     funClearEle(cmd);
 }
 
 void OP_ObjCtrl::clearEle(int start, int end)
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0;
     for(int i=start; i<end; i++) setBitControl(i, cmd);
     funClearEle(cmd);
 }
 
 void OP_ObjCtrl::setClearEle(int id)
 {
-    uchar cmd[8];
-    for(int i=0; i<6; i++) cmd[i] = 0;
+    uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0;
     setBitControl(id, cmd);
     funClearEle(cmd);
 }
 
+void OP_ObjCtrl::clearEle_A(int start, int end)
+{
+    for(int i=start; i<end; i++) clearEle_A(i+1);
+}
+
+void OP_ObjCtrl::clearEle_A(int id)
+{    
+    if(mDev->cfg.nums.loopNum > 5) {
+        switch (id) {
+        case 1: id = 1; break;
+        case 2: id = 4; break;
+        case 3: id = 2; break;
+        case 4: id = 5; break;
+        case 5: id = 3; break;
+        case 6: id = 6; break;
+        default: cout << id; return;
+        }
+    } uchar cmd[10];
+    for(int i=0; i<10; i++) cmd[i] = 0;
+    setBitControl(id-1, &cmd[8]);
+    funClearEle(cmd);
+}
+
+
 void OP_ObjCtrl::setAllDelay(uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.powerUpDelay;
-    for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
-    funDelay(cmd);
+    if(dev->cfg.param.devSpec > 2) {
+        uint *cmd = dev->output.relay.powerUpDelay;
+        for(int i=0; i<OUTPUT_NUM; i++) cmd[i] = sec;
+        funDelay(cmd);
+    }
 }
 
 void OP_ObjCtrl::setOutputDelay(int id, uchar sec)
 {
     sDevData *dev = cm::masterDev();
-    uint *cmd = dev->output.relay.powerUpDelay;
-    cmd[id-1] = sec;
-    funDelay(cmd);
+    if(dev->cfg.param.devSpec > 2) {
+        uint *cmd = dev->output.relay.powerUpDelay;
+        cmd[id-1] = sec; funDelay(cmd);
+    }
 }

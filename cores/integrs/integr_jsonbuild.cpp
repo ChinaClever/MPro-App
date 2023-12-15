@@ -53,8 +53,7 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
             if(dc > 2) {loginPermit(json); outputVol(json);}
             if(!addr) netAddr(cm::dataPacket()->net, "net_addr", json);
             //json.insert("login_permit", Set_Core::bulid()->loginPermit()?1:0);
-        }
-        QDateTime datetime = QDateTime::currentDateTime();
+        } QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("pdu_alarm", Alarm_Log::bulid()->getCurrentAlarm(addr+1));
         json.insert("version", JSON_VERSION);
@@ -121,7 +120,7 @@ void Integr_JsonBuild::loginPermit(QJsonObject &json)
 void Integr_JsonBuild::outputVol(QJsonObject &json)
 {
     int size = PACK_ARRAY_SIZE;
-    uint *ptr = cm::masterDev()->output.vol.value;
+    uint *ptr = cm::masterDev()->output.vol.reserve[5];
     arrayAppend(ptr, size, "output_vol", json);
 }
 
@@ -289,10 +288,14 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     obj.insert("releaseDate", it.releaseDate);
     obj.insert("upgradeDate", it.upgradeDate);
     obj.insert("serialNumber", it.serialNumber);
+    obj.insert("prodDate", it.prodDate);
 
-    QJsonArray vs;
+    QJsonArray vs, temps;
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
     obj.insert("op_vers", vs); json.insert(key, obj);
+
+    for(uint i=0; i<6; ++i) temps.append(it.opVers[10+i]/1.0);
+    obj.insert("mcu_temp", temps); json.insert(key, obj);
 }
 
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)

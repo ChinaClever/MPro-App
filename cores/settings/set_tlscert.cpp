@@ -40,6 +40,8 @@ static void tls_log()
 
 bool Set_TlsCert::setTlsCert(uchar fc, const QVariant &v)
 {
+    if(fc > 10 && fc < 18 && cm::cipp(v)) return false;
+
     //cout << fc << v;
     QString str = v.toString();
     bool ret = true; switch(fc) {

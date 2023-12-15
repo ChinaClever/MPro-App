@@ -35,7 +35,7 @@ void App_Core::compileTime()
 }
 
 void App_Core::initUuid()
-{    
+{
     QString fn = "/usr/data/clever/cfg/uuid.conf";
     if(!QFile::exists(fn)) {
         if(QDate::currentDate().year() < 2023) return;
@@ -60,10 +60,10 @@ QString App_Core::hashPassword(const QString& password)
 
 void App_Core::initRoot(const QString &sn)
 {
-    QString fmd = "echo -e '%1\n%1' |  passwd root";
+    QString fmd = "echo -e '%1\n%1' | passwd root";
     QString pwd = "123456"; if(sn.size() > 3) pwd = hashPassword(sn);
-    QString cmd = fmd.arg(pwd); system(cmd.toStdString().c_str());
-    char *ptr = cm::dataPacket()->login[0].reserve[3];
+    QString cmd = fmd.arg(pwd); system(cmd.toLatin1().data());
+    char *ptr = cm::dataPacket()->login[0].reserve[2];
     //QByteArray ba = pwd.toLatin1().toBase64();
     qstrcpy(ptr, pwd.toStdString().c_str());
 }
@@ -93,6 +93,12 @@ void App_Core::initVer()
         qstrcpy(ver->serialNumber, sn.toUtf8().data());
         cfg.app_serialNumber(sn);
     } initRoot(ver->serialNumber);
+
+    fn = "/usr/data/clever/cfg/prod_date.conf";
+    if(QFile::exists(fn)) {
+        QString res = cm::execute("cat " + fn);
+        qstrcpy(ver->prodDate, res.toUtf8().data());
+    }
 
     int t = QRandomGenerator::global()->bounded(965);
     QTimer::singleShot(t+5,this, &App_Core::initUuid);

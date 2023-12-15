@@ -20,26 +20,28 @@ Alarm_Log *Alarm_Log::bulid(QObject *parent)
     }
     return sington;
 }
-
+/**
+ * 获取当前告警
+ */
 QString Alarm_Log::getCurrentAlarm(int addr)
 {
-    QString res; if(addr) {
-        res = m_currentAlarm[addr-1];
-    } else {
+    QString res; if(addr) { /*为副机*/
+        res = m_currentAlarm[addr-1];   /*获取副机告警信息*/
+    } else {    /*为主机则获取所有设备的当前告警信息信息*/
         for(int i=0; i<DEV_NUM; ++i) {
             if(m_currentAlarm[i].size())
-                res += m_currentAlarm[i];
+                res += m_currentAlarm[i];   /*判断如果有告警则添加到res书组*/
         }
     }
-    return res;
+    return res; /*返回存储告警信息的res变量*/
 }
 
 void Alarm_Log::appendAlarm(const sDataItem &index, uchar value)
 {
     sAlarmItem it = alarmItem(index, value);
     //QString str = QString::number(++m_id) +"、";
-    QString str = it.alarm_status + it.alarm_content;
-    if(str.size()) m_currentAlarm[it.addr] += str + "\n";
+    QString str = it.alarm_status + it.alarm_content;   /*获取告警状态和告警内容*/
+    if(str.size()) m_currentAlarm[it.addr] += str + "\n";   /*如果告警信息存在，将告警内容和告警状态添加到 m_currentAlarm 变量*/
     //cout << m_currentAlarm[it.addr].size() << str;
 }
 
@@ -56,15 +58,20 @@ void Alarm_Log::resetAwtk()
     system("awtk &");
     //cout << "awtk";
 }
-
+/**
+ * 根据当前告警记录生成二维码，先从告警记录中提取数据，如果提取的数据为空，则使用主设备配置中的二维码数据，
+ * 如果提取的数据不为空，则更新二维码数据并生成新的二维码
+ */
 void Alarm_Log::generateQRcode()
 {
     static QString alarm=" "; QString str = m_currentAlarm[0];
-    if(str.size()) str = str.split("\n").first().split(";").first();
+    if(str.size()) str = str.split("\n").first().split(";").first();    /*判断警告信息是否存在*/
     if(str.isEmpty()) str = cm::masterDev()->cfg.uut.qrcode; //cout << str << alarm;
     if((str != alarm)) { alarm = str; cm::qrcodeGenerator(str); resetAwtk();}
 }
-
+/**
+ * 根据传入的type和topic，返回对应的告警类型和字符串
+ */
 QString Alarm_Log::alarmType(const sDataItem &index)
 {
     QString str;
@@ -193,8 +200,9 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
         if(index.type) it.alarm_status += tr("%１").arg(index.id+1);
     } it.alarm_status += alarmType(index) +", ";
 
-    if(index.topic == DTopic::Relay) {        
-        it.alarm_content = alarmRelay(value);
+    if(index.topic == DTopic::Relay) {  /*开关*/
+        it.alarm_content = alarmRelay(value);   /*告警内容赋值给it.alarm_content变量*/
+#if 0
          if(DType::Loop == index.type) {
             Alarm_Object obj;
             sDataItem item = index;
@@ -203,18 +211,19 @@ sAlarmItem Alarm_Log::alarmItem(const sDataItem &index, uchar value)
             double v = unit->value[index.id] /COM_RATE_VOL;
             it.alarm_content += tr("vol = %1V").arg(v);
          }
-    }else if(index.type == DType::Sensor) {
-        it.alarm_content = alarmSensor(value);
+#endif
+    }else if(index.type == DType::Sensor) { /*传感器*/
+        it.alarm_content = alarmSensor(value);  /*告警内容赋值给it.alarm_content变量*/
     }else {
-        it.alarm_status += alarmStatus(value);
-        it.alarm_content = alarmContent(index);
+        it.alarm_status += alarmStatus(value);  /*告警内容赋值给it.alarm_status变量*/
+        it.alarm_content = alarmContent(index); /*告警内容赋值给it.alarm_content变量*/
     }
     return it;
 }
 
 void Alarm_Log::alarmSlot(const sDataItem &index, uchar value)
 {
-    sAlarmItem it = alarmItem(index, value);
+    sAlarmItem it = alarmItem(index, value);    /*告警项目*/
     Log_Core::bulid()->append(it);
     //qDebug() << it.module << it.content;
 }

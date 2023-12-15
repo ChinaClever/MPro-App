@@ -15,7 +15,6 @@ bool Odbc_Dev::dev_createTable()
     QString sql = "CREATE TABLE IF NOT EXISTS `%1`.`pdu_dev` ( "
                   "`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , "
                   "`pdu_id` INT(11) UNSIGNED NOT NULL , "
-                  "`run_status` TINYINT(2) UNSIGNED NOT NULL , "
                   "`dev_type` VARCHAR(64) NULL ,"
                   "`dev_spec` TINYINT(3) UNSIGNED NOT NULL , "
                   //"`dev_spec` ENUM('A', 'B', 'C', 'D') , "
@@ -40,11 +39,11 @@ bool Odbc_Dev::dev_createTable()
 bool Odbc_Dev::dev_insert(const sOdbcDevIt &it)
 {
     QString cmd = "INSERT INTO `pdu_dev` "
-                  "(`id`, `pdu_id`, `run_status`, `dev_type`, "
+                  "(`id`, `pdu_id`, `dev_type`, "
                   "`dev_spec`, `dev_mode`, `line_num`, `loop_num`, `output_num`, "
                   "`ip_v4`, `ip_v6`, `cascade_addr`, `slave_num`, `sw_version`, `createtime`) "
 
-                  "VALUES (NULL, :pdu_id, :run_status, :dev_type, "
+                  "VALUES (NULL, :pdu_id, :dev_type, "
                   ":dev_spec, :dev_mode, :line_num, :loop_num, :output_num,"
                   ":ip_v4, :ip_v6, :cascade_addr, :slave_num, :sw_version, NOW())";
     return dev_modifyItem(it,cmd);
@@ -56,7 +55,6 @@ bool Odbc_Dev::dev_modifyItem(const sOdbcDevIt &item, const QString &cmd)
     query.prepare(cmd);
 
     query.bindValue(":pdu_id",item.pdu_id);
-    query.bindValue(":run_status",item.run_status);
     query.bindValue(":dev_type",item.dev_type);
     query.bindValue(":dev_spec",item.dev_spec);
     query.bindValue(":dev_mode",item.dev_mode);
@@ -78,7 +76,6 @@ bool Odbc_Dev::dev_modifyItem(const sOdbcDevIt &item, const QString &cmd)
 bool Odbc_Dev::dev_update(const sOdbcDevIt &it)
 {
     QString fmd = "update `pdu_dev` set "
-                  "run_status       = :run_status,"
                   "dev_type         = :dev_type,"
                   "dev_spec         = :dev_spec,"
                   "dev_mode         = :dev_mode,"
@@ -127,7 +124,6 @@ bool Odbc_Dev::dev_params(int addr, sOdbcDevIt &it)
     sDevData *dev = cm::devData(addr);
     it.cascade_addr = addr;
     it.pdu_id = getPduId(addr);
-    it.run_status = dev->status;
 
     sDevCfg *devCfg = &(dev->cfg);
     sUutInfo *uut = &(devCfg->uut);

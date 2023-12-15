@@ -34,7 +34,7 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
@@ -59,32 +59,20 @@
 		let slave_num1 = 0;
 		let pdu_data;
 		let rack_stu;
+		let pdu_spe;
 		let device_num = 10;
 		function ParseData(){
+
 			let DataString = pdu_cfg.meta_value();
 			let pdu_data = JSON.parse(DataString);
 			output_num = pdu_data.pdu_info.output_num;
-			slave_num = pdu_data.pdu_info.slave_num;
-			language = pdu_data.pdu_info.language;
-			rack_stu = pdu_data.pdu_info.dev_mode;
-			let k = 0;
-			for(let i = 0;i<output_num;i++){
-				output_info_[i] = new Array();
-				let j = 0;
-				for(let key in pdu_data.pdu_data.output_item_list){
-					output_info_[i][j] = pdu_data.pdu_data.output_item_list[key][i];
-					j ++;
-				}
-			}
-		}
-		ParseData();
-		function ParseData(){
-			let DataString = pdu_cfg.meta_value();
-			let pdu_data = JSON.parse(DataString);
 			slave_num1 = pdu_data.pdu_info.slave_num;
 			language = pdu_data.pdu_info.language;
 			rack_stu = pdu_data.pdu_info.dev_mode;
+			pdu_spe = pdu_data.pdu_info.pdu_spec;
+
 		}
+
 		ParseData();
 		LangInit();
 		function LangInit(){
@@ -171,6 +159,11 @@
 				{
 					iptname[i].disabled = false;
 				}
+				if(pdu_spe == 1 || pdu_spe == 3){	//AC系列不显示机架功能
+					document.getElementById("rack_sel").disabled = true;
+				}else{
+					document.getElementById("rack_sel").disabled = false;
+				}
 			}
 			else{
 				read = 1;
@@ -185,12 +178,6 @@
 				{
 					iptname[i].disabled = true;
 				}
-				// document.getElementById("data_len").disabled = true;
-				// document.getElementById("buz").disabled = true;
-				// document.getElementById("addr").disabled = true;
-				// document.getElementById("mode").disabled = true;
-				// document.getElementById("sensor").disabled = true;
-				// document.getElementById("rack_set").disabled = true;
 
 			}
 		}
@@ -205,6 +192,7 @@
 			{
 				iptname[i].disabled = true;
 			}
+			
 		}
 		setTimeout(function(){
 			$('.mode_set').html(BuildTableMode());
@@ -253,6 +241,7 @@
 				$("select").attr("disabled","disabled");
 			}else{
 			}
+
 			if(rack_stu == 2){
 				document.getElementById("rack_sel").value = 1;				
 			}else{

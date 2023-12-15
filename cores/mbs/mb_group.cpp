@@ -20,7 +20,7 @@ void Mb_Group::group_dataUpdate()
     appendData(size, obj->pf, vs);
     appendData2(size-3, obj->ele, vs);
     appendData(size, obj->pow.alarm, vs);
-    setRegs(MbReg_GroupData, vs);
+    setRegs(mStartReg+MbReg_GroupData, vs);
 }
 
 void Mb_Group::group_thresholdUpdate()
@@ -32,7 +32,7 @@ void Mb_Group::group_thresholdUpdate()
     appendData(size, obj->crMax, vs);
     appendData(size, obj->crMin, vs);
     appendData(size, obj->min, vs);
-    setRegs(MbReg_GroupThreshol, vs);
+    setRegs(mStartReg+MbReg_GroupThreshol, vs);
 }
 
 void Mb_Group::group_update()
@@ -49,52 +49,44 @@ void Mb_Group::group_relayUpdate()
     uint *ptr = obj->relay.reserve[3];
     for(int i=0; i<size; ++i) ptr[i] = 0xff;
     appendData(size, ptr, vs);
-    setRegs(MbReg_GroupRelay, vs);
+    setRegs(mStartReg+MbReg_GroupRelay, vs);
 }
 
-void Mb_Group::group_ctrl(int id, ushort value)
+void Mb_Group::group_ctrl(ushort addr, int id, ushort value)
 {
-    //QList<int> ids; sObjData *obj = &(mDevData->group);
-    //ids = Data_Core::bulid()->outletByGroup(id);
-    //sRelayUnit *it = &(obj->relay);
-   // if(it->en[id]) OP_Core::bulid()->relaysCtrl(ids, value);
-
     sDataItem unit;
-    unit.rw = 1;
     unit.id = id+1;
-    unit.addr = 0;
-    unit.value = value;
+    unit.addr = addr;
     unit.type = DType::Group;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::Value;
-    unit.txType = DTxType::TxModbus;
-    if(value < 3) Set_Core::bulid()->setting(unit);
+    if(value < 3) setting(unit, value);
 }
 
-void Mb_Group::group_setting(ushort addr, ushort value)
+void Mb_Group::group_setting(ushort addr, ushort address, ushort value)
 {
-    ushort reg = addr - MbReg_GroupThreshol;
-    sObjData *obj = &(mDevData->group);
-    sAlarmUnit *unit = nullptr;
-    uint *ptr = nullptr;
-    int id = reg%15;
-    //cout << id << reg << addr << value;
+    ushort reg = address - MbReg_GroupThreshol;
+    sObjData *obj = &(cm::devData(addr)->group);
+    sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
+    int id = reg%15; sDataItem it; it.id = id+1;
+    it.type = DType::Group; it.addr = addr;
 
     switch (reg/75) {
-    case 0: unit = &(obj->pow); break;
-    case 1: group_ctrl(id, value); return;
+    case 0: unit = &(obj->pow); it.topic = DTopic::Pow; break;
+    case 1: group_ctrl(addr, id, value); return;
     default: cout << addr << reg << value; return;
     }
 
     reg = reg/15; switch (reg) {
-    case 0: ptr = unit->en; break;
-    case 1: ptr = unit->max; break;
-    case 2: ptr = unit->crMax; break;
-    case 3: ptr = unit->crMin; break;
-    case 4: ptr = unit->min; break;
-    default: cout << addr; break;
+    case 0: ptr = unit->en; it.subtopic = DSub::EnAlarm; break;
+    case 1: ptr = unit->max; it.subtopic = DSub::VMax; break;
+    case 2: ptr = unit->crMax; it.subtopic = DSub::VCrMax; break;
+    case 3: ptr = unit->crMin; it.subtopic = DSub::VCrMin; break;
+    case 4: ptr = unit->min; it.subtopic = DSub::VMin; break;
+    default: cout << addr << address; break;
     }
 
     bool ret = alarmUnitCheck(reg, id, unit, value);
-    if(ptr && ret) ptr[id] = value;
+    if(ptr && ret && ptr[id] != value) setting(it, value);
+    if(ptr) ptr[id] = value;
 }

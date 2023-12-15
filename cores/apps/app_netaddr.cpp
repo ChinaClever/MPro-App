@@ -21,6 +21,7 @@ void App_NetAddr::inet_initFunSlot()
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
     if(net->inet.dhcp || (net->inet6.dhcp && net->inet6.en)) system("udhcpc &");
+    else system("killall dhcpd");
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
@@ -72,7 +73,8 @@ void App_NetAddr::inet_setInterface()
         sNetInterface *net = &(cm::dataPacket()->net);
         if(net->inet.dhcp || net->inet6.dhcp) t = 9500;
         QTimer::singleShot(87,this,&App_NetAddr::inet_setInterfaceSlot);
-        QTimer::singleShot(1234,this,&App_NetAddr::inet_updateInterface);
+        QTimer::singleShot(1543,this,&App_NetAddr::inet_setInterfaceSlot);
+        QTimer::singleShot(1654,this,&App_NetAddr::inet_updateInterface);
         if(t) QTimer::singleShot(t+587,this,&App_NetAddr::inet_setInterfaceSlot);
         if(t) QTimer::singleShot(2*t+587,this,&App_NetAddr::inet_setInterfaceSlot);
     }
@@ -248,6 +250,7 @@ void App_NetAddr::inet_updateInterface()
             if(hostIp != QHostAddress(QHostAddress::LocalHost)) {
                 switch (hostIp.protocol()) {
                 case QAbstractSocket::IPv4Protocol:
+                    memset(net->inet.ip, 0, NAME_SIZE);
                     net->inet.prefixLen = entry.prefixLength();//获取子网掩码
                     qstrcpy(net->inet.ip, hostIp.toString().toLatin1().constData()); //获取ip
                     qstrcpy(net->inet.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码

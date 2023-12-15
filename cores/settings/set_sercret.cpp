@@ -89,6 +89,7 @@ bool Set_Sercret::setWhiteList(uchar fc, const QVariant &v)
     bool ret = true;
     QString prefix = "whiteList"; QString key;
     sWhiteListCfg *cfg = &App_WhiteList::whiteListCfg;
+    if(fc > 1 && fc < 10 && cm::cipp(v)) return false;  // 防止命令注入 过滤单引号或者转义单引号
 
     switch (fc) {
     case 1: key = "en";  cfg->en = v.toInt(); break;

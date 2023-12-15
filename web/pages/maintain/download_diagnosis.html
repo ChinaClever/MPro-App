@@ -31,7 +31,7 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
@@ -69,6 +69,7 @@
 		function download(){
 			let url = window.location.origin;
 			url += "/index.html/diagnosis.zip";
+			url += "?uid=" + pdu_cfg.getUuid();
 			window.open(url,'_blank');
 		}
 		function buildTable() {

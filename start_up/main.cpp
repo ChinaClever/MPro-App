@@ -75,15 +75,15 @@ static void init_netWork()
 static void init_mem()
 {
     //system("echo 38912 > /proc/sys/vm/min_free_kbytes");
-    system("echo 800 > /proc/sys/vm/vfs_cache_pressure");
-    system("echo 0 > /proc/sys/vm/dirty_background_bytes");
-    system("echo 1 > /proc/sys/vm/dirty_background_ratio");
-    system("echo 2  > /proc/sys/net/ipv4/conf/all/arp_announce");
-    system("echo 100 > /proc/sys/vm/dirty_writeback_centisecs");
-    system("echo 600 > /proc/sys/vm/dirty_expire_centisecs");
-    system("echo 0 > /proc/sys/vm/dirty_bytes");
-    system("echo 1 > /proc/sys/vm/panic_on_oom");
-    system("echo 2 > /proc/sys/vm/dirty_ratio");
+    //system("echo 800 > /proc/sys/vm/vfs_cache_pressure");
+    //system("echo 0 > /proc/sys/vm/dirty_background_bytes");
+    //system("echo 1 > /proc/sys/vm/dirty_background_ratio");
+    //system("echo 2  > /proc/sys/net/ipv4/conf/all/arp_announce");
+    //system("echo 100 > /proc/sys/vm/dirty_writeback_centisecs");
+    //system("echo 600 > /proc/sys/vm/dirty_expire_centisecs");
+    //system("echo 0 > /proc/sys/vm/dirty_bytes");
+    //system("echo 1 > /proc/sys/vm/panic_on_oom");
+    //system("echo 2 > /proc/sys/vm/dirty_ratio");
     system("echo 3 >/proc/sys/vm/drop_caches");
 }
 

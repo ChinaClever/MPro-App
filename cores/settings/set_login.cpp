@@ -21,12 +21,20 @@ QVariant Set_Login::loginUsrPwd(int type, int id)
     case 2: res = it->pwd; break;
     case 3: res = it->token; break;
     case 4: res = it->permit; break;
-    case 5: res = it->groupCtrl; break;
-    case 9: res = it->reserve[3]; break;
+    case 5: res = it->updatetime; break;
+    case 6: res = it->groupCtrl; break;
+    case 9: res = it->reserve[2]; break;
     default:  qDebug() << Q_FUNC_INFO; break;
     }
 
     return res;
+}
+
+int Set_Login::reserveCheck(const QString &str, int id)
+{
+    QString token = cm::dataPacket()->login[id].token;
+    if(str.size()) if(token == str) return 1;
+    return 0;
 }
 
 
@@ -42,16 +50,22 @@ int Set_Login::loginSet(uchar type, const QVariant &v, int id)
     case 2: key = "pwd_%1"; ptr = it->pwd; break;
     case 3: key = "token_%1"; ptr = it->token; break;
     case 4: key = "permit_%1"; it->permit = v.toInt(); break;
-    case 5: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
+    case 5: key = "updatetime_%1"; ptr = it->updatetime; break;
+    case 6: key = "groupCtrl_%1"; it->groupCtrl = v.toInt(); break;
     case 11: ret = loginCheck(v.toString()); break;
+    case 12: ret = reserveCheck(v.toString(), id); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } //if(ret && (type != 11)) Cfg_ReadWrite::bulid()->writeParams();
 
     if(ret && key.size()) {
-        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type && strong_pwd) {
+        Cfg_Com *cfg = Cfg_Com::bulid(); if(2 == type && strong_pwd) {  /*启用了强密码*/
             QByteArray str = Sercret_Core::bulid()->rsa_encode(v.toByteArray());
             cfg->writeCfg(key.arg(id), str, prefix); //cout << str.size() << str;
         } else cfg->writeCfg(key.arg(id), v, prefix);
+
+        QString dt = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qstrcpy(it->updatetime, dt.toStdString().c_str()); key = "updatetime_%1";
+        if(type != 5) cfg->writeCfg(key.arg(id), dt, prefix);
     }
 
     if(ptr) {
@@ -106,18 +120,18 @@ void Set_Login::loginLocking(bool ok)
 int Set_Login::loginCheck(const QString &str)
 {
     QStringList ls = str.split(";");
-    int ret = loginTryLock();
+    int ret = loginTryLock();   /*连续输入多次账户密码错误则锁定*/
     if(ret) return 0-ret;
 
-    if(ls.size() == 2) {
+    if(ls.size() == 2) {    /*输入了账户和密码*/
         sRadiusCfg *cfg = &App_Radius::radiusCfg;
-        if(cfg->en) {
+        if(cfg->en) {   /*启用了radius功能*/
             int res = App_Core::bulid()->radius_work(ls.first(), ls.last());
-            if((res == -1) && cfg->local) ret = loginAuth(ls);
+            if((res == -1) && cfg->local) ret = loginAuth(ls);  /*radius认证失败且开启了本地认证*/
             else ret = res; cout << ret;
         } else {
-            ret = loginAuth(ls);
-            loginLocking(ret);
+            ret = loginAuth(ls);    /*进行登陆验证*/
+            loginLocking(ret);  /*如果登陆验证失败则错误次数加1*/
         }
     } else if(App_Ldap::ldapCfg.en && ls.size()) {
         bool res = App_Core::bulid()->ldap_work(ls.last());

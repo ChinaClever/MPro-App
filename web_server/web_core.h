@@ -16,7 +16,7 @@ public:
     bool app_upgrade(const QString &fn);
 
 private:
-    void web_initFun();
+    void web_initFun(char *ip);
     sDataPacket *init_share_mem();
     void init_webCfg(sWebCfg &web);
 

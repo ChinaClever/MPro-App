@@ -20,10 +20,10 @@ SOURCES += \
 contains(TARGET_ARCH, x86_64) {
     # Default rules for deployment.
     qnx: target.path = /tmp/$${TARGET}/bin
-    else: unix:!android: target.path = /tmp/$${TARGET}/bin
+    else: unix:!android: target.path = /tmp
     !isEmpty(target.path): INSTALLS += target
 } else {
-    target.path = /usr/data/clever/app
+    target.path = /tmp
     INSTALLS = target
 }
 

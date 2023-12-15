@@ -59,7 +59,21 @@ bool Alarm_Updater::upCorrectData(int i, sAlarmUnit &it)
     it.crMax[i] = qMin(it.max[i], it.crMax[i]);
     it.crMin[i] = qMin(it.crMin[i], it.crMax[i]);
     it.min[i] = qMin(it.crMin[i], it.min[i]);
-    return false;
+    return false;   /*更新成功则返回false*/
+}
+
+bool Alarm_Updater::upLoopVol(const sDataItem &index)
+{
+    bool ret = true;
+    if(index.type == DType::Loop && index.topic == DTopic::Vol) {   /*回路电压*/
+        sDevData *dev = cm::devData(index.addr);
+        sDevCfg *cfg = &dev->cfg; int dtc = dev->dtc.fault;
+        if(cfg->param.isBreaker && dtc == FaultCode::DTC_OK) {  /*有断路器并且没有故障*/
+            int breaker = cm::masterDev()->loop.relay.sw[index.id];
+            if(breaker == sRelay::Off) ret = false;     /*断路器关闭则反击false*/
+        }
+    }
+    return ret;
 }
 
 bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
@@ -67,18 +81,19 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     bool ret = upCorrectData(i, it);
     uint value = index.value = it.value[i];
     index.id = i; uchar alarm = AlarmCode::Ok;
-    if(value > it.max[i]) alarm = AlarmCode::Max;
-    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;
-    if(value < it.min[i]) alarm = AlarmCode::Min;
-    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;
-    uint t = 0; if(cm::runTime() > 48*60*60) t = 5;
-    if(it.alarm[i] != alarm)  {
-        if(it.cnt[i]++ > t) {
+    if(value > it.max[i]) alarm = AlarmCode::Max;   /*alarm=8*/
+    else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;  /*alarm=4*/
+    if(value < it.min[i]) alarm = AlarmCode::Min;   /*alarm=1*/
+    else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;  /*alarm=2*/
+    uint t = 0; if(cm::runTime() > 48*60*60) t = 5; /*运行时间大于48小时，t=5*/
+    if(index.topic == DTopic::Vol) t += 2;  /*topic为电压， t=7*/
+    if(it.alarm[i] != alarm)   {
+        if(it.cnt[i]++ > t && upLoopVol(index)) {
             Log_Core::bulid()->append(index);
             emit alarmSig(index, alarm);
             it.alarm[i] = alarm;
         } else alarm = AlarmCode::Ok;
-    } else it.cnt[i] = 0;
+    } else it.cnt[i] = 0;   /*将连续报警次数置0*/
 
     if(alarm) Alarm_Log::bulid()->appendAlarm(index, alarm);
     if((alarm == AlarmCode::Max) || (alarm == AlarmCode::Min)) ret |= alarm;
@@ -289,39 +304,44 @@ bool Alarm_Updater::upDevData(sDataItem &index, sDevData *it)
     return ret;
 }
 
+/**
+ *更新设备运行状态：正常、预警、告警、升级、故障等等
+ */
 bool Alarm_Updater::upDevAlarm(uchar addr)
 {
     bool ret = mCrAlarm = 0;
     sDevData *dev = cm::devData(addr);
     sDataItem index; index.addr = addr;
-    uchar *ptr = &cm::masterDev()->status;
-    Alarm_Log::bulid()->currentAlarmClear(addr);
+    uchar *ptr = &cm::masterDev()->status;  /*获取主机设备当前状态*/
+    Alarm_Log::bulid()->currentAlarmClear(addr);    /*清除该设备当前告警*/
     //if(0 == addr) dev->offLine = 5;
 
-    if(dev->offLine > 1) {
-        ret = upDevData(index, dev);
-        dev->alarm = ret ? 2:0;
-        dev->status = dev->alarm;
-        if(!ret && mCrAlarm) dev->status = 1;
-        if(dev->dtc.fault) dev->status = 4;
-        if(addr && (0 == *ptr) && mCrAlarm) *ptr=6;
-        if(addr && (0 == *ptr) && dev->alarm) *ptr=7;
-        if(cm::dataPacket()->ota.work) dev->status = 3;
-    } else if(dev->offLine <= 1) {
-        dev->status = 5; if(!(*ptr)) *ptr=5;
-        if(addr) Alarm_Log::bulid()->appendSlaveOffline(addr);
-    } dev->cfg.param.runStatus = dev->status;
+    if(dev->offLine > 1) {  /*副机设备在线*/
+        ret = upDevData(index, dev);    /*更新设备数据，计算相、回路、输出位、分组、环境数据是否达到告警值*/
+        dev->alarm = ret ? 2:0;         /*根据返回值来设置设备的告警状态，0表示正常*/
+        dev->status = dev->alarm;       /*将告警状态给设备的状态*/
+        if(!ret && mCrAlarm) dev->status = 1;   /*如果 ret 为0且 mCrAlarm 为真，将设备状态置为预警*/
+        if(dev->dtc.fault) dev->status = 4;     /*设备故障时将设备状态置为故障*/
+        if(addr && (0 == *ptr) && mCrAlarm) *ptr=6;     /*如果设备为副机且mCrAlarm 为真且主机当前工作状态为0，将主机设备状态置为副机预警*/
+        if(addr && (0 == *ptr) && dev->alarm) *ptr=7;   /*如果设备为副机且当前工作状态为告警且主机当前工作状态为0，将主机设备状态置为副机告警*/
+        if(cm::dataPacket()->ota.work) dev->status = 3; /*如果当前为升级状态，将主机设备状态置为升级*/
+    } else if(dev->offLine <= 1) {      /*副机设备不在线*/
+        dev->status = 5; if(!(*ptr)) *ptr=5;    /*将主机设备状态置为副机离线*/
+        if(addr) Alarm_Log::bulid()->appendSlaveOffline(addr);  /*将副机离线事件记录到数据库*/
+    } dev->cfg.param.runStatus = dev->status;       /*将设备的状态赋值给设备运行状态*/
 
     return ret;
 }
-
+/**
+ * 更新设备运行状态,生成二维码
+ */
 void Alarm_Updater::run()
 {
     int num = 0; sDevCfg *cfg = &cm::masterDev()->cfg;
-    if(cfg->param.devMode) num = cfg->nums.slaveNum;
-    else Alarm_Log::bulid()->currentAllAlarmClear();
-    for(int i=0; i<num+1; ++i) upDevAlarm(i);
-    Alarm_Log::bulid()->generateQRcode();
+    if(cfg->param.devMode) num = cfg->nums.slaveNum;    /*未禁用级联则获取副机数量*/
+    else Alarm_Log::bulid()->currentAllAlarmClear();    /*禁用级联则清除当前所有设备的告警*/
+    for(int i=0; i<num+1; ++i) upDevAlarm(i);   /*更新设备运行状态：正常、预警、告警、升级、故障等等*/
+    Alarm_Log::bulid()->generateQRcode();   /*生成二维码*/
     Log_Core::bulid()->log_addCnt();
     Odbc_Core::bulid()->addCnt();
 }

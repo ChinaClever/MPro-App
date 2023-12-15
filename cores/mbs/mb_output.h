@@ -9,9 +9,11 @@ public:
 
 protected:
     void output_update();
-    void output_ctrl(ushort addr, ushort value);
-    void output_setting(ushort addr, ushort value);
-    void output_dualCtrl(ushort addr, ushort value);
+    void output_clearEle(uchar addr, uchar id);
+    void output_upDelay(uchar addr, uchar id, ushort value);
+    void output_ctrl(ushort addr, ushort address, ushort value);
+    void output_setting(ushort addr, ushort address, ushort value);
+    void output_dualCtrl(ushort addr, ushort address, ushort value);
 
 private:
     void output_dataObj(vshort &vs, int id);

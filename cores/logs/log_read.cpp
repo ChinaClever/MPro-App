@@ -58,14 +58,16 @@ QString Log_Read::log_readPage(int type, int id, int cnt)
 
     return v.toString();
 }
-
+/**
+ * 根据传入的日志类型，返回对应的数据库
+ */
 Sql_Statement *Log_Read::getSql(int type)
 {
     Sql_Statement *sql = nullptr; switch (type) {
-    case eLogs::eOtaLog: sql = Db_Ota::bulid(); break;
-    case eLogs::eHdaLog: sql = Db_Hda::bulid(); break;
-    case eLogs::eEventLog: sql = Db_Event::bulid(); break;
-    case eLogs::eAlarmLog: sql = Db_Alarm::bulid(); break;
+    case eLogs::eOtaLog: sql = Db_Ota::bulid(); break;  /*固件历史*/
+    case eLogs::eHdaLog: sql = Db_Hda::bulid(); break;  /*历史数据*/
+    case eLogs::eEventLog: sql = Db_Event::bulid(); break;  /*时间记录*/
+    case eLogs::eAlarmLog: sql = Db_Alarm::bulid(); break;  /*告警日志*/
     default: qDebug() << Q_FUNC_INFO << type; break;
     }
     return sql;
@@ -92,6 +94,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     QString cmd = "where ";
     if(it.start.size()) {
         QString endDateStr = it.end;
+        if(cm::cipp(it.start)) return "";
         if(it.end.isEmpty()) endDateStr = QDate::currentDate().toString("yyyy-MM-dd");
         cmd += QString("dtime between '%1 00:00:00' and '%2 23:59:59' ").arg(it.start, endDateStr);
     }

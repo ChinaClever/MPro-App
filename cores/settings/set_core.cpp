@@ -51,6 +51,7 @@ QVariant Set_Core::getCfg(sCfgItem &it)
     case SFnCode::OutputName: res = outputName(it.addr, it.fc); break;
     case SFnCode::EVersion: res = softwareVersion(it.addr, it.fc); break;
 
+    case SFnCode::EFtp: res = ftpCfg(it.fc); break;
     case SFnCode::ELdap: res = ldapCfg(it.fc); break;
     case SFnCode::EODBC: res = odbcCfg(it.fc); break;
     case SFnCode::ELogCfg: res = logCfg(it.fc); break;
@@ -87,8 +88,10 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::EWhiteList: ret = setWhiteList(it.fc, v); break;
     case SFnCode::EDgsNet: ret = net_diagnoseSet(it.fc, v); break;
     case SFnCode::EThreshold: ret = thresholdSlave(it.fc); break;
+    case SFnCode::EVersion: ret = setSwVersion(it.fc, v); break;
 
     case SFnCode::ESys: ret = syscmd(it.fc); break;
+    case SFnCode::EFtp: ret = ftpSet(it.fc, v); break;
     case SFnCode::EBR: ret = restores(it.fc, v); break;
     case SFnCode::ESsh: ret = sshSet(it.fc, v); break;
     case SFnCode::ENtp: ret = ntpSet(it.fc, v); break;
@@ -116,7 +119,7 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
     case SFnCode::ECfgNum: ret = setCfgNum(it, v.toInt()); break;
     case SFnCode::EDevInfo: ret = setInfoCfg(it.fc, v.toInt()); break;
     case SFnCode::EModbus: ret = modbusSet(it.fc, v.toInt()); break;
-    case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;
+    //case SFnCode::ECmd: ret = system(v.toByteArray().data()); break;  /////////========
     default: cout << it.type; break;
     }
 
@@ -127,12 +130,12 @@ int Set_Core::setParam(sCfgItem &it, const QVariant &v)
 int Set_Core::setCfg(sCfgItem &it, const QVariant &v)
 {
     int ret = false;
-    if(it.addr==0 || it.addr==0xff) {
-        ret = setParam(it, v);
+    if(it.addr==0 || it.addr==0xff) {   /*主机*/
+        ret = setParam(it, v);  /*/根据不同的Type，调用不同的设置函数*/
     }
 
-    if(it.addr) {
-        int num = cm::masterDev()->cfg.nums.slaveNum;
+    if(it.addr) {   /*副机*/
+        int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
         if(num) ret = Cascade_Core::bulid()->masterSetCfg(it, v);        
     } if(it.type == SFnCode::EDual) { it.addr += 1; Cascade_Core::bulid()->masterSetCfg(it, v);}
 
@@ -143,18 +146,18 @@ int Set_Core::setting(sDataItem &it)
 {
     int ret = true;
 
-    if(it.rw) {
-        if(it.addr==0 || it.addr==0xff) {
+    if(it.rw) {   /*写数据*/
+        if(it.addr==0 || it.addr==0xff) {   /*主机*/
             if(it.topic == DTopic::Relay) {
-                ret = relaySet(it);
+                ret = relaySet(it); /*开关设置*/
             } else {
-                ret = setAlarm(it);
+                ret = setAlarm(it); /*告警设置*/
             }
-            if(ret) writeAlarm();
+            if(ret) writeAlarm();   /*保存报警配置*/
         }
 
-        if(it.addr) {
-            int num = cm::masterDev()->cfg.nums.slaveNum;
+        if(it.addr) {   /*副机*/
+            int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
             if(num) ret = Cascade_Core::bulid()->masterSeting(it);
         } if((it.topic != DTopic::Relay) && ret) setAlarmLog(it);
         if(it.type == DType::Dual) { it.addr += 1; Cascade_Core::bulid()->masterSeting(it);}

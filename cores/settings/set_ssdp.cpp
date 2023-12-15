@@ -9,7 +9,7 @@
 Set_Ssdp::Set_Ssdp(QObject *parent)
     : Ssdp_Obj{parent}
 {
-    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();
+    Integr_JsonRecv *j = Integr_JsonRecv::bulid(this); ssdpBind();  /*执行SSDP绑定操作*/
     connect(j, &Integr_JsonRecv::recvSetSig, this, &Set_Ssdp::recvSetSlot);
     connect(j, &Integr_JsonRecv::recvCfgSig, this, &Set_Ssdp::recvCfgSlot);
     connect(this, &Ssdp_Obj::recvSig, this, &Set_Ssdp::recvSlot);
@@ -71,9 +71,9 @@ void Set_Ssdp::recvSwVersion()
     //int addr =cm::masterDev()->cfg.param.cascadeAddr;
     //if(devMode) if(addr) return;
 
-    int num = cm::masterDev()->cfg.nums.slaveNum;
+    int num = cm::masterDev()->cfg.nums.slaveNum;   /*获取副机数量*/
     for(int i=0; i<=num; i++) {        
-        int op = cm::devData(i)->cfg.nums.boardNum;
+        int op = cm::devData(i)->cfg.nums.boardNum; /*获取执行板数量*/
         sVersions *ver = &(cm::devData(i)->cfg.vers);
         str = "addr:" + QString::number(i); //else str.clear();
         str += fmt.arg(ver->ver, ver->releaseDate, ver->usr, ver->md5);
@@ -81,7 +81,7 @@ void Set_Ssdp::recvSwVersion()
             str += QString::number(ver->opVers[k]/10.0, 'f',1) +"; ";
         }
         item.data = str.toUtf8();
-        udpSend(item);
+        udpSend(item); /*通过UDP发送数据*/
     }
 }
 

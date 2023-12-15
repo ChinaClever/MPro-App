@@ -24,7 +24,7 @@ Log_Core *Log_Core::bulid(QObject *parent)
     static Log_Core *sington = nullptr;
     if(!sington) {
         sington = new Log_Core(parent);
-        if(cm::masterDev()->startCnt < 1500) {
+        if(cm::masterDev()->startCnt < 1500) {  /*设备启动次数小于1500*/
             sEventItem it; it.addr = 0;
             if(cm::cn()) {
                 it.event_type = tr("系统事件");
@@ -58,18 +58,18 @@ void Log_Core::append(const sAlarmItem &it)
 {
     QString fmd = "alarm:%1 content:%2";
     if(cm::cn()) fmd = tr("%1　 内容：%2");
-    QString str = fmd.arg(it.alarm_status, it.alarm_content);
-    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(str);
-    Odbc_Core::bulid()->alarm(it);
-    mAlarmIts << it; run();
+    QString str = fmd.arg(it.alarm_status, it.alarm_content);   /*使用alarm_status和alarm_content填充格式化字符串fmd*/
+    App_Core::bulid()->smtp_sendMail(str); sys_logAlarm(it);   /*调用发生SMTP邮件函数和系统告警日志函数*/
+    Odbc_Core::bulid()->alarm(it);  /*调用alarm函数，对数据库进行报警记录*/
+    mAlarmIts << it; run();     /*将结构体it添加到mAlarmIts中*/
 }
 
 void Log_Core::append(const sEventItem &it)
 {
-    QString fmd = "type:%1 content:%2";
-    QString str = fmd.arg(it.event_type, it.event_content);
-    sys_logInfo(str); mEventIts << it; run();
-    Odbc_Core::bulid()->event(it);
+    //QString fmd = "type:%1 content:%2";
+    //QString str = fmd.arg(it.event_type, it.event_content);     /*使用fmd.arg函数将event_type和event_content的值填充到格式字符串中，生成一个格式化的字符串str*/
+    sys_logInfo(it); mEventIts << it; run();   /*run函数控制日志核心的运行操作*/
+    Odbc_Core::bulid()->event(it);  /*将事件添加到数据库*/
 }
 
 void Log_Core::append(const sDataItem &it)
@@ -125,22 +125,28 @@ void Log_Core::initFunSlot()
     mEvent = Db_Event::bulid();
     mAlarm = Db_Alarm::bulid();
 }
-
+/**
+ *控制日志核心的运行操作。如果当前没有正在运行的操作，则根据条件判断执行相应的操作，
+ *包括超时处理、计数更新和定时调用槽函数。最后，设置运行状态和mt的值。如果当前有
+ *正在运行的操作，则将mt设置为5567，表示等待当前操作完成
+ */
 void Log_Core::run()
 {
     if(!isRun) {
-        if(cm::runTime() > 48*60*60) mt += 1567;
+        if(cm::runTime() > 48*60*60) mt += 1567;    /*最近开关运行时间超过48小时*/
         int cnt = mEventIts.size() + mAlarmIts.size();
         if(cnt > 10 || mLogCnt > 1000) {mt += 3567; timeoutDone();}
-        mLogCnt += cnt; QTimer::singleShot(mt,this, SLOT(saveLogSlot()));
+        mLogCnt += cnt; QTimer::singleShot(mt,this, SLOT(saveLogSlot()));   /*mt秒后调用函数保存日志信息*/
         //QtConcurrent::run(this, &Log_Core::saveLogSlot);
         isRun = true; mt = 567;
     } else mt = 5567;
 }
-
+/**
+ *提交数据库，将之前的数据库操作永久保存到数据库中
+ */
 void Log_Core::saveLogSlot()
 {
-    QWriteLocker locker(mRwLock);
+    QWriteLocker locker(mRwLock);   /*加写锁*/
     QSqlDatabase::database().transaction();
     while(mOtaIts.size()) mOta->insertItem(mOtaIts.takeFirst());
     while(mHdaIts.size()) mHda->insertItem(mHdaIts.takeFirst());
@@ -153,7 +159,7 @@ void Log_Core::timeoutDone()
 {
     int cnt = 1; system("sync");
     QWriteLocker locker(mRwLock); Db_Tran t;
-    mHda->countsRemove(cfg.hdaCnt * cnt);
+    mHda->countsRemove(cfg.hdaCnt * cnt);   /*超过数据库最大值则删除*/
     mAlarm->countsRemove(cfg.logCnt * cnt);
     mEvent->countsRemove(cfg.eventCnt * cnt);
     QTimer::singleShot(367,this, &Log_Core::invAdcSlot);

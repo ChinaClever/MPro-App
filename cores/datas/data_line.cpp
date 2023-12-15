@@ -12,22 +12,22 @@ Data_Line::Data_Line()
 
 void Data_Line::lineWork()
 {
-    int size = mDev->cfg.nums.lineNum; if(size == 0) size = 1;    
-    if(mDev->cfg.nums.loopNum) {
+    int size = mDev->cfg.nums.lineNum; if(size == 0) size = 1;  /*获取设备单三相*/
+    if(mDev->cfg.nums.loopNum) {    /*回路数量不为0*/
         int num = mDev->cfg.nums.loopNum / size;
         for(int i=0; i<size; ++i) {
             int start = i * num;
             int end = (i+1) * num;
-            lineData(i, start, end);
+            lineData(i, start, end);    /*计算电压、电流、功率、无功功率、视在功率、电能、功率因数*/
         }
     } else {
         int num = mDev->cfg.nums.outputNum / size;
         for(int i=0; i<size; ++i) {
             int start = i * num;
             int end = (i+1) * num;
-            lineDataNoLoop(i, start, end);
+            lineDataNoLoop(i, start, end);  /*计算电压、电流、功率、无功功率、视在功率、电能、功率因数*/
         }
-    }inletNum(); lineVoltage();
+    }inletNum(); lineVoltage(); /*获取相电压的值*/
 }
 
 void Data_Line::inletNum()
@@ -41,10 +41,12 @@ void Data_Line::lineVoltage()
 {
     sObjData *obj = &(mDev->line); //obj->relay.size = 0;
     for (int i = 0; i < obj->size; ++i) {
-        obj->lineVol[i] = obj->vol.value[i] * std::sqrt(3);
+        obj->lineVol[i] = obj->vol.value[i] * std::sqrt(3); /*将相电压的当前值的根号3倍给线电压*/
     }
 }
-
+/**
+ * 产品实时频率、电压频率。电压、电流、功率、无功功率、视在功率、电能、功率因数写入统计数据结构体中
+ */
 void Data_Line::tgWork()
 {
     sObjData *obj = &(mDev->line);

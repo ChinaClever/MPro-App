@@ -15,6 +15,7 @@
 #include "odbc_obj.h"
 #include "redis_obj.h"
 #include "aiot/aiot_core.h"
+#include "ftps/ftp_object.h"
 
 Cfg_Service::Cfg_Service()
 {
@@ -29,6 +30,7 @@ void Cfg_Service::readCfgParams()
     ntp();
     web();
     rpc();
+    ftp();
     aiot();
     ldap();
     push();
@@ -153,6 +155,31 @@ void Cfg_Service::ssh()
             if(res.size() > 42) cfg->pwd = Sercret_Core::bulid()->rsa_decode(res);
             else cfg->pwd = res;
             break;
+        }
+    }
+}
+
+void Cfg_Service::ftp()
+{
+    sFtpCfg *cfg = &Ftp_Object::ftpCfg;
+    QString prefix = "ftp"; QString key;
+
+    for(int i=1; i<17; ++i)  {
+        switch (i) {
+        case 1: key = "en"; cfg->en = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 2: key = "host"; cfg->host = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 3: key = "user"; cfg->user = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 4: key = "pwd"; cfg->pwd = mCfg->readCfg(key, "", prefix).toString(); break;
+        case 5: key = "path"; cfg->path = mCfg->readCfg(key, "/", prefix).toString(); break;
+        case 6: key = "total"; cfg->total = mCfg->readCfg(key, 1, prefix).toInt(); break;
+        case 7: key = "line"; cfg->line = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 8: key = "loop"; cfg->loop = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 9: key = "outlet"; cfg->outlet = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 11: key = "dualPower"; cfg->dualPower = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 12: key = "updateTime"; cfg->updateTime = mCfg->readCfg(key, 15, prefix).toInt(); break;
+        case 13: key = "backupTime"; cfg->backupTime = mCfg->readCfg(key, 4, prefix).toInt(); break;
+        case 14: key = "port"; cfg->port = mCfg->readCfg(key, 0, prefix).toInt(); break;
+        case 15: key = "csvXlsx"; cfg->csvXlsx = mCfg->readCfg(key, 0, prefix).toInt(); break;
         }
     }
 }
@@ -360,11 +387,12 @@ void Cfg_Service::login()
 
     for(int k=0; k<USER_NUM; ++k) {
         sDevLogin *it = &(packet->login[k]);
-        for(int i=1; i<4; ++i) {
+        for(int i=1; i<5; ++i) {
             switch (i) {
             case 1: key = "user_%1";  ptr = it->user; break;
             case 2: key = "pwd_%1";  ptr = it->pwd; break;
             case 3: key = "token_%1";  ptr = it->token; break;
+            case 4: key = "updatetime_%1";  ptr = it->updatetime; break;
             }
             QByteArray res = mCfg->readCfg(key.arg(k), "", prefix).toByteArray();
             if(i == 2 && res.size()>42) res = Sercret_Core::bulid()->rsa_decode(res);

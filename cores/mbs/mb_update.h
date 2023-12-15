@@ -7,7 +7,7 @@ class Mb_Update : public Mb_Control
 {
 public:
     explicit Mb_Update(QObject *parent = nullptr);
-    void mbUpdates();
+    void mbUpdates(int addr);
 };
 
 #endif // MB_UPDATE_H
