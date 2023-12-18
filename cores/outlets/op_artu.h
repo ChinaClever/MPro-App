@@ -1,9 +1,8 @@
 #ifndef OP_ARTU_H
 #define OP_ARTU_H
+#include "op_sernum.h"
 
-#include "op_objctrl.h"
-
-class OP_ARtu : public OP_ObjCtrl
+class OP_ARtu : public Op_SerialNumber
 {
 public:
     explicit OP_ARtu(QObject *parent = nullptr);

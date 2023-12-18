@@ -32,7 +32,7 @@ void OP_Core::run()
         int size = mDev->cfg.nums.boardNum; // cout << size;    /*获取执行版数量*/
         if(1 == mDev->cfg.param.devSpec) {  /*A系列*/
             cmsWrite(175); ota_updates();   /*将命令写入串口，并等待发送完成，执行OTA更新操作*/
-            ret |= loop_readData(); /*获取回路数据*/
+            ret |= loop_readData(); /*获取回路数据*/            
         } else if(size) {
             for(int i=0; i<size; ++i) {
                 cmsWrite(175);  /*将命令写入串口，并等待发送完成*/

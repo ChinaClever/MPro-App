@@ -27,6 +27,7 @@ struct sOpIt
     uint version;  // 执行板软件版本号
     uint temp; // 执行板MCU温度
     uchar ens[DEV_NUM];
+    uchar sn[DEV_NUM][OP_ARRAY_SIZE]; // 执行板序列号
 };
 
 
