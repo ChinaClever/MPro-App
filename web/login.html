@@ -152,6 +152,7 @@
         user_name = obj.cfgValue(user,1,0,0);
 
         identify = obj.cfgValue(user,3,0,0);
+        if(dev_type == null) dev_type = ''
         if(user_name !== null &&  user_name !== ""){
          document.getElementById("rule").style.display = "none";
          document.getElementById("free_rule").style.display = "none";
