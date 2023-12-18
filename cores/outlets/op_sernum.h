@@ -20,6 +20,7 @@ public:
     explicit Op_SerialNumber(QObject *parent = nullptr);
     QString sn_get(uchar addr) {return m_sn[addr];}
     bool sn_read(uchar addr);
+    QJsonArray sn_json();
 
 private:
     int sn_initReadCmd(uchar addr, uchar *sn);

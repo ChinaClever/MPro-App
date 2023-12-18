@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_info.h"
-//#include "cfg_com.h"
+#include "op_core.h"
 #include "app_core.h"
 
 Set_Info::Set_Info()
@@ -42,8 +42,10 @@ QVariant Set_Info::softwareVersion(int addr, int type)
     default: qDebug() << Q_FUNC_INFO << type; break;
     } if(type > 10 && type < 20) {
         int temp = it->opVers[10 + type-11];
-        QString str = "  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; temp:";
-        str += QString::number(temp) + "°C"; if(temp) res = res.toString() + str;
+        QString emsp = "  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ";
+        QString str = "TEMP: "+QString::number(temp) + "°C"; if(temp) res = res.toString() + emsp + str;
+        QString sn = "SN: " + OP_Core::bulid()->sn_get(type-10);
+        if(sn.size() > 5) res = res.toString() + emsp + sn;
     }
     return res;
 }

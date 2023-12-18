@@ -11,9 +11,20 @@ Op_SerialNumber::Op_SerialNumber(QObject *parent) : OP_ObjCtrl{parent}
 }
 
 
+QJsonArray Op_SerialNumber::sn_json()
+{
+    QJsonArray sn; for(uint i=0; i<10; ++i) {
+        if(m_sn[i].size()) sn.append(m_sn[i]);
+    }
+    return sn;
+}
+
+
 bool Op_SerialNumber::sn_read(uchar addr)
 {
+    static uchar cnt[DEV_NUM] = {0,0,0,0,0,0,0,0};
     if(m_sn[addr].size()) return true;
+    if(++cnt[addr] > 2) return true;
     uchar sn[32] = {0}; bool ret = false;
     int len = sn_initReadCmd(addr, sn);
     if(len > 0) {
@@ -31,8 +42,9 @@ int Op_SerialNumber::sn_initReadCmd(uchar addr, uchar *sn)
     buf[0] = addr; ushort crc = Crc::Rtu(buf, 6);
     buf[6] = (0xff&crc); buf[7]= (crc >> 8);
     QByteArray rcv = transmit(buf, 8);
+    //cout << cm::byteArrayToHexStr(rcv);
     int rtn = 0; if(rcv.size() == 17) {
-        for(int i=3; i<17-2; ++i) sn[i] = (uchar)rcv.at(i);
+        rtn = 12; for(int i=0; i<rtn; ++i) sn[i] = (uchar)rcv.at(3+i);
     } else cout << rcv;
     return rtn;
 }
@@ -54,19 +66,19 @@ void Op_SerialNumber::sn_toStr(uchar addr)
                      .arg(it->num, 4, 10, QLatin1Char('0'))
                      .arg(it->pc, 2, 16, QLatin1Char('0'))
                      .arg(it->exor, 2, 16, QLatin1Char('0'));
-    m_sn[addr] = sn.toUpper();
+    m_sn[addr] = sn.toUpper(); //cout << addr << m_sn[addr];
 }
 
 
 bool Op_SerialNumber::sn_check(uchar *sn, int len)
 {
-    bool ret = false;
-    if((len != 8) || (sn[0] != 0)  || (sn[1] > 99) ){
-        cout << "SN check err" << len << sn[0];
+    bool ret = false; sn += 4; len -= 4;
+    if((len != 8) || (sn[0] != 0)  || (sn[1] > 99)){ // || (sn[1] == 0)
+        cout << "SN check err" << len << sn[0] << sn[1];
     } else {
         uchar exor = Crc::XorNum(sn, len-1);//暂时注释下面的异或和校验不对
         if(exor == sn[len-1]) ret = true;
-        else cout << "SN Crc XorNum err";
+        else cout << "SN Crc XorNum err" << exor << sn[len-1];
     }
     return ret;
 }
