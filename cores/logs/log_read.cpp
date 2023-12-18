@@ -94,6 +94,7 @@ QString Log_Read::log_readHda(const sLogHdaIt &it)
     QString cmd = "where ";
     if(it.start.size()) {
         QString endDateStr = it.end;
+        if(cm::cipp(it.start)) return "";
         if(it.end.isEmpty()) endDateStr = QDate::currentDate().toString("yyyy-MM-dd");
         cmd += QString("dtime between '%1 00:00:00' and '%2 23:59:59' ").arg(it.start, endDateStr);
     }

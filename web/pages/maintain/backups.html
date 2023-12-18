@@ -45,7 +45,7 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
@@ -89,6 +89,7 @@
 		function download(){
 			let url = window.location.origin;
 			url += "/index.html/cfg_backup.zip";
+			url += "?uid=" + pdu_cfg.getUuid();
 			window.open(url,'_blank');
 		}
 		function upload_data(){
@@ -102,7 +103,7 @@
 					document.getElementById('inputkey').value = '';
 					document.getElementById('loading').innerText = 'Uploading...';
 					document.getElementById('loading').style.color = 'red';
-					fetch('/upload_backup?name=' + encodeURIComponent(f.name), {
+					fetch('/upload_backup?name=' + encodeURIComponent(f.name) + "&uid=" + pdu_cfg.getUuid(), {
 					method: 'POST',
 					body: r.result,
 					}).then(function(res) {

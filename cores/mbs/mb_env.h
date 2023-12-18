@@ -10,7 +10,7 @@ public:
 
 protected:
     void env_update();
-    void env_setting(ushort addr, ushort value);
+    void env_setting(ushort addr, ushort address, ushort value);
 
 private:
     void env_dataUpdate();

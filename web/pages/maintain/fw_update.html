@@ -28,6 +28,12 @@
 						<div style=" width: 99%; margin-bottom: 0.8%; border:1px solid;border-color: #ffffff; margin-left:10px; height:50px; background:#ffffff;">
 						</div>
 						<div align="center">
+							<input  id = "inputkey_sig" type = "file" style ="display: none;" onchange="chosefile_sig()">
+							<button id = "lang_37" type ="button" onclick = "document.getElementById('inputkey_sig').click()"></button> 
+							<input style=" width: 30%;" type = "text" value = "" id = "info_sig" >
+							<label id  = "loading_sig"></label>
+						</div><br/>
+						<div align="center">
 							<input  id = "inputkey" type = "file" style ="display: none;" onchange="chosefile()">
 							<button id = "lang_3" type ="button" onclick = "document.getElementById('inputkey').click()"></button> 
 							<input style=" width: 30%;" type = "text" value = "" id = "info" >
@@ -47,7 +53,7 @@
 		</div>
 	</div>
     <script src="../../include/js/jquery-1.11.3.min.js"></script>
-	<script src="../../include/js/pdu_rpc.js"></script>
+	<script src="../../include/js/rpc.min.js"></script>
     <script src="../../include/js/public.min.js"></script>
     <script>
 		let pdu_cfg = top.pdu_cfg_;
@@ -85,9 +91,13 @@
 			language = pdu_data.pdu_info.language;
 			slave_num = pdu_data.pdu_info.slave_num;
 			board_num = pdu_data.pdu_info.board_num;
+
 		}
 		ParseData();
 		lang_init();
+		document.getElementById('lang_3').disabled = true;//将按钮置灰
+		document.getElementById('lang_4').disabled = true;
+
 		function read_data(){
 			let i = 0;
 			
@@ -162,6 +172,7 @@
 			lang[34] = ["主机升级中...","Host upgrade in progress...","","",""];
 			lang[35] = ["级联升级","Cascade upgrade","","",""];
 			lang[36] = ["执行板升级","Executive board upgrade","","",""];
+			lang[37] = ["校验文件","Verify File","","",""];
 
 			for(i = 0;i<board_num;i++){
 				board_name[i] = lang[14][language] + lang[17 +i][language] + lang[16][language];
@@ -181,6 +192,7 @@
 			for(let j = 1;j<14;j++){
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
+			document.getElementById("lang_37").innerHTML  = lang[37][language];
 			if(top.login_permit_ == 0){
 			}else{
 				$("input").attr("disabled","disabled");
@@ -263,6 +275,7 @@
 				var chunk = data.subarray(offset, offset + chunkSize) || '';
 				var opts = {method: 'POST', body: chunk};
 				var url = '/upload_fw?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_cfg.getUuid();
 				var ok = true;
 				setStatus(
 					// 'Uploading ' + name + ', bytes ' + offset + '..' +
@@ -283,17 +296,67 @@
 			read_data();
 			document.getElementById('lang_3').disabled = true;//将按钮置灰防止多次点击
 			document.getElementById('lang_4').disabled = true;
+			document.getElementById('lang_37').disabled = true;
 		};
+
+
+		var sendFileSig = function(name, data, chunkSize,id){
+			var sendChunk = function(offset) {
+				var chunk = data.subarray(offset, offset + chunkSize) || '';
+				var opts = {method: 'POST', body: chunk};
+				var url = '/upload_sig?offset=' + offset + '&name=' + encodeURIComponent(name);
+				url += "&uid=" + pdu_cfg.getUuid();
+				var ok = true;
+				setStatus(
+					// 'Uploading ' + name + ', bytes ' + offset + '..' +
+					// (offset + chunk.length) + ' of ' + data.length,id,ok);
+					'Uploading ' + name + ', bytes ' + 
+					 (data.length)+' B',id,ok);
+				fetch(url, opts)
+					.then(function(res) {
+					if (res.ok && chunk.length > 0) sendChunk(offset + chunk.length);
+					ok = res.ok;
+					return res.text();
+					})
+					.then(function(text) {
+					if (!ok) setStatus('Error: ' + text,id,ok);
+					});
+			};
+			sendChunk(0);
+			read_data();
+			document.getElementById('lang_3').disabled = true;//将按钮置灰防止多次点击
+			document.getElementById('lang_4').disabled = true;
+			document.getElementById('lang_37').disabled = true;
+		};	
+
 		function upload_data(){
 			let  key = document.getElementById("info").value;
-			if(key != ""){
-				let fileObj = document.getElementById('inputkey').files[0];
+			let  key_sig = document.getElementById("info_sig").value;
+			let fileObj = document.getElementById('inputkey').files[0];
+			let fileObj_sig = document.getElementById('inputkey_sig').files[0];
+
+			if(key != "" && key_sig != "" && (fileObj.name.split('.').slice(0, -1).join('.') == fileObj_sig.name.split('.').slice(0, -1).join('.'))){
+				
+				if (!fileObj_sig) return;
+				var h = fileObj_sig, q = new FileReader();
+				q.readAsArrayBuffer(h);
+				q.onload = function() {
+					sendFileSig(h.name, new Uint8Array(q.result), 10*1024,"loading_sig");
+				};
+
 				if (!fileObj) return;
 				var f = fileObj, r = new FileReader();
 				r.readAsArrayBuffer(f);
 				r.onload = function() {
 					sendFileData(f.name, new Uint8Array(r.result), 10*1024*1024,"loading");
 				};
+
+			}else{
+				if(0 == language){
+				  	 alert("请选择正确的升级文件！");
+			    }else{
+               		 alert("Please select the correct upgrade file!");
+              }      
 			}
 		}
 		function flash_data(){
@@ -307,6 +370,14 @@
 		}
 		function chosefile(){
 			document.getElementById("info").value = document.getElementById("inputkey").value;
+		}
+		function chosefile_sig(){
+			document.getElementById("info_sig").value = document.getElementById("inputkey_sig").value;
+			let  key_sig = document.getElementById("info_sig").value;
+			if(key_sig != ""){
+				document.getElementById('lang_3').disabled = false;
+				document.getElementById('lang_4').disabled = false;
+			}
 		}
 		function buildTable(){
 			var thead = '',tbody = '';

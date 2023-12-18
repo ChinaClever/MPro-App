@@ -36,9 +36,8 @@ void Mb_Line::line_dataObj(vshort &vs, int id)
 void Mb_Line::line_dataUpdate()
 {
     vshort vs; int size = mDevData->line.size;
-    for(int i=0; i<size; ++i) {
-        line_dataObj(vs, i);
-    } setRegs(MbReg_LineData, vs);
+    for(int i=0; i<size; ++i) line_dataObj(vs, i);
+    setRegs(mStartReg + MbReg_LineData, vs);
 }
 
 void Mb_Line::line_alarmObj(vshort &vs, int id)
@@ -52,9 +51,8 @@ void Mb_Line::line_alarmObj(vshort &vs, int id)
 void Mb_Line::line_alarmUpdate()
 {
     vshort vs; int size = mDevData->line.size;
-    for(int i=0; i<size; ++i) {
-        line_alarmObj(vs, i);
-    } setRegs(MbReg_LineAlarm, vs);
+    for(int i=0; i<size; ++i) line_alarmObj(vs, i);
+    setRegs(mStartReg + MbReg_LineAlarm, vs);
 }
 
 void Mb_Line::line_thresholdObj(const sAlarmUnit &unit, int id, vshort &vs)
@@ -74,35 +72,36 @@ void Mb_Line::line_thresholdUpdate()
         line_thresholdObj(obj->vol, i, vs);
         line_thresholdObj(obj->cur, i, vs);
         line_thresholdObj(obj->pow, i, vs);
-    } setRegs(MbReg_LineThreshol, vs);
+    } setRegs(mStartReg + MbReg_LineThreshol, vs);
 }
 
-void Mb_Line::line_setting(ushort addr, ushort value)
+void Mb_Line::line_setting(ushort addr, ushort address, ushort value)
 {
-    ushort reg = addr - MbReg_LineThreshol;
-    sObjData *obj = &(mDevData->line);
-    sAlarmUnit *unit = nullptr;
-    uint *ptr = nullptr;
-    int id = reg/15;
+    ushort reg = address - MbReg_LineThreshol;
+    sObjData *obj = &(cm::devData(addr)->line);
+    sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
+    int id = reg/15; sDataItem it; it.id = id+1;
+    it.type = DType::Line; it.addr = addr;
 
     switch (reg%15/5) {
-    case 0: unit = &(obj->vol); break;
-    case 1: unit = &(obj->cur); break;
-    case 3: unit = &(obj->pow); break;
-    default: cout << addr; return;
+    case 0: unit = &(obj->vol); it.topic = DTopic::Vol; break;
+    case 1: unit = &(obj->cur); it.topic = DTopic::Cur; break;
+    case 3: unit = &(obj->pow); it.topic = DTopic::Pow; break;
+    default: cout << addr << address; return;
     }
 
     reg = reg % 5; switch (reg) {
-    case 0: ptr = unit->en; break;
-    case 1: ptr = unit->max; break;
-    case 2: ptr = unit->crMax; break;
-    case 3: ptr = unit->crMin; break;
-    case 4: ptr = unit->min; break;
-    default: cout << addr; break;
+    case 0: ptr = unit->en; it.subtopic = DSub::EnAlarm; break;
+    case 1: ptr = unit->max; it.subtopic = DSub::VMax; break;
+    case 2: ptr = unit->crMax; it.subtopic = DSub::VCrMax; break;
+    case 3: ptr = unit->crMin; it.subtopic = DSub::VCrMin; break;
+    case 4: ptr = unit->min; it.subtopic = DSub::VMin; break;
+    default: cout << addr << address; break;
     }
 
     bool ret = alarmUnitCheck(reg, id, unit, value);
-    if(ptr && ret) ptr[id] = value;
+    if(ptr && ret && (ptr[id] != value)) setting(it, value);
+    if(ptr) ptr[id] = value;
 }
 
 

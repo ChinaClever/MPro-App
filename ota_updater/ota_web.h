@@ -11,6 +11,7 @@ public:
 
 private:
     void web_workDown();
+    bool web_readRsaSig(sOtaFile &it);
 };
 
 #endif // OTA_WEB_H

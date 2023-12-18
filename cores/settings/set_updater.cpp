@@ -69,37 +69,53 @@ bool Set_Updater::ota_logErr(int fc, const QString &fn)
         cfg.app_unpack(ver); it.ver = ver.ver; it.md5 = ver.md5;
         QString version = cm::masterDev()->cfg.vers.ver;
         if(version.isEmpty()) version = ver.oldVersion;
-        it.oldVersion = version;
-
-        switch (fc) {
-        case 401: if(cm::cn()) str = "未升级：目前软件版本高于升级升级";
-            else str = "Not upgraded: The current software version is higher than the upgraded version";
-            break;
-
-        case 402: if(cm::cn()) str = "未升级：升级包中的目标设备型号不相符";
-            else str = "Not upgraded: The target device model in the upgrade package does not match";
-            break;
-
-        case 403: if(cm::cn()) str = "未升级：升级包已损坏";
-            else str = "Not upgraded: The upgrade package is corrupt";
-            break;
-
-        default: str = ver.remark; break;
-        }
-        it.remark = "[error] " + str;
-        //it.oldVersion = ver.oldVersion;
-        it.releaseDate = ver.releaseDate;
+        it.oldVersion = version; it.releaseDate = ver.releaseDate;
     } else {
         QString file = fn.split("/").last().remove(".zip");
         QStringList ls = file.split("_");
-        if(ls.size() == 3) {
-            it.ver = ls.at(1);
-            it.md5 = "md5 error";
-            it.remark = "updater error";
+        if(ls.size() == 4) {
+            it.ver = ls.at(1)+ls.at(2);
+            it.md5 = "--- ---";
+            it.remark = " updater error";
             it.oldVersion = "--- ---";
             it.releaseDate = ls.last();
         } ret = false;
-    } Log_Core::bulid()->append(it);
+    }
+
+    switch (fc) {
+    case 401: if(cm::cn()) str = "未升级：目前软件版本高于升级升级";
+        else str = "Not upgraded: The current software version is higher than the upgraded version";
+        break;
+
+    case 402: if(cm::cn()) str = "未升级：升级包中的目标设备型号不相符";
+        else str = "Not upgraded: The target device model in the upgrade package does not match";
+        break;
+
+    case 403: if(cm::cn()) str = "未升级：升级包已损坏";
+        else str = "Not upgraded: The upgrade package is corrupt";
+        break;
+
+    case 404: if(cm::cn()) str = "未升级：签名信息错误";
+        else str = "Not upgraded: incorrect signature information";
+        break;
+
+    case 411: if(cm::cn()) str = "未升级：校验文件不存在";
+        else str = "Not upgraded: The verification file does not exist";
+        break;
+
+    case 412: if(cm::cn()) str = "未升级：MD5校验码格式不对";
+        else str = "Not upgraded: MD5 checksum format is incorrect";
+        break;
+
+    case 413: if(cm::cn()) str = "未升级：签名信息格式不对";
+        else str = "Not upgraded: The signature information format is incorrect";
+        break;
+
+    default: if(cm::cn()) str = "未升级：升级包错误";
+        else str = "Not upgraded: The upgrade package is corrupt";
+        break;
+    } it.remark.insert(0, "[error] " + str);
+    Log_Core::bulid()->append(it);
     return ret;
 }
 

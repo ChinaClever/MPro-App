@@ -51,7 +51,7 @@ void Mb_Object::upDevInfo()
     vs << (dev->tg.ele >> 16);
     vs << (dev->tg.ele & 0xffff);
 
-    setRegs(0, vs);
+    setRegs(mStartReg+0, vs);
 }
 
 bool Mb_Object::setReg(ushort reg, const char *str)
@@ -86,4 +86,17 @@ bool Mb_Object::alarmUnitCheck(int reg, int id, sAlarmUnit *unit, ushort v)
     } if(id >= unit->size) ret = false;
 
     return ret;
+}
+
+int Mb_Object::setting(sDataItem &it, uint value)
+{
+    it.txType = DTxType::TxModbus; // 通讯类型 1 Web
+    it.value = value; it.rw = 1; // 0 读  1 写
+    return Set_Core::bulid()->setting(it);
+}
+
+int Mb_Object::setCfg(sCfgItem &it, const QVariant &v)
+{
+    it.txType = DTxType::TxModbus;
+    return Set_Core::bulid()->setCfg(it, v);
 }

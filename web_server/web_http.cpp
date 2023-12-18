@@ -152,6 +152,21 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             }
             memset(file_path , 0 , sizeof(file_path));
             memset(file_name , 0 , sizeof(file_name));
+        }else if(mg_http_match_uri(hm, "/upload_sig")){
+            //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s",file_path);
+            mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
+            mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
+            if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
+            if(File::cipp(file_name)) return;
+
+            if(file_name[0] == '\0'){
+                mg_http_reply(c , 400 , "","%s","name required");
+            }else{
+                mg_snprintf(file_path , sizeof(file_name) , "/usr/data/upload/%s",file_name);
+                mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 30*1024);
+            }
+            memset(file_path , 0 , sizeof(file_path));
+            memset(file_name , 0 , sizeof(file_name));
         }else if(mg_http_match_uri(hm, "/upload_fw")){
             //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/upload/%s",file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));

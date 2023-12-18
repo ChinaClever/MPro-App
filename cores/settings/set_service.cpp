@@ -67,6 +67,7 @@ bool Set_Service::syslogSet(int fc, const QVariant &v)
     bool ret = true;
     sSysLogCfg *cfg = &Log_Sys::sysLogCfg;
     QString prefix = "syslog"; QString key;
+    if(2==fc || 3==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: key = "en"; cfg->en = v.toInt(); break;
@@ -185,6 +186,7 @@ bool Set_Service::sshSet(int fc, const QVariant &v)
     App_Core *obj = App_Core::bulid();
     QString prefix = "ssh"; QString key; bool ret = true;
     ushort strong_pwd = cm::dataPacket()->web.strong_pwd;
+    if(3==fc || 4==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: key = "ssh_en"; cfg->ssh_en = v.toInt(); break;
@@ -228,7 +230,7 @@ bool Set_Service::ntpSet(int fc, const QVariant &v)
     sNtpCfg *it = &App_Ntp::ntpCfg;
     App_Core *obj = App_Core::bulid();
     QString prefix = "ntp"; QString key;
-    if(1==fc || 3==fc || 4==fc) if(cm::cipp(v.toString())) return false;
+    if(1==fc || 3==fc || 4==fc) if(cm::cipp(v)) return false;
 
     switch (fc) {
     case 1: ret = obj->ntp_time(v.toString()); break;
