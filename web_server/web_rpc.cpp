@@ -75,13 +75,13 @@ char *Web_Rpc::pduSetParam(mg_str &r)
 {
     QVector<uint> its = mObj->getNumbers(r, 5);
     QVariant value = mObj->getString(r, 5); int ret = 1;
-    if(value.toString().isNull()) value = mObj->getNumber(r, 5); //cout << its << value;
+    if(value.toString().isNull()) value = mObj->getNumber(r, 5);
     ret = mObj->checkUuid(r, its.at(1) != 14); // if(its.at(1) != 14)
     if(ret) ret = mObj->setCfg(its.at(1), its.at(2), value,its.at(3), its.at(0));
     if(its.at(1) == 14 && its.at(2) == 11) {
         if(1 == ret) value = QString::number(ret) + "; " + mObj->createUuid();
         else value = ret; //?1:0; cout << value;
-    }
+    } // cout << its << value;
     return responRpcString(its, value.toString());
 }
 
