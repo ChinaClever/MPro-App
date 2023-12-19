@@ -176,7 +176,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 
 bool OP_ProRtu::readData(int addr)
 {
-    if(isOta) return false;
+    if(isOta) {return false;} sn_read(addr);
     bool ret = sendReadCmd(addr, mOpData);  /*发送读命令*/
     setEndisable(addr, ret, mOpData->ens[addr]);
     fillData(addr); //cout << addr << ret;  /*获取设备数据*/

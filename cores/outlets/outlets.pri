@@ -11,6 +11,7 @@ HEADERS += \
     $$PWD/op_objrtu.h \
     $$PWD/op_proctrl.h \
     $$PWD/op_prortu.h \
+    $$PWD/op_sernum.h \
     $$PWD/op_updater.h
 
 SOURCES += \
@@ -21,4 +22,5 @@ SOURCES += \
     $$PWD/op_objrtu.cpp \
     $$PWD/op_proctrl.cpp \
     $$PWD/op_prortu.cpp \
+    $$PWD/op_sernum.cpp \
     $$PWD/op_updater.cpp

@@ -1,6 +1,5 @@
 #ifndef OP_PROCTRL_H
 #define OP_PROCTRL_H
-
 #include "op_artu.h"
 
 class OP_ProCtrl : public OP_ARtu

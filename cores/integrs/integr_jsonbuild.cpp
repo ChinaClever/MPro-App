@@ -5,6 +5,7 @@
  */
 #include "integr_jsonbuild.h"
 #include "set_core.h"
+#include "op_core.h"
 
 Integr_JsonBuild::Integr_JsonBuild()
 {
@@ -290,7 +291,9 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
     obj.insert("serialNumber", it.serialNumber);
     obj.insert("prodDate", it.prodDate);
 
-    QJsonArray vs, temps;
+    QJsonArray vs, sn, temps;
+    sn = OP_Core::bulid()->sn_json();
+    obj.insert("op_sn", vs); json.insert(key, obj);
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
     obj.insert("op_vers", vs); json.insert(key, obj);
 

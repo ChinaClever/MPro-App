@@ -38,7 +38,16 @@ static ushort calccrc(ushort crc, uchar crcbuf)
     }
     return crc;
 }
-#endif
+
+ushort Crc::Rtu(uchar *buf, int len)
+{
+    ushort crc = 0xffff;
+    for(int i=0; i<len; i++)
+       crc = calccrc(crc, buf[i]);
+    return crc;
+}
+
+#else
 
 uint16_t Crc::CRC_16(uint8_t *puchMsg, uint16_t usDataLen)
 {
@@ -112,17 +121,16 @@ uint16_t Crc::CRC_16(uint8_t *puchMsg, uint16_t usDataLen)
         uchCRCLo = auchCRCLo[uIndex];
     }
 
-    return (uchCRCHi << 8 | uchCRCLo);
-
+    //return (uchCRCHi << 8 | uchCRCLo);
+    return (uchCRCLo << 8 | uchCRCHi);
 }
 
 ushort Crc::Rtu(uchar *buf, int len)
 {
-    //ushort crc = 0xffff;
-    //for(int i=0; i<len; i++)
-    //    crc = calccrc(crc, buf[i]);
     return CRC_16(buf, len);
 }
+#endif
+
 
 ushort Crc::Rtu(const QByteArray &array)
 {
@@ -132,8 +140,8 @@ ushort Crc::Rtu(const QByteArray &array)
 void Crc::RtuAppend(QByteArray &array)
 {
     ushort crc = Rtu(array);
-    array.append(crc >> 8);
     array.append(0xff & crc);
+    array.append(crc >> 8);
 }
 
 uchar Crc::XorNum(uchar *buf, int len)

@@ -7,7 +7,7 @@
 #include "log_core.h"
 
 OP_ARtu::OP_ARtu(QObject *parent)
-    : OP_ObjCtrl{parent}
+    : Op_SerialNumber{parent}
 {
 
 }
@@ -99,7 +99,7 @@ bool OP_ARtu::loop_readData()
     if((recv.size() == 62) && (recv.at(2) == addr)) {
         res = loop_recvPacket(recv, mOpData);        
         loop_setEndisable(res, mOpData->ens[0]); loop_fillData();
-    } else if(recv.size()) cout << recv.size();
+    } else if(recv.size()) {cout << recv.size();} sn_read(addr);
 
     return res;
 }
