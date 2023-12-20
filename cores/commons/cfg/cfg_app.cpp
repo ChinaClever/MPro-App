@@ -75,7 +75,7 @@ bool Cfg_App::app_unpack(sAppVerIt &it)
     it.usr = readCfg("usr", "", g).toString();
     it.md5 = readCfg("md5", "", g).toString();
     it.ver = readCfg("ver", "", g).toString();
-    it.dev = readCfg("dev", "MPDU-Pro", g).toString();
+    it.dev = readCfg("dev", "MPro", g).toString();
     it.remark = readCfg("remark", "", g).toString();
     it.oldVersion = readCfg("oldVersion", "", g).toString();
 

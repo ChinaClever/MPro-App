@@ -304,7 +304,7 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
 void Integr_JsonBuild::devInfo(const sDevCfg &it, const QString &key, QJsonObject &json)
 {
     QJsonObject obj; double r = 1;
-    //obj.insert("pdu_type", "MPDU-Pro");
+    //obj.insert("pdu_type", "MPro");
     obj.insert("line_num", it.nums.lineNum/r);
     obj.insert("pdu_spec", it.param.devSpec/r);
     obj.insert("dev_mode", it.param.devMode/r);
