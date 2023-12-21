@@ -187,7 +187,7 @@ bool Ota_Net::versionCheck(const QString &dir)
             } else {
                 throwMessage("version dev type "+it.dev);
                 str = cm::masterDev()->cfg.vers.dev;if(str.size()) {
-                    if(str != it.dev) {
+                    if((str != it.dev) /*&& !it.dev.contains("-Pro")*/) {
                         QString msg = "version dev type err: currnet type %1 up type:%2";
                         throwMessage(msg.arg(str, it.dev)); ret = false;
                         if(!dir.contains("/tmp/mass_storage/sda1")) mLastError = 2;
