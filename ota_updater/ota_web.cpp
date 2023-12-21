@@ -50,7 +50,6 @@ bool Ota_Web::web_readRsaSig(sOtaFile &it)
     if(ok) msg += "ok"; else {msg += "error"; ota_error(4);}
     throwMessage(msg);
 
-    ok = false;
     return ok;
 }
 
