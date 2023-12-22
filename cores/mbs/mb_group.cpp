@@ -68,7 +68,7 @@ void Mb_Group::group_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_GroupThreshol;
     sObjData *obj = &(cm::devData(addr)->group);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg%15+1; sDataItem it; it.id = id;
+    int id = reg%15; sDataItem it; it.id = id+1;
     it.type = DType::Group; it.addr = addr;
 
     switch (reg/75) {

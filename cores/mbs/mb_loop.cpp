@@ -89,14 +89,14 @@ void Mb_Loop::loop_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_LoopThreshol;
     sObjData *obj = &(cm::devData(addr)->loop);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg/15+1; sDataItem it; it.id = id;
+    int id = reg/15; sDataItem it; it.id = id+1;
     it.type = DType::Loop; it.addr = addr;
 
     switch (reg%15/5) {
     case 0: unit = &(obj->vol); it.topic = DTopic::Vol; break;
     case 1: unit = &(obj->cur); it.topic = DTopic::Cur; break;
-    case 3: unit = &(obj->pow); it.topic = DTopic::Pow; break;
-    default: cout << addr << address; return;
+    case 2: unit = &(obj->pow); it.topic = DTopic::Pow; break;
+    default: cout << addr << address << reg%15/5; return;
     }
 
     reg = reg % 5; switch (reg) {
@@ -105,7 +105,7 @@ void Mb_Loop::loop_setting(ushort addr, ushort address, ushort value)
     case 2: ptr = unit->crMax; it.subtopic = DSub::VCrMax; break;
     case 3: ptr = unit->crMin; it.subtopic = DSub::VCrMin; break;
     case 4: ptr = unit->min; it.subtopic = DSub::VMin; break;
-    default: cout << addr << address;; break;
+    default: cout << addr << address << reg; break;
     }
 
     bool ret = alarmUnitCheck(reg, id, unit, value);

@@ -153,6 +153,7 @@ void Mb_Output::output_upDelay(uchar addr, uchar id, ushort value)
     unit.type = DType::Output;
     unit.topic = DTopic::Relay;
     unit.subtopic = DSub::UpDelay;
+    cout << addr << id << value;
 
     uint *ptr = cm::devData(addr)->output.relay.powerUpDelay;
     if(ptr[unit.id] != value) {setting(unit, value);} ptr[id] = value;
@@ -163,13 +164,13 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_OutputThreshol;
     sObjData *obj = &(cm::devData(addr)->output);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg%50+1; sDataItem it; it.id = id;
+    int id = reg%50; sDataItem it; it.id = id+1;
     it.type = DType::Output; it.addr = addr;
 
     switch (reg/250) {
     case 0: unit = &(obj->cur); it.topic = DTopic::Cur; break;
     case 1: unit = &(obj->pow); it.topic = DTopic::Pow; break;
-    case 2: output_upDelay(addr, id, value); return;
+    case 2: output_upDelay(addr, id+1, value); return;
     default: cout << addr << address << value; return;
     }
 
