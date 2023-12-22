@@ -163,7 +163,7 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_OutputThreshol;
     sObjData *obj = &(cm::devData(addr)->output);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg%50; sDataItem it; it.id = id+1;
+    int id = reg%50+1; sDataItem it; it.id = id;
     it.type = DType::Output; it.addr = addr;
 
     switch (reg/250) {

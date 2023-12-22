@@ -80,7 +80,7 @@ void Mb_Line::line_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_LineThreshol;
     sObjData *obj = &(cm::devData(addr)->line);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg/15; sDataItem it; it.id = id+1;
+    int id = reg/15+1; sDataItem it; it.id = id;
     it.type = DType::Line; it.addr = addr;
 
     switch (reg%15/5) {
