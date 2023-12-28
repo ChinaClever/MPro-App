@@ -78,7 +78,7 @@ void Mb_Env::env_setting(ushort addr, ushort address, ushort value)
     ushort reg = address - MbReg_EnvThreshol;
     sEnvData *obj = &(cm::devData(addr)->env);
     sAlarmUnit *unit = nullptr; uint *ptr = nullptr;
-    int id = reg/10+1; sDataItem it; it.id = id;
+    int id = reg/10; sDataItem it; it.id = id+1;
     it.type = DType::Env; it.addr = addr;
 
     switch (reg%10/5) {

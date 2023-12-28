@@ -148,7 +148,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort address, ushort value)
 void Mb_Output::output_upDelay(uchar addr, uchar id, ushort value)
 {
     sDataItem unit;
-    unit.id = id;
+    unit.id = id+1;
     unit.addr = addr;
     unit.type = DType::Output;
     unit.topic = DTopic::Relay;
@@ -170,7 +170,7 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
     switch (reg/250) {
     case 0: unit = &(obj->cur); it.topic = DTopic::Cur; break;
     case 1: unit = &(obj->pow); it.topic = DTopic::Pow; break;
-    case 2: output_upDelay(addr, id+1, value); return;
+    case 2: output_upDelay(addr, id, value); return;
     default: cout << addr << address << value; return;
     }
 

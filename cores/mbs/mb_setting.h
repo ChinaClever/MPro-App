@@ -17,7 +17,7 @@ private:
     void addrSet(ushort &v);
     void buzzerSw(uchar addr, ushort &v);
     void startSet(ushort addr, ushort reg, ushort &value);
-    void timeSet(ushort addr, ushort &value);
+    void timeSet(ushort addr, ushort reg, ushort &value);
     void datetimeSet(ushort addr, ushort &value);
     void restoreFactoryDefaults(ushort addr);
 

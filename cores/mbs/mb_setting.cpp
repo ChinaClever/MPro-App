@@ -35,6 +35,7 @@ void Mb_Setting::upSetData()
 
 void Mb_Setting::addrSet(ushort &v)
 {
+    if(!Mb_Core::modbusCfg.enRtu) return;
     if(mDevData->cfg.param.modbusRtuAddr != v) {
         Cfg_Com::bulid()->writeCfg("addr", v, "modbus");
         Mb_Core::modbusCfg.addrRtu = v; setAddress(v);
@@ -46,9 +47,8 @@ void Mb_Setting::buzzerSw(uchar addr, ushort &v)
 {
     sDevData *dev = cm::devData(addr);
     if(dev->cfg.param.buzzerSw != v) {
-        sCfgItem it;
-        it.addr = addr;
-        it.type = SFnCode::EModbus;
+        sCfgItem it; it.addr = addr;
+        it.type = SFnCode::EDevInfo;
         it.fc = 7; setCfg(it, v);
     }
 
@@ -71,21 +71,24 @@ void Mb_Setting::startSet(ushort addr, ushort reg, ushort &value)
     case MbReg_SetBuzzer: buzzerSw(addr, value); break;
     case MbReg_SetDry: drySw(value); break;
     case MbReg_SetEle: output_clearEle(addr, 0);  break;
-     //case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, value); break;
+    case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, reg, value); break;
     }
 }
 
 
-void Mb_Setting::timeSet(ushort addr, ushort &value)
+void Mb_Setting::timeSet(ushort addr,  ushort reg, ushort &value)
 {
     static uint t = 0;
-    if(addr%2) {
+    if(reg%2) {
         t = value << 16;
     } else {
         t += value;
         QDateTime dt = QDateTime::fromTime_t(t);
         QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
-        App_Core::bulid()->ntp_time(str); //cout << str;
+        //App_Core::bulid()->ntp_time(str); //cout << str;
+        sCfgItem it; it.addr = addr;
+        it.type = SFnCode::ENtp;
+        it.fc = 1; setCfg(it, str);
     }
 }
 

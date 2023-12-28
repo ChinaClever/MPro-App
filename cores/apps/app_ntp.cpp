@@ -61,7 +61,7 @@ bool App_Ntp::ntp_time(const QString &t)
 {
     bool ret = true;
     QDateTime dt = QDateTime::fromString(t, "yyyy-MM-dd hh:mm:ss");
-    QDateTime localDate = QDateTime::fromString("2022-09-01 10:40:00", "yyyy-MM-dd hh:mm:ss");
+    QDateTime localDate = QDateTime::fromString("2023-12-01 10:40:00", "yyyy-MM-dd hh:mm:ss");
     if(dt > localDate) {
         QString qstrDateTime = QString("date -s '%1'").arg(t); qDebug() << qstrDateTime;
         system(qstrDateTime.toStdString().c_str()); system("hwclock -w -u"); system("sync");
@@ -73,8 +73,8 @@ bool App_Ntp::ntpdate()
 {
     bool ret = true;
     if(ntpCfg.ntp_host.size()) {
-        QString cmd = QString("ntpdate %1").arg(ntpCfg.ntp_host);
-        qDebug() << cmd; system(cmd.toStdString().c_str());
+            QString cmd = QString("ntpdate %1 &").arg(ntpCfg.ntp_host);
+            qDebug() << cmd; system(cmd.toStdString().c_str());
     } else ret = false;
     return ret;
 }
