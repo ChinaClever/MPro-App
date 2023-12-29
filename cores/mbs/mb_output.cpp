@@ -136,7 +136,7 @@ void Mb_Output::output_ctrl(ushort addr, ushort address, ushort value)
 
         if(value < 2) {
             uint *ptr = cm::devData(addr)->output.relay.sw;
-            if(ptr[unit.id] == value) return;
+            if(ptr[unit.id-1] == value) return;
         } setting(unit, value);
     } else {
         int id = (reg+1) % 50;
@@ -185,6 +185,6 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
 
     bool ret = alarmUnitCheck(reg, id, unit, value);
     if(ptr && ret && ptr[id] != value) setting(it, value);
-    if(ptr) ptr[id] = value;
+    if(ptr && ret) ptr[id] = value;
 }
 

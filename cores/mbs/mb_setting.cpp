@@ -71,19 +71,21 @@ void Mb_Setting::startSet(ushort addr, ushort reg, ushort &value)
     case MbReg_SetBuzzer: buzzerSw(addr, value); break;
     case MbReg_SetDry: drySw(value); break;
     case MbReg_SetEle: output_clearEle(addr, 0);  break;
-    case MbReg_SetTime: case MbReg_SetTime+1: timeSet(addr, reg, value); break;
+    default: timeSet(addr, reg, value); break;
     }
 }
 
 
 void Mb_Setting::timeSet(ushort addr,  ushort reg, ushort &value)
 {
-    static uint t = 0;
-    if(reg%2) {
-        t = value << 16;
-    } else {
-        t += value;
-        QDateTime dt = QDateTime::fromTime_t(t);
+    static ushort buf[10] = {2023,1,1,12,0,0};
+
+    reg -= MbReg_SetTime;
+    if(reg < 5) buf[reg] = value;
+    else if(reg == 5) {
+        QDate date(buf[0], buf[1], buf[2]);
+        QTime time(buf[3], buf[4], buf[5]);
+        QDateTime dt(date, time);
         QString str = dt.toString("yyyy-MM-dd hh:mm:ss");
         //App_Core::bulid()->ntp_time(str); //cout << str;
         sCfgItem it; it.addr = addr;
