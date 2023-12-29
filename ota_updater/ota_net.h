@@ -18,6 +18,7 @@ private:
     bool versionCheck(const QString &dir);
     void workDown(const QString &fn, int bit);
     int cmd_updater(const QString &fn, int bit);
+    bool containsMAndPro(const QString& str);
     bool up_rootfs(const QString &path);
     bool rootfsExists(const QString &path);
     bool outletCheck(const QString &dir);

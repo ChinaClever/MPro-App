@@ -40,9 +40,9 @@ enum eMbRegs {
     MbReg_Setting = 3000,    // 配置参数
     MbReg_SetAddr = 30001, // 通讯地址
     MbReg_SetBuzzer = 3002, // 蜂鸣器开关
-    MbReg_SetTime = 3003,
-    MbReg_SetEle = 3005,
-    MbReg_SetDry = 3006, // 报警干接点开关
+    MbReg_SetTime = 3004,
+    MbReg_SetEle = 3003,
+    MbReg_SetDry = 3010, // 报警干接点开关
 
     MbReg_Restores = 4000,  // 恢复出厂设置
     MbReg_DualCtr = 4301,
