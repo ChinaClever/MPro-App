@@ -33,15 +33,18 @@ Log_Sys::Log_Sys(QObject *parent)
 void Log_Sys::sys_logInfo(const sEventItem &it)
 {
     if(sysLogCfg.en==2){
-        QJsonObject json;
-        json.insert("type", it.event_type);
-        json.insert("content", it.event_content);
+        //QJsonObject json;
+        //json.insert("type", it.event_type);
+        //json.insert("content", it.event_content);
         QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
 
         QJsonObject jsonObject;
         jsonObject.insert("dev", "PDU");
         jsonObject.insert("uuid", uuid);
-        jsonObject.insert("event", json);
+        //jsonObject.insert("event", json);
+        jsonObject.insert("alarm_event", 1);
+        jsonObject.insert("state_type", it.event_type);
+        jsonObject.insert("content", it.event_content);
         jsonObject.insert("datetime", it.datetime);
         QJsonDocument jsonDocument(jsonObject);
         QString jsonString = jsonDocument.toJson(); // QJsonDocument::Compact
@@ -53,15 +56,19 @@ void Log_Sys::sys_logInfo(const sEventItem &it)
 void Log_Sys::sys_logAlarm(const sAlarmItem &it)
 {
     if(sysLogCfg.en) {
-        QJsonObject json;
-        json.insert("status", it.alarm_status);
-        json.insert("content", it.alarm_content);
+        //QJsonObject json;
+        //json.insert("status", it.alarm_status);
+        //json.insert("content", it.alarm_content);
         QString uuid = cm::devData(it.addr)->cfg.uut.uuid;
 
         QJsonObject jsonObject;
         jsonObject.insert("dev", "PDU");
         jsonObject.insert("uuid", uuid);
-        jsonObject.insert("alarm", json);
+        //jsonObject.insert("alarm", json);
+        jsonObject.insert("alarm_event", 2);
+        jsonObject.insert("state_type", it.alarm_status);
+        jsonObject.insert("content", it.alarm_content);
+
         jsonObject.insert("datetime", it.datetime);
         QJsonDocument jsonDocument(jsonObject);
         QString jsonString = jsonDocument.toJson(); // QJsonDocument::Compact
