@@ -330,7 +330,7 @@ int mkdir(const char *, mode_t);
 #include <unistd.h>
 
 #ifndef MG_ENABLE_DIRLIST
-#define MG_ENABLE_DIRLIST 1
+#define MG_ENABLE_DIRLIST 0
 #endif
 
 #ifndef MG_PATH_MAX
