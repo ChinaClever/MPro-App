@@ -293,7 +293,7 @@ void Integr_JsonBuild::verInfo(const sVersions &it, const QString &key, QJsonObj
 
     QJsonArray vs, sn, temps;
     sn = OP_Core::bulid()->sn_json();
-    obj.insert("op_sn", vs); json.insert(key, obj);
+    obj.insert("op_sn", sn); json.insert(key, obj);
     for(uint i=0; i<6; ++i) vs.append(it.opVers[i]/10.0);
     obj.insert("op_vers", vs); json.insert(key, obj);
 
