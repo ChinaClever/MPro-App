@@ -233,9 +233,11 @@ int App_NetAddr::inet_dhcpUpdate()
     return t;
 }
 
+
 void App_NetAddr::inet_updateInterface()
 {
     int t = inet_dhcpUpdate(); mCnt += t;
+    QString gwCmd = "ip route show default | awk '/default/ {print $3}'";
     QTimer::singleShot(t*1000,this,&App_NetAddr::inet_updateInterface);
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
@@ -254,6 +256,7 @@ void App_NetAddr::inet_updateInterface()
                     net->inet.prefixLen = entry.prefixLength();//获取子网掩码
                     qstrcpy(net->inet.ip, hostIp.toString().toLatin1().constData()); //获取ip
                     qstrcpy(net->inet.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
+                    qstrcpy(net->inet.gw, cm::execute(gwCmd).toLatin1().constData());
                     break;
 
                 case QAbstractSocket::IPv6Protocol:
