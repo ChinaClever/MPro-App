@@ -36,7 +36,7 @@ void App_Core::compileTime()
 
 void App_Core::initUuid()
 {
-    QString fn = "/usr/data/clever/cfg/uuid.conf";
+    QString fn = "/usr/data/pdu/cfg/uuid.conf";
     if(!QFile::exists(fn)) {
         if(QDate::currentDate().year() < 2023) return;
         QString uuid = QUuid::createUuid().toString();
@@ -71,8 +71,8 @@ void App_Core::initRoot(const QString &sn)
 void App_Core::initVer()
 {
     sVersions *ver = &(cm::masterDev()->cfg.vers);
-    sAppVerIt it; Cfg_App cfg("/usr/data/clever/");
-    if(QFile::exists("/usr/data/clever/ver.ini")) {
+    sAppVerIt it; Cfg_App cfg("/usr/data/pdu/");
+    if(QFile::exists("/usr/data/pdu/ver.ini")) {
         cfg.app_unpack(it); cm::buildDateTime(ver->compileDate);
         qstrcpy(ver->ver, it.ver.toUtf8().data());
         qstrcpy(ver->md5, it.md5.toUtf8().data());
@@ -87,14 +87,14 @@ void App_Core::initVer()
         //cout << sizeof(ver->remark) << it.remark << ver->remark;
     } else {ver->md5[0] = 0; cout << CFG_APP << "error";}
 
-    QString fn = "/usr/data/clever/cfg/sn.conf";
+    QString fn = "/usr/data/pdu/cfg/sn.conf";
     if(it.sn.isEmpty() && QFile::exists(fn)) {
         QString sn = cm::execute("cat " + fn);
         qstrcpy(ver->serialNumber, sn.toUtf8().data());
         cfg.app_serialNumber(sn);
     } initRoot(ver->serialNumber);
 
-    fn = "/usr/data/clever/cfg/prod_date.conf";
+    fn = "/usr/data/pdu/cfg/prod_date.conf";
     if(QFile::exists(fn)) {
         QString res = cm::execute("cat " + fn);
         qstrcpy(ver->prodDate, res.toUtf8().data());

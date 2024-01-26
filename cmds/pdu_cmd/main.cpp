@@ -18,8 +18,8 @@ void usage()
     cout << "*    pduDataSet      addr   type   topic  sub    id  value" <<endl;
     cout << "*    pduCfgSet       type   fc     value  [id]   [addr] " <<endl;
     cout << "*    pduCfgGet       type   fc     [id]   [addr]" <<endl;
-    cout << "*    pduLogFun       type   fc     [id]   [cnt]" <<endl;
-    cout << "*    pduLogHda       start  [end]  [addr] [type] [topic] [id]"<<endl;
+    // cout << "*    pduLogFun       type   fc     [id]   [cnt]" <<endl;
+    // cout << "*    pduLogHda       start  [end]  [addr] [type] [topic] [id]"<<endl;
     cout << "*    pduMetaData     [addr] [dc]" <<endl;
     cout << "*******************************************************" <<endl;
 }

@@ -54,8 +54,8 @@ void App_Led::led_initFun()
 
 void App_Led::led_factoryRestore()
 {
-    QString fn = "/usr/data/clever/cfg/factory_restore.ini";
-    QString dst = "/usr/data/clever/cfg/factory_restore.conf";
+    QString fn = "/usr/data/pdu/cfg/factory_restore.ini";
+    QString dst = "/usr/data/pdu/cfg/factory_restore.conf";
     if(QFile::exists(fn) || QFile::exists(dst)) m_fr = true; else m_fr = false;
 }
 

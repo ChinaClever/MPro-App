@@ -22,7 +22,7 @@ void App_RunTime::runing_initFunSlot()
     qstrcpy(run->start, t.toLatin1().data());
     cm::buildDateTime(run->compileTime);
 
-    QString fn = "/usr/data/clever/cfg/proc_cnt.conf";
+    QString fn = "/usr/data/pdu/cfg/proc_cnt.conf";
     int cnt = cm::execute("cat "+fn).toInt();
     cm::masterDev()->startCnt = cnt;
 }

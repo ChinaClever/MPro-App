@@ -65,8 +65,8 @@ void Daemons::initFun()
 void Daemons::resetProc(sRunTime &proc, const QString &name)
 {
     QString cmd = "killall " + name;
-    system("chmod 755 -R /usr/data/clever/bin");
-    system("chmod 755 -R /usr/data/clever/app");
+    system("chmod 755 -R /usr/data/pdu/bin");
+    system("chmod 755 -R /usr/data/pdu/app");
     system(cmd.toLatin1().data()); mdelay(100);
     proc_log(name +"_exit"); mdelay(100);
     proc_start(proc, name); mdelay(5000);

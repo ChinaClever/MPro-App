@@ -88,15 +88,15 @@ bool Set_TlsCert::createTlsCert()
     str = "openssl x509 -req -extfile /usr/lib/ssl/openssl.cnf -extensions v3_req -in cert/client-req.csr -out cert/client-cert.pem -signkey cert/client-key.pem -CAkey cert/root-key.key -CAcreateserial -days 3650";
     if(ret) ret = systemCmd(str);
 #else
-    QString str = "openssl genrsa -out /usr/data/clever/certs/client-key.pem 2048\n";
+    QString str = "openssl genrsa -out /usr/data/pdu/certs/client-key.pem 2048\n";
     bool ret = systemCmd(str);
-    str = QString("openssl req -new -out /usr/data/clever/certs/client-req.csr -key /usr/data/clever/certs/client-key.pem -subj %1\n").arg(sub);
+    str = QString("openssl req -new -out /usr/data/pdu/certs/client-req.csr -key /usr/data/pdu/certs/client-key.pem -subj %1\n").arg(sub);
     if(ret) ret = systemCmd(str);
-    str = "openssl genrsa -out /usr/data/clever/certs/root-key.key 2048\n";
+    str = "openssl genrsa -out /usr/data/pdu/certs/root-key.key 2048\n";
     if(ret) ret = systemCmd(str);
-    str = QString("openssl req -new -out /usr/data/clever/certs/root-req.csr -key /usr/data/clever/certs/root-key.key -subj %1\n").arg(sub);
+    str = QString("openssl req -new -out /usr/data/pdu/certs/root-req.csr -key /usr/data/pdu/certs/root-key.key -subj %1\n").arg(sub);
     if(ret) ret = systemCmd(str);
-    str = "openssl x509 -req -extfile /etc/ssl/openssl.cnf -extensions v3_req -in /usr/data/clever/certs/client-req.csr -out /usr/data/clever/certs/client-cert.pem -signkey /usr/data/clever/certs/client-key.pem -CAkey /usr/data/clever/certs/root-key.key -CAcreateserial -days 3650";
+    str = "openssl x509 -req -extfile /etc/ssl/openssl.cnf -extensions v3_req -in /usr/data/pdu/certs/client-req.csr -out /usr/data/pdu/certs/client-cert.pem -signkey /usr/data/pdu/certs/client-key.pem -CAkey /usr/data/pdu/certs/root-key.key -CAcreateserial -days 3650";
     if(ret) ret = systemCmd(str);
 #endif
     tlsCertLog(0);
@@ -105,7 +105,7 @@ bool Set_TlsCert::createTlsCert()
 
 void Set_TlsCert::tlsCertName()
 {
-    QString dir = "/usr/data/clever/certs";
+    QString dir = "/usr/data/pdu/certs";
     QStringList fs = File::entryList(dir);
     foreach (const auto &it, fs) {
         if(it == "." || it == "..") continue;
@@ -122,7 +122,7 @@ void Set_TlsCert::tlsCertName()
 void Set_TlsCert::tlsCertLog(int fc)
 {
     sEventItem db; QStringList fs;
-    QString dir = "/usr/data/clever/certs";
+    QString dir = "/usr/data/pdu/certs";
     db.event_type = QStringLiteral("证书管理");
     if(cm::language()) db.event_type = "certificates";
     switch (fc) {

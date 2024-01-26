@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QFontDatabase::addApplicationFont("/usr/data/clever/fonts/roboto/Roboto-Medium.ttf");
+    QFontDatabase::addApplicationFont("/usr/data/pdu/fonts/roboto/Roboto-Medium.ttf");
 
 
     MainWindow w;

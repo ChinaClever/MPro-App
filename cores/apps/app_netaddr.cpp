@@ -109,7 +109,7 @@ void App_NetAddr::inet_setIpV4()
         //qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
+            if(QFile::exists("/usr/data/pdu/bin/netcfg")) {
                 cmd = "netcfg -g %1 eth0"; str = cmd.arg(gw);
             } else {
                 cmd = "ip route replace default via %1 dev %2";
@@ -139,7 +139,7 @@ void App_NetAddr::inet_setIpV6()
         QString dns2 = net->inet6.dns2;
         int mask = net->inet6.prefixLen;
         QString cmd, str;
-        if(QFile::exists("/usr/data/clever/bin/netcfg")) {
+        if(QFile::exists("/usr/data/pdu/bin/netcfg")) {
             cmd = "netcfg -i %1/%2 eth0";
             str = cmd.arg(ip).arg(mask);
         } else {
@@ -148,7 +148,7 @@ void App_NetAddr::inet_setIpV6()
         } system(str.toStdString().c_str()); // qDebug() << str;
 
         if(gw.size()) {
-            if(QFile::exists("/usr/data/clever/bin/netcfg")) {
+            if(QFile::exists("/usr/data/pdu/bin/netcfg")) {
                 cmd = "netcfg -g %1 eth0";
                 str = cmd.arg(gw);
             } else {
@@ -233,13 +233,30 @@ int App_NetAddr::inet_dhcpUpdate()
     return t;
 }
 
+QString App_NetAddr::getIpv4GatewayAddress()
+{
+    QString gw = cm::dataPacket()->net.inet.gw;
+    QString cmd = "ip route show dev eth0 | awk '/default/ {print $3}'";
+    QStringList res = cm::execute(cmd).split(" ");
+    if(res.size() > 4) gw = res.at(2);
+    //cout << res << gw;
+    return gw;
+}
+
+QString App_NetAddr::getIpv6GatewayAddress()
+{
+    QString gw = cm::dataPacket()->net.inet6.gw;
+    QString cmd = "ip -6 route show dev eth0 | awk '/default/ {print $3}'";
+    QString res = cm::execute(cmd).split("\n", QString::SkipEmptyParts).last();
+    QStringList lst = res.split(" "); if(lst.size() > 4) gw = lst.at(0);
+    //cout << cm::execute(cmd).split("\n") << res << lst <<  gw;
+    return gw;
+}
 
 void App_NetAddr::inet_updateInterface()
 {
     int t = inet_dhcpUpdate(); mCnt += t;
     QTimer::singleShot(t*1000,this,&App_NetAddr::inet_updateInterface);
-    QString gwCmd = "ip route show dev eth0 | awk '/default/ {print $3}'";
-    QString gwv6Cmd = "ip -6 route show dev eth0 | awk '/default/ {print $3}'";
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     if(net->inet6.dhcp && net->inet6.en)inet_setIpV4();
@@ -247,6 +264,8 @@ void App_NetAddr::inet_updateInterface()
         if(interface.name() != "eth0") continue;
         qstrcpy(net->name, interface.name().toLatin1().constData());//设备名称
         qstrcpy(net->mac, interface.hardwareAddress().toLatin1().constData());//获取并输出mac地址
+        qstrcpy(net->inet.gw, getIpv4GatewayAddress().toLatin1().constData());
+        qstrcpy(net->inet6.gw, getIpv6GatewayAddress().toLatin1().constData());
         QList<QNetworkAddressEntry>entryList=interface.addressEntries();//获取ip地址和子网掩码和广播地址
         foreach(QNetworkAddressEntry entry, entryList) {//便利ip条目列表
             QHostAddress hostIp = entry.ip();
@@ -257,14 +276,12 @@ void App_NetAddr::inet_updateInterface()
                     net->inet.prefixLen = entry.prefixLength();//获取子网掩码
                     qstrcpy(net->inet.ip, hostIp.toString().toLatin1().constData()); //获取ip
                     qstrcpy(net->inet.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
-                    qstrcpy(net->inet.gw, cm::execute(gwCmd).toLatin1().constData());
                     break;
 
                 case QAbstractSocket::IPv6Protocol:
                     if((0==net->inet6.en) || net->inet6.dhcp) {
                         qstrcpy(net->inet6.ip, hostIp.toString().remove("%eth0").toLatin1().constData()); //获取ip
                         qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
-                        qstrcpy(net->inet6.gw, cm::execute(gwv6Cmd).toLatin1().constData());
                         net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
                     } str = hostIp.toString() + "/" + QString::number(entry.prefixLength());
                     if(k<3)qstrcpy(net->inet6.reserve[k++], str.remove("%eth0").toLatin1().constData());

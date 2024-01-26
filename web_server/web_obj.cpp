@@ -5,7 +5,7 @@
  */
 #include "web_obj.h"
 #include "web_core.h"
-extern QString web_ip_addr();
+extern QStringList web_ip_addr();
 
 Web_Obj::Web_Obj(QObject *parent)
     : QObject{parent}
@@ -25,9 +25,9 @@ Web_Obj *Web_Obj::bulid(QObject *parent)
 QString Web_Obj::md5Hash(const QString& input)
 {
     QByteArray msg = input.toLatin1().toBase64();
-    int size = 2; mUuidList << msg;
-    if(Web_Http::cfg.multi_users) size = 6;
-    if(mUuidList.size() > size) mUuidList.removeAt(1);
+    int size = web_ip_addr().size()+1; mUuidList << msg;
+    if(Web_Http::cfg.multi_users) size += 6;
+    if(mUuidList.size() > size) mUuidList.removeAt(web_ip_addr().size());
     return msg;
 }
 
@@ -40,14 +40,10 @@ QString Web_Obj::createUuid()
 bool Web_Obj::checkUuid(const QString &uuid, bool set)
 {
     bool ret = false;
-    if(mUuidList.isEmpty()) md5Hash(web_ip_addr());
+    if(mUuidList.isEmpty()) foreach (const auto &ip, web_ip_addr()) md5Hash(ip);
     if(set) if(mUuidList.first() == uuid) return false;
-    if(mUuidList.contains(uuid)) ret = true;
-    else cout << uuid << mUuidList;
-
-//    if(Web_Http::cfg.multi_users) ret = true;
-//    else if((uuid == " ") || (mUuid == uuid)) ret = true;
-//    else cout << mUuid << uuid;
+    if(mUuidList.contains(uuid)) ret = true; // || uuid == "QA=="
+    else cout << uuid << mUuidList.size() << mUuidList;
     return ret;
 }
 

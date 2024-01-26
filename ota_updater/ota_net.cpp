@@ -76,7 +76,7 @@ bool Ota_Net::up_rootfs(const QString &path)
         //cout << ota->rootfs.progress;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
     } else {
-        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString fmd = "cp -af %1* /usr/data/pdu/";
         QString cmd = fmd.arg(path);
         system(cmd.toLatin1().data());
         throwMessage(cmd);
@@ -91,8 +91,8 @@ void Ota_Net::workDown(const QString &fn, int bit)
 #if (QT_VERSION < QT_VERSION_CHECK(5,15,0))
     QString dir = "/tmp/updater/ota_apps/";
     if(DOtaCode::DOta_Usb == bit) dir = fn;
-    system("chmod 777 -R /usr/data/clever/"); system("sync");
-    QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/clever/";
+    system("chmod 777 -R /usr/data/pdu/"); system("sync");
+    QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/pdu/";
     QString cmd = fmd.arg(dir); cmd = cm::execute(cmd); throwMessage(cmd);
 
     up_rootfs(dir);
@@ -147,13 +147,13 @@ void Ota_Net::rebootSlot()
 {
     system("rm -rf /usr/data/upload");
     system("rm -rf /tmp/updater/ota_apps");
-    system("chmod 777 -R /usr/data/clever/");
-    system("chmod 777 /usr/data/clever/bin/*");
-    system("chmod 777 /usr/data/clever/app/*");
-    system("rm -rf /usr/data/clever/outlet/*");
-    system("rm -rf /usr/data/clever/cfg/proc_cnt.conf");
+    system("chmod 777 -R /usr/data/pdu/");
+    system("chmod 777 /usr/data/pdu/bin/*");
+    system("chmod 777 /usr/data/pdu/app/*");
+    system("rm -rf /usr/data/pdu/outlet/*");
+    system("rm -rf /usr/data/pdu/cfg/proc_cnt.conf");
     throwMessage("start now reboot"); cm::mdelay(1);
-    system("sync"); system("reboot");
+    system("sync"); system("reboot"); system("reboot");
 }
 
 bool Ota_Net::outletCheck(const QString &dir)

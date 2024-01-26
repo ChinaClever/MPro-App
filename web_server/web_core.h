@@ -3,7 +3,7 @@
 
 #include "web_http.h"
 #define SUPPORT_C 1
-#include "/home/lzy/work/mpro-app/cores/commons/cms/datapacket.h"
+#include "../cores/commons/cms/datapacket.h"
 #define SHM_KEY	0x5105
 
 
@@ -16,7 +16,7 @@ public:
     bool app_upgrade(const QString &fn);
 
 private:
-    void web_initFun(char *ip);
+    void web_initFun();
     sDataPacket *init_share_mem();
     void init_webCfg(sWebCfg &web);
 

@@ -87,7 +87,7 @@ void Log_Sys::sys_open()
 void Log_Sys::sys_initfun()
 {
     sSysLogCfg *cfg = &sysLogCfg;
-    QString fn = "/usr/data/clever/bin/";
+    QString fn = "/usr/data/pdu/bin/";
     if(QFile::exists(fn+"rsyslogcfg") && cfg->en) {
         QString fmd = "rsyslogcfg udp %1 %2 7";
         QString cmd = fmd.arg(cfg->host).arg(cfg->port);

@@ -41,10 +41,10 @@ void Agent_Trap::timeoutDone()
 
 void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 {
-    QString msg = "Alarm: ";
-    QSNMPOid oid = mModuleOid;
+    QSNMPOid oid = mModuleOid; QString msg = "Alarm ";
+    if(value) msg += "elimination "; else msg += "generation ";
     oid << index.addr;  QSNMPOid dstOid = oid;
-    msg += " addr " + QString::number(index.addr);
+    msg += ": addr " + QString::number(index.addr);
 
     switch (index.type) {
     case DType::Line: oid << 1;  msg += " line "; break;
@@ -77,7 +77,7 @@ void Agent_Trap::alarmSlot(const sDataItem &index, uchar value)
 //    else oid << 7;
 
     if(value) {
-        QString doid = toString(dstOid << 1); // dstOid << 11   2
+        QString doid = toString(dstOid << 0); // dstOid << 11   2
         sAgentCfg *cfg = &Agent_Core::snmpCfg;
         for(int i=0; i<SNMP_TRAP_SIZE; ++i) {
             QString ip = cfg->trap[i]; if(ip.size()) {

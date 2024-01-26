@@ -155,9 +155,9 @@ void Cascade_Updater::otaRecvFinishSlot(const sOtaFile &it, bool ok)
         QString dir = "/tmp/updater/ota_apps/";
         QString str = "unzip -o %1 -d " + dir;
         qDebug() << cm::execute(str.arg(fn));
-        system("chmod 777 -R /usr/data/clever/");
+        system("chmod 777 -R /usr/data/pdu/");
         system("chmod 777 -R /tmp/updater/ota_apps/");
-        QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/clever/";
+        QString fmd = "rsync -av --exclude rootfs/  %1 /usr/data/pdu/";
         QString cmd = fmd.arg(dir); throwMessage(cmd);
         str = cm::execute(cmd); throwMessage(str);
         Set_Core::bulid()->ota_updater(1, fn);
@@ -192,7 +192,7 @@ void Cascade_Updater::otaRootfs(const QString &path)
         ota->rootfs.progress = 100;
         clrbit(cm::dataPacket()->ota.work, DOta_Rootfs);
     } else {
-        QString fmd = "cp -af %1* /usr/data/clever/";
+        QString fmd = "cp -af %1* /usr/data/pdu/";
         QString cmd = fmd.arg(path);
         system(cmd.toLatin1().data());
         throwMessage(cmd);
@@ -201,11 +201,11 @@ void Cascade_Updater::otaRootfs(const QString &path)
 
 void Cascade_Updater::otaReboot()
 {
-    system("rm -rf /usr/data/clever/cfg/proc_cnt.conf");
-    system("rm -rf /usr/data/clever/outlet/*");
-    system("chmod 777 -R /usr/data/clever/");
-    system("chmod 777 /usr/data/clever/bin/*");
-    system("chmod 777 /usr/data/clever/app/*");
+    system("rm -rf /usr/data/pdu/cfg/proc_cnt.conf");
+    system("rm -rf /usr/data/pdu/outlet/*");
+    system("chmod 777 -R /usr/data/pdu/");
+    system("chmod 777 /usr/data/pdu/bin/*");
+    system("chmod 777 /usr/data/pdu/app/*");
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
     system("sync"); system("reboot");

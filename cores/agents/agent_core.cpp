@@ -28,7 +28,7 @@ void Agent_Core::startSnmpdV3()
     QString id = "oldEngineID ";
     if(!mCfg->enV3) return; //cout << mCfg->enV3;
     system("chmod 777 /usr/data/etc/snmp/snmpd.conf");
-    QString dst = "/usr/data/clever/cfg/snmpd.conf";
+    QString dst = "/usr/data/pdu/cfg/snmpd.conf";
     QString src = "/usr/data/etc/snmp/snmpd.conf";
     for(int i=0; i<3; ++i) {
         QString cmd = "sed -n '%1p' " + src; char buf[256]={0};
@@ -49,7 +49,7 @@ void Agent_Core::startSnmpd()
     QString ret = cm::execute("proc_run snmpd");
     if(ret.toInt()) return ;    /*检查snmpd进程是否已经在运行，如果是，则函数返回*/
 
-    QString custom = "/usr/data/clever/cfg/";
+    QString custom = "/usr/data/pdu/cfg/";
     if(QFile::exists(custom + fn)) {
         cmd += custom + fn + " &";      /*如果文件"custom + fn"存在，将cmd追加为custom + fn + &*/
     } else if(QFile::exists("/usr/data/etc/"+fn)) {
@@ -65,7 +65,7 @@ void Agent_Core::startSnmpd()
 
 QByteArray Agent_Core::snmdConf()
 {
-    QString fn = "/usr/data/clever/cfg/snmpd.conf";
+    QString fn = "/usr/data/pdu/cfg/snmpd.conf";
     QByteArray res; QFile file(fn);
     if(file.open(QIODevice::ReadOnly)) {
         res = file.readAll();
@@ -82,12 +82,12 @@ void Agent_Core::set_snmpdV3()
     if(idx > 0 ) res = res.mid(0, idx);
     if(mCfg->enV3) res.append(cmd);
 
-    QString fn = "/usr/data/clever/cfg/snmpd.conf"; QFile file(fn);
+    QString fn = "/usr/data/pdu/cfg/snmpd.conf"; QFile file(fn);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         file.write(res.toLatin1());
     } file.close();
 #else
-    QString fn = "/usr/data/clever/cfg/snmpd.conf";
+    QString fn = "/usr/data/pdu/cfg/snmpd.conf";
     for(int i=57; i<65; ++i) {
         QString str = "sed -i '%1c ' " + fn;
         system(str.arg(i).toStdString().c_str());

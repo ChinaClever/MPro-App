@@ -56,7 +56,7 @@ bool Set_Info::setSwVersion(int fc, const QVariant &v)
     if(9 == fc) {
         if(cm::cipp(v)) return false;
         QString fmd = "echo '%1' > %2";
-        QString fn = "/usr/data/clever/cfg/prod_date.conf";
+        QString fn = "/usr/data/pdu/cfg/prod_date.conf";
         QString cmd = fmd.arg(v.toString(), fn);
         system(cmd.toStdString().c_str());
     }else ret = false;

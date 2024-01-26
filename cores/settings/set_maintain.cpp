@@ -32,9 +32,9 @@ bool Set_Maintain::syscmd(int fc)
 
 void Set_Maintain::clearLogs()
 {
-    system("chmod 777 /usr/data/clever/cfg/logs.db");
-    system("rm -rf /usr/data/clever/cfg/relay.conf");
-    system("rm -rf /usr/data/clever/cfg/logs.db");
+    system("chmod 777 /usr/data/pdu/cfg/logs.db");
+    system("rm -rf /usr/data/pdu/cfg/relay.conf");
+    system("rm -rf /usr/data/pdu/cfg/logs.db");
 }
 
 void Set_Maintain::factoryRestore()
@@ -46,10 +46,10 @@ void Set_Maintain::factoryRestore()
 
     QStringList fns;
     OP_Core::bulid()->setDelay(0, 1);
-    QString dir = "/usr/data/clever/cfg/";
+    QString dir = "/usr/data/pdu/cfg/";
     Cfg_Core::bulid()->devParamRestoreFactory();
-    system("chmod 777 /usr/data/clever/cfg/*");
-    system("echo '1' > /usr/data/clever/cfg/factory_restore.ini");
+    system("chmod 777 /usr/data/pdu/cfg/*");
+    system("echo '1' > /usr/data/pdu/cfg/factory_restore.ini");
     fns << "proc_cnt.conf" << "cfg.ini" << "alarm.conf"; // << "logs.db";
     if(!cm::dataPacket()->net.inet.dhcp) fns << "inet.ini";
 
@@ -87,14 +87,14 @@ bool Set_Maintain::restores(int fc, const QVariant &v)
 QString Set_Maintain::profileBackup()
 {
     QString fmd = "zip -vr %1 %2";
-    QString src = "/usr/data/clever/cfg";
+    QString src = "/usr/data/pdu/cfg";
     QString dst = "/tmp/download/cfg.zip";
     QString cmd = fmd.arg(dst, src);
     system("rm -rf /tmp/download/*");
     system(cmd.toLocal8Bit().data());
 
     QStringList fns;
-    QString dir = "usr/data/clever/cfg/";
+    QString dir = "usr/data/pdu/cfg/";
     fns << "mac.conf" << "uuid.conf" << "sn.conf";
     foreach (const auto &fn, fns) {
         QString fmd = "zip -d %1 %2%3";
@@ -116,7 +116,7 @@ QString Set_Maintain::profileBackup()
 QString Set_Maintain::batchBackup()
 {
     QStringList fns;
-    QString dir = "usr/data/clever/cfg/";
+    QString dir = "usr/data/pdu/cfg/";
     fns << "inet.ini" << "devParam.ini";
     fns << "logs.db" << "qrcode.png" << "proc_cnt.conf";
     //fns << "uuid.conf" << "sn.conf" << "mac.conf";
@@ -168,9 +168,9 @@ bool Set_Maintain::restory(const QString &fn)
     bool ret = true; if(QFile::exists(fn)) {
         QString fmd = "unzip -o %1 -d /";
         QString cmd = fmd.arg(fn); qDebug() << cmd;
-        system("chmod 775 /usr/data/clever/cfg/*");
+        system("chmod 775 /usr/data/pdu/cfg/*");
         system(cmd.toLatin1().data()); //cm::mdelay(50);
-        system("chmod 775 /usr/data/clever/cfg/*");
+        system("chmod 775 /usr/data/pdu/cfg/*");
         cm::execute("rm -rf " + fn);
         m_thread = new std::thread(dev_restart);
         m_thread->detach(); //子线程与主线程分离

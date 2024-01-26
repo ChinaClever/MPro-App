@@ -27,7 +27,7 @@ void ProcStart::proc_md5(sRunTime &proc, const QString &fn)
 
 void ProcStart::proc_start(sRunTime &proc, const QString &app)
 {
-    QString path = ""; //"/usr/data/clever/app/";
+    QString path = ""; //"/usr/data/pdu/app/";
     QString fn = path + app;
     if(proc_isRun(app)) return;
 

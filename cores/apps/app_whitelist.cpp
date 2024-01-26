@@ -15,7 +15,7 @@ App_WhiteList::App_WhiteList(QObject *parent)
 void App_WhiteList::internetFirewall()
 {
     bool ret = false; sWhiteListCfg *cfg = &whiteListCfg;
-    if(cfg->en && QFile::exists("/usr/data/clever/bin/netcfg")) {
+    if(cfg->en && QFile::exists("/usr/data/pdu/bin/netcfg")) {
         system("netcfg -s on"); system("netcfg -a '127.0.0.1 - - -'");
         for(int i=0; i<WHITE_LIST_NUM; ++i) {
             QString ip = cfg->ip[i]; //if(ip.isEmpty()) ip = "-";

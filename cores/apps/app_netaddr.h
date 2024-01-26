@@ -20,6 +20,8 @@ private:
     void inet_dnsCfg();
     int inet_dhcpUpdate();
     void inet_writeCfg(const sNetAddr &inet, const QString &g);
+    QString getIpv4GatewayAddress();
+    QString getIpv6GatewayAddress();
 
 private:
     int mCnt = 1;

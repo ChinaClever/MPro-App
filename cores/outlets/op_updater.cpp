@@ -39,9 +39,9 @@ void OP_Updater::onOtaFinish(uchar addr, bool ok)
 
 void OP_Updater::ota_reboot()
 {
-    system("chmod 777 /usr/data/clever/bin/*");
-    system("chmod 777 /usr/data/clever/app/*");
-    system("rm -rf /usr/data/clever/outlet/*");
+    system("chmod 777 /usr/data/pdu/bin/*");
+    system("chmod 777 /usr/data/pdu/app/*");
+    system("rm -rf /usr/data/pdu/outlet/*");
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
 
@@ -67,7 +67,7 @@ bool OP_Updater::ota_updates()
             emit otaFinish(i, ret); cm::mdelay(5*1200);
         } cm::mdelay(220); isOta = false; up->isRun = ret?0:2;
         clrbit(cm::dataPacket()->ota.work, DOta_Outlet);
-        if(ret) system("rm -rf /usr/data/clever/outlet/*");
+        if(ret) system("rm -rf /usr/data/pdu/outlet/*");
         if(!cm::dataPacket()->ota.work) ota_reboot();
     }
 

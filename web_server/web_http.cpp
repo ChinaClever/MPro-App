@@ -13,7 +13,7 @@ static const char *s_web_root = "/home/lzy/work/NPDU/web";
 #else
 static const char *s_listen_on = "ws://0.0.0.0:";
 static const char *s_https_addr = "wss://0.0.0.0:";  // HTTPS port
-static const char *s_web_root = "/usr/data/clever/web";
+static const char *s_web_root = "/usr/data/pdu/web";
 static const char *s_ipv6_listen_on = "ws://[::]:";
 static const char *s_ipv6_https_addr = "wss://[::]:";
 #endif
@@ -137,7 +137,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
         }else if(mg_http_match_uri(hm, "/index.html/snmp.mib")){
             mgr_download_file(c , hm , "/index.html/snmp.mib");
         }else if(mg_http_match_uri(hm, "/upload")){
-            //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/certs/%s",file_path);
+            //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/pdu/certs/%s",file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
@@ -146,7 +146,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
-                mg_snprintf(file_path , sizeof(file_name) , "/usr/data/clever/certs/%s",file_name);
+                mg_snprintf(file_path , sizeof(file_name) , "/usr/data/pdu/certs/%s",file_name);
                 mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 99999);
                 system("pdu_cmd pduCfgSet 32 32 1");
             }
@@ -217,7 +217,7 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             }
             if(file_path[0] != '\0') Web_Obj::bulid()->restores(1,file_path);
         }else if(mg_http_match_uri(hm, "/upload_logo")){
-            //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/clever/cfg/%s" , file_path);
+            //mgr_upload_small_file(&c , &hm  , &fp , "/usr/data/pdu/cfg/%s" , file_path);
             mg_http_get_var(&hm->query , "name" , file_name , sizeof(file_name));
             mg_http_get_var(&hm->query , "uid" , uid , sizeof(uid));
             if(!Web_Obj::bulid()->checkUuid(uid, true)) return;
@@ -226,9 +226,9 @@ void Web_Http::fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data)
             if(file_name[0] == '\0'){
                 mg_http_reply(c , 400 , "","%s","name required");
             }else{
-                mg_snprintf(file_path , sizeof(file_name) , "/usr/data/clever/cfg/%s",file_name);
+                mg_snprintf(file_path , sizeof(file_name) , "/usr/data/pdu/cfg/%s",file_name);
                 mg_http_upload(c , hm , &mg_fs_posix , mg_remove_double_dots(file_path) , 2*1024*1024);
-                QString str = "mv " + QString(file_path) + " /usr/data/clever/cfg/logo.png";
+                QString str = "mv " + QString(file_path) + " /usr/data/pdu/cfg/logo.png";
                 system(str.toStdString().c_str());
             }
             memset(file_path , 0 , sizeof(file_path));
@@ -266,10 +266,10 @@ void Web_Http::mgr_download_file(struct mg_connection *c,struct mg_http_message 
     }else if(0 == strcmp("/index.html/diagnosis.zip" , path)){
         mg_http_serve_file(c , hm , Web_Obj::bulid()->diag().toLatin1().data() , &opts);
     }else if(0 == strcmp("/index.html/modbus.xlsx" , path)){
-        mg_http_serve_file(c , hm , "/usr/data/clever/doc/modbus.xlsx" , &opts);
+        mg_http_serve_file(c , hm , "/usr/data/pdu/doc/modbus.xlsx" , &opts);
     }else if(0 == strcmp("/index.html/snmp.mib" , path)){
         opts.mime_types = "mib=a/b,txt=c/d";
-        mg_http_serve_file(c , hm , "/usr/data/clever/doc/snmp.mib" , &opts);
+        mg_http_serve_file(c , hm , "/usr/data/pdu/doc/snmp.mib" , &opts);
     }
 }
 

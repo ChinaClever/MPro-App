@@ -40,8 +40,8 @@ Log_Core *Log_Core::bulid(QObject *parent)
 
 void Log_Core::factoryRestore()
 {
-    QString fn = "/usr/data/clever/cfg/factory_restore.ini";
-    QString dst = "/usr/data/clever/cfg/factory_restore.conf";
+    QString fn = "/usr/data/pdu/cfg/factory_restore.ini";
+    QString dst = "/usr/data/pdu/cfg/factory_restore.conf";
     sEventItem it; if(QFile::exists(fn)) {
         if(cm::cn()) {
             it.event_type = QStringLiteral("恢复");

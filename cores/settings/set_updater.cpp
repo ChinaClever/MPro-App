@@ -45,7 +45,7 @@ QVariant Set_Updater::otaStatus(sCfgItem &cfg)
 
 void Set_Updater::ota_log()
 {
-    QString dir = "/usr/data/clever/";
+    QString dir = "/usr/data/pdu/";
     sOtaItem it; sAppVerIt ver; Cfg_App cfg(dir);
     bool ret = cfg.app_unpack(ver);
     if(ret) {
@@ -143,7 +143,7 @@ bool Set_Updater::ota_cascade(const QString &fn)
 
 bool Set_Updater::ota_outlet()
 {    
-    QString dir = "/usr/data/clever/outlet/";
+    QString dir = "/usr/data/pdu/outlet/";
     QStringList fns = File::entryList(dir); bool ret = false;
     foreach (const auto &fn, fns) {
         if((fn == ".") || (fn == "..")) continue;
