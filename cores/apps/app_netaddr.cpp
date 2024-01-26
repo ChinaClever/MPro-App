@@ -237,8 +237,9 @@ int App_NetAddr::inet_dhcpUpdate()
 void App_NetAddr::inet_updateInterface()
 {
     int t = inet_dhcpUpdate(); mCnt += t;
-    QString gwCmd = "ip route show default | awk '/default/ {print $3}'";
     QTimer::singleShot(t*1000,this,&App_NetAddr::inet_updateInterface);
+    QString gwCmd = "ip route show dev eth0 | awk '/default/ {print $3}'";
+    QString gwv6Cmd = "ip -6 route show dev eth0 | awk '/default/ {print $3}'";
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
     if(net->inet6.dhcp && net->inet6.en)inet_setIpV4();
@@ -263,6 +264,7 @@ void App_NetAddr::inet_updateInterface()
                     if((0==net->inet6.en) || net->inet6.dhcp) {
                         qstrcpy(net->inet6.ip, hostIp.toString().remove("%eth0").toLatin1().constData()); //获取ip
                         qstrcpy(net->inet6.mask, entry.netmask().toString().toLatin1().constData()); //获取子网掩码
+                        qstrcpy(net->inet6.gw, cm::execute(gwv6Cmd).toLatin1().constData());
                         net->inet6.prefixLen = entry.prefixLength();//获取子网掩码
                     } str = hostIp.toString() + "/" + QString::number(entry.prefixLength());
                     if(k<3)qstrcpy(net->inet6.reserve[k++], str.remove("%eth0").toLatin1().constData());
