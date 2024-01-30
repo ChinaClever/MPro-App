@@ -74,10 +74,10 @@ static void init_netWork()
 
 static void init_mem()
 {
-    if(!QFile::exists("/usr/data/pdu")) {
+    QDir dir("/usr/data/pdu"); if(!dir.exists()) {
         system("mv /usr/data/clever /usr/data/pdu");
-    } system("ln -sf /usr/data/pdu /usr/data/clever");
-    system("echo 3 >/proc/sys/vm/drop_caches");
+        system("ln -sf /usr/data/pdu /usr/data/clever");
+    } system("echo 3 >/proc/sys/vm/drop_caches");
 }
 
 
