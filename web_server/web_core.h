@@ -16,17 +16,19 @@ public:
     bool app_upgrade(const QString &fn);
 
 private:
-    void web_initFun();
+    void web_initFun();    
     sDataPacket *init_share_mem();
     void init_webCfg(sWebCfg &web);
 
 private slots:
     void initFunSlot();
+    void netAddrSlot();
     void web_onTimeoutDone();
 
 private:
     QTimer *timer = nullptr;
     sRunTime *mRun = nullptr;
+    sDataPacket *m_shm = nullptr;
 };
 
 #endif // WEB_CORE_H

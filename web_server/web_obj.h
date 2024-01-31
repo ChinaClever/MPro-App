@@ -31,6 +31,7 @@ public:
     bool checkUuid(mg_str &r, bool set=false);
     bool checkUuid(const QString &uuid, bool set);
     QString md5Hash(const QString& input);
+    void clearUuid() {mUuidList.clear();}
 
 private:
     JsonRpc_Client *mRpc;

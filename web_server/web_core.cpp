@@ -16,7 +16,8 @@ QStringList web_ip_addr(){return g_ip_addr;}
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
-    QTimer::singleShot(4840,this,SLOT(initFunSlot()));
+    QTimer::singleShot(1634,this,SLOT(initFunSlot()));
+    QTimer::singleShot(7840,this,SLOT(netAddrSlot()));
 }
 
 Web_Core *Web_Core::bulid(QObject *parent)
@@ -26,18 +27,25 @@ Web_Core *Web_Core::bulid(QObject *parent)
     return sington;
 }
 
+void Web_Core::netAddrSlot()
+{
+    g_ip_addr.clear(); for(int i=0; i<3; ++i) {
+        QString ptr = m_shm->net.inet6.reserve[i];
+        if(ptr.size() > 3) g_ip_addr << QString("[%1]").arg(ptr.split("/").first());
+    } g_ip_addr << QString("[%1]").arg(m_shm->net.inet6.ip);
+    g_ip_addr << m_shm->net.inet.ip; g_ip_addr.removeDuplicates();
+    if(m_shm->net.inet.dhcp || m_shm->net.inet6.dhcp) Web_Obj::bulid()->clearUuid();
+}
+
 void Web_Core::initFunSlot()
 {
     sDataPacket *shm = init_share_mem();
     timer = new QTimer(this); timer->start(1000); mgr_init();
     connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
     if(mRun) {
-        web_initFun(); for(int i=0; i<3; ++i) {
-            QString ptr = shm->net.inet6.reserve[i];
-            if(ptr.size() > 3) g_ip_addr << QString("[%1]").arg(ptr.split("/").first());
-        } g_ip_addr << QString("[%1]").arg(shm->net.inet6.ip);
-        g_ip_addr << shm->net.inet.ip;
-        g_ip_addr.removeDuplicates();
+        web_initFun(); int t = 150;
+        if(shm->net.inet.dhcp || shm->net.inet6.dhcp) t += 2840;
+        QTimer::singleShot(t,this,SLOT(netAddrSlot()));
     }
 }
 
