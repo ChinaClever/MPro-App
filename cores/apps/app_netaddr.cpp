@@ -180,8 +180,7 @@ void App_NetAddr::inet_dnsCfg()
     QString str = cm::execute("cat /tmp/resolv.conf");
     QStringList res, lst = str.split("\n");
     foreach (auto s, lst) res << s.remove("nameserver ").remove(" # eth0");
-    if(res.isEmpty()) return;
-    //qDebug() << str << res;
+    if(res.isEmpty()) return; // else qDebug() << str << res;
 
     net->inet.dns[0] = 0;
     net->inet.dns2[0] = 0;
@@ -189,7 +188,6 @@ void App_NetAddr::inet_dnsCfg()
     net->inet6.dns2[0] = 0;
 
     if(res.size() > 1) {
-        str = res.takeFirst();
         str = res.takeFirst();
         qstrcpy(net->inet.dns, str.toLocal8Bit().data());
         if(!res.size()) return ;
