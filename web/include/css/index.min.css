@@ -12,7 +12,8 @@ html {
     float: left;
     min-width: 180px;
     /* background: #2b333e */
-    background: #083266
+    background: #083266;
+    position: relative;
 }
 
 .side-box a {
@@ -33,7 +34,7 @@ html {
     background: #083266;
     border-bottom: 1px solid #28303a;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1)
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 }
 
 .sys-title>h1 {
@@ -50,7 +51,15 @@ html {
     max-width: 500px;
     margin: 0 auto;
     border: none;
-    outline: 0
+    outline: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate( -50% , -50%);
+    -webkit-transform: translate( -50% , -50%);
+    -moz-transform: translate( -50% , -50%);
+    -o-transform: translate( -50% , -50%);
+    -ms-transform: translate( -50% , -50%);
 }
 
 .nav {
