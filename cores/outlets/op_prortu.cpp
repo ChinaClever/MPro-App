@@ -155,6 +155,9 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 
     if(v < 3) {
         int size = sizeof(mOpData->vol);
+        memset(mOpData->activePow, 0, size);
+        memset(mOpData->reactivePow, 0, size);
+        memset(mOpData->ele, 0, size);
         memset(mOpData->cur, 0, size);
         memset(mOpData->pow, 0, size);
         memset(mOpData->pf, 0, size);
