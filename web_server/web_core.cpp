@@ -16,7 +16,7 @@ QStringList web_ip_addr(){return g_ip_addr;}
 
 Web_Core::Web_Core(QObject *parent) : Web_Http{parent}
 {
-    QTimer::singleShot(1634,this,SLOT(initFunSlot()));
+    QTimer::singleShot(4634,this,SLOT(initFunSlot()));
     QTimer::singleShot(7840,this,SLOT(netAddrSlot()));
 }
 
@@ -39,7 +39,7 @@ void Web_Core::netAddrSlot()
 
 void Web_Core::initFunSlot()
 {
-    sDataPacket *shm = init_share_mem();
+    sDataPacket *shm = m_shm = init_share_mem();
     timer = new QTimer(this); timer->start(1000); mgr_init();
     connect(timer, SIGNAL(timeout()),this, SLOT(web_onTimeoutDone()));
     if(mRun) {
