@@ -590,7 +590,7 @@ class PduCfgs extends PduCfgObj {
         this.getCfgList(93, fcs);
     }
     modesetCfg(){
-        let fcs = [3,4,7,8,9,10,21];
+        let fcs = [3,4,7,8,9,10,21,22];
         this.getCfgList(13, fcs);
     }
     placesetCfg() {

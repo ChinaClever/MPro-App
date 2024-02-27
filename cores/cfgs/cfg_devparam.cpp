@@ -80,7 +80,7 @@ void Cfg_devParam::devParamRead(sParameter &it)
     it.backlightType = cfg->readCfg("backlightType", 0, g).toInt();
     it.backlightTime = cfg->readCfg("backlightTime", 6, g).toInt();
     it.jsonContent = cfg->readCfg("jsonContent", 1, g).toInt();
-    it.jsonCompress = cfg->readCfg("jsonCompress", 0, g).toInt();
+    it.oldProtocol = cfg->readCfg("oldProtocol", 0, g).toInt();
     it.standNeutral = cfg->readCfg("standNeutral", 0, g).toInt();
     it.webBackground = cfg->readCfg("webBackground", 0, g).toInt();
     it.groupEn = cfg->readCfg("groupEn", 0, g).toInt();
