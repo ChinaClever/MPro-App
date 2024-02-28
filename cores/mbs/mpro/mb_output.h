@@ -15,6 +15,7 @@ protected:
     void output_setting(ushort addr, ushort address, ushort value);
     void output_dualCtrl(ushort addr, ushort address, ushort value);
 
+
 private:
     void output_dataObj(vshort &vs, int id);
     void output_objUpdate();

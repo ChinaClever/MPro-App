@@ -10,7 +10,7 @@
 #include "mqtt_client.h"
 #include "agent_core.h"
 #include "app_core.h"
-#include "mb_core.h"
+#include "mbs/mb_core.h"
 #include "qrabbitmq.h"
 #include "odbc_obj.h"
 #include "redis_obj.h"

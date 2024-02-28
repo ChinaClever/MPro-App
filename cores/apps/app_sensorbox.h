@@ -18,6 +18,10 @@ private:
     ushort getShort(uchar *ptr);
     bool box_recvPacket(const QByteArray &array);
 
+    bool box_readDataii();
+    void box_offlineii();
+    bool box_recvPacketii(const QByteArray &array);
+
 private:
     bool box_isRun=true;
     SerialPort *mSerial=nullptr;

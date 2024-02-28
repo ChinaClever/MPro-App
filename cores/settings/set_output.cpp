@@ -26,7 +26,6 @@ void Set_Output::relayOpLog(const sDataItem &it)
         if(cm::cn()) {
             if(it.type == DType::Group) str += QStringLiteral("组开关 ");
             else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
-            else if(it.type == DType::Dual) str += QStringLiteral("双电源开关 ");
             else str += QStringLiteral(" 输出位继电器 ");
             switch (it.value) {
             case 2: str += QStringLiteral("复位"); break;
@@ -35,7 +34,6 @@ void Set_Output::relayOpLog(const sDataItem &it)
             } //if(it.value) str += QStringLiteral("闭合"); else str += QStringLiteral("断开");
         } else {
             if(it.type == DType::Group) str += "group switch ";
-            else if(it.type == DType::Dual) str += "group switch ";
             else if(it.type == DType::Dual) str += "Dual power switch ";
             else str += "Output position relay ";
             if(it.value) str += "close"; else str += "break";

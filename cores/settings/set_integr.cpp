@@ -4,7 +4,7 @@
  *      Author: Lzy
  */
 #include "set_integr.h"
-#include "mb_core.h"
+#include "mbs/mb_core.h"
 #include "agent_core.h"
 #include "rpc_service.h"
 #include "integr_core.h"

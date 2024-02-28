@@ -58,11 +58,11 @@ QStringList Ftp_Csv::csv_outletHeader(int addr, QString& title)
     QStringList header; if(cm::cn()) {
         header << "时间" << "输出位";
         if(devSpec > 2) header << "开关";
-        if(devSpec !=3 ) header << "电流(A)" << "有功功率(KW)" << "视在功率(KVA)" << "功率因素" << "电能(KWh)";
+        if(devSpec !=3 ) header << "电流(A)" << "有功功率(kW)" << "视在功率(kVA)" << "功率因数" << "电能(kWh)";
     } else {
         header << "time" << "output";
         if(devSpec > 2) header << "relay switch";
-        if(devSpec !=3 ) header << "current(A)" << "active power(KW)" << "active power(KVA)" << "active power" << "active power(KWh)";
+        if(devSpec !=3 ) header << "current(A)" << "active power(kW)" << "active power(kVA)" << "active power" << "active power(kWh)";
     }
 
     return header;
@@ -83,9 +83,9 @@ QStringList Ftp_Csv::csv_lineHeader(int addr, QString& title)
     title = csv_headerCommon(addr) + str;
 
     QStringList header; if(cm::cn()) {
-        header << "时间" << "相" << "电压(V)" << "电流(A)" << "有功功率(KW)" << "视在功率(KVA)" << "功率因素" << "电能(KWh)";
+        header << "时间" << "相" << "电压(V)" << "电流(A)" << "有功功率(kW)" << "视在功率(kVA)" << "功率因数" << "电能(kWh)";
     } else {
-        header << "time" << "L" << "voltage(V)" << "current(A)" << "active power(KW)" << "active power(KVA)" << "active power" << "active power(KWh)";
+        header << "time" << "L" << "voltage(V)" << "current(A)" << "active power(kW)" << "active power(kVA)" << "active power" << "active power(kWh)";
     }
 
     return header;
@@ -109,11 +109,11 @@ QStringList Ftp_Csv::csv_loopHeader(int addr, QString& title)
     QStringList header; if(cm::cn()) {
         header << "时间" << "回路";
         if(isBreaker) header << "断路器";
-        header << "电压(V)" << "电流(A)" << "有功功率(KW)" << "视在功率(KVA)" << "功率因素" << "电能(KWh)";
+        header << "电压(V)" << "电流(A)" << "有功功率(kW)" << "视在功率(kVA)" << "功率因数" << "电能(kWh)";
     } else {
         header << "time" << "loop";
         if(isBreaker) header << "breaker switch";
-        header << "voltage(V)" << "current(A)" << "active power(KW)" << "active power(KVA)" << "active power" << "active power(KWh)";
+        header << "voltage(V)" << "current(A)" << "active power(kW)" << "active power(kVA)" << "active power" << "active power(kWh)";
     }
 
     return header;
@@ -133,9 +133,9 @@ QStringList Ftp_Csv::csv_dualHeader(int addr, QString& title)
     title = csv_headerCommon(addr) + str;
 
     QStringList header; if(cm::cn()) {
-        header << "时间" << "服务器" << "有功功率(KW)" << "视在功率(KVA)" << "功率因素" << "电能(KWh)";
+        header << "时间" << "服务器" << "有功功率(kW)" << "视在功率(kVA)" << "功率因数" << "电能(kWh)";
     } else {
-        header << "time" << "server" << "active power(KW)" << "active power(KVA)" << "active power" << "active power(KWh)";
+        header << "time" << "server" << "active power(kW)" << "active power(kVA)" << "active power" << "active power(kWh)";
     }
 
     return header;
@@ -156,9 +156,9 @@ QStringList Ftp_Csv::csv_totalHeader(int addr, QString& title)
     title = csv_headerCommon(addr) + str;
 
     QStringList header; if(cm::cn()) {
-        header << "时间" << "有功功率(KW)" << "视在功率(KVA)" << "功率因素" << "总电能(KWh)";
+        header << "时间" << "有功功率(kW)" << "视在功率(kVA)" << "功率因数" << "总电能(kWh)";
     } else {
-        header << "time" << "active power(KW)" << "active power(KVA)" << "active power" << "active power(KWh)";
+        header << "time" << "active power(kW)" << "active power(kVA)" << "active power" << "active power(kWh)";
     }
 
     return header;

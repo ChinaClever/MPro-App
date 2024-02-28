@@ -5,7 +5,7 @@
  */
 #include "mb_setting.h"
 #include "app_core.h"
-#include "mb_core.h"
+#include "../mb_core.h"
 #include "cfg_core.h"
 
 

@@ -187,4 +187,3 @@ void Mb_Output::output_setting(ushort addr, ushort address, ushort value)
     if(ptr && ret && ptr[id] != value) setting(it, value);
     if(ptr && ret) ptr[id] = value;
 }
-

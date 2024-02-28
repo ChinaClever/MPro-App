@@ -107,4 +107,3 @@ void Mb_Line::line_setting(ushort addr, ushort address, ushort value)
 
 
 
-

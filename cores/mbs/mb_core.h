@@ -1,7 +1,8 @@
 #ifndef MB_CORE_H
 #define MB_CORE_H
 
-#include "mb_update.h"
+#include "mpro/mb_update.h"
+#include "mpdu/mpdurtu_update.h"
 
 class Mb_Core : public QThread
 {
@@ -33,6 +34,8 @@ private:
     QTimer *mTimer;
     Mb_Update *mRtu;
     Mb_Update *mTcp;
+    Mpdurtu_Update *mMpduRtu;
+    Mpdurtu_Update *mMpduTcp;
     sModbusSetting *mCfg;
 };
 

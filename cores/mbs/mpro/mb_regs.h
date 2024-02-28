@@ -38,7 +38,7 @@ enum eMbRegs {
     MbReg_EnvThreshol = 4001,
 
     MbReg_Setting = 3000,    // 配置参数
-    MbReg_SetAddr = 30001, // 通讯地址
+    MbReg_SetAddr = 3001, // 通讯地址
     MbReg_SetBuzzer = 3002, // 蜂鸣器开关
     MbReg_SetTime = 3004,
     MbReg_SetEle = 3003,

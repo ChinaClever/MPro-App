@@ -150,7 +150,7 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
     } else {
         cout << value/COM_RATE_PF;
         sEventItem it; it.event_type = tr("PF");
-        if(cm::cn()) it.event_content = tr("输出位 %1 功率因素错误2%").arg(id+1).arg(value/COM_RATE_PF);
+        if(cm::cn()) it.event_content = tr("输出位 %1 功率因数错误2%").arg(id+1).arg(value/COM_RATE_PF);
         else it.event_content = tr("Output bit %1 power factor error 2%").arg(id+1).arg(value/COM_RATE_PF);
         Log_Core::bulid()->append(it);
     }
