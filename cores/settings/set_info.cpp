@@ -92,6 +92,7 @@ int Set_Info::devInfoCfg(int addr, int type)
     case 18: ret = it->webBackground; break;
     case 19: ret = it->supplyVol; break;
     case 21: ret = it->jsonContent; break;
+    case 22: ret = it->oldProtocol; break;
     default: cout << type; break;
     }
 
@@ -121,7 +122,7 @@ bool Set_Info::setInfoCfg(int fc, int value)
     case 17: key = "standNeutral"; it->standNeutral = value; break;
     case 18: key = "webBackground"; it->webBackground = value; break;
     case 21: key = "jsonContent"; it->jsonContent = value; break;
-    case 22: key = "jsonCompress"; it->jsonCompress = value; break;
+    case 22: key = "oldProtocol"; it->oldProtocol = value; break;
     default: ret = false; cout << fc; break;
     } if(ret && key.size()) Cfg_Core::bulid()->devParamWrite(key, value, prefix);
     if(it->cascadeAddr) {sCfgItem it; it.type  = 12; it.fc = 5; ret=setCfgNum(it, 0);}

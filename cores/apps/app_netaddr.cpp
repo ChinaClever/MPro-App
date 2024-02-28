@@ -178,8 +178,8 @@ void App_NetAddr::inet_dnsCfg()
     if(!QFile::exists("/tmp/resolv.conf")) return ;
     sNetInterface *net = &(cm::dataPacket()->net);
     QString str = cm::execute("cat /tmp/resolv.conf");
-    QStringList res, lst = str.split("\n");
-    foreach (auto s, lst) res << s.remove("nameserver ").remove(" # eth0");
+    QString lst = str.remove("search b").remove(" # eth0").remove("\n");
+    QStringList res = lst.split("nameserver ");
     if(res.isEmpty()) return; // else qDebug() << str << res;
 
     net->inet.dns[0] = 0;

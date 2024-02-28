@@ -243,7 +243,7 @@ struct sParameter {
     uint runTime; // 总运行时间 单位天
     uint vh; // 0:垂直 1:水平
     uint hz; // 产品实时频繁
-    uint jsonCompress; // 0：不压缩 1：压缩
+    uint oldProtocol; // 0：标准  1：兼容旧协议ＭＰＤＵ
     uint standNeutral; // 0-标准,1-中性
     uint webBackground; // 网页背景颜色
     uint reserve[17];

@@ -68,8 +68,8 @@ void Integr_PushThread::workDown()
         sDevData *dev = cm::devData(i);
         if(dev->offLine || i==0) {
             mArray = mJson->getJson(i); //cout << mArray.size();
-            if(cm::masterDev()->cfg.param.jsonCompress) {
-                mArray = cm::zipCompress(mArray); //cout << mArray.size();
+            if(cm::masterDev()->cfg.param.oldProtocol) { ///////======
+                //mArray = cm::zipCompress(mArray); //cout << mArray.size();
             } mAddr = i; emit pushSig();
         } if(isRun) delay(20);
     }
