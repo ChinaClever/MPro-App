@@ -30,7 +30,7 @@ Mb_Core *Mb_Core::bulid(QObject *parent)
 
 void Mb_Core::initFunSlot()
 {
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0){
+    if( cm::masterDev()->cfg.param.oldProtocol == 0 ){
         emit connectTcpSig();
         emit connectRtuSig();
     }else{
@@ -42,7 +42,7 @@ void Mb_Core::initFunSlot()
 void Mb_Core::setAddress(int addr)
 {
     mCfg->addrRtu = addr;
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) {
         mRtu->setAddress(addr);
     }else{
         mMpduRtu->setAddress(addr);
@@ -52,7 +52,7 @@ void Mb_Core::setAddress(int addr)
 void Mb_Core::setTcpAddress(int addr)
 {
     mCfg->addrTcp = addr;
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) {
         mTcp->setAddress(addr);
     }else{
         mMpduTcp->setAddress(addr);
@@ -61,7 +61,7 @@ void Mb_Core::setTcpAddress(int addr)
 
 void Mb_Core::setPort(int port)
 {
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) {
         bool ret = mTcp->isConnectedModbus(); mCfg->port = port;
         if(ret) mTcp->setModbus(QModbusDevice::NetworkPortParameter, port);
     }else{
@@ -81,7 +81,7 @@ void Mb_Core::setRtu(int parameter, const QVariant &value)
     case QModbusDevice::SerialStopBitsParameter: mCfg->stopBits = value.toInt(); break;
     default: ret = false; qDebug() << Q_FUNC_INFO; break;
     } if(ret){
-        if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+        if( cm::masterDev()->cfg.param.oldProtocol == 0) {
             mRtu->setModbus(parameter, value);
         }else{
             mMpduRtu->setModbus(parameter, value);
@@ -92,7 +92,7 @@ void Mb_Core::setRtu(int parameter, const QVariant &value)
 void Mb_Core::connectTcpSlot()
 {
     bool ret = false;
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) {
         mTcp->disconnectModbus();
         if(mCfg->enTcp) ret =mTcp->connectTcp(mCfg->addrTcp, mCfg->port);
         if(ret) {
@@ -112,11 +112,11 @@ void Mb_Core::connectTcpSlot()
 void Mb_Core::connectRtuSlot()
 {     
     bool ret = false;
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) mRtu->disconnectModbus();
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) mRtu->disconnectModbus();
     else mMpduRtu->disconnectModbus();
     int res = cm::masterDev()->cfg.param.devMode;
     if(res == EDevMode::DM_Rtu && mCfg->enRtu) {
-        if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+        if( cm::masterDev()->cfg.param.oldProtocol == 0) {
             ret = mRtu->connectRtu(*mCfg);
             if(ret)  {
                 mRtu->mbUpdates(0);
@@ -135,7 +135,7 @@ void Mb_Core::run()
 {
     static uint cnt = 0;
     bool ret = true;
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0) {
+    if( cm::masterDev()->cfg.param.oldProtocol == 0) {
         if(cnt++ %2) {
             ret = mRtu->isConnectedModbus();
             if(ret) mRtu->mbUpdates(0);

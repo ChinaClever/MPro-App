@@ -52,10 +52,11 @@
 		let mode_set = new Array();
 		let rack_set = new Array();
 		let sensor_set = new Array();
+		let protocol_mode = new Array();
 		let opt_val = new Array();
 		let sel_len = new Array();
-		let id_val = new Array("","","","mode","addr","","","buz","","sensor","","","","","","","","","","","","data_len");//,"group","energe","pow");
-		let id_val1 = new Array("mode","addr","buz","data_len");//,"group","energe","pow");
+		let id_val = new Array("","","","mode","addr","","","buz","","sensor","","","","","","","","","","","","data_len","protocol_mode");//,"group","energe","pow");
+		let id_val1 = new Array("mode","addr","buz","data_len","protocol_mode");//,"group","energe","pow");
 		let slave_num1 = 0;
 		let pdu_data;
 		let rack_stu;
@@ -106,6 +107,9 @@
 			lang[25] = ["启用","Enable","","",""];
 			lang[26] = ["禁用","Disable","","",""];
 			lang[27] = ["启用","Enable","","",""];
+			lang[28] = ["兼容旧协议:","Compatible with old protocols:","","",""];
+			lang[29] = ["标准","Standard","","",""];
+			lang[30] = ["兼容MPDU","Compatible with MPDU","","",""];
 
 
 			for(let j = 0;j < 2;j++){
@@ -114,6 +118,7 @@
 			}
 			for(let j = 0;j < 2;j++){
 				sensor_set[j] = lang[24 +j][language];
+				protocol_mode[j] = lang[29 +j][language];
 			}
 			opt_val[0] = lang[10][language];
 			opt_val[1] = lang[11][language];
@@ -132,8 +137,9 @@
 			document.getElementById("lang_14").innerHTML = lang[14][language];
 			document.getElementById("lang_21").innerHTML = lang[21][language];
 			document.getElementById("lang_23").innerHTML = lang[23][language];
+			document.getElementById("lang_28").innerHTML = lang[28][language];
 		}
-		let modeset_arr = [3,4,7,21,8,9,10];
+		let modeset_arr = [3,4,7,21,8,9,10,22];
 		function ReadData(){
 			for(let i = 0;i<modeset_arr.length;i++){
 				mode_data[i] = pdu_cfg.cfgValue(cfg,modeset_arr[i],0,addr);
@@ -234,6 +240,7 @@
 				// document.getElementById(id_val1[i]).value = mode_data[i];
 				document.getElementById("slave").value = slave_num1;
 				document.getElementById("sensor").value = sensor_data;
+				document.getElementById("protocol_mode").value = mode_data[7];
 			}
 			if(top.login_permit_ != 0){
 				document.getElementById("lang_21").style.display="none";
@@ -297,10 +304,19 @@
 		}
 		function SetData_other(btn){
 			let mds_data = 0;
+			
 			if(0 == language){
-				var retVal = confirm("请确认是否选择此功能！");	
+				if(btn.id == "protocol_mode"){
+					var retVal = confirm("请确认是否选择此功能,更改该功能需要重启才生效！");	
+				}else{
+					var retVal = confirm("请确认是否选择此功能！");
+				}	
 			}else{
-				var retVal = confirm("Please confirm if this feature is selected！");
+				if(btn.id == "protocol_mode"){
+					var retVal = confirm("Please confirm if this feature is selected. Changing this feature requires to restart to take effect！");	
+				}else{
+					var retVal = confirm("Please confirm if this feature is selected！");
+				}
 			}
 			if(retVal == true){
 				for(let  i = 0;i < id_val.length;i++){
@@ -366,7 +382,7 @@
 			tbody += '</select></td></tr>';
 
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
-			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
+			tbody += '<tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				 + '<tbody>' + tbody + '</tbody>';
 		}
@@ -392,6 +408,15 @@
 				tbody +='<option value ="'+i+'">'+sensor_set[i] +'</option>';
 			}
 			tbody += '</select></td></tr>';
+			
+			tbody += '</select></td></tr>';
+			tbody += '<tr><td id = "lang_28"></td>';
+			tbody += '<td><select id ="protocol_mode" onchange ="SetData_other(this)">';
+			for(var i = 0; i<protocol_mode.length;i++){
+				tbody +='<option value ="'+i+'">'+protocol_mode[i] +'</option>';
+			}
+			tbody += '</select></td></tr>';
+
 			tbody += '<tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>';
 			return '<thead>' + thead + '</thead>'
 				+ '<tbody>' + tbody + '</tbody>';
