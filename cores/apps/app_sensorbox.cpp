@@ -167,15 +167,15 @@ void App_SensorBox::sensorBox_run()
         if(cm::masterDev()->cfg.param.sensorBoxEn) {
             bool ret = box_open();
             if(ret){
-                if(cm::masterDev()->cfg.nums.reserve[2] == 0){
-                    for(int i=0; i<3; ++i) {
-                        ret = box_readData(); if(ret) break;
-                    } if(!ret) box_offline();
-                }else{
+//                if(cm::masterDev()->cfg.nums.reserve[2] == 0){
+//                    for(int i=0; i<3; ++i) {
+//                        ret = box_readData(); if(ret) break;
+//                    } if(!ret) box_offline();
+//                }else{
                     for(int i=0; i<3; ++i) {
                         ret = box_readDataii(); if(ret) break;
                     } if(!ret) box_offlineii();
-                }
+//                }
             }
         } else {
             box_close();
