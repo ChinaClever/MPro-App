@@ -81,7 +81,7 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
     } else if(!proc_isRun(name)){   /*检查进程是否在运行*/
         resetProc(proc, name);      /*该程序不在运行则重新运行该程序*/
         ret = false; qDebug() << __FUNCTION__ << name;
-    } mdelay(100);
+    } mdelay(1250);
     return ret;
 }
 
@@ -91,9 +91,9 @@ void Daemons::workDown()
         procRunStatus(mProcs->core, "cores");
         procRunStatus(mProcs->web, "web_server");
         mProcs->daemon.runSec += 1; mdelay(1800);
-        if(5 == mProcs->daemon.runSec%30) {
+        if(29 == mProcs->daemon.runSec%30) {
             procRunStatus(mProcs->awtk, "awtk");
             procRunStatus(mProcs->ota, "ota_updater");
-        }mdelay(25000);
+        }mdelay(3500);
     }
 }
