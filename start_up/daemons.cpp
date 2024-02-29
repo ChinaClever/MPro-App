@@ -94,6 +94,6 @@ void Daemons::workDown()
         if(5 == mProcs->daemon.runSec%30) {
             procRunStatus(mProcs->awtk, "awtk");
             procRunStatus(mProcs->ota, "ota_updater");
-        }
+        }mdelay(25000);
     }
 }
