@@ -87,7 +87,7 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
 
 void Daemons::workDown()
 {
-    mdelay(6500); while(1) {
+    mdelay(16500); while(1) {
         procRunStatus(mProcs->core, "cores");
         procRunStatus(mProcs->web, "web_server");
         procRunStatus(mProcs->ota, "ota_updater");

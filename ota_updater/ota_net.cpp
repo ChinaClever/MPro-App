@@ -137,7 +137,8 @@ void Ota_Net::ota_updater(const sOtaFile &it, int bit, bool ok)
                 QString cmd = "rm -f " + fn;
                 system(cmd.toLocal8Bit());
                 system("rm -rf /usr/data/upload/*");
-                system("sync"); system("reboot");
+                system("sync"); system("reboot"); system("reboot");
+                system("echo 'c' > /proc/sysrq-trigger");
             }
         }
     } clrbit(mOta->work, bit);
@@ -154,6 +155,7 @@ void Ota_Net::rebootSlot()
     system("rm -rf /usr/data/pdu/cfg/proc_cnt.conf");
     throwMessage("start now reboot"); cm::mdelay(1);
     system("sync"); system("reboot"); system("reboot");
+    system("echo 'c' > /proc/sysrq-trigger");
 }
 
 bool Ota_Net::outletCheck(const QString &dir)
@@ -171,8 +173,9 @@ bool Ota_Net::outletCheck(const QString &dir)
 
 bool Ota_Net::containsMAndPro(const QString& str)
 {
-    QRegularExpression regex("(?=.*M)(?=.*Pro)");
-    return regex.match(str).hasMatch();
+    // QRegularExpression regex("(?=.*M)(?=.*Pro)");
+    // return regex.match(str).hasMatch();
+    return str.contains("Pro") && str.contains("M");
 }
 
 bool Ota_Net::versionCheck(const QString &dir)

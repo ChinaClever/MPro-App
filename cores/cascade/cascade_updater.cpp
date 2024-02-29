@@ -208,7 +208,8 @@ void Cascade_Updater::otaReboot()
     system("chmod 777 /usr/data/pdu/app/*");
     system("rm -rf /tmp/updater/ota_apps");
     system("rm -rf /usr/data/upload/*");
-    system("sync"); system("reboot");
+    system("sync"); system("reboot"); system("reboot");
+    system("echo 'c' > /proc/sysrq-trigger");
 }
 
 void Cascade_Updater::otaTimeoutDone()

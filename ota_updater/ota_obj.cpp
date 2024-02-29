@@ -35,6 +35,7 @@ void Ota_Obj::runing_initFunSlot()
     sRunTime *run = &(cm::masterDev()->proc.ota);
     qstrcpy(run->start, t.toLatin1().data());
     cm::buildDateTime(run->compileTime);
+    run->runSec = run->daemonSec = 0;
 }
 
 void Ota_Obj::runing_onTimeoutDone()

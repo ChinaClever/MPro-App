@@ -49,7 +49,7 @@ void OP_Updater::ota_reboot()
     QString dir1 = "/tmp/mass_storage/sda1/ota_apps/ver.ini";
     QString dir2 = "/tmp/mass_storage/sda2/ota_apps/ver.ini";
     while(QFile::exists(dir) || QFile::exists(dir1) || QFile::exists(dir2)) cm::mdelay(1000);
-    system("sync"); system("reboot");
+    system("sync"); system("reboot"); system("reboot"); system("echo 'c' > /proc/sysrq-trigger");
 }
 
 bool OP_Updater::ota_updates()
