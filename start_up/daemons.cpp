@@ -87,13 +87,13 @@ bool Daemons::procRunStatus(sRunTime &proc, const QString &name)
 
 void Daemons::workDown()
 {
-    mdelay(16500); while(1) {
+    mdelay(26500); while(1) {
         procRunStatus(mProcs->core, "cores");
         procRunStatus(mProcs->web, "web_server");
-        procRunStatus(mProcs->ota, "ota_updater");
         mProcs->daemon.runSec += 1; mdelay(1800);
         if(5 == mProcs->daemon.runSec%30) {
             procRunStatus(mProcs->awtk, "awtk");
+            procRunStatus(mProcs->ota, "ota_updater");
         }
     }
 }
