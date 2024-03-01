@@ -27,7 +27,7 @@ QString Ota_Net::unzip(const QString &fn)
 {
     QString dst = "/tmp/updater/ota_apps/"; cm::execute("mkdir -p " + dst);
     QString str = "unzip -o %1 -d " + dst; throwMessage(str.arg(fn));
-    str = cm::execute(str.arg(fn)); throwMessage(str);
+    str = str.arg(fn); system(str.toStdString().c_str()); throwMessage(str); //cm::execute(str.arg(fn));
     system("chmod 777 -R /tmp/updater/ota_apps/");
     return dst;
 }
@@ -93,7 +93,7 @@ void Ota_Net::workDown(const QString &fn, int bit)
     if(DOtaCode::DOta_Usb == bit) dir = fn;
     system("chmod 777 -R /usr/data/pdu/"); system("sync");
     QString fmd = "rsync -av --exclude rootfs/ %1 /usr/data/pdu/";
-    QString cmd = fmd.arg(dir); cmd = cm::execute(cmd); throwMessage(cmd);
+    QString cmd = fmd.arg(dir); system(cmd.toStdString().c_str()); throwMessage(cmd); // cmd = cm::execute(cmd);
 
     up_rootfs(dir);
     clrbit(mOta->work, bit);
