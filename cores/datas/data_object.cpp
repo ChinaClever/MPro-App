@@ -34,30 +34,56 @@ void Data_Object::sumAlarmUnit(int id, sAlarmUnit &dest, const sAlarmUnit &src, 
     dest.value[id] = summation(src.value, ls);
 }
 
+
+uint Data_Object::getMetaValue(const QList<uint>& array)
+{
+    uint length = array.size();
+    uint middleIndex = length / 2;
+
+    QMap<int, uint> countMap;
+
+    for (uint value : array) {
+        if (value != 0) {
+            countMap[value]++;
+        }
+    }
+
+    uint maxCount = 0;
+    uint maxValue = 0;
+
+    for (auto it = countMap.begin(); it != countMap.end(); ++it) {
+        uint value = it.key();
+        uint count = it.value();
+
+        if (count > maxCount) {
+            maxCount = count;
+            maxValue = value;
+        }
+    }
+
+    if (maxCount > 1) {
+        return maxValue;  // 返回非零值中出现次数最多的值
+    } else {
+        QList<uint> sortedArray = array;
+        std::sort(sortedArray.begin(), sortedArray.end());
+        return sortedArray[middleIndex];  // 返回排序后的中间值
+    }
+}
+
 uint Data_Object::averageValue(const uint *ptr, const QList<int> &ls)
 {
-    QList<uint> list; uint ret = 0; //QList<uint> tmp;
-    foreach(auto i, ls) if(ptr[i]) if(!list.contains(ptr[i])) list << ptr[i];
-    //if(list.size()) std::sort(list.begin(), list.end());
-    //foreach(auto i, list) if(!tmp.contains(i)) tmp << i;
-    //if(tmp.size() > 2){
-    //    tmp.removeFirst(); tmp.removeLast();
-    //    if(tmp.size()) list = tmp;
-    //} else if(tmp.size() == 2) {
-    //    int rated = mDev->line.vol.rated[0];
-    //    uint max = qMax(tmp.first(), tmp.last());
-    //    uint min = qMin(tmp.first(), tmp.last());
-    //    uint temp_max = qAbs((int)max-rated);
-    //    uint temp_min = qAbs((int)min-rated);
-    //    if(temp_max >= temp_min) return min; else return max;
-    //} else if(1==tmp.size()) return tmp.first();
+    QList<uint> list; // uint ret = 0; QList<uint> tmp;
+    // foreach(auto i, ls) if(ptr[i]) if(!list.contains(ptr[i])) list << ptr[i];
+    // if(list.size()) {
+    //     std::sort(list.begin(), list.end());
+    //     int k = (list.size() + 1) / 2;
+    //     if(k < list.size()) ret = list.at(k);
+    //     else ret = list.last();
+    // }
 
-    if(list.size()) {
-        std::sort(list.begin(), list.end());
-        int k = (list.size() + 1) / 2;
-        if(k < list.size()) ret = list.at(k);
-        else ret = list.last();
-    } if(ret < 50*COM_RATE_VOL) ret = 0;
+    foreach(auto i, ls) list << ptr[i];
+    uint ret = getMetaValue(list);
+    if(ret < 50*COM_RATE_VOL) ret = 0;
 
     return ret;
 }
