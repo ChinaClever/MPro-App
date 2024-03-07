@@ -15,6 +15,7 @@ protected:
     void loopBreaker(int id);
 
     uint calPf(int id, sObjData &obj);
+    uint getMetaValue(const QList<uint> &array);
     uint summation(const uint *ptr, int start, int end);
     uint averageValue(const uint *ptr, int start, int end);
     void sumObjData(int id, sObjData &dest, const sObjData &src, const QList<int> &ls);

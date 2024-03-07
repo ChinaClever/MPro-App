@@ -72,8 +72,9 @@ void Data_Line::tgWork()
 
 void Data_Line::calHz()
 {
+    QList<uint> list;
     for(uint i=0; i<mDev->cfg.nums.boardNum; ++i) {
-        uchar hz = mDev->rtu.hzs[i];
-        if(hz) {mDev->hz = mDev->cfg.param.hz = hz;break;}
-    }
+        list << mDev->rtu.hzs[i];
+    } uint hz = getMetaValue(list);
+    if(hz) {mDev->hz = mDev->cfg.param.hz = hz;}
 }
