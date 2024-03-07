@@ -104,6 +104,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
     int cnt = 1; if(cm::runTime() > 36*60*60) cnt = 3;
+    static uchar isErrArray[10] = {0,0,0,0,0,0,0,0};
 
     for(int i=0; i<cnt; ++i) {
         recv = transmit(cmd, sizeof(cmd));
@@ -113,7 +114,7 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
 
     if(recv.size()) res = rtuLog(addr, recv);
     if((recv.size() == zRcvLen) && (recv.at(2) == addr) && res) {
-        res = recvPacket(recv, it);
+        res = recvPacket(recv, it); isErrArray[addr] = 0;
         if(res) m_array[addr].clear();
     } else if(recv.isEmpty()){
         mOpData->size = mDev->cfg.nums.boards[addr-1];
@@ -129,7 +130,10 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
         } rtuThrowMessage(it.event_type + cm::byteArrayToHexStr(recv));
         mOpData->size = mDev->cfg.nums.boards[addr-1];
         //it.content +=cm::byteArrayToHexStr(recv);
-        if(cm::runTime() > 5) Log_Core::bulid()->append(it);
+        if(cm::runTime() > 5 && isErrArray[addr] == 0) {
+            Log_Core::bulid()->append(it);
+            isErrArray[addr] = 1;
+        }
     }
 
     return res;

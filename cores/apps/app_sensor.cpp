@@ -60,7 +60,10 @@ void App_Sensor::door_workDown()
     sEnvData *env = &cm::masterDev()->env;
     int ret = read(fd, data, sizeof(data));    
     if(ret < 0) cout << "read /dev/door failed";
-    else for(int i=0; i<2; ++i)  env->door[i] = data[i] +1;
+    else for(int i=0; i<2; ++i){
+        if(env->reserve[0][0] && i == 1){ break;}
+        else env->door[i] = data[i] +1;
+    }
     // close(fd); cout << data[0] +1 << data[1] +1;
 }
 

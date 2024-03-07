@@ -35,7 +35,7 @@ bool Modbus_SlaveObj::initUnitMap()
 
 void Modbus_SlaveObj::recvDataSlot(QModbusDataUnit::RegisterType table, int address, int size)
 {
-    if( cm::masterDev()->cfg.nums.reserve[0] != 0){
+    if( cm::masterDev()->cfg.param.oldProtocol == 0){
         ushort reg = address % 5000;
         if((reg > 3000) && (reg < 5000)){
             quint16 value = 0; //cout << table << address << size;
