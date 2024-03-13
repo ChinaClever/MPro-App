@@ -80,9 +80,7 @@ void Mqtt_Client::startMqtt()
         cfg.isConnected = false;
         m_client->disconnectFromHost();
         delete m_client; m_client=nullptr;
-    }
-
-    if(cfg.type) connectToHost();
+    } if(cfg.type) connectToHost();
 }
 
 void Mqtt_Client::onConnected()
