@@ -83,7 +83,7 @@ bool OP_ProRtu::rtuLog(int addr, const QByteArray &array)
     uchar *ptr = (uchar *)array.data();
     uchar crc = Crc::XorNum(ptr, array.size()-1);
     if(crc != (uchar)array.at(array.size()-1)) {
-        ret = false; if(1 == cnt[addr]++) {
+        ret = false; if(2 == cnt[addr]++) {
             sEventItem it; it.addr = addr;
             if(cm::cn()) {
                 it.event_type = tr("执行板通讯");
@@ -103,15 +103,17 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    int cnt = 1; if(cm::runTime() > 36*60*60) cnt = 3;
+    int cnt = 3; if(cm::runTime() > 36*60*60) cnt = 5;
 
     for(int i=0; i<cnt; ++i) {
         recv = transmit(cmd, sizeof(cmd));
-        if(recv.size() == zRcvLen) break;
-        else cm::mdelay(1200);
+        if(recv.size() == zRcvLen) {
+            res = rtuLog(addr, recv);
+            if(res) break;
+        } else cm::mdelay(1200);
     }
 
-    if(recv.size()) res = rtuLog(addr, recv);
+    //if(recv.size()) res = rtuLog(addr, recv);
     if((recv.size() == zRcvLen) && (recv.at(2) == addr) && res) {
         res = recvPacket(recv, it);
         if(res) m_array[addr].clear();

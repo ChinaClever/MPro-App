@@ -211,9 +211,9 @@ int App_NetAddr::inet_dhcpUpdate()
     static int t = 30; t *= 2;
     sNetInterface *net = &(cm::dataPacket()->net);
     if(net->inet.dhcp || net->inet6.dhcp) {
-        if(mCnt < 15*60) t = 1;
-        else if(mCnt < 30*60) t = 2;
-        else if(mCnt < 60*60) t = 3;
+        if(mCnt < 1*60*60) t = 1;
+        else if(mCnt < 2*60*60) t = 2;
+        else if(mCnt < 3*60*60) t = 3;
         else if(mCnt < 4*60*60) t = 4;
         else if(mCnt < 12*60*60) t = 6;
         else if(mCnt < 24*60*60) t = 8;
@@ -254,7 +254,7 @@ QString App_NetAddr::getIpv6GatewayAddress()
 
 void App_NetAddr::inet_updateInterface()
 {
-    int t = inet_dhcpUpdate(); mCnt += t;
+    int t = inet_dhcpUpdate(); mCnt += 1;
     QTimer::singleShot(t*1000,this,&App_NetAddr::inet_updateInterface);
     sNetInterface *net = &(cm::dataPacket()->net); inet_dnsCfg(); QString str; int k=0;    
     QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口信息
