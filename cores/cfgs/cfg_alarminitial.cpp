@@ -21,8 +21,8 @@ void Cfg_AlarmInitial::setVolAlarm(sAlarmUnit &it, uchar size, uint rated)
 {
     for(int i=0; i<size; ++i) {
         it.en[i] = 1; it.rated[i] = rated;
-        it.max[i] = it.crMax[i] = rated * 1.25+10;
-        it.min[i] = it.crMin[i] = rated * 0.8;
+        it.max[i] = it.crMax[i] = 286*COM_RATE_VOL; // rated * 1.25+10
+        it.min[i] = it.crMin[i] = 80*COM_RATE_VOL;     // rated * 0.8
     }
 }
 
@@ -38,8 +38,8 @@ void Cfg_AlarmInitial::setAlarmUnit(sAlarmUnit &it, uchar size, uint rated)
 
 void Cfg_AlarmInitial::initObjData(sObjData &it, uchar size, uint curRated)
 {
-    setAlarmUnit(it.pow, size, 220*curRated);
-    setVolAlarm(it.vol, size, 220*COM_RATE_VOL);
+    setAlarmUnit(it.pow, size, 230*curRated);
+    setVolAlarm(it.vol, size, 230*COM_RATE_VOL);
     setAlarmUnit(it.cur, size, curRated*COM_RATE_CUR);
 }
 
