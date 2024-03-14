@@ -34,8 +34,11 @@ void Web_Core::netAddrSlot()
         if(ptr.size() > 3) g_ip_addr << QString("[%1]").arg(ptr.split("/").first());
     } g_ip_addr << QString("[%1]").arg(m_shm->net.inet6.ip);
     g_ip_addr << m_shm->net.inet.ip; g_ip_addr.removeDuplicates();
-    if(m_shm->net.inet.dhcp || m_shm->net.inet6.dhcp) {Web_Obj::bulid()->clearUuid();
-        if(0==strlen(m_shm->net.inet.ip)) QTimer::singleShot(1340,this,SLOT(netAddrSlot()));
+    if(m_shm->net.inet.dhcp || m_shm->net.inet6.dhcp) {
+        if(0==strlen(m_shm->net.inet.ip)) {
+            Web_Obj::bulid()->clearUuid();
+            QTimer::singleShot(1340,this,SLOT(netAddrSlot()));
+        }
     }
 }
 
