@@ -45,6 +45,7 @@ void Cfg_AlarmInitial::initObjData(sObjData &it, uchar size, uint curRated)
 
 void Cfg_AlarmInitial::setTgVol(sTgUnit &it, uint rated)
 {
+    it.en = false;
     it.rated = rated;
     it.max = it.crMax = rated * 1.2;
     it.min = it.crMin = rated * 0.8;
@@ -52,6 +53,7 @@ void Cfg_AlarmInitial::setTgVol(sTgUnit &it, uint rated)
 
 void Cfg_AlarmInitial::setTgUnit(sTgUnit &it, uint rated)
 {
+    it.en = false;
     it.max = rated;
     it.rated = rated;
     it.crMax = rated * 0.8;
