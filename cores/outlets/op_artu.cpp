@@ -90,7 +90,7 @@ bool OP_ARtu::loop_readData()
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA9, 0xB9, 0x01};
     cmd[2] = addr; for(int i=0; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
-    int cnt = 1; if(cm::runTime() > 36*60*60) cnt = 3;
+    int cnt = 3; if(cm::runTime() > 36*60*60) cnt = 5;
     QByteArray recv; for(int i=0; i<cnt; ++i) {
         recv = transmit(cmd, sizeof(cmd)); //cout << recv.size();
         if(recv.size() == 62) break; else cm::mdelay(1200);
