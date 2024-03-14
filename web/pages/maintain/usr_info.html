@@ -213,7 +213,15 @@
 			}
 			//if(document.getElementById("lang_21").checked == true){				
 			//}else{
-			if(web_data[0] == 0){				
+			if(web_data[0] == 0){	
+				if(ident_ == psd_){
+					if(0 == language){
+						alert("输入的验证信息和密码不能是同一个，请重新输入");
+					}else{
+						alert("The verification information and password entered cannot be the same. Please re-enter");
+					}		
+					return ;
+				}			
 			}else{
 				if(!pattern_.test(usr_))
 				{

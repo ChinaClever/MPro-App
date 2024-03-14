@@ -391,6 +391,14 @@
       }
       else{
         if(document.getElementById("lang_2").checked == false){
+          if(ient == psd){
+            if(0 == language){
+				    	alert("输入的验证信息和密码不能是同一个，请重新输入");
+			    	}else{
+					    alert("The verification information and password entered cannot be the same. Please re-enter");
+				    }
+            return ;
+         }         
         }else{
           if(!pattern_.test(usr))
           {

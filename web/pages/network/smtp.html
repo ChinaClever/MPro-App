@@ -146,7 +146,9 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
-			if(document.getElementById("SmtpState").innerHTML !=''){
+			if(document.getElementById("SmtpState").innerHTML == "send mail ok"){
+				document.getElementById("SmtpState").style.color = 'green';	
+			}else{
 				document.getElementById("SmtpState").style.color = 'red';	
 			}
 			if(0 != language){

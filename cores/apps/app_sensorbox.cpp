@@ -180,6 +180,7 @@ void App_SensorBox::sensorBox_run()
                 //                }
             }
         } else {
+            box_offlineii();
             box_close();
             cm::mdelay(360);
         }
