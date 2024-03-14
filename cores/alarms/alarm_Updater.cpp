@@ -85,7 +85,7 @@ bool Alarm_Updater::upAlarmItem(sDataItem &index, int i, sAlarmUnit &it)
     else if(value > it.crMax[i]) alarm = AlarmCode::CrMax;  /*alarm=4*/
     if(value < it.min[i]) alarm = AlarmCode::Min;   /*alarm=1*/
     else if(value < it.crMin[i]) alarm = AlarmCode::CrMin;  /*alarm=2*/
-    uint t = 0; if(cm::runTime() > 48*60*60) t = 5; /*运行时间大于48小时，t=5*/
+    uint t = 3; if(cm::runTime() > 48*60*60) t = 9; /*运行时间大于48小时，t=5*/
     if(index.topic == DTopic::Vol) t += 2;  /*topic为电压， t=7*/
     if(it.alarm[i] != alarm)   {
         if(it.cnt[i]++ > t && upLoopVol(index)) {
