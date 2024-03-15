@@ -11,6 +11,7 @@ public:
     bool netAddrSet(sCfgItem &it, const QVariant &v);
 
 private:
+    bool isSetting = false;
     sNetInterface m_net;
 };
 
