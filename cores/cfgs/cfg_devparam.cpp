@@ -55,10 +55,6 @@ void Cfg_devParam::devNumRead(sDevNums &it)
 
     QByteArray array = cfg->readCfg("group", QByteArray(), g).toByteArray();
     if(array.size()) memcpy(it.group, array.data(), sizeof(it.group));
-
-    it.reserve[0] = cfg->readCfg("modbusMode", 0, g).toInt();
-    it.reserve[1] = cfg->readCfg("snmpMode", 0, g).toInt();
-    it.reserve[2] = cfg->readCfg("sensorboxMode", 0, g).toInt();
 }
 
 void Cfg_devParam::groupWrite()

@@ -179,11 +179,20 @@
 			},500);
 		}
 		function changed(ipt){
-			if(0 == language){
-				var retVal = confirm("请确认是否保存此次修改！");	
+			if(ipt.id == "enable"){
+				if(0 == language){
+					var retVal = confirm("请确认是否保存此次修改,需要重启生效！");	
+				}else{
+					var retVal = confirm("Please confirm whether to save this modification, it needs to be restarted to take effect!");
+				}			
 			}else{
-				var retVal = confirm("Please confirm whether to save this modification！");
+				if(0 == language){
+					var retVal = confirm("请确认是否保存此次修改！");	
+				}else{
+					var retVal = confirm("Please confirm whether to save this modification!");
+				}
 			}
+
 			if(retVal == true){
 				for(var i = 0 ;i<(id_name.length -1);i++){
 					if(ipt.id == id_name[i]){
@@ -194,10 +203,18 @@
 			}else{}
 		}
 		function changed_(ipt){
-			if(0 == language){
-				var retVal = confirm("请确认是否保存此次修改！");	
+			if(ipt.id == "enable_"){
+				if(0 == language){
+					var retVal = confirm("请确认是否保存此次修改,需要重启生效！");	
+				}else{
+					var retVal = confirm("Please confirm whether to save this modification, it needs to be restarted to take effect!");
+				}			
 			}else{
-				var retVal = confirm("Please confirm whether to save this modification！");
+				if(0 == language){
+					var retVal = confirm("请确认是否保存此次修改！");	
+				}else{
+					var retVal = confirm("Please confirm whether to save this modification!");
+				}
 			}
 			if(retVal == true){
 				for(var i = 0 ;i<(red_name.length -1);i++){

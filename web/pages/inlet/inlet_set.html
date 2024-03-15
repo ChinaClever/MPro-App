@@ -469,13 +469,14 @@
 			let data2 = parseFloat(ipt.parentNode.parentNode.childNodes[6].childNodes[0].value);
 			let data3 = parseFloat(ipt.parentNode.parentNode.childNodes[7].childNodes[0].value);
 			let data4 = parseFloat(ipt.parentNode.parentNode.childNodes[8].childNodes[0].value);
+			//let data5 = parseFloat(ipt.parentNode.parentNode.childNodes[4].childNodes[0].data);
 
 			if(number == pdu_data.pdu_info.line_num +1){
 				number1 = 0;
 
 			}else{
 				number1 = number;
-				if(data1>data2 || data2>data3 || data3>data4){
+				if(data1>data2 || data2>data3 || data3>data4/* || (data4 > 1.3*data5)*/){
 					alert("input data error");
 					FlashHtml(ipt);
 					return ;

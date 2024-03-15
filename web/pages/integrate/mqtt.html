@@ -26,6 +26,8 @@
 					<div class="grid-col grid-col-7 border-none">
 						<table class="table table-border-none text-left mqtt"></table>
 					</div>
+					<div class="grid-col grid-col-7 " style ="height: 150px;">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -81,6 +83,8 @@
 			lang[19] = ["2 消息仅传递一次","2 message can be delivered at once","","",""];
 			lang[20] = ["已连接","Connected","","",""];
 			lang[21] = ["未连接","Disconnected","","",""];
+			lang[22] = ["协议对应默认端口:","Protocol corresponds to default port:","","",""];
+
 
 			enable[0] = lang[15][language];
 			qos_[0] = lang[17][language];
@@ -92,6 +96,7 @@
 				document.getElementById("lang_" + j).innerHTML  = lang[j][language];
 			}
 			document.getElementById("lang_14").value  = lang[14][language];
+			document.getElementById("lang_22").innerHTML  = lang[22][language];
 		}
 
 		setInterval(function () {
@@ -203,6 +208,12 @@
 			tbody += '<td><input  id = "'+ id_name[1] +'" style ="width:24.5%" type = "text"  onchange ="changed(this)" placeholder="0.0.0.0"></input></td></tr>';
 			tbody += '<tr><td id  = "lang_5"></td>';
 			tbody += '<td><input  id = "'+ id_name[2] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
+			tbody += '<tr><td id = "lang_22"></td>';
+			tbody += '<td>(mqtt:1883、mqtts:8883)';
+			tbody += '</td></tr>';
+			tbody += '<tr><td></td>';
+			tbody += '<td>(ws:8083、wss:8084)';
+			tbody += '</td></tr>';
 			tbody += '<tr><td id  = "lang_6"></td>';
 			tbody += '<td><input  id = "'+ id_name[3] +'" style ="width:24.5%" onchange ="changed(this)" type = "text" ></input></td></tr>';
 			tbody += '<tr><td id  = "lang_7"></td>';
