@@ -179,15 +179,15 @@ void App_NetAddr::inet_dnsCfg()
     sNetInterface *net = &(cm::dataPacket()->net);
     QString str = cm::execute("cat /tmp/resolv.conf");
     QString lst = str.remove("search b").remove(" # eth0").remove("\n");
-    QStringList res = lst.split("nameserver ");
-    if(res.isEmpty()) return; // else qDebug() << str << res;
+    QStringList res = lst.split("nameserver ", QString::SkipEmptyParts);
+    if(res.isEmpty()) return; else cout << str << res;
 
     net->inet.dns[0] = 0;
     net->inet.dns2[0] = 0;
     net->inet6.dns[0] = 0;
     net->inet6.dns2[0] = 0;
 
-    if(res.size() > 1) {
+    if(res.size()) {
         str = res.takeFirst();
         qstrcpy(net->inet.dns, str.toLocal8Bit().data());
         if(!res.size()) return ;
