@@ -14,7 +14,9 @@ Set_NetAddr::Set_NetAddr()
 
 QVariant Set_NetAddr::netAddrCfg(uchar fc, uchar sub)
 {
-    if(!isSetting) m_net = cm::dataPacket()->net;
+    sNetInterface *net = &cm::dataPacket()->net;
+    if(!m_net.inet.en || !strlen(m_net.mac)) m_net = *net;
+    if(!isSetting && m_net.inet.en) m_net = *net;
     sNetAddr *inet = &m_net.inet; QVariant res;
     if(sub) inet = &m_net.inet6;
 
