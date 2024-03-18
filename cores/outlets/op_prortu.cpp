@@ -103,7 +103,6 @@ bool OP_ProRtu::sendReadCmd(int addr, sOpIt *it)
     uchar cmd[zCmdLen] = {0x7B, 0xC1, 0x01, 0xA1, 0xB1, 0x01};
     cmd[2] = addr; for(int i=1; i<61; i++) cmd[k++] = 0x00;
     cmd[k++] = 0x44; cmd[k] = Crc::XorNum(cmd,sizeof(cmd)-1);
-
     int cnt = 3; if(cm::runTime() > 36*60*60) cnt = 5;
     static uchar isErrArray[10] = {0,0,0,0,0,0,0,0};
 

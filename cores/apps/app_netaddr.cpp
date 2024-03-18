@@ -21,7 +21,7 @@ void App_NetAddr::inet_initFunSlot()
     inet_readCfg(net->inet, "IPV4"); net->inet.en = 1;
     inet_readCfg(net->inet6, "IPV6"); qstrcpy(net->name, "eth0");
     if(net->inet.dhcp || (net->inet6.dhcp && net->inet6.en)) system("udhcpc &");
-    else system("killall dhcpd");
+    else{system("killall udhcpc");}
 
     if(!strlen(net->inet.ip)) {
         sNetAddr *inet = &net->inet;
@@ -30,7 +30,8 @@ void App_NetAddr::inet_initFunSlot()
         qstrcpy(inet->ip, "192.168.1.163");
         qstrcpy(inet->mask, "255.255.255.0");
         inet_writeCfg(*inet, "IPV4");
-    } inet_setInterface();
+    } if(net->inet.dhcp) net->inet.ip[0] = 0;
+    inet_setInterface();
 }
 
 void App_NetAddr::inet_readCfg(sNetAddr &inet, const QString &g)
@@ -179,15 +180,15 @@ void App_NetAddr::inet_dnsCfg()
     sNetInterface *net = &(cm::dataPacket()->net);
     QString str = cm::execute("cat /tmp/resolv.conf");
     QString lst = str.remove("search b").remove(" # eth0").remove("\n");
-    QStringList res = lst.split("nameserver ");
-    if(res.isEmpty()) return; // else qDebug() << str << res;
+    QStringList res = lst.split("nameserver ", QString::SkipEmptyParts);
+    if(res.isEmpty()) return; //else cout << str << res;
 
     net->inet.dns[0] = 0;
     net->inet.dns2[0] = 0;
     net->inet6.dns[0] = 0;
     net->inet6.dns2[0] = 0;
 
-    if(res.size() > 1) {
+    if(res.size()) {
         str = res.takeFirst();
         qstrcpy(net->inet.dns, str.toLocal8Bit().data());
         if(!res.size()) return ;
