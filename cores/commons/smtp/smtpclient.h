@@ -25,7 +25,6 @@
 #include "smtpmime_global.h"
 #include "mimemessage.h"
 
-
 class SMTP_MIME_EXPORT SmtpClient : public QObject
 {
     Q_OBJECT

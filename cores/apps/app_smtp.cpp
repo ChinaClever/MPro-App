@@ -5,6 +5,7 @@
  */
 #include "app_smtp.h"
 #include "smtp/SmtpMime"
+#include "sercet_tlscert.h"
 
 sSmtpCfg App_Smtp::smtpCfg;
 App_Smtp::App_Smtp(QObject *parent)
@@ -91,7 +92,15 @@ void App_Smtp::sendMail()
     }
 
     SmtpClient smtp(cfg->host, cfg->port, ct);
-    smtp.connectToHost(); //cout <<"AAAAAAAAAAAA";
+    if(cfg->ct) {
+        Sercret_TlsCert *tls = Sercret_TlsCert::bulid();
+        QSslSocket *socket = (QSslSocket*)smtp.getSocket();
+        QSslConfiguration ssl = tls->sslConfiguration();
+        ssl.setProtocol(QSsl::TlsV1_2);  //TlsV1_1OrLater
+        socket->setSslConfiguration(ssl);
+    }
+
+    smtp.connectToHost(); //cout <<cfg->ct<<"AAAAAAAAAAAA";
     if (!smtp.waitForReadyConnected(5000)) {
         cfg->lastErr += "Failed to connect to host! " + cfg->host;
         smtp.quit(); cout << cfg->lastErr; return;

@@ -146,11 +146,26 @@
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
 			}
-			if(document.getElementById("SmtpState").innerHTML == "send mail ok"){
-				document.getElementById("SmtpState").style.color = 'green';	
-			}else{
-				document.getElementById("SmtpState").style.color = 'red';	
-			}
+			// if(document.getElementById("SmtpState").innerHTML == "send mail ok"){
+			// 	document.getElementById("SmtpState").style.color = 'green';	
+			// }else if(document.getElementById("SmtpState").innerHTML.indexOf("Failed")!=-1 
+			// || document.getElementById("SmtpState").innerHTML.indexOf("error")!=-1){
+			// 	document.getElementById("SmtpState").style.color = 'red';			
+			// }
+			//else if(document.getElementById("SmtpState").innerHTML.indexOf("Failed")!=-1 
+			//|| document.getElementById("SmtpState").innerHTML.indexOf("error")!=-1){
+			//	document.getElementById("SmtpState").style.color = 'red';
+			//	if(0 == language){alert("测试失败！");}
+			//	else{alert("Test failed!");}			
+			//}
+			//else{
+			//	if(count != 0) count++;
+			//	else if(count > 50*3){
+			//		if(0 == language){alert("测试失败！");}
+			//		else{alert("Test failed!");}
+			//		count=0;
+			//	}
+			//}
 			if(0 != language){
 				document.getElementById("SmtpSendPsd").placeholder = "Passward";
 			}
@@ -200,21 +215,23 @@
 				}				
 			}else{
 				pdu_cfg.setCfg(44,11,0,0,addr);
-				setTimeout(function(){
-					if(document.getElementById("SmtpState").innerHTML ==''){
-						if(0 == language){
-							alert("测试成功！");
-						}else{
+				document.getElementById("SmtpState").style.color = 'black';
+			 	setTimeout(function(){
+			 		if(document.getElementById("SmtpState").innerHTML =='send mail ok'){
+			 			if(0 == language){
+			 				alert("测试成功！");
+			 			}else{
 							alert("Test successful!");
-						}
-					}else{
-						if(0 == language){
-							alert("测试失败！");
-						}else{
-							alert("Test failed!");
-						}					
-					}
-				},3000);
+			 			}
+			 		}else if(document.getElementById("SmtpState").innerHTML.indexOf('Failed')!=-1 
+			|| document.getElementById("SmtpState").innerHTML.indexOf('error')!=-1){
+			 			if(0 == language){
+			 				alert("测试失败！");
+			 			}else{
+			 				alert("Test failed!");
+			 			}				
+			 		}
+			 	},10000);
 
 			}
 		}
@@ -223,6 +240,13 @@
 			setTimeout(function(){
 				read_data();
 				document.getElementById("SmtpState").innerHTML = smtp_data[8][1];
+			
+				if(document.getElementById("SmtpState").innerHTML =='send mail ok'){
+					document.getElementById("SmtpState").style.color = 'green';
+				}else if(document.getElementById("SmtpState").innerHTML.indexOf("Failed")!=-1 
+		|| document.getElementById("SmtpState").innerHTML.indexOf("error")!=-1){
+					document.getElementById("SmtpState").style.color = 'red';	
+				}
 			},900);
    		 },2000);
 		function buildTable() {

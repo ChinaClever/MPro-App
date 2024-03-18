@@ -37,11 +37,10 @@ SmtpClient::SmtpClient(const QString & host, int port, ConnectionType connection
     isReset(false)
 {
     setConnectionType(connectionType);
-
+    connect(socket,SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(socketError(QAbstractSocket::SocketError)));
     connect(socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
-    connect(socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
-            this, SLOT(socketError(QAbstractSocket::SocketError)));
     connect(socket, SIGNAL(readyRead()),
             this, SLOT(socketReadyRead()));
 }
@@ -158,6 +157,7 @@ void SmtpClient::sendMail(const MimeMessage & email)
 
 void SmtpClient::quit()
 {
+    qDebug()<<socket->errorString();
     changeState(DisconnectingState);
 }
 
@@ -231,13 +231,17 @@ void SmtpClient::setConnectionType(ConnectionType ct)
 
     switch (connectionType)
     {
-    case TcpConnection:
+    case TcpConnection:{
         socket = new QTcpSocket(this);
+//        connect(socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+//                this, SLOT(socketError(QAbstractSocket::SocketError)));
         break;
+    }
     case SslConnection:
     case TlsConnection:
         socket = new QSslSocket(this);
         ((QSslSocket*) socket)->ignoreSslErrors();
+
         connect(socket, SIGNAL(encrypted()),
                 this, SLOT(socketEncrypted()));
         break;
@@ -264,12 +268,14 @@ void SmtpClient::changeState(SmtpClient::ClientState state) {
         switch (connectionType)
         {
         case TlsConnection:
-        case TcpConnection:
+        case TcpConnection:{
             socket->connectToHost(host, port);
             break;
-        case SslConnection:
+        }
+        case SslConnection:{
             ((QSslSocket*) socket)->connectToHostEncrypted(host, port);
             break;
+        }
         }
         break;
 
@@ -563,10 +569,11 @@ void SmtpClient::waitForEvent(int msec, const char *successSignal)
 
     if(msec > 0)
     {
-        QTimer timer;
-        timer.setSingleShot(true);
-        connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-        timer.start(msec);
+//        QTimer timer;
+//        timer.setSingleShot(true);
+//        connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+//        timer.start(msec);
+        QTimer::singleShot(msec, &loop, SLOT(quit()));
     }
 
     loop.exec();
@@ -600,6 +607,9 @@ void SmtpClient::socketStateChanged(QAbstractSocket::SocketState state) {
 void SmtpClient::socketError(QAbstractSocket::SocketError socketError) {
 #ifndef QT_NO_DEBUG
     qDebug() << "[Socket] ERROR:" << socketError;
+    qDebug()<<QSslSocket::supportsSsl();
+    qDebug()<<QSslSocket::sslLibraryBuildVersionString();
+    qDebug()<<QSslSocket::sslLibraryVersionString();
 #else
     Q_UNUSED(socketError);
 #endif
