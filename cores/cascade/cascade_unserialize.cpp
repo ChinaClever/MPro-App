@@ -66,8 +66,10 @@ void Cascade_Unserialize::unObjData(uchar id, sObjData &data, c_sObjData &obj)
     data.ele[id] = obj.ele;
     data.hdaEle[id] = obj.hdaEle;
     data.lineVol[id] = obj.lineVol;
-    data.artPow[id] = obj.activePow;
+    data.artPow[id] = obj.apparentPow;
+    data.apparentEle[id] = obj.apparentEle;
     data.reactivePow[id] = obj.reactivePow;
+    data.reactiveEle[id] = obj.reactiveEle;
     data.reserve[0][id] = obj.reserve[0];
 }
 

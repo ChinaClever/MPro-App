@@ -138,7 +138,7 @@ void OP_Object::powFaultCheck(uchar k, uchar i)
     sObjData *obj = &mDev->output;
     if(mOpData->type) {
         obj = &mDev->loop;
-        obj->artPow[id] = mOpData->activePow[id];
+        obj->artPow[id] = mOpData->apparentPow[id];
         obj->pow.value[id] = mOpData->pow[id];
         obj->reactivePow[id] = mOpData->reactivePow[id];
         if(value > 99) {value = 99;}obj->pf[id] = value;
@@ -223,7 +223,9 @@ void OP_Object::loop_fillData()
         curFaultCheck(k, i);
         eleFaultCheck(k, i);
         powFaultCheck(k, i);
-
+        
+        dev->loop.apparentEle[k+i] = it->apparentEle[i];
+        dev->loop.reactiveEle[k+i] = it->reactiveEle[i];
         //dev->loop.relay.sw[k+i] = it->sw[i];
         //relayCheck(dev->loop.relay.sw[k+i], it->sw[i], m_swCnt[k+i]);
     }

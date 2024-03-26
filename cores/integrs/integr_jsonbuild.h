@@ -35,6 +35,7 @@ private:
     void online(QJsonObject &json);
 
 private:
+    uchar mAddr;
     int mDataContent;
     QJsonObject *mJson;
 };

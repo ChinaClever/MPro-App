@@ -17,6 +17,9 @@ private:
     void line_dataObj(vshort &vs, int id);
     void line_dataUpdate();
 
+    void line_eleObj(vshort &vs, int id);
+    void line_eleUpdate();
+
     void line_alarmObj(vshort &vs, int id);
     void line_alarmUpdate();
 

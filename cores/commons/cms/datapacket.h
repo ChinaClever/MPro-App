@@ -107,7 +107,9 @@ struct sObjData
     uint reactivePow[PACK_ARRAY_SIZE]; // 无功功率
     char name[PACK_ARRAY_SIZE][NAME_SIZE];
     uint lineVol[PACK_ARRAY_SIZE]; // 线电压
-    uint reserve[6][PACK_ARRAY_SIZE]; // 预留
+    uint apparentEle[PACK_ARRAY_SIZE]; // 视在电能
+    uint reactiveEle[PACK_ARRAY_SIZE]; // 无功电能
+    uint reserve[4][PACK_ARRAY_SIZE]; // 预留
 
     //uint wave[PACK_ARRAY_SIZE]; // 谐波值
     //uint tem[PACK_ARRAY_SIZE];
@@ -162,7 +164,9 @@ struct sTgObjData
     uint artPow; // 视在功率
     uint leakCur; // 漏电电流
     uint reactivePow; // 无功功率
-    uint reserve[10]; // 预留
+    uint apparentEle; // 视在电能
+    uint reactiveEle; // 无功电能
+    uint reserve[8]; // 预留
 };
 
 

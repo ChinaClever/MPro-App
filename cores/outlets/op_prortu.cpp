@@ -49,7 +49,7 @@ bool OP_ProRtu::recvPacket(const QByteArray &array, sOpIt *obj)
         } for(int i=0; i<obj->size; ++i) obj->tmp_vol[i] = obj->vol[i];
 
         //for(int i=0; i<op; ++i) {
-        //    obj->activePow[i] = obj->vol[i] * obj->cur[i] / 100.0;
+        //    obj->artPow[i] = obj->vol[i] * obj->cur[i] / 100.0;
         //    obj->pow[i] = obj->activePow[i] * obj->pf[i] / 100.0;
         //    obj->reactivePow[i] = obj->activePow[i] - obj->pow[i];
         //}
@@ -161,7 +161,7 @@ bool OP_ProRtu::setEndisable(int addr, bool ret, uchar &v)
 
     if(v < 3) {
         int size = sizeof(mOpData->vol);
-        memset(mOpData->activePow, 0, size);
+        memset(mOpData->apparentPow, 0, size);
         memset(mOpData->reactivePow, 0, size);
         memset(mOpData->ele, 0, size);
         memset(mOpData->cur, 0, size);

@@ -13,6 +13,7 @@ Mb_Line::Mb_Line(QObject *parent) : Mb_Object{parent}
 
 void Mb_Line::line_update()
 {
+    line_eleUpdate();
     line_dataUpdate();
     line_alarmUpdate();
     line_thresholdUpdate();
@@ -38,6 +39,24 @@ void Mb_Line::line_dataUpdate()
     vshort vs; int size = mDevData->line.size;
     for(int i=0; i<size; ++i) line_dataObj(vs, i);
     setRegs(mStartReg + MbReg_LineData, vs);
+}
+
+void Mb_Line::line_eleObj(vshort &vs, int id)
+{
+    sObjData *obj = &(mDevData->line);
+    vs << (obj->ele[id] >> 16);
+    vs << (obj->ele[id] & 0xffff);
+    vs << (obj->apparentEle[id] >> 16);
+    vs << (obj->apparentEle[id] & 0xffff);
+    vs << (obj->reactiveEle[id] >> 16);
+    vs << (obj->reactiveEle[id] & 0xffff);
+}
+
+void Mb_Line::line_eleUpdate()
+{
+    vshort vs; int size = mDevData->line.size;
+    for(int i=0; i<size; ++i) line_eleObj(vs, i);
+    setRegs(mStartReg + MbReg_LineEle, vs);
 }
 
 void Mb_Line::line_alarmObj(vshort &vs, int id)
