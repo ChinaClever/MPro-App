@@ -220,7 +220,7 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     if(type > 2) { if(!size) {size = it.relay.size;} strListAppend(it.name, size, "name", obj); }
 
     uint devSpec = cm::devData(mAddr)->cfg.param.devSpec;
-    if(type < 3 && 1==devSpec) {
+    if((type < 3 && (1==devSpec)) || (mDataContent > 2)) {
         arrayAppend(it.apparentEle, size, "ele_apparent", obj, COM_RATE_ELE);
         arrayAppend(it.reactiveEle, size, "ele_reactive", obj, COM_RATE_ELE);
     }
@@ -257,7 +257,7 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
     obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
     obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
     uint devSpec = cm::devData(mAddr)->cfg.param.devSpec;
-    if(1==devSpec) {
+    if((1==devSpec) || (mDataContent > 2)) {
         obj.insert("ele_apparent", it.apparentEle/COM_RATE_ELE);
         obj.insert("ele_reactive", it.reactiveEle/COM_RATE_ELE);
     } json.insert(key, QJsonValue(obj));
