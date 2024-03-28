@@ -156,7 +156,12 @@ void Agent_Get::addObjData(uchar addr, const QString &oidPrefix,
     addOidValue(addr, id++, oid, name+"pf", it.pf[index], false);
     addOidValue(addr, id++, oid, name+"ele", it.ele[index], false);
     if(it.vol.size > 1 && (1 == type)) addOidValue(addr, id++,oid, name+"phase-vol", it.lineVol[index], false);
-    if(it.relay.size && (2 == type))addOidValue(addr, id++, oid, name+"breaker", it.relay.sw[index], false);
+    if(it.relay.size && (2 == type)) addOidValue(addr, id++, oid, name+"breaker", it.relay.sw[index], false);
+
+    uint devSpec = cm::devData(addr)->cfg.param.devSpec; if(1==devSpec) { id = 8;
+        addOidValue(addr, id++, oid, name+"ele-apparent", it.apparentEle[index], false);
+        addOidValue(addr, id++, oid, name+"ele-reactive", it.reactiveEle[index], false);
+    }
 }
 
 void Agent_Get::addObjAlarm(uchar addr, const QString &oidPrefix,

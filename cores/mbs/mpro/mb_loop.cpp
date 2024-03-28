@@ -34,6 +34,25 @@ void Mb_Loop::loop_dataUpdate()
     setRegs(mStartReg + MbReg_LoopData, vs);
 }
 
+
+void Mb_Loop::loop_eleObj(vshort &vs, int id)
+{
+    sObjData *obj = &(mDevData->loop);
+    vs << (obj->ele[id] >> 16);
+    vs << (obj->ele[id] & 0xffff);
+    vs << (obj->apparentEle[id] >> 16);
+    vs << (obj->apparentEle[id] & 0xffff);
+    vs << (obj->reactiveEle[id] >> 16);
+    vs << (obj->reactiveEle[id] & 0xffff);
+}
+
+void Mb_Loop::loop_eleUpdate()
+{
+    vshort vs; int size = mDevData->loop.size;
+    for(int i=0; i<size; ++i) loop_eleObj(vs, i);
+    setRegs(mStartReg + MbReg_LoopEle, vs);
+}
+
 void Mb_Loop::loop_alarmObj(vshort &vs, int id)
 {
     sObjData *obj = &(mDevData->loop);
@@ -78,6 +97,7 @@ void Mb_Loop::loop_thresholdUpdate()
 
 void Mb_Loop::loop_update()
 {
+    loop_eleUpdate();
     loop_dataUpdate();
     loop_alarmUpdate();
     loop_breakerUpdate();

@@ -50,6 +50,12 @@ void Mb_Object::upDevInfo()
     vs << dev->tg.pf;
     vs << (dev->tg.ele >> 16);
     vs << (dev->tg.ele & 0xffff);
+    vs << dev->tg.reactivePow;
+
+    vs << (dev->tg.apparentEle >> 16);
+    vs << (dev->tg.apparentEle & 0xffff);
+    vs << (dev->tg.reactiveEle >> 16);
+    vs << (dev->tg.reactiveEle & 0xffff);
 
     setRegs(mStartReg+0, vs);
 }

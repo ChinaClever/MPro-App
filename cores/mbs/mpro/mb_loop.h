@@ -17,6 +17,9 @@ private:
     void loop_dataObj(vshort &vs, int id);
     void loop_dataUpdate();
 
+    void loop_eleObj(vshort &vs, int id);
+    void loop_eleUpdate();
+
     void loop_alarmObj(vshort &vs, int id);
     void loop_alarmUpdate();
     void loop_breakerUpdate();

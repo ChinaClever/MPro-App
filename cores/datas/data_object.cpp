@@ -132,7 +132,9 @@ void Data_Object::sumObjData(int id, sObjData &dest, const sObjData &src, const 
 
     dest.ele[id] = summation(src.ele, ls);
     dest.artPow[id] = summation(src.artPow, ls);
+    dest.apparentEle[id] = summation(src.apparentEle, ls);
     dest.reactivePow[id] = summation(src.reactivePow, ls);
+    dest.reactiveEle[id] = summation(src.reactiveEle, ls);
     dest.pf[id] = calPf(id, dest);
 }
 

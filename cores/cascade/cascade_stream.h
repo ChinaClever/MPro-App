@@ -27,10 +27,12 @@ struct _sObjData {
     uint pf; // 功率因数
     uint hdaEle; // 电能数据记录开关
     uint ratedCur;
-    uint activePow;
+    uint apparentPow;
     uint reactivePow;
     uint lineVol;
-    uint reserve[5];
+    uint apparentEle;
+    uint reactiveEle;
+    uint reserve[3];
 };
 
 

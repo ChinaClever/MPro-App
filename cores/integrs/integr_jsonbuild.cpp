@@ -35,7 +35,7 @@ QByteArray Integr_JsonBuild::getJson(uchar addr, int dc)
 
 QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
 {
-    if(dc) mDataContent = dc;
+    mAddr = addr; if(dc) mDataContent = dc;
     else mDataContent = cm::masterDev()->cfg.param.jsonContent;
     sDevData *dev = cm::devData(addr); QJsonObject json;
     if(dev->offLine > 0 || addr == 0) {
@@ -57,7 +57,8 @@ QJsonObject Integr_JsonBuild::getJsonObject(uchar addr, int dc)
         } QDateTime datetime = QDateTime::currentDateTime();
         json.insert("datetime", datetime.toString("yyyy-MM-dd hh:mm:ss"));
         json.insert("pdu_alarm", Alarm_Log::bulid()->getCurrentAlarm(addr+1));
-        json.insert("version", JSON_VERSION);
+        json.insert("version", JSON_VERSION); json.insert("dev_hz", (int)dev->hz);
+        json.insert("dev_ip", cm::dataPacket()->net.inet.ip);
     } else {
         cout << dev->offLine;
     }
@@ -218,6 +219,12 @@ void Integr_JsonBuild::ObjData(const sObjData &it, const QString &key, QJsonObje
     else if(it.vol.size > 1) arrayAppend(it.lineVol, size, "phase_voltage", obj, COM_RATE_VOL);
     if(type > 2) { if(!size) {size = it.relay.size;} strListAppend(it.name, size, "name", obj); }
 
+    uint devSpec = cm::devData(mAddr)->cfg.param.devSpec;
+    if((type < 3 && (1==devSpec)) || (mDataContent > 2)) {
+        arrayAppend(it.apparentEle, size, "ele_apparent", obj, COM_RATE_ELE);
+        arrayAppend(it.reactiveEle, size, "ele_reactive", obj, COM_RATE_ELE);
+    }
+
     json.insert(key, obj);
 }
 
@@ -249,7 +256,11 @@ void Integr_JsonBuild::tgObjData(const sTgObjData &it, const QString &key, QJson
     obj.insert("ele", it.ele/COM_RATE_ELE);
     obj.insert("apparent_pow", it.artPow/COM_RATE_POW);
     obj.insert("reactive_pow", it.reactivePow/COM_RATE_POW);
-    json.insert(key, QJsonValue(obj));
+    uint devSpec = cm::devData(mAddr)->cfg.param.devSpec;
+    if((1==devSpec) || (mDataContent > 2)) {
+        obj.insert("ele_apparent", it.apparentEle/COM_RATE_ELE);
+        obj.insert("ele_reactive", it.reactiveEle/COM_RATE_ELE);
+    } json.insert(key, QJsonValue(obj));
 }
 
 void Integr_JsonBuild::envData(const sEnvData &it, const QString &key, QJsonObject &json)
