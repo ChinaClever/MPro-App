@@ -126,9 +126,13 @@ bool App_SensorBox::box_recvPacketii(const QByteArray &array)
 
         //if(env->tem.value[2]) env->tem.value[2] -= 400;
         //if(env->tem.value[3]) env->tem.value[3] -= 400;
-        if(env->smoke[0]) env->smoke[0] += (alarm >> j++) & 1;
-        if(env->water[0]) env->water[0] += (alarm >> j++) & 1;
-        if(env->reserve[0][0]) {env->door[1] = env->reserve[0][0]+((alarm >> j++) & 1);cout<<" door2 alram "<<env->door[1];}
+        if(env->smoke[0]) env->smoke[0] += (alarm >> j) & 1;
+        j++;
+        if(env->water[0]) env->water[0] += (alarm >> j) & 1;
+        j++;
+        if(env->reserve[0][0]) env->door[1] = env->reserve[0][0]+((alarm >> j) & 1);
+        cout<<" alram "<<alarm;
+        j++;
         //        if(env->door[0]) env->door[0] += (alarm >> j++) & 1;
         //        if(env->door[1]) env->door[1] += (alarm >> j++) & 1;
     } else  ret = false;
